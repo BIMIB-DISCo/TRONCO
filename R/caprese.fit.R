@@ -59,6 +59,7 @@ function(dataset,lambda,verbose) {
         	conditional.probs[i,1] = 1;
     	}
 	}
+
 	#estimate the error rates and, given them, the probabilities
     estimated.error.rates = estimate.tree.error.rates(best.parents$marginal.probs,best.parents$joint.probs,parents.pos);
     estimated.probabilities = estimate.tree.probs(best.parents$marginal.probs,best.parents$joint.probs,parents.pos,estimated.error.rates);
