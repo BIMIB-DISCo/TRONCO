@@ -1,4 +1,4 @@
-#### estimate.tree.error.rates.R
+#### estimate.dag.error.rates.R
 ####
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
@@ -8,19 +8,20 @@
 
 #estimate the error rates by "L-BFGS-B" optimization in terms of L2-error
 #INPUT:
+#dataset: a valid dataset
 #marginal.probs: marginal probabilities
 #joint.probs: joint probabilities
 #parents.pos: which event is the parent? 0 if none, a number otherwise
 #RETURN:
 #estimated.error.rates: estimated probabilities, false positive and false negative error rates
-"estimate.tree.error.rates" <-
-function(marginal.probs,joint.probs,parents.pos) {
+"estimate.dag.error.rates" <-
+function(dataset,marginal.probs,joint.probs,parents.pos) {
     #function to be optimized by "L-BFGS-B" optimization in terms of L2-error
 	f.estimation <- function(errors) {
         #set the current error rates with the starting point of the optimization being (e_pos,e_neg) = 0
         error.rates = list(error.fp=errors[1],error.fn=errors[2]);
         #estimate the observed probabilities given the error rates
-        estimated.probs = estimate.tree.probs(marginal.probs,joint.probs,parents.pos,error.rates);
+        estimated.probs = estimate.dag.probs(dataset,marginal.probs,joint.probs,parents.pos,error.rates);
         #evaluate the goodness of the estimatione by L2-error on the estimated marginal and joint probabilities
         error.estimation = sum((marginal.probs-estimated.probs$marginal.probs)^2)+sum((joint.probs-estimated.probs$joint.probs)^2);
         return(error.estimation);
@@ -33,4 +34,4 @@ function(marginal.probs,joint.probs,parents.pos) {
     return(estimated.error.rates);
 }
 
-#### end of file -- estimate.tree.error.rates.R
+#### end of file -- estimate.dag.error.rates.R

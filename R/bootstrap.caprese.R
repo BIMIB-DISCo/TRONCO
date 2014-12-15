@@ -1,20 +1,10 @@
-##################################################################################
-#                                                                                #
-# TRONCO: a tool for TRanslational ONCOlogy                                      #
-#                                                                                #
-##################################################################################
-# Copyright (c) 2014, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
-# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
-# and Daniele Ramazzotti.                                                        #
-#                                                                                #
-# All rights reserved. This program and the accompanying materials               #
-# are made available under the terms of the Eclipse Public License v1.0          #
-# which accompanies this distribution, and is available at                       #
-# http://www.eclipse.org/legal/epl-v10.html and in the include COPYING file      #
-#                                                                                #
-# Initial contributors:                                                          #
-# Giulio Caravagna, Alex Graudenzi, Mattia Longoni and Daniele Ramazzotti.       #
-##################################################################################
+#### bootstrap.caprese.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
+
 
 #perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
 #INPUT:
@@ -47,7 +37,7 @@ function(dataset, lambda, reconstructed.topology, command=c("non-parametric","pa
         	stop(err, call. = FALSE);
         }
         for (i in 1:possible.strings) {
-            curr.dataset[i,] = decimal.to.binary(i-1,ncol(dataset));
+            curr.dataset[i,] = decimal.to.binary.tree(i-1,ncol(dataset));
         }
         colnames(curr.dataset) = colnames(dataset);
         #define the samples distribution induced by the topology
@@ -67,20 +57,20 @@ function(dataset, lambda, reconstructed.topology, command=c("non-parametric","pa
     	}
     	else if(command=="parametric") {
     		#perform the sampling for the current step of bootstrap
-    		samples <- sample(1:nrow(curr.dataset),size=nrow(dataset),replace=TRUE,prob=samples.probabilities);
+    		samples <- suppressWarnings(sample(1:nrow(curr.dataset),size=nrow(dataset),replace=TRUE,prob=samples.probabilities));
         	#perform the reconstruction on the bootstrapped dataset
         	check.data = check.dataset(curr.dataset[samples,],FALSE);
     	}
         #if the reconstruction was performed without errors
         if(check.data$is.valid==TRUE) {
         	bootstrapped.dataset = check.data$dataset;
-            bootstrapped.topology = caprese.fit(bootstrapped.dataset,lambda,FALSE);
+            bootstrapped.topology = caprese.fit(bootstrapped.dataset,lambda,FALSE,FALSE);
             #set the reconstructed causal edges
             parents.pos = array(-1,c(ncol(bootstrapped.topology$dataset),1));
             for(i in 1:ncol(bootstrapped.topology$dataset)) {
             	for(j in 1:ncol(bootstrapped.topology$dataset)) {
                 	if(i!=j && bootstrapped.topology$adj.matrix[i,j]==1) {
-                    	parents.pos[j,1] = i;
+						parents.pos[j,1] = i;
                     }
                 }
             }
@@ -147,3 +137,5 @@ function(dataset, lambda, reconstructed.topology, command=c("non-parametric","pa
     bootstrap.statistics = list(reconstructed.topology=reconstructed.topology,confidence=confidence,edge.confidence=edge.confidence,bootstrap.settings=bootstrap.settings);
     return(bootstrap.statistics);
 }
+
+#### end of file -- bootstrap.caprese.R

@@ -1,89 +1,162 @@
-##################################################################################
-#                                                                                #
-# TRONCO: a tool for TRanslational ONCOlogy                                      #
-#                                                                                #
-##################################################################################
-# Copyright (c) 2014, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
-# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
-# and Daniele Ramazzotti.                                                        #
-#                                                                                #
-# All rights reserved. This program and the accompanying materials               #
-# are made available under the terms of the Eclipse Public License v1.0          #
-# which accompanies this distribution, and is available at                       #
-# http://www.eclipse.org/legal/epl-v10.html and in the include COPYING file      #
-#                                                                                #
-# Initial contributors:                                                          #
-# Giulio Caravagna, Alex Graudenzi, Mattia Longoni and Daniele Ramazzotti.       #
-##################################################################################
+#### tronco.bootstrap.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
 
-#' @import lattice
+
 #' @export tronco.bootstrap
-#' @title perform bootstrap algorithm
+#' @title perform bootstrap estimation
 #'
 #' @description
-#' \code{tronco.bootstrap} perform parametric and non-parametric bootstrap algorithms 
+#' \code{tronco.bootstrap} perform parametric and non-parametric bootstrap procedures 
 #' 
-#' @param topology A topology returned by a reconstruction algorithm
-#' @param lambda A lambda value, default is 0.5
-#' @param type The type of bootstrap performed, parametric and non parametric types are available.
-#' To specify wich type of bootstrap run type must be "parametric" or "non-parametric".
-#' @param nboot Samplig value. The grater will be the nboot value the logehr time the
-#' entire process will take to complete the computing
-#' @return
-#' A topology object with bootstrap informations added
+#' @param curr.topology A reconstructed curr.topology
+#' @param type The type of bootstrap to be performed, non-parametric and parametric types are implemented.
+#' @param nboot Number of bootstrap resampling.
+#' @return A curr.topology object with bootstrap estimation
 #' 
-tronco.bootstrap <- function(topology, lambda = 0.5, type = "non-parametric", nboot = 1000){
-   show.level <- function(topology){
-		print(topology@edge.confidence)
-		levelplot(topology@edge.confidence, xlab = "", ylab = "", 
-			scales = list(x = list(alternating = 2, rot = 90), tck = 0), 
-			main = paste("Edge confidence (", topology@bootstrap.settings$type, " bootstrap)",sep = ""))
-   }
-   
-   if(missing(topology))
-     stop("Missing parameter for tronco.bootstrap function: tronco.bootstrap(topology, lambda, type, nboot)", call. = FALSE)
-   # If the given topology is valid and contains a valid dataset and other informations.
-   if(topology@is.valid){
-   	 # If all numeric parameters are well formed.
-     if(nboot > 0){
-       if(lambda > 0 && lambda < 1){
-         if(type == "non-parametric" || type == "parametric"){
-           	
-           cat("Executing bootstrap algorithm this may take several time...\n")
-           
-           # The error rates are turned into the format required by bootstrap.caprese function.
-           error.rates <- list()
-           error.rates$error.fp <- topology@error.fp
-           error.rates$error.fn <- topology@error.fn
-           
-           # The bootstrap function of the caprese algorithm is performed.
-           boot.info <- bootstrap.caprese(topology@dataset, lambda, topology@adj.matrix, type, topology@estimated.marginal.probs, topology@estimated.cond.probs, error.rates, nboot)
-           
-           # Confidence informations are set into the topology object.
-           topology@edge.confidence <- boot.info$edge.confidence
-           topology@confidence <- boot.info$confidence
-           topology@bootstrap.settings <- boot.info$bootstrap.settings
-           topology@bootstrap <-  TRUE
-           
-           cat(paste("Executed ", type, " bootsrap with ", nboot, 
-                     " as sampling number and ", lambda, " as lambda value\n\n", sep =""))
-           
-           print(topology@edge.confidence)
-           cat("\nConfidence overall value:", boot.info$confidence$overall.value)
-           cat("\nConfidence overall frequency:", boot.info$confidence$overall.frequency)
-     		 
-         }
-         else
-           stop("Valid type of bootstrap are: non-parametric or parametric, check your typing!", call. = FALSE)
-       }
-       else
-         stop("Lambda must be in [0:1]!", call. = FALSE)
-     }
-     else
-       stop("Bootstrap number bust be greater than zero!", call. = FALSE)
-   }
-   else
-     stop("Topology object does not contain a valid CAPRESE reconstruction!", call. = FALSE)
-      
-   return(topology)
+tronco.bootstrap <- function(curr.topology=NA,dataset=NA,lambda=NA,do.boot=NA,nboot.capri=NA,pvalue=NA,reconstructed.curr.topology.pf=NA,reconstructed.curr.topology=NA,type="non-parametric",estimated.marginal.probs.pf=NA,estimated.conditional.probs.pf=NA,parents.pos.pf=NA,error.rates.pf=NA,estimated.marginal.probs=NA, estimated.conditional.probs=NA,parents.pos=NA,error.rates=NA,nboot=100) {
+	if(suppressWarnings(is.na(curr.topology))) {
+		curr.topology = topology;
+	}
+	if(is.null(curr.topology)) {
+		stop("Missing parameters for the function tronco.bootstrap",call.=FALSE);
+    }
+    #set all the needed parameters
+    if(type=="non-parametric" || type=="parametric") {
+		if(is.na(dataset)) {
+			dataset = curr.topology@dataset;
+		}
+		if(is.na(reconstructed.curr.topology)) {
+			reconstructed.curr.topology = curr.topology@adj.matrix;
+		}
+		if(curr.topology@algorithm=="CAPRESE") {
+			if(is.na(lambda)) {
+				lambda = curr.topology@parameters$lambda;
+			}
+			else {
+				if(lambda < 0 || lambda > 1) {
+					stop("The value of lambda has to be in [0:1]!",call.=FALSE);
+				}
+			}
+			if(type=="parametric") {
+				if(is.na(estimated.marginal.probs)) {
+					estimated.marginal.probs = curr.topology@marginal.probs;
+				}
+				if(is.na(estimated.conditional.probs)) {
+					estimated.conditional.probs = curr.topology@conditional.probs;
+				}
+				if(is.na(parents.pos)) {
+					parents.pos = curr.topology@parents.pos;
+				}
+				if(is.na(error.rates)) {
+					error.rates = list(error.fp=curr.topology@error.fp,error.fn=curr.topology@error.fn);
+				}
+			}
+		}
+		else if(curr.topology@algorithm=="CAPRI") {
+			if(is.na(do.boot)) {
+				do.boot = curr.topology@parameters$do.boot;
+			}
+			if(is.na(nboot.capri)) {
+			nboot.capri = curr.topology@parameters$nboot;
+			}
+			if(is.na(pvalue)) {
+				pvalue = curr.topology@parameters$pvalue;
+			}
+			else {
+				if(pvalue < 0 || lambda > 1) {
+					stop("The value of the pvalue has to be in [0:1]!",call.=FALSE);
+				}
+			}
+			if(is.na(reconstructed.curr.topology.pf)) {
+				reconstructed.curr.topology.pf = curr.topology@pf.adj.matrix;;
+			}
+			if(type=="parametric") {
+				if(is.na(estimated.marginal.probs)) {
+					estimated.marginal.probs = curr.topology@marginal.probs;
+				}
+				if(is.na(estimated.conditional.probs)) {
+					estimated.conditional.probs = curr.topology@conditional.probs;
+				}
+				if(is.na(parents.pos)) {
+					parents.pos = curr.topology@parents.pos;
+				}
+				if(is.na(error.rates)) {
+					error.rates = list(error.fp=curr.topology@error.fp,error.fn=curr.topology@error.fn);
+				}
+				if(is.na(estimated.marginal.probs.pf)) {
+					estimated.marginal.probs.pf = curr.topology@pf.marginal.probs;
+				}
+				if(is.na(estimated.conditional.probs.pf)) {
+					estimated.conditional.probs.pf = curr.topology@pf.conditional.probs;
+				}
+				if(is.na(parents.pos.pf)) {
+					parents.pos.pf = curr.topology@pf.parents.pos;
+				}
+				if(is.na(error.rates.pf)) {
+					error.rates.pf = list(error.fp=curr.topology@pf.error.fp,error.fn=curr.topology@pf.error.fn);
+				}
+			}
+		}
+    }
+    else {
+		stop("The valid types of bootstrap are: non-parametric and parametric.",call.=FALSE);
+    }
+    #perform the selected bootstrap procedure
+    cat("Executing now the bootstrap procedure, this may take a long time...\n");
+    if(curr.topology@algorithm=="CAPRESE") {
+		curr.boot = bootstrap.caprese(dataset,lambda,reconstructed.curr.topology,type,estimated.marginal.probs,estimated.conditional.probs,error.rates,nboot);
+		if(type=="non-parametric") {
+			curr.topology@confidence.np <- curr.boot$confidence;
+			curr.topology@edge.confidence.np <- curr.boot$edge.confidence;
+			curr.topology@bootstrap.settings.np <- curr.boot$bootstrap.settings;
+			curr.topology@bootstrap.np <-  TRUE;
+		}
+		else if(type=="parametric") {
+			curr.topology@confidence.p <- curr.boot$confidence;
+			curr.topology@edge.confidence.p <- curr.boot$edge.confidence;
+			curr.topology@bootstrap.settings.p <- curr.boot$bootstrap.settings;
+			curr.topology@bootstrap.p <-  TRUE;
+		}
+		cat("\nConfidence overall value:",curr.boot$confidence$overall.value);
+		cat("\nConfidence overall frequency:",curr.boot$confidence$overall.frequency);
+		cat(paste("\n\nExecuted ", type, " bootstrap with ",nboot," resampling and ",lambda," as shrinkage parameter.\n\n",sep =""));
+    }
+    else if(curr.topology@algorithm=="CAPRI") {
+		curr.boot = bootstrap.capri(dataset,do.boot,nboot.capri,pvalue,reconstructed.curr.topology.pf,reconstructed.curr.topology,type,estimated.marginal.probs.pf,estimated.conditional.probs.pf,parents.pos.pf,error.rates.pf,estimated.marginal.probs,estimated.conditional.probs,parents.pos,error.rates,nboot);
+		if(type=="non-parametric") {
+			curr.topology@confidence.np <- curr.boot$confidence$confidence.bic;
+			curr.topology@pf.confidence.np <- curr.boot$confidence$confidence.pf;
+			curr.topology@edge.confidence.np <- curr.boot$edge.confidence$edge.confidence.bic;
+			curr.topology@pf.edge.confidence.np <- curr.boot$edge.confidence$edge.confidence.pf;
+			curr.topology@bootstrap.settings.np <- curr.boot$bootstrap.settings;
+			curr.topology@bootstrap.np <- TRUE;
+		}
+		else if(type=="parametric") {
+			curr.topology@confidence.p <- curr.boot$confidence$confidence.bic;
+			curr.topology@pf.confidence.p <- curr.boot$confidence$confidence.pf;
+			curr.topology@edge.confidence.p <- curr.boot$edge.confidence$edge.confidence.bic;
+			curr.topology@pf.edge.confidence.p <- curr.boot$edge.confidence$edge.confidence.pf;
+			curr.topology@bootstrap.settings.p <- curr.boot$bootstrap.settings;
+			curr.topology@bootstrap.p <- TRUE;
+		}
+		cat("\nConfidence overall \"bic\" value:",curr.boot$confidence$confidence.bic$overall.value.bic);
+		cat("\nConfidence overall \"bic\" frequency:",curr.boot$confidence$confidence.bic$overall.frequency.bic);
+		cat("\nConfidence overall \"prima facie\" value:",curr.boot$confidence$confidence.pf$overall.value.pf);
+		cat("\nConfidence overall \"prima facie\" frequency:",curr.boot$confidence$confidence.pf$overall.frequency.pf);
+		if(do.boot==TRUE) {
+			cat(paste("\n\nExecuted ",type," bootstrap with ",nboot," resampling and ",pvalue," as pvalue for the statistical tests.\n\n",sep =""));
+		}
+		else {
+			cat(paste("\n\nExecuted ",type," bootstrap with ",nboot," resampling.\n\n",sep =""));
+		}
+    }
+    #save the reconstruction to the global workspace and return it
+    assign("curr.topology", curr.topology,envir=.GlobalEnv);
+    return(curr.topology);
 }
+
+#### end of file -- tronco.bootstrap.R

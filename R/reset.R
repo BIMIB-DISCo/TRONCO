@@ -1,63 +1,106 @@
-##################################################################################
-#                                                                                #
-# TRONCO: a tool for TRanslational ONCOlogy                                      #
-#                                                                                #
-##################################################################################
-# Copyright (c) 2014, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
-# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
-# and Daniele Ramazzotti.                                                        #
-#                                                                                #
-# All rights reserved. This program and the accompanying materials               #
-# are made available under the terms of the Eclipse Public License v1.0          #
-# which accompanies this distribution, and is available at                       #
-# http://www.eclipse.org/legal/epl-v10.html and in the include COPYING file      #
-#                                                                                #
-# Initial contributors:                                                          #
-# Giulio Caravagna, Alex Graudenzi, Mattia Longoni and Daniele Ramazzotti.       #
-##################################################################################
+#### reset.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
 
-#' @export reset.events
-#' @export reset.types
+
 #' @export reset
+#' @export reset.types
+#' @export reset.events
+#' @export reset.data.values
+#' @export reset.hypotheses
 #' @name reset
 #' @title reset
 #' @description
-#' A set of functions to reset events, types and data.values variables
-#' 
-#' @usage reset.events() 
-#' @details \code{reset.events} Resets the events variable
-#' @examples
-#' reset.events()
-reset.events <- function(){
-   assign("events", NULL, envir = .GlobalEnv)
-}
-#' @rdname reset
-#' @usage reset.types()
-#' @details \code{reset.types()} Resets the types variable
-#' @examples
-#' reset.types()
-reset.types <- function(){
-   assign("types", NULL, envir = .GlobalEnv)
-}
-reset.data.values <- function(){
-	assign("data.values", NULL, envir = .GlobalEnv)
-}
+#' A set of functions to reset types, events, data.values and hypotheses
+
 #' @rdname reset
 #' @usage reset()
-#' @details \code{reset()} Resets types, events and data.values variables
+#' @details \code{reset()} Resets settings$types, settings$events, settings$data.values, settings$visualization and settings$hypotheses
 #' @examples
 #' reset()
-reset <- function(){
-  reset.events()
-  reset.types()
-  reset.data.values()
-  if(exists("num.hypotheses")) {
-  	assign("num.hypotheses", 0, envir = .GlobalEnv)
-  }
-  if(exists("llist")) {
-  	assign("llist", vector(), envir = .GlobalEnv)
-  }
-  if(exists("hlist")) {
-  	assign("hlist", vector(), envir = .GlobalEnv)
-  }
+"reset" <-
+function() {
+	if(exists("settings")) {
+		assign("settings",NULL,envir=.GlobalEnv);
+	}
 }
+
+#' @rdname reset.types
+#' @usage reset.types()
+#' @details \code{reset.types()} Resets settings$types
+#' @examples
+#' reset.types()
+"reset.types" <-
+function() {
+	if(exists("settings")) {
+		if(length(settings$types)>0) {
+			settings$types = NULL;
+			assign("settings",settings,envir=.GlobalEnv);
+		}
+	}
+}
+
+#' @rdname reset.events
+#' @usage reset.events()
+#' @details \code{reset.events()} Resets settings$events
+#' @examples
+#' reset.events()
+"reset.events" <-
+function() {
+	if(exists("settings")) {
+		if(length(settings$events)>0) {
+			settings$events = NULL;
+			assign("settings",settings,envir=.GlobalEnv);
+		}
+	}
+}
+
+#' @rdname reset.data.values
+#' @usage reset.data.values()
+#' @details \code{reset.data.values()} Resets settings$data.values
+#' @examples
+#' reset.data.values()
+"reset.data.values" <-
+function() {
+	if(exists("settings")) {
+		if(length(settings$data.values)>0) {
+			settings$data.values = NULL;
+			assign("settings",settings,envir=.GlobalEnv);
+		}
+	}
+}
+
+#' @rdname reset.visualization
+#' @usage reset.visualization()
+#' @details \code{reset.visualization()} Resets settings$visualization
+#' @examples
+#' reset.visualization()
+"reset.visualization" <-
+function() {
+	if(exists("settings")) {
+		if(length(settings$visualization)>0) {
+			settings$visualization = NULL;
+			assign("settings",settings,envir=.GlobalEnv);
+		}
+	}
+}
+
+#' @rdname reset.hypotheses
+#' @usage reset.hypotheses()
+#' @details \code{reset.hypotheses()} Resets settings$hypotheses
+#' @examples
+#' reset.hypotheses()
+"reset.hypotheses" <-
+function() {
+	if(exists("settings")) {
+		if(length(settings$hypotheses)>0) {
+			settings$hypotheses = NULL;
+			assign("settings",settings,envir=.GlobalEnv);
+		}
+	}
+}
+
+#### end of file -- reset.R
