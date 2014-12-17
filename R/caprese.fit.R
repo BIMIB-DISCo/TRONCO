@@ -1,28 +1,37 @@
-#### caprese.fit.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
+##################################################################################
+#                                                                                #
+# TRONCO: a tool for TRanslational ONCOlogy                                      #
+#                                                                                #
+##################################################################################
+# Copyright (c) 2014, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
+# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
+# and Daniele Ramazzotti.                                                        #
+#                                                                                #
+# All rights reserved. This program and the accompanying materials               #
+# are made available under the terms of the Eclipse Public License v1.0          #
+# which accompanies this distribution, and is available at                       #
+# http://www.eclipse.org/legal/epl-v10.html and in the include COPYING file      #
+#                                                                                #
+# Initial contributors:                                                          #
+# Giulio Caravagna, Alex Graudenzi, Mattia Longoni and Daniele Ramazzotti.       #
+##################################################################################
 
 #reconstruct the best tree-like topology
 #INPUT:
 #dataset: a dataset describing a progressive phenomenon
 #lambda: shrinkage parameter (value in [0,1])
-#do.estimation: should I perform the estimation of the error rates and probabilities?
 #verbose: should I print the warnings? Yes if TRUE, no otherwise
 #RETURN:
 #topology: the reconstructed tree-like topology
 "caprese.fit" <-
-function(dataset,lambda,do.estimation,verbose) {
+function(dataset,lambda,verbose) {
 	#structure to compute the observed marginal and joint probabilities
 	pair.count <- array(0, dim=c(ncol(dataset), ncol(dataset)));
 	#compute the probabilities on the dataset
  	for(i in 1:ncol(dataset)) {
 		for(j in 1:ncol(dataset)) {
-			val1 = dataset[ ,i];
-			val2 = dataset[ ,j];
+        	val1 = dataset[ ,i];
+        	val2 = dataset[ ,j];
             pair.count[i,j] = (t(val1) %*% val2);
         }
 	}
@@ -43,28 +52,20 @@ function(dataset,lambda,do.estimation,verbose) {
             #Note: [i,j] = 1 means that i is causing j
             adj.matrix[parents.pos[i,1],i] = 1;
             #compute the conditional probability of P(CHILD=1|PARENT=1)
-            conditional.probs[i,1] = best.parents$joint.probs[parents.pos[i,1],i]/best.parents$marginal.probs[parents.pos[i]];
+        	conditional.probs[i,1] = best.parents$joint.probs[parents.pos[i,1],i]/best.parents$marginal.probs[parents.pos[i]];
         }
         #if the node has no parent, its conditional probability is set to 
         else {
-			conditional.probs[i,1] = 1;
-        }
-    }
-    if(do.estimation) {
-		#estimate the error rates and, given them, the probabilities
-		estimated.error.rates = estimate.tree.error.rates(best.parents$marginal.probs,best.parents$joint.probs,parents.pos);
-		estimated.probabilities = estimate.tree.probs(best.parents$marginal.probs,best.parents$joint.probs,parents.pos,estimated.error.rates);
+        	conditional.probs[i,1] = 1;
+    	}
 	}
-	else {
-		estimated.error.rates = list(error.fp=NA,error.fn=NA);
-		estimated.probabilities = list(marginal.probs=NA,joint.probs=NA,conditional.probs=NA);
-	}
+	#estimate the error rates and, given them, the probabilities
+    estimated.error.rates = estimate.tree.error.rates(best.parents$marginal.probs,best.parents$joint.probs,parents.pos);
+    estimated.probabilities = estimate.tree.probs(best.parents$marginal.probs,best.parents$joint.probs,parents.pos,estimated.error.rates);
     #structures where to save the probabilities
     probabilities = list(marginal.probs=best.parents$marginal.probs,joint.probs=best.parents$joint.probs,conditional.probs=conditional.probs,estimated.marginal.probs=estimated.probabilities$marginal.probs,estimated.joint.probs=estimated.probabilities$joint.probs,estimated.conditional.probs=estimated.probabilities$conditional.probs);
-    parameters = list(algorithm="CAPRESE",lambda=lambda);
+    parameters = list(lambda=lambda);
     #return the results
-    topology = list(dataset=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=estimated.error.rates,confidence=best.parents$pr.score,adj.matrix=adj.matrix,parameters=parameters);
+    topology = list(dataset=dataset, probabilities=probabilities,error.rates=estimated.error.rates,pr.score=best.parents$pr.score,adj.matrix=adj.matrix,parameters=parameters);
     return(topology);
 }
-
-#### end of file -- caprese.fit.R

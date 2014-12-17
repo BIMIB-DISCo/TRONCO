@@ -16,39 +16,22 @@
 # Giulio Caravagna, Alex Graudenzi, Mattia Longoni and Daniele Ramazzotti.       #
 ##################################################################################
 
-# Check if there is a type with the given tipe.name in type variable.
-search.type <- function(type.name){
-	types <- types
-  	for(i in 1:nrow(types)){
-    	if(toString(types[i,"type"]) == type.name)
-    	  return(TRUE)
- 	 }
-  	return(FALSE)
+library(lattice)
+#' @import lattice
+#' @export tronco.bootstrap.show
+#' @title show bootstrapping results
+#'
+#' @description
+#' \code{tronco.bootstrap.show} show bootstrapping results. Requires that you already executed tronco.bootstrap 
+#' 
+#' @param topology A topology returned by a reconstruction algorithm
+tronco.bootstrap.show <- function(topology){
+  if(missing(topology))
+    stop("Missing parameter for tronco.bootstrap.show function: tronco.bootstrap.show(topology)", call. = FALSE)
+	if(!topology@bootstrap)
+      stop("To show confidence information bootstrap execution is needed! see: tronco.bootstrap function!", call. = FALSE)
+	print(topology@edge.confidence)
+	levelplot(topology@edge.confidence, xlab = "", ylab = "", 
+	scales = list(x = list(alternating = 2, rot = 90), tck = 0), 
+	main = paste("Edge confidence (", topology@bootstrap.settings$type, " bootstrap)",sep = ""))
 }
-
-# Search type information for the given type.name.
-search.type.info <- function(name.type){
-	types <- types
-  	for(j in 1:nrow(types))
-    	if(types[j,]$type == name.type)
-    		return(types[j,])
-}
-
-# Search event informations for the given column.
-search.event <- function(column.index){
-	events <- events
-  	column.index <- as.integer(column.index)
-  	for(j in 1:nrow(events))
-    	if(events[j,]$column == column.index)
-      		return(events[j,])
-  	stop(paste("Events definition is not complete!: events for column ", toString(column.index), " not found!", sep = ""), call.= FALSE)
-}
-
-exists.event <- function(event.name){
-	events <- events
-  	for(j in 1:nrow(events))
-    	if(events[j,]$event == event.name)
-      		return(events[j,])
-  	return(NULL)
-}
-

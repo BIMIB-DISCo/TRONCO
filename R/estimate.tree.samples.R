@@ -1,10 +1,20 @@
-#### estimate.tree.samples.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
+##################################################################################
+#                                                                                #
+# TRONCO: a tool for TRanslational ONCOlogy                                      #
+#                                                                                #
+##################################################################################
+# Copyright (c) 2014, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
+# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
+# and Daniele Ramazzotti.                                                        #
+#                                                                                #
+# All rights reserved. This program and the accompanying materials               #
+# are made available under the terms of the Eclipse Public License v1.0          #
+# which accompanies this distribution, and is available at                       #
+# http://www.eclipse.org/legal/epl-v10.html and in the include COPYING file      #
+#                                                                                #
+# Initial contributors:                                                          #
+# Giulio Caravagna, Alex Graudenzi, Mattia Longoni and Daniele Ramazzotti.       #
+##################################################################################
 
 #estimate the probability of observing each sample in the dataset given the reconstructed topology
 #INPUT:
@@ -90,10 +100,10 @@
                             #I can not have a child without its parent
                             curr.level.parent = curr.parents[curr.level.nodes];
                             for (p in 1:length(curr.level.parent)) {
-								if(dataset[i,curr.level.parent[p]]==0 && dataset[i,curr.entry[curr.level.nodes[p]]]==1) {
-									is.valid = FALSE;
-									break;
-								}
+                            	if(dataset[i,curr.level.parent[p]]==0 && dataset[i,curr.entry[curr.level.nodes[p]]]==1) {
+                                	is.valid = FALSE;
+                                	break;
+                            	}
                             }
                         }
                         #if the sample is valid
@@ -101,12 +111,12 @@
                             #add the probability of each edge
                             curr.level.parent = curr.parents[curr.level.nodes];
                             for (p in 1:length(curr.level.parent)) {
-								if(dataset[i,curr.level.parent[p]]==1 && dataset[i,curr.entry[curr.level.nodes[p]]]==0) {
-									curr.sample.probability = curr.sample.probability * (1 - estimated.conditional.probabilities[curr.entry[curr.level.nodes[p]],1]);
-								}
-								else if(dataset[i,curr.level.parent[p]]==1 && dataset[i,curr.entry[curr.level.nodes[p]]]==1) {
-									curr.sample.probability = curr.sample.probability * estimated.conditional.probabilities[curr.entry[curr.level.nodes[p]],1];
-								}
+                            	if(dataset[i,curr.level.parent[p]]==1 && dataset[i,curr.entry[curr.level.nodes[p]]]==0) {
+                                    curr.sample.probability = curr.sample.probability * (1 - estimated.conditional.probabilities[curr.entry[curr.level.nodes[p]],1]);
+                            	}
+                                else if(dataset[i,curr.level.parent[p]]==1 && dataset[i,curr.entry[curr.level.nodes[p]]]==1) {
+                                    curr.sample.probability = curr.sample.probability * estimated.conditional.probabilities[curr.entry[curr.level.nodes[p]],1];
+                                }
                             }
                         }
                     }
@@ -144,5 +154,3 @@
     probabilities[,1] = as.numeric(as.vector(probabilities)%*%errors.matrix);
     return(probabilities);
 }
-
-#### end of file -- estimate.tree.samples.R
