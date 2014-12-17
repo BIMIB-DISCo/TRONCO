@@ -1,89 +1,74 @@
-#### topology.class.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
+##################################################################################
+#                                                                                #
+# TRONCO: a tool for TRanslational ONCOlogy                                      #
+#                                                                                #
+##################################################################################
+# Copyright (c) 2014, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
+# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
+# and Daniele Ramazzotti.                                                        #
+#                                                                                #
+# All rights reserved. This program and the accompanying materials               #
+# are made available under the terms of the Eclipse Public License v1.0          #
+# which accompanies this distribution, and is available at                       #
+# http://www.eclipse.org/legal/epl-v10.html and in the include COPYING file      #
+#                                                                                #
+# Initial contributors:                                                          #
+# Giulio Caravagna, Alex Graudenzi, Mattia Longoni and Daniele Ramazzotti.       #
+##################################################################################
 
 #' @import methods
 # The topology class definition
 topology = NULL;
 setClass("topology",
-	representation(
-		#the input valid dataset
-		dataset = "data.frame",
-		#the observed and estimated probabilities
-		marginal.probs = "matrix",
-		joint.probs = "matrix",
-		conditional.probs = "matrix",
-		estimated.marginal.probs = "matrix",
-		estimated.joint.probs = "matrix",
-		estimated.conditional.probs = "matrix",
-		#the observed and estimated probabilities for the prima facie topology
-		pf.marginal.probs = "matrix",
-		pf.joint.probs = "matrix",
-		pf.conditional.probs = "matrix",
-		pf.estimated.marginal.probs = "matrix",
-		pf.estimated.joint.probs = "matrix",
-		pf.estimated.conditional.probs = "matrix",
-		#the reconstructed topology
-		adj.matrix = "matrix",
-		parents.pos = "matrix",
-		#the reconstructed prima facie topology
-		pf.adj.matrix = "matrix",
-		pf.parents.pos = "matrix",
-		#the estimated error rates for the reconstructed and prima facie topologies
-		error.fp = "numeric",
-		error.fn = "numeric",
-		pf.error.fp = "numeric",
-		pf.error.fn = "numeric",
-		#confidence in terms of prima facie scores
-		confidence.scores = "list",
-		#confidence in terms of non-parametric bootstrap
-		confidence.np = "list",
-		pf.confidence.np = "list",
-		edge.confidence.np = "matrix",
-		pf.edge.confidence.np = "matrix",
-		bootstrap.settings.np = "list",
-		bootstrap.np = "logical",
-		#confidence in terms of parametric bootstrap
-		confidence.p = "list",
-		pf.confidence.p = "list",
-		edge.confidence.p = "matrix",
-		pf.edge.confidence.p = "matrix",
-		bootstrap.settings.p = "list",
-		bootstrap.p = "logical",
-		#parameters
-		parameters = "list",
-		algorithm = "character"))
+		representation(			  
+						dataset = "data.frame",
+                        
+					   	marginal.probs = "matrix",
+					   	joint.probs = "matrix",
+					    cond.probs = "matrix",
+                       
+				 		estimated.marginal.probs = "matrix",
+					    estimated.joint.probs = "matrix",
+					    estimated.cond.probs = "matrix",
+                        edge.confidence = "matrix",
+                        confidence = "list",
+         
+					    pr.score = "matrix",
+					    adj.matrix = "matrix",
+					    adj.matrix.bic = "matrix",
+            
+					    is.valid = "logical",
+                        invalid.events = "list",
+                       
+					    error.fp = "numeric",
+                        error.fn = "numeric",
+                        bootstrap.settings = "list",
+                        bootstrap = "logical",
+                        
+                        algorithm = "character"))
 
-# A summary of the topology is displayed for this object
+# A summary is displayed if the object name of class 
+# topology is written in the R console.
 setMethod("show", "topology",
-	function(object) {
-		topology <- c();
-		adj.matrix <- object@adj.matrix;
-		names <- colnames(adj.matrix);
-		for(i in 1:nrow(adj.matrix)) {
-			for(j in 1:ncol(adj.matrix)) {
-				if(adj.matrix[i,j] == 1) {
-					topology <- c(topology,paste(names[i]," -> ",names[j],"\n"));
-				}
-			}
-		}
-		cat(object@algorithm,"progression model of",ncol(adj.matrix),"events.\n");
-		cat("\n ");
-		cat(topology);
-		if(object@algorithm == "CAPRESE") {
-			cat("\n Estimated false positives error rate:", object@error.fp);
-			cat("\n Estimated false negative error rate:", object@error.fn);
-		}
-        else if(object@algorithm == "CAPRI") {
-			cat("\n Estimated false positives \"bic\"error rate:", object@error.fp);
-			cat("\n Estimated false negative \"bic\" error rate:", object@error.fp);
-			cat("\n Estimated false positives \"prima facie\" error rate:", object@pf.error.fp);
-			cat("\n Estimated false negative \"prima facie\" error rate:", object@pf.error.fn);
+		  function(object){
+		  	tree <- c()
+		  	adj.matrix <- object@adj.matrix
+		  	names <- colnames(adj.matrix)
+		  	for(i in 1:nrow(adj.matrix))
+		  		for(j in 1:ncol(adj.matrix))
+		  			if(adj.matrix[i,j] == 1)
+		  				tree <- c(tree, 
+		  						  paste(names[i], " -> ", names[j], "\n"))
+		  	cat(" Tree progression model with ", ncol(adj.matrix), "events \n")
+		  	cat(" ")
+		  	cat(tree)
+		  	cat("\n Estimated false positives error rate:", object@error.fp)
+		  	cat("\n Estimated false negative error rate:", object@error.fn)
+		  	
+        if(object@bootstrap){
+          cat("\n")
+          cat("\n Executed", object@bootstrap.settings$type, "bootstrap, nboot:", topology@bootstrap.settings$nboot)
+          cat("\n Confidence overall value:", object@confidence$overall.value)
+          cat("\n Confidence overall frequency:", object@confidence$overall.frequency)
         }
-	})
-
-#### end of file -- topology.class.R
+})
