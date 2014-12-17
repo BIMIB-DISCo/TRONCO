@@ -1,10 +1,17 @@
+#### events.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
+
+
 #' @name events
-#' @title Events collection for Ovarian cancer CGH data
-#' @description 
-#' This example contains a collection of events associeted to the
-#' Ovarian cancer CGH dataset
+#' @title A set of events for the Ovarian cancer CGH dataset
+#' @description This example contains the events associated to the Ovarian cancer CGH dataset
 #' @docType data
-# @usage events.load("data/events.txt")
-#' @format
-#' An example with 7 events
+#' @usage events.load("events")
+#' @format An example of 7 events 
 NULL
+
+#### end of file -- events.R

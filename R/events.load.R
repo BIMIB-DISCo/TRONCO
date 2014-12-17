@@ -1,100 +1,95 @@
-##################################################################################
-#                                                                                #
-# TRONCO: a tool for TRanslational ONCOlogy                                      #
-#                                                                                #
-##################################################################################
-# Copyright (c) 2014, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
-# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
-# and Daniele Ramazzotti.                                                        #
-#                                                                                #
-# All rights reserved. This program and the accompanying materials               #
-# are made available under the terms of the Eclipse Public License v1.0          #
-# which accompanies this distribution, and is available at                       #
-# http://www.eclipse.org/legal/epl-v10.html and in the include COPYING file      #
-#                                                                                #
-# Initial contributors:                                                          #
-# Giulio Caravagna, Alex Graudenzi, Mattia Longoni and Daniele Ramazzotti.       #
-##################################################################################
+#### events.load.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
+
 
 #' @export events.load
-#' @title load a set of events from file
+#' @title load a set of events (e.g., a copy number gain for 8q+) from a file
 #'
 #' @description
-#' \code{events.load} sets a global data frame 'events' that contains all event definitions found in a specified file or dataset to be validated. This is a way to automatise calls to function \code{events.add} for a bunch of events.
+#' \code{events.load} sets to the global data frame 'settings' the parameter 'events' where the settings for the events are defined in a specified file or dataset to be validated.
 #'
 #' @details
-#' \code{events.load} load a set of events from a given file. The input file must be structured as a CSV file, where each event is defined on a separate line in the format: eventName, typeName, columnNumber.
+#' \code{events.load} defines a new set of events (i.e., mutations) from a specified file or dataset. The specified file or dataset must be structured as a csv file. All the definitions are a pair of entries specified as follow:
 #' 
-#' @seealso \code{\link{events.add}}
+#' eventName, typeName, columnNumber
+#'  ...     , ...     , ...
+#' 
 #' @param data.input The input file path or a dataset to be validated.
 #' 
-events.load <- function(data.input){
-	
-  err <- ""
-  message <- "The definition file contains errors!"
-  
-  if(missing(data.input))
-    stop("Missing parameter for events.load function: events.load(data.input)", call. = FALSE)
-  
-  	 # Types must be defined before the event definition
-    if(exists("types") && (length(types) > 0)){
-    	
-      types <- types
-      # If a global events variable is found, the new definition is queued to the definitions found.
-      if(exists("events") && (length(events) > 0)){
-      	events <- events
-        
-      	if(is.data.frame(data.input))
-      	  events.file <- data.input
-        else{
-          # If the pathname is correct
-          if(file.exists(data.input)){
-          	# Definition file may contain error such as the lack of a comma or columns, a try-catch manages this.
-            err <- tryCatch( events.file <- suppressWarnings(read.table(data.input, sep = ",", col.names = c("event", "type", "column"), stringsAsFactors = FALSE)),
-                      error = function(e) err <- message)
-            if(toString(err) == message)
-              stop(err, call. = FALSE)
-          }else
-            stop("File not found!", call. = FALSE)
-        }
-      	if(nrow(events.file) > 0)
-      	  # The new definitions are queued.   
-      	  events.local <- rbind(events, events.file)
-        else
-      	  stop("Empty set of events at input file path or dataset!", call. = FALSE)
-      }
-      else{
-        if(is.data.frame(data.input))
-          events.local <- data.input
-        else{
-          # If the pathname is correct
-          if(file.exists(data.input)){
-            err <- tryCatch( events.local <- suppressWarnings(read.table(data.input, sep = ",", col.names = c("event", "type", "column"), stringsAsFactors = FALSE)),
-                      error = function(e) err <- message)
-            if(toString(err) == message)
-              stop(err, call. = FALSE)
-          }else
-            stop("File not found!", call. = FALSE)
-        }
-        if(nrow(events.local) == 0)
-          stop("Empty set of events at input file pathor dataset!", call. = FALSE)
-      }
-      
-      # The user is free to leave spaces between each element in the definition, definitions file is more clear this way.
-      events.local <- trim.events(events.local)
-      
-      
-      # The check function perform consistency and correctness checks.
-      events.local <- check.events(events.local, types, TRUE)
-      
-      
-      for(i in 1:nrow(events.local))
-        cat(paste("Added event \"", events.local[i, "event"] , "\" of type \"", events.local[i, "type"], "\" (color: \"", 
-        	toString(search.type.info(events.local[i, "type"])[,"color"]),"\"), dataset column \"", events.local[i, "column"],"\"\n", sep =""))
-      
-      assign("events", events.local, envir = .GlobalEnv)
-
-    }else
-      stop("Types not defined!", call. = FALSE)
-  
+#' @seealso \code{\link{events.add}}
+#' 
+"events.load" <-
+function(data.input) {
+	#check if all the input parameters are given
+	if(missing(data.input)) {
+		stop("Missing parameter for the function events.load: events.load(data.input).", call.=FALSE);
+	}
+    #otherwise, I can add the new event
+    else {
+    	#types must be defined before the events definition
+    	if(exists("settings") && (length(settings$types)>0)) {
+    		types <- settings$types;
+	    	#if the events are given as a data frame
+    		if(is.data.frame(data.input)) {
+    			events.input <- data.input;
+    		}
+	    	#if the events are given as a file
+    		else {
+    			#if the file name is correct, get the file
+    			if(file.exists(data.input)) {
+    				#set the error message
+    				err <- "";
+    				message <- "Errors in the definition of the events!";
+    				#the definition file may contain errors in the format, hence a try-catch statement is necessary
+    				err <- tryCatch(events.input <- suppressWarnings(read.table(data.input,sep = ",",col.names=c("event", "type", "column"),stringsAsFactors=FALSE)),error=function(e) err <- message);
+    				if(toString(err)==message) {
+    					stop(err,call.=FALSE);
+    				}
+    			}
+	    		#otherwise, show an error message
+    			else {
+    				stop("The input file can not be found!", call.=FALSE);
+    			}
+		}
+		#if a global events variable is found, the new definition is added in it
+    		if(length(settings$events)>0) {
+    			#add the new events to the definitions if any
+    			if(nrow(events.input)>0) {
+    	    		new.event <- rbind(settings$events,events.input);
+			}
+			else {
+				stop("The input file or dataset is empty!",call.=FALSE);
+ 			}
+		}
+ 		#otherwise, I create the new definition from scratch
+		else {
+ 			#set the new events to the definitions
+    			if(nrow(events.input)>0) {
+    				new.event <- events.input;
+			}
+			else {
+				stop("The input file or dataset is empty!",call.=FALSE);
+    	  		}
+    	  	}
+    	  	#the user is free to leave spaces between each element in the definition, the definitions file looks more clear this way
+    	  	new.event <- trim.events(new.event);
+    	  	#the check function performs checks for consistency and correctness
+    	  	new.event <- check.events(new.event,types);
+		#add the new type to global environment
+		for(i in 1:nrow(new.event)) {
+			cat(paste("Adding event \"",new.event[i,"event"],"\" of type \"",new.event[i,"type"],"\" (color: \"",toString(search.type.info(new.event[i,"type"])[,"color"]),"\"), dataset column \"",new.event[i,"column"],"\"\n",sep =""));
+		}
+		settings$events = new.event;
+		assign("settings",settings,envir=.GlobalEnv);
+    	}
+    	else {
+    		stop("The types must be defined before the events definition!",call.=FALSE);
+  		}
+  	}
 }
+
+#### end of file -- events.load.R

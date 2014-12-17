@@ -1,20 +1,10 @@
-##################################################################################
-#                                                                                #
-# TRONCO: a tool for TRanslational ONCOlogy                                      #
-#                                                                                #
-##################################################################################
-# Copyright (c) 2014, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
-# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
-# and Daniele Ramazzotti.                                                        #
-#                                                                                #
-# All rights reserved. This program and the accompanying materials               #
-# are made available under the terms of the Eclipse Public License v1.0          #
-# which accompanies this distribution, and is available at                       #
-# http://www.eclipse.org/legal/epl-v10.html and in the include COPYING file      #
-#                                                                                #
-# Initial contributors:                                                          #
-# Giulio Caravagna, Alex Graudenzi, Mattia Longoni and Daniele Ramazzotti.       #
-##################################################################################
+#### get.tree.scores.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
+
 
 #compute the probability raising based scores
 #INPUT:
@@ -42,3 +32,5 @@ function(marginal.probs,joint.probs,lambda) {
 	scores = list(marginal.probs=marginal.probs,joint.probs=joint.probs,pr.score=pr.score);
 	return(scores);
 }
+
+#### end of file -- get.tree.scores.R

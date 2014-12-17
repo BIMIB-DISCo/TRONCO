@@ -1,4 +1,4 @@
-#### estimate.tree.samples.R
+#### estimate.dag.samples.R
 ####
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
@@ -12,30 +12,41 @@
 #reconstructed.topology: the reconstructed topology
 #estimated.marginal.probabilities: estimated marginal probabilities of the events
 #estimated.conditional.probabilities: estimated conditional probabilities of the events
+#parents.pos: position of the parents of each node
 #error.rates: error rates for false positives and false negatives
 #RETURN:
 #probabilities: probability of each sample
-"estimate.tree.samples" <- function(dataset, reconstructed.topology, estimated.marginal.probabilities, estimated.conditional.probabilities, error.rates) {
+"estimate.dag.samples" <- function(dataset, reconstructed.topology, estimated.marginal.probabilities, estimated.conditional.probabilities, parents.pos, error.rates) {
     #structure where to save the probabilities of the samples
     probabilities = array(-1,c(nrow(dataset),1));
+    #compute the position of the latest parent and its conditional probability for each node
+    last.parent.pos = array(-1,c(nrow(parents.pos),1));
+    curr.estimated.conditional.probabilities = array(1,c(nrow(estimated.conditional.probabilities),1));
+	for (i in 1:length(parents.pos)) {
+		if(length(parents.pos[[i,1]])!=1 || parents.pos[[i,1]]!=-1) {
+			curr.last.parent = which.min(estimated.marginal.probabilities[parents.pos[[i,1]],1]);
+			last.parent.pos[i,1] = parents.pos[[i,1]][curr.last.parent[1]];
+			curr.estimated.conditional.probabilities[i,1] = estimated.conditional.probabilities[[i,1]][curr.last.parent[1]];
+		}
+	}
     #topological properties:
-    #1. tree number
-    #2. parent
-    #3. level in the tree
+    #1. progression number
+    #2. latest parent
+    #3. level in the progression
     topology.structure = array(0,c(nrow(reconstructed.topology),3));
-    #go through the subtrees within the topology of four 
-    tree.count = 0;
+    #go through the subtrees within the topology
+    progression.count = 0;
     for (i in 1:nrow(reconstructed.topology)) {
         #if node i has no parents, it is a root
         if(length(which(reconstructed.topology[,i]==1))==0) {
-            tree.count = tree.count + 1;
+            progression.count = progression.count + 1;
             level = 1;
             #set the parameters for the root
-            topology.structure[i,1] = tree.count;
+            topology.structure[i,1] = progression.count;
             topology.structure[i,2] = -1;
             topology.structure[i,3] = level;
             curr.node = i;
-            #go through this tree
+            #go through this progression
             while (length(curr.node)>0) {
                 #move to the next level
                 level = level + 1;
@@ -45,10 +56,12 @@
                     if(length(curr.new.node)>0) {
                         new.node = c(new.node,curr.new.node);
                         for (k in 1:length(curr.new.node)) {
-                            #number of the current subtree
-                            topology.structure[curr.new.node[k],1] = tree.count;
+                            #number of the current subprogression
+                            topology.structure[curr.new.node[k],1] = progression.count;
                             #parent of the current node
-                            topology.structure[curr.new.node[k],2] = curr.node[j];
+                            if(last.parent.pos[curr.new.node[k],1]==curr.node[j]) {
+                            		topology.structure[curr.new.node[k],2] = curr.node[j];
+                            }
                             #level of this node
                             topology.structure[curr.new.node[k],3] = level;
                         }
@@ -61,20 +74,20 @@
     #go through the dataset and evalutate the probability of each sample
     for (i in 1:nrow(dataset)) {
         sample.probability = 1;
-        for (j in 1:tree.count) {
-            #probability of this subtree (without any knowledge, I set it to 1)
+        for (j in 1:progression.count) {
+            #probability of this subprogression (without any knowledge, I set it to 1)
             curr.sample.probability = 1;
-            #entries referring to this subtree
+            #entries referring to this subprogression
             curr.entry = which(topology.structure[,1]==j);
-            #samples of each element of this subtree
+            #samples of each element of this subprogression
             curr.sample = dataset[i,curr.entry];
-            #parents of each element of this subtree
+            #parents of each element of this subprogression
             curr.parents = topology.structure[curr.entry,2];
-            #level of each element of this subtree
+            #level of each element of this subprogression
             curr.levels = topology.structure[curr.entry,3];
-            #set the probability as the one of the root of this tree
+            #set the probability as the one of the root of this progression
             curr.sample.probability = curr.sample.probability * estimated.marginal.probabilities[curr.entry[which(curr.levels==1,arr.ind=TRUE)],1];
-            #set the maximum level of this subtree
+            #set the maximum level of this subprogression
             max.level = curr.levels[which.max(curr.levels)];
             #if I have at least one event in this sample
             if(length(curr.sample[curr.sample==1])>0) {
@@ -102,10 +115,10 @@
                             curr.level.parent = curr.parents[curr.level.nodes];
                             for (p in 1:length(curr.level.parent)) {
 								if(dataset[i,curr.level.parent[p]]==1 && dataset[i,curr.entry[curr.level.nodes[p]]]==0) {
-									curr.sample.probability = curr.sample.probability * (1 - estimated.conditional.probabilities[curr.entry[curr.level.nodes[p]],1]);
+									curr.sample.probability = curr.sample.probability * (1 - curr.estimated.conditional.probabilities[curr.entry[curr.level.nodes[p]],1]);
 								}
 								else if(dataset[i,curr.level.parent[p]]==1 && dataset[i,curr.entry[curr.level.nodes[p]]]==1) {
-									curr.sample.probability = curr.sample.probability * estimated.conditional.probabilities[curr.entry[curr.level.nodes[p]],1];
+                                    curr.sample.probability = curr.sample.probability * curr.estimated.conditional.probabilities[curr.entry[curr.level.nodes[p]],1];
 								}
                             }
                         }
@@ -120,7 +133,7 @@
                     break;
                 }
             }
-            #if this sample has no events for this tree
+            #if this sample has no events for this progression
             else {
                 curr.sample.probability = 1 - curr.sample.probability;
             }
@@ -145,4 +158,4 @@
     return(probabilities);
 }
 
-#### end of file -- estimate.tree.samples.R
+#### end of file -- estimate.dag.samples.R
