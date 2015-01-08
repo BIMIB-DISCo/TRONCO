@@ -1,4 +1,4 @@
-#### get.prima.facie.parents.R
+#### get.prima.facie.parents.do.boot.R
 ####
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
@@ -6,19 +6,20 @@
 #### information.
 
 
-#select the set of the prima facie parents for each node based on Suppes' definition of causation
+#select the set of the prima facie parents (with bootstrap) for each node based on Suppes' definition of causation
 #INPUT:
 #dataset: a valid dataset
 #nboot: integer number (greater than 0) of bootstrap sampling to be performed
 #pvalue: pvalue for the tests (value between 0 and 1)
+#adj.matrix: adjacency matrix of the initially valid edges
 #RETURN:
-#prima.facie.parents: list of the set of prima facie parents for each node (if any)
-"get.prima.facie.parents" <-
-function(dataset, nboot, pvalue) {
+#prima.facie.parents: list of the set (if any) of prima facie parents for each node
+"get.prima.facie.parents.do.boot" <-
+function(dataset, nboot, pvalue, adj.matrix) {
 	#compute a robust estimation of the scores using rejection sampling bootstrap
-	scores = get.bootstapped.scores(dataset,nboot);
+	scores = get.bootstapped.scores(dataset,nboot,adj.matrix);
     #remove all the edges not representing a prima facie causes
-    prima.facie.topology = get.prima.facie.causes(scores$marginal.probs.distributions,scores$prima.facie.model.distributions,scores$prima.facie.null.distributions,pvalue);
+    prima.facie.topology = get.prima.facie.causes.do.boot(adj.matrix,scores$marginal.probs.distributions,scores$prima.facie.model.distributions,scores$prima.facie.null.distributions,pvalue);
     #compute the observed and joint probabilities from the bootstrapped values
     marginal.probs = array(-1,dim=c(ncol(dataset),1));
     joint.probs = array(-1,dim=c(ncol(dataset),ncol(dataset)));
@@ -36,4 +37,4 @@ function(dataset, nboot, pvalue) {
     return(prima.facie.parents);
 }
 
-#### end of file -- get.prima.facie.parents.R
+#### end of file -- get.prima.facie.parents.do.boot.R

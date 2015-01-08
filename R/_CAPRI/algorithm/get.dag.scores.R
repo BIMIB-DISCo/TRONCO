@@ -9,10 +9,11 @@
 #compute the observed probabilities and the prima facie scores on the dataset
 #INPUT:
 #dataset: a valid dataset
+#adj.matrix: adjacency matrix of the initially valid edges
 #RETURN:
 #scores: observed probabilities and prima facie scores
 "get.dag.scores" <-
-function(dataset) {
+function(dataset, adj.matrix) {
     #structure to save the positive prima facie scores
     prima.facie.model <- array(-1, dim=c(ncol(dataset), ncol(dataset)));
     prima.facie.null <- array(-1, dim=c(ncol(dataset), ncol(dataset)));
@@ -33,9 +34,9 @@ function(dataset) {
 	#compute the prima facie errors based on the probability raising model
 	for(i in 1:nrow(prima.facie.model)) {
 	    for(j in i:ncol(prima.facie.model)) {
-            #the scores are saved in the convention of the adjacency matrix, i.e. [j,i] means j is causing i
-            #the diagonal (self cause) has not to be considered
-            if(i!=j) {
+            #the scores are saved in the convention of the adjacency matrix, i.e., [i,j] means i is causing j
+            #the diagonal (self cause) and the other invalid edges have not to be considered
+            if(adj.matrix[i,j]!=0) {
                 #check if the connections from j to i and from i to j can be evaluated on this dataset
                 if(marginal.probs[i]>0 && marginal.probs[i]<1 && marginal.probs[j]>0 && marginal.probs[j]<1) {
                     #check if the two events i and j are distinguishable
@@ -48,10 +49,6 @@ function(dataset) {
                         prima.facie.null[j,i] = (marginal.probs[i]-joint.probs[i,j])/(1-marginal.probs[j]);
                     }
                 }
-            }
-            else {
-                prima.facie.model[i,j] = 1;
-                prima.facie.null[i,j] = 0;
             }
 	    }
 	}

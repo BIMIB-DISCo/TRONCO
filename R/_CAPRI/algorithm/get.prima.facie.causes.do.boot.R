@@ -1,4 +1,4 @@
-#### get.prima.facie.causes.R
+#### get.prima.facie.causes.do.boot.R
 ####
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
@@ -8,18 +8,15 @@
 
 #select the best set of prima facie causes per node
 #INPUT:
+#adj.matrix: adjacency matrix of the initially valid edges
 #marginal.probs.distributions: distributions of the bootstrapped marginal probabilities
 #prima.facie.model.distributions: distributions of the prima facie model
 #prima.facie.null.distributions: distributions of the prima facie null
 #pvalue: minimum pvalue for the Mann-Whitney U tests to be significant
 #RETURN:
 #prima.facie.topology: list describing the topology of the prima facie causes
-"get.prima.facie.causes" <-
-function(marginal.probs.distributions, prima.facie.model.distributions, prima.facie.null.distributions, pvalue) {
-    #structure to save the adjacency matrix of the prima facie causes
-    #the matrix is complete: all the edges are plausible causations except for the diagonal ones (self cause)
-    adj.matrix <- array(1, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
-    adj.matrix[row(adj.matrix)==col(adj.matrix)] <- 0;
+"get.prima.facie.causes.do.boot" <-
+function(adj.matrix, marginal.probs.distributions, prima.facie.model.distributions, prima.facie.null.distributions, pvalue) {
     #structure to save the confidence of the edges
     edge.confidence.matrix <- array(list(array(-1, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)))), c(2,1));
     #verify Suppes' conditions for prima facie causes
@@ -41,4 +38,5 @@ function(marginal.probs.distributions, prima.facie.model.distributions, prima.fa
     return(prima.facie.topology);
 }
 
-#### end of file -- get.prima.facie.causes.R
+#### end of file -- get.prima.facie.causes.do.boot.R
+ 

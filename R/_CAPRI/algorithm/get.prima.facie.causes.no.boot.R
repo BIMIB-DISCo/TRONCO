@@ -8,17 +8,14 @@
 
 #select the best set of prima facie causes per node without bootstrap
 #INPUT:
+#adj.matrix: adjacency matrix of the initially valid edges
 #marginal.probs: marginal probabilities
 #prima.facie.model: prima facie model
 #prima.facie.null: prima facie null
 #RETURN:
 #prima.facie.topology: adjacency matrix of the prima facie causes
 "get.prima.facie.causes.no.boot" <-
-function(marginal.probs, prima.facie.model, prima.facie.null) {
-    #structure to save the adjacency matrix of the prima facie causes
-    #the matrix is complete: all the edges are plausible causations except for the diagonal ones (self cause)
-    adj.matrix <- array(1, c(ncol(prima.facie.model),ncol(prima.facie.model)));
-    adj.matrix[row(adj.matrix)==col(adj.matrix)] <- 0;
+function(adj.matrix, marginal.probs, prima.facie.model, prima.facie.null) {
     #verify Suppes' conditions for prima facie causes
     #i.e., i --> j implies P(i)>P(j) (temporal priority) and P(j|i)>P(j|not i) (probability raising)
     #verify the temporal priority condition
