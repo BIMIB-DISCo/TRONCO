@@ -1,4 +1,4 @@
-#### verify.temporal.priority.R
+#### verify.temporal.priority.do.boot.R
 ####
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
@@ -14,15 +14,15 @@
 #edge.confidence.matrix: matrix of the confidence of each edge
 #RETURN:
 #temporal.priority: list describing the causes where temporal priority is verified
-"verify.temporal.priority" <-
+"verify.temporal.priority.do.boot" <-
 function(marginal.probs.distributions, pvalue, adj.matrix, edge.confidence.matrix) {
     #evalutate the temporal priority condition for each par of edges
     not.ordered = list();
     counter = 0;
     for(i in 1:nrow(adj.matrix)) {
         for(j in i:ncol(adj.matrix)) {
-            #if this edge is valid (no self causes)
-            if(i!=j) {
+            #the diagonal (self cause) and the other invalid edges have not to be considered
+            if(adj.matrix[i,j]!=0 || adj.matrix[j,i]!=0) {
                 #[i,j] refers to causation i --> j
                 #temporal priority condition: if P(i)>P(j) the edge i --> j is valid for temporal priority
                 #test i --> j
@@ -74,4 +74,4 @@ function(marginal.probs.distributions, pvalue, adj.matrix, edge.confidence.matri
     return(temporal.priority);
 }
 
-#### end of file -- verify.temporal.priority.R
+#### end of file -- verify.temporal.priority.do.boot.R

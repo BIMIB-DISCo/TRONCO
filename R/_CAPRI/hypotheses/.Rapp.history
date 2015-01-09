@@ -1,0 +1,13 @@
+hypothese = NA
+hypotheses = NA
+hypotheses
+hypotheses$llist
+is.na(hypotheses)
+length(hypotheses)
+hypotheses = list()
+length(hypotheses)
+hypotheses = list();
+hypotheses$llist
+?is.data.frame
+v = "fgdfg"
+is.data.frame(v)

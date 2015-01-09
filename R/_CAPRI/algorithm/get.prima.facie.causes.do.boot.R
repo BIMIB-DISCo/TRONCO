@@ -18,7 +18,9 @@
 "get.prima.facie.causes.do.boot" <-
 function(adj.matrix, marginal.probs.distributions, prima.facie.model.distributions, prima.facie.null.distributions, pvalue) {
     #structure to save the confidence of the edges
-    edge.confidence.matrix <- array(list(array(-1, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)))), c(2,1));
+    edge.confidence.matrix <- array(list(), c(2,1));
+    edge.confidence.matrix[[1,1]] = array(1, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
+    edge.confidence.matrix[[2,1]] = array(0, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
     #verify Suppes' conditions for prima facie causes
     #i.e., i --> j implies P(i)>P(j) (temporal priority) and P(j|i)>P(j|not i) (probability raising)
     #verify the temporal priority condition

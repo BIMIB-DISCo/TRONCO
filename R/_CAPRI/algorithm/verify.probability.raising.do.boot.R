@@ -1,4 +1,4 @@
-#### verify.probability.raising.R
+#### verify.probability.raising.do.boot.R
 ####
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
@@ -15,13 +15,13 @@
 #edge.confidence.matrix: matrix of the confidence of each edge
 #RETURN:
 #probability.raising: list describing the causes where probability raising is verified
-"verify.probability.raising" <-
+"verify.probability.raising.do.boot" <-
 function(prima.facie.model.distributions, prima.facie.null.distributions, pvalue, adj.matrix, edge.confidence.matrix) {
     #compute the pvalues for the probability raising conditions
     for(i in 1:nrow(adj.matrix)) {
         for(j in i:ncol(adj.matrix)) {
-            #if this edge is valid (no self causes)
-            if(i!=j) {
+            #the diagonal (self cause) and the other invalid edges have not to be considered
+            if(adj.matrix[i,j]!=0) {
                 #pvalue for the probability raising condition for i --> j
                 second.pvalue.i.j = wilcox.test(unlist(prima.facie.model.distributions[i,j]),unlist(prima.facie.null.distributions[i,j]),alternative="greater",mu=0)$p.value;
                 if(is.na(second.pvalue.i.j) || is.nan(second.pvalue.i.j)) {
@@ -60,4 +60,4 @@ function(prima.facie.model.distributions, prima.facie.null.distributions, pvalue
     return(probability.raising);
 }
 
-#### end of file -- verify.probability.raising.R
+#### end of file -- verify.probability.raising.do.boot.R
