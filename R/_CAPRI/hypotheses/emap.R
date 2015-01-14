@@ -8,8 +8,8 @@
 
 # Return the position of the event of a given label.effect
 "emap" <-
-function( label.effect, dataset = NA ) {
-	if(!is.na(dataset)) {
+function( label.effect, dataset ) {
+	if(!is.null(dataset)) {
 		col.num = which(names(dataset)==label.effect);
 		if(length(col.num)==0) {
 			col.num = -1;

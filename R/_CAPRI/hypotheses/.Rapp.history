@@ -11,3 +11,35 @@ hypotheses$llist
 ?is.data.frame
 v = "fgdfg"
 is.data.frame(v)
+col.num = which(c("a","b","c")=="d");
+is.na(col.num)
+col.num
+is.null(col.num)
+is.null(dataset)
+dataset
+dataset = NULL
+is.null(dataset)
+label.effect = "ciao"
+label.effect[1]
+label.effect = c("ciao","d")
+label.effect[1]
+a = list(S)
+A
+a = list("CIAO")
+A
+a
+a = c(a,a)
+a
+a = c(a,a)
+a
+b = list
+b = list()
+a = list("CIAO")
+b = c(c,a)
+b
+b=list()
+b
+b = c(c,a)
+b=list()
+b = c(b,a)
+b

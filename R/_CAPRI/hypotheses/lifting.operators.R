@@ -8,10 +8,11 @@
 
 # Utility function to add the hypotheses
 "aux.log" <-
-function( dataset = NA, hypotheses = NA, ... ) {
-	if(!is.na(dataset) && length(list(...))>0) {
+function( dataset, ... ) {
+	if(!is.null(dataset) && length(list(...))>0) {
 		clauses = list(...);
 		curr_dataset = array(0,c(nrow(dataset),length(clauses)));
+		hypotheses = list();
 		for (i in 1:length(clauses)) {
 			#if the clause is given by name, get the column from the dataset
 			if(typeof(clauses[[i]])=="character") {
@@ -21,24 +22,26 @@ function( dataset = NA, hypotheses = NA, ... ) {
 					stop(paste("Event ",clauses[[i]]," does not exist! The formula is bad formed and no hypothesis will be created.",sep=''));
 				}
 				else {
-					curr.col = dataset[,col.num];
-					if(is.na(hypotheses)) {
-						hypotheses = list();
-					}
+					curr_dataset[,i] = dataset[,col.num];
 					if(length(hypotheses$llist)==0) {
 						hypotheses$llist = clauses[i];
 					}
 					else {
-						hypotheses$llist = c(hypotheses$llist,clauses[i]);
+						hypotheses$llist = list(c(unlist(hypotheses$llist),clauses[[i]]));
 					}
 				}
 			}
 			#otherwise I already have the column as a vector
 			else {
-				#if it is a vector
-				curr.col = clauses[[i]];
+				#if it is a list
+				curr_dataset[,i] = clauses[[i]]$curr_dataset;
+				if(length(hypotheses$llist)==0) {
+					hypotheses$llist = clauses[[i]]$hypotheses$llist;
+				}
+				else {
+					hypotheses$llist = list(c(unlist(clauses[[i]]$hypotheses$llist),unlist(hypotheses$llist)));
+				}
 			}
-			curr_dataset[,i] = curr.col;
 		}
 		result = list(curr_dataset=curr_dataset,hypotheses=hypotheses);
 		return(result);
@@ -51,10 +54,10 @@ function( dataset = NA, hypotheses = NA, ... ) {
 
 # XOR hypothesis
 "XOR" <-
-function( dataset = NA, hypotheses = NA, ... ) {
-	if(!is.na(dataset) && length(list(...))>0) {
+function( dataset, ... ) {
+	if(!is.null(dataset) && length(list(...))>0) {
 		#get the vector of the clauses of the formula from the dataset
-		result = aux.log(dataset,hypotheses,...);
+		result = aux.log(dataset,...);
 		curr_dataset = result$curr_dataset;
 		hypotheses = result$hypotheses;
 		#evaluate the XOR operator
@@ -77,10 +80,10 @@ function( dataset = NA, hypotheses = NA, ... ) {
 
 # OR hypothesis
 "OR" <-
-function( dataset = NA, hypotheses = NA, ... ) {
-	if(!is.na(dataset) && length(list(...))>0) {
+function( dataset, ... ) {
+	if(!is.null(dataset) && length(list(...))>0) {
 		#get the vector of the clauses of the formula from the dataset
-		result = aux.log(dataset,hypotheses,...);
+		result = aux.log(dataset,...);
 		curr_dataset = result$curr_dataset;
 		hypotheses = result$hypotheses;
 		#evaluate the OR operator
@@ -103,10 +106,10 @@ function( dataset = NA, hypotheses = NA, ... ) {
 
 # AND hypothesis
 "AND" <-
-function( dataset = NA, hypotheses = NA, ... ) {
-	if(!is.na(dataset) && length(list(...))>0) {
+function( dataset, ... ) {
+	if(!is.null(dataset) && length(list(...))>0) {
 		#get the vector of the clauses of the formula from the dataset
-		result = aux.log(dataset,hypotheses,...);
+		result = aux.log(dataset,...);
 		curr_dataset = result$curr_dataset;
 		hypotheses = result$hypotheses;
 		#evaluate the AND operator
