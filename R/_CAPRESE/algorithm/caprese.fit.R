@@ -11,11 +11,10 @@
 #dataset: a dataset describing a progressive phenomenon
 #lambda: shrinkage parameter (value in [0,1])
 #do.estimation: should I perform the estimation of the error rates and probabilities?
-#verbose: should I print the warnings? Yes if TRUE, no otherwise
 #RETURN:
 #topology: the reconstructed tree-like topology
 "caprese.fit" <-
-function(dataset,lambda,do.estimation,verbose) {
+function(dataset, lambda = 0.5 , do.estimation = FALSE) {
 	#structure to compute the observed marginal and joint probabilities
 	pair.count <- array(0, dim=c(ncol(dataset), ncol(dataset)));
 	#compute the probabilities on the dataset

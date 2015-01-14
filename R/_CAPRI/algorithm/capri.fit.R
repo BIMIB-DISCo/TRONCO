@@ -9,65 +9,40 @@
 #verify the dataset and reconstruct the best dag topology
 #INPUT:
 #dataset: a dataset describing a progressive phenomenon
+#hypotheses: hypotheses to be considered in the reconstruction
 #do.boot: should I perform bootstrap? Yes if TRUE, no otherwise
 #nboot: integer number (greater than 0) of bootstrap sampling to be performed
 #pvalue: pvalue for the tests (value between 0 and 1)
 #do.estimation: should I perform the estimation of the error rates and probabilities?
-#verbose: should I print the warnings? Yes if TRUE, no otherwise
 #RETURN:
 #topology: the reconstructed tree topology
 "capri.fit" <-
-function(dataset,do.boot,nboot,pvalue,do.estimation,verbose) {
+function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, do.estimation = FALSE) {
+	#structure with the set of valid edges
+	#I start from the complete graph, i.e., I have no prior
+	adj.matrix = array(1,c(ncol(dataset),ncol(dataset)));
+	#the diagonal of the adjacency matrix should not be considered, i.e., no self cause
+	diag(adj.matrix) = 0;
+	#consider the hypotheses if any
+	if(!is.na(hypotheses)) {
+		#set the invalid entries in the adj.matrix
+		#neither atomic events nor hypotheses can be causing any hypothesis
+		adj.matrix[,(ncol(adj.matrix)-hypotheses$num.hypotheses+1):ncol(adj.matrix)] = 0;
+		#consider the given hypotheses only toward the specified possible effects
+		hypotheses.matrix = array(0,c(hypotheses$num.hypotheses,ncol(adj.matrix)-hypotheses$num.hypotheses));
+		for (i in seq(1,(length(hypotheses$hlist)-1),by=2)) {
+			hypotheses.matrix[hypotheses$hlist[i],hypotheses$hlist[i+1]] = 1;
+		}
+		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix),1:(ncol(adj.matrix)-hypotheses$num.hypotheses)] = hypotheses.matrix;
+	}
 	#reconstruct the causal topology
     #should I perform bootstrap? Yes if TRUE, no otherwise
     if(do.boot==TRUE) {
-        prima.facie.parents = get.prima.facie.parents(dataset,nboot,pvalue);
+        prima.facie.parents = get.prima.facie.parents.do.boot(dataset,adj.matrix,nboot,pvalue);
     }
     else {
-        prima.facie.parents = get.prima.facie.parents.no.boot(dataset);
+        prima.facie.parents = get.prima.facie.parents.no.boot(dataset,adj.matrix);
     }
-    #set the invalid entries in the adj.matrix
-    if(exists("settings") && length(settings$data.values$num.events)>0) {
-		if(nrow(prima.facie.parents$adj.matrix)-settings$data.values$num.events>0) {
-			for (i in 1:nrow(prima.facie.parents$adj.matrix)) {
-				for (j in (settings$data.values$num.events+1):nrow(prima.facie.parents$adj.matrix)) {
-					prima.facie.parents$adj.matrix[i,j] = 0;
-					if(do.boot==TRUE) {
-						tmp = prima.facie.parents$pf.confidence[[1,1]];
-						tmp[i,j] = 1;
-						tmp[j,i] = 1;
-						prima.facie.parents$pf.confidence[1,1] = list(tmp);
-						tmp = prima.facie.parents$pf.confidence[[2,1]];
-               			tmp[i,j] = 1;
-               			tmp[j,i] = 1;
-               			prima.facie.parents$pf.confidence[2,1] = list(tmp);
-					}
-				}
-			}
-		}
-    }
-    if(exists("settings") && length(settings$hypotheses$hlist)>0) {
-		hypotheses.matrix = array(0,c(settings$hypotheses$num.hypotheses,settings$data.values$num.events));
-		for (i in seq(1,(length(settings$hypotheses$hlist)-1),by=2)) {
-			hypotheses.matrix[settings$hypotheses$hlist[i],settings$hypotheses$hlist[i+1]] = 1;
-		}
-		swap.matrix = prima.facie.parents$adj.matrix[(settings$data.values$num.events+1):nrow(prima.facie.parents$adj.matrix),1:settings$data.values$num.events];
-		prima.facie.parents$adj.matrix[(settings$data.values$num.events+1):nrow(prima.facie.parents$adj.matrix),1:settings$data.values$num.events] = swap.matrix*hypotheses.matrix;
-		for (i in 1:nrow(hypotheses.matrix)) {
-			for(j in 1:nrow(hypotheses.matrix)) {
-				if(hypotheses.matrix[i,j]==0) {
-					if(do.boot==TRUE) {
-               			tmp = prima.facie.parents$pf.confidence[[1,1]];
-               			tmp[i+settings$data.values$num.events,j] = 1;
-               			prima.facie.parents$pf.confidence[1,1] = list(tmp);
-               			tmp = prima.facie.parents$pf.confidence[[2,1]];
-               			tmp[i+settings$data.values$num.events,j] = 1;
-               			prima.facie.parents$pf.confidence[2,1] = list(tmp);
-					}
-				}
-			}
-		}
-	}
 	#perform the likelihood fit by BIC score
 	best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix);
 	#set the conditional probabilities
