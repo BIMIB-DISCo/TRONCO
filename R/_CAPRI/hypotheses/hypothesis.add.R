@@ -11,7 +11,7 @@
 function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA ) {
 	if(!is.null(dataset)) {
 		#get the series of calls of the recursive function to generate the lifted formula
-		hstructure = as.list(match.call())[3];
+		hstructure = toString(as.list(match.call())$lifted.formula);
 		#save the lifted dataset and its hypotheses for the current formula
 		curr_formula = lifted.formula$formula;
 		curr_hypotheses = lifted.formula$hypotheses;
@@ -25,10 +25,7 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 		if(label.effect[1]=="*") {
 			label.effect = names(dataset)[1:(length(names(dataset))-num.hypotheses)];
 			#any event can not be both causes and effects for the formula to be well-formed
-			for(i in 1:length(curr_hypotheses$llist)) {
-				val = which(label.effect==curr_hypotheses$llist[[i]]);
-				label.effect = label.effect[-val];
-			}	
+			label.effect = label.effect[-which((label.effect%in%unlist(curr_hypotheses$llist)))];
 			if(length(label.effect)==0) {
 				stop(paste("No valid effect provided in the formula! No hypothesis will be created.",sep=''));
 			}
@@ -41,7 +38,7 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 		else {
 			#check the effects of the formula to be well-formed
 			for (i in 1:length(label.effect)) {
-				col.num = emap(label.effect[[i]]);
+				col.num = emap(label.effect[[i]],dataset);
 				#check the effect to be a valid event
 				if(col.num==-1) {
 					stop(paste("Event ",label.effect[[i]]," does not exist! The formula is bad formed and no hypothesis will be created.",sep=''));
@@ -49,10 +46,8 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 				all.col.nums[length(all.col.nums)+1] = col.num;
 				#check the formula to be well-formed
 				#if the effect is in the formula, the formula is not well-formed
-				for (j in 1:length(curr_hypotheses$llist)) {
-					if(label.effect[[i]]==curr_hypotheses$llist[[j]]) {
-						stop(paste("The effect is in the formula! The formula is bad formed and no hypothesis will be created.",sep=''));
-					}
+				if(length(which(unlist(curr_hypotheses$llist)%in%unlist(label.effect[[i]])))>0) {
+					stop(paste("The effect is in the formula! The formula is bad formed and no hypothesis will be created.",sep=''));
 				}
 			}
 		}
@@ -108,8 +103,11 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 		}
 		#add the new hypothesis to the list
 		for (i in 1:length(label.effect)) {
-			col.num = emap(label.effect[[i]]);
-			hypotheses$hlist = c(hypotheses$hlist,hypotheses$num.hypotheses,col.num);
+			col.num = emap(label.effect[[i]],dataset);
+			hypotheses$hlist = rbind(hypotheses$hlist,t(c(ncol(dataset),col.num)));
+			if(is.null(colnames(hypotheses$hlist))) {
+				colnames(hypotheses$hlist) = c("cause","effect");
+			}
 		}
 		#create the list of hypotheses' structures
 		if(length(hypotheses$hstructure)==0) {
@@ -118,7 +116,7 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 		hypotheses$hstructure = c(hypotheses$hstructure,hstructure);
 		#return the result as a list
 		result = list(dataset=dataset,hypotheses=hypotheses);
-		return(results);
+		return(result);
 	}
 	else {
 		stop("Either the dataset or the formula is not provided! No hypothesis will be created.");
