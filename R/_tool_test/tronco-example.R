@@ -15,7 +15,7 @@ invisible(sapply(list.files(pattern="[.]R$",path="R",full.names=TRUE),source));
 caprese = caprese.fit(dataset);
 
 #perform the reconstruction with CAPRI
-my.hypotheses = hypothesis.add(dataset,"H1",OR(dataset,XOR(dataset,"V1","V4"),AND(dataset,"V2","V3"),"V5","V6"),"V7");
-my.hypotheses = hypothesis.add(my.hypotheses$dataset,"H2",AND(my.hypotheses$dataset,XOR(my.hypotheses$dataset,"V1","V4"),OR(my.hypotheses$dataset,"V2","V3"),"V5","V6"),"V7",hypotheses=my.hypotheses$hypotheses);
-my.hypotheses = hypothesis.add(my.hypotheses$dataset,"H3",OR(my.hypotheses$dataset,XOR(my.hypotheses$dataset,"V1","V4"),"V5"),"*",hypotheses=my.hypotheses$hypotheses);
+my.hypotheses = hypothesis.add(dataset,"H1",OR(XOR("V1","V4"),AND("V2","V3"),"V5","V6"),"V7");
+my.hypotheses = hypothesis.add(my.hypotheses$dataset,"H2",AND(XOR("V1","V4"),OR("V2","V3"),"V5","V6"),"V7",my.hypotheses$hypotheses);
+my.hypotheses = hypothesis.add(my.hypotheses$dataset,"H3",OR(XOR("V1","V4"),"V5"),"*",my.hypotheses$hypotheses);
 capri = capri.fit(my.hypotheses$dataset,my.hypotheses$hypotheses);

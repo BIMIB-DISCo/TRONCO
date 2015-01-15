@@ -10,11 +10,27 @@
 "hypothesis.add" <-
 function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA ) {
 	if(!is.null(dataset)) {
-		#get the series of calls of the recursive function to generate the lifted formula
-		hstructure = toString(as.list(match.call())$lifted.formula);
+		#get the series of calls of the recursive function to generate the lifted formula as a string
+		hstructure = toString(as.expression(as.list(match.call())$lifted.formula));
+		#the Boolean functions look for a global variable named lifting.dataset
+		#if there is already a global variable named lifting.dataset, make the backup of it
+		do.roll.back = FALSE;
+		if(exists("lifting.dataset")) {
+			roll.back.dataset = lifting.dataset;
+			do.roll.back = TRUE;
+		}
+		assign("lifting.dataset",dataset,envir=.GlobalEnv);
 		#save the lifted dataset and its hypotheses for the current formula
 		curr_formula = lifted.formula$formula;
 		curr_hypotheses = lifted.formula$hypotheses;
+		#roll back to the previous value of the global variable if any or remove it
+		if(do.roll.back) {
+			assign("lifting.dataset",roll.back.dataset,envir=.GlobalEnv);
+		}
+		else {
+			rm(lifting.dataset,pos=".GlobalEnv");
+		}
+		#set the hypotheses number
 		if(!is.na(hypotheses[1])) {
 			num.hypotheses = hypotheses$num.hypotheses;
 		}

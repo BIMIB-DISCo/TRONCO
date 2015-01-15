@@ -52,20 +52,25 @@ function( dataset, ... ) {
 	return(NA);
 }
 
-# XOR hypothesis
-"XOR" <-
-function( dataset, ... ) {
+# AND hypothesis
+"AND" <-
+function( ... ) {
+	#look for a global variable named lifting.dataset
+	dataset = lifting.dataset;
 	if(!is.null(dataset) && length(list(...))>0) {
 		#get the vector of the clauses of the formula from the dataset
 		result = aux.log(dataset,...);
 		curr_dataset = result$curr_dataset;
 		hypotheses = result$hypotheses;
-		#evaluate the XOR operator
+		#evaluate the AND operator
 		formula = rep(0,nrow(dataset));
 		for (i in 1:nrow(dataset)) {
 			formula[i] = sum(curr_dataset[i,]);
-			if(formula[i]>1) {
+			if(formula[i]<ncol(curr_dataset)) {
 				formula[i] = 0;
+			}
+			else {
+				formula[i] = 1;
 			}
 		}
 		formula = as.integer(formula);
@@ -80,7 +85,9 @@ function( dataset, ... ) {
 
 # OR hypothesis
 "OR" <-
-function( dataset, ... ) {
+function( ... ) {
+	#look for a global variable named lifting.dataset
+	dataset = lifting.dataset;
 	if(!is.null(dataset) && length(list(...))>0) {
 		#get the vector of the clauses of the formula from the dataset
 		result = aux.log(dataset,...);
@@ -104,23 +111,22 @@ function( dataset, ... ) {
 	return(NA);
 }
 
-# AND hypothesis
-"AND" <-
-function( dataset, ... ) {
+# XOR hypothesis
+"XOR" <-
+function( ... ) {
+	#look for a global variable named lifting.dataset
+	dataset = lifting.dataset;
 	if(!is.null(dataset) && length(list(...))>0) {
 		#get the vector of the clauses of the formula from the dataset
 		result = aux.log(dataset,...);
 		curr_dataset = result$curr_dataset;
 		hypotheses = result$hypotheses;
-		#evaluate the AND operator
+		#evaluate the XOR operator
 		formula = rep(0,nrow(dataset));
 		for (i in 1:nrow(dataset)) {
 			formula[i] = sum(curr_dataset[i,]);
-			if(formula[i]<ncol(curr_dataset)) {
+			if(formula[i]>1) {
 				formula[i] = 0;
-			}
-			else {
-				formula[i] = 1;
 			}
 		}
 		formula = as.integer(formula);
