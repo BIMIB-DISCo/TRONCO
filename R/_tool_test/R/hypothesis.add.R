@@ -10,25 +10,41 @@
 "hypothesis.add" <-
 function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA ) {
 	if(!is.null(dataset)) {
-		#get the series of calls of the recursive function to generate the lifted formula as a string
-		hstructure = toString(as.expression(as.list(match.call())$lifted.formula));
 		#the Boolean functions look for a global variable named lifting.dataset
 		#if there is already a global variable named lifting.dataset, make the backup of it
-		do.roll.back = FALSE;
+		do.roll.back.lifting.dataset = FALSE;
+		do.roll.back.lifting.edges = FALSE;
 		if(exists("lifting.dataset")) {
-			roll.back.dataset = lifting.dataset;
-			do.roll.back = TRUE;
+			roll.back.lifting.dataset = lifting.dataset;
+			do.roll.back.lifting.dataset = TRUE;
 		}
 		assign("lifting.dataset",dataset,envir=.GlobalEnv);
+		#I need a global variable to save the edges of the lifted formula
+		#if there is already a global variable named lifting.edges, make the backup of it
+		do.roll.back.lifting.dataset = FALSE;
+		if(exists("lifting.edges")) {
+			roll.back.lifting.edges = lifting.edges;
+			do.roll.back.lifting.edges = TRUE;
+		}
+		assign("lifting.edges",NULL,envir=.GlobalEnv);
 		#save the lifted dataset and its hypotheses for the current formula
 		curr_formula = lifted.formula$formula;
 		curr_hypotheses = lifted.formula$hypotheses;
-		#roll back to the previous value of the global variable if any or remove it
-		if(do.roll.back) {
-			assign("lifting.dataset",roll.back.dataset,envir=.GlobalEnv);
+		#save the edges of the lifted formula
+		hstructure = lifting.edges;
+		#roll back to the previous value of the global variable lifting.dataset if any or remove it
+		if(do.roll.back.lifting.dataset) {
+			assign("lifting.dataset",roll.back.lifting.dataset,envir=.GlobalEnv);
 		}
 		else {
 			rm(lifting.dataset,pos=".GlobalEnv");
+		}
+		#roll back to the previous value of the global variable lifting.edges if any or remove it
+		if(do.roll.back.lifting.edges) {
+			assign("lifting.edges",roll.back.lifting.edges,envir=.GlobalEnv);
+		}
+		else {
+			rm(lifting.edges,pos=".GlobalEnv");
 		}
 		#set the hypotheses number
 		if(!is.na(hypotheses[1])) {
@@ -127,9 +143,9 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 		}
 		#create the list of hypotheses' structures
 		if(length(hypotheses$hstructure)==0) {
-			hypotheses$hstructure = list();
+			hypotheses$hstructure = new.env(hash=TRUE,parent=emptyenv());
 		}
-		hypotheses$hstructure = c(hypotheses$hstructure,hstructure);
+		hypotheses$hstructure[[label.formula]] = get.lifted.formula(hstructure);
 		#return the result as a list
 		result = list(dataset=dataset,hypotheses=hypotheses);
 		return(result);
