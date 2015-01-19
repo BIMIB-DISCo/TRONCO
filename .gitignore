@@ -1,3 +1,5 @@
+/.Rbuildignore
+/TRONCO.Rproj
 # History #
 ###########
 *.history
@@ -11,3 +13,4 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+.Rproj.user
