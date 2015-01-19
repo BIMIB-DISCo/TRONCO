@@ -19,10 +19,12 @@ hypotheses.expansion <- function(input_matrix,
   
   # get node list
   node_list <- colnames(input_matrix)
+  print(input_matrix)
 
   # cut input matrix
   margin = length(node_list) - atomic_nodes
   min_matrix = input_matrix[-(margin+1):-length(node_list), -(margin+1):-length(node_list)]
+  print(min_matrix)
 
   # create graph from matrix
   min_graph = graph.adjacency(min_matrix)
@@ -32,12 +34,11 @@ hypotheses.expansion <- function(input_matrix,
   for (h in ls(map)) {
     
     # eros! please give me the transposed matrix
-    map[[h]] = t(map[[h]])
+    hypo = t(map[[h]])
     
     # create graph from hypo
-    hypo_graph = graph.adjacency(map[[h]])
-    plot(igraph.to.graphNEL(hypo_graph))
-    print(map[[h]])
+    hypo_graph = graph.adjacency(hypo)
+    print(hypo)
 
     # add this graph to main graph
     min_graph = graph.union(min_graph, hypo_graph)
