@@ -31,8 +31,13 @@ hypotheses.expansion <- function(input_matrix,
   # foreach hypothesis
   for (h in ls(map)) {
     
+    # eros! please give me the transposed matrix
+    map[[h]] = t(map[[h]])
+    
     # create graph from hypo
     hypo_graph = graph.adjacency(map[[h]])
+    plot(igraph.to.graphNEL(hypo_graph))
+    print(map[[h]])
 
     # add this graph to main graph
     min_graph = graph.union(min_graph, hypo_graph)
@@ -51,6 +56,5 @@ hypotheses.expansion <- function(input_matrix,
     }
     
   }
-  plot(igraph.to.graphNEL(min_graph))
-  return(igraph.to.graphNEL(min_graph))
+  return(get.adjacency(min_graph, sparse = F))
 }

@@ -24,3 +24,22 @@ capri = capri.fit(my.hypotheses$dataset,my.hypotheses$hypotheses);
 print(my.hypotheses$hypotheses$hstructure[["H1"]]);
 print(my.hypotheses$hypotheses$hstructure[["H2"]]);
 print(my.hypotheses$hypotheses$hstructure[["H3"]]);
+
+# set colnames e rownames to adjacency matrix
+colnames(capri$adj.matrix$adj.matrix.bic) = colnames(my.hypotheses$data)
+rownames(capri$adj.matrix$adj.matrix.bic) = colnames(my.hypotheses$data)
+
+# load hypotheses.
+source('../hypotheses.expansion.R')
+source('../tronco.plot.R')
+
+
+hypo_mat = hypotheses.expansion(capri$adj.matrix$adj.matrix.bic, 
+                                  my.hypotheses$hypotheses$num.hypotheses, 
+                                  my.hypotheses$hypotheses$hstructure)
+
+hypo_graph = graph.adjacency(hypo_mat)
+graph <- igraph.to.graphNEL(hypo_graph)
+graph <- layoutGraph(graph)
+graph.par(list(nodes=list(fontsize=70, textCol="black")))
+renderGraph(graph)
