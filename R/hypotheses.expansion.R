@@ -32,6 +32,9 @@ hypotheses.expansion <- function(input_matrix,
 
   # foreach hypothesis
   for (h in ls(map)) {
+    if(length(which(input_matrix[h,] == 1)) == 0) {
+      break
+    }
     
     # eros! please give me the transposed matrix
     hypo = t(map[[h]])

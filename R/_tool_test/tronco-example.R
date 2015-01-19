@@ -33,6 +33,7 @@ rownames(capri$adj.matrix$adj.matrix.bic) = colnames(my.hypotheses$data)
 source('../hypotheses.expansion.R')
 source('../tronco.plot.R')
 
+capri$adj.matrix$adj.matrix.bic["H1","V7"] = 1
 
 hypo_mat = hypotheses.expansion(capri$adj.matrix$adj.matrix.bic, 
                                   my.hypotheses$hypotheses$num.hypotheses, 
@@ -41,5 +42,5 @@ hypo_mat = hypotheses.expansion(capri$adj.matrix$adj.matrix.bic,
 hypo_graph = graph.adjacency(hypo_mat)
 graph <- igraph.to.graphNEL(hypo_graph)
 graph <- layoutGraph(graph)
-graph.par(list(nodes=list(fontsize=70, textCol="black")))
+graph.par(list(nodes=list(fontsize=90, textCol="black")))
 renderGraph(graph)
