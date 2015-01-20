@@ -6,12 +6,12 @@ work.dir = '~/Desktop/_tool_test';
 setwd(work.dir);
 
 #load the dataset and set all the values for colnames and rownames
-genotype = read.table(file.dataset.ovarian);
-colnames(genotype) = gsub("V", "Gene ", colnames(genotype));
-rownames(genotype) = paste("Patient ",rownames(genotype),sep="");
-annotations = array("",c(ncol(genotype),2));
+genotypes = read.table(file.dataset.ovarian);
+colnames(genotypes) = gsub("V", "Gene ", colnames(genotypes));
+rownames(genotypes) = paste("Patient ",rownames(genotypes),sep="");
+annotations = array("",c(ncol(genotypes),2));
 colnames(annotations) = c("Event","Type");
-rownames(annotations) = colnames(genotype);
+rownames(annotations) = colnames(genotypes);
 annotations[1,1] = "8q+";
 annotations[2,1] = "3q+";
 annotations[3,1] = "5q-";
@@ -28,16 +28,16 @@ types[1,1] = "Red";
 types[2,1] = "Blue";
 
 #create the input variable
-data = list(genotype = genotype, annotations = annotations, types = types);
+data = list(genotypes = genotypes, annotations = annotations, types = types);
 
 #load TRONCO package
 invisible(sapply(list.files(pattern="[.]R$",path="R",full.names=TRUE),source));
 
 #perform the reconstruction with CAPRESE
-caprese = caprese.fit(data$genotype);
+caprese = caprese.fit(data$genotypes);
 
 #perform the reconstruction with CAPRI
-my.hypotheses = hypothesis.add(data$genotype,"H1",OR(XOR("Gene 1","Gene 4"),AND("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
+my.hypotheses = hypothesis.add(data$genotypes,"H1",OR(XOR("Gene 1","Gene 4"),AND("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
 my.hypotheses = hypothesis.add(my.hypotheses$dataset,"H2",AND(XOR("Gene 1","Gene 4"),OR("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7",my.hypotheses$hypotheses);
 my.hypotheses = hypothesis.add(my.hypotheses$dataset,"H3",OR(XOR("Gene 1","Gene 4"),"Gene 5"),"*",my.hypotheses$hypotheses);
 capri = capri.fit(my.hypotheses$dataset,my.hypotheses$hypotheses);
@@ -48,7 +48,7 @@ print(my.hypotheses$hypotheses$hstructure[["H2"]]);
 print(my.hypotheses$hypotheses$hstructure[["H3"]]);
 
 source('../_CAPRI/hypotheses/hypotheses.expansion.R')
-# source('../tronco.plot.R')
+source('../_TRONCO/tronco.plot.R')
 
 # only for test!!!
 capri$adj.matrix$adj.matrix.bic[8,7] = 1
@@ -56,7 +56,7 @@ capri$adj.matrix$adj.matrix.bic[9,7] = 1
 
 # plot hypotheses base function
 hypo.plot(capri, my.hypotheses)
-
+hypo.plot(capri)
 
 
 

@@ -5,11 +5,9 @@
 #### See the files COPYING and LICENSE for copyright and licensing
 #### information.
 
-library('Rgraphviz')
-
 hypotheses.expansion <- function(input_matrix, 
-                                atomic_nodes, 
-                                map) {
+                                atomic_nodes = NULL, 
+                                map = list()) {
   
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
@@ -23,7 +21,12 @@ hypotheses.expansion <- function(input_matrix,
 
   # cut input matrix
   margin = length(node_list) - atomic_nodes
-  min_matrix = input_matrix[-(margin+1):-length(node_list), -(margin+1):-length(node_list)]
+  if (length(map) == 0) {
+    min_matrix = input_matrix
+    return(min_matrix)
+  } else {
+    min_matrix = input_matrix[-(margin+1):-length(node_list), -(margin+1):-length(node_list)]
+  }
   print(min_matrix)
 
   # create graph from matrix
@@ -63,7 +66,7 @@ hypotheses.expansion <- function(input_matrix,
   return(get.adjacency(min_graph, sparse = F))
 }
 
-hypo.plot = function(capri, hypotheses) {
+hypo.plot = function(capri, hypotheses = NULL) {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -75,15 +78,18 @@ hypo.plot = function(capri, hypotheses) {
   }
   
   c_matrix = capri$adj.matrix$adj.matrix.bic
-  print(c_matrix)
-  hstruct = hypotheses$hypotheses$hstructure
   
-  print(hypotheses$dataset)
-  colnames(c_matrix) = colnames(hypotheses$dataset);
-  rownames(c_matrix) = colnames(hypotheses$dataset);
+  colnames(c_matrix) = colnames(capri$dataset);
+  rownames(c_matrix) = colnames(capri$dataset);
   
-  num_h = length(hstruct)
-  print(num_h)
+  if (is.null(hypotheses)) {
+    hstruct = NULL
+    num_h = NULL
+  } else {
+    hstruct = hypotheses$hypotheses$hstructure
+    num_h = length(hstruct)
+  }
+
   hypo_mat = hypotheses.expansion(c_matrix, num_h, hstruct)
   hypo_graph = graph.adjacency(hypo_mat)
   V(hypo_graph)$label = gsub("_.*$", "", V(hypo_graph)$name)
