@@ -36,8 +36,8 @@ invisible(sapply(list.files(pattern="[.]R$",path="R",full.names=TRUE),source));
 #perform the reconstruction with CAPRESE
 caprese = caprese.fit(data$genotypes);
 
-#perform the reconstruction with CAPRI
-my.hypotheses = hypothesis.add(data$genotypes,"H1",OR(XOR("Gene 1","Gene 4"),AND("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
-my.hypotheses = hypothesis.add(my.hypotheses$dataset,"H2",AND(XOR("Gene 1","Gene 4"),OR("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7",my.hypotheses$hypotheses);
-my.hypotheses = hypothesis.add(my.hypotheses$dataset,"H3",OR(XOR("Gene 1","Gene 4"),"Gene 5"),"*",my.hypotheses$hypotheses);
-capri = capri.fit(my.hypotheses$dataset,my.hypotheses$hypotheses);
+#perform the reconstruction with CAPRI given some hypotheses
+data = hypothesis.add(data,"H1",OR(XOR("Gene 1","Gene 4"),AND("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
+data = hypothesis.add(data,"H2",AND(XOR("Gene 1","Gene 4"),OR("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
+data = hypothesis.add(data,"H3",OR(XOR("Gene 1","Gene 4"),"Gene 5"),"*");
+capri = capri.fit(data$genotypes,data$hypotheses);

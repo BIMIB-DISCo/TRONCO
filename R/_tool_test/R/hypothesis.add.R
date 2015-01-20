@@ -8,7 +8,21 @@
 
 # Add a new hypothesis by creating a new causal event and adding it to the dateset
 "hypothesis.add" <-
-function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA ) {
+function( data, label.formula, lifted.formula, label.effect ) {
+	###TO BE FIXED TO HANDLE <EVENT,TYPE> as a key for the input mutations
+	if(!is.null(data$genotypes)) {
+		dataset = data$genotypes;
+	}
+	else {
+		dataset = NULL;
+	}
+	if(!is.null(data$hypotheses)) {
+		hypotheses = data$hypotheses;
+	}
+	else {
+		hypotheses = NA;
+	}
+	###END TO BE FIXED
 	if(!is.null(dataset)) {
 		#the Boolean functions look for a global variable named lifting.dataset
 		#if there is already a global variable named lifting.dataset, make the backup of it
@@ -146,9 +160,10 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 			hypotheses$hstructure = new.env(hash=TRUE,parent=emptyenv());
 		}
 		hypotheses$hstructure[[label.formula]] = get.lifted.formula(hstructure);
-		#return the result as a list
-		result = list(dataset=dataset,hypotheses=hypotheses);
-		return(result);
+		#return the new data as result
+		data$genotypes = dataset;
+		data$hypotheses = hypotheses;
+		return(data);
 	}
 	else {
 		stop("Either the dataset or the formula is not provided! No hypothesis will be created.");
