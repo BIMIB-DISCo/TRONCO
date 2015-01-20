@@ -8,7 +8,7 @@ setwd(work.dir);
 #load the dataset and set all the values for colnames and rownames
 genotypes = read.table(file.dataset.ovarian);
 colnames(genotypes) = gsub("V", "Gene ", colnames(genotypes));
-rownames(genotypes) = paste("Patient ",rownames(genotypes),sep="");.hy  
+rownames(genotypes) = paste("Patient ",rownames(genotypes),sep="");
 annotations = array("",c(ncol(genotypes),2));
 colnames(annotations) = c("Event","Type");
 rownames(annotations) = colnames(genotypes);
