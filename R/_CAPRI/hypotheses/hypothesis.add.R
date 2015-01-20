@@ -138,7 +138,7 @@ function( data, label.formula, lifted.formula, label.effect ) {
 			}
 		}
 		#now I can finally add the hypothesis
-		colnames(dataset)[length(dataset)] = label.formula;
+		colnames(dataset)[ncol(dataset)] = label.formula;
 		if(is.na(hypotheses[1])) {
 			hypotheses = list();
 		}
