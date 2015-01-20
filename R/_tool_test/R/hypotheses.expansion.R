@@ -66,7 +66,7 @@ hypotheses.expansion <- function(input_matrix,
   return(get.adjacency(min_graph, sparse = F))
 }
 
-hypo.plot = function(capri, hypotheses = NULL) {
+hypo.plot = function(capri, data, hypotheses = NULL) {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -92,7 +92,18 @@ hypo.plot = function(capri, hypotheses = NULL) {
 
   hypo_mat = hypotheses.expansion(c_matrix, num_h, hstruct)
   hypo_graph = graph.adjacency(hypo_mat)
-  V(hypo_graph)$label = gsub("_.*$", "", V(hypo_graph)$name)
+  v_names = gsub("_.*$", "", V(hypo_graph)$name)
+  new_name = list()
+  for(v in v_names) {
+    if(v %in% rownames(data$annotations)) {
+      n = data$annotations[v,"Event"]
+      t = data$annotations[v,"Type"]
+      new_name = append(new_name, paste(n, t))
+    } else {
+      new_name = append(new_name, v)
+    }
+  }
+  V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
   z = V(hypo_graph)$label
   names(z) = nodes(graph)
