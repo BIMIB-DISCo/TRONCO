@@ -55,7 +55,7 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 		}
 		#* is a special label.effect which indicates to use all the events as effects for this formula
 		if(label.effect[1]=="*") {
-			label.effect = names(dataset)[1:(length(names(dataset))-num.hypotheses)];
+			label.effect = colnames(dataset)[1:(length(colnames(dataset))-num.hypotheses)];
 			#any event can not be both causes and effects for the formula to be well-formed
 			label.effect = label.effect[-which((label.effect%in%unlist(curr_hypotheses$llist)))];
 			if(length(label.effect)==0) {
@@ -88,7 +88,7 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 			stop(paste("There are duplicated effects in the formula! No hypothesis will be created.",sep=''));
 		}
 		#check that the we are not duplicating any name by adding the new hypothesis
-		if(length(which(names(dataset)==label.formula))>0) {
+		if(length(which(colnames(dataset)==label.formula))>0) {
 			stop(paste("Hypothesis ",label.formula," already exists! No hypothesis will not be created.",sep=''));
 		}
 		#add the hypothesis to the dataset
@@ -124,7 +124,7 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 			}
 		}
 		#now I can finally add the hypothesis
-		names(dataset)[length(dataset)] = label.formula;
+		colnames(dataset)[length(dataset)] = label.formula;
 		if(is.na(hypotheses[1])) {
 			hypotheses = list();
 		}
