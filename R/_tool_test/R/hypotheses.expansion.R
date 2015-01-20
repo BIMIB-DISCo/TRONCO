@@ -17,7 +17,7 @@ hypotheses.expansion <- function(input_matrix,
   
   # get node list
   node_list <- colnames(input_matrix)
-  print(input_matrix)
+  #print(input_matrix)
 
   # cut input matrix
   margin = length(node_list) - atomic_nodes
@@ -27,7 +27,7 @@ hypotheses.expansion <- function(input_matrix,
   } else {
     min_matrix = input_matrix[-(margin+1):-length(node_list), -(margin+1):-length(node_list)]
   }
-  print(min_matrix)
+  #print(min_matrix)
 
   # create graph from matrix
   min_graph = graph.adjacency(min_matrix)
@@ -44,7 +44,7 @@ hypotheses.expansion <- function(input_matrix,
     
     # create graph from hypo
     hypo_graph = graph.adjacency(hypo)
-    print(hypo)
+    #print(hypo)
 
     # add this graph to main graph
     min_graph = graph.union(min_graph, hypo_graph)
@@ -63,7 +63,50 @@ hypotheses.expansion <- function(input_matrix,
     }
     
   }
-  return(get.adjacency(min_graph, sparse = F))
+  
+  # foreach AND
+  min_matrix = get.adjacency(min_graph, sparse = F)
+  print(min_matrix)
+  and_matrix = NULL
+  to_reconnect = list()
+  logical_op = list("AND", "OR", "NOT", "XOR")
+  for (col in colnames(min_matrix)) {
+    # if a node start with AND_.. is already a AND
+    prefix = gsub("_.*$", "", col)
+    if ( !(prefix %in% logical_op) && sum(min_matrix[,col]) > 1 ) {
+      # if colsum > 1 there is a hidden AND and something has to be done..
+      print("AND!")
+      to_reconnect = append(to_reconnect, col)
+      # append a colum to the matrix..
+      and_matrix = cbind(and_matrix, min_matrix[,col])
+      pos = ncol(and_matrix)
+      # and give her a new name
+      colnames(and_matrix)[pos] = paste("AND", col, sep="_")
+      
+      and_matrix = cbind(and_matrix, matrix(0,nrow = nrow(and_matrix), ncol = 1))
+      pos = ncol(and_matrix)
+      colnames(and_matrix)[pos] = col
+    } else {
+      # ..else add a row ad set the correct colname
+      and_matrix = cbind(and_matrix, min_matrix[,col])
+      pos = ncol(and_matrix)
+      colnames(and_matrix)[pos] = col
+    }
+  }
+
+  for(row in to_reconnect) {
+    and_matrix = rbind(and_matrix, matrix(0, ncol=ncol(and_matrix), nrow = 1))
+    pos = nrow(and_matrix)
+    rownames(and_matrix)[pos] = paste0("AND_", row)
+    and_matrix[paste0("AND_", row),row] = 1
+  }
+  
+  print(and_matrix)
+  
+  print(colnames(and_matrix))
+  print(rownames(and_matrix))
+  
+  return(and_matrix)
 }
 
 hypo.plot = function(capri, data, hypotheses = NULL, font=14) {
