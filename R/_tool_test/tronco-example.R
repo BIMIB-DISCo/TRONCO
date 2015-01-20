@@ -47,22 +47,17 @@ print(my.hypotheses$hypotheses$hstructure[["H1"]]);
 print(my.hypotheses$hypotheses$hstructure[["H2"]]);
 print(my.hypotheses$hypotheses$hstructure[["H3"]]);
 
-# set colnames e rownames to adjacency matrix
-colnames(capri$adj.matrix$adj.matrix.bic) = colnames(my.hypotheses$dataset);
-rownames(capri$adj.matrix$adj.matrix.bic) = colnames(my.hypotheses$dataset);
-
 # load hypotheses.
 source('../hypotheses.expansion.R')
 source('../tronco.plot.R')
 
-capri$adj.matrix$adj.matrix.bic["H1","Gene 7"] = 1
+# only for test!!!
+capri$adj.matrix$adj.matrix.bic[8,7] = 1
+capri$adj.matrix$adj.matrix.bic[9,7] = 1
 
-hypo_mat = hypotheses.expansion(capri$adj.matrix$adj.matrix.bic, 
-                                  my.hypotheses$hypotheses$num.hypotheses, 
-                                  my.hypotheses$hypotheses$hstructure)
+# plot hypotheses base function
+hypo.plot(capri, my.hypotheses)
 
-hypo_graph = graph.adjacency(hypo_mat)
-graph <- igraph.to.graphNEL(hypo_graph)
-graph <- layoutGraph(graph)
-graph.par(list(nodes=list(fontsize=90, textCol="black")))
-renderGraph(graph)
+
+
+

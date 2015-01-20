@@ -37,7 +37,7 @@ hypotheses.expansion <- function(input_matrix,
     }
     
     # eros! please give me the transposed matrix
-    hypo = t(map[[h]])
+    hypo = map[[h]]
     
     # create graph from hypo
     hypo_graph = graph.adjacency(hypo)
@@ -61,4 +61,36 @@ hypotheses.expansion <- function(input_matrix,
     
   }
   return(get.adjacency(min_graph, sparse = F))
+}
+
+hypo.plot = function(capri, hypotheses) {
+  if (!require(igraph)) {
+    install.packages('igraph', dependencies = TRUE)
+    library(igraph)
+  }
+  
+  if (!require(Rgraphviz)) {
+    install.packages('Rgraphviz', dependencies = TRUE)
+    library(Rgraphviz)
+  }
+  
+  c_matrix = capri$adj.matrix$adj.matrix.bic
+  print(c_matrix)
+  hstruct = hypotheses$hypotheses$hstructure
+  
+  print(hypotheses$dataset)
+  colnames(c_matrix) = colnames(hypotheses$dataset);
+  rownames(c_matrix) = colnames(hypotheses$dataset);
+  
+  num_h = length(hstruct)
+  print(num_h)
+  hypo_mat = hypotheses.expansion(c_matrix, num_h, hstruct)
+  hypo_graph = graph.adjacency(hypo_mat)
+  V(hypo_graph)$label = gsub("_.*$", "", V(hypo_graph)$name)
+  graph <- igraph.to.graphNEL(hypo_graph)
+  z = V(hypo_graph)$label
+  names(z) = nodes(graph)
+  nAttrs = list()
+  nAttrs$label = z
+  plot(graph, nodeAttrs=nAttrs)
 }
