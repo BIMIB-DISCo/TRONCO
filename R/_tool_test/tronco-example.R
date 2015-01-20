@@ -41,22 +41,3 @@ my.hypotheses = hypothesis.add(data$genotypes,"H1",OR(XOR("Gene 1","Gene 4"),AND
 my.hypotheses = hypothesis.add(my.hypotheses$dataset,"H2",AND(XOR("Gene 1","Gene 4"),OR("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7",my.hypotheses$hypotheses);
 my.hypotheses = hypothesis.add(my.hypotheses$dataset,"H3",OR(XOR("Gene 1","Gene 4"),"Gene 5"),"*",my.hypotheses$hypotheses);
 capri = capri.fit(my.hypotheses$dataset,my.hypotheses$hypotheses);
-
-#print the lifted adjacency matrix for each hypothesis
-print(my.hypotheses$hypotheses$hstructure[["H1"]]);
-print(my.hypotheses$hypotheses$hstructure[["H2"]]);
-print(my.hypotheses$hypotheses$hstructure[["H3"]]);
-
-source('../_CAPRI/hypotheses/hypotheses.expansion.R')
-source('../_TRONCO/tronco.plot.R')
-
-# only for test!!!
-capri$adj.matrix$adj.matrix.bic[8,7] = 1
-capri$adj.matrix$adj.matrix.bic[9,7] = 1
-
-# plot hypotheses base function
-hypo.plot(capri, my.hypotheses)
-hypo.plot(capri)
-
-
-

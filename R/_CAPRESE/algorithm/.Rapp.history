@@ -29,3 +29,10 @@ setwd(work.dir);#
 #
 #load the dataset#
 genotype = read.table(file.dataset.ovarian);
+dataset = array(0,c(3,5))
+dataset
+colnames(dataset)
+colnames(dataset) = c("1","2","3","4","5")
+rownames(dataset) = c("V1","V2","V3")
+dataset
+names(dataset)

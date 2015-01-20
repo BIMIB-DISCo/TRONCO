@@ -10,7 +10,7 @@
 "emap" <-
 function( label.effect, dataset ) {
 	if(!is.null(dataset)) {
-		col.num = which(names(dataset)==label.effect);
+		col.num = which(colnames(dataset)==label.effect);
 		if(length(col.num)==0) {
 			col.num = -1;
 		}
