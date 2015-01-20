@@ -96,8 +96,8 @@ hypo.plot = function(capri, data, hypotheses = NULL) {
   new_name = list()
   for(v in v_names) {
     if(v %in% rownames(data$annotations)) {
-      n = data$annotations[v,"Event"]
-      t = data$annotations[v,"Type"]
+      n = data$annotations[v,"event"]
+      t = data$annotations[v,"type"]
       new_name = append(new_name, paste(n, t))
     } else {
       new_name = append(new_name, v)
