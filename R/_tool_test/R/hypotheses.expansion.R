@@ -113,8 +113,8 @@ hypo.plot = function(capri, data, hypotheses = NULL, font=14) {
   # nAttrs$fontsize = rep('8', length(nAttrs$label))
   # names(nAttrs$fontsize) = z
 
-     attrs <- list(node = list(fixedsize = FALSE, fontsize=font)) 
-     # attrs$node$fontsize=8 
+  attrs <- list(node = list(fixedsize = FALSE, fontsize=font)) 
+  # attrs$node$fontsize=8 
    
   # print(nAttrs)
    
