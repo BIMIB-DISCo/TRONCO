@@ -9,6 +9,9 @@
 # Add a new hypothesis by creating a new causal event and adding it to the dateset
 "hypothesis.add" <-
 function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA ) {
+	
+
+
 	if(!is.null(dataset)) {
 		#the Boolean functions look for a global variable named lifting.dataset
 		#if there is already a global variable named lifting.dataset, make the backup of it
@@ -69,6 +72,9 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 		}
 		else {
 			#check the effects of the formula to be well-formed
+
+			 # print(label.effect)
+
 			for (i in 1:length(label.effect)) {
 				col.num = emap(label.effect[[i]],dataset);
 				#check the effect to be a valid event
@@ -124,7 +130,7 @@ function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA 
 			}
 		}
 		#now I can finally add the hypothesis
-		colnames(dataset)[length(dataset)] = label.formula;
+		colnames(dataset)[ncol(dataset)] = label.formula;
 		if(is.na(hypotheses[1])) {
 			hypotheses = list();
 		}
