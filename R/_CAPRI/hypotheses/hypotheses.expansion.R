@@ -37,7 +37,7 @@ hypotheses.expansion <- function(input_matrix,
     }
     
     # eros! please give me the transposed matrix
-    hypo = t(map[[h]])
+    #hypo = t(map[[h]])
     
     # create graph from hypo
     hypo_graph = graph.adjacency(hypo)
