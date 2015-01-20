@@ -8,6 +8,7 @@
 
 # Add a new hypothesis by creating a new causal event and adding it to the dateset
 "hypothesis.add" <-
+<<<<<<< HEAD
 function( data, label.formula, lifted.formula, label.effect ) {
 	###TO BE FIXED TO HANDLE <EVENT,TYPE> as a key for the input mutations
 	if(!is.null(data$genotypes)) {
@@ -23,6 +24,12 @@ function( data, label.formula, lifted.formula, label.effect ) {
 		hypotheses = NA;
 	}
 	###END TO BE FIXED
+=======
+function( dataset, label.formula, lifted.formula, label.effect, hypotheses = NA ) {
+	
+
+
+>>>>>>> FETCH_HEAD
 	if(!is.null(dataset)) {
 		#the Boolean functions look for a global variable named lifting.dataset
 		#if there is already a global variable named lifting.dataset, make the backup of it
@@ -69,7 +76,7 @@ function( data, label.formula, lifted.formula, label.effect ) {
 		}
 		#* is a special label.effect which indicates to use all the events as effects for this formula
 		if(label.effect[1]=="*") {
-			label.effect = names(dataset)[1:(length(names(dataset))-num.hypotheses)];
+			label.effect = colnames(dataset)[1:(length(colnames(dataset))-num.hypotheses)];
 			#any event can not be both causes and effects for the formula to be well-formed
 			label.effect = label.effect[-which((label.effect%in%unlist(curr_hypotheses$llist)))];
 			if(length(label.effect)==0) {
@@ -83,6 +90,9 @@ function( data, label.formula, lifted.formula, label.effect ) {
 		}
 		else {
 			#check the effects of the formula to be well-formed
+
+			 # print(label.effect)
+
 			for (i in 1:length(label.effect)) {
 				col.num = emap(label.effect[[i]],dataset);
 				#check the effect to be a valid event
@@ -102,7 +112,7 @@ function( data, label.formula, lifted.formula, label.effect ) {
 			stop(paste("There are duplicated effects in the formula! No hypothesis will be created.",sep=''));
 		}
 		#check that the we are not duplicating any name by adding the new hypothesis
-		if(length(which(names(dataset)==label.formula))>0) {
+		if(length(which(colnames(dataset)==label.formula))>0) {
 			stop(paste("Hypothesis ",label.formula," already exists! No hypothesis will not be created.",sep=''));
 		}
 		#add the hypothesis to the dataset
@@ -138,7 +148,7 @@ function( data, label.formula, lifted.formula, label.effect ) {
 			}
 		}
 		#now I can finally add the hypothesis
-		names(dataset)[length(dataset)] = label.formula;
+		colnames(dataset)[ncol(dataset)] = label.formula;
 		if(is.na(hypotheses[1])) {
 			hypotheses = list();
 		}
