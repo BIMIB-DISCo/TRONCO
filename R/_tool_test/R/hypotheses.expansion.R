@@ -66,7 +66,7 @@ hypotheses.expansion <- function(input_matrix,
   return(get.adjacency(min_graph, sparse = F))
 }
 
-hypo.plot = function(capri, data, hypotheses = NULL) {
+hypo.plot = function(capri, data, hypotheses = NULL, font=14) {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -109,5 +109,14 @@ hypo.plot = function(capri, data, hypotheses = NULL) {
   names(z) = nodes(graph)
   nAttrs = list()
   nAttrs$label = z
-  plot(graph, nodeAttrs=nAttrs)
+
+  # nAttrs$fontsize = rep('8', length(nAttrs$label))
+  # names(nAttrs$fontsize) = z
+
+     attrs <- list(node = list(fixedsize = FALSE, fontsize=font)) 
+     # attrs$node$fontsize=8 
+   
+  # print(nAttrs)
+   
+  plot(graph, nodeAttrs=nAttrs, attrs=attrs)
 }
