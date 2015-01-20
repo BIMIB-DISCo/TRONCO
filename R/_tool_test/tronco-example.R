@@ -47,9 +47,8 @@ print(my.hypotheses$hypotheses$hstructure[["H1"]]);
 print(my.hypotheses$hypotheses$hstructure[["H2"]]);
 print(my.hypotheses$hypotheses$hstructure[["H3"]]);
 
-# load hypotheses.
-source('../hypotheses.expansion.R')
-source('../tronco.plot.R')
+source('../_CAPRI/hypotheses/hypotheses.expansion.R')
+# source('../tronco.plot.R')
 
 # only for test!!!
 capri$adj.matrix$adj.matrix.bic[8,7] = 1
