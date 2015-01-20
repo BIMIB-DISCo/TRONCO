@@ -13,7 +13,7 @@ function( dataset, function.name, ... ) {
 		clauses = list(...);
 		curr_dataset = array(0,c(nrow(dataset),length(clauses)));
 		hypotheses = list();
-		function.effects = list();
+		function.inputs = list();
 		for (i in 1:length(clauses)) {
 			#if the clause is given by name, get the column from the dataset
 			if(typeof(clauses[[i]])=="character") {
@@ -31,7 +31,7 @@ function( dataset, function.name, ... ) {
 						hypotheses$llist = list(c(unlist(hypotheses$llist),clauses[[i]]));
 					}
 					function.name = paste(function.name,"_",clauses[[i]],sep="");
-					function.effects = c(function.effects,clauses[[i]]);
+					function.inputs = c(function.inputs,clauses[[i]]);
 				}
 			}
 			#otherwise I already have the column as a vector
@@ -45,13 +45,13 @@ function( dataset, function.name, ... ) {
 					hypotheses$llist = list(c(unlist(clauses[[i]]$hypotheses$llist),unlist(hypotheses$llist)));
 				}
 				function.name = paste(function.name,"_",clauses[[i]]$function.name,sep="");
-				function.effects = c(function.effects,clauses[[i]]$function.name);
+				function.inputs = c(function.inputs,clauses[[i]]$function.name);
 			}
 		}
-		result = list(curr_dataset=curr_dataset,hypotheses=hypotheses,function.name=function.name,function.effects=function.effects);
+		result = list(curr_dataset=curr_dataset,hypotheses=hypotheses,function.name=function.name,function.inputs=function.inputs);
 		#save the new edges
-		for(k in 1:length(result$function.effects)) {
-			lifting.edges = rbind(lifting.edges,c(result$function.name,result$function.effects[[k]]));
+		for(k in 1:length(result$function.inputs)) {
+			lifting.edges = rbind(lifting.edges,c(result$function.inputs[[k]],result$function.name));
 			assign("lifting.edges",lifting.edges,envir=.GlobalEnv);
 		}
 		return(result);
@@ -73,7 +73,7 @@ function( ... ) {
 		curr_dataset = result$curr_dataset;
 		hypotheses = result$hypotheses;
 		function.name = result$function.name;
-		function.effects = result$function.effects;
+		function.inputs = result$function.inputs;
 		#evaluate the AND operator
 		formula = rep(0,nrow(dataset));
 		for (i in 1:nrow(dataset)) {
@@ -86,7 +86,7 @@ function( ... ) {
 			}
 		}
 		formula = as.integer(formula);
-		result = list(formula=formula,hypotheses=hypotheses,function.name=function.name,function.effects=function.effects);
+		result = list(formula=formula,hypotheses=hypotheses,function.name=function.name,function.inputs=function.inputs);
 		return(result);
 	}
 	else {
@@ -106,7 +106,7 @@ function( ... ) {
 		curr_dataset = result$curr_dataset;
 		hypotheses = result$hypotheses;
 		function.name = result$function.name;
-		function.effects = result$function.effects;
+		function.inputs = result$function.inputs;
 		#evaluate the OR operator
 		formula = rep(0,nrow(dataset));
 		for (i in 1:nrow(dataset)) {
@@ -116,7 +116,7 @@ function( ... ) {
 			}
 		}
 		formula = as.integer(formula);
-		result = list(formula=formula,hypotheses=hypotheses,function.name=function.name,function.effects=function.effects);
+		result = list(formula=formula,hypotheses=hypotheses,function.name=function.name,function.inputs=function.inputs);
 		return(result);
 	}
 	else {
@@ -136,7 +136,7 @@ function( ... ) {
 		curr_dataset = result$curr_dataset;
 		hypotheses = result$hypotheses;
 		function.name = result$function.name;
-		function.effects = result$function.effects;
+		function.inputs = result$function.inputs;
 		#evaluate the XOR operator
 		formula = rep(0,nrow(dataset));
 		for (i in 1:nrow(dataset)) {
@@ -146,7 +146,7 @@ function( ... ) {
 			}
 		}
 		formula = as.integer(formula);
-		result = list(formula=formula,hypotheses=hypotheses,function.name=function.name,function.effects=function.effects);
+		result = list(formula=formula,hypotheses=hypotheses,function.name=function.name,function.inputs=function.inputs);
 		return(result);
 	}
 	else {

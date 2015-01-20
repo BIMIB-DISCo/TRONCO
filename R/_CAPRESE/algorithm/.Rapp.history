@@ -20,3 +20,12 @@ edge.confidence.matrix
 edge.confidence.matrix[[1,1]]
 edge.confidence.matrix[[2,1]]
 ls()
+#dataset#
+file.dataset.ovarian = "data/ovarian-data.txt";#
+#
+#set the working directory#
+work.dir = '~/Desktop/_tool_test';#
+setwd(work.dir);#
+#
+#load the dataset#
+genotype = read.table(file.dataset.ovarian);
