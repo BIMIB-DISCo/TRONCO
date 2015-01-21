@@ -37,27 +37,7 @@ invisible(sapply(list.files(pattern="[.]R$",path="R",full.names=TRUE),source));
 caprese = caprese.fit(data$genotypes);
 
 #perform the reconstruction with CAPRI
-my.hypotheses = hypothesis.add(data,"H1",OR(XOR("Gene 1","Gene 4"),AND("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
-my.hypotheses = hypothesis.add(my.hypotheses,"H2",AND(XOR("Gene 1","Gene 4"),OR("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
-my.hypotheses = hypothesis.add(my.hypotheses,"H3",OR(XOR("Gene 1","Gene 4"),"Gene 5"),"*");
-capri.hypo = capri.fit(my.hypotheses$genotypes ,my.hypotheses$hypotheses);
+data = hypothesis.add(data,"H1",OR(XOR("Gene 1","Gene 4"),AND("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
+data = hypothesis.add(data,"H2",AND(XOR("Gene 1","Gene 4"),OR("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
+data = hypothesis.add(data,"H3",OR(XOR("Gene 1","Gene 4"),"Gene 5"),"*");
 capri = capri.fit(data$genotypes);
-
-#print the lifted adjacency matrix for each hypothesis
-print(my.hypotheses$hypotheses$hstructure[["H1"]]);
-print(my.hypotheses$hypotheses$hstructure[["H2"]]);
-print(my.hypotheses$hypotheses$hstructure[["H3"]]);
-
-source('../_CAPRI/hypotheses/hypotheses.expansion.R')
-source('../_TRONCO/tronco.plot.R')
-
-# only for test!!!
-capri.hypo$adj.matrix$adj.matrix.bic[8,7] = 1
-capri.hypo$adj.matrix$adj.matrix.bic[9,7] = 1
-
-# plot hypotheses base function
-hypo.plot(capri.hypo, data, my.hypotheses)
-hypo.plot(capri, data)
-
-
-
