@@ -64,36 +64,41 @@ hypotheses.expansion <- function(input_matrix,
     
   }
   
-  # foreach AND
   min_matrix = get.adjacency(min_graph, sparse = F)
   print(min_matrix)
+  
   and_matrix = NULL
   to_reconnect = list()
   logical_op = list("AND", "OR", "NOT", "XOR")
+  
+  # foreach AND column
   for (col in colnames(min_matrix)) {
-    # if a node start with AND_.. is already a AND
     prefix = gsub("_.*$", "", col)
     if ( !(prefix %in% logical_op) && sum(min_matrix[,col]) > 1 ) {
-      # if colsum > 1 there is a hidden AND and something has to be done..
-      print("AND!")
+      # not logical operator and colsum > 1 there is a hidden AND and something has to be done..
+      
+      # remember to reconnect the fake and to this node
       to_reconnect = append(to_reconnect, col)
-      # append a colum to the matrix..
+      # append a colum from the old matrix..
       and_matrix = cbind(and_matrix, min_matrix[,col])
       pos = ncol(and_matrix)
-      # and give her a new name
+      # and give her a new name based on the old one
       colnames(and_matrix)[pos] = paste("AND", col, sep="_")
       
+      # append a 0 columl to the matrix..
       and_matrix = cbind(and_matrix, matrix(0,nrow = nrow(and_matrix), ncol = 1))
       pos = ncol(and_matrix)
+      # and give her the old name
       colnames(and_matrix)[pos] = col
     } else {
-      # ..else add a row ad set the correct colname
+      # ..else add the row taken from the old matrix and set the correct colname
       and_matrix = cbind(and_matrix, min_matrix[,col])
       pos = ncol(and_matrix)
       colnames(and_matrix)[pos] = col
     }
   }
 
+  # now reconnect AND node to his gene (AND_Gene7 -> Gene7)
   for(row in to_reconnect) {
     and_matrix = rbind(and_matrix, matrix(0, ncol=ncol(and_matrix), nrow = 1))
     pos = nrow(and_matrix)
@@ -101,11 +106,11 @@ hypotheses.expansion <- function(input_matrix,
     and_matrix[paste0("AND_", row),row] = 1
   }
   
-  print(and_matrix)
+  # sort col and row (igraph wants the same order)
+  and_matrix = and_matrix[,order(colnames(and_matrix))]
+  and_matrix = and_matrix[order(rownames(and_matrix)),]
   
-  print(colnames(and_matrix))
-  print(rownames(and_matrix))
-  
+  print(and_matrix)  
   return(and_matrix)
 }
 
