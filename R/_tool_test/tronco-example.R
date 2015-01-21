@@ -40,7 +40,7 @@ caprese = caprese.fit(data$genotypes);
 my.hypotheses = hypothesis.add(data,"H1",OR(XOR("Gene 1","Gene 4"),AND("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
 my.hypotheses = hypothesis.add(my.hypotheses,"H2",AND(XOR("Gene 1","Gene 4"),OR("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
 my.hypotheses = hypothesis.add(my.hypotheses,"H3",OR(XOR("Gene 1","Gene 4"),"Gene 5"),"*");
-capri.hypo = capri.fit(my.hypotheses$dataset,my.hypotheses$hypotheses);
+capri.hypo = capri.fit(my.hypotheses$genotypes ,my.hypotheses$hypotheses);
 capri = capri.fit(data$genotypes);
 
 #print the lifted adjacency matrix for each hypothesis

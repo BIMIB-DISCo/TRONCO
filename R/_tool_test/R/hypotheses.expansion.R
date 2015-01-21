@@ -21,50 +21,53 @@ hypotheses.expansion <- function(input_matrix,
 
   # cut input matrix
   margin = length(node_list) - atomic_nodes
+  
+  # check if there are hypotheses
   if (length(map) == 0) {
+    # if no hypos do nothings..
     min_matrix = input_matrix
-    return(min_matrix)
   } else {
+    # ..else expand them
     min_matrix = input_matrix[-(margin+1):-length(node_list), -(margin+1):-length(node_list)]
-  }
-  #print(min_matrix)
 
-  # create graph from matrix
-  min_graph = graph.adjacency(min_matrix)
+    # create graph from matrix
+    min_graph = graph.adjacency(min_matrix)
+    
   
-
-  # foreach hypothesis
-  for (h in ls(map)) {
-    if(length(which(input_matrix[h,] == 1)) == 0) {
-      break
+    # foreach hypothesis
+    for (h in ls(map)) {
+      if(length(which(input_matrix[h,] == 1)) == 0) {
+        break
+      }
+      
+      # eros! please give me the transposed matrix
+      hypo = map[[h]]
+      
+      # create graph from hypo
+      hypo_graph = graph.adjacency(hypo)
+      #print(hypo)
+  
+      # add this graph to main graph
+      min_graph = graph.union(min_graph, hypo_graph)
+      
+      # edge to reconstruct
+      h_edge <- input_matrix[h,]
+      final_node <- names(h_edge)[which(h_edge==1)]
+      
+      # name of this node
+      h_mat <- rowSums(get.adjacency(hypo_graph, sparse=FALSE))
+      initial_node <- names(h_mat)[which(h_mat==0)]
+      
+      # recreate lost edge
+      for (node in final_node) {
+        min_graph <- min_graph + edge(initial_node, node)
+      }
+      
     }
-    
-    # eros! please give me the transposed matrix
-    hypo = map[[h]]
-    
-    # create graph from hypo
-    hypo_graph = graph.adjacency(hypo)
-    #print(hypo)
-
-    # add this graph to main graph
-    min_graph = graph.union(min_graph, hypo_graph)
-    
-    # edge to reconstruct
-    h_edge <- input_matrix[h,]
-    final_node <- names(h_edge)[which(h_edge==1)]
-    
-    # name of this node
-    h_mat <- rowSums(get.adjacency(hypo_graph, sparse=FALSE))
-    initial_node <- names(h_mat)[which(h_mat==0)]
-    
-    # recreate lost edge
-    for (node in final_node) {
-      min_graph <- min_graph + edge(initial_node, node)
-    }
-    
+    min_matrix = get.adjacency(min_graph, sparse = F)
   }
   
-  min_matrix = get.adjacency(min_graph, sparse = F)
+  # now expand the hidden AND
   print(min_matrix)
   
   and_matrix = NULL
