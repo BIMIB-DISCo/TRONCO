@@ -35,9 +35,22 @@ hypotheses.expansion <- function(input_matrix,
     
   
     # foreach hypothesis
+    # print(ls(map))
+    # for (h in ls(map)) {
+    	# print(h)
+    	# }
+
+
     for (h in ls(map)) {
+    	
+    	# print(input_matrix[h,])
+    	
+    	# print(any(input_matrix[h,] == 1))
+    	
+    	
+    	
       if(length(which(input_matrix[h,] == 1)) == 0) {
-        break
+        next
       }
       
       # eros! please give me the transposed matrix
@@ -68,7 +81,7 @@ hypotheses.expansion <- function(input_matrix,
   }
   
   # now expand the hidden AND
-  print(min_matrix)
+  # print(min_matrix)
   
   and_matrix = NULL
   to_reconnect = list()
@@ -113,7 +126,7 @@ hypotheses.expansion <- function(input_matrix,
   and_matrix = and_matrix[,order(colnames(and_matrix))]
   and_matrix = and_matrix[order(rownames(and_matrix)),]
   
-  print(and_matrix)  
+  # print(and_matrix)  
   return(and_matrix)
 }
 
@@ -168,6 +181,8 @@ hypo.plot = function(capri, data, hypotheses = NULL, font=14) {
   # attrs$node$fontsize=8 
    
   # print(nAttrs)
+  
+  
    
   plot(graph, nodeAttrs=nAttrs, attrs=attrs)
 }
