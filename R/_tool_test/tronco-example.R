@@ -37,7 +37,8 @@ invisible(sapply(list.files(pattern="[.]R$",path="R",full.names=TRUE),source));
 caprese = caprese.fit(data$genotypes);
 
 #perform the reconstruction with CAPRI
-data = hypothesis.add(data,"H1",OR(XOR("Gene 1","Gene 4"),AND("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
-data = hypothesis.add(data,"H2",AND(XOR("Gene 1","Gene 4"),OR("Gene 2","Gene 3"),"Gene 5","Gene 6"),"Gene 7");
-data = hypothesis.add(data,"H3",OR(XOR("Gene 1","Gene 4"),"Gene 5"),"*");
+data = hypothesis.add(data,"H1",OR(XOR(c("8q+","Gain"),c("4q-","Loss")),AND(c("3q+","Gain"),c("5q-","Loss")),c("8p-","Loss"),c("1q+","Gain")),c("Xp-","Loss"));
+data = hypothesis.add(data,"H2",AND(XOR(c("8q+","Gain"),c("4q-","Loss")),OR(c("3q+","Gain"),c("5q-","Loss")),c("8p-","Loss"),c("1q+","Gain")),c("Xp-","Loss"));
+data = hypothesis.add(data,"H3",OR(XOR(c("8q+","Gain"),c("4q-","Loss")),c("8p-","Loss")),"*");
+data = hypothesis.add(data,"H4",OR(AND(c("8q+","Gain"),c("4q-","Loss")),c("8p-","Loss")),c("1q+","Gain"),c("Xp-","Loss"));
 capri = capri.fit(data$genotypes);

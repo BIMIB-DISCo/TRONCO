@@ -8,13 +8,16 @@
 
 # Add a new hypothesis by creating a new causal event and adding it to the dateset
 "hypothesis.add" <-
-function( data, label.formula, lifted.formula, label.effect ) {
-	###TO BE FIXED TO HANDLE <EVENT,TYPE> as a key for the input mutations
-	if(!is.null(data$genotypes)) {
+function( data, label.formula, lifted.formula, ... ) {
+	label.effect = list(...);
+	#save the needed data structures
+	if(!is.null(data$genotypes) && !is.null(data$annotations)) {
 		dataset = data$genotypes;
+		annotations = data$annotations;
 	}
 	else {
 		dataset = NULL;
+		annotations = NULL;
 	}
 	if(!is.null(data$hypotheses)) {
 		hypotheses = data$hypotheses;
@@ -22,17 +25,27 @@ function( data, label.formula, lifted.formula, label.effect ) {
 	else {
 		hypotheses = NA;
 	}
-	###END TO BE FIXED
-	if(!is.null(dataset)) {
+	#add the hypothesis only if all the inputs are correctly provided
+	if(!is.null(dataset) && !is.null(annotations)) {
 		#the Boolean functions look for a global variable named lifting.dataset
-		#if there is already a global variable named lifting.dataset, make the backup of it
+		#if there are already global variables named as the ones used here, make the backup of them
 		do.roll.back.lifting.dataset = FALSE;
+		do.roll.back.lifting.annotations = FALSE;
 		do.roll.back.lifting.edges = FALSE;
+		#I need a global variable to save the dataset of the lifted formula
+		#if there is already a global variable named lifting.dataset, make the backup of it
 		if(exists("lifting.dataset")) {
 			roll.back.lifting.dataset = lifting.dataset;
 			do.roll.back.lifting.dataset = TRUE;
 		}
 		assign("lifting.dataset",dataset,envir=.GlobalEnv);
+		#I need a global variable to save the annotations of the lifted formula
+		#if there is already a global variable named lifting.annotations, make the backup of it
+		if(exists("lifting.annotations")) {
+			roll.back.lifting.annotations = lifting.annotations;
+			do.roll.back.lifting.annotations = TRUE;
+		}
+		assign("lifting.annotations",annotations,envir=.GlobalEnv);
 		#I need a global variable to save the edges of the lifted formula
 		#if there is already a global variable named lifting.edges, make the backup of it
 		do.roll.back.lifting.dataset = FALSE;
@@ -53,6 +66,13 @@ function( data, label.formula, lifted.formula, label.effect ) {
 		else {
 			rm(lifting.dataset,pos=".GlobalEnv");
 		}
+		#roll back to the previous value of the global variable lifting.annotations if any or remove it
+		if(do.roll.back.lifting.annotations) {
+			assign("lifting.annotations",roll.back.lifting.annotations,envir=.GlobalEnv);
+		}
+		else {
+			rm(lifting.annotations,pos=".GlobalEnv");
+		}
 		#roll back to the previous value of the global variable lifting.edges if any or remove it
 		if(do.roll.back.lifting.edges) {
 			assign("lifting.edges",roll.back.lifting.edges,envir=.GlobalEnv);
@@ -68,10 +88,12 @@ function( data, label.formula, lifted.formula, label.effect ) {
 			num.hypotheses = 0;
 		}
 		#* is a special label.effect which indicates to use all the events as effects for this formula
-		if(label.effect[1]=="*") {
+		is.to.all.effects = FALSE;
+		if(label.effect[[1]][1]=="*") {
 			label.effect = colnames(dataset)[1:(length(colnames(dataset))-num.hypotheses)];
 			#any event can not be both causes and effects for the formula to be well-formed
-			label.effect = label.effect[-which((label.effect%in%unlist(curr_hypotheses$llist)))];
+			label.effect = list(label.effect[-which((label.effect%in%unlist(curr_hypotheses$llist)))]);
+			is.to.all.effects = TRUE;
 			if(length(label.effect)==0) {
 				stop(paste("No valid effect provided in the formula! No hypothesis will be created.",sep=''));
 			}
@@ -84,15 +106,35 @@ function( data, label.formula, lifted.formula, label.effect ) {
 		else {
 			#check the effects of the formula to be well-formed
 			for (i in 1:length(label.effect)) {
-				col.num = emap(label.effect[[i]],dataset);
-				#check the effect to be a valid event
-				if(col.num==-1) {
-					stop(paste("Event ",label.effect[[i]]," does not exist! The formula is bad formed and no hypothesis will be created.",sep=''));
+				curr.label.effect = label.effect[[i]];
+				if(is.to.all.effects==FALSE) {
+					col.num = -1;
+					if(length(curr.label.effect)==1) {
+						event.map = emap(c(curr.label.effect,"*"),dataset,annotations);
+						col.num = event.map$col.num;
+						events.name = event.map$events.name;
+					}
+					else if(length(curr.label.effect)==2) {
+						event.map = emap(curr.label.effect,dataset,annotations);
+						col.num = event.map$col.num;
+						events.name = event.map$events.name;
+					}
 				}
-				all.col.nums[length(all.col.nums)+1] = col.num;
+				else {
+					col.num = which(colnames(dataset)%in%curr.label.effect);
+					if(length(col.num)==0) {
+						col.num = -1;
+					}
+					events.name = curr.label.effect;
+				}
+				#check the effect to be a valid event
+				if(col.num[1]==-1) {
+					stop(paste("One or more undefined events have been found! The formula is bad formed and no hypothesis will be created.",sep=''));
+				}
+				all.col.nums = append(all.col.nums,col.num);
 				#check the formula to be well-formed
 				#if the effect is in the formula, the formula is not well-formed
-				if(length(which(unlist(curr_hypotheses$llist)%in%unlist(label.effect[[i]])))>0) {
+				if(length(which(unlist(curr_hypotheses$llist)%in%events.name))>0) {
 					stop(paste("The effect is in the formula! The formula is bad formed and no hypothesis will be created.",sep=''));
 				}
 			}
@@ -149,8 +191,26 @@ function( data, label.formula, lifted.formula, label.effect ) {
 		}
 		#add the new hypothesis to the list
 		for (i in 1:length(label.effect)) {
-			col.num = emap(label.effect[[i]],dataset);
-			hypotheses$hlist = rbind(hypotheses$hlist,t(c(ncol(dataset),col.num)));
+			curr.label.effect = label.effect[[i]];
+			if(is.to.all.effects==FALSE) {
+				if(length(curr.label.effect)==1) {
+					event.map = emap(c(curr.label.effect,"*"),dataset,annotations);
+					col.num = event.map$col.num;
+				}
+				else if(length(curr.label.effect)==2) {
+					event.map = emap(curr.label.effect,dataset,annotations);
+					col.num = event.map$col.num;
+				}
+			}
+			else {
+				col.num = which(colnames(dataset)%in%curr.label.effect);
+				if(length(col.num)==0) {
+					col.num = -1;
+				}
+			}
+			for (j in 1:length(col.num)) {
+				hypotheses$hlist = rbind(hypotheses$hlist,t(c(ncol(dataset),col.num[j])));
+			}
 			if(is.null(colnames(hypotheses$hlist))) {
 				colnames(hypotheses$hlist) = c("cause","effect");
 			}
