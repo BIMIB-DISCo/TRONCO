@@ -86,7 +86,7 @@ function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, d
     probabilities = list(probabilities.pf=probabilities.pf,probabilities.bic=probabilities.bic);
     parents.pos = list(parents.pos.pf=parents.pos.pf,parents.pos.bic=parents.pos.bic);
     error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.bic=estimated.error.rates.bic);
-	parameters = list(algorithm="CAPRI",do.boot=do.boot,nboot=nboot,pvalue=pvalue);
+	parameters = list(algorithm="CAPRI",do.boot=do.boot,nboot=nboot,pvalue=pvalue,do.estimation=do.estimation);
     #return the results
     topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,confidence=prima.facie.parents$pf.confidence,adj.matrix=best.parents,parameters=parameters);
 	return(topology);

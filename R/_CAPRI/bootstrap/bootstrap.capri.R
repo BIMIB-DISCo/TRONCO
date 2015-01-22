@@ -53,13 +53,14 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
 			#if the reconstruction was performed without errors
 			if(check.data$is.valid==TRUE) {
 				bootstrapped.dataset = check.data$dataset;
-				bootstrapped.topology = capri.fit(bootstrapped.dataset,do.boot,nboot.capri,pvalue,FALSE,FALSE);
+				bootstrapped.hypotheses = NA;
+				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,do.boot,nboot.capri,pvalue,FALSE);
 				#set the reconstructed causal edges
-				parents.pos.pf = array(list(),c(ncol(bootstrapped.topology$dataset),1));
-				parents.pos.bic = array(list(),c(ncol(bootstrapped.topology$dataset),1));
-				for(i in 1:ncol(bootstrapped.topology$dataset)) {
-					for(j in 1:ncol(bootstrapped.topology$dataset)) {
-						if(i!=j && bootstrapped.topology$adj.matrix$adj.matrix.prima.facie[i,j]==1) {
+				parents.pos.pf = array(list(),c(ncol(bootstrapped.topology$data),1));
+				parents.pos.bic = array(list(),c(ncol(bootstrapped.topology$data),1));
+				for(i in 1:ncol(bootstrapped.topology$data)) {
+					for(j in 1:ncol(bootstrapped.topology$data)) {
+						if(i!=j && bootstrapped.topology$adj.matrix$adj.matrix.pf[i,j]==1) {
 							parents.pos.pf[j,1] = list(c(unlist(parents.pos.pf[j,1]),i));
 						}
 						if(i!=j && bootstrapped.topology$adj.matrix$adj.matrix.bic[i,j]==1) {
@@ -70,8 +71,8 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
 				parents.pos.pf[unlist(lapply(parents.pos.pf,is.null))] = list(-1);
 				parents.pos.bic[unlist(lapply(parents.pos.bic,is.null))] = list(-1);
 				#get the matched edge in the reconstruction
-				matched.idx.pf = match(colnames(bootstrapped.topology$dataset),colnames(bootstrap.results.pf));
-				matched.idx.bic = match(colnames(bootstrapped.topology$dataset),colnames(bootstrap.results.bic));
+				matched.idx.pf = match(colnames(bootstrapped.topology$data),colnames(bootstrap.results.pf));
+				matched.idx.bic = match(colnames(bootstrapped.topology$data),colnames(bootstrap.results.bic));
 				#if an event has no match, it means it has been merged and I discard it
 				parents.pos.pf = parents.pos.pf[!is.na(matched.idx.pf)];
 				parents.pos.bic = parents.pos.bic[!is.na(matched.idx.bic)];
@@ -109,19 +110,20 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
 			#if the reconstruction was performed without errors for the prima facie topology
 			if(check.data.pf$is.valid==TRUE) {
 				bootstrapped.dataset = check.data.pf$dataset;
-				bootstrapped.topology = capri.fit(bootstrapped.dataset,do.boot,nboot.capri,pvalue,FALSE,FALSE);
+				bootstrapped.hypotheses = NA;
+				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,do.boot,nboot.capri,pvalue,FALSE);
 				#set the reconstructed causal edges
-				parents.pos.pf = array(list(),c(ncol(bootstrapped.topology$dataset),1));
-				for(i in 1:ncol(bootstrapped.topology$dataset)) {
-					for(j in 1:ncol(bootstrapped.topology$dataset)) {
-						if(i!=j && bootstrapped.topology$adj.matrix$adj.matrix.prima.facie[i,j]==1) {
+				parents.pos.pf = array(list(),c(ncol(bootstrapped.topology$data),1));
+				for(i in 1:ncol(bootstrapped.topology$data)) {
+					for(j in 1:ncol(bootstrapped.topology$data)) {
+						if(i!=j && bootstrapped.topology$adj.matrix$adj.matrix.pf[i,j]==1) {
 							parents.pos.pf[j,1] = list(c(unlist(parents.pos.pf[j,1]),i));
 						}
 					}
 				}
 				parents.pos.pf[unlist(lapply(parents.pos.pf,is.null))] = list(-1);
 				#get the matched edge in the reconstruction
-				matched.idx.pf = match(colnames(bootstrapped.topology$dataset),colnames(bootstrap.results.pf));
+				matched.idx.pf = match(colnames(bootstrapped.topology$data),colnames(bootstrap.results.pf));
 				#if an event has no match, it means it has been merged and I discard it
 				parents.pos.pf = parents.pos.pf[!is.na(matched.idx.pf)];
 				matched.idx.pf = matched.idx.pf[!is.na(matched.idx.pf)];
@@ -131,11 +133,12 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
 			#if the reconstruction was performed without errors for the causal topology
 			if(check.data.bic$is.valid==TRUE) {
 				bootstrapped.dataset = check.data.bic$dataset;
-				bootstrapped.topology = capri.fit(bootstrapped.dataset,do.boot,nboot.capri,pvalue,FALSE,FALSE);
+				bootstrapped.hypotheses = NA;
+				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,do.boot,nboot.capri,pvalue,FALSE);
 				#set the reconstructed causal edges
-				parents.pos.bic = array(list(),c(ncol(bootstrapped.topology$dataset),1));
-				for(i in 1:ncol(bootstrapped.topology$dataset)) {
-					for(j in 1:ncol(bootstrapped.topology$dataset)) {
+				parents.pos.bic = array(list(),c(ncol(bootstrapped.topology$data),1));
+				for(i in 1:ncol(bootstrapped.topology$data)) {
+					for(j in 1:ncol(bootstrapped.topology$data)) {
 						if(i!=j && bootstrapped.topology$adj.matrix$adj.matrix.bic[i,j]==1) {
 							parents.pos.bic[j,1] = list(c(unlist(parents.pos.bic[j,1]),i));
 						}
@@ -143,7 +146,7 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
 				}
 				parents.pos.bic[unlist(lapply(parents.pos.bic,is.null))] = list(-1);
 				#get the matched edge in the reconstruction
-				matched.idx.bic = match(colnames(bootstrapped.topology$dataset),colnames(bootstrap.results.bic));
+				matched.idx.bic = match(colnames(bootstrapped.topology$data),colnames(bootstrap.results.bic));
 				#if an event has no match, it means it has been merged and I discard it
 				parents.pos.bic = parents.pos.bic[!is.na(matched.idx.bic)];
 				matched.idx.bic = matched.idx.bic[!is.na(matched.idx.bic)];

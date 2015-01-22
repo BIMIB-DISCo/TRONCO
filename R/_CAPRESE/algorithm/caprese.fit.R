@@ -60,7 +60,7 @@ function(dataset, lambda = 0.5 , do.estimation = FALSE) {
 	}
     #structures where to save the probabilities
     probabilities = list(marginal.probs=best.parents$marginal.probs,joint.probs=best.parents$joint.probs,conditional.probs=conditional.probs,estimated.marginal.probs=estimated.probabilities$marginal.probs,estimated.joint.probs=estimated.probabilities$joint.probs,estimated.conditional.probs=estimated.probabilities$conditional.probs);
-    parameters = list(algorithm="CAPRESE",lambda=lambda);
+    parameters = list(algorithm="CAPRESE",lambda=lambda,do.estimation=do.estimation);
     #return the results
     topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=estimated.error.rates,confidence=best.parents$pr.score,adj.matrix=adj.matrix,parameters=parameters);
     return(topology);

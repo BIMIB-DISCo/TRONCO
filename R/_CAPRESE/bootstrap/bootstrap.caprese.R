@@ -28,13 +28,13 @@ function(dataset, lambda, reconstructed.topology, command=c("non-parametric","pa
     command <- match.arg(command);
     #set the dataset if the bootstrap is parametric
     if(command=="parametric") {
-    	#define the possible samples given the current number of events
+    		#define the possible samples given the current number of events
         possible.strings = 2^ncol(dataset);
         err = "";
   		message = "Too many events! Parametric bootstrastap can not be performed."
         err <- tryCatch(curr.dataset <- suppressWarnings(array(0,c(possible.strings,ncol(dataset)))), error = function(e) err <- message);
         if(toString(err) == message) {
-        	stop(err, call. = FALSE);
+        		stop(err, call. = FALSE);
         }
         for (i in 1:possible.strings) {
             curr.dataset[i,] = decimal.to.binary.tree(i-1,ncol(dataset));
@@ -48,34 +48,34 @@ function(dataset, lambda, reconstructed.topology, command=c("non-parametric","pa
     colnames(bootstrap.results) = colnames(dataset);    
 	#perform nboot bootstrap resampling
     for (num in 1:nboot) {
-    	#performed the bootstrapping procedure
-    	if(command=="non-parametric") {
-    		#perform the sampling for the current step of bootstrap
-    		samples <- sample(1:nrow(dataset),size=nrow(dataset),replace=TRUE);
-        	#perform the reconstruction on the bootstrapped dataset
-        	check.data = check.dataset(dataset[samples,],FALSE);
-    	}
-    	else if(command=="parametric") {
-    		#perform the sampling for the current step of bootstrap
-    		samples <- suppressWarnings(sample(1:nrow(curr.dataset),size=nrow(dataset),replace=TRUE,prob=samples.probabilities));
-        	#perform the reconstruction on the bootstrapped dataset
-        	check.data = check.dataset(curr.dataset[samples,],FALSE);
-    	}
+    		#performed the bootstrapping procedure
+    		if(command=="non-parametric") {
+    			#perform the sampling for the current step of bootstrap
+    			samples <- sample(1:nrow(dataset),size=nrow(dataset),replace=TRUE);
+        		#perform the reconstruction on the bootstrapped dataset
+        		check.data = check.dataset(dataset[samples,],FALSE);
+    		}
+    		else if(command=="parametric") {
+    			#perform the sampling for the current step of bootstrap
+    			samples <- suppressWarnings(sample(1:nrow(curr.dataset),size=nrow(dataset),replace=TRUE,prob=samples.probabilities));
+        		#perform the reconstruction on the bootstrapped dataset
+        		check.data = check.dataset(curr.dataset[samples,],FALSE);
+    		}
         #if the reconstruction was performed without errors
         if(check.data$is.valid==TRUE) {
-        	bootstrapped.dataset = check.data$dataset;
-            bootstrapped.topology = caprese.fit(bootstrapped.dataset,lambda,FALSE,FALSE);
+        		bootstrapped.dataset = check.data$dataset;
+            bootstrapped.topology = caprese.fit(bootstrapped.dataset,lambda,FALSE);
             #set the reconstructed causal edges
-            parents.pos = array(-1,c(ncol(bootstrapped.topology$dataset),1));
-            for(i in 1:ncol(bootstrapped.topology$dataset)) {
-            	for(j in 1:ncol(bootstrapped.topology$dataset)) {
-                	if(i!=j && bootstrapped.topology$adj.matrix[i,j]==1) {
+            parents.pos = array(-1,c(ncol(bootstrapped.topology$data),1));
+            for(i in 1:ncol(bootstrapped.topology$data)) {
+            		for(j in 1:ncol(bootstrapped.topology$data)) {
+                		if(i!=j && bootstrapped.topology$adj.matrix[i,j]==1) {
 						parents.pos[j,1] = i;
                     }
                 }
             }
             #get the matched edge in the reconstruction
-            matched.idx = match(colnames(bootstrapped.topology$dataset),colnames(bootstrap.results));
+            matched.idx = match(colnames(bootstrapped.topology$data),colnames(bootstrap.results));
             #if an event has no match, it means it has been merged and I discard it
             parents.pos = parents.pos[!is.na(matched.idx)];
             matched.idx = matched.idx[!is.na(matched.idx)];
