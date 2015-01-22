@@ -52,7 +52,7 @@ function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, d
     conditional.probs.bic = array(list(),c(ncol(dataset),1));
     for(i in 1:ncol(dataset)) {
 		for(j in 1:ncol(dataset)) {
-			if(i!=j && best.parents$adj.matrix.prima.facie[i,j]==1) {
+			if(i!=j && best.parents$adj.matrix.pf[i,j]==1) {
 				parents.pos.pf[j,1] = list(c(unlist(parents.pos.pf[j,1]),i));
 				conditional.probs.pf[j,1] = list(c(unlist(conditional.probs.pf[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
 			}
@@ -88,7 +88,7 @@ function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, d
     error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.bic=estimated.error.rates.bic);
 	parameters = list(algorithm="CAPRI",do.boot=do.boot,nboot=nboot,pvalue=pvalue);
     #return the results
-    topology = list(dataset=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,confidence=prima.facie.parents$pf.confidence,adj.matrix=best.parents,parameters=parameters);
+    topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,confidence=prima.facie.parents$pf.confidence,adj.matrix=best.parents,parameters=parameters);
 	return(topology);
 }
 

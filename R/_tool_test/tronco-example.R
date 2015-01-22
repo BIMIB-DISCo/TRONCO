@@ -7,8 +7,8 @@ setwd(work.dir);
 
 #load the dataset and set all the values for colnames and rownames
 genotypes = read.table(file.dataset.ovarian);
-colnames(genotypes) = gsub("V", "Gene ", colnames(genotypes));
-rownames(genotypes) = paste("Patient ",rownames(genotypes),sep="");
+colnames(genotypes) = gsub("V", "gene ", colnames(genotypes));
+rownames(genotypes) = paste("patient ",rownames(genotypes),sep="");
 annotations = array("",c(ncol(genotypes),2));
 colnames(annotations) = c("event","type");
 rownames(annotations) = colnames(genotypes);
@@ -22,7 +22,7 @@ annotations[7,1] = "Xp-";
 annotations[c(1,2,6),2] = "Gain";
 annotations[c(3,4,5,7),2] = "Loss";
 types = array("",c(length(unique(annotations[,"type"])),1));
-colnames(types) = "Color";
+colnames(types) = "color";
 rownames(types) = unique(annotations[,"type"]);
 types[1,1] = "Red";
 types[2,1] = "Blue";
@@ -33,12 +33,12 @@ data = list(genotypes = genotypes, annotations = annotations, types = types);
 #load TRONCO package
 invisible(sapply(list.files(pattern="[.]R$",path="R",full.names=TRUE),source));
 
-#perform the reconstruction with CAPRESE
-caprese = caprese.fit(data$genotypes);
+#perform the reconstruction with CAPRESE using its default values
+caprese = tronco.caprese(data);
 
-#perform the reconstruction with CAPRI
+#perform the reconstruction with CAPRI using its default values
 data = hypothesis.add(data,"H1",OR(XOR(c("8q+","Gain"),c("4q-","Loss")),AND(c("3q+","Gain"),c("5q-","Loss")),c("8p-","Loss"),c("1q+","Gain")),c("Xp-","Loss"));
 data = hypothesis.add(data,"H2",AND(XOR(c("8q+","Gain"),c("4q-","Loss")),OR(c("3q+","Gain"),c("5q-","Loss")),c("8p-","Loss"),c("1q+","Gain")),c("Xp-","Loss"));
 data = hypothesis.add(data,"H3",OR(XOR(c("8q+","Gain"),c("4q-","Loss")),c("8p-","Loss")),"*");
 data = hypothesis.add(data,"H4",OR(AND(c("8q+","Gain"),c("4q-","Loss")),c("8p-","Loss")),c("1q+","Gain"),c("Xp-","Loss"));
-capri = capri.fit(data$genotypes);
+capri = tronco.capri(data);

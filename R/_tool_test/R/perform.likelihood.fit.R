@@ -71,7 +71,7 @@ function(dataset,adj.matrix) {
             adj.matrix.bic[as.numeric(hc.arcs[i,1]),as.numeric(hc.arcs[i,2])] = 1;
         }
     }
-    topology = list(adj.matrix.prima.facie=adj.matrix,adj.matrix.bic=adj.matrix.bic);
+    topology = list(adj.matrix.pf=adj.matrix,adj.matrix.bic=adj.matrix.bic);
     return(topology);
 }
 
