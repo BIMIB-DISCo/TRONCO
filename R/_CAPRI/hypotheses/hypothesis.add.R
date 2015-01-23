@@ -220,9 +220,19 @@ function( data, label.formula, lifted.formula, ... ) {
 			hypotheses$hstructure = new.env(hash=TRUE,parent=emptyenv());
 		}
 		hypotheses$hstructure[[label.formula]] = get.lifted.formula(hstructure);
+		#add the new hypothesis in the annotations
+		annotations = rbind(data$annotations,c(label.formula,"Hypothesis"));
+		rownames(annotations)[nrow(annotations)] = label.formula;
+		#add the color of the type "Hypothesis" is not already defined
+		if(any(rownames(data$types)=="Hypothesis")==FALSE) {
+			types = rbind(data$types,"Hypothesis");
+			rownames(types)[nrow(types)] = "Hypothesis";
+			data$types = types;
+		}
 		#return the new data as result
 		data$genotypes = dataset;
 		data$hypotheses = hypotheses;
+		data$annotations = annotations;
 		return(data);
 	}
 	else {
