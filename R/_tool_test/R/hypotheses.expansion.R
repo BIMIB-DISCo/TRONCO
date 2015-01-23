@@ -130,7 +130,7 @@ hypotheses.expansion <- function(input_matrix,
   return(and_matrix)
 }
 
-hypo.plot = function(capri, data, hypotheses = NULL, font=14) {
+hypo.plot = function(capri, data, hypotheses = NULL, font=14, pf = FALSE) {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -141,8 +141,10 @@ hypo.plot = function(capri, data, hypotheses = NULL, font=14) {
     library(Rgraphviz)
   }
   
-  c_matrix = capri$adj.matrix$adj.matrix.bic
+   c_matrix = capri$adj.matrix$adj.matrix.bic
   
+   if(pf) c_matrix = capri.two$adj.matrix$adj.matrix.prima.facie
+
   colnames(c_matrix) = colnames(capri$dataset);
   rownames(c_matrix) = colnames(capri$dataset);
   
@@ -153,6 +155,8 @@ hypo.plot = function(capri, data, hypotheses = NULL, font=14) {
     hstruct = hypotheses$hypotheses$hstructure
     num_h = length(hstruct)
   }
+
+
 
   hypo_mat = hypotheses.expansion(c_matrix, num_h, hstruct)
   hypo_graph = graph.adjacency(hypo_mat)
