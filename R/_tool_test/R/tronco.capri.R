@@ -38,16 +38,18 @@ tronco.capri <- function(data, do.boot = TRUE, nboot = 100, pvalue = 0.05, do.es
 	colnames(topology$parents.pos$parents.pos.pf) = "parent";
 	rownames(topology$parents.pos$parents.pos.bic) = colnames(data$genotypes);
 	colnames(topology$parents.pos$parents.pos.bic) = "parent";
-	rownames(topology$confidence) = c("temporal priority","probability raising");
-	colnames(topology$confidence) = "confidence";	
-	rownames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-	colnames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-	rownames(topology$confidence[[2,1]]) = colnames(data$genotypes);
-	colnames(topology$confidence[[2,1]]) = colnames(data$genotypes);
-	rownames(topology$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-	colnames(topology$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-	rownames(topology$adj.matrix$adj.matrix.bic) = colnames(data$genotypes);
-	colnames(topology$adj.matrix$adj.matrix.bic) = colnames(data$genotypes);
+	if(do.boot==TRUE) {
+		rownames(topology$confidence) = c("temporal priority","probability raising");
+		colnames(topology$confidence) = "confidence";	
+		rownames(topology$confidence[[1,1]]) = colnames(data$genotypes);
+		colnames(topology$confidence[[1,1]]) = colnames(data$genotypes);
+		rownames(topology$confidence[[2,1]]) = colnames(data$genotypes);
+		colnames(topology$confidence[[2,1]]) = colnames(data$genotypes);
+		rownames(topology$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+		colnames(topology$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+		rownames(topology$adj.matrix$adj.matrix.bic) = colnames(data$genotypes);
+		colnames(topology$adj.matrix$adj.matrix.bic) = colnames(data$genotypes);
+	}
 	if(do.estimation==TRUE) {
 		rownames(topology$probabilities$probabilities.pf$estimated.marginal.probs) = colnames(data$genotypes);
 		colnames(topology$probabilities$probabilities.pf$estimated.marginal.probs) = "marginal probability";

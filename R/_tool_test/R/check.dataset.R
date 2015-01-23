@@ -13,7 +13,7 @@
 #RETURN:
 #valid.dataset: a dataset valid accordingly to the probability raising
 "check.dataset" <-
-function(dataset,verbose) {
+function( dataset, verbose ) {
     #perform the preprocessing only if I have at least two binary events and two samples
     if(length(ncol(dataset))>0 && ncol(dataset)>1 && length(nrow(dataset))>0 && nrow(dataset)>1 && length(dataset[dataset==0|dataset==1])==nrow(dataset)*ncol(dataset)) {
         #structure to compute the observed and observed joint probabilities
