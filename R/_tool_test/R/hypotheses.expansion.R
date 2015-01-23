@@ -130,7 +130,7 @@ hypotheses.expansion <- function(input_matrix,
   return(and_matrix)
 }
 
-hypo.plot = function(capri, data, hypotheses = NULL, font=14, pf = FALSE) {
+hypo.plot = function(capri, data, hypotheses = NULL, font=14, pf = FALSE, disconnected=FALSE) {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -145,8 +145,8 @@ hypo.plot = function(capri, data, hypotheses = NULL, font=14, pf = FALSE) {
   
    if(pf) c_matrix = capri$adj.matrix$adj.matrix.prima.facie
 
-	print(colnames(capri$dataset))
-	print(ncol(c_matrix))
+	# print(colnames(capri$dataset))
+	# print(ncol(c_matrix))
 	
   colnames(c_matrix) = colnames(capri$dataset);
   rownames(c_matrix) = colnames(capri$dataset);
@@ -160,8 +160,23 @@ hypo.plot = function(capri, data, hypotheses = NULL, font=14, pf = FALSE) {
   }
 
 
-
-  hypo_mat = hypotheses.expansion(c_matrix, num_h, hstruct)
+hypo_mat = hypotheses.expansion(c_matrix, num_h, hstruct)
+  
+if(!disconnected)
+{	
+	# print(hypo_mat)  
+	
+	# print(which(rowSums(hypo_mat)+colSums(hypo_mat) == 0 ))
+	
+	del = which(rowSums(hypo_mat)+colSums(hypo_mat) == 0 )
+	w = !(rownames(hypo_mat) %in% names(del))
+	
+	hypo_mat = hypo_mat[w,]
+	hypo_mat = hypo_mat[,w]
+	
+# # 	print(hypo_mat)
+	}
+  
   hypo_graph = graph.adjacency(hypo_mat)
   v_names = gsub("_.*$", "", V(hypo_graph)$name)
   new_name = list()
@@ -181,15 +196,34 @@ hypo.plot = function(capri, data, hypotheses = NULL, font=14, pf = FALSE) {
   nAttrs = list()
   nAttrs$label = z
 
-  # nAttrs$fontsize = rep('8', length(nAttrs$label))
-  # names(nAttrs$fontsize) = z
+	
+	n = names(nAttrs$label)
+	nAttrs$fillcolor = matrix('yellow', ncol=length(n))
+	colnames(nAttrs$fillcolor) = n
+	nAttrs$fillcolor = data.frame(nAttrs$fillcolor, stringsAsFactors=FALSE)
+	
+	w = unlist(nAttrs$label[colnames(nAttrs$fillcolor)]) == 'OR'
+	nAttrs$fillcolor[which(w)] = 'orange'
 
-  attrs <- list(node = list(fixedsize = FALSE, fontsize=font)) 
-  # attrs$node$fontsize=8 
-   
-  # print(nAttrs)
+	w = unlist(nAttrs$label[colnames(nAttrs$fillcolor)]) == 'AND'
+	nAttrs$fillcolor[which(w)] = 'green'
+
+	w = unlist(nAttrs$label[colnames(nAttrs$fillcolor)]) == 'XOR'
+	nAttrs$fillcolor[which(w)] = 'red'
+
+	attrs <- list(node = list(fixedsize = FALSE, fontsize=font, fillcolor='yellow')) 
+	# eattrs = list(edges = list(style='dotted', color='cyan'))	
+	# eattrs = list(lty='dotted', color='cyan')
+	
+	# print(eattrs)
+	# print(nAttrs)
   
-  
+  # lty
+  # , attrs=list(node=list(label="foo", fillcolor="lightgreen"),
+# + edge=list(color="cyan"),
+# + graph=list(rankdir="LR")
+
+
    
-  plot(graph, nodeAttrs=nAttrs, attrs=attrs)
+  plot(graph, nodeAttrs=nAttrs, attrs=attrs) # edgeAttrs=eattrs)
 }
