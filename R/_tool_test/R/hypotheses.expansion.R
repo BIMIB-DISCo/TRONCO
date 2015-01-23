@@ -143,8 +143,11 @@ hypo.plot = function(capri, data, hypotheses = NULL, font=14, pf = FALSE) {
   
    c_matrix = capri$adj.matrix$adj.matrix.bic
   
-   if(pf) c_matrix = capri.two$adj.matrix$adj.matrix.prima.facie
+   if(pf) c_matrix = capri$adj.matrix$adj.matrix.prima.facie
 
+	print(colnames(capri$dataset))
+	print(ncol(c_matrix))
+	
   colnames(c_matrix) = colnames(capri$dataset);
   rownames(c_matrix) = colnames(capri$dataset);
   
