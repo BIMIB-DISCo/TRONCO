@@ -45,9 +45,9 @@ data = hypothesis.add(data,"H1",OR(XOR(c("8q+","Gain"),c("4q-","Loss")),AND(c("3
 data = hypothesis.add(data,"H2",AND(XOR(c("8q+","Gain"),c("4q-","Loss")),OR(c("3q+","Gain"),c("5q-","Loss")),c("8p-","Loss"),c("1q+","Gain")),c("Xp-","Loss"));
 data = hypothesis.add(data,"H3",OR(XOR(c("8q+","Gain"),c("4q-","Loss")),c("8p-","Loss")),"*");
 data = hypothesis.add(data,"H4",OR(AND(c("8q+","Gain"),c("4q-","Loss")),c("8p-","Loss")),c("1q+","Gain"),c("Xp-","Loss"));
-###capri = tronco.capri(data);
-capri = tronco.capri(data,do.boo=FALSE);
+capri.with.bootstrap = tronco.capri(data);
+capri.without.bootstrap = tronco.capri(data,do.boot=FALSE);
 
 #perform the estimation by non-parametric bootstrap using its default values of the reconstruction with CAPRI
 set.seed("12345");
-capri = tronco.bootstrap(capri);
+capri.without.bootstrap = tronco.bootstrap(capri.without.bootstrap);
