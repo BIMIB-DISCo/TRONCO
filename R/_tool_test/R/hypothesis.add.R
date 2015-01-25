@@ -139,6 +139,11 @@ function( data, label.formula, lifted.formula, label.effect ) {
 		}
 		#now I can finally add the hypothesis
 		colnames(dataset)[ncol(dataset)] = label.formula;
+		
+		data$annotations = rbind(data$annotations, c('Hypothesis', label.formula))
+		rownames(data$annotations)[nrow(data$annotations)] = label.formula
+
+		
 		if(is.na(hypotheses[1])) {
 			hypotheses = list();
 		}
@@ -163,6 +168,20 @@ function( data, label.formula, lifted.formula, label.effect ) {
 		#return the new data as result
 		data$genotypes = dataset;
 		data$hypotheses = hypotheses;
+
+		if(!is.null(data$hypotheses$num.hypotheses) && data$hypotheses$num.hypotheses > 0)
+		{		
+			if(!('Hypothesis' %in% rownames(data$types)) )
+			{
+				data$types = rbind(data$types, c('khaki'))
+				rownames(data$types)[nrow(data$types)] = 'Hypothesis'
+			}
+		}
+		
+		# print(data)
+		
+		is.compliant(data, 'hyp. add ret res')
+		
 		return(data);
 	}
 	else {

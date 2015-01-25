@@ -18,6 +18,7 @@
 #topology: the reconstructed tree topology
 "capri.fit" <-
 function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, do.estimation = FALSE) {
+		
 	#structure with the set of valid edges
 	#I start from the complete graph, i.e., I have no prior
 	adj.matrix = array(1,c(ncol(dataset),ncol(dataset)));
@@ -35,6 +36,8 @@ function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, d
 		}
 		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix),1:(ncol(adj.matrix)-hypotheses$num.hypotheses)] = hypotheses.matrix;
 	}
+	
+	
 	#reconstruct the causal topology
     #should I perform bootstrap? Yes if TRUE, no otherwise
     if(do.boot==TRUE) {

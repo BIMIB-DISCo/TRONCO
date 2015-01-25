@@ -130,7 +130,7 @@ hypotheses.expansion <- function(input_matrix,
   return(and_matrix)
 }
 
-hypo.plot = function(capri, data, hypotheses = NULL, font=14, pf = FALSE, disconnected=FALSE) {
+hypo.plot = function(capri, data, hypotheses = NULL, font=14, pf = FALSE, disconnected=FALSE, name=deparse(substitute(capri))) {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -224,6 +224,13 @@ if(!disconnected)
 # + graph=list(rankdir="LR")
 
 
-   
-  plot(graph, nodeAttrs=nAttrs, attrs=attrs) # edgeAttrs=eattrs)
+	cur.dev = dev.cur()
+
+	pdf(file=paste(name, as.character(disconnected), '.', as.character(pf),'.pdf', sep=''), height=11, width=8.5)
+	plot(graph, nodeAttrs=nAttrs, attrs=attrs) # edgeAttrs=eattrs)
+
+	dev.off()
+	dev.set(which=cur.dev)
+   	plot(graph, nodeAttrs=nAttrs, attrs=attrs) # edgeAttrs=eattrs)
+
 }
