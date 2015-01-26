@@ -195,16 +195,9 @@ hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse
   graph <- igraph.to.graphNEL(hypo_graph)
   z = V(hypo_graph)$label
   names(z) = nodes(graph)
-
-  e = edges(graph)
-  edge_names = edgeNames(graph)
   nAttrs = list()
-  eAttrs = list()
   nAttrs$label = z
-  eAttrs$label = e
-  names(eAttrs$label) = edge_names
-  print(eAttrs)
-  
+    
   # set a default color
   nAttrs$fillcolor =  nAttrs$label
   nAttrs$fillcolor[] = 'White'
@@ -232,6 +225,32 @@ hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse
   nAttrs$fillcolor[which(w)] = 'red'
     
   attrs <- list(node = list(fixedsize = FALSE, fontsize=font, fillcolor='yellow')) 
+  
+  # edges properties
+  
+  edge_names = edgeNames(graph)
+  eAttrs = list()
+  
+  # set temporary edge name
+  eAttrs$label = rep('    4', length(edge_names))
+  names(eAttrs$label) = edge_names
+  
+  
+  # set temporary edge tick
+  eAttrs$lwd = rep(4, length(edge_names))
+  names(eAttrs$lwd) = edge_names
+  
+  # set temporary edge shape
+  eAttrs$lty = rep("dashed", length(edge_names))
+  names(eAttrs$lty) = edge_names
+  
+  # set temporary edge arrow
+  eAttrs$arrowhead = rep("open", length(edge_names))
+  names(eAttrs$arrowhead) = edge_names
+  
+  print(eAttrs)
+  
+  
   
   cur.dev = dev.cur()
   
