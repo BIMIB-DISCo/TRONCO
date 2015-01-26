@@ -6,49 +6,49 @@
 #### information.
 
 hypotheses.expansion <- function(input_matrix, 
-                                atomic_nodes = NULL, 
-                                map = list()) {
+                                 map = list()) {
   
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
   }
   
+  num_hypos = length(map)
   
   # get node list
   node_list <- colnames(input_matrix)
   #print(input_matrix)
-
+  
   # cut input matrix
-  margin = length(node_list) - atomic_nodes
+  margin = length(node_list) - num_hypos
   
   # check if there are hypotheses
-  if (length(map) == 0) {
+  if (num_hypos == 0) {
     # if no hypos do nothings..
     min_matrix = input_matrix
   } else {
     # ..else expand them
     min_matrix = input_matrix[-(margin+1):-length(node_list), -(margin+1):-length(node_list)]
-
+    
     # create graph from matrix
     min_graph = graph.adjacency(min_matrix)
     
-  
+    
     # foreach hypothesis
     # print(ls(map))
     # for (h in ls(map)) {
-    	# print(h)
-    	# }
-
-
+    # print(h)
+    # }
+    
+    
     for (h in ls(map)) {
-    	
-    	# print(input_matrix[h,])
-    	
-    	# print(any(input_matrix[h,] == 1))
-    	
-    	
-    	
+      
+      # print(input_matrix[h,])
+      
+      # print(any(input_matrix[h,] == 1))
+      
+      
+      
       if(length(which(input_matrix[h,] == 1)) == 0) {
         next
       }
@@ -59,7 +59,7 @@ hypotheses.expansion <- function(input_matrix,
       # create graph from hypo
       hypo_graph = graph.adjacency(hypo)
       #print(hypo)
-  
+      
       # add this graph to main graph
       min_graph = graph.union(min_graph, hypo_graph)
       
@@ -113,7 +113,7 @@ hypotheses.expansion <- function(input_matrix,
       colnames(and_matrix)[pos] = col
     }
   }
-
+  
   # now reconnect AND node to his gene (AND_Gene7 -> Gene7)
   for(row in to_reconnect) {
     and_matrix = rbind(and_matrix, matrix(0, ncol=ncol(and_matrix), nrow = 1))
@@ -130,7 +130,8 @@ hypotheses.expansion <- function(input_matrix,
   return(and_matrix)
 }
 
-hypo.plot = function(capri, data, hypotheses = NULL, font=14) {
+
+hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse(substitute(capri))) {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -141,20 +142,43 @@ hypo.plot = function(capri, data, hypotheses = NULL, font=14) {
     library(Rgraphviz)
   }
   
-  c_matrix = capri$adj.matrix$adj.matrix.bic
+  c_matrix = data$adj.matrix$adj.matrix.bic
   
-  colnames(c_matrix) = colnames(capri$dataset);
-  rownames(c_matrix) = colnames(capri$dataset);
+  
+  
+  if(pf) c_matrix = data$adj.matrix$adj.matrix.prima.facie
+  
+  # the TRONCO object
+  data = data$data
+  
+  # hypotheses
+  hypotheses = data$data$hypotheses
   
   if (is.null(hypotheses)) {
     hstruct = NULL
     num_h = NULL
   } else {
-    hstruct = hypotheses$hypotheses$hstructure
+    hstruct = hypotheses$hstructure
     num_h = length(hstruct)
   }
-
-  hypo_mat = hypotheses.expansion(c_matrix, num_h, hstruct)
+  
+  hypo_mat = hypotheses.expansion(c_matrix, hstruct)
+  
+  if(!disconnected)
+  {	
+    # print(hypo_mat)  
+    
+    # print(which(rowSums(hypo_mat)+colSums(hypo_mat) == 0 ))
+    
+    del = which(rowSums(hypo_mat)+colSums(hypo_mat) == 0 )
+    w = !(rownames(hypo_mat) %in% names(del))
+    
+    hypo_mat = hypo_mat[w,]
+    hypo_mat = hypo_mat[,w]
+    
+    # # 	print(hypo_mat)
+  }
+  
   hypo_graph = graph.adjacency(hypo_mat)
   v_names = gsub("_.*$", "", V(hypo_graph)$name)
   new_name = list()
@@ -171,18 +195,51 @@ hypo.plot = function(capri, data, hypotheses = NULL, font=14) {
   graph <- igraph.to.graphNEL(hypo_graph)
   z = V(hypo_graph)$label
   names(z) = nodes(graph)
+
+  e = edges(graph)
+  edge_names = edgeNames(graph)
   nAttrs = list()
+  eAttrs = list()
   nAttrs$label = z
-
-  # nAttrs$fontsize = rep('8', length(nAttrs$label))
-  # names(nAttrs$fontsize) = z
-
-  attrs <- list(node = list(fixedsize = FALSE, fontsize=font)) 
-  # attrs$node$fontsize=8 
-   
-  # print(nAttrs)
+  eAttrs$label = e
+  names(eAttrs$label) = edge_names
+  print(eAttrs)
   
+  # set a default color
+  nAttrs$fillcolor =  nAttrs$label
+  nAttrs$fillcolor[] = 'White'
   
-   
-  plot(graph, nodeAttrs=nAttrs, attrs=attrs)
+  # use colors defined in tronco$types
+  w = unlist(lapply(names(nAttrs$fillcolor), function(x){
+    if (x %in% rownames(data$annotations))
+      data$types[data$annotations[x,'type'], 'color']
+    else
+      'White'
+    }))
+  nAttrs$fillcolor[] = w
+  
+  # hide node border
+  nAttrs$color = nAttrs$fillcolor
+  
+  # set color for logic nodes
+  w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
+  nAttrs$fillcolor[which(w)] = 'orange'
+  
+  w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
+  nAttrs$fillcolor[which(w)] = 'green'
+  
+  w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
+  nAttrs$fillcolor[which(w)] = 'red'
+    
+  attrs <- list(node = list(fixedsize = FALSE, fontsize=font, fillcolor='yellow')) 
+  
+  cur.dev = dev.cur()
+  
+  pdf(file=paste(name, as.character(disconnected), '.', as.character(pf),'.pdf', sep=''), height=11, width=8.5)
+  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs)
+  
+  dev.off()
+  dev.set(which=cur.dev)
+  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs)
+  
 }

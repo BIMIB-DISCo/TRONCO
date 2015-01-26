@@ -51,3 +51,6 @@ capri.without.bootstrap = tronco.capri(data,do.boot=FALSE);
 #perform the estimation by non-parametric bootstrap using its default values of the reconstruction with CAPRI
 set.seed("12345");
 capri.without.bootstrap = tronco.bootstrap(capri.without.bootstrap);
+
+hypo.plot(capri.with.bootstrap)
+
