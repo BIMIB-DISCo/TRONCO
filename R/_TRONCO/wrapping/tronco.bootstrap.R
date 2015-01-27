@@ -22,6 +22,9 @@ tronco.bootstrap <- function( topology, type="non-parametric", nboot=100 ) {
 	if(is.null(topology)) {
 		stop("A valid reconstruction has to be provided in order to estimate its confidence.",call.=FALSE);
     }
+    if(topology$parameters$do.estimation==FALSE && type=="parametric") {
+    		stop("To perform parametric bootstrap, the estimation of error rates and probabilities should be computed.",call.=FALSE);
+    }
     #set all the needed parameters to perform the bootstrap
     if(type=="non-parametric" || type=="parametric") {
     		dataset = topology$data$genotypes;
