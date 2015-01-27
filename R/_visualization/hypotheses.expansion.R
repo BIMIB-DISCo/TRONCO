@@ -234,17 +234,17 @@ hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse
   eAttrs = list()
   
   # set temporary edge name
-  eAttrs$label = rep('    4', length(edge_names))
-  names(eAttrs$label) = edge_names
+  #eAttrs$label = rep('    4', length(edge_names))
+  #names(eAttrs$label) = edge_names
   
   
   # set temporary edge tick
-  eAttrs$lwd = rep(4, length(edge_names))
-  names(eAttrs$lwd) = edge_names
+  #eAttrs$lwd = rep(4, length(edge_names))
+  #names(eAttrs$lwd) = edge_names
   
   # set temporary edge shape
-  eAttrs$lty = rep("dashed", length(edge_names))
-  names(eAttrs$lty) = edge_names
+  #eAttrs$lty = rep("dashed", length(edge_names))
+  #names(eAttrs$lty) = edge_names
   
   # set temporary edge arrow
   eAttrs$arrowhead = rep("open", length(edge_names))
