@@ -20,7 +20,7 @@ function( label.event, dataset, annotations ) {
 		}
 		if(length(curr.events)>0) {
 			events.name = names(curr.events);
-			col.num = which(names(dataset)%in%events.name);
+			col.num = which(colnames(dataset)%in%events.name);
 		}
 	}
 	else {

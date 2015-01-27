@@ -221,11 +221,11 @@ function( data, label.formula, lifted.formula, ... ) {
 		}
 		hypotheses$hstructure[[label.formula]] = get.lifted.formula(hstructure);
 		#add the new hypothesis in the annotations
-		annotations = rbind(data$annotations,c(label.formula,"Hypothesis"));
+		annotations = rbind(data$annotations,c("Hypothesis", label.formula));
 		rownames(annotations)[nrow(annotations)] = label.formula;
 		#add the color of the type "Hypothesis" is not already defined
 		if(any(rownames(data$types)=="Hypothesis")==FALSE) {
-			types = rbind(data$types,"Hypothesis");
+			types = rbind(data$types,"#FFFFFF");
 			rownames(types)[nrow(types)] = "Hypothesis";
 			data$types = types;
 		}
