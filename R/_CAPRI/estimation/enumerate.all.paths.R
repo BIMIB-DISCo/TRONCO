@@ -14,7 +14,7 @@
 #RETURN:
 #all.paths: vector of all the paths
 "enumerate.all.paths" <-
-function(ancestor.node, child.node, parents.pos) {
+function( ancestor.node, child.node, parents.pos ) {
 	#set the initial parents set
 	all.paths = parents.pos[[child.node]];
 	if(length(all.paths)==1 && all.paths==-1) {

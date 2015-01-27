@@ -16,7 +16,7 @@
 #RETURN:
 #estimated.dag.joint.probs: estimated theoretical joint probability
 "estimate.dag.joint.probs" <-
-function(first.node,second.node,parents.pos,marginal.probs,conditional.probs) {
+function( first.node, second.node, parents.pos, marginal.probs, conditional.probs ) {
     #if the two nodes are roots
     if((length(parents.pos[[first.node]])==1 && parents.pos[[first.node]]==-1) && (length(parents.pos[[second.node]])==1 && parents.pos[[second.node]]==-1)) {
         estimated.dag.joint.probs = marginal.probs[first.node,1]*marginal.probs[second.node,1];
