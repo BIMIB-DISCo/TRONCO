@@ -187,8 +187,7 @@ hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse
   for(v in v_names) {
     if(v %in% rownames(data$annotations)) {
       n = data$annotations[v,"event"]
-      t = data$annotations[v,"type"]
-      new_name = append(new_name, paste(n, t))
+      new_name = append(new_name, n)
     } else {
       new_name = append(new_name, v)
     }
