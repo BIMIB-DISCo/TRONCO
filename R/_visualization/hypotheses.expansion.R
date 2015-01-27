@@ -143,16 +143,18 @@ hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse
   }
   
   c_matrix = data$adj.matrix$adj.matrix.bic
+  print(c_matrix)
   
   
-  
-  if(pf) c_matrix = data$adj.matrix$adj.matrix.prima.facie
+  if(pf) c_matrix = data$adj.matrix$adj.matrix.pf
   
   # the TRONCO object
   data = data$data
   
+  print(data)
+  
   # hypotheses
-  hypotheses = data$data$hypotheses
+  hypotheses = data$hypotheses
   
   if (is.null(hypotheses)) {
     hstruct = NULL
@@ -248,7 +250,7 @@ hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse
   eAttrs$arrowhead = rep("open", length(edge_names))
   names(eAttrs$arrowhead) = edge_names
   
-  print(eAttrs)
+  # print(eAttrs)
   
   
   
