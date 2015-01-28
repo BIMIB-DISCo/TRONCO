@@ -324,7 +324,11 @@ hypo.plot = function(x,
   eAttrs$lty = rep("solid", length(edge_names))
   names(eAttrs$lty) = edge_names
   
-  #set temporary edge name based on prob
+  #set edge thikness based on prob
+  eAttrs$lwd = rep(1, length(edge_names))
+  names(eAttrs$lwd) = edge_names
+  
+  #set edge name based on prob
   eAttrs$label = rep('', length(edge_names))
   names(eAttrs$label) = edge_names
   
@@ -338,22 +342,21 @@ hypo.plot = function(x,
       if (from %in% rownames(conf_matrix) && to %in% colnames(conf_matrix)) {
         # if confidence > 0..
         # print(paste('from', from, 'to', to, ':', conf_matrix[from, to]))
-        if (conf_matrix[from, to] >= 0.01) {
+        if (conf_matrix[from, to] == 1) {
+          eAttrs$label[e] = '      1'
+          eAttrs$lwd[e] = log(150)
+        } else if (conf_matrix[from, to] >= 0.01) {
           # ..draw it on the graph..
           eAttrs$label[e] = paste0('      ', substr(conf_matrix[from, to], 2, 4))
+          eAttrs$lwd[e] = log(conf_matrix[from, to] * 150)
         } else {
           # ..else set the style of the edge to dashed
           eAttrs$label[e] = "       <.01"
+          eAttrs$lwd[e] = log(1.5)
         }
       }
     }
   }
-  
-  
-  
-  # set temporary edge tick
-  #eAttrs$lwd = rep(4, length(edge_names))
-  #names(eAttrs$lwd) = edge_names
   
   # set temporary edge shape
   #eAttrs$lty = rep("dashed", length(edge_names))
