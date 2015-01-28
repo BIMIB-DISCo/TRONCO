@@ -188,7 +188,15 @@ hypo.plot = function(x,
   # get the adjacency matrix
   adj.matrix = x$adj.matrix
   c_matrix = adj.matrix$adj.matrix.bic
-  if(pf) c_matrix = adj.matrix$adj.matrix.pf
+  
+  
+  if (pf) {
+    c_matrix = adj.matrix$adj.matrix.pf
+  }
+  
+  if (confidence) {
+    conf_matrix = if (pf) x$bootstrap$edge.confidence$edge.confidence.pf else x$bootstrap$edge.confidence$edge.confidence.bic
+  }
   # print(c_matrix)
   
   # get algorithm parameters
@@ -295,9 +303,35 @@ hypo.plot = function(x,
   edge_names = edgeNames(graph)
   eAttrs = list()
   
-  # set temporary edge name
-  #eAttrs$label = rep('    4', length(edge_names))
-  #names(eAttrs$label) = edge_names
+  # set temporary edge shape
+  eAttrs$lty = rep("solid", length(edge_names))
+  names(eAttrs$lty) = edge_names
+  
+  #set temporary edge name based on prob
+  eAttrs$label = rep('', length(edge_names))
+  names(eAttrs$label) = edge_names
+  
+  if(confidence) {
+    # for each edge..
+    for(e in edge_names) {
+      edge = unlist(strsplit(e, '~'))
+      from = edge[1]
+      to = edge[2]
+      # ..checks if confidence is available
+      if (from %in% rownames(conf_matrix) && to %in% colnames(conf_matrix)) {
+        # if confidence > 0..
+        if (conf_matrix[from, to] > 0) {
+          # ..draw it on the graph..
+          eAttrs$label[e] = paste0('     ', substr(conf_matrix[from, to], 2, 4))
+        } else {
+          # ..else set the style of the edge to dashed
+          eAttrs$label[e] = "    .0"
+          eAttrs$lty[e] = "dashed"
+        }
+      }
+    }
+  }
+  
   
   
   # set temporary edge tick
