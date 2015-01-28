@@ -136,7 +136,12 @@ hypotheses.expansion <- function(input_matrix,
 
 
 hypo.plot = function(x, 
-                     font=14, 
+                     fontsize=18, 
+                     fontsize.logic=12, 
+                     height=1,
+                     height.logic=0.5,
+                     width=1.5,
+                     width.logic=0.5,
                      pf = FALSE, 
                      disconnected=FALSE, 
                      name=deparse(substitute(capri)),
@@ -232,6 +237,14 @@ hypo.plot = function(x,
   nAttrs$fillcolor =  rep('White', length(node_names))
   names(nAttrs$fillcolor) = node_names
   
+  # set node height
+  nAttrs$height = rep(height, length(node_names))
+  names(nAttrs$height) = node_names
+  
+  # set node width
+  nAttrs$width = rep(width, length(node_names))
+  names(nAttrs$width) = node_names
+  
   # use colors defined in tronco$types
   w = unlist(lapply(names(nAttrs$fillcolor), function(x){
     if (x %in% rownames(data$annotations))
@@ -248,21 +261,37 @@ hypo.plot = function(x,
   nAttrs$shape = rep("ellipse", length(node_names))
   names(nAttrs$shape) = node_names
   
-  # set color, size fo anrd shape each logic nodes
+  # set fontsize
+  nAttrs$fontsize = rep(fontsize, length(node_names))
+  names(nAttrs$fontsize) = node_names
+  
+  # set color, size fo and shape each logic nodes
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
   nAttrs$fillcolor[which(w)] = 'orange'
-  nAttrs$shape[which(w)] = ''
+  nAttrs$shape[which(w)] = 'circle'
+  nAttrs$color[which(w)] = 'black'
+  nAttrs$fontsize[which(w)] = fontsize.logic
+  nAttrs$height[which(w)] = height.logic
+  nAttrs$width[which(w)] = width.logic
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
   nAttrs$fillcolor[which(w)] = 'green'
-  nAttrs$shape[which(w)] = ''
+  nAttrs$shape[which(w)] = 'circle'
+  nAttrs$color[which(w)] = 'black'
+  nAttrs$fontsize[which(w)] = fontsize.logic
+  nAttrs$height[which(w)] = height.logic
+  nAttrs$width[which(w)] = width.logic
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
   nAttrs$fillcolor[which(w)] = 'red'
-  nAttrs$shape[which(w)] = ''
+  nAttrs$shape[which(w)] = 'circle'
+  nAttrs$color[which(w)] = 'black'
+  nAttrs$fontsize[which(w)] = fontsize.logic
+  nAttrs$height[which(w)] = height.logic
+  nAttrs$width[which(w)] = width.logic
   
     
-  attrs <- list(node = list(fixedsize = FALSE, fontsize=font, fillcolor='yellow')) 
+  attrs <- list(node = list(fixedsize = FALSE)) 
   
   # edges properties
   
@@ -289,7 +318,6 @@ hypo.plot = function(x,
   # print(eAttrs)
   
   # create legend
-  
   if (legend) {
     legend_colors = data$types[data$types[, "color"] != '#FFFFFF',]
     legend_names = names(legend_colors)
@@ -312,14 +340,12 @@ hypo.plot = function(x,
            title = legend.title,
            bty = 'n',
            cex = legend.coeff,
+           pt.cex = 1.5,
            pch = c(19,19),
-           #pt.cex = legend.coeff*log(proportion)
            ncol = legend.columns,
            col = legend_colors,
            xjust = 1,
-           xpd = TRUE,
-           y.intersp = 1.7,
-           x.intersp = 1.2)
+           xpd = TRUE)
   }
   
   dev.off()
@@ -332,14 +358,12 @@ hypo.plot = function(x,
            title = legend.title,
            bty = 'n',
            cex = legend.coeff,
+           pt.cex = 1.5,
            pch = c(19,19),
-           #pt.cex = legend.coeff*log(proportion)
            ncol = legend.columns,
            col = legend_colors,
            xjust = 1,
-           xpd = TRUE,
-           y.intersp = 1.7,
-           x.intersp = 1.2)
+           xpd = TRUE)
   }
   
 }
