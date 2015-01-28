@@ -130,8 +130,32 @@ hypotheses.expansion <- function(input_matrix,
   return(and_matrix)
 }
 
+###########################
+######## HYPO PLOT ########
+###########################
 
-hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse(substitute(capri))) {
+
+hypo.plot = function(x, 
+                     font=14, 
+                     pf = FALSE, 
+                     disconnected=FALSE, 
+                     name=deparse(substitute(capri)),
+                     # new parameters
+                     title = paste("Progression model",curr.topology@algorithm,sep = " "), 
+                     title.color = "black", 
+                     confidence = FALSE, 
+                     legend = TRUE, 
+                     legend.title = "Legend", 
+                     legend.columns = 1, 
+                     legend.inline = FALSE, 
+                     legend.pos = "bottomright", 
+                     legend.coeff = 1, 
+                     label.coeff = 1, 
+                     label.color = "black", 
+                     label.edge.size = 12, 
+                     node.th.on = FALSE, 
+                     node.th = 2, 
+                     bootstrap="non-parametric") {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -142,43 +166,46 @@ hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse
     library(Rgraphviz)
   }
   
-  c_matrix = data$adj.matrix$adj.matrix.bic
-  print(c_matrix)
-  
-  
-  if(pf) c_matrix = data$adj.matrix$adj.matrix.pf
-  
-  # the TRONCO object
-  data = data$data
-  
-  print(data)
-  
-  # hypotheses
-  hypotheses = data$hypotheses
-  
-  if (is.null(hypotheses)) {
-    hstruct = NULL
-    num_h = NULL
-  } else {
-    hstruct = hypotheses$hstructure
-    num_h = length(hstruct)
+  # Checks if topology exists
+  if(missing(x)) {
+    stop("Topology missing, usage: hypo.plot(topology, ...", call.=FALSE);
   }
   
+  # Want confidence? Boostrap is needed
+  if(confidence && !exists('bootstrap', where=x)) {
+    stop("To show confidence information, bootstrap execution is needed! See: the function tronco.bootstrap.", call.=FALSE);
+  }
+  
+  # get TRONCO object
+  data = x$data
+  # print(data)
+  
+  # get the adjacency matrix
+  adj.matrix = x$adj.matrix
+  c_matrix = adj.matrix$adj.matrix.bic
+  if(pf) c_matrix = adj.matrix$adj.matrix.pf
+  # print(c_matrix)
+  
+  # get algorithm parameters
+  parameters = x$parameters
+  # print(parameters)
+  
+  # get hypotheses
+  hypotheses = data$hypotheses
+  hstruct = NULL
+  if (!is.null(hypotheses)) {
+    hstruct = hypotheses$hstructure
+  }
+  
+  # expand hypotheses
   hypo_mat = hypotheses.expansion(c_matrix, hstruct)
   
-  if(!disconnected)
-  {	
-    # print(hypo_mat)  
-    
-    # print(which(rowSums(hypo_mat)+colSums(hypo_mat) == 0 ))
-    
+  # remove disconnected nodes
+  if(!disconnected) {	
     del = which(rowSums(hypo_mat)+colSums(hypo_mat) == 0 )
     w = !(rownames(hypo_mat) %in% names(del))
-    
     hypo_mat = hypo_mat[w,]
     hypo_mat = hypo_mat[,w]
-    
-    # # 	print(hypo_mat)
   }
   
   hypo_graph = graph.adjacency(hypo_mat)
@@ -194,14 +221,16 @@ hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse
   }
   V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
-  z = V(hypo_graph)$label
-  names(z) = nodes(graph)
+
+  node_names = nodes(graph)
   nAttrs = list()
-  nAttrs$label = z
+  
+  nAttrs$label = V(hypo_graph)$label
+  names(nAttrs$label) = node_names
     
   # set a default color
-  nAttrs$fillcolor =  nAttrs$label
-  nAttrs$fillcolor[] = 'White'
+  nAttrs$fillcolor =  rep('White', length(node_names))
+  names(nAttrs$fillcolor) = node_names
   
   # use colors defined in tronco$types
   w = unlist(lapply(names(nAttrs$fillcolor), function(x){
@@ -215,15 +244,23 @@ hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse
   # hide node border
   nAttrs$color = nAttrs$fillcolor
   
-  # set color for logic nodes
+  # Set shape
+  nAttrs$shape = rep("ellipse", length(node_names))
+  names(nAttrs$shape) = node_names
+  
+  # set color, size fo anrd shape each logic nodes
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
   nAttrs$fillcolor[which(w)] = 'orange'
+  nAttrs$shape[which(w)] = ''
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
   nAttrs$fillcolor[which(w)] = 'green'
+  nAttrs$shape[which(w)] = ''
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
   nAttrs$fillcolor[which(w)] = 'red'
+  nAttrs$shape[which(w)] = ''
+  
     
   attrs <- list(node = list(fixedsize = FALSE, fontsize=font, fillcolor='yellow')) 
   
@@ -251,15 +288,58 @@ hypo.plot = function(data, font=14, pf = FALSE, disconnected=FALSE, name=deparse
   
   # print(eAttrs)
   
+  # create legend
+  
+  if (legend) {
+    legend_colors = data$types[data$types[, "color"] != '#FFFFFF',]
+    legend_names = names(legend_colors)
+    print(legend_names)
+    print(legend_colors)
+    if(legend.inline) {
+      legend.columns  = length(legend_names);
+    }
+  }
   
   
   cur.dev = dev.cur()
   
   pdf(file=paste(name, as.character(disconnected), '.', as.character(pf),'.pdf', sep=''), height=11, width=8.5)
   plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs)
+  # Adds the legend to the plot
+  if (legend) {
+    legend(legend.pos,
+           legend = legend_names,
+           title = legend.title,
+           bty = 'n',
+           cex = legend.coeff,
+           pch = c(19,19),
+           #pt.cex = legend.coeff*log(proportion)
+           ncol = legend.columns,
+           col = legend_colors,
+           xjust = 1,
+           xpd = TRUE,
+           y.intersp = 1.7,
+           x.intersp = 1.2)
+  }
   
   dev.off()
   dev.set(which=cur.dev)
   plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs)
+  # Adds the legend to the plot.
+  if (legend) {
+    legend(legend.pos,
+           legend = legend_names,
+           title = legend.title,
+           bty = 'n',
+           cex = legend.coeff,
+           pch = c(19,19),
+           #pt.cex = legend.coeff*log(proportion)
+           ncol = legend.columns,
+           col = legend_colors,
+           xjust = 1,
+           xpd = TRUE,
+           y.intersp = 1.7,
+           x.intersp = 1.2)
+  }
   
 }
