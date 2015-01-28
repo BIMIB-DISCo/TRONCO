@@ -6,7 +6,8 @@
 #### information.
 
 hypotheses.expansion <- function(input_matrix, 
-                                 map = list()) {
+                                 map = list(),
+                                 conf_matrix = NULL) {
   
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
@@ -71,6 +72,12 @@ hypotheses.expansion <- function(input_matrix,
       h_mat <- rowSums(get.adjacency(hypo_graph, sparse=FALSE))
       initial_node <- names(h_mat)[which(h_mat==0)]
       
+      # change names in confidence matrix according to hypotesis
+      if(!is.null(conf_matrix)) {
+        rownames(conf_matrix)[rownames(conf_matrix) == h] = initial_node
+        colnames(conf_matrix)[rownames(conf_matrix) == h] = initial_node
+      }
+      
       # recreate lost edge
       for (node in final_node) {
         min_graph <- min_graph + edge(initial_node, node)
@@ -78,6 +85,7 @@ hypotheses.expansion <- function(input_matrix,
       
     }
     min_matrix = get.adjacency(min_graph, sparse = F)
+    
   }
   
   # now expand the hidden AND
@@ -126,7 +134,10 @@ hypotheses.expansion <- function(input_matrix,
   and_matrix = and_matrix[,order(colnames(and_matrix))]
   and_matrix = and_matrix[order(rownames(and_matrix)),]
   
-  # print(and_matrix)  
+  # print(and_matrix)
+  if(!is.null(conf_matrix)) {
+    return(list(and_matrix, conf_matrix))
+  }
   return(and_matrix)
 }
 
@@ -211,7 +222,13 @@ hypo.plot = function(x,
   }
   
   # expand hypotheses
-  hypo_mat = hypotheses.expansion(c_matrix, hstruct)
+  if (!confidence) {
+    hypo_mat = hypotheses.expansion(c_matrix, hstruct)
+  } else {
+    expansion = hypotheses.expansion(c_matrix, hstruct, conf_matrix)
+    hypo_mat = expansion[[1]]
+    conf_matrix = expansion[[2]]
+  }
   
   # remove disconnected nodes
   if(!disconnected) {	
@@ -320,7 +337,8 @@ hypo.plot = function(x,
       # ..checks if confidence is available
       if (from %in% rownames(conf_matrix) && to %in% colnames(conf_matrix)) {
         # if confidence > 0..
-        if (conf_matrix[from, to] > 0.01) {
+        # print(paste('from', from, 'to', to, ':', conf_matrix[from, to]))
+        if (conf_matrix[from, to] >= 0.01) {
           # ..draw it on the graph..
           eAttrs$label[e] = paste0('      ', substr(conf_matrix[from, to], 2, 4))
         } else {
