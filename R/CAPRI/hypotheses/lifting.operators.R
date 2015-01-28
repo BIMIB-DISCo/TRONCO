@@ -27,7 +27,7 @@ function( dataset, annotations, function.name, ... ) {
 					event.map = emap(clauses[[i]],dataset,annotations);
 					col.num = event.map$col.num;
 				}
-				if(col.num==-1) {
+				if(col.num[1]==-1) {
 					stop(paste("One or more undefined events have been found! The formula is bad formed and no hypothesis will be created.",sep=''));
 				}
 				else {
