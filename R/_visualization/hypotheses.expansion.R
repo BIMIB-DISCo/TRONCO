@@ -146,7 +146,7 @@ hypo.plot = function(x,
                      disconnected=FALSE, 
                      name=deparse(substitute(capri)),
                      # new parameters
-                     title = paste("Progression model",curr.topology@algorithm,sep = " "), 
+                     title = paste("Progression model", x$parameters$algorithm), 
                      title.color = "black", 
                      confidence = FALSE, 
                      legend = TRUE, 
@@ -290,9 +290,6 @@ hypo.plot = function(x,
   nAttrs$height[which(w)] = height.logic
   nAttrs$width[which(w)] = width.logic
   
-    
-  attrs <- list(node = list(fixedsize = FALSE)) 
-  
   # edges properties
   
   edge_names = edgeNames(graph)
@@ -317,22 +314,22 @@ hypo.plot = function(x,
   
   # print(eAttrs)
   
+  # general parameter
+  attrs <- list(node = list(fixedsize = FALSE)) 
+  
   # create legend
   if (legend) {
     legend_colors = data$types[data$types[, "color"] != '#FFFFFF',]
     legend_names = names(legend_colors)
-    print(legend_names)
-    print(legend_colors)
     if(legend.inline) {
       legend.columns  = length(legend_names);
     }
   }
   
-  
   cur.dev = dev.cur()
   
   pdf(file=paste(name, as.character(disconnected), '.', as.character(pf),'.pdf', sep=''), height=11, width=8.5)
-  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs)
+  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title)
   # Adds the legend to the plot
   if (legend) {
     legend(legend.pos,
@@ -350,7 +347,7 @@ hypo.plot = function(x,
   
   dev.off()
   dev.set(which=cur.dev)
-  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs)
+  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title)
   # Adds the legend to the plot.
   if (legend) {
     legend(legend.pos,
