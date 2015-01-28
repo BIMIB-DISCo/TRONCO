@@ -320,13 +320,12 @@ hypo.plot = function(x,
       # ..checks if confidence is available
       if (from %in% rownames(conf_matrix) && to %in% colnames(conf_matrix)) {
         # if confidence > 0..
-        if (conf_matrix[from, to] > 0) {
+        if (conf_matrix[from, to] > 0.01) {
           # ..draw it on the graph..
-          eAttrs$label[e] = paste0('     ', substr(conf_matrix[from, to], 2, 4))
+          eAttrs$label[e] = paste0('      ', substr(conf_matrix[from, to], 2, 4))
         } else {
           # ..else set the style of the edge to dashed
-          eAttrs$label[e] = "    .0"
-          eAttrs$lty[e] = "dashed"
+          eAttrs$label[e] = "       <.01"
         }
       }
     }
