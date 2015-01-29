@@ -107,13 +107,22 @@ hypotheses.expansion <- function(input_matrix,
       and_matrix = cbind(and_matrix, min_matrix[,col])
       pos = ncol(and_matrix)
       # and give her a new name based on the old one
-      colnames(and_matrix)[pos] = paste("AND", col, sep="_")
+      new_col_name = paste("*", col, sep="_")
+      colnames(and_matrix)[pos] = new_col_name
       
       # append a 0 columl to the matrix..
       and_matrix = cbind(and_matrix, matrix(0,nrow = nrow(and_matrix), ncol = 1))
       pos = ncol(and_matrix)
       # and give her the old name
       colnames(and_matrix)[pos] = col
+      
+      # now do the same to conf_matrix
+      if(!is.null(conf_matrix)) {
+        conf_matrix = cbind(conf_matrix, conf_matrix[, col])
+        pos = ncol(conf_matrix)
+        colnames(conf_matrix)[pos] = new_col_name
+      }
+      
     } else {
       # ..else add the row taken from the old matrix and set the correct colname
       and_matrix = cbind(and_matrix, min_matrix[,col])
@@ -126,8 +135,8 @@ hypotheses.expansion <- function(input_matrix,
   for(row in to_reconnect) {
     and_matrix = rbind(and_matrix, matrix(0, ncol=ncol(and_matrix), nrow = 1))
     pos = nrow(and_matrix)
-    rownames(and_matrix)[pos] = paste0("AND_", row)
-    and_matrix[paste0("AND_", row),row] = 1
+    rownames(and_matrix)[pos] = paste0("*_", row)
+    and_matrix[paste0("*_", row),row] = 1
   }
   
   # sort col and row (igraph wants the same order)
@@ -280,7 +289,8 @@ tronco.plot = function(x,
   nAttrs$fillcolor[] = w
   
   # hide node border
-  nAttrs$color = nAttrs$fillcolor
+  nAttrs$color = rep("black", length(node_names))
+  names(nAttrs$color) = node_names
   
   # Set shape
   nAttrs$shape = rep("ellipse", length(node_names))
@@ -294,7 +304,7 @@ tronco.plot = function(x,
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
   nAttrs$fillcolor[which(w)] = 'orange'
   nAttrs$shape[which(w)] = 'circle'
-  nAttrs$color[which(w)] = 'black'
+  nAttrs$color[which(w)] = 'darkblue'
   nAttrs$fontsize[which(w)] = fontsize.logic
   nAttrs$height[which(w)] = height.logic
   nAttrs$width[which(w)] = width.logic
@@ -302,7 +312,7 @@ tronco.plot = function(x,
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
   nAttrs$fillcolor[which(w)] = 'green'
   nAttrs$shape[which(w)] = 'circle'
-  nAttrs$color[which(w)] = 'black'
+  nAttrs$color[which(w)] = 'darkblue'
   nAttrs$fontsize[which(w)] = fontsize.logic
   nAttrs$height[which(w)] = height.logic
   nAttrs$width[which(w)] = width.logic
@@ -310,7 +320,15 @@ tronco.plot = function(x,
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
   nAttrs$fillcolor[which(w)] = 'red'
   nAttrs$shape[which(w)] = 'circle'
-  nAttrs$color[which(w)] = 'black'
+  nAttrs$color[which(w)] = 'darkblue'
+  nAttrs$fontsize[which(w)] = fontsize.logic
+  nAttrs$height[which(w)] = height.logic
+  nAttrs$width[which(w)] = width.logic
+  
+  w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == '*'
+  nAttrs$fillcolor[which(w)] = 'pink'
+  nAttrs$shape[which(w)] = 'circle'
+  nAttrs$color[which(w)] = 'darkblue'
   nAttrs$fontsize[which(w)] = fontsize.logic
   nAttrs$height[which(w)] = height.logic
   nAttrs$width[which(w)] = width.logic
@@ -331,6 +349,14 @@ tronco.plot = function(x,
   #set edge name based on prob
   eAttrs$label = rep('', length(edge_names))
   names(eAttrs$label) = edge_names
+  
+  #set arrowdir to forward (default)
+  eAttrs$dir = rep('forward', length(edge_names))
+  names(eAttrs$dir) = edge_names
+  
+  #set edge color to black (default)
+  eAttrs$color = rep('black', length(edge_names))
+  names(eAttrs$color) = edge_names
   
   if(confidence) {
     # for each edge..
@@ -355,6 +381,10 @@ tronco.plot = function(x,
           eAttrs$label[e] = "       <.01"
           eAttrs$lwd[e] = log(1.5)
         }
+      } else {
+        # ..else this edge is located inside to an hypothesis, so no arrow to show
+        eAttrs$dir[e] = 'none'
+        eAttrs$color[e] = 'darkblue'
       }
     }
   }
