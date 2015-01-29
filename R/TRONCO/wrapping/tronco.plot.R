@@ -163,7 +163,8 @@ tronco.plot = function(x,
                      width=1.5,
                      width.logic=0.5,
                      pf = FALSE, 
-                     disconnected=FALSE, 
+                     disconnected=FALSE,
+                     fixed.size=FALSE,
                      name=deparse(substitute(capri)),
                      # new parameters
                      title = paste("Progression model", x$parameters$algorithm), 
@@ -179,7 +180,6 @@ tronco.plot = function(x,
                      label.color = "black", 
                      label.edge.size = 12, 
                      node.th.on = FALSE, 
-                     node.th = 2, 
                      bootstrap="non-parametric") {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
@@ -208,10 +208,12 @@ tronco.plot = function(x,
   # get the adjacency matrix
   adj.matrix = x$adj.matrix
   c_matrix = adj.matrix$adj.matrix.bic
+  marginal_p = x$probabilities$probabilities.bic$marginal.probs
   
   
   if (pf) {
     c_matrix = adj.matrix$adj.matrix.pf
+    marginal_p = x$probabilities$probabilities.pf$marginal.probs
   }
   
   if (confidence) {
@@ -247,6 +249,8 @@ tronco.plot = function(x,
     hypo_mat = hypo_mat[,w]
   }
   
+  attrs = list(node = list(fixedsize = fixed.size))
+      
   hypo_graph = graph.adjacency(hypo_mat)
   v_names = gsub("_.*$", "", V(hypo_graph)$name)
   new_name = list()
@@ -271,6 +275,10 @@ tronco.plot = function(x,
   nAttrs$fillcolor =  rep('White', length(node_names))
   names(nAttrs$fillcolor) = node_names
   
+  # set fontsize
+  nAttrs$fontsize = rep(fontsize, length(node_names))
+  names(nAttrs$fontsize) = node_names
+  
   # set node height
   nAttrs$height = rep(height, length(node_names))
   names(nAttrs$height) = node_names
@@ -278,6 +286,21 @@ tronco.plot = function(x,
   # set node width
   nAttrs$width = rep(width, length(node_names))
   names(nAttrs$width) = node_names
+  
+  if (node.th.on) {
+    logical_op = list("AND", "OR", "NOT", "XOR", "*")
+
+    # foreach node
+    for (node in node_names) {
+      prefix = gsub("_.*$", "", node)
+      if ( !(prefix %in% logical_op)) {
+        increase_coeff = log(marginal_p[node,] + 1.2)
+        # print(increase_coeff)
+        nAttrs$width[node] = nAttrs$width[node] * increase_coeff
+        nAttrs$height[node] = nAttrs$height[node] * increase_coeff
+      }
+    }
+  }
   
   # use colors defined in tronco$types
   w = unlist(lapply(names(nAttrs$fillcolor), function(x){
@@ -295,10 +318,6 @@ tronco.plot = function(x,
   # Set shape
   nAttrs$shape = rep("ellipse", length(node_names))
   names(nAttrs$shape) = node_names
-  
-  # set fontsize
-  nAttrs$fontsize = rep(fontsize, length(node_names))
-  names(nAttrs$fontsize) = node_names
   
   # set color, size fo and shape each logic nodes
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
@@ -355,8 +374,8 @@ tronco.plot = function(x,
   names(eAttrs$label) = edge_names
   
   #set arrowdir to forward (default)
-  # eAttrs$dir = rep('forward', length(edge_names))
-  # names(eAttrs$dir) = edge_names
+  eAttrs$fontsize = rep(label.edge.size, length(edge_names))
+  names(eAttrs$fontsize) = edge_names
   
   #set edge color to black (default)
   eAttrs$color = rep('black', length(edge_names))
@@ -402,10 +421,7 @@ tronco.plot = function(x,
   names(eAttrs$arrowhead) = edge_names
   
   # print(eAttrs)
-  
-  # general parameter
-  attrs <- list(node = list(fixedsize = FALSE)) 
-  
+    
   # create legend
   if (legend) {
     legend_colors = data$types[data$types[, "color"] != '#FFFFFF',]
