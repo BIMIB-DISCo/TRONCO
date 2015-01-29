@@ -35,7 +35,12 @@ function(dataset, lambda = 0.5 , do.estimation = FALSE) {
     parents.pos <- best.parents$parents;
     conditional.probs <- array(-1, dim=c(length(parents.pos),1));
     adj.matrix <- array(0, dim=c(length(parents.pos),length(parents.pos)));
+    confidence <- array(list(), c(3,1));
+    confidence[[1,1]] = best.parents$pr.score;
+    confidence[[2,1]] = array(0, dim=c(length(parents.pos),length(parents.pos)));
+    confidence[[3,1]] = array(0, dim=c(length(parents.pos),length(parents.pos)));
     #set the parents names and the structures
+    hypergeometric.pvalues = vector();
     for(i in 1:ncol(dataset)) {
         #if the node has a parent
         if(parents.pos[i,1]!=-1) {
@@ -47,6 +52,29 @@ function(dataset, lambda = 0.5 , do.estimation = FALSE) {
         #if the node has no parent, its conditional probability is set to 
         else {
 			conditional.probs[i,1] = 1;
+        }
+        #compute the hypergeometric test
+        for (j in i:ncol(dataset)) {
+        		if(i!=j) {
+        			#compute the confidence by hypergeometric test
+        			confidence[[2,1]][i,j] = phyper(best.parents$joint.probs[i,j]*nrow(dataset),best.parents$marginal.probs[i]*nrow(dataset),nrow(dataset)-best.parents$marginal.probs[i]*nrow(dataset),best.parents$marginal.probs[j]*nrow(dataset),lower.tail=FALSE);
+        			confidence[[2,1]][j,i] = confidence[[2,1]][i,j];
+        			#save all the valid pvalues
+        			hypergeometric.pvalues = append(hypergeometric.pvalues,confidence[[2,1]][i,j]);
+        		}
+        }
+    }
+    #perform false discovery rate on the valid pvalues
+    hypergeometric.pvalues = p.adjust(hypergeometric.pvalues,method="fdr");
+    #save the resulting pvalues
+    cont = 0;
+    for(i in 1:ncol(dataset)) {
+        for (j in i:ncol(dataset)) {
+        	if(i!=j) {
+        		cont = cont + 1;
+        		confidence[[3,1]][i,j] = hypergeometric.pvalues[cont];
+        		confidence[[3,1]][j,i] = confidence[[3,1]][i,j];
+        	}
         }
     }
     if(do.estimation) {
@@ -62,7 +90,7 @@ function(dataset, lambda = 0.5 , do.estimation = FALSE) {
     probabilities = list(marginal.probs=best.parents$marginal.probs,joint.probs=best.parents$joint.probs,conditional.probs=conditional.probs,estimated.marginal.probs=estimated.probabilities$marginal.probs,estimated.joint.probs=estimated.probabilities$joint.probs,estimated.conditional.probs=estimated.probabilities$conditional.probs);
     parameters = list(algorithm="CAPRESE",lambda=lambda,do.estimation=do.estimation);
     #return the results
-    topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=estimated.error.rates,confidence=best.parents$pr.score,adj.matrix=adj.matrix,parameters=parameters);
+    topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=estimated.error.rates,confidence= confidence,adj.matrix=adj.matrix,parameters=parameters);
     return(topology);
 }
 

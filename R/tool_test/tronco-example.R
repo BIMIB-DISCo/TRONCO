@@ -6,10 +6,10 @@ work.dir = '~/Desktop/tool_test';
 setwd(work.dir);
 
 # set git directory
-my.GIT = '/home/dex/project/'
-invisible(sapply(list.files(pattern="[.]R$", path=paste0(my.GIT, 'TRONCO/R/TRONCO'), full.names=T, recursive = T), source))
-invisible(sapply(list.files(pattern="[.]R$", path=paste0(my.GIT, 'TRONCO/R/CAPRI'), full.names=T, recursive = T), source))
-invisible(sapply(list.files(pattern="[.]R$", path=paste0(my.GIT, 'TRONCO/R/CAPRESE'), full.names=T, recursive = T), source))
+my.GIT = '/Users/daniele/Documents/BIMIB/'
+invisible(sapply(list.files(pattern="[.]R$",path=paste0(my.GIT,'TRONCO/R/CAPRI'),full.names=TRUE,recursive=TRUE),source));
+invisible(sapply(list.files(pattern="[.]R$",path=paste0(my.GIT,'TRONCO/R/CAPRESE'),full.names=TRUE,recursive=TRUE),source));
+invisible(sapply(list.files(pattern="[.]R$",path=paste0(my.GIT,'TRONCO/R/TRONCO'),full.names=TRUE,recursive=TRUE),source));
 
 #load the dataset and set all the values for colnames and rownames
 genotypes = read.table(file.dataset.ovarian);
@@ -35,7 +35,6 @@ types[2,1] = "Blue";
 
 #create the input variable
 data = list(genotypes = genotypes, annotations = annotations, types = types);
-
 
 #perform the reconstruction with CAPRESE without estimations
 caprese.no.estimations = tronco.caprese(data);
