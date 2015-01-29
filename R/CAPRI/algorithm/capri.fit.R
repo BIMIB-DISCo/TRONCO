@@ -50,6 +50,19 @@ function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, d
     conditional.probs.pf = array(list(),c(ncol(dataset),1));
     parents.pos.bic = array(list(),c(ncol(dataset),1));
     conditional.probs.bic = array(list(),c(ncol(dataset),1));
+    confidence <- array(list(), c(4,1));
+    if(do.boot==TRUE) {
+    	confidence[[1,1]] = prima.facie.parents$pf.confidence[[1,1]];
+    	confidence[[2,1]] = prima.facie.parents$pf.confidence[[2,1]];
+    }
+    else {
+    	confidence[[1,1]] = NA;
+    	confidence[[2,1]] = NA;
+    }
+    confidence[[3,1]] = array(0, dim=c(ncol(dataset),ncol(dataset)));
+    confidence[[4,1]] = array(0, dim=c(ncol(dataset),ncol(dataset)));
+    #compute the remaining probabilities
+    hypergeometric.pvalues = vector();
     for(i in 1:ncol(dataset)) {
 		for(j in 1:ncol(dataset)) {
 			if(i!=j && best.parents$adj.matrix.pf[i,j]==1) {
@@ -60,12 +73,32 @@ function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, d
 				parents.pos.bic[j,1] = list(c(unlist(parents.pos.bic[j,1]),i));
 				conditional.probs.bic[j,1] = list(c(unlist(conditional.probs.bic[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
 			}
+        	if(i<j) {
+        		#compute the confidence by hypergeometric test
+        		confidence[[3,1]][i,j] = phyper(prima.facie.parents$joint.probs[i,j]*nrow(dataset),prima.facie.parents$marginal.probs[i]*nrow(dataset),nrow(dataset)-prima.facie.parents$marginal.probs[i]*nrow(dataset),prima.facie.parents$marginal.probs[j]*nrow(dataset),lower.tail=FALSE);
+        		confidence[[3,1]][j,i] = confidence[[3,1]][i,j];
+        		#save all the valid pvalues
+        		hypergeometric.pvalues = append(hypergeometric.pvalues,confidence[[3,1]][i,j]);
+        	}
 		}
     }
     parents.pos.pf[unlist(lapply(parents.pos.pf,is.null))] = list(-1);
     conditional.probs.pf[unlist(lapply(conditional.probs.pf,is.null))] = list(1);
     parents.pos.bic[unlist(lapply(parents.pos.bic,is.null))] = list(-1);
     conditional.probs.bic[unlist(lapply(conditional.probs.bic,is.null))] = list(1);
+    #perform false discovery rate on the valid pvalues
+    hypergeometric.pvalues = p.adjust(hypergeometric.pvalues,method="fdr");
+    #save the resulting pvalues
+    cont = 0;
+    for(i in 1:ncol(dataset)) {
+        for (j in i:ncol(dataset)) {
+        	if(i!=j) {
+        		cont = cont + 1;
+        		confidence[[4,1]][i,j] = hypergeometric.pvalues[cont];
+        		confidence[[4,1]][j,i] = confidence[[4,1]][i,j];
+        	}
+        }
+    }
     if(do.estimation) {
 		#estimate the error rates and, given them, the probabilities for the prima facie topology
 		estimated.error.rates.pf = estimate.dag.error.rates(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.pf);
@@ -88,7 +121,7 @@ function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, d
     error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.bic=estimated.error.rates.bic);
 	parameters = list(algorithm="CAPRI",do.boot=do.boot,nboot=nboot,pvalue=pvalue,do.estimation=do.estimation);
     #return the results
-    topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,confidence=prima.facie.parents$pf.confidence,adj.matrix=best.parents,parameters=parameters);
+    topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,confidence=confidence,adj.matrix=best.parents,parameters=parameters);
 	return(topology);
 }
 

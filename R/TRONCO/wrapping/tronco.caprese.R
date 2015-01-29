@@ -42,8 +42,14 @@ tronco.caprese <- function(data, lambda = 0.5, do.estimation = FALSE) {
 	colnames(topology$probabilities$conditional.probs) = "conditional probability";
 	rownames(topology$parents.pos) = colnames(data$genotypes);
 	colnames(topology$parents.pos) = "parent";
-	rownames(topology$confidence) = colnames(data$genotypes);
-	colnames(topology$confidence) = colnames(data$genotypes);
+	rownames(topology$confidence) = c("probabilistic causality","hypergeometric test","adjusted hypergeometric test");
+	colnames(topology$confidence) = "confidence";
+	rownames(topology$confidence[[1,1]]) = colnames(data$genotypes);
+	colnames(topology$confidence[[1,1]]) = colnames(data$genotypes);
+	rownames(topology$confidence[[2,1]]) = colnames(data$genotypes);
+	colnames(topology$confidence[[2,1]]) = colnames(data$genotypes);
+	rownames(topology$confidence[[3,1]]) = colnames(data$genotypes);
+	colnames(topology$confidence[[3,1]]) = colnames(data$genotypes);
 	rownames(topology$adj.matrix) = colnames(data$genotypes);
 	colnames(topology$adj.matrix) = colnames(data$genotypes);
 	if(do.estimation==TRUE) {
