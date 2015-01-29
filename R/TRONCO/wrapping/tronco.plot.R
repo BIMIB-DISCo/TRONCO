@@ -1,9 +1,10 @@
-#### capri.fit.R
+#### tronco.plot.R
 ####
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
 #### See the files COPYING and LICENSE for copyright and licensing
 #### information.
+
 
 hypotheses.expansion <- function(input_matrix, 
                                  map = list(),
@@ -155,6 +156,42 @@ hypotheses.expansion <- function(input_matrix,
 ###########################
 
 
+#' @import Rgraphviz
+#' @import graph
+#' @export tronco.plot
+#' @title plot a progression model
+#'
+#' @description
+#' \code{tronco.plot} plots a progression model from a recostructed \code{curr.topology}. 
+#' 
+#' 
+#' @param curr.topology A curr.topology returned by a reconstruction algorithm
+#' @param title plot Plot title (default "Progression model x", x reconstruction algorithm)
+#' @param title.color color title (default "black")
+#' 
+#' @param legend bool; show/hide the legend (default is t)
+#' @param legend.pos string; legend positioning, available keywords "topleft", "topright","bottomleft" and "bottomright" (default is "bottomright")
+#' @param legend.title string; legend title (default is "Legend")
+#' 
+#' @param legend.columns int; use 1 or 2 columns to plot the legend (default is 1)
+#' @param legend.inline bool; print inline legend (default is f)
+#' @param legend.coeff double; size of the types label in the legend (default is 1)
+#' 
+#' @param label.coeff double; size of the events label (default is 1)
+#' @param label.color color events label (default "black")
+#' @param label.edge.size double; size of the confidence label, when used (default is 12)
+#' 
+#' @param confidence bool; plot edges according to confidence (default is f)
+#' @param node.th.on controls the node thickness, based on the margina probabilty for each event
+#' @param node.th; the node thickness, default 2. Ignored if node.th.on is not set.  
+#' @examples
+#' \dontrun{
+#'     types.load("data/types.txt");
+#'     events.load("data/events.txt");
+#'   	data.load("data/CGH.txt");
+#'   	topology <- tronco.caprese();
+#'   	tronco.plot(curr.topology, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
+#' }
 tronco.plot = function(x, 
                      fontsize=18, 
                      fontsize.logic=12, 
@@ -166,9 +203,8 @@ tronco.plot = function(x,
                      disconnected=FALSE,
                      fixed.size=FALSE,
                      name=deparse(substitute(capri)),
-                     # new parameters
                      title = paste("Progression model", x$parameters$algorithm), 
-                     title.color = "black", 
+                     # title.color = "black", 
                      confidence = FALSE, 
                      legend = TRUE, 
                      legend.title = "Legend", 
@@ -176,11 +212,10 @@ tronco.plot = function(x,
                      legend.inline = FALSE, 
                      legend.pos = "bottomright", 
                      legend.coeff = 1, 
-                     label.coeff = 1, 
-                     label.color = "black", 
+                     # label.coeff = 1, 
+                     # label.color = "black", 
                      label.edge.size = 12, 
-                     node.th.on = FALSE, 
-                     bootstrap="non-parametric") {
+                     node.th.on = FALSE) {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -380,6 +415,25 @@ tronco.plot = function(x,
   #set edge color to black (default)
   eAttrs$color = rep('black', length(edge_names))
   names(eAttrs$color) = edge_names
+  
+  if(pf) {
+    # for each edge..
+    bic = adj.matrix$adj.matrix.bic
+    # print(bic)
+    
+    for(e in edge_names) {
+      edge = unlist(strsplit(e, '~'))
+      from = edge[1]
+      to = edge[2]
+      # ..checks if edge is present in BIC
+      #print(from)
+      #print(to)
+      if ( !(from %in% rownames(bic) && to %in% colnames(bic)) ) {
+        #print("prima facie!!!")
+        #eAttrs$color[e] = 'red'
+      }
+    }
+  }
   
   if(confidence) {
     # for each edge..

@@ -74,3 +74,7 @@ set.seed("12345");
 capri.without.bootstrap.non.parametric = tronco.bootstrap(capri.without.bootstrap);
 set.seed("12345");
 capri.without.bootstrap.parametric = tronco.bootstrap(capri.without.bootstrap,type="parametric");
+
+#plot the results
+tronco.plot(capri.without.bootstrap.non.parametric);
+tronco.plot(capri.without.bootstrap.non.parametric,pf=TRUE);
