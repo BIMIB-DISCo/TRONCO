@@ -107,7 +107,7 @@ hypotheses.expansion <- function(input_matrix,
       and_matrix = cbind(and_matrix, min_matrix[,col])
       pos = ncol(and_matrix)
       # and give her a new name based on the old one
-      colnames(and_matrix)[pos] = paste("AND", col, sep="_")
+      colnames(and_matrix)[pos] = paste("*", col, sep="_")
       
       # append a 0 columl to the matrix..
       and_matrix = cbind(and_matrix, matrix(0,nrow = nrow(and_matrix), ncol = 1))
@@ -126,8 +126,8 @@ hypotheses.expansion <- function(input_matrix,
   for(row in to_reconnect) {
     and_matrix = rbind(and_matrix, matrix(0, ncol=ncol(and_matrix), nrow = 1))
     pos = nrow(and_matrix)
-    rownames(and_matrix)[pos] = paste0("AND_", row)
-    and_matrix[paste0("AND_", row),row] = 1
+    rownames(and_matrix)[pos] = paste0("*_", row)
+    and_matrix[paste0("*_", row),row] = 1
   }
   
   # sort col and row (igraph wants the same order)
@@ -315,6 +315,14 @@ tronco.plot = function(x,
   nAttrs$height[which(w)] = height.logic
   nAttrs$width[which(w)] = width.logic
   
+  w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == '*'
+  nAttrs$fillcolor[which(w)] = 'pink'
+  nAttrs$shape[which(w)] = 'circle'
+  nAttrs$color[which(w)] = 'black'
+  nAttrs$fontsize[which(w)] = fontsize.logic
+  nAttrs$height[which(w)] = height.logic
+  nAttrs$width[which(w)] = width.logic
+  
   # edges properties
   
   edge_names = edgeNames(graph)
@@ -331,6 +339,10 @@ tronco.plot = function(x,
   #set edge name based on prob
   eAttrs$label = rep('', length(edge_names))
   names(eAttrs$label) = edge_names
+  
+  #set arrowhead based on prob
+  eAttrs$arrowhead = rep('', length(edge_names))
+  names(eAttrs$arrowhead) = edge_names
   
   if(confidence) {
     # for each edge..
