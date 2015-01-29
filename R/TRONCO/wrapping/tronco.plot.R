@@ -322,7 +322,7 @@ tronco.plot = function(x,
   # set color, size fo and shape each logic nodes
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
   nAttrs$fillcolor[which(w)] = 'orange'
-  nAttrs$label[which(w)] = 'ANY'
+  nAttrs$label[which(w)] = 'OR'
   nAttrs$shape[which(w)] = 'circle'
   nAttrs$color[which(w)] = 'darkblue'
   nAttrs$fontsize[which(w)] = fontsize.logic
@@ -331,7 +331,7 @@ tronco.plot = function(x,
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
   nAttrs$fillcolor[which(w)] = 'green'
-  nAttrs$label[which(w)] = 'CO'
+  nAttrs$label[which(w)] = 'AND'
   nAttrs$shape[which(w)] = 'circle'
   nAttrs$color[which(w)] = 'darkblue'
   nAttrs$fontsize[which(w)] = fontsize.logic
@@ -340,7 +340,7 @@ tronco.plot = function(x,
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
   nAttrs$fillcolor[which(w)] = 'red'
-  nAttrs$label[which(w)] = 'EX'
+  nAttrs$label[which(w)] = 'XOR'
   nAttrs$shape[which(w)] = 'circle'
   nAttrs$color[which(w)] = 'darkblue'
   nAttrs$fontsize[which(w)] = fontsize.logic
@@ -349,7 +349,7 @@ tronco.plot = function(x,
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == '*'
   nAttrs$fillcolor[which(w)] = 'green'
-  nAttrs$label[which(w)] = 'CO'
+  nAttrs$label[which(w)] = 'AND'
   nAttrs$shape[which(w)] = 'circle'
   nAttrs$color[which(w)] = 'darkblue'
   nAttrs$fontsize[which(w)] = fontsize.logic
