@@ -47,7 +47,12 @@ function(dataset, lambda, reconstructed.topology, command=c("non-parametric","pa
     bootstrap.results = array(-1,c(nboot,ncol(dataset)));
     colnames(bootstrap.results) = colnames(dataset);    
 	#perform nboot bootstrap resampling
+  
+	# create a progress bar
+	pb <- txtProgressBar(1, nboot, style = 3)
+  
     for (num in 1:nboot) {
+      setTxtProgressBar(pb, num)
     		#performed the bootstrapping procedure
     		if(command=="non-parametric") {
     			#perform the sampling for the current step of bootstrap
@@ -83,6 +88,10 @@ function(dataset, lambda, reconstructed.topology, command=c("non-parametric","pa
             bootstrap.results[num,matched.idx] = parents.pos;
         }
     }
+  
+	  # close progress bar
+	  close(pb)
+  
     #set the statistics of the bootstrap
     for(i in 1:ncol(bootstrap.adj.matrix)) {
         for(j in 1:ncol(bootstrap.adj.matrix)) {

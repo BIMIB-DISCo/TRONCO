@@ -343,6 +343,7 @@ hypo.plot = function(x,
         # if confidence > 0..
         # print(paste('from', from, 'to', to, ':', conf_matrix[from, to]))
         if (conf_matrix[from, to] == 1) {
+          # ..set edge thickness and label..
           eAttrs$label[e] = '      1'
           eAttrs$lwd[e] = log(150)
         } else if (conf_matrix[from, to] >= 0.01) {

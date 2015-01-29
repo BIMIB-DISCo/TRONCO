@@ -43,7 +43,12 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
     bootstrap.results.bic = array(list(-1),c(nboot,ncol(dataset)));
     colnames(bootstrap.results.bic) = colnames(dataset);
 	#perform nboot bootstrap resampling
+  
+  # create a progress bar
+	pb <- txtProgressBar(1, nboot, style = 3)
+  
     for (num in 1:nboot) {
+      setTxtProgressBar(pb, num)
 		#performed the bootstrapping procedure
 		if(command=="non-parametric") {
 			#perform the sampling for the current step of bootstrap
@@ -155,6 +160,10 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
 			}
 		}
     }
+  
+    # close progress bar
+    close(pb)
+  
     #set the statistics of the bootstrap
     for(i in 2:ncol(bootstrap.adj.matrix.pf)) {
 		curr.result.pf = bootstrap.results.pf[,i-1];
