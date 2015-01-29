@@ -303,6 +303,7 @@ tronco.plot = function(x,
   # set color, size fo and shape each logic nodes
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
   nAttrs$fillcolor[which(w)] = 'orange'
+  nAttrs$label[which(w)] = 'ANY'
   nAttrs$shape[which(w)] = 'circle'
   nAttrs$color[which(w)] = 'darkblue'
   nAttrs$fontsize[which(w)] = fontsize.logic
@@ -311,6 +312,7 @@ tronco.plot = function(x,
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
   nAttrs$fillcolor[which(w)] = 'green'
+  nAttrs$label[which(w)] = 'CO'
   nAttrs$shape[which(w)] = 'circle'
   nAttrs$color[which(w)] = 'darkblue'
   nAttrs$fontsize[which(w)] = fontsize.logic
@@ -319,6 +321,7 @@ tronco.plot = function(x,
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
   nAttrs$fillcolor[which(w)] = 'red'
+  nAttrs$label[which(w)] = 'EX'
   nAttrs$shape[which(w)] = 'circle'
   nAttrs$color[which(w)] = 'darkblue'
   nAttrs$fontsize[which(w)] = fontsize.logic
@@ -326,7 +329,8 @@ tronco.plot = function(x,
   nAttrs$width[which(w)] = width.logic
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == '*'
-  nAttrs$fillcolor[which(w)] = 'pink'
+  nAttrs$fillcolor[which(w)] = 'green'
+  nAttrs$label[which(w)] = 'CO'
   nAttrs$shape[which(w)] = 'circle'
   nAttrs$color[which(w)] = 'darkblue'
   nAttrs$fontsize[which(w)] = fontsize.logic
@@ -351,8 +355,8 @@ tronco.plot = function(x,
   names(eAttrs$label) = edge_names
   
   #set arrowdir to forward (default)
-  eAttrs$dir = rep('forward', length(edge_names))
-  names(eAttrs$dir) = edge_names
+  # eAttrs$dir = rep('forward', length(edge_names))
+  # names(eAttrs$dir) = edge_names
   
   #set edge color to black (default)
   eAttrs$color = rep('black', length(edge_names))
@@ -383,7 +387,7 @@ tronco.plot = function(x,
         }
       } else {
         # ..else this edge is located inside to an hypothesis, so no arrow to show
-        eAttrs$dir[e] = 'none'
+        # eAttrs$dir[e] = 'none'
         eAttrs$color[e] = 'darkblue'
       }
     }
