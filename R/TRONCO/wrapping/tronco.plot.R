@@ -142,11 +142,11 @@ hypotheses.expansion <- function(input_matrix,
 }
 
 ###########################
-######## HYPO PLOT ########
+####### TRONCO PLOT #######
 ###########################
 
 
-hypo.plot = function(x, 
+tronco.plot = function(x, 
                      fontsize=18, 
                      fontsize.logic=12, 
                      height=1,
