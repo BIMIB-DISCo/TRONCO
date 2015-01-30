@@ -65,11 +65,11 @@ function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, d
     hypergeometric.pvalues = vector();
     for(i in 1:ncol(dataset)) {
 		for(j in 1:ncol(dataset)) {
-			if(i!=j && best.parents$adj.matrix.pf[i,j]==1) {
+			if(i!=j && best.parents$adj.matrix$adj.matrix.pf[i,j]==1) {
 				parents.pos.pf[j,1] = list(c(unlist(parents.pos.pf[j,1]),i));
 				conditional.probs.pf[j,1] = list(c(unlist(conditional.probs.pf[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
 			}
-			if(i!=j && best.parents$adj.matrix.bic[i,j]==1) {
+			if(i!=j && best.parents$adj.matrix$adj.matrix.bic[i,j]==1) {
 				parents.pos.bic[j,1] = list(c(unlist(parents.pos.bic[j,1]),i));
 				conditional.probs.bic[j,1] = list(c(unlist(conditional.probs.bic[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
 			}
@@ -121,7 +121,7 @@ function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, d
     error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.bic=estimated.error.rates.bic);
 	parameters = list(algorithm="CAPRI",do.boot=do.boot,nboot=nboot,pvalue=pvalue,do.estimation=do.estimation);
     #return the results
-    topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,confidence=confidence,adj.matrix=best.parents,parameters=parameters);
+    topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,cpt=best.parents$cpt,error.rates=error.rates,confidence=confidence,adj.matrix=best.parents$adj.matrix,parameters=parameters);
 	return(topology);
 }
 

@@ -18,6 +18,10 @@ function(dataset,adj.matrix) {
     require(bnlearn);
     #adjacency matrix of the topology reconstructed by likelihood fit
     adj.matrix.bic = array(0,c(nrow(adj.matrix),ncol(adj.matrix)));
+    #conditional probability tables of the prima facie topology
+    cpt.pf = array(list(-1),c(nrow(adj.matrix),1));
+    #conditional probability tables of the fitted topology
+    cpt.bic = array(list(-1),c(nrow(adj.matrix),1));
     #create a categorical data frame from the dataset
     data = array("missing",c(nrow(dataset),ncol(dataset)));
     for (i in 1:nrow(dataset)) {
@@ -59,10 +63,16 @@ function(dataset,adj.matrix) {
     #the hill climbing is used as the mathematical optimization technique
     if(cont>0) {
         blacklist = data.frame(from = parent,to = child);
-        hc.arcs = hc(data,score="bic",blacklist=blacklist)$arcs;
+        hc.net = hc(data,score="bic",blacklist=blacklist);
     }
     else {
-        hc.arcs = hc(data,score="bic")$arcs;
+        hc.net = hc(data,score="bic");
+    }
+    hc.arcs = hc.net$arcs;
+    #estimate the CPTs of the network and save them
+    net.cpt = bn.fit(hc.net,data);
+    for(i in 1:length(net.cpt)) {
+    	cpt.bic[[i]] = net.cpt[[i]]$prob;
     }
     #make the adjacency matrix of the reconstructed topology
     if(length(nrow(hc.arcs))>0 && nrow(hc.arcs)>0) {
@@ -71,7 +81,10 @@ function(dataset,adj.matrix) {
             adj.matrix.bic[as.numeric(hc.arcs[i,1]),as.numeric(hc.arcs[i,2])] = 1;
         }
     }
-    topology = list(adj.matrix.pf=adj.matrix,adj.matrix.bic=adj.matrix.bic);
+    #save the results
+    adj.matrix = list(adj.matrix.pf=adj.matrix,adj.matrix.bic=adj.matrix.bic);
+    cpt = list(cpt.pf=cpt.pf,cpt.bic=cpt.bic);
+    topology = list(adj.matrix=adj.matrix,cpt=cpt);
     return(topology);
 }
 
