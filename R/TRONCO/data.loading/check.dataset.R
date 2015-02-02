@@ -99,11 +99,11 @@ function( dataset, verbose ) {
         #if at this point I still have at least two events, the dataset is valid
         if(length(ncol(valid.dataset))>0 && ncol(valid.dataset)>1) {
             invalid.events = list(removed.events=removed.events,merged.events=merged.events);
-            valid.dataset = list(dataset=valid.dataset,hypotheses=NA,invalid.events=invalid.events,marginal.probs=valid.marginal.probs,joint.probs=valid.joint.probs,is.valid=TRUE);
+            valid.dataset = list(dataset=valid.dataset,invalid.events=invalid.events,marginal.probs=valid.marginal.probs,joint.probs=valid.joint.probs,is.valid=TRUE);
         }
         #if the dataset is not valid, we stop here
         else {
-            valid.dataset = list(dataset=NA,hypotheses=NA,invalid.events=NA,marginal.probs=NA,joint.probs=NA,is.valid=FALSE);
+            valid.dataset = list(dataset=NA,invalid.events=NA,marginal.probs=NA,joint.probs=NA,is.valid=FALSE);
         }
     }
     #if the dataset is not valid, we stop here
@@ -111,7 +111,7 @@ function( dataset, verbose ) {
         if(verbose==TRUE) {
             warning("The dataset must contain at least two binary events and two samples.");
         }
-        valid.dataset = list(dataset=NA,hypotheses=NA,invalid.events=NA,marginal.probs=NA,joint.probs=NA,is.valid=FALSE);
+        valid.dataset = list(dataset=NA,invalid.events=NA,marginal.probs=NA,joint.probs=NA,is.valid=FALSE);
     }
     return(valid.dataset);
 }

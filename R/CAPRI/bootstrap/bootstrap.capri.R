@@ -9,6 +9,7 @@
 #perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
 #INPUT:
 #dataset: a dataset describing a progressive phenomenon
+#hypotheses: a set of hypotheses referring to the dataset
 #command.capri: type of search, either hill climbing (hc) or tabu (tabu)
 #do.boot: should I perform bootstrap? Yes if TRUE, no otherwise
 #nboot.capri: integer number (greater than 0) of bootstrap sampling to be performed
@@ -28,7 +29,7 @@
 #RETURN:
 #bootstrap.statistics: statistics of the bootstrap
 "bootstrap.capri" <-
-function(dataset, command.capri, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, reconstructed.topology.bic, command = "non-parametric", estimated.marginal.probabilities.pf, estimated.conditional.probabilities.pf, parents.pos.pf, error.rates.pf, estimated.marginal.probabilities.bic, estimated.conditional.probabilities.bic, parents.pos.bic, error.rates.bic, nboot) {
+function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, reconstructed.topology.bic, command = "non-parametric", estimated.marginal.probabilities.pf, estimated.conditional.probabilities.pf, parents.pos.pf, error.rates.pf, estimated.marginal.probabilities.bic, estimated.conditional.probabilities.bic, parents.pos.bic, error.rates.bic, nboot) {
     #structure to save the statistics of the bootstrap
     bootstrap.adj.matrix.pf = array(0,c(ncol(dataset)+1,ncol(dataset)+1));
     colnames(bootstrap.adj.matrix.pf) = c("None",colnames(dataset));
@@ -47,7 +48,8 @@ function(dataset, command.capri, do.boot, nboot.capri, pvalue, reconstructed.top
 	pb <- txtProgressBar(1, nboot, style = 3);
   
     for (num in 1:nboot) {
-      setTxtProgressBar(pb, num)
+    		#start the progress bar
+    		setTxtProgressBar(pb, num)
 		#performed the bootstrapping procedure
 		if(command=="non-parametric") {
 			#perform the sampling for the current step of bootstrap
@@ -57,7 +59,12 @@ function(dataset, command.capri, do.boot, nboot.capri, pvalue, reconstructed.top
 			#if the reconstruction was performed without errors
 			if(check.data$is.valid==TRUE) {
 				bootstrapped.dataset = check.data$dataset;
-				bootstrapped.hypotheses = check.data$hypotheses;
+				curr.hypotheses = hypotheses;
+				if(!is.na(check.data$invalid.events$removed.events[1])) {
+					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%check.data$invalid.events$removed.events));
+					curr.hypotheses$hlist = curr.hypotheses$hlist[which(!(hypotheses$hlist[,"cause"]%in%check.data$invalid.events$removed.events)),];
+				}
+				bootstrapped.hypotheses = curr.hypotheses;
 				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
 				#set the reconstructed causal edges
 				parents.pos.pf = array(list(),c(ncol(bootstrapped.topology$data),1));
@@ -114,7 +121,12 @@ function(dataset, command.capri, do.boot, nboot.capri, pvalue, reconstructed.top
 			#if the reconstruction was performed without errors for the prima facie topology
 			if(check.data.pf$is.valid==TRUE) {
 				bootstrapped.dataset = check.data.pf$dataset;
-				bootstrapped.hypotheses = check.data.pf$hypotheses;
+				curr.hypotheses = hypotheses;
+				if(!is.na(check.data.pf$invalid.events$removed.events[1])) {
+					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%check.data.pf$invalid.events$removed.events));
+					curr.hypotheses$hlist = curr.hypotheses$hlist[which(!(hypotheses$hlist[,"cause"]%in%check.data.pf$invalid.events$removed.events)),];
+				}
+				bootstrapped.hypotheses = curr.hypotheses;
 				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
 				#set the reconstructed causal edges
 				parents.pos.pf = array(list(),c(ncol(bootstrapped.topology$data),1));
@@ -137,7 +149,12 @@ function(dataset, command.capri, do.boot, nboot.capri, pvalue, reconstructed.top
 			#if the reconstruction was performed without errors for the causal topology
 			if(check.data.bic$is.valid==TRUE) {
 				bootstrapped.dataset = check.data.bic$dataset;
-				bootstrapped.hypotheses = check.data.bic$hypotheses;
+				curr.hypotheses = hypotheses;
+				if(!is.na(check.data.bic$invalid.events$removed.events[1])) {
+					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%check.data.bic$invalid.events$removed.events));
+					curr.hypotheses$hlist = curr.hypotheses$hlist[which(!(hypotheses$hlist[,"cause"]%in%check.data.bic$invalid.events$removed.events)),];
+				}
+				bootstrapped.hypotheses = curr.hypotheses;
 				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
 				#set the reconstructed causal edges
 				parents.pos.bic = array(list(),c(ncol(bootstrapped.topology$data),1));
