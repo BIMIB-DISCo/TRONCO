@@ -6,17 +6,6 @@
 #### information.
 
 
-#' @export tronco.bootstrap
-#' @title perform an estimation in the confidence of the reconstruction by bootstrap
-#'
-#' @description
-#' \code{tronco.bootstrap} perform parametric or non-parametric bootstrap estimations.
-#' 
-#' @param topology A reconstructed topology.
-#' @param type The type of bootstrap to be performed, non-parametric or parametric bootstraps are implemented.
-#' @param nboot Number of bootstrap resampling to be performed.
-#' @return A topology structure with bootstrap estimation.
-#' 
 tronco.bootstrap <- function( topology, type="non-parametric", nboot=100 ) {
 	#check for the inputs to be correct
 	if(is.null(topology)) {
@@ -44,6 +33,7 @@ tronco.bootstrap <- function( topology, type="non-parametric", nboot=100 ) {
 			}
 		}
 		else if(topology$parameters$algorithm=="CAPRI") {
+			command.capri = do.boot = topology$parameters$command;
 			do.boot = topology$parameters$do.boot;
 			nboot.capri = topology$parameters$nboot;
 			pvalue = topology$parameters$pvalue;
@@ -85,10 +75,10 @@ tronco.bootstrap <- function( topology, type="non-parametric", nboot=100 ) {
     }
     else if(topology$parameters$algorithm=="CAPRI") {
 		if(type=="non-parametric") {
-			curr.boot = bootstrap.capri(dataset,do.boot,nboot.capri,pvalue,adj.matrix.pf,adj.matrix.bic,type,NA,NA,NA,NA,NA,NA,NA,NA,nboot);
+			curr.boot = bootstrap.capri(dataset,command.capri,do.boot,nboot.capri,pvalue,adj.matrix.pf,adj.matrix.bic,type,NA,NA,NA,NA,NA,NA,NA,NA,nboot);
 		}
 		else if(type=="parametric") {
-			curr.boot = bootstrap.capri(dataset,do.boot,nboot.capri,pvalue,adj.matrix.pf,adj.matrix.bic,type,estimated.marginal.probs.pf,estimated.conditional.probs.pf,parents.pos.pf,error.rates.pf,estimated.marginal.probs.bic,estimated.conditional.probs.bic,parents.pos.bic,error.rates.bic,nboot);
+			curr.boot = bootstrap.capri(dataset,command.capri,do.boot,nboot.capri,pvalue,adj.matrix.pf,adj.matrix.bic,type,estimated.marginal.probs.pf,estimated.conditional.probs.pf,parents.pos.pf,error.rates.pf,estimated.marginal.probs.bic,estimated.conditional.probs.bic,parents.pos.bic,error.rates.bic,nboot);
 		}
 		topology$bootstrap = curr.boot;
 		cat("\nConfidence overall \"prima facie\" value:",curr.boot$confidence$confidence.pf$overall.value.pf);

@@ -10,10 +10,11 @@
 #INPUT:
 #dataset: a valid dataset
 #adj.matrix: the adjacency matrix of the prima facie causes
+#command: type of search, either hill climbing (hc) or tabu (tabu)
 #RETURN:
 #topology: the adjacency matrix of both the prima facie and causal topologies
 "perform.likelihood.fit" <-
-function(dataset,adj.matrix) {
+function(dataset, adj.matrix, command) {
     #load the bnlearn library required for the likelihood fit with bic
     require(bnlearn);
     #adjacency matrix of the topology reconstructed by likelihood fit
@@ -60,25 +61,60 @@ function(dataset,adj.matrix) {
         }
     }
     #perform the reconstruction by likelihood fit with bic
-    #the hill climbing is used as the mathematical optimization technique
+    #either the hill climbing or the tabu search is used as the mathematical optimization technique
     if(cont>0) {
         blacklist = data.frame(from = parent,to = child);
-        hc.net = hc(data,score="bic",blacklist=blacklist);
+        if(command=="hc") {
+        		my.net = hc(data,score="bic",blacklist=blacklist);
+        }
+        else if(command=="tabu") {
+        		my.net = tabu(data,score="bic",blacklist=blacklist);
+        }
     }
     else {
-        hc.net = hc(data,score="bic");
+    		if(command=="hc") {
+        		my.net = hc(data,score="bic");
+        }
+        else if(command=="tabu") {
+        		my.net = tabu(data,score="bic");
+        }
     }
-    hc.arcs = hc.net$arcs;
-    #estimate the CPTs of the network and save them
-    net.cpt = bn.fit(hc.net,data);
+    my.arcs = my.net$arcs;
+    #create the network of the prima facie causes
+    pf.net = empty.graph(colnames(data));
+    #create the connections in this network
+    arc.set = NA;
+    for (i in 1:nrow(adj.matrix)) {
+    	for (j in 1:ncol(adj.matrix)) {
+            if(adj.matrix[i,j]==1) {
+                if(is.na(arc.set[1])) {
+                	arc.set = matrix(c(colnames(data)[i],colnames(data)[j]),ncol=2,byrow=TRUE,dimnames=list(NULL, c("from", "to")));
+                }
+                else {
+                	arc.set = rbind(arc.set,c(colnames(data)[i],colnames(data)[j]));
+                }
+            }
+        }
+    }
+    #set the arcs to the pf network
+    if(!is.na(arc.set[1])) {
+    		arcs(pf.net) = arc.set;
+    }
+    #estimate the CPTs of the prima facie network and save them
+    net.cpt = bn.fit(pf.net,data);
     for(i in 1:length(net.cpt)) {
-    	cpt.bic[[i]] = net.cpt[[i]]$prob;
+    		cpt.pf[[i]] = net.cpt[[i]]$prob;
+    }
+    #estimate the CPTs of the bic network and save them
+    net.cpt = bn.fit(my.net,data);
+    for(i in 1:length(net.cpt)) {
+    		cpt.bic[[i]] = net.cpt[[i]]$prob;
     }
     #make the adjacency matrix of the reconstructed topology
-    if(length(nrow(hc.arcs))>0 && nrow(hc.arcs)>0) {
-        for (i in 1:nrow(hc.arcs)) {
+    if(length(nrow(my.arcs))>0 && nrow(my.arcs)>0) {
+        for (i in 1:nrow(my.arcs)) {
             #[i,j] refers to causation i --> j
-            adj.matrix.bic[as.numeric(hc.arcs[i,1]),as.numeric(hc.arcs[i,2])] = 1;
+            adj.matrix.bic[as.numeric(my.arcs[i,1]),as.numeric(my.arcs[i,2])] = 1;
         }
     }
     #save the results

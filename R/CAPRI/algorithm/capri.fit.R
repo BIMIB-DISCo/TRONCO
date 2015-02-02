@@ -10,6 +10,7 @@
 #INPUT:
 #dataset: a dataset describing a progressive phenomenon
 #hypotheses: hypotheses to be considered in the reconstruction
+#command: type of search, either hill climbing (hc) or tabu (tabu)
 #do.boot: should I perform bootstrap? Yes if TRUE, no otherwise
 #nboot: integer number (greater than 0) of bootstrap sampling to be performed
 #pvalue: pvalue for the tests (value between 0 and 1)
@@ -17,7 +18,7 @@
 #RETURN:
 #topology: the reconstructed tree topology
 "capri.fit" <-
-function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, do.estimation = FALSE) {
+function(dataset, hypotheses = NA, command = "hc", do.boot = TRUE, nboot = 100, pvalue = 0.05, do.estimation = FALSE) {
 	#structure with the set of valid edges
 	#I start from the complete graph, i.e., I have no prior
 	adj.matrix = array(1,c(ncol(dataset),ncol(dataset)));
@@ -44,7 +45,7 @@ function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, d
         prima.facie.parents = get.prima.facie.parents.no.boot(dataset,adj.matrix);
     }
 	#perform the likelihood fit by BIC score
-	best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix);
+	best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command);
 	#set the conditional probabilities
 	parents.pos.pf = array(list(),c(ncol(dataset),1));
     conditional.probs.pf = array(list(),c(ncol(dataset),1));
@@ -119,7 +120,7 @@ function(dataset, hypotheses = NA, do.boot = TRUE, nboot = 100, pvalue = 0.05, d
     probabilities = list(probabilities.pf=probabilities.pf,probabilities.bic=probabilities.bic);
     parents.pos = list(parents.pos.pf=parents.pos.pf,parents.pos.bic=parents.pos.bic);
     error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.bic=estimated.error.rates.bic);
-	parameters = list(algorithm="CAPRI",do.boot=do.boot,nboot=nboot,pvalue=pvalue,do.estimation=do.estimation);
+	parameters = list(algorithm="CAPRI",command=command,do.boot=do.boot,nboot=nboot,pvalue=pvalue,do.estimation=do.estimation);
     #return the results
     topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,cpt=best.parents$cpt,error.rates=error.rates,confidence=confidence,adj.matrix=best.parents$adj.matrix,parameters=parameters);
 	return(topology);

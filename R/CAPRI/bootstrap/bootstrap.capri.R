@@ -9,6 +9,7 @@
 #perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
 #INPUT:
 #dataset: a dataset describing a progressive phenomenon
+#command.capri: type of search, either hill climbing (hc) or tabu (tabu)
 #do.boot: should I perform bootstrap? Yes if TRUE, no otherwise
 #nboot.capri: integer number (greater than 0) of bootstrap sampling to be performed
 #pvalue: pvalue for the tests (value between 0 and 1)
@@ -27,7 +28,7 @@
 #RETURN:
 #bootstrap.statistics: statistics of the bootstrap
 "bootstrap.capri" <-
-function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, reconstructed.topology.bic, command=c("non-parametric","parametric"), estimated.marginal.probabilities.pf, estimated.conditional.probabilities.pf, parents.pos.pf, error.rates.pf, estimated.marginal.probabilities.bic, estimated.conditional.probabilities.bic, parents.pos.bic, error.rates.bic, nboot) {
+function(dataset, command.capri, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, reconstructed.topology.bic, command = "non-parametric", estimated.marginal.probabilities.pf, estimated.conditional.probabilities.pf, parents.pos.pf, error.rates.pf, estimated.marginal.probabilities.bic, estimated.conditional.probabilities.bic, parents.pos.bic, error.rates.bic, nboot) {
     #structure to save the statistics of the bootstrap
     bootstrap.adj.matrix.pf = array(0,c(ncol(dataset)+1,ncol(dataset)+1));
     colnames(bootstrap.adj.matrix.pf) = c("None",colnames(dataset));
@@ -35,8 +36,6 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
     bootstrap.adj.matrix.bic = array(0,c(ncol(dataset)+1,ncol(dataset)+1));
     colnames(bootstrap.adj.matrix.bic) = c("None",colnames(dataset));
     rownames(bootstrap.adj.matrix.bic) = c("None",colnames(dataset));
-    #set the type of bootstrap to be performed, i.e., non-parametric or parametric
-    command <- match.arg(command);
     #structure to save the results of the bootstrap
     bootstrap.results.pf = array(list(-1),c(nboot,ncol(dataset)));
     colnames(bootstrap.results.pf) = colnames(dataset);
@@ -44,8 +43,8 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
     colnames(bootstrap.results.bic) = colnames(dataset);
 	#perform nboot bootstrap resampling
   
-  # create a progress bar
-	pb <- txtProgressBar(1, nboot, style = 3)
+  	# create a progress bar
+	pb <- txtProgressBar(1, nboot, style = 3);
   
     for (num in 1:nboot) {
       setTxtProgressBar(pb, num)
@@ -58,8 +57,8 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
 			#if the reconstruction was performed without errors
 			if(check.data$is.valid==TRUE) {
 				bootstrapped.dataset = check.data$dataset;
-				bootstrapped.hypotheses = NA;
-				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,do.boot,nboot.capri,pvalue,FALSE);
+				bootstrapped.hypotheses = check.data$hypotheses;
+				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
 				#set the reconstructed causal edges
 				parents.pos.pf = array(list(),c(ncol(bootstrapped.topology$data),1));
 				parents.pos.bic = array(list(),c(ncol(bootstrapped.topology$data),1));
@@ -115,8 +114,8 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
 			#if the reconstruction was performed without errors for the prima facie topology
 			if(check.data.pf$is.valid==TRUE) {
 				bootstrapped.dataset = check.data.pf$dataset;
-				bootstrapped.hypotheses = NA;
-				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,do.boot,nboot.capri,pvalue,FALSE);
+				bootstrapped.hypotheses = check.data$hypotheses;
+				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
 				#set the reconstructed causal edges
 				parents.pos.pf = array(list(),c(ncol(bootstrapped.topology$data),1));
 				for(i in 1:ncol(bootstrapped.topology$data)) {
@@ -138,8 +137,8 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
 			#if the reconstruction was performed without errors for the causal topology
 			if(check.data.bic$is.valid==TRUE) {
 				bootstrapped.dataset = check.data.bic$dataset;
-				bootstrapped.hypotheses = NA;
-				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,do.boot,nboot.capri,pvalue,FALSE);
+				bootstrapped.hypotheses = check.data$hypotheses;
+				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
 				#set the reconstructed causal edges
 				parents.pos.bic = array(list(),c(ncol(bootstrapped.topology$data),1));
 				for(i in 1:ncol(bootstrapped.topology$data)) {
@@ -162,7 +161,7 @@ function(dataset, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, recon
     }
   
     # close progress bar
-    close(pb)
+    close(pb);
   
     #set the statistics of the bootstrap
     for(i in 2:ncol(bootstrap.adj.matrix.pf)) {

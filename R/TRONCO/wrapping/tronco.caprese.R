@@ -6,21 +6,6 @@
 #### information.
 
 
-#' @export tronco.caprese
-#' @title runs CAPRESE algorithm
-#'
-#' @description
-#' \code{tronco.caprese} run CAPRESE algorithm on the specified inputs. 
-#'
-#' @details
-#' \code{tronco.caprese} infer the best tree topology and compute the confidence measures defined in \code{confidence}.
-#' 
-#' @param data The input data. Type: dataframe. The dataset provided inside data is assumed to be valid.
-#' @seealso \code{\link{data}}
-#' @param lambda a real positive value defining the shrinkage coefficient, required to range in [0, 1]. Its default value is 0.5.
-#' @param do.estimation run CAPRESE algorithm and estimates the error rates. Type: boolean, dafault: FALSE.
-#' @return a list saving the reconstructed tree topology and the confidence values.
-#' 
 tronco.caprese <- function(data, lambda = 0.5, do.estimation = FALSE) {
 	#check for the inputs to be correct
 	if(is.null(data) || is.null(data$genotypes)) {
