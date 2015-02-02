@@ -114,7 +114,7 @@ function(dataset, command.capri, do.boot, nboot.capri, pvalue, reconstructed.top
 			#if the reconstruction was performed without errors for the prima facie topology
 			if(check.data.pf$is.valid==TRUE) {
 				bootstrapped.dataset = check.data.pf$dataset;
-				bootstrapped.hypotheses = check.data$hypotheses;
+				bootstrapped.hypotheses = check.data.pf$hypotheses;
 				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
 				#set the reconstructed causal edges
 				parents.pos.pf = array(list(),c(ncol(bootstrapped.topology$data),1));
@@ -137,7 +137,7 @@ function(dataset, command.capri, do.boot, nboot.capri, pvalue, reconstructed.top
 			#if the reconstruction was performed without errors for the causal topology
 			if(check.data.bic$is.valid==TRUE) {
 				bootstrapped.dataset = check.data.bic$dataset;
-				bootstrapped.hypotheses = check.data$hypotheses;
+				bootstrapped.hypotheses = check.data.bic$hypotheses;
 				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
 				#set the reconstructed causal edges
 				parents.pos.bic = array(list(),c(ncol(bootstrapped.topology$data),1));
