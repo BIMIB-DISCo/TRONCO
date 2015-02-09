@@ -6,7 +6,7 @@
 #### information.
 
 
-tronco.capri <- function(data, do.boot = TRUE, nboot = 100, pvalue = 0.05, do.estimation = FALSE) {
+tronco.capri <- function(data, command = "hc", do.boot = TRUE, nboot = 100, pvalue = 0.05, do.estimation = FALSE) {
 	#check for the inputs to be correct
 	if(is.null(data) || is.null(data$genotypes)) {
 		stop("The dataset given as input is not valid.");
@@ -14,12 +14,15 @@ tronco.capri <- function(data, do.boot = TRUE, nboot = 100, pvalue = 0.05, do.es
 	if(is.null(data$hypotheses)) {
 		data$hypotheses = NA;
 	}
+	if(command != "hc" && command != "tabu") {
+		stop("The inference can be performed either by hill climbing or tabu search!",call.=FALSE);
+	}
 	if(pvalue < 0 || pvalue > 1) {
 		stop("The value of the pvalue has to be in [0:1]!",call.=FALSE);
 	}
 	#reconstruct the topology with CAPRI
 	cat(paste("Running CAPRI algorithm.","\n"));
-	topology = capri.fit(data$genotypes,data$hypotheses,do.boot,nboot,pvalue,do.estimation);
+	topology = capri.fit(data$genotypes,data$hypotheses,command,do.boot,nboot,pvalue,do.estimation);
 	topology$data = data;
 	#set rownames and colnames to the results
 	rownames(topology$probabilities$probabilities.pf$marginal.probs) = colnames(data$genotypes);
@@ -38,6 +41,10 @@ tronco.capri <- function(data, do.boot = TRUE, nboot = 100, pvalue = 0.05, do.es
 	colnames(topology$parents.pos$parents.pos.pf) = "parent";
 	rownames(topology$parents.pos$parents.pos.bic) = colnames(data$genotypes);
 	colnames(topology$parents.pos$parents.pos.bic) = "parent";
+	rownames(topology$cpt$cpt.pf) = colnames(data$genotypes);
+	colnames(topology$cpt$cpt.pf) = "parent";
+	rownames(topology$cpt$cpt.bic) = colnames(data$genotypes);
+	colnames(topology$cpt$cpt.bic) = "parent";
 	rownames(topology$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
 	colnames(topology$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
 	rownames(topology$adj.matrix$adj.matrix.bic) = colnames(data$genotypes);

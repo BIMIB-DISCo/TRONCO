@@ -74,7 +74,7 @@ function(dataset, lambda = 0.5 , do.estimation = FALSE) {
         		cont = cont + 1;
         		confidence[[3,1]][i,j] = hypergeometric.pvalues[cont];
         		confidence[[3,1]][j,i] = confidence[[3,1]][i,j];
-        	}
+        		}
         }
     }
     if(do.estimation) {
@@ -86,11 +86,51 @@ function(dataset, lambda = 0.5 , do.estimation = FALSE) {
 		estimated.error.rates = list(error.fp=NA,error.fn=NA);
 		estimated.probabilities = list(marginal.probs=NA,joint.probs=NA,conditional.probs=NA);
 	}
+	#load the bnlearn library required for the parameters estimation by mle
+    require(bnlearn);
+    #conditional probability tables of the topology
+    cpt = array(list(-1),c(nrow(adj.matrix),1));
+    #create a categorical data frame from the dataset
+    data = array("missing",c(nrow(dataset),ncol(dataset)));
+    for (i in 1:nrow(dataset)) {
+        for (j in 1:ncol(dataset)) {
+            if(dataset[i,j]==1) {
+                data[i,j] = "observed";
+            }
+        }
+    }
+    data = as.data.frame(data);
+    #create the empty network
+    my.colnames = colnames(data);
+    my.net = empty.graph(my.colnames);
+    #create the connections in this network
+    arc.set = NA;
+    for (i in 1:nrow(adj.matrix)) {
+    		for (j in 1:ncol(adj.matrix)) {
+            if(adj.matrix[i,j]==1) {
+                if(is.na(arc.set[1])) {
+                		arc.set = matrix(c(my.colnames[i],my.colnames[j]),ncol=2,byrow=TRUE,dimnames=list(NULL, c("from", "to")));
+                }
+                else {
+                		arc.set = rbind(arc.set,c(my.colnames[i],my.colnames[j]));
+                }
+            }
+        }
+    }
+    #set the arcs to the pf network
+    if(!is.na(arc.set[1])) {
+    		arcs(my.net) = arc.set;
+    }
+    #estimate the CPTs of the network and save them
+    net.cpt = bn.fit(my.net,data);
+    for(i in 1:length(net.cpt)) {
+    		cpt[[i]] = net.cpt[[i]]$prob;
+    }
     #structures where to save the probabilities
     probabilities = list(marginal.probs=best.parents$marginal.probs,joint.probs=best.parents$joint.probs,conditional.probs=conditional.probs,estimated.marginal.probs=estimated.probabilities$marginal.probs,estimated.joint.probs=estimated.probabilities$joint.probs,estimated.conditional.probs=estimated.probabilities$conditional.probs);
     parameters = list(algorithm="CAPRESE",lambda=lambda,do.estimation=do.estimation);
     #return the results
-    topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=estimated.error.rates,confidence= confidence,adj.matrix=adj.matrix,parameters=parameters);
+    topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,cpt=cpt,error.rates=estimated.error.rates,confidence= confidence,adj.matrix=adj.matrix,parameters=parameters);
     return(topology);
 }
 

@@ -1,12 +1,14 @@
-#file where the dataset is saved
-file.dataset.ovarian = "data/ovarian-data.txt";
+#the local path of my git directory
+my.GIT = '/Users/daniele/Documents/BIMIB/'
 
 #set the working directory
-work.dir = '~/Desktop/tool_test';
+work.dir = paste0(my.GIT,'TRONCO/R/tool_test');
 setwd(work.dir);
 
-# set git directory
-my.GIT = '/Users/daniele/Documents/BIMIB/'
+#file where the dataset is saved
+file.dataset.ovarian = paste0(work.dir,'/data/ovarian-data.txt');
+
+#set git directory
 invisible(sapply(list.files(pattern="[.]R$",path=paste0(my.GIT,'TRONCO/R/CAPRI'),full.names=TRUE,recursive=TRUE),source));
 invisible(sapply(list.files(pattern="[.]R$",path=paste0(my.GIT,'TRONCO/R/CAPRESE'),full.names=TRUE,recursive=TRUE),source));
 invisible(sapply(list.files(pattern="[.]R$",path=paste0(my.GIT,'TRONCO/R/TRONCO'),full.names=TRUE,recursive=TRUE),source));

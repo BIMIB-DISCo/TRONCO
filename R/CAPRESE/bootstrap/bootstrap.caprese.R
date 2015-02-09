@@ -19,13 +19,11 @@
 #RETURN:
 #bootstrap.statistics: statistics of the bootstrap
 "bootstrap.caprese" <-
-function(dataset, lambda, reconstructed.topology, command=c("non-parametric","parametric"), estimated.marginal.probabilities, estimated.conditional.probabilities, error.rates, nboot) {
+function(dataset, lambda, reconstructed.topology, command = "non-parametric", estimated.marginal.probabilities, estimated.conditional.probabilities, error.rates, nboot) {
     #structure to save the statistics of the bootstrap
     bootstrap.adj.matrix = array(0,c(ncol(dataset)+1,ncol(dataset)+1));
     colnames(bootstrap.adj.matrix) = c("None",colnames(dataset));
     rownames(bootstrap.adj.matrix) = c("None",colnames(dataset));
-    #set the type of bootstrap to be performed, i.e., non-parametric or parametric
-    command <- match.arg(command);
     #set the dataset if the bootstrap is parametric
     if(command=="parametric") {
     		#define the possible samples given the current number of events
@@ -49,7 +47,7 @@ function(dataset, lambda, reconstructed.topology, command=c("non-parametric","pa
 	#perform nboot bootstrap resampling
   
 	# create a progress bar
-	pb <- txtProgressBar(1, nboot, style = 3)
+	pb <- txtProgressBar(1, nboot, style = 3);
   
     for (num in 1:nboot) {
       setTxtProgressBar(pb, num)
@@ -89,8 +87,8 @@ function(dataset, lambda, reconstructed.topology, command=c("non-parametric","pa
         }
     }
   
-	  # close progress bar
-	  close(pb)
+	# close progress bar
+	close(pb);
   
     #set the statistics of the bootstrap
     for(i in 1:ncol(bootstrap.adj.matrix)) {
