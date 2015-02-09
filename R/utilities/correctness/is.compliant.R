@@ -4,7 +4,7 @@
 # - stage: boolean flag to check x$stage datagframe
 #
 # Returns: on error stops the computation
-is.compliant = function(x, err.fun, stage=FALSE)
+is.compliant = function(x, err.fun, stage=has.stages(x))
 {
 	# Check if x is defined
   	if(is.null(x) || is.na(x))
@@ -22,15 +22,6 @@ is.compliant = function(x, err.fun, stage=FALSE)
 	
 	colnames(x$annotations) = c('type', 'event')
 	colnames(x$types) = c('color')
-	# # If for some data import genotypes are no more characters, convert them
-	# if(typeof(x$genotypes) != typeof(1))	
-	# {
-		# # mode(x$genotypes) = typeof(1)
-		 # rn = rownames(x$genotypes)
-		 # x$genotypes = apply(x$genotypes, 2, as.numeric)
-		 # rownames(x$genotypes) = rn
-	# }	
-		
 	
 	if(is.null(x$annotations) || is.na(x$annotations))
 		stop(paste(err.fun, ': input \'x\' has no annotations field.'))
@@ -59,11 +50,6 @@ is.compliant = function(x, err.fun, stage=FALSE)
 
  	if(!all(unique(x$annotations[,'type']) %in% rownames(x$types))) 
 	{
-		# print(unique(x$annotations[,'type']))
-		# print(rownames(x$types))
-		
-		# print(x$types)
-		
 		stop(paste(err.fun, ': input \'x\' has inconsistent types (', 
 				paste(unique(x$annotations[,'type']), collapse=',') 
 				,' vs ', paste(rownames(x$types), collapse=',') ,').', 
@@ -71,13 +57,10 @@ is.compliant = function(x, err.fun, stage=FALSE)
 	}
 		
  	# Stage should be defined for every samples
-  	if(stage == TRUE && nrow(x$stages) != nrow(x$genotypes)) 
+  if(stage == TRUE && nrow(x$stages) != nrow(x$genotypes)) 
 		stop(paste(err.fun, ': input \'x\' has less stages than expected.'))			
  	if(stage == TRUE && !all(rownames(x$stages) == rownames(x$genotypes))) 
 		stop(paste(err.fun, ': input \'x\' has inconsistent stages.'))			
 		
 	if(stage == TRUE)	colnames(x$stages) = c('stage')
-	
-	# if(stage == TRUE) print(head(x$stages))	
-	# print(stage)
  }

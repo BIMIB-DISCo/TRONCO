@@ -198,7 +198,7 @@ oncoprint <- function(x,
 
 	if(is.na(font.row)) 
 	{
-		font.row = max(c(15 * exp(-0.02 * nrow(data)), 1))    
+		font.row = max(c(15 * exp(-0.02 * nrow(data)), 2))    
 		cat(paste('Setting automatic font (exp. scaling): ', round(font.row, 1), '\n', sep=''))
 	}
 

@@ -1,13 +1,44 @@
+
+# Return all samples IDs in the cohort
 as.samples = function(x)
 {
 	return(rownames(x$genotypes))
 }
 
+# Return alla gene symbols in the cohort
 as.genes = function(x)
 {
 	return(unlist(unique(x$annotations[, 'event'])))
 }
 
+# Return all events for each gene in the cohort
+as.events = function(x)
+{
+  return(x$annotations[,c('type', 'event')])
+}
+
+# Return alla stages per sample, if present
+as.stages = function(x)
+{
+  if(has.stages(x))
+    return(x$stages)
+  else return(NA)
+}
+
+# Return all types (labels) of events in the dataset
+as.types = function(x)
+{
+  return(rownames(x$types))
+}
+
+# Return all colors
+as.colors = function(x)
+{
+  return(x$types[, 'color'])
+}
+
+
+# Return genotypes for a specific gene (uses all events)
 as.gene = function(x, g)
 {
 	data = data.frame(x$genotypes[, which(as.events(x)[, 'event'] == g)], row.names = as.samples(x))
@@ -16,27 +47,13 @@ as.gene = function(x, g)
 	return(data)
 }
 
-as.events = function(x)
+# Return true if stages are present
+has.stages = function(x)
 {
-	return(x$annotations[,c('type', 'event')])
+  return(!is.null(x$stages))
 }
 
-as.stages = function(x)
-{
-	if(!is.null(x$stages))
-	return(x$stages)
-}
-
-as.types = function(x)
-{
-	return(rownames(x$types))
-}
-
-as.colors = function(x)
-{
-	return(x$types[, 'color'])
-}
-
+# Short report for a dataset 
 show = function(x, view = 10)
 {
 	is.compliant(x)
@@ -45,11 +62,10 @@ show = function(x, view = 10)
 	cat(paste('Events: ', paste(as.types(x), collapse=', '), '.\n', sep=''))
 	cat(paste('Colors: ', paste(as.colors(x), collapse=', '), '.\n', sep=''))
 
-	if(!is.null(x$stages))
+	if(has.stages(x))
 	{
 		cat(paste('Stages: '))
-		# cat(paste(paste('\t', rownames(as.stages(x)[1: view,]), ':', as.stages(x)[1: view, 1], sep=' '), collapse='\n'))
-		
+s		
 		s = unlist(unique(as.stages(x)[, 1]))
 		cat(paste(s, collpase=', '), '.\n', sep='')
 	 }
@@ -59,9 +75,6 @@ show = function(x, view = 10)
 
 	cat(paste('\nGenotypes for ', view, ' events.\n'))
 	head(x$genotypes[,1:view])
-	
-	# head(x$annotations[1:nev,])
-
 }
 
 
@@ -80,5 +93,28 @@ ngenes = function(x)
 	return(length(as.genes(x)))
 }
 
+# Check internal types and convert accordingly
+enforce.numeric = function(x)
+{
+  if(is.numeric(x$genotypes[1,1]))
+  {
+    rn = as.samples(x)
+    x$genotypes = apply(x$genotypes, 2, as.numeric)
+    rownames(x$genotypes) = rn
+  }
+  
+  return(x)
+}
 
+enforce.string = function(x)
+{
+  if(is.character(x$genotypes[1,1]))
+  {
+    rn = as.samples(x)
+    x$genotypes = apply(x$genotypes, 2, as.character)
+    rownames(x$genotypes) = rn
+  }
+
+  return(x)
+}
 
