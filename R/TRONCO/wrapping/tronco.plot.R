@@ -416,24 +416,9 @@ tronco.plot = function(x,
   eAttrs$color = rep('black', length(edge_names))
   names(eAttrs$color) = edge_names
   
-  if(pf) {
-    # for each edge..
-    bic = adj.matrix$adj.matrix.bic
-    # print(bic)
-    
-    for(e in edge_names) {
-      edge = unlist(strsplit(e, '~'))
-      from = edge[1]
-      to = edge[2]
-      # ..checks if edge is present in BIC
-      #print(from)
-      #print(to)
-      if ( !(from %in% rownames(bic) && to %in% colnames(bic)) ) {
-        #print("prima facie!!!")
-        #eAttrs$color[e] = 'red'
-      }
-    }
-  }
+  #record logic edge
+  eAttrs$logic = rep(F, length(edge_names))
+  names(eAttrs$logic) = edge_names
   
   if(confidence) {
     # for each edge..
@@ -460,8 +445,33 @@ tronco.plot = function(x,
         }
       } else {
         # ..else this edge is located inside to an hypothesis, so no arrow to show
-        # eAttrs$dir[e] = 'none'
+        eAttrs$logic[e] = T
         eAttrs$color[e] = 'darkblue'
+      }
+    }
+  }
+  
+  if(pf) {
+    # for each edge..
+    bic = adj.matrix$adj.matrix.bic
+    # print(bic)
+    
+    print(rownames(bic))
+    for(e in edge_names) {
+      edge = unlist(strsplit(e, '~'))
+      from = edge[1]
+      to = edge[2]
+      # ..checks if edge is present in BIC
+
+      print(paste('from:', from, 'to:', to))
+      # check if edge in BIC and not logic edge and to is not a fake and
+      if ( !(from %in% rownames(bic) && to %in% colnames(bic)) 
+           && !eAttrs$logic[e]
+           ) {
+        print("prima facie!!!")
+        eAttrs$color[e] = 'red'
+      } else {
+        print('no PF!')
       }
     }
   }
