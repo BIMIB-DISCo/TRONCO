@@ -63,4 +63,10 @@ is.compliant = function(x, err.fun, stage=has.stages(x))
 		stop(paste(err.fun, ': input \'x\' has inconsistent stages.'))			
 		
 	if(stage == TRUE)	colnames(x$stages) = c('stage')
+  
+  if(has.duplicates(x)) {
+    print("Duplicated events:")
+    print(duplicates(x))
+    warning('duplicated events found in annotations')
+  }
  }

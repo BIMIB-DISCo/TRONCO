@@ -53,6 +53,21 @@ has.stages = function(x)
   return(!is.null(x$stages))
 }
 
+
+# Return true if duplicate events are present
+has.duplicates = function(x) {
+  # find duplicate over the dataset
+  dup = duplicated(as.events(x))
+  
+  # return true if al least one duplicate is found
+  return(any(dup))
+}
+
+duplicates = function(x) {
+  as.events(x)[duplicated(as.events(x)),]
+}
+
+
 # Short report for a dataset 
 show = function(x, view = 10)
 {
