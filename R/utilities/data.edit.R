@@ -34,3 +34,22 @@ rename.gene <- function(x, old.name, new.name) {
   is.compliant(x)
   return(x)
 }
+
+delete.type <- function(x, type) {
+  # if is compliant x
+  is.compliant(x)
+  print(as.types(x))
+  if (type %in% as.types(x)) {
+    print('babana')
+    drops = rownames(x$annotations[ which(x$annotations[,'type'] == type), ])
+    print(drops)
+    x$genotypes = subset(x$genotypes, select= -c(unlist(drops)))
+    #x$annotations = x$annotations[! (rownames(x$annotations) %in% drops), ]
+  } else {
+    stop(paste(old.name, 'not in as.types(x)'))
+  }
+  
+  is.compliant(x)
+  #return(x)
+  
+}
