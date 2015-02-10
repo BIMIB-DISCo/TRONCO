@@ -65,8 +65,8 @@ is.compliant = function(x, err.fun, stage=has.stages(x))
 	if(stage == TRUE)	colnames(x$stages) = c('stage')
   
   if(has.duplicates(x)) {
-    print("Duplicated events:")
+    cat("Duplicated events in \'x\': \n")
     print(duplicates(x))
-    warning('duplicated events found in annotations')
+    stop('duplicated events found in annotations')
   }
  }
