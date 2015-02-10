@@ -9,6 +9,28 @@ rename.type <- function(x, old.name, new.name) {
   # if is compliant x
   is.compliant(x)
   
-  ### has duplicates needed!
+  if (old.name %in% as.types(x)) {
+    x$annotations[ which(x$annotations[,'type'] == old.name), 'type' ] = new.name
+    rownames(x$types)[which(rownames(x$types) == old.name)] = new.name
+  } else {
+    stop(paste(old.name, 'not in as.types(x)'))
+  }
   
+  is.compliant(x)
+  return(x)
+}
+
+rename.gene <- function(x, old.name, new.name) {
+  # if is compliant x
+  is.compliant(x)
+  
+  if (old.name %in% as.genes(x)) {
+    x$annotations[ which(x$annotations[,'event'] == old.name), 'event' ] = new.name
+
+  } else {
+    stop(paste(old.name, 'not in as.genes(x)'))
+  }
+  
+  is.compliant(x)
+  return(x)
 }
