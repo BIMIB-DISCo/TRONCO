@@ -85,7 +85,7 @@ sbind = function(...)
       if(has.stages(y)) ystages = as.stages(y)
       else ystages = matrix(rep('NA', nsamples(y)), nrow=nsamples(y))
       
-      z$types = rbind(x$types, y$types)
+      z$stages = (rbind(x$stages, y$stages))
       
       colnames(z$stages) = 'stage'
     }
@@ -102,6 +102,9 @@ sbind = function(...)
   
   # This could be done with a foldR
   z = samples.pairwise.bind(input[[1]], y=input[[2]])
+  if (!(length(input) > 2)) {
+    return(z)
+  }
   for(i in 3:length(input))
     z = samples.pairwise.bind(z, input[[i]])
   

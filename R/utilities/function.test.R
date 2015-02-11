@@ -38,5 +38,5 @@ t2$genotypes = t2$genotypes[21:40,]
 t2$stages = t2$stages[ which(rownames(t2$stages) %in% rownames(t2$genotypes)), , drop=F]
 is.compliant(t2)
 test = sbind(t1, t2)
-
+is.compliant(test)
 
