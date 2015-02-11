@@ -26,8 +26,8 @@ as.events = function(x, genes=NA, types=NA)
 {
   ann = x$annotations[, c('type', 'event')]
 
-  if(!anyNA(genes)) ann = ann[ which(ann[, 'event'] %in% genes) , , drop=FALSE] 
-  if(!anyNA(types)) ann = ann[ which(ann[, 'type'] %in% types) , , drop=FALSE]   
+  if(!any(is.na(genes))) ann = ann[ which(ann[, 'event'] %in% genes) , , drop=FALSE] 
+  if(!any(is.na(types))) ann = ann[ which(ann[, 'type'] %in% types) , , drop=FALSE]   
 
   return(ann)
 }
