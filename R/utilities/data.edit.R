@@ -38,18 +38,41 @@ rename.gene <- function(x, old.name, new.name) {
 delete.type <- function(x, type) {
   # if is compliant x
   is.compliant(x)
-  print(as.types(x))
+
   if (type %in% as.types(x)) {
-    print('babana')
-    drops = rownames(x$annotations[ which(x$annotations[,'type'] == type), ])
-    print(drops)
-    x$genotypes = subset(x$genotypes, select= -c(unlist(drops)))
-    #x$annotations = x$annotations[! (rownames(x$annotations) %in% drops), ]
+
+    drops = rownames(x$annotations[ x$annotations[, "type"] == type,])
+    x$genotypes = x$genotypes[, -which( colnames(x$genotypes) %in% drops )]
+    x$annotations = x$annotations[ -which (rownames(x$annotations) %in% drops), ]
+    
+    # TO DO: something better than this t(t(...))
+    x$types = t(t(x$types[ which(rownames(x$types) != type), ]))
+    colnames(x$types) = 'color'
   } else {
-    stop(paste(old.name, 'not in as.types(x)'))
+    stop(paste(type, 'not in as.types(x)'))
   }
   
   is.compliant(x)
-  #return(x)
+  return(x)
+}
+
+delete.gene <- function(x, gene) {
+  # if is compliant x
+  is.compliant(x)
   
+  if (gene %in% as.genes(x)) {
+    
+    drops = rownames(x$annotations[ x$annotations[, "event"] == gene,])
+    x$genotypes = x$genotypes[, -which( colnames(x$genotypes) %in% drops )]
+    x$annotations = x$annotations[ -which (rownames(x$annotations) %in% drops), ]
+    
+    # TO DO: something better than this t(t(...))
+    x$types = t(t(x$types[ which(rownames(x$types) %in% unique(x$annotations[,"type"])), ]))
+    colnames(x$types) = 'color'
+  } else {
+    stop(paste(gene, 'not in as.types(x)'))
+  }
+  
+  is.compliant(x)
+  return(x)
 }
