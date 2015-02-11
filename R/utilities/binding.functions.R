@@ -25,7 +25,7 @@ ebind = function(...)
     z$types = unique(rbind(x$types, y$types))	
     
     # Copy stages, if present
-    if(has.stages(x) && has.stages(y) && !all(as.stages(x) == has.stages(y), na.rm=TRUE))
+    if(has.stages(x) && has.stages(y) && !all(as.stages(x) == as.stages(y), na.rm=TRUE))
       stop('Patients have different stages, won\'t merge!')
     
     if(has.stages(x)) 
@@ -45,6 +45,9 @@ ebind = function(...)
 		
 	# This could be done with a foldR
 	z = events.pairwise.bind(input[[1]], y=input[[2]])
+  if (!(length(input) > 2)) {
+    return(z)
+  }
 	for(i in 3:length(input))
 		z = events.pairwise.bind(z, input[[i]])
 		  

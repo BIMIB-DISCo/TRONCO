@@ -46,8 +46,9 @@ delete.type <- function(x, type) {
     x$annotations = x$annotations[ -which (rownames(x$annotations) %in% drops), ]
     
     # TO DO: something better than this t(t(...))
-    x$types = t(t(x$types[ which(rownames(x$types) != type), ]))
-    colnames(x$types) = 'color'
+    x$types = matrix(x$types[ which(rownames(x$types) != type), ])
+    rownames(x$types) = unique(x$annotations[,'type'])
+    colnames(x$types) = c('color')
   } else {
     stop(paste(type, 'not in as.types(x)'))
   }
