@@ -12,9 +12,14 @@ as.genes = function(x)
 }
 
 # Return all events for each gene in the cohort
-as.events = function(x)
+as.events = function(x, genes=NA, types=NA)
 {
-  return(x$annotations[,c('type', 'event')])
+  ann = x$annotations[,c('type', 'event')]
+  
+  if(!is.na(genes)) ann = ann[ which(ann[,'event'] %in% genes) ,]    
+  if(!is.na(types)) ann = ann[ which(ann[,'type'] %in% types) ,]  
+  
+  return(ann)
 }
 
 # Return alla stages per sample, if present

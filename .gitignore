@@ -18,3 +18,5 @@ Thumbs.db
 .Rproj.user
 
 *.Rproj
+
+R/.Rhistory
