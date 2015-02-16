@@ -34,8 +34,12 @@ merge.types = function(x, type.one, type.two, new.type=paste(type.one, type.two,
 	z$annotations = x$annotations[colnames(z$genotypes),] 
 
   x = enforce.numeric(x)
+  
+	pb = txtProgressBar(1, nrow(cols), style = 3);      
 	for(i in 1:nrow(cols))
 	{
+	  setTxtProgressBar(pb, i)  
+	  
 		c1 = x$genotypes[, as.character(cols[ i, 'refcol.x'])]
 		c2 = x$genotypes[, as.character(cols[ i, 'refcol.y'])]
 
@@ -46,7 +50,8 @@ merge.types = function(x, type.one, type.two, new.type=paste(type.one, type.two,
 		z$genotypes = cbind(z$genotypes, c)
 		z$annotations = rbind(z$annotations, c(new.type, as.character(cols[ i, 'event'])))
 	}
-	
+	close(pb)
+		
 	z$annotations[which(z$annotations[,'type'] == type.one), 'type' ] = new.type
 	z$annotations[which(z$annotations[,'type'] == type.two), 'type' ] = new.type
 
