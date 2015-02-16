@@ -10,9 +10,8 @@
 	dataset = x$genotypes
 	
 	cat(paste('*** Events selection: #events=', ncol(dataset), ', #types=', nrow(x$types),  sep=''))
-	cat(paste('\nFrequency Filter : ', !is.na(filter.freq), '\n', sep=''))
-	cat(paste('In-Names Filter : ', !any(is.na(filter.in.names)), '\n', sep=''))
-	cat(paste('Out-Names Filter : ', !any(is.na(filter.out.names)), sep=''))
+	cat(paste('\nFilters : % [', !is.na(filter.freq), '] \t+ [', !any(is.na(filter.in.names)), ']\t - [',
+            !any(is.na(filter.out.names)), ']', sep=''))
 
 	if(is.na(filter.out.names) && is.na(filter.in.names) && is.na(filter.freq))
 		return(x);
@@ -21,21 +20,29 @@
 					
 	if(!is.na(filter.freq))
 	{	
-		cat(paste('\nGenes with a minimum mutation frequency of ', filter.freq, ' (', 
-              round(nrow(x$genotypes) * filter.freq, 0),' hits) are: ', sep=''))
+		cat(paste('\nExtracting genes with a minimum mutation frequency of ', filter.freq, ' (', 
+              round(nsamples(x) * filter.freq, 0),' alterations).\n', sep=''))
     x = enforce.numeric(x)		
     
+		pb = txtProgressBar(1, nevents(x), style = 3);      
 		for(i in 1:nevents(x))
 		{		
+		  setTxtProgressBar(pb, i)  
+		  
 			mut.freq <- sum(x$genotypes[,i])/nsamples(x)
 			valid[i] <- mut.freq > filter.freq
 					
-			if(valid[i]) 
-			{
-				name = x$annotations[colnames(x$genotypes)[i], ]
-				cat(paste('\"', name[2], '\" [', name[1],' ', round(mut.freq, 1), '] \n', sep=''))
-			}
+			#if(valid[i]) 
+			#{
+			#	name = x$annotations[colnames(x$genotypes)[i], ]
+				#cat(paste('\"', name[2], '\" [', name[1],' ', round(mut.freq, 1), '] \n', sep=''))
+			#}
 		}
+		close(pb)
+
+    nev = min(10, nrow(as.events(x)[valid, ]))
+    cat(paste('Selected ', nrow(as.events(x)[valid, ]), ' events, showing ', nev, '.\n', sep=''))
+    print(head(as.events(x)[valid, ], n=nev))
 	}
 						
 	if(!any(is.na(filter.in.names)))
@@ -79,7 +86,7 @@
 	if(!is.null(x$stages)) y$stages=x$stages
 	is.compliant(x, err.fun='events.selection: output')
 	
-	cat(paste('\nSelected ', ncol(y$genotypes), ' events, returning.\n', sep=''))
+	cat(paste('\nSelected ', nevents(y), ' events, returning.\n', sep=''))
 
 	return(y)
 }

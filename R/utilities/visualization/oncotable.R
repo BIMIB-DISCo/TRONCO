@@ -9,9 +9,10 @@ genes.report = function(x, name, dir=getwd(), maxrow=33,
   print.table = function(table, name, dir=getwd(), maxrow, font, height, 
                          width, fill)
   {
-    cat('Printing table to file(s): ')
-    cat(paste(dir, '/', name, '.genes-table.pdf [PDF] \n', sep=''))
-        
+    cat('Printing PDF and Latex table to files: \n')
+    cat(paste('PDF \t\t', dir, '/', name, '.genes-table.pdf\n', sep=''))
+    cat(paste('Latex\t\t', dir, '/', name, '.genes-table.tex\n', sep=''))
+    
     # output pdf
     require(gridExtra)  
     require(xtable)  
@@ -42,9 +43,7 @@ genes.report = function(x, name, dir=getwd(), maxrow=33,
     dev.off()
     dev.set(which=cur.dev)
     
-    # output latex
-    cat(paste(dir, '/', name, '.genes-table.tex [Latex] \n', sep=''))
-    
+    # output latex    
     print(xtable(table, digits=0), file=paste(dir, '/', name, '.genes-table.tex', sep=''), type='latex')
   }
   
