@@ -23,7 +23,7 @@
 	{	
 		cat(paste('\nGenes with a minimum mutation frequency of ', filter.freq, ' (', 
               round(nrow(x$genotypes) * filter.freq, 0),' hits) are: ', sep=''))
-    enforce.numeric(x)		
+    x = enforce.numeric(x)		
     
 		for(i in 1:nevents(x))
 		{		
