@@ -83,20 +83,11 @@ merge.types = function(x, ..., new.type='new.type', new.color='khaki') {
       if(has.stages(x)) z$stages = x$stages
       
     } else {
-      
       # ..simply rename and change the color
-      print('here')
-      is.compliant(x, 'aa')
-      print(paste('old', type.one, 'new', new.type))
+
       x = rename.type(x, type.one, new.type)
-      print(x)
-      print('asdasdsadsadsa')
-      is.compliant(x, 'asd')
       x = rename.type(x,type.two, new.type)
-      is.compliant(x, 'asd2')
       x = change.color(x, new.type, new.color)
-      is.compliant(x, 'asd3')
-      print('ok')
       z = x
     }
     
