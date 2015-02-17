@@ -2,7 +2,7 @@
 # oncotable : plots a table
 #
 
-genes.report = function(x, name, dir=getwd(), maxrow=33, 
+genes.table.report = function(x, name, dir=getwd(), maxrow=33, 
                         font=10, height=11, width=8.5, fill="lightblue") 
 {
   # Print table with gridExtra and xtables
@@ -87,6 +87,56 @@ genes.report = function(x, name, dir=getwd(), maxrow=33,
 	return(genes.table)
 }
 
+genes.table.plot = function(x, name, minfreq, dir=getwd()) 
+{  
+  cat('Preparing output table: creating alterations profiles and selecting events with minimum frequency.\n')
+  alterations = events.selection(as.alterations(x), minfreq)
+ 
+  alterations = sort.by.frequency(alterations)
+  
+  cat('Stacked histogram with genes in the following order (head): ')
+  cat(head(as.genes(alterations)))
+  cat('\nRetrieving all events for the above genes.\n')
+
+  y = events.selection(x, filter.in.names=as.genes(alterations))
+  y = enforce.numeric(y)
+#  show(y)
+  
+ # print(ntypes(y))
+#  print(ngenes(y))
+
+  table = matrix(rep(0, ntypes(y) * ngenes(y)), ncol=ntypes(y), nrow=ngenes(y))
+  
+  rownames(table) = 1:ngenes(alterations)
+  colnames(table) = as.types(y)
+
+  cat('Populating histogram table.\n')
+  pb = txtProgressBar(1, ngenes(alterations), style = 3);      
+  for(i in 1:ngenes(alterations))
+  {
+    setTxtProgressBar(pb, i)  
+    
+    g = colSums(as.gene(y, gene=as.genes(alterations)[i]))
+    table[i, ] = g
+  }
+  close(pb)
+
+  table = cbind(Rank=as.genes(alterations), table)
+  table.melt = melt(as.data.frame(table), id.var='Rank')  
+
+  #print(table)
+  #print(table.melt)
+  
+  require(reshape2)
+  require(ggplot2)
+
+# Problem, does not work well - can't assign colors in as.colors(y)
+  ggplot(table.melt, aes(x = Rank, y = value, fill = variable)) + 
+  geom_bar(stat = "identity")
+
+
+  return(table.melt)
+}
 # # cat('Latex tables (genes)')
 # genes.table.input = genes.report(input)
 # genes.table.sub1 = genes.report(sub1)
