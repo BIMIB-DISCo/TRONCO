@@ -73,6 +73,15 @@ as.gene = function(x, genes, types=NA)
 	return(data)
 }
 
+# For an input dataset merge all the events in a new one.
+#
+# @x: the dataset.
+# @new.type: label for the new type to create
+# @new.color: color for the new type to create
+as.alterations = function(x, new.type = 'new.type', new.color = 'khaki') {
+  merge.types(x, NULL, new.type = new.type, new.color = new.color)
+}
+
 # Return true if stages are present
 #
 # @x: the dataset.
