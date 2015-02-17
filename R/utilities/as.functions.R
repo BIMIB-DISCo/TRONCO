@@ -78,7 +78,7 @@ as.gene = function(x, genes, types=NA)
 # @x: the dataset.
 # @new.type: label for the new type to create
 # @new.color: color for the new type to create
-as.alterations = function(x, new.type = 'new.type', new.color = 'khaki') {
+as.alterations = function(x, new.type = 'Alteration', new.color = 'khaki') {
   merge.types(x, NULL, new.type = new.type, new.color = new.color)
 }
 
@@ -137,7 +137,7 @@ show = function(x, view = 10)
 	cat(paste(paste('\t', rownames(as.events(x)[1: view,]), ':', as.events(x)[1: view, 1], as.events(x)[1: view, 2], sep=' '), collapse='\n'))
 
 	cat(paste('\nGenotypes (', view, ' shown):\n', sep=''))
-	head(x$genotypes[,1:view])
+	print(head(x$genotypes[,1:view]))
 }
 
 
@@ -215,3 +215,15 @@ enforce.string = function(x)
   return(x)
 }
 
+sort.by.frequency = function(x)
+{
+  is.compliant(x)
+  
+  x = enforce.numeric(x)
+  sums = colSums(x$genotypes)
+    
+  x$genotypes = x$genotypes[, order(sums, decreasing = TRUE)]
+  x$annotations = x$annotations[colnames(x$genotypes), ]
+
+  return(x)  
+}

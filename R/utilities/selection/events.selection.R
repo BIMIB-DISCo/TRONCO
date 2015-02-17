@@ -41,7 +41,7 @@
 						
 	if(!any(is.na(filter.in.names)))
 	{
-		cat(paste('Events for the following genes will be selected (filter.in.names): ', 
+		cat(paste('\nEvents for the following genes will be selected (filter.in.names): ', 
               sep='', paste(filter.in.names, collapse=', ')))
 		
 		colnames = which(x$annotations[,2] %in% filter.in.names, arr.ind=T)

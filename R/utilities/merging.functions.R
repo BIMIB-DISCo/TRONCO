@@ -88,12 +88,15 @@ merge.types = function(x, ..., new.type='new.type', new.color='khaki') {
   input = list(...)
   
   if(length(input) == 1 && is.null(input[[1]])) {
-    cat('All types in as.types() selected. \n')
+    cat(paste('Merging all types: ', paste(as.types(x), collapse=', ', sep=''),' into ', new.type,'.\n', sep=''))
     input = as.list(as.types(x))
   } 
 
   if(length(input) <= 1) { 
-    cat('Only one type selected. Nothing to do here.')
+    #cat(paste('Only one type selected: ', input,', done.\n', sep=''))
+  
+    x = rename.type(x, input, new.type)  
+    x = change.color(x, new.type, new.color)
     return(x) 
   }
   

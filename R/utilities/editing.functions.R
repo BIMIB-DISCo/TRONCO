@@ -77,3 +77,13 @@ delete.gene <- function(x, gene) {
   is.compliant(x)
   return(x)
 }
+
+change.color = function(x, type, new.color)
+{
+  is.compliant(x)
+  
+  x$types[type, ] = new.color
+  
+  is.compliant(x)
+  return(x)
+}
