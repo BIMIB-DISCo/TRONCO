@@ -10,7 +10,7 @@
 	dataset = x$genotypes
 	
 	cat(paste('*** Events selection: #events=', ncol(dataset), ', #types=', nrow(x$types),  sep=''))
-	cat(paste('\nFilters : % [', !is.na(filter.freq), '] \t+ [', !any(is.na(filter.in.names)), ']\t - [',
+	cat(paste('\nFilters : freq. [', !is.na(filter.freq), '] \t names.in [', !any(is.na(filter.in.names)), ']\t names.out [',
             !any(is.na(filter.out.names)), ']', sep=''))
 
 	if(is.na(filter.out.names) && is.na(filter.in.names) && is.na(filter.freq))
@@ -20,8 +20,8 @@
 					
 	if(!is.na(filter.freq))
 	{	
-		cat(paste('\nExtracting genes with a minimum mutation frequency of ', filter.freq, ' (', 
-              round(nsamples(x) * filter.freq, 0),' alterations).\n', sep=''))
+		cat(paste('\nExtracting events with a minimum frequency of ', filter.freq, ' (', 
+              round(nsamples(x) * filter.freq, 0),' alterations out of ', nsamples(x),' samples).\n', sep=''))
     x = enforce.numeric(x)		
     
 		pb = txtProgressBar(1, nevents(x), style = 3);      
@@ -31,12 +31,6 @@
 		  
 			mut.freq <- sum(x$genotypes[,i])/nsamples(x)
 			valid[i] <- mut.freq > filter.freq
-					
-			#if(valid[i]) 
-			#{
-			#	name = x$annotations[colnames(x$genotypes)[i], ]
-				#cat(paste('\"', name[2], '\" [', name[1],' ', round(mut.freq, 1), '] \n', sep=''))
-			#}
 		}
 		close(pb)
 
@@ -47,7 +41,7 @@
 						
 	if(!any(is.na(filter.in.names)))
 	{
-		cat(paste('\nEvents for the following genes will be selected (filter.in.names): ', 
+		cat(paste('Events for the following genes will be selected (filter.in.names): ', 
               sep='', paste(filter.in.names, collapse=', ')))
 		
 		colnames = which(x$annotations[,2] %in% filter.in.names, arr.ind=T)

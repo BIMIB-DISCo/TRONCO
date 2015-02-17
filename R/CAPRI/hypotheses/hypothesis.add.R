@@ -225,7 +225,7 @@ function( data, label.formula, lifted.formula, ... ) {
 		rownames(annotations)[nrow(annotations)] = label.formula;
 		#add the color of the type "Hypothesis" is not already defined
 		if(any(rownames(data$types)=="Hypothesis")==FALSE) {
-			types = rbind(data$types,"#FFFFFF");
+			types = rbind(data$types,"slateblue");
 			rownames(types)[nrow(types)] = "Hypothesis";
 			data$types = types;
 		}
