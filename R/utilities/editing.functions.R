@@ -7,7 +7,7 @@
 
 rename.type <- function(x, old.name, new.name) {
   # if is compliant x
-  is.compliant(x)
+  is.compliant(x, 'rename.type: pre')
   
   if (old.name %in% as.types(x)) {
     x$annotations[ which(x$annotations[,'type'] == old.name), 'type' ] = new.name
@@ -16,7 +16,7 @@ rename.type <- function(x, old.name, new.name) {
     stop(paste(old.name, 'not in as.types(x)'))
   }
   
-  is.compliant(x)
+  is.compliant(x, 'rename.type: output')
   return(x)
 }
 

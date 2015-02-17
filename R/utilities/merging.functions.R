@@ -35,48 +35,67 @@ merge.types = function(x, ..., new.type='new.type', new.color='khaki') {
     
     x = enforce.numeric(x)
     
-    # print pb
-    cat('*** Merge \'', type.one, '\' and \'', type.two, '\'. \n', sep='')
-    pb <- txtProgressBar(1, nrow(cols), style = 3)
-    
-    for(i in 1:nrow(cols))
-    {
-      c1 = x$genotypes[, as.character(cols[ i, 'refcol.x'])]
-      c2 = x$genotypes[, as.character(cols[ i, 'refcol.y'])]
+    # if there is an intersection...
+    if (nrow(cols) > 1) {
+      # ..merge everything..
       
-      c = c1+c2
-      c[c==2] = 1
+      # print pb
+      cat('*** Merge \'', type.one, '\' and \'', type.two, '\'. \n', sep='')
+      pb <- txtProgressBar(1, nrow(cols), style = 3)
       
-      # Copy genotype matrix and annotations
-      z$genotypes = cbind(z$genotypes, c)
-      z$annotations = rbind(z$annotations, c(new.type, as.character(cols[ i, 'event'])))
+      for(i in 1:nrow(cols))
+      {
+        c1 = x$genotypes[, as.character(cols[ i, 'refcol.x'])]
+        c2 = x$genotypes[, as.character(cols[ i, 'refcol.y'])]
+        
+        c = c1+c2
+        c[c==2] = 1
+        
+        # Copy genotype matrix and annotations
+        z$genotypes = cbind(z$genotypes, c)
+        z$annotations = rbind(z$annotations, c(new.type, as.character(cols[ i, 'event'])))
+        
+        # update pb
+        setTxtProgressBar(pb, i)
+      }
       
-      # update pb
-      setTxtProgressBar(pb, i)
+      # close pb
+      close(pb)
+      
+      z$annotations[which(z$annotations[,'type'] == type.one), 'type' ] = new.type
+      z$annotations[which(z$annotations[,'type'] == type.two), 'type' ] = new.type
+      
+      colnames(z$genotypes) = paste('G', 1:ncol(z$genotypes), sep='')
+      rownames(z$annotations) = colnames(z$genotypes)
+      
+      # Copy types
+      idx = which(z$annotations[,'type'] != new.type)
+      
+      z$types = matrix(x$types[ unique(z$annotations[idx,'type'], ) ,])
+      rownames(z$types) = unique(z$annotations[idx,'type'], new.type)
+      
+      z$types = rbind(z$types, new.color)
+      rownames(z$types)[length(z$types)] = new.type
+      
+      colnames(z$types) = 'color'
+      
+      # Copy stages, if present.  
+      if(has.stages(x)) z$stages = x$stages
+      
+    } else {
+      
+      # ..simply rename and change the color
+      print('here')
+      is.compliant(x, 'aa')
+      print(paste('old', type.one, 'new', new.type))
+      x = rename.type(x, type.one, new.type)
+      is.compliant(x, 'asd')
+      x = rename.type(x,type.two, new.type)
+      is.compliant(x, 'asd2')
+      x = change.color(x, new.type, new.color)
+      is.compliant(x, 'asd3')
+      print('ok')
     }
-    
-    # close pb
-    close(pb)
-    
-    z$annotations[which(z$annotations[,'type'] == type.one), 'type' ] = new.type
-    z$annotations[which(z$annotations[,'type'] == type.two), 'type' ] = new.type
-    
-    colnames(z$genotypes) = paste('G', 1:ncol(z$genotypes), sep='')
-    rownames(z$annotations) = colnames(z$genotypes)
-    
-    # Copy types
-    idx = which(z$annotations[,'type'] != new.type)
-    
-    z$types = matrix(x$types[ unique(z$annotations[idx,'type'], ) ,])
-    rownames(z$types) = unique(z$annotations[idx,'type'], new.type)
-    
-    z$types = rbind(z$types, new.color)
-    rownames(z$types)[length(z$types)] = new.type
-    
-    colnames(z$types) = 'color'
-    
-    # Copy stages, if present.	
-    if(has.stages(x)) z$stages = x$stages
     
     is.compliant(z, 'merge.types: output')
     return(z)
