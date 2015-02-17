@@ -89,6 +89,10 @@ genes.table.report = function(x, name, dir=getwd(), maxrow=33,
 
 genes.table.plot = function(x, name, minfreq, dir=getwd()) 
 {  
+  
+  require(reshape2)
+  require(ggplot2)
+  
   cat('Preparing output table: creating alterations profiles and selecting events with minimum frequency.\n')
   alterations = events.selection(as.alterations(x), minfreq)
  
@@ -127,8 +131,6 @@ genes.table.plot = function(x, name, minfreq, dir=getwd())
   #print(table)
   #print(table.melt)
   
-  require(reshape2)
-  require(ggplot2)
 
 # Problem, does not work well - can't assign colors in as.colors(y)
   ggplot(table.melt, aes(x = Rank, y = value, fill = variable)) + 

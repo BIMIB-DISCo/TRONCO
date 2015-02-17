@@ -97,6 +97,7 @@ merge.types = function(x, ..., new.type='new.type', new.color='khaki') {
       x = change.color(x, new.type, new.color)
       is.compliant(x, 'asd3')
       print('ok')
+      z = x
     }
     
     is.compliant(z, 'merge.types: output')

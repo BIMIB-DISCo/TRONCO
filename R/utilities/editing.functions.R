@@ -12,10 +12,15 @@ rename.type <- function(x, old.name, new.name) {
   
   if (old.name %in% types) {
     x$annotations[ which(x$annotations[,'type'] == old.name), 'type' ] = new.name
-    if(! new.name %in% types) rownames(x$types)[which(rownames(x$types) == old.name)] = new.name
+    if(! new.name %in% types) {
+      rownames(x$types)[which(rownames(x$types) == old.name)] = new.name
+    } else {
+      x$types = x$types[!rownames(x$types) %in% list(old.name), , drop=F]
+    }
   } else {
     stop(paste(old.name, 'not in as.types(x)'))
   }
+  print(x$types)
   is.compliant(x, err.fun = 'rename.type: output')
   return(x)
 }
