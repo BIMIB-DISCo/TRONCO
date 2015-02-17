@@ -89,6 +89,8 @@ merge.types = function(x, ..., new.type='new.type', new.color='khaki') {
       is.compliant(x, 'aa')
       print(paste('old', type.one, 'new', new.type))
       x = rename.type(x, type.one, new.type)
+      print(x)
+      print('asdasdsadsadsa')
       is.compliant(x, 'asd')
       x = rename.type(x,type.two, new.type)
       is.compliant(x, 'asd2')
