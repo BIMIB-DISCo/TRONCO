@@ -59,11 +59,11 @@ delete.type <- function(x, type) {
 
 delete.gene <- function(x, gene) {
   # if is compliant x
-  is.compliant(x)
+  is.compliant(x, 'delete:gene: input')
   
   if (gene %in% as.genes(x)) {
     
-    drops = rownames(x$annotations[ x$annotations[, "event"] == gene,])
+    drops = rownames(as.events(x, genes = gene))
     x$genotypes = x$genotypes[, -which( colnames(x$genotypes) %in% drops )]
     x$annotations = x$annotations[ -which (rownames(x$annotations) %in% drops), ]
     
@@ -74,7 +74,7 @@ delete.gene <- function(x, gene) {
     stop(paste(gene, 'not in as.types(x)'))
   }
   
-  is.compliant(x)
+  is.compliant(x, 'delete:gene: output')
   return(x)
 }
 

@@ -4,7 +4,7 @@
 # - stage: boolean flag to check x$stage datagframe
 #
 # Returns: on error stops the computation
-is.compliant = function(x, err.fun, stage=has.stages(x))
+is.compliant = function(x, err.fun='[ERR]', stage=has.stages(x))
 {
 	# Check if x is defined
   	if(is.null(x) || is.na(x))
@@ -15,7 +15,7 @@ is.compliant = function(x, err.fun, stage=has.stages(x))
 		stop(paste(err.fun, ': input \'x\' is not a list.'))
 
 	# Check then if x has required fields
-    if(is.null(x$genotypes) || is.na(x$genotypes))
+    if(is.null(x$genotypes) || any(is.na(x$genotypes)))
 		stop(paste(err.fun, ': input \'x\' has no genotypes field.'))	
 	else
 		if(!is.matrix(x$genotypes) && !is.data.frame(x$genotypes))	stop(paste(err.fun, ': attribute genotypes in  \'x\' is not a matrix.'))	
@@ -23,12 +23,12 @@ is.compliant = function(x, err.fun, stage=has.stages(x))
 	colnames(x$annotations) = c('type', 'event')
 	colnames(x$types) = c('color')
 	
-	if(is.null(x$annotations) || is.na(x$annotations))
+	if(is.null(x$annotations) || any(is.na(x$annotations)))
 		stop(paste(err.fun, ': input \'x\' has no annotations field.'))
 	else
 		if(!is.matrix(x$annotations) && !is.data.frame(x$annotations)) stop(paste(err.fun, ': attribute annotations in  \'x\' is not a matrix.'))	
 
-	if(is.null(x$types) || is.na(x$types))
+	if(is.null(x$types) || any(is.na(x$types)))
 		stop(paste(err.fun, ': input \'x\' has no types field.'))
 	else
 		if(!is.matrix(x$types) && !is.data.frame(x$types))  stop(paste(err.fun, ': attribute types in  \'x\' is not a matrix.'))	
