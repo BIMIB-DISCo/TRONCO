@@ -8,7 +8,34 @@
 # @ type.two: type to merge
 # @ new.type: label for the new type to create
 # @ new.color: color for the new type to create
-merge.types = function(x, type.one, type.two, new.type=paste(type.one, type.two, sep=':'), new.color='khaki')
+merge.types = function(x, ..., new.type='new.type', new.color='khaki') {
+  is.compliant(x)
+  
+  input = list(...)
+  if(length(input) <= 1) return(x)
+  
+  types.check = lapply(input, function(type){ type %in% as.types(x) })
+  if(!all(unlist(types.check))) {
+    stop('Wrong type selected, please check as.types()')
+  }
+  if(any(duplicated(input))) {
+    stop('You tried to merge the same type more than one time, and that\' not a good idea!')
+  }
+  
+  z = merge.two.types(x, input[[1]], input[[2]], new.type, new.color)
+  if (!(length(input) > 2))
+    return(z)
+  
+  for(i in 3:length(input))
+    z = merge.two.types(z, new.type, input[[i]], new.type, new.color)
+  
+  return(z)
+  
+}
+
+
+
+merge.two.types = function(x, type.one, type.two, new.type=paste(type.one, type.two, sep=':'), new.color='khaki')
 {	
 	is.compliant(x, 'merge.types: input x')
 	
@@ -34,6 +61,12 @@ merge.types = function(x, type.one, type.two, new.type=paste(type.one, type.two,
 	z$annotations = x$annotations[colnames(z$genotypes),] 
 
   x = enforce.numeric(x)
+  
+  # print pb
+  cat('*** Merge \'', type.one, '\' and \'', type.two, '\'.', sep='')
+  print('')
+	pb <- txtProgressBar(1, nrow(cols), style = 3)
+  
 	for(i in 1:nrow(cols))
 	{
 		c1 = x$genotypes[, as.character(cols[ i, 'refcol.x'])]
@@ -45,7 +78,13 @@ merge.types = function(x, type.one, type.two, new.type=paste(type.one, type.two,
 		# Copy genotype matrix and annotations
 		z$genotypes = cbind(z$genotypes, c)
 		z$annotations = rbind(z$annotations, c(new.type, as.character(cols[ i, 'event'])))
+		
+    # update pb
+    setTxtProgressBar(pb, i)
 	}
+  
+  # close pb
+  close(pb)
 	
 	z$annotations[which(z$annotations[,'type'] == type.one), 'type' ] = new.type
 	z$annotations[which(z$annotations[,'type'] == type.two), 'type' ] = new.type

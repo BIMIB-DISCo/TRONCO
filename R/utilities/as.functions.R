@@ -130,6 +130,14 @@ show = function(x, view = 10)
 }
 
 
+# Return the number of types in the cohort. 
+#
+# @x: the dataset.
+ntypes = function(x)
+{
+  return(length(as.types(x)))
+}
+
 # Return the number of samples in the cohort. 
 #
 # @x: the dataset.
@@ -162,7 +170,7 @@ ngenes = function(x, types=NA)
 # @x: the dataset.
 enforce.numeric = function(x)
 {
-  if(is.numeric(x$genotypes[1,1]))
+  if(!is.numeric(x$genotypes[1,1]))
   {
     rn = as.samples(x)
     x$genotypes = apply(x$genotypes, 2, as.numeric)
