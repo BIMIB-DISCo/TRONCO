@@ -133,9 +133,9 @@ genes.table.plot = function(x, name, minfreq, dir=getwd())
   
 
 # Problem, does not work well - can't assign colors in as.colors(y)
-  ggplot(table.melt, aes(x = Rank, y = value, fill = variable)) + 
-  geom_bar(stat = "identity")
-
+  p = ggplot(table.melt, aes(x = Rank, y = value, fill = variable)) 
+  p + geom_bar(stat = "identity")
+  print(p)
 
   return(table.melt)
 }
