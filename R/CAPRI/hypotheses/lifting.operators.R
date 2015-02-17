@@ -27,8 +27,10 @@ function( dataset, annotations, function.name, ... ) {
 					event.map = emap(clauses[[i]],dataset,annotations);
 					col.num = event.map$col.num;
 				}
-				if(col.num[1]==-1) {
-					stop(paste("One or more undefined events have been found! The formula is bad formed and no hypothesis will be created.",sep=''));
+				if(col.num[1]==-1) 
+          {
+					stop(paste("Cannot evaluate genotypes for event(s): ", paste(clauses[[i]], collapse=', ', sep=''),
+                     ". No hypothesis will be created.", sep=''));
 				}
 				else {
 					curr_dataset[,i] = dataset[,col.num[1]];

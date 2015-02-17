@@ -8,7 +8,7 @@
 
 # Add a new hypothesis by creating a new causal event and adding it to the dateset
 "hypothesis.add" <-
-  function( data, label.formula, lifted.formula, ... ) {
+  function( data, label.formula, lifted.formula,  ... ) {
     label.effect = list(...);
     #save the needed data structures
     if(!is.null(data$genotypes) && !is.null(data$annotations)) {
@@ -89,6 +89,7 @@
       }
       #* is a special label.effect which indicates to use all the events as effects for this formula
       is.to.all.effects = FALSE;
+            
       if(label.effect[[1]][1]=="*") {
         label.effect = colnames(dataset)[1:(length(colnames(dataset))-num.hypotheses)];
         #any event can not be both causes and effects for the formula to be well-formed
@@ -97,14 +98,14 @@
         
         if(length(label.effect)==0) 
         {
-          stop(paste("[ERR] Hypothesis requires a list of effects to test or wildcard \'*\'. Hypothesis ", label.formula, " will not be created.", sep=''));
+          stop(paste("Hypothesis requires a list of effects to test or wildcard \'*\'. Hypothesis ", label.formula, " will not be created.", sep=''));
         }
       }
       #check the formula to be well-formed
       all.col.nums = vector();
       if(length(label.effect)==0) {
         
-        stop(paste("[ERR] The formula is bad formed, a list of effects or wildcard \'*\' is missing. Hypothesis ", label.formula, " will not be created.", sep=''));
+        stop(paste("The formula is bad formed, a list of effects or wildcard \'*\' is missing. Hypothesis ", label.formula, " will not be created.", sep=''));
         
       }
       else {
@@ -133,14 +134,14 @@
           }
           #check the effect to be a valid event
           if(col.num[1]==-1) {            
-            stop(paste("[ERR] The formula is bad formed, the list of effects contains an undefined event \"", curr.label.effect,
+            stop(paste("The formula is bad formed, the list of effects contains an undefined event \"", curr.label.effect,
                        "\". Hypothesis ", label.formula, " will not be created.",sep=''));
           }
           all.col.nums = append(all.col.nums,col.num);
           #check the formula to be well-formed
           #if the effect is in the formula, the formula is not well-formed
           if(length(which(unlist(curr_hypotheses$llist)%in%events.name))>0) {
-                  stop(paste("[ERR] The formula is bad formed, event \"", curr.label.effect,
+                  stop(paste("The formula is bad formed, event \"", curr.label.effect,
                        "\" yields a loop. Hypothesis ", label.formula, " will not be created.",,sep=''));          
             }
         }
@@ -148,14 +149,14 @@
       #look for duplicated effects in the formula
       if(anyDuplicated(all.col.nums)>0) 
         {
-        stop(paste("[ERR] The formula is bad formed, there are duplicated events ", 
+        stop(paste("The formula is bad formed, there are duplicated events ", 
                    paste(label.effect[duplicated(label.effect)], collapse=', ', sep=''),
-                   "within effects. Hypothesis ", label.formula, " will not be created.",,sep=''));          
+                   "within effects. Hypothesis ", label.formula, " will not be created.", sep=''));          
         }
       #check that the we are not duplicating any name by adding the new hypothesis
       if(length(which(colnames(dataset)==label.formula))>0) 
-        {
-        stop(paste("[ERR] Hypothesis ",label.formula," already exists! No hypothesis will not be created.",sep=''));
+      {
+        stop(paste("Hypothesis ",label.formula," already exists! No hypothesis will be created.", sep=''));
       }
       #add the hypothesis to the dataset
       dataset = cbind(dataset,curr_formula);		
@@ -175,8 +176,10 @@
       #joint.probs is an array of the observed joint probabilities
       joint.probs <- as.matrix(pair.count/nrow(dataset));
       #check that the probability of the formula is in (0,1)
-      if(marginal.probs[ncol(dataset)]==0 || marginal.probs[ncol(dataset)]==1) {
-        stop(paste("The marginal probability of the formula is not strictly in (0,1)! The formula is not valid and no hypothesis will be created.",sep=''));
+      if(marginal.probs[ncol(dataset)]==0 || marginal.probs[ncol(dataset)]==1) 
+        {        
+        stop(paste("The marginal probability of the formula is ", marginal.probs[ncol(dataset)], 
+                   ", but should be in (0,1). Hypothesis ", label.formula, " will not be created.", sep=''));
       }
       #check that the formula does not duplicate any existing column
       i = ncol(dataset);
@@ -184,8 +187,10 @@
         #if the edge is valid, i.e., not self cause
         if(i!=j) {
           #if the two considered events are not distinguishable
-          if((joint.probs[i,j]/marginal.probs[i])==1 && (joint.probs[i,j]/marginal.probs[j])==1) {
-            stop(paste("The formula duplicates an already existing event! The formula is not valid and no hypothesis will be created.",sep=''));
+          if((joint.probs[i,j]/marginal.probs[i])==1 && (joint.probs[i,j]/marginal.probs[j])==1) 
+          {
+            stop(paste("The formula duplicates event (", paste(as.events(data)[j, ], collapse=', ', sep=''), 
+                       "). Hypothesis ", label.formula, " will not be created.", sep=''));
           }
         }
       }
@@ -235,7 +240,7 @@
       rownames(annotations)[nrow(annotations)] = label.formula;
       #add the color of the type "Hypothesis" is not already defined
       if(any(rownames(data$types)=="Hypothesis")==FALSE) {
-        types = rbind(data$types,"slateblue");
+        types = rbind(data$types, 'slateblue');
         rownames(types)[nrow(types)] = "Hypothesis";
         data$types = types;
       }
