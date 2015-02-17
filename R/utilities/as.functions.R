@@ -109,10 +109,12 @@ duplicates = function(x) {
 show = function(x, view = 10)
 {
 	is.compliant(x)
-	
+  x = enforce.numeric(x)
+	view = min(view, nevents(x))
+    
 	cat(paste('Dataset: n=', nsamples(x), ', m=', nevents(x), ', |G|=', ngenes(x), '.\n', sep=''))
-	cat(paste('Events: ', paste(as.types(x), collapse=', '), '.\n', sep=''))
-	cat(paste('Colors: ', paste(as.colors(x), collapse=', '), '.\n', sep=''))
+	cat(paste('Events (types): ', paste(as.types(x), collapse=', '), '.\n', sep=''))
+	cat(paste('Colors (plot): ', paste(as.colors(x), collapse=', '), '.\n', sep=''))
 
 	if(has.stages(x))
 	{
@@ -165,6 +167,15 @@ ngenes = function(x, types=NA)
 	return(length(as.genes(x, types=types)))
 }
 
+#' Return the number of types in the dataset involving a certain set of genes
+#'
+#' @param x the dataset.
+#' @param genes the genes to consider, if NA all available ones are used.
+ntypes = function(x, genes=NA)
+{
+  return(length(unique(as.events(x, genes=genes)[, 'type'])))
+}
+
 # Convert the internal reprensentation of genotypes to numeric, if not. 
 #
 # @x: the dataset.
@@ -185,7 +196,7 @@ enforce.numeric = function(x)
 # @x: the dataset.
 enforce.string = function(x)
 {
-  if(is.character(x$genotypes[1,1]))
+  if(!is.character(x$genotypes[1,1]))
   {
     rn = as.samples(x)
     x$genotypes = apply(x$genotypes, 2, as.character)

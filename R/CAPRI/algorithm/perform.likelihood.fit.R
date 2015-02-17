@@ -23,6 +23,7 @@ function(dataset, adj.matrix, command) {
     cpt.pf = array(list(-1),c(nrow(adj.matrix),1));
     #conditional probability tables of the fitted topology
     cpt.bic = array(list(-1),c(nrow(adj.matrix),1));
+
     #create a categorical data frame from the dataset
     data = array("missing",c(nrow(dataset),ncol(dataset)));
     for (i in 1:nrow(dataset)) {
@@ -42,6 +43,8 @@ function(dataset, adj.matrix, command) {
     cont = 0;
     parent = -1;
     child = -1;
+    
+
     for (i in 1:nrow(adj.matrix)) {
         for (j in 1:ncol(adj.matrix)) {
             if(i!=j) {
@@ -60,6 +63,8 @@ function(dataset, adj.matrix, command) {
             }
         }
     }
+    
+
     #perform the reconstruction by likelihood fit with bic
     #either the hill climbing or the tabu search is used as the mathematical optimization technique
     if(cont>0) {
@@ -84,6 +89,9 @@ function(dataset, adj.matrix, command) {
     pf.net = empty.graph(colnames(data));
     #create the connections in this network
     arc.set = NA;
+    
+    	print('****')
+
     for (i in 1:nrow(adj.matrix)) {
     	for (j in 1:ncol(adj.matrix)) {
             if(adj.matrix[i,j]==1) {
@@ -96,20 +104,30 @@ function(dataset, adj.matrix, command) {
             }
         }
     }
+    
+
+    
     #set the arcs to the pf network
     if(!is.na(arc.set[1])) {
     		arcs(pf.net) = arc.set;
     }
     #estimate the CPTs of the prima facie network and save them
-    net.cpt = bn.fit(pf.net,data);
-    for(i in 1:length(net.cpt)) {
-    		cpt.pf[[i]] = net.cpt[[i]]$prob;
-    }
+        	print('sss')
+     print(pf.net)   	
+     print(data)   	
+        	
+    # net.cpt = bn.fit(pf.net,data);
+        	# print('sssreqwqew')
+    # for(i in 1:length(net.cpt)) {
+    		# cpt.pf[[i]] = net.cpt[[i]]$prob;
+    # }
     #estimate the CPTs of the bic network and save them
     net.cpt = bn.fit(my.net,data);
     for(i in 1:length(net.cpt)) {
     		cpt.bic[[i]] = net.cpt[[i]]$prob;
     }
+    
+
     #make the adjacency matrix of the reconstructed topology
     if(length(nrow(my.arcs))>0 && nrow(my.arcs)>0) {
         for (i in 1:nrow(my.arcs)) {
@@ -117,6 +135,9 @@ function(dataset, adj.matrix, command) {
             adj.matrix.bic[as.numeric(my.arcs[i,1]),as.numeric(my.arcs[i,2])] = 1;
         }
     }
+    
+
+    
     #save the results
     adj.matrix = list(adj.matrix.pf=adj.matrix,adj.matrix.bic=adj.matrix.bic);
     cpt = list(cpt.pf=cpt.pf,cpt.bic=cpt.bic);
