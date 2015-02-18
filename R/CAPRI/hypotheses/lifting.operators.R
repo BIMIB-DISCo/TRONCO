@@ -16,15 +16,15 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 		function.inputs = list()
     
     ### test
-    print('aux log clauses')
-    print(clauses)
+    #print('aux log clauses')
+    #print(clauses)
     
 		for (i in 1:length(clauses)) {
 			# if the clause is given by name, get the column from the dataset..
       
       ### test
-      print('typeof cl 1')
-      print(typeof(clauses[[1]]))
+      #print('typeof cl 1')
+      #print(typeof(clauses[[1]]))
       
       
 			if(typeof(clauses[[i]]) == "character") {
@@ -33,8 +33,8 @@ aux.log = function( dataset, annotations, function.name, ... ) {
         # if I have the label, get the column in the dataset for this event
 				if(length(clauses[[i]]) == 1) {
           ### print
-          print('arg of emap with l = 1')
-          print(c(clauses[[i]],"*"))
+          #print('arg of emap with l = 1')
+          #print(c(clauses[[i]],"*"))
           
           
 					event.map = emap(c(clauses[[i]],"*"), dataset, annotations)
@@ -142,7 +142,7 @@ AND = function( ... ) {
 "OR" <-
 function( ... ) {
   
-  print('sono in OR')
+  # print('sono in OR')
   
   
 	#look for the global variables named lifting.dataset and lifting.annotations
@@ -166,8 +166,8 @@ function( ... ) {
 		formula = as.integer(formula);
 		result = list(formula=formula,hypotheses=hypotheses,function.name=function.name,function.inputs=function.inputs);
 		
-    print('or result')
-    print(result)
+    #print('or result')
+    #print(result)
     
     
     return(result);

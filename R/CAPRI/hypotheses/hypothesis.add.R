@@ -11,7 +11,7 @@
   function( data, label.formula, lifted.formula,  ... ) {
 
     label.effect = list(...);
-    print(label.effect)
+    #print(label.effect)
     
     # save the needed data structures
     if(!is.null(data$genotypes) && !is.null(data$annotations)) {
@@ -64,8 +64,8 @@
       }
       assign("lifting.edges",NULL,envir=.GlobalEnv);
       
-      print('lifted.formula')
-      print(lifted.formula)
+      #print('lifted.formula')
+      #print(lifted.formula)
       
       ## test
       #lifted.formula = eval(lifted.formula)
@@ -77,10 +77,10 @@
       
 
 
-      print('cur formula')
-      print(curr_formula)
-      print('cur_hypo')
-      print(curr_hypotheses)
+      #print('cur formula')
+      #print(curr_formula)
+      #print('cur_hypo')
+      #print(curr_hypotheses)
       
       # save the edges of the lifted formula
       hstructure = lifting.edges;

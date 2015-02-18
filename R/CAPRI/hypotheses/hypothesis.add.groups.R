@@ -1,12 +1,11 @@
 # commenti
 
-hypothesis.add.groups = function(x, FUN, ...) {
+hypothesis.add.groups = function(x, FUN, group, ...) {
   op = deparse(substitute(FUN))
   
-  group = list(...)
+  effect = list(...)
 
   ngroup = length(group)
-
   if(ngroup < 2) 
     return()
   
@@ -16,25 +15,19 @@ hypothesis.add.groups = function(x, FUN, ...) {
     
     for(j in 1:ncol(gr))
     {	
+
       cat('\n')
+      genes = as.list(gr[,j])
       
-      genes = list()
-      
-      for(k in 1:nrow(gr)) {
-        cat(gr[k,j], '')
-        genes = append(genes, gr[k,j])
-      }
-      cat('\n')
-      #print(genes)
-      formula = quote(FUN(unlist(genes)))
+      #formula = quote(FUN(unlist(genes)))
       #print(formula)
       #formula = substitute(f(arg), list(f = FUN, arg = unlist(genes)))
-      print(formula)
+      #print(formula)
       
-      hypo.name = paste(op, unlist(genes), sep='_')
-      hypo.genes = paste(unlist(genes), sep='\', \'')
+      hypo.name = paste(unlist(genes), sep='_', collapse='_')
+      hypo.genes = paste(unlist(genes), collapse='\', \'')
       hypo.add = paste0('hypothesis.add(x, label.formula = \'', 
-                        hypo.name, 
+                        op, '_', hypo.name, 
                         '\', lifted.formula = ',
                         op,
                         '(\'',
@@ -43,7 +36,21 @@ hypothesis.add.groups = function(x, FUN, ...) {
       
       print('hadd')
       print(hypo.add)
-      eval(parse(text=hypo.add))
+      
+      tryCatch({
+        x = eval(parse(text=hypo.add))
+      },
+      error=function(cond){
+        message(paste('Error on', hypo.add, '.\n'))
+        message(cond)
+        message('\n')
+      },
+      warning=function(cond){
+        essage(paste('Warning on', hypo.add, '.\n'))
+        message(cond)
+        essage('\n')
+      })
+      
       
       #eval('hypothesis.add(s, label.formula = \'asd\', lifted.formula = XOR(\'APC\', \'KRAS\'), c(\'CUBN\', \'SNV\'))')
       
@@ -54,5 +61,5 @@ hypothesis.add.groups = function(x, FUN, ...) {
     
   }
   
-  return()
+  return(x)
 }
