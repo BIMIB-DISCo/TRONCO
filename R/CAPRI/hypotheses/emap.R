@@ -7,8 +7,7 @@
 
 
 # Return the position of the event of a given label.event
-"emap" <-
-function( label.event, dataset, annotations ) {
+emap = function( label.event, dataset, annotations ) {
 	col.num = -1;
 	events.name = "";
 	if(!is.null(dataset) && !is.null(annotations)) {

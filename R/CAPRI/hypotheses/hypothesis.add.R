@@ -9,8 +9,11 @@
 # Add a new hypothesis by creating a new causal event and adding it to the dateset
 "hypothesis.add" <-
   function( data, label.formula, lifted.formula,  ... ) {
+
     label.effect = list(...);
-    #save the needed data structures
+    print(label.effect)
+    
+    # save the needed data structures
     if(!is.null(data$genotypes) && !is.null(data$annotations)) {
       dataset = data$genotypes;
       annotations = data$annotations;
@@ -25,69 +28,93 @@
     else {
       hypotheses = NA;
     }
-    #add the hypothesis only if all the inputs are correctly provided
+    
+    # add the hypothesis only if all the inputs are correctly provided
     if(!is.null(dataset) && !is.null(annotations)) {
-      #the Boolean functions look for a global variable named lifting.dataset
-      #if there are already global variables named as the ones used here, make the backup of them
+      # the Boolean functions look for a global variable named lifting.dataset
+      # if there are already global variables named as the ones used here, make the backup of them
       do.roll.back.lifting.dataset = FALSE;
       do.roll.back.lifting.annotations = FALSE;
       do.roll.back.lifting.edges = FALSE;
-      #I need a global variable to save the dataset of the lifted formula
-      #if there is already a global variable named lifting.dataset, make the backup of it
+      
+      # I need a global variable to save the dataset of the lifted formula
+      # if there is already a global variable named lifting.dataset, make the backup of it
       if(exists("lifting.dataset")) {
         roll.back.lifting.dataset = lifting.dataset;
         do.roll.back.lifting.dataset = TRUE;
       }
       assign("lifting.dataset",dataset,envir=.GlobalEnv);
-      #I need a global variable to save the annotations of the lifted formula
-      #if there is already a global variable named lifting.annotations, make the backup of it
+      
+      # I need a global variable to save the annotations of the lifted formula
+      # if there is already a global variable named lifting.annotations, make the backup of it
       if(exists("lifting.annotations")) {
         roll.back.lifting.annotations = lifting.annotations;
         do.roll.back.lifting.annotations = TRUE;
       }
       assign("lifting.annotations",annotations,envir=.GlobalEnv);
-      #I need a global variable to save the edges of the lifted formula
-      #if there is already a global variable named lifting.edges, make the backup of it
-      do.roll.back.lifting.dataset = FALSE;
+      
+      # I need a global variable to save the edges of the lifted formula
+      # if there is already a global variable named lifting.edges, make the backup of it
+      
+      do.roll.back.lifting.dataset = FALSE; # <- ???? why????
+      
       if(exists("lifting.edges")) {
         roll.back.lifting.edges = lifting.edges;
         do.roll.back.lifting.edges = TRUE;
       }
       assign("lifting.edges",NULL,envir=.GlobalEnv);
-      #save the lifted dataset and its hypotheses for the current formula
+      
+      print('lifted.formula')
+      print(lifted.formula)
+      
+      ## test
+      #lifted.formula = eval(lifted.formula)
+      
+      
+      # save the lifted dataset and its hypotheses for the current formula
       curr_formula = lifted.formula$formula;
       curr_hypotheses = lifted.formula$hypotheses;
-      #save the edges of the lifted formula
+      
+
+
+      print('cur formula')
+      print(curr_formula)
+      print('cur_hypo')
+      print(curr_hypotheses)
+      
+      # save the edges of the lifted formula
       hstructure = lifting.edges;
-      #roll back to the previous value of the global variable lifting.dataset if any or remove it
+      
+      # roll back to the previous value of the global variable lifting.dataset if any or remove it
       if(do.roll.back.lifting.dataset) {
         assign("lifting.dataset",roll.back.lifting.dataset,envir=.GlobalEnv);
       }
       else {
         rm(lifting.dataset,pos=".GlobalEnv");
       }
-      #roll back to the previous value of the global variable lifting.annotations if any or remove it
+      
+      # roll back to the previous value of the global variable lifting.annotations if any or remove it
       if(do.roll.back.lifting.annotations) {
         assign("lifting.annotations",roll.back.lifting.annotations,envir=.GlobalEnv);
       }
       else {
         rm(lifting.annotations,pos=".GlobalEnv");
       }
-      #roll back to the previous value of the global variable lifting.edges if any or remove it
+      # roll back to the previous value of the global variable lifting.edges if any or remove it
       if(do.roll.back.lifting.edges) {
         assign("lifting.edges",roll.back.lifting.edges,envir=.GlobalEnv);
       }
       else {
         rm(lifting.edges,pos=".GlobalEnv");
       }
-      #set the hypotheses number
+      # set the hypotheses number
       if(!is.na(hypotheses[1])) {
         num.hypotheses = hypotheses$num.hypotheses;
       }
       else {
         num.hypotheses = 0;
       }
-      #* is a special label.effect which indicates to use all the events as effects for this formula
+      # * is a special label.effect which indicates to use all the events as effects for this formula
       is.to.all.effects = FALSE;
             
       if(label.effect[[1]][1]=="*") {
@@ -101,12 +128,10 @@
           stop(paste("Hypothesis requires a list of effects to test or wildcard \'*\'. Hypothesis ", label.formula, " will not be created.", sep=''));
         }
       }
-      #check the formula to be well-formed
+      # check the formula to be well-formed
       all.col.nums = vector();
       if(length(label.effect)==0) {
-        
         stop(paste("The formula is bad formed, a list of effects or wildcard \'*\' is missing. Hypothesis ", label.formula, " will not be created.", sep=''));
-        
       }
       else {
         #check the effects of the formula to be well-formed
@@ -146,7 +171,8 @@
             }
         }
       }
-      #look for duplicated effects in the formula
+      
+      # look for duplicated effects in the formula
       if(anyDuplicated(all.col.nums)>0) 
         {
         stop(paste("The formula is bad formed, there are duplicated events ", 
