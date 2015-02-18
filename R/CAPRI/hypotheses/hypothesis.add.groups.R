@@ -3,61 +3,49 @@
 hypothesis.add.groups = function(x, FUN, group, ...) {
   op = deparse(substitute(FUN))
   
-  effect = list(...)
-
+  effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
+  effect = paste(effect, collapse = ', ')
+  
   ngroup = length(group)
   if(ngroup < 2) 
     return()
   
   for(i in 2:ngroup) {
-    cat('i', i)
     gr = combn(unlist(group), i)
     
     for(j in 1:ncol(gr))
     {	
-
-      cat('\n')
       genes = as.list(gr[,j])
-      
-      #formula = quote(FUN(unlist(genes)))
-      #print(formula)
-      #formula = substitute(f(arg), list(f = FUN, arg = unlist(genes)))
-      #print(formula)
-      
+        
       hypo.name = paste(unlist(genes), sep='_', collapse='_')
-      hypo.genes = paste(unlist(genes), collapse='\', \'')
+      hypo.genes = paste(unlist(genes), collapse='\', \'')  
+      
       hypo.add = paste0('hypothesis.add(x, label.formula = \'', 
                         op, '_', hypo.name, 
                         '\', lifted.formula = ',
                         op,
                         '(\'',
                         hypo.genes,
-                        '\'), \'*\' )')
+                        '\'), ',
+                        effect,
+                        ')')
       
-      print('hadd')
-      print(hypo.add)
+      cat('*** Evaluating ', hypo.add, '\n')
       
       tryCatch({
         x = eval(parse(text=hypo.add))
       },
       error=function(cond){
-        message(paste('Error on', hypo.add, '.\n'))
+        message(paste('Error on', hypo.add, '.'))
         message(cond)
         message('\n')
       },
       warning=function(cond){
-        essage(paste('Warning on', hypo.add, '.\n'))
+        message(paste('Warning on', hypo.add, '.'))
         message(cond)
-        essage('\n')
       })
       
-      
-      #eval('hypothesis.add(s, label.formula = \'asd\', lifted.formula = XOR(\'APC\', \'KRAS\'), c(\'CUBN\', \'SNV\'))')
-      
-      #x = hypothesis.add(x, label.formula = 'asd', lifted.formula = formula, c('CUBN', 'SNV'))
-      
     }
-    cat('\n\n')
     
   }
   
