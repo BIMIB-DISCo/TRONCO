@@ -152,15 +152,28 @@ oncoprint <- function(x,
   for(i in 1:ntypes(x))
   {
     events = as.events(x, type=as.types(x)[i])
+    # print(events)
     keys = rownames(events)
-    sub.data = data[keys, ]
+    # print(keys)
+    # print(rownames(data))
+    print(sort(as.genes(x)))
+    print(sort(rownames(data)))
+    
+    
+    # print(rownames(data)[which(!(keys %in% rownames(data)))])
+    # print(as.events(x, types = 'Alteration'))
+    if (ntypes(x) > 1) {
+      sub.data = data[keys, ]
 
-    # shift 1s to 'i', add color to the map  
-    idx = which(sub.data == 1)
-    if(length(idx) > 0) map.gradient = cbind(map.gradient, as.colors(x)[i])
-   
-    sub.data[idx] = i
-    data[keys, ] = sub.data  
+      # shift 1s to 'i', add color to the map  
+      idx = which(sub.data == 1)
+      if(length(idx) > 0) map.gradient = cbind(map.gradient, as.colors(x)[i])
+     
+      sub.data[idx] = i
+      data[keys, ] = sub.data  
+    } else {
+      map.gradient = cbind(map.gradient, as.colors(x)[i])
+    }
   }
   
   # Augment gene names with frequencies and prepare legend labels

@@ -64,7 +64,7 @@
 		ampl = import.genotypes(d.high, default.variant='Amplification', color = 'firebrick4')
 		del = import.genotypes(d.homo, default.variant='Deletion', color = 'dodgerblue4')
 		
-		d.cnv.all = merge.genotypes(ampl, del)
+		d.cnv.all = ebind(ampl, del)
 		
 		is.compliant(d.cnv.all, 'import.gistic: output')
 		return(d.cnv.all);
