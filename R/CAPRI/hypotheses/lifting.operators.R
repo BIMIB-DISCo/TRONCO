@@ -108,7 +108,6 @@ AND = function( ... ) {
 	
   if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
 		# get the vector of the clauses of the formula from the dataset
-    print('aux log going to be executed')
 		result = aux.log(dataset,annotations, "AND" ,...)
 		curr_dataset = result$curr_dataset
 		hypotheses = result$hypotheses

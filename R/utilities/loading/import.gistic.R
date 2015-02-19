@@ -99,7 +99,7 @@
 		loss = import.genotypes(loss, default.variant='Loss', color='dodgerblue4')
 		gain = import.genotypes(gain, default.variant='Gain', color='firebrick4')
 		
-		d.cnv.all = merge.genotypes(loss, gain)
+		d.cnv.all = ebind(loss, gain)
 	}
 	else
 	{
@@ -115,7 +115,7 @@
 		high = import.genotypes(d.high, default.variant='High-level Gain')
 		high$types['High-level Gain', ] = 'firebrick4'
 	
-		d.cnv.all = merge.genotypes(homo, het, low, high)
+		d.cnv.all = ebind(homo, het, low, high)
 	}
 	
 	cat(paste('*** Data extracted, returning ', ncol(d.cnv.all$genotypes),

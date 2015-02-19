@@ -1,9 +1,4 @@
-#library(ggplot2)
-library(reshape2)
-library(RColorBrewer)
-#install_github('likert','jbryer')
-require('likert')
-#require(devtools)
+
 
 #' Calculate the likert
 #' 
@@ -12,6 +7,14 @@ require('likert')
 #' @param cluster_prefix Prefix to prefend to cluster data
 #' @param sample_prefix Prefix to prefend to stage data
 likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample_prefix=''){
+
+	#library(ggplot2)
+library(reshape2)
+library(RColorBrewer)
+#install_github('likert','jbryer')
+require('likert')
+#require(devtools)
+
   # check different value
   cluster <- sort(unique(cluster_result), decreasing = T)
   stage <- sort(unique(sample_stage), na.last = T)
