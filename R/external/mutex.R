@@ -5,7 +5,7 @@
 #' @param map_hugo_entrez   Hugo_Symbol  - Entrez_Gene_Id
 #' @param filename
 #' @param filepath 
-export.nbs = function(x, 
+export.nbs.input = function(x, 
                       map_hugo_entrez,
                       filename = 'tronco_to_nbs.mat',
                       filepath = './')

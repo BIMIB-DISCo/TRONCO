@@ -125,13 +125,13 @@
         
         if(length(label.effect)==0) 
         {
-          stop(paste("Hypothesis requires a list of effects to test or wildcard \'*\'. Hypothesis ", label.formula, " will not be created.", sep=''));
+          stop(paste("[ERR] Missing list of effects to test or wildcard \'*\' - won't add hypothesis.", sep=''));
         }
       }
       # check the formula to be well-formed
       all.col.nums = vector();
       if(length(label.effect)==0) {
-        stop(paste("The formula is bad formed, a list of effects or wildcard \'*\' is missing. Hypothesis ", label.formula, " will not be created.", sep=''));
+        stop(paste("[ERR] Missing list of effects or wildcard \'*\' is missing - won't add hypothesis.", sep=''));
       }
       else {
         #check the effects of the formula to be well-formed
@@ -159,15 +159,15 @@
           }
           #check the effect to be a valid event
           if(col.num[1]==-1) {            
-            stop(paste("The formula is bad formed, the list of effects contains an undefined event \"", curr.label.effect,
-                       "\". Hypothesis ", label.formula, " will not be created.",sep=''));
+            stop(paste("[ERR] Unknown gene among effects: \"", curr.label.effect,
+                       "\".  - won't add hypothesis.",sep=''));
           }
           all.col.nums = append(all.col.nums,col.num);
           #check the formula to be well-formed
           #if the effect is in the formula, the formula is not well-formed
           if(length(which(unlist(curr_hypotheses$llist)%in%events.name))>0) {
-                  stop(paste("The formula is bad formed, event \"", curr.label.effect,
-                       "\" yields a loop. Hypothesis ", label.formula, " will not be created.",,sep=''));          
+                  stop(paste("[ERR] Bad forme formula, event \"", curr.label.effect,
+                       "\" yields a loop.  - won't add hypothesis.",,sep=''));          
             }
         }
       }
@@ -175,14 +175,14 @@
       # look for duplicated effects in the formula
       if(anyDuplicated(all.col.nums)>0) 
         {
-        stop(paste("The formula is bad formed, there are duplicated events ", 
+        stop(paste("[ERR] Bad formed formula, duplicated events ", 
                    paste(label.effect[duplicated(label.effect)], collapse=', ', sep=''),
-                   "within effects. Hypothesis ", label.formula, " will not be created.", sep=''));          
+                   "within effects - won't add hypothesis.", sep=''));          
         }
       #check that the we are not duplicating any name by adding the new hypothesis
       if(length(which(colnames(dataset)==label.formula))>0) 
       {
-        stop(paste("Hypothesis ",label.formula," already exists! No hypothesis will be created.", sep=''));
+        stop(paste("[ERR] This hypothesis already exists - won't add hypothesis.", sep=''));
       }
       #add the hypothesis to the dataset
       dataset = cbind(dataset,curr_formula);		
@@ -204,8 +204,8 @@
       #check that the probability of the formula is in (0,1)
       if(marginal.probs[ncol(dataset)]==0 || marginal.probs[ncol(dataset)]==1) 
         {        
-        stop(paste("The marginal probability of the formula is ", marginal.probs[ncol(dataset)], 
-                   ", but should be in (0,1). Hypothesis ", label.formula, " will not be created.", sep=''));
+        stop(paste("[ERR] Formula has marginal probability ", marginal.probs[ncol(dataset)], 
+                   ", but should be in (0,1) - won't add hypothesis.", sep=''));
       }
       #check that the formula does not duplicate any existing column
       i = ncol(dataset);
@@ -215,8 +215,8 @@
           #if the two considered events are not distinguishable
           if((joint.probs[i,j]/marginal.probs[i])==1 && (joint.probs[i,j]/marginal.probs[j])==1) 
           {
-            stop(paste("The formula duplicates event (", paste(as.events(data)[j, ], collapse=', ', sep=''), 
-                       "). Hypothesis ", label.formula, " will not be created.", sep=''));
+            stop(paste("[ERR] The formula duplicates event (", paste(as.events(data)[j, ], collapse=', ', sep=''), 
+                       ") - won't add hypothesis.", sep=''));
           }
         }
       }
@@ -277,7 +277,7 @@
       return(data);
     }
     else {
-      stop("Either the dataset or the formula is not provided! No hypothesis will be created.");
+      stop("[ERR] Missing dataset or formula - won't add hypothesis.");
     }
     return(NA);
   }

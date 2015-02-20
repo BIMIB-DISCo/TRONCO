@@ -3,13 +3,21 @@
 hypothesis.add.group = function(x, FUN, group, ...) {
   op = deparse(substitute(FUN))
   
+  #print(length(unlist(group)))
+  #print(unlist(group))
+  
   effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
   effect = paste(effect, collapse = ', ')
-  
+
+  cat(paste('*** Adding hypotheses for group: ', paste(group, collapse=', ', sep=''),
+            ' with function ', op, ' and effect ', effect,'.\n', sep=''))
+      
   ngroup = length(group)
   if(ngroup < 2) 
+  {
+    warning('No hypothesis can be created for groups with less than 2 elements.')
     return()
-  
+  }
   hom.group = lapply(group, function(g, x){if(nevents(x, genes = g) > 1) T else F }, x)
   hom.group = group[unlist(hom.group)]
   
@@ -21,18 +29,18 @@ hypothesis.add.group = function(x, FUN, group, ...) {
   
   # print(hom.group)
   
-  tot = 0
-  for(k in 2:ngroup) { tot = tot + (factorial(ngroup) / factorial(k))}
+  tot = 2^(ngroup) - ngroup - 1
+  #for(k in 2:ngroup) { tot = tot + (factorial(ngroup) / factorial(k))}
   
-  cat('*** Number of hypothses to be generated: ', tot, '\n')
+  cat('Number of hypothses to be generated: ', tot, '\n')
   if (length(hom.group) > 0)
-    cat('*** Genes with functional homologous found: ', unlist(hom.group), '\n')
+    cat('Genes with functional homologous found: ', unlist(hom.group), '\n')
   
   # create a progress bar
   pb <- txtProgressBar(1, tot, style = 3)
   pbPos = 1
   
-  e = list()
+  error.summary = data.frame()
     
   for(i in 2:ngroup) {
     gr = combn(unlist(group), i)
@@ -64,20 +72,29 @@ hypothesis.add.group = function(x, FUN, group, ...) {
       
       # cat('*** Evaluating ', hypo.add, '\n')
       
-      tryCatch({
+      err=tryCatch({
         x = eval(parse(text=hypo.add))
       },
       error=function(cond){
         m = paste('Error on', hypo.add, '.\n', cond)
-        e = append(e, m)
-        message(e)
+        code = strsplit(as.character(cond), " ")[[1]]
+        idx.errcode = which(code == '[ERR]', arr.ind=TRUE) + 1
+        
+        return(
+            data.frame(
+              pattern = paste(unlist(genes), collapse=', ', sep=''), 
+              error = paste(code[idx.errcode:length(code)], collapse=' ')
+            )
+        )
+        
       },
       warning=function(cond){
         m = paste('Warning on', hypo.add, '.\n', cond)
-        e = append(e, m)
-        message(e)
-      })
-      
+        return(genes)
+      }
+      )
+      # Dummy errors detection
+      if(!('genotypes' %in% names(err))) error.summary = rbind(error.summary, err)
     }
     
   }
@@ -85,6 +102,13 @@ hypothesis.add.group = function(x, FUN, group, ...) {
   # close progress bar
   close(pb)
   
+  if(nrow(error.summary) > 0)
+  {
+    cat(paste(nrow(error.summary), ' genes pattern could not be added -- showing errors\n', sep=''))
+    print(error.summary)
+  }
+  else cat('Hypothesis created for all possible gene patterns.\n')
+    
   return(x)
 }
 
@@ -114,7 +138,7 @@ hypothesis.add.hom = function(x, ..., genes = as.genes(x)){
                       '\', lifted.formula = OR(\'',
                       hom.group[[i]],
                       '\'), ',
-                      effect,
+                      effect, 
                       ')')
           
     tryCatch({
@@ -128,8 +152,9 @@ hypothesis.add.hom = function(x, ..., genes = as.genes(x)){
     warning=function(cond){
       message(paste('Warning on', hypo.add, '.'))
       message(cond)
-    })
-  }
+    }
+    )
+      }
   
   # close progress bar
   close(pb)
