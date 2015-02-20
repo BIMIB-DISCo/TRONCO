@@ -37,8 +37,8 @@ hypothesis.add.group = function(x, FUN, group, ...) {
     cat('Genes with functional homologous found: ', unlist(hom.group), '\n')
   
   # create a progress bar
-  pb <- txtProgressBar(1, tot, style = 3)
-  pbPos = 1
+  pb <- txtProgressBar(1, tot + 1, style = 3)
+  pbPos = 2
   
   error.summary = data.frame()
     
@@ -113,7 +113,7 @@ hypothesis.add.group = function(x, FUN, group, ...) {
 }
 
 
-hypothesis.add.hom = function(x, ..., genes = as.genes(x)){
+hypothesis.add.homologous = function(x, ..., genes = as.genes(x)){
   # in questa funzione, per ogni gene che ha più di un tipo di alterazione
   # aggiungo l'OR
   
