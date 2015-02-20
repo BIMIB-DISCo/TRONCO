@@ -1,0 +1,59 @@
+######## Export to mutex goes here
+
+
+
+######## Import mutex groups -- current Mutex version is XXX
+import.mutex.groups = function(file, fdr=.2, display = TRUE)
+{
+  # Found somewhere on the web - makes sense
+  read.irregular <- function(filenm) 
+  {
+    fileID <- file(filenm,open="rt")
+    nFields <- count.fields(fileID)
+    mat <- matrix(nrow=length(nFields),ncol=max(nFields))
+    invisible(seek(fileID,where=0,origin="start",rw="read"))
+    for(i in 1:nrow(mat) ) {
+      mat[i,1:nFields[i]] <-scan(fileID,what="",nlines=1,quiet=TRUE)
+    }
+    close(fileID)
+    df <- data.frame(mat, stringsAsFactors=FALSE)
+    return(df)
+  }
+  
+  x = read.irregular(file)
+  
+  if(any(x[1,1:3] != c('Score', 'q-val', 'Members')))
+    warning('File header does not seem to contain \'Score\', \'q-val\' and \'Members field\' - are you
+            sure this is a Mutex result file?' )
+
+  cat(paste('*** Groups extracted - ', (nrow(x) -1), ' total groups.\n', sep=''))
+  x = x[-1, ] # this is c('Score', 'q-val', 'Members')
+  x[, 1] = as.numeric(x[,1]) # fdr
+  x[, 2] = as.numeric(x[,2]) # q-value
+  
+  res = x[which(x[,1] < fdr), ] # remove those with low fdr
+  
+  res.g = res[, 3:ncol(res)] # sort gene names
+  for(i in 1:nrow(res.g)) res[i,3:ncol(res)] = sort(res.g[i,], na.last = T)   
+  
+  res = res[!duplicated((res[,3:ncol(res)])), ] # remove duplicated groups (permutations)
+  
+  cat(paste('Selected ', nrow(res), ' unique groups with fdr < ', fdr, '\n', sep=''))
+  
+  groups = function(g) {
+    g = g[3:length(g)]
+    g = g[!is.na(g)]
+    names(g) = NULL
+    
+    return(sort(g))
+  }
+  
+  G = apply(res, 1, groups)
+  names(G) = paste('MUTEX_GROUP', 1:length(names(G)), sep='')
+  rownames(res) = names(G)
+  colnames(res)[1:2] = c('fdr', 'q-score')
+  
+  if(display) print(res)
+ 
+  return(G)
+}
