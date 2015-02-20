@@ -50,8 +50,8 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 				} 
         
 				if(col.num[1] == -1) {
-					stop(paste("Cannot evaluate genotypes for event(s): ", paste(clauses[[i]], collapse=', ', sep=''),
-                     ". No hypothesis will be created.", sep=''))
+					stop(paste("[ERR] Event(s) for gene ", paste(clauses[[i]], collapse=', ', sep=''),
+                     " do no not exist.", sep=''))
 				} else {
 					curr_dataset[,i] = dataset[,col.num[1]]
 					if(length(col.num)>1) {
