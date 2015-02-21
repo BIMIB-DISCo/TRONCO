@@ -24,10 +24,10 @@ as.genes = function(x, types=NA)
 # @types: the types of events to consider, if NA all available types are used.
 as.events = function(x, genes=NA, types=NA)
 {
-  ann = x$annotations[, c('type', 'event')]
+  ann = x$annotations[, c('type', 'event'), drop=FALSE]
 
-  if(!any(is.na(genes))) ann = ann[ which(ann[, 'event'] %in% genes) , , drop=FALSE] 
-  if(!any(is.na(types))) ann = ann[ which(ann[, 'type'] %in% types) , , drop=FALSE]   
+  if(!any(is.na(genes))) ann = ann[ which(ann[, 'event', drop=FALSE] %in% genes) , , drop=FALSE] 
+  if(!any(is.na(types))) ann = ann[ which(ann[, 'type', drop=FALSE] %in% types) , , drop=FALSE]   
 
   return(ann)
 }
@@ -46,7 +46,7 @@ as.stages = function(x)
 # @x: the dataset.
 # @genes: a list of genes to query, if NA all available genes are used.
 as.types = function(x, genes=NA)
-{
+{    
   return(unlist(unique(as.events(x, genes=genes)[, 'type'])))
 }
 
@@ -117,7 +117,7 @@ duplicates = function(x) {
 # @view: the number of events to show.
 show = function(x, view = 10)
 {
-	is.compliant(x)
+  is.compliant(x)
   x = enforce.numeric(x)
 	view = min(view, nevents(x))
     
@@ -137,7 +137,7 @@ show = function(x, view = 10)
 	cat(paste(paste('\t', rownames(as.events(x)[1: view,]), ':', as.events(x)[1: view, 1], as.events(x)[1: view, 2], sep=' '), collapse='\n'))
 
 	cat(paste('\nGenotypes (', view, ' shown):\n', sep=''))
-	print(head(x$genotypes[,1:view]))
+	print(head(x$genotypes[,1:view, drop=FALSE]))
 }
 
 
@@ -213,6 +213,46 @@ enforce.string = function(x)
   }
 
   return(x)
+}
+
+# as.pathway - Given a cohort and a pathway, return the cohort with events restricted to genes 
+# involved in the pathway. This might contain a new 'pathway' genotype with an alteration mark if
+# any of the involved genes are altered.
+#
+# @pathway.genes: gene - symbols - involved in the pathway
+# @pathway.name: pathway name
+# @pathway.color: pathway color (for visualization)
+# @aggregate.pathway: if TRUE does not show the genes in the pathway
+as.pathway <- function(x, pathway.genes, pathway.name, 
+                       pathway.color='yellow', aggregate.pathway = TRUE) 
+{
+  is.compliant(x, 'as.pathway: input')
+  
+  data = x$genotypes
+  
+  cat(paste('*** Extracting events for pathway: ', pathway.name,'.\n', sep=''))
+  
+  # Select only those events involving a gene in pathway.genes which is also in x
+  y = events.selection(x, NA, filter.in.names=pathway.genes, NA)
+  
+  # Extend genotypes
+  y = enforce.numeric(y)
+  
+  pathway.genotype = rowSums(y$genotypes)
+  pathway.genotype[pathway.genotype > 1] = 1 # Any hit is enough
+  
+  pathway.genotype = matrix(pathway.genotype, ncol=1)
+  colnames(pathway.genotype) = pathway.name
+  rownames(pathway.genotype) = as.samples(y)
+  
+  res = import.genotypes(pathway.genotype, default.variant='Pathway', color=pathway.color)
+  
+  if(!aggregate.pathway) res = ebind(res, y)
+  if(has.stages(y)) res$stages = as.stages(y)
+  
+  is.compliant(res, 'as.pathway: output')
+  
+  return(res)
 }
 
 sort.by.frequency = function(x)
