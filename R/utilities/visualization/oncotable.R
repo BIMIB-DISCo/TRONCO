@@ -1,7 +1,4 @@
-#
-# oncotable : plots a table
-#
-
+# PDF and laex tables
 genes.table.report = function(x, name, dir=getwd(), maxrow=33, 
                         font=10, height=11, width=8.5, fill="lightblue") 
 {
@@ -40,14 +37,14 @@ genes.table.report = function(x, name, dir=getwd(), maxrow=33,
     } 
     close(pb)
     
-    dev.off()
-    dev.set(which=cur.dev)
-    
     # output latex    
     print(xtable(table, digits=0), file=paste(dir, '/', name, '.genes-table.tex', sep=''), type='latex')
-  }
   
-  cat('Preparing output table...\n')
+    dev.off()
+    dev.set(which=cur.dev)
+    }
+  
+  cat(paste('Preparing output table with ', ngenes(x),' genes ...\n'))
   genes = as.genes(x)
   types = as.types(x)
   
@@ -87,16 +84,17 @@ genes.table.report = function(x, name, dir=getwd(), maxrow=33,
 	return(genes.table)
 }
 
-genes.table.plot = function(x, name, minfreq, dir=getwd()) 
+
+
+# stacked histogram
+genes.table.plot = function(x, name, dir=getwd()) 
 {  
   
   require(reshape2)
   require(ggplot2)
   
-  cat('Preparing output table: creating alterations profiles and selecting events with minimum frequency.\n')
-  alterations = events.selection(as.alterations(x), minfreq)
- 
-  alterations = sort.by.frequency(alterations)
+  cat('Preparing output table: creating alterations profiles and selecting events with minimum frequency.\n') 
+  alterations = sort.by.frequency(as.alterations(x))
   
   cat('Stacked histogram with genes in the following order (head): ')
   cat(head(as.genes(alterations)))
