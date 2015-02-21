@@ -32,8 +32,24 @@ function(dataset, hypotheses = NA, command = "hc", do.boot = TRUE, nboot = 100, 
 		#consider the given hypotheses only toward the specified possible effects
 		hypotheses.matrix = array(0,c(hypotheses$num.hypotheses,ncol(adj.matrix)-hypotheses$num.hypotheses));
 		for (i in 1:nrow(hypotheses$hlist)) {
+		  print('---')
+		  #print(i)
+      #print(hypotheses$hlist[i,])
+      print(ncol(dataset))
+		  print(ncol(adj.matrix))
+		  print(hypotheses$num.hypotheses)
+		  
+      wr = hypotheses$hlist[i,1]-ncol(dataset)+hypotheses$num.hypotheses # 42-82+122
+      wc = hypotheses$hlist[i,2]
+      print(wr)
+      print(wc)
+      print(dim(hypotheses.matrix))
+      
+      
+      
 			hypotheses.matrix[hypotheses$hlist[i,1]-ncol(dataset)+hypotheses$num.hypotheses,hypotheses$hlist[i,2]] = 1;
 		}
+    print(ss)
 		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix),1:(ncol(adj.matrix)-hypotheses$num.hypotheses)] = hypotheses.matrix;
 	}
 	#reconstruct the causal topology
