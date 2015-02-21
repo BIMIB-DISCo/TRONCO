@@ -32,7 +32,7 @@ oncoprint <- function(x,
                       ann.score=TRUE, 
                       stage.color='YlOrRd', 
                       score.color = 'Purples',  
-                      null.color='darkgray', 
+                      null.color='lightgray', 
                       border.color='white', 
                       font.size=7, 
                       font.column = 3, 
@@ -240,5 +240,40 @@ oncoprint <- function(x,
              filename=file,
              ...
     )
+}
+
+
+##### Pathway print
+pathway.visualization = function(x, file, aggregate.pathways, names, ...) 
+{	
+	input = list(...)
+
+  if(length(names) != length(input))
+    stop('Missing pathway names...')
+  
+	#name=deparse(substitute(data)),
+  cat(paste('*** Processing pathways: ', paste(names, collapse=', ', sep=''), '\n', sep=''))
+  
+	cat(paste('\n[PATHWAY \"', names[1],'\"] ', paste(unlist(input[1]), collapse=', ', sep=''), '\n', sep=''))
+  data.pathways = as.pathway(x, pathway.genes=unlist(input[1]), 
+                             pathway.name=names[1], aggregate.pathway = aggregate.pathways)
+	
+  if(length(names) > 1)
+  {  
+    for(i in 2:length(input))
+  	{
+  	  cat(paste('\n\n[PATHWAY \"', names[i],'\"] ', paste(unlist(input[i]), collapse=', ', sep=''), '\n', sep=''))
+  	  data.pathways = ebind(data.pathways,
+                            as.pathway(x, pathway.genes=unlist(input[i]), 
+                                       pathway.name=names[i], aggregate.pathway = aggregate.pathways))
+  	}
+  }
+  print(as.events(data.pathways))
+
+
+  oncoprint(trim(data.pathways), title=paste('Pathways:', paste(names, collapse=', ', sep='')), 
+          file=file)
+
+  return(data.pathways)
 }
 
