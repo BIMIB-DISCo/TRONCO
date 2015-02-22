@@ -6,9 +6,10 @@ genes.table.report = function(x, name, dir=getwd(), maxrow=33,
   print.table = function(table, name, dir=getwd(), maxrow, font, height, 
                          width, fill)
   {
-    cat('Printing PDF and Latex table to files: \n')
+    cat('\nPrinting PDF and Latex table to files: \n')
     cat(paste('PDF \t\t', dir, '/', name, '.genes-table.pdf\n', sep=''))
     cat(paste('Latex\t\t', dir, '/', name, '.genes-table.tex\n', sep=''))
+    cat('\n')
     
     # output pdf
     require(gridExtra)  

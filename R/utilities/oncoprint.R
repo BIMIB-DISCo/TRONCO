@@ -143,34 +143,23 @@ oncoprint <- function(x,
   # Augment data to make type-dependent colored plots
   types = as.types(x)
   map.gradient = null.color
-
-  print(ntypes(x))
   
   for(i in 1:ntypes(x))
   {
     events = as.events(x, type=as.types(x)[i])
-    print('eventi')
-    print(events)
     keys = rownames(events)
-    print('chiavi')
-     print(keys)
-    print('rownames data - che e ordinato')
-    print(rownames(data))
-   # print(sort(as.genes(x)))
-   # print(sort(rownames(data)))
     
-    
-    # print(rownames(data)[which(!(keys %in% rownames(data)))])
-    # print(as.events(x, types = 'Alteration'))
     if (ntypes(x) > 1) {
-      sub.data = data[keys, ]
-
+      keys.subset = keys[unlist(lapply(keys, function(x, data){if (x %in% data) T else F}, rownames(data)))]
+      sub.data = data[keys.subset, ]
+      
       # shift 1s to 'i', add color to the map  
       idx = which(sub.data == 1)
       if(length(idx) > 0) map.gradient = cbind(map.gradient, as.colors(x)[i])
      
       sub.data[idx] = i
-      data[keys, ] = sub.data  
+      data[keys.subset, ] = sub.data 
+
     } else {
       map.gradient = cbind(map.gradient, as.colors(x)[i])
     }
