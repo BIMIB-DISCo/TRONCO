@@ -1,10 +1,5 @@
-#
+
 # oncoPrint : plot a genotype
-#
-
-
-
-# This is the plotting function
 # 
 # @param excl.soft A number
 # @param col.cluster A number
@@ -149,15 +144,20 @@ oncoprint <- function(x,
   types = as.types(x)
   map.gradient = null.color
 
+  print(ntypes(x))
+  
   for(i in 1:ntypes(x))
   {
     events = as.events(x, type=as.types(x)[i])
-    # print(events)
+    print('eventi')
+    print(events)
     keys = rownames(events)
-    # print(keys)
-    # print(rownames(data))
-    print(sort(as.genes(x)))
-    print(sort(rownames(data)))
+    print('chiavi')
+     print(keys)
+    print('rownames data - che e ordinato')
+    print(rownames(data))
+   # print(sort(as.genes(x)))
+   # print(sort(rownames(data)))
     
     
     # print(rownames(data)[which(!(keys %in% rownames(data)))])
