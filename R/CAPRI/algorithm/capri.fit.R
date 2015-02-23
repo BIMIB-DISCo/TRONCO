@@ -49,7 +49,7 @@ function(dataset, hypotheses = NA, command = "hc", do.boot = TRUE, nboot = 100, 
       
 			hypotheses.matrix[hypotheses$hlist[i,1]-ncol(dataset)+hypotheses$num.hypotheses,hypotheses$hlist[i,2]] = 1;
 		}
-    print(ss)
+    # print(ss)
 		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix),1:(ncol(adj.matrix)-hypotheses$num.hypotheses)] = hypotheses.matrix;
 	}
 	#reconstruct the causal topology
