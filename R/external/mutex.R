@@ -20,14 +20,14 @@ export.nbs.input = function(x,
   data = x$genotypes
   event = x$annotation[, 'event']
   # gene_indiv_all <- the matrix
-  gene_indiv_all = as.matrix(data)
+  gene_indiv_mat = as.matrix(data)
   
   # sample_id <- patient id
-  sample_id = rownames(gene_indiv_all)
+  sample_id = rownames(gene_indiv_mat)
   
   # remove colnames and rownames from gene_indiv_mat
-  rownames(gene_indiv_all) = NULL
-  colnames(gene_indiv_all) = NULL
+  rownames(gene_indiv_mat) = NULL
+  colnames(gene_indiv_mat) = NULL
   
   # gene_id_symbol <- sorted name of events
   gene_id_symbol = mapply(function(x) event[[x]], colnames(data))
@@ -39,7 +39,7 @@ export.nbs.input = function(x,
   filepath = if(grepl("\\/$", filepath)) filepath else paste0(filepath, "/")
   con = paste0(filepath, filename)
   
-  writeMat(con, gene_indiv_all = gene_indiv_all, gene_id_all = gene_id_all, sample_id = sample_id, gene_id_symbol = gene_id_symbol)
+  writeMat(con, gene_indiv_mat = gene_indiv_mat, gene_id_all = gene_id_all, sample_id = sample_id, gene_id_symbol = gene_id_symbol)
 }
 
 ######## Import mutex groups -- current Mutex version is XXX
