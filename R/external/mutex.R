@@ -19,18 +19,18 @@ export.nbs.input = function(x,
   
   data = x$genotypes
   event = x$annotation[, 'event']
-  # gene_indiv_all <- the matrix
+  # gene_indiv_mat <- the matrix
   gene_indiv_mat = as.matrix(data)
-  
-  # sample_id <- patient id
-  sample_id = rownames(gene_indiv_mat)
   
   # remove colnames and rownames from gene_indiv_mat
   rownames(gene_indiv_mat) = NULL
   colnames(gene_indiv_mat) = NULL
   
+  # sample_id <- patient id
+  sample_id = as.samples(x)
+    
   # gene_id_symbol <- sorted name of events
-  gene_id_symbol = mapply(function(x) event[[x]], colnames(data))
+  gene_id_symbol = as.genes(x)
   
   # gene_id_all <- event id positions
   gene_id_all = mapply(function(x) map_hugo_entrez[[which(map_hugo_entrez[,'Hugo_Symbol'] == x), 'Entrez_Gene_Id']], gene_id_symbol)
