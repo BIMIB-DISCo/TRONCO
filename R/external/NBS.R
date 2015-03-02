@@ -17,10 +17,8 @@ export.nbs.input = function(x,
   
   is.compliant(x);
   
-  data = x$genotypes
-  event = x$annotation[, 'event']
   # gene_indiv_mat <- the matrix
-  gene_indiv_mat = as.matrix(data)
+  gene_indiv_mat = as.matrix(x$genotypes)
   
   # remove colnames and rownames from gene_indiv_mat
   rownames(gene_indiv_mat) = NULL
@@ -33,7 +31,7 @@ export.nbs.input = function(x,
   gene_id_symbol = as.genes(x)
   
   # gene_id_all <- event id positions
-  gene_id_all = mapply(function(x) map_hugo_entrez[[which(map_hugo_entrez[,'Hugo_Symbol'] == x), 'Entrez_Gene_Id']], gene_id_symbol)
+  gene_id_all = mapply(function(x) as.numeric(map_hugo_entrez[[which(map_hugo_entrez[,'Hugo_Symbol'] == x), 'Entrez_Gene_Id']]), gene_id_symbol)
   
   filename = if(grepl("\\.mat$", filename)) filename else paste0(filename, ".mat")
   filepath = if(grepl("\\/$", filepath)) filepath else paste0(filepath, "/")
