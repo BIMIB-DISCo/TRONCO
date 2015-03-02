@@ -84,3 +84,43 @@
 
 	return(y)
 }
+
+# Return the first n recurrent events
+rank.recurrents = function(x, n)
+{
+	is.compliant(x)
+	
+	if(n <= 0) stop('Rank value (n) should be positive.')
+	
+	# Sum columns
+	sums = colSums(x$genotypes)
+	
+	# Get the names of the first n ranked
+	sorted = sort(sums, decreasing = T)
+	
+	# print(sorted[1:20])
+	
+	scores = unique(sorted)
+	# print(scores)	
+
+	l = length(scores)
+	if(n >l) warning(paste0('Rank contains ', l, ' unique entries, using n=', l, ' instead of n=', n))
+
+	n = min(n, length(scores))
+	scores = scores[1:n]
+	
+	sorted = sorted[which(sorted >= min(scores))]
+
+	max = names(sorted[which(sorted == max(scores))])
+	min = names(sorted[which(sorted == min(scores))])
+
+	cat(paste0('Most recurrent(s): ', paste(as.events(x)[max, 'event'], collapse=', '), ' (', (max(scores)), ' hits).\n' ))
+	cat(paste0(n, '-th recurrent(s): ', paste(as.events(x)[min, 'event'], collapse=', '), ' (', (min(scores)), ' hits).\n' ))
+	
+	
+	order = names(sorted)
+	genes = as.events(x)[order, 'event']
+	
+	return(as.vector(genes))
+	
+}

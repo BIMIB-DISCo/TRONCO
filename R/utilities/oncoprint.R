@@ -21,7 +21,6 @@ oncoprint <- function(x,
                       excl.sort=TRUE, 
                       col.cluster=FALSE, 
                       row.cluster=FALSE, 
-                      device.new=FALSE, 
                       file=NA, 
                       ann.stage=TRUE, 
                       ann.score=TRUE, 
@@ -39,6 +38,7 @@ oncoprint <- function(x,
                       cellwidth = 5, 
                       cellheigth = 10,
                       group.by.label = FALSE,
+                      group.samples = NA,
                       ...) 
 {
   if (!require('pheatmap')) {
@@ -78,31 +78,48 @@ oncoprint <- function(x,
   is.compliant(x, 'oncoprint', stage=ann.stage)
   x = enforce.numeric(x)
   
+  # If hide.zeros trim x
+  if (hide.zeroes) {
+    cat(paste('Trimming the input dataset (hide.zeroes).\n', sep=''))
+   	x = trim(x)
+   	}
+ 
   # We reverse the heatmap under the assumption that ncol(data) << nrow(data)
   data = t(x$genotypes)
   nc = ncol(data) 
   nr = nrow(data)
-  
-  # If hide.zeros remove event without mutations, that's stronger than a "trim"
-  # whihc cuts out the genes with null genotypes
-  if (hide.zeroes) {
-    cat(paste('Hiding empty genes and samples.\n', sep=''))
     
-    data = data[ rowSums(data) != 0, ]
-    data = data[ , colSums(data) != 0]
-    nr = nrow(data)
-    nc = ncol(data)
-  }
-  
-  
-  # Sort data, if required. 
+  # Sort data, if required. excl.sort and group.samples are not compatible
+  hasGroups = !any(is.na(group.samples))
+
+  if(excl.sort && hasGroups) 
+  	stop('Disable sorting for mutual exclusivity (excl.sort=FALSE) or avoid using grouped samples (group.samples=NA).')
+
   if(excl.sort) {
-    cat(paste('Sorting data to enhance exclusivity patterns.\n', sep=''))
+    cat(paste('Sorting samples ordering to enhance exclusivity patterns.\n', sep=''))
     sorted.data = exclusivity.sort(data)
     data = sorted.data$M	
+  }
+  
+  if(hasGroups)
+  {
+  	grn = rownames(group.samples)
+  	
+    cat(paste('Grouping samples according to input groups (group.samples).\n', sep=''))
+    
+    if(any(is.null(grn))) stop('Input groups should have sample names.')
+    
+  	if(!setequal(grn, as.samples(x)))
+  		stop(paste0('Missing group assignment for samples: ', paste(setdiff(as.samples(x), grn), collapse=', '),'.'))
+ 
+ 	# Order groups by label, and then data (by column)
+ 	order = order(group.samples)
+  	group.samples = group.samples[order, , drop=FALSE]
+  	
+  	data = data[, rownames(group.samples)]  	  	
   }	
   
-  # If group.by.label group events involving the same label
+  ##### If group.by.label group events involving the gene symbol
   if (group.by.label) {
     cat(paste('Grouping events by gene.\n', sep=''))
     genes = as.genes(x)
@@ -112,18 +129,19 @@ oncoprint <- function(x,
   cn = colnames(data)
   rn = rownames(data)
   
-  # Heatmap score annotation: total 1s per sample
+  ##### Heatmap annotations: score (total 1s per sample), stage or groups
   nmut = colSums(data)
   if(ann.score == TRUE && ann.stage == FALSE) annotation = data.frame(score=nmut)
   if(ann.score == FALSE && ann.stage == TRUE) annotation = data.frame(stage=as.stages(x)[cn, 1])
   if(ann.score == TRUE && ann.stage == TRUE)  annotation = data.frame(stage=as.stages(x)[cn, 1], score=nmut)
-  
-  if(ann.score == TRUE || ann.stage == TRUE) {
+  if(hasGroups) annotation$group = as.factor(group.samples[cn, 1])
+
+  ##### Color each annotation 
+  if(ann.score || ann.stage || hasGroups) {
     rownames(annotation) = cn
     annotation_colors = list()
   }
-  
-  # annotation colors
+
   if(ann.score == T){
     score.gradient = (colorRampPalette(brewer.pal(6, score.color))) (max(nmut))
     annotation_colors = append(annotation_colors, list(score=score.gradient))
@@ -135,7 +153,14 @@ oncoprint <- function(x,
     stage.color.attr = append(brewer.pal(n=num.stages, name=stage.color), "#FFFFFF")
     names(stage.color.attr) = append(levels(different.stages), NA)
     annotation_colors = append(annotation_colors, list(stage=stage.color.attr))
-  }	  
+  }
+  
+  if(hasGroups)	{
+  	ngroups = length(unique(group.samples[,1]))
+  	group.color.attr = brewer.pal(n=ngroups, name='Accent')
+  	names(group.color.attr) = levels(as.factor(unlist(unique(group.samples[,1]))))
+    annotation_colors = append(annotation_colors, list(group=group.color.attr))
+   }
 
   # Display also event frequency, which gets computed now
   genes.freq = rowSums(data)/nsamples(x)
@@ -182,7 +207,7 @@ oncoprint <- function(x,
   title = paste(title, '\n n = ', nsamples(x),' \t m = ', nevents(x), ' \t |G| = ', ngenes(x),  sep='')
   
   # Pheatmap
-  if(ann.score == TRUE || ann.stage == TRUE)  
+  if(ann.score == TRUE || ann.stage == TRUE || hasGroups)  
     pheatmap(data, 
              scale = "none", 
              col = map.gradient, 

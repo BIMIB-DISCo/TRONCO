@@ -67,7 +67,7 @@ import.genotypes = function(geno, geno.annot=NA, stage.annot=NA, default.variant
 	
 	
 	# Add stage, if given as input
-	if(!is.na(stage.annot))
+	if(!any(is.na(stage.annot)))
 	{
 		if(nrow(stage.annot) != nr)
 			cat(paste('Missing stage information for some samples (genotypes= ', nr, ', stages=', nrow(stage.annot),'), setting them as NA.\n', sep=''))
