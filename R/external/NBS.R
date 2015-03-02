@@ -18,7 +18,7 @@ export.nbs.input = function(x,
   is.compliant(x);
   
   # gene_indiv_mat <- the matrix
-  gene_indiv_mat = as.matrix(data)
+  gene_indiv_mat = as.matrix(x$genotypes)
   
   # remove colnames and rownames from gene_indiv_mat
   rownames(gene_indiv_mat) = NULL
