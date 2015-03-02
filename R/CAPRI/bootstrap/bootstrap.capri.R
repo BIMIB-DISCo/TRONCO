@@ -61,7 +61,7 @@ function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, recon
 				bootstrapped.dataset = check.data$dataset;
 				curr.hypotheses = hypotheses;
 				if(!is.na(check.data$invalid.events$removed.events[1])) {
-					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%check.data$invalid.events$removed.events));
+					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%colnames(dataset)[check.data$invalid.events$removed.events]));
 				}
 				bootstrapped.hypotheses = curr.hypotheses;
 				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
@@ -122,7 +122,7 @@ function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, recon
 				bootstrapped.dataset = check.data.pf$dataset;
 				curr.hypotheses = hypotheses;
 				if(!is.na(check.data.pf$invalid.events$removed.events[1])) {
-					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%check.data.pf$invalid.events$removed.events));
+					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%colnames(dataset)[check.data$invalid.events$removed.events]));
 				}
 				bootstrapped.hypotheses = curr.hypotheses;
 				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
@@ -149,7 +149,7 @@ function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, recon
 				bootstrapped.dataset = check.data.bic$dataset;
 				curr.hypotheses = hypotheses;
 				if(!is.na(check.data.bic$invalid.events$removed.events[1])) {
-					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%check.data.bic$invalid.events$removed.events));
+					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%colnames(dataset)[check.data$invalid.events$removed.events]));
 				}
 				bootstrapped.hypotheses = curr.hypotheses;
 				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);

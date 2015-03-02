@@ -25,14 +25,13 @@ function(dataset, hypotheses = NA, command = "hc", do.boot = TRUE, nboot = 100, 
 	adj.matrix = array(1,c(ncol(dataset),ncol(dataset)));
 	#the diagonal of the adjacency matrix should not be considered, i.e., no self cause is allowed
 	diag(adj.matrix) = 0;
-	
 	#consider the hypotheses if any
 	if(!is.na(hypotheses[1])) {
 		#set the invalid entries in the adj.matrix
 		#neither atomic events nor hypotheses can be causing any other hypothesis
 		adj.matrix[,(ncol(adj.matrix)-hypotheses$num.hypotheses+1):ncol(adj.matrix)] = 0;
 		#consider the given hypotheses only toward the specified possible effects
-		hypotheses.matrix = array(0,c(hypotheses$num.hypotheses,ncol(adj.matrix)-hypotheses$num.hypotheses));
+		hypotheses.matrix = array(0,c(hypotheses$num.hypotheses,ncol(adj.matrix)-hypotheses$num.hypotheses));		
 		for (i in 1:nrow(hypotheses$hlist)) {
 			cause = which(hypotheses$hlist[i,1]==colnames(dataset));
 			effect = which(hypotheses$hlist[i,2]==colnames(dataset));

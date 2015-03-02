@@ -146,12 +146,12 @@
 # mapk4 = read.table('1mar/nbs_k4.txt')
 # mapk5 = read.table('1mar/nbs_k5.txt')
 
-mapk3 = read.table('ok208/nbs_k3.txt')
-mapk4 = read.table('ok208/nbs_k4.txt')
-mapk5 = read.table('ok208/nbs_k5.txt')
-samples = read.table('ok208/sample_id')
+#mapk3 = read.table('ok208/nbs_k3.txt')
+#mapk4 = read.table('ok208/nbs_k4.txt')
+#mapk5 = read.table('ok208/nbs_k5.txt')
+#samples = read.table('ok208/sample_id')
 
-data = data.frame(mapk3, mapk4, mapk5, row.names = samples[,1])
-colnames(data) = c('K=3', 'K=4', 'K=5')
+#data = data.frame(mapk3, mapk4, mapk5, row.names = samples[,1])
+#colnames(data) = c('K=3', 'K=4', 'K=5')
 
-cluster.sensitivity(data, reference = 'K=4')
+#cluster.sensitivity(data, reference = 'K=4')
