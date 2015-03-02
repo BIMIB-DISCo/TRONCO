@@ -41,10 +41,6 @@ tronco.capri <- function(data, command = "hc", do.boot = TRUE, nboot = 100, pval
 	colnames(topology$parents.pos$parents.pos.pf) = "parent";
 	rownames(topology$parents.pos$parents.pos.bic) = colnames(data$genotypes);
 	colnames(topology$parents.pos$parents.pos.bic) = "parent";
-	rownames(topology$cpt$cpt.pf) = colnames(data$genotypes);
-	colnames(topology$cpt$cpt.pf) = "parent";
-	rownames(topology$cpt$cpt.bic) = colnames(data$genotypes);
-	colnames(topology$cpt$cpt.bic) = "parent";
 	rownames(topology$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
 	colnames(topology$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
 	rownames(topology$adj.matrix$adj.matrix.bic) = colnames(data$genotypes);

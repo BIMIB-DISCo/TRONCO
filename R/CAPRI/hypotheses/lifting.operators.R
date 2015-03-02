@@ -41,8 +41,8 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 					col.num = event.map$col.num
 				} else if(length(clauses[[i]]) == 2) {
           
-				  print('arg of emap with l = 2')
-				  print(clauses[[i]])
+				  #print('arg of emap with l = 2')
+				  #print(clauses[[i]])
           
           
 					event.map = emap(clauses[[i]], dataset, annotations)
@@ -101,37 +101,34 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 }
 
 # AND hypothesis
-AND = function( ... ) {
+"AND" <-
+function( ... ) {
 	# look for the global variables named lifting.dataset and lifting.annotations
-	dataset = lifting.dataset
-	annotations = lifting.annotations
-	
-  if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
+	dataset = lifting.dataset;
+	annotations = lifting.annotations;
+  	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
 		# get the vector of the clauses of the formula from the dataset
-		result = aux.log(dataset,annotations, "AND" ,...)
-		curr_dataset = result$curr_dataset
-		hypotheses = result$hypotheses
-		function.name = result$function.name
-		function.inputs = result$function.inputs
-		
-    # evaluate the AND operator
-		formula = rep(0,nrow(dataset))
+		result = aux.log(dataset,annotations, "AND" ,...);
+		curr_dataset = result$curr_dataset;
+		hypotheses = result$hypotheses;
+		function.name = result$function.name;
+		function.inputs = result$function.inputs;
+		# evaluate the AND operator
+		formula = rep(0,nrow(dataset));
 		for (i in 1:nrow(dataset)) {
-			formula[i] = sum(curr_dataset[i,])
+			formula[i] = sum(curr_dataset[i,]);
 			if(formula[i]<ncol(curr_dataset)) {
-				formula[i] = 0
+				formula[i] = 0;
 			}
 			else {
-				formula[i] = 1
+				formula[i] = 1;
 			}
 		}
-    
-		formula = as.integer(formula)
-		result = list(formula=formula,hypotheses=hypotheses, 
-                  function.name=function.name, 
-                  function.inputs=function.inputs)
-		return(result)
-	} else {
+		formula = as.integer(formula);
+		result = list(formula=formula,hypotheses=hypotheses, function.name=function.name, function.inputs=function.inputs);
+		return(result);
+	}
+	else {
 		stop("Either the dataset or the formula not provided! No hypothesis will be created.");
 	}
 	return(NA)
@@ -140,10 +137,6 @@ AND = function( ... ) {
 # OR hypothesis
 "OR" <-
 function( ... ) {
-  
-  # print('sono in OR')
-  
-  
 	#look for the global variables named lifting.dataset and lifting.annotations
 	dataset = lifting.dataset;
 	annotations = lifting.annotations;
@@ -164,18 +157,11 @@ function( ... ) {
 		}
 		formula = as.integer(formula);
 		result = list(formula=formula,hypotheses=hypotheses,function.name=function.name,function.inputs=function.inputs);
-		
-    #print('or result')
-    #print(result)
-    
-    
-    return(result);
+		return(result);
 	}
 	else {
 		stop("Either the dataset or the formula not provided! No hypothesis will be created.");
 	}
-  
-  
 	return(NA);
 }
 

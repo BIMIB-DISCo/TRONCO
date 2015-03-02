@@ -1,4 +1,4 @@
-#### verify.probability.raising.do.boot.R
+#### verify.probability.raising.R
 ####
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
@@ -17,36 +17,44 @@
 #probability.raising: list describing the causes where probability raising is verified
 "verify.probability.raising.do.boot" <-
 function(prima.facie.model.distributions, prima.facie.null.distributions, pvalue, adj.matrix, edge.confidence.matrix) {
+	
     #compute the pvalues for the probability raising conditions
     for(i in 1:nrow(adj.matrix)) {
         for(j in i:ncol(adj.matrix)) {
+        	
             #the diagonal (self cause) and the other invalid edges have not to be considered
             if(adj.matrix[i,j]!=0 || adj.matrix[j,i]!=0) {
+            	
                 #pvalue for the probability raising condition for i --> j
                 second.pvalue.i.j = wilcox.test(unlist(prima.facie.model.distributions[i,j]),unlist(prima.facie.null.distributions[i,j]),alternative="greater",mu=0)$p.value;
                 if(is.na(second.pvalue.i.j) || is.nan(second.pvalue.i.j)) {
                     #in this case the two distributions are exactly identical
                     second.pvalue.i.j = 1;
                 }
+                
                 #in this case i --> j is not valid
                 if(second.pvalue.i.j>=pvalue) {
                     adj.matrix[i,j] = 0;
                 }
+                
                 #pvalue for the probability raising condition for j --> i
                 second.pvalue.j.i = wilcox.test(unlist(prima.facie.model.distributions[j,i]),unlist(prima.facie.null.distributions[j,i]),alternative="greater",mu=0)$p.value;
                 if(is.na(second.pvalue.j.i) || is.nan(second.pvalue.j.i)) {
                     #in this case the two distributions are exactly identical
                     second.pvalue.j.i = 1;
                 }
+                
                 #in this case j --> i is not valid
                 if(second.pvalue.j.i>=pvalue) {
                     adj.matrix[j,i] = 0;
-                }   
+                }
+                
                 #save the confidence for i-->j and j --> i
                 tmp = edge.confidence.matrix[[2,1]];
                 tmp[i,j] = second.pvalue.i.j;
                 tmp[j,i] = second.pvalue.j.i;
                 edge.confidence.matrix[2,1] = list(tmp);
+                
             }
             else {
                 tmp = edge.confidence.matrix[[2,1]];
@@ -54,10 +62,50 @@ function(prima.facie.model.distributions, prima.facie.null.distributions, pvalue
                 tmp[j,i] = 0;
                 edge.confidence.matrix[2,1] = list(tmp);
             }
+            
+        }
+        
+    }
+    
+    #save the results and return them
+    probability.raising <- list(adj.matrix=adj.matrix,edge.confidence.matrix=edge.confidence.matrix);
+    return(probability.raising);
+
+}
+
+
+#verify the probability raising condition without bootstrap
+#INPUT:
+#prima.facie.model: prima facie model
+#prima.facie.null: prima facie null
+#adj.matrix: adjacency matrix of the topology
+#RETURN:
+#probability.raising: adjacency matrix where temporal priority is verified
+"verify.probability.raising.no.boot" <-
+function(prima.facie.model, prima.facie.null, adj.matrix) {
+	
+    for(i in 1:nrow(adj.matrix)) {
+        for(j in i:ncol(adj.matrix)) {
+            #the diagonal (self cause) and the other invalid edges have not to be considered
+            #temporal priority condition: if P(j|i)>P(j|not i) the edge i --> j is valid for temporal priority
+            if(adj.matrix[i,j]!=0) {
+                #verify i --> j
+                if(prima.facie.model[i,j]<=prima.facie.null[i,j]) {
+                    adj.matrix[i,j] = 0;
+                }
+            }
+            if(adj.matrix[j,i]!=0) {
+                #verify j --> i
+                if(prima.facie.model[j,i]<=prima.facie.null[j,i]) {
+                    adj.matrix[j,i] = 0;
+                }
+            }
         }
     }
-    probability.raising <- list(adj.matrix=adj.matrix,edge.confidence.matrix=edge.confidence.matrix);
+    
+    #save the results and return them
+    probability.raising = adj.matrix;
     return(probability.raising);
 }
 
-#### end of file -- verify.probability.raising.do.boot.R
+#### end of file -- verify.probability.raising.R

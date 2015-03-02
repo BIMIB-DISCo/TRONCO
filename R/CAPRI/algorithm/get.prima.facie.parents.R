@@ -1,4 +1,4 @@
-#### get.prima.facie.parents.do.boot.R
+#### get.prima.facie.parents.R
 ####
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
@@ -16,11 +16,14 @@
 #prima.facie.parents: list of the set (if any) of prima facie parents for each node
 "get.prima.facie.parents.do.boot" <-
 function(dataset, nboot, pvalue, adj.matrix) {
+	
 	#compute a robust estimation of the scores using rejection sampling bootstrap
 	scores = get.bootstapped.scores(dataset,nboot,adj.matrix);
+	
     #remove all the edges not representing a prima facie causes
     prima.facie.topology = get.prima.facie.causes.do.boot(adj.matrix,scores$marginal.probs.distributions,scores$prima.facie.model.distributions,scores$prima.facie.null.distributions,pvalue);
-    #compute the observed and joint probabilities from the bootstrapped values
+    
+    #compute the observed and joint probabilities as the mean of the bootstrapped values
     marginal.probs = array(-1,dim=c(ncol(dataset),1));
     joint.probs = array(-1,dim=c(ncol(dataset),ncol(dataset)));
     for(i in 1:ncol(dataset)) {
@@ -32,9 +35,33 @@ function(dataset, nboot, pvalue, adj.matrix) {
             }
         }
     }
-    #save the results in a list and return it
+    
+    #save the results and return them
     prima.facie.parents <- list(marginal.probs=marginal.probs,joint.probs=joint.probs,adj.matrix=prima.facie.topology$adj.matrix,pf.confidence=prima.facie.topology$edge.confidence.matrix);
     return(prima.facie.parents);
+    
 }
 
-#### end of file -- get.prima.facie.parents.do.boot.R
+
+#select the set of the prima facie parents (without bootstrap) for each node based on Suppes' definition of causation
+#INPUT:
+#dataset: a valid dataset
+#adj.matrix: adjacency matrix of the initially valid edges
+#RETURN:
+#prima.facie.parents: list of the set (if any) of prima facie parents for each node
+"get.prima.facie.parents.no.boot" <-
+function(dataset, adj.matrix) {
+	
+	#compute the scores from the dataset
+	scores = get.dag.scores(dataset,adj.matrix);
+	
+    #remove all the edges not representing a prima facie causes
+    prima.facie.topology = get.prima.facie.causes.no.boot(adj.matrix,scores$marginal.probs,scores$prima.facie.model,scores$prima.facie.null);
+    
+    #save the results return them
+    prima.facie.parents <- list(marginal.probs=scores$marginal.probs,joint.probs=scores$joint.probs,adj.matrix=prima.facie.topology,pf.confidence=NA);
+    return(prima.facie.parents);
+    
+}
+
+#### end of file -- get.prima.facie.parents.R

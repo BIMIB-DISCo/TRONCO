@@ -162,4 +162,3 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x)){
   return(x)
   
 }
-

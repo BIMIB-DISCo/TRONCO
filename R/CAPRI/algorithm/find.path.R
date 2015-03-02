@@ -16,8 +16,10 @@
 #is.path: 0 if there is not a path from first.node to last.node, 1 if there is
 "find.path" <-
 function(adj.matrix, first.node, last.node, visited.nodes) {
+	
     #suppose that there is no path from first.node to last.node
     is.path = 0;
+    
     #recursion base case: first.node==last.node
     if(first.node==last.node) {
         is.path = 1;
@@ -49,7 +51,10 @@ function(adj.matrix, first.node, last.node, visited.nodes) {
             }
         }
     }
+    
+    #return the results
     return(is.path);
+    
 }
 
 #### end of file -- find.path.R

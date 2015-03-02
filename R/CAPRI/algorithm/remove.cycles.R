@@ -15,6 +15,7 @@
 #acyclic.topology: structure representing the best acyclic topology
 "remove.cycles" <-
 function(adj.matrix, weights.matrix, not.ordered) {
+	
     #create the structures where to save the weights in increasing order of confidence
     ordered.weights <- vector();
     ordered.edges <- list();
@@ -42,6 +43,7 @@ function(adj.matrix, weights.matrix, not.ordered) {
             ordered.edges[curr.edge.pos] = list(new.edge);
         }
     }
+    
     #sort the edges in increasing order of confidence (i.e. the edges with lower pvalue are the most confident)
     ordered.edges = ordered.edges[sort(unlist(ordered.weights),decreasing=TRUE,index.return=TRUE)$ix];
     #visit the ordered edges and remove the ones that are causing cycles, if any
@@ -58,8 +60,11 @@ function(adj.matrix, weights.matrix, not.ordered) {
             }
         }
     }
+    
+    #save the results and return them
     acyclic.topology = list(adj.matrix=adj.matrix);
     return(acyclic.topology);
+    
 }
 
 #### end of file -- remove.cycles.R

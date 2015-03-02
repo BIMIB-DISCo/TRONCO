@@ -14,11 +14,13 @@
 #scores: observed probabilities and prima facie scores
 "get.dag.scores" <-
 function(dataset, adj.matrix) {
-    #structure to save the positive prima facie scores
+	
+    #structure to save the prima facie scores
     prima.facie.model <- array(-1, dim=c(ncol(dataset), ncol(dataset)));
     prima.facie.null <- array(-1, dim=c(ncol(dataset), ncol(dataset)));
-    #structure to compute the observed and observed-joint probabilities
+    #structure to save the observed and observed-joint probabilities
     pair.count <- array(0, dim=c(ncol(dataset), ncol(dataset)));
+    
 	#compute the observed probabilities on the dataset
 	for(i in 1:ncol(dataset)) {
 	    for(j in 1:ncol(dataset)) {
@@ -31,7 +33,8 @@ function(dataset, adj.matrix) {
 	marginal.probs <- array(as.matrix(diag(pair.count)/nrow(dataset)),dim=c(ncol(dataset),1));
     #joint.probs is an array with the joint observed probabilities
 	joint.probs <- as.matrix(pair.count/nrow(dataset));
-	#compute the prima facie errors based on the probability raising model
+	
+	#compute the prima facie scores based on the probability raising model
 	for(i in 1:nrow(prima.facie.model)) {
 	    for(j in 1:ncol(prima.facie.model)) {
             #the scores are saved in the convention of the adjacency matrix, i.e., [i,j] means i is causing j
@@ -49,8 +52,11 @@ function(dataset, adj.matrix) {
             }
 	    }
 	}
+	
+	#save the results and return them
 	scores <- list(marginal.probs=marginal.probs,joint.probs=joint.probs,prima.facie.model=prima.facie.model,prima.facie.null=prima.facie.null);
 	return(scores);
+	
 }
 
 #### end of file -- get.dag.scores.R

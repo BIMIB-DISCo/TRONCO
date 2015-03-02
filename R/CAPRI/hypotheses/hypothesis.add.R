@@ -250,7 +250,7 @@
           }
         }
         for (j in 1:length(col.num)) {
-          hypotheses$hlist = rbind(hypotheses$hlist,t(c(ncol(dataset),col.num[j])));
+          hypotheses$hlist = rbind(hypotheses$hlist,t(c(colnames(dataset)[ncol(dataset)],colnames(dataset)[col.num[j]])));
         }
         if(is.null(colnames(hypotheses$hlist))) {
           colnames(hypotheses$hlist) = c("cause","effect");

@@ -38,4 +38,3 @@ oncoprint(all, ann.stage=F, cellwidth=3, cellheigth=5, null.color='lightgray', h
 
 all = union.types(all, 'CNA', 'SNV', new.type='Alteration', new.color='darkgray')
 oncoprint(all, ann.stage=F, cellwidth=3, cellheigth=5, null.color='lightgray', hide.zeroes = T)
-

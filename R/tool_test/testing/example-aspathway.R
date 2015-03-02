@@ -28,10 +28,7 @@ p.p53 = as.pathway(tcga.sub1, P53, 'P53')
 z = merge.genotypes(p.pi3k, p.wnt, p.ras, p.tgfb, p.p53)
 oncoprint(z) 
 
-
-
 # p.wnt = as.pathway(tcga.sub2, Wnt, 'Wnt')
 # p.p53 = as.pathway(tcga.sub2, P53, 'P53')
 # z = merge.genotypes(p.wnt, p.p53)
 # oncoprint(z) 
-

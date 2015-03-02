@@ -1,4 +1,4 @@
-#### verify.temporal.priority.do.boot.R
+#### verify.temporal.priority.R
 ####
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
@@ -16,13 +16,16 @@
 #temporal.priority: list describing the causes where temporal priority is verified
 "verify.temporal.priority.do.boot" <-
 function(marginal.probs.distributions, pvalue, adj.matrix, edge.confidence.matrix) {
+	
     #evalutate the temporal priority condition for each par of edges
     not.ordered = list();
     counter = 0;
     for(i in 1:nrow(adj.matrix)) {
         for(j in i:ncol(adj.matrix)) {
+        	
             #the diagonal (self cause) and the other invalid edges have not to be considered
             if(adj.matrix[i,j]!=0 || adj.matrix[j,i]!=0) {
+            	
                 #[i,j] refers to causation i --> j
                 #temporal priority condition: if P(i)>P(j) the edge i --> j is valid for temporal priority
                 #test i --> j
@@ -31,12 +34,14 @@ function(marginal.probs.distributions, pvalue, adj.matrix, edge.confidence.matri
                     #in this case the two distributions are exactly identical
                     first.pvalue.i.j = 1;
                 }
+                
                 #test j --> i
                 first.pvalue.j.i = wilcox.test(unlist(marginal.probs.distributions[j,1]),unlist(marginal.probs.distributions[i,1]),alternative="greater",mu=0)$p.value;
                 if(is.na(first.pvalue.j.i) || is.nan(first.pvalue.j.i)) {
                     #in this case the two distributions are exactly identical
                     first.pvalue.j.i = 1;
                 }
+                
                 #in this case i is before j and j --> i is not valid
                 if(first.pvalue.j.i>=pvalue && first.pvalue.i.j<pvalue) {
                     #[j,i] = 0 means j is after i, i.e. it can not be causing i
@@ -56,11 +61,13 @@ function(marginal.probs.distributions, pvalue, adj.matrix, edge.confidence.matri
                     curr.not.ordered[2,1] = j;
                     not.ordered[counter] = list(curr.not.ordered);
                 }
+                
                 #save the confidence for i --> j and j --> i
                 tmp = edge.confidence.matrix[[1,1]];
                 tmp[i,j] = first.pvalue.i.j;
                 tmp[j,i] = first.pvalue.j.i;
                 edge.confidence.matrix[1,1] = list(tmp);
+                
             }
             else {
                 tmp = edge.confidence.matrix[[1,1]];
@@ -68,10 +75,47 @@ function(marginal.probs.distributions, pvalue, adj.matrix, edge.confidence.matri
                 tmp[j,i] = 1;
                 edge.confidence.matrix[1,1] = list(tmp);
             }
+            
         }
     }
+    
+    #save the results and return them
     temporal.priority <- list(adj.matrix=adj.matrix,edge.confidence.matrix=edge.confidence.matrix,not.ordered=not.ordered);
+    return(temporal.priority);
+
+}
+
+
+#verify the temporal priority condition without bootstrap
+#INPUT:
+#marginal.probs: marginal probabilities
+#adj.matrix: adjacency matrix of the topology
+#RETURN:
+#temporal.priority: adjacency matrix where temporal priority is verified
+"verify.temporal.priority.no.boot" <-
+function(marginal.probs, adj.matrix) {
+	
+    for(i in 1:nrow(adj.matrix)) {
+        for(j in i:ncol(adj.matrix)) {
+            #the diagonal (self cause) and the other invalid edges have not to be considered
+            if(adj.matrix[i,j]!=0 || adj.matrix[j,i]!=0) {
+                #[i,j] refers to causation i --> j
+                #temporal priority condition: if P(i)>P(j) the edge i --> j is valid for temporal priority
+                if(marginal.probs[i,1]>marginal.probs[j,1]) {
+                    #in this case j --> i is not valid
+                    adj.matrix[j,i] = 0;
+                }
+                else {
+                    #in this case i --> j is not valid
+                    adj.matrix[i,j] = 0;
+                }
+            }
+        }
+    }
+    
+    #save the results and return them
+    temporal.priority = adj.matrix;
     return(temporal.priority);
 }
 
-#### end of file -- verify.temporal.priority.do.boot.R
+#### end of file -- verify.temporal.priority.R

@@ -39,4 +39,3 @@ t2$stages = t2$stages[ which(rownames(t2$stages) %in% rownames(t2$genotypes)), ,
 is.compliant(t2)
 test = sbind(t1, t2)
 is.compliant(test)
-

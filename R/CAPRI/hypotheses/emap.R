@@ -23,7 +23,7 @@ emap = function( label.event, dataset, annotations ) {
 		}
 	}
 	else {
-		stop("[ERR] Dataset must be available to define hypotheses!",call.=FALSE);
+		stop("[ERR] The dataset must be available to define hypotheses!",call.=FALSE);
 	}
 	results = list(col.num=col.num,events.name=events.name);
 	return(results);
