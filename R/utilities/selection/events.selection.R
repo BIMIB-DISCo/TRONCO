@@ -89,6 +89,8 @@
 rank.recurrents = function(x, n)
 {
 	is.compliant(x)
+    x = enforce.numeric(x)		
+
 	
 	if(n <= 0) stop('Rank value (n) should be positive.')
 	

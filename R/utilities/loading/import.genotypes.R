@@ -103,10 +103,7 @@ import.genotypes = function(geno, geno.annot=NA, stage.annot=NA, default.variant
 	# print(is.na(stage.annot))
 	# print(is.null(stage.annot))
 	
-	if(is.na(stage.annot))
-		is.compliant(x, 'import.genotypes', stage=FALSE)		
-	else
-    	is.compliant(x, 'import.genotypes', stage=TRUE)		
-	
+	is.compliant(x, 'import.genotypes: output')		
+
 	return(x)
  }
