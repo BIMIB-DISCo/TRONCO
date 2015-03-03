@@ -36,7 +36,7 @@ import.genotypes = function(geno, geno.annot=NA, stage.annot=NA, default.variant
 	x$annotations = matrix(0, nrow=nc, ncol=2)
 	colnames(x$annotations) = c('type', 'event')
 	
-	if(is.na(geno.annot))
+	if(all(is.na(geno.annot)))
 	{
 		# If no attribute is given, default 'variant' is used
 		x$annotations[, 'type']  = default.variant
@@ -46,7 +46,7 @@ import.genotypes = function(geno, geno.annot=NA, stage.annot=NA, default.variant
 		x$annotations = geno.annot # TODO: debug this...
 					
 	# We create a mapping from columns in x$genotypes and row names in x$attributes
-	names.map = paste('G', c(1:nc))
+	names.map = paste0('G', c(1:nc))
 	colnames(x$genotypes) = names.map
 	rownames(x$annotations) = names.map
 	
@@ -67,42 +67,17 @@ import.genotypes = function(geno, geno.annot=NA, stage.annot=NA, default.variant
 	
 	
 	# Add stage, if given as input
-	if(!any(is.na(stage.annot)))
+	if(!all(is.na(stage.annot)))
 	{
 		if(nrow(stage.annot) != nr)
 			cat(paste('Missing stage information for some samples (genotypes= ', nr, ', stages=', nrow(stage.annot),'), setting them as NA.\n', sep=''))
 				
 		x$stages = matrix('NA', nrow=nr, ncol=1)	
-		# x$stage = data.frame(row.names=rownames(x$genotypes))
-		# x$stage = cbind(as.character(stage.annot[rownames(x$stage), 1]))		
-		# print(x$stage)
-		# print(stage.annot[rownames(x$genotypes), 1])
 		rownames(x$stages) = rownames(x$genotypes)
-		# print(x$stage)
-		
-		# print(stage.annot)
 		x$stages[,1] = as.character(stage.annot[rownames(x$genotypes), 1])
-		# print(x$stage)
-		# print(rownames(x$stage))
-		
 		rownames(x$stages) = rownames(x$genotypes)
 	}
-	# print(x)
-	# else x$stage = NULL
-	# print(nrow(x$genotypes))
-	# print(nrow(as.matrix(x$stages)))
-	
-	# print('sss')
-	# print(as.matrix(x$stage))
-	 # print(nrow(x$stages))
-	 # print(nrow(x$genotypes))
-	 # print(dim(x$genotypes))
-	
-	 # print(nrow(x$stages) != nrow(x$genotypes))
-	
-	# print(is.na(stage.annot))
-	# print(is.null(stage.annot))
-	
+		
 	is.compliant(x, 'import.genotypes: output')		
 
 	return(x)
