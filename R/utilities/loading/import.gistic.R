@@ -4,7 +4,7 @@
 
 # TODO - Stages?
 
-"import.gistic" <- function(x, merge = FALSE, amp.del = FALSE) {
+"import.gistic" <- function(x, merge = FALSE, amp.del = FALSE, stage.annot = NA) {
 
 	cat('*** GISTIC input format conversion started.\n'); 	
 
@@ -12,18 +12,14 @@
 		stop('merge = amp.del = TRUE')
 
 	# For next operations it is convenient to have everything as 'char' rather than 'int'
-	# if(typeof(x) == typeof(list()))
-	# {
-		# rn = rownames(x)
-		# x= apply(x, 2, as.character) 
-		# rownames(x) = rn		
-	# }	
-	 # if(typeof(x) == typeof(list()))
-		# cat('Warning: maybe convert input to char should speed-up computation.')
+	if(typeof(x[,1]) != typeof("somechar"))
+	{
+		cat('Converting input data to character for import speedup.\n')
+		rn = rownames(x)
+		x = apply(x, 2, as.character) 
+		rownames(x) = rn		
+	}	
 	
-	# x <- data.frame(lapply(x, as.integer), stringsAsFactors=FALSE, row.names=rownames(x))
-    # x = as.matrix(sapply(x, as.numeric), stringsAsFactors=FALSE, row.names=rownames(x))  
-
 	if(any(is.na(x))) cat('Some entries are either NA or NaN and will be replaced with 0s.\n')
 	x[is.na(x)] = 0		
     
@@ -66,6 +62,13 @@
 		
 		d.cnv.all = ebind(ampl, del)
 		
+		if(!all(is.na(stage.annot))) 
+		{
+			cat('\nAdding stage annotation for samples.\n')
+			d.cnv.all$stages = stage.annot
+			d.cnv.all$stages = d.cnv.all$stages[rownames(d.cnv.all$genotypes), , drop = FALSE]		
+		}
+	
 		is.compliant(d.cnv.all, 'import.gistic: output')
 		return(d.cnv.all);
 	}
@@ -118,9 +121,18 @@
 		d.cnv.all = ebind(homo, het, low, high)
 	}
 	
+	print(is.na(stage.annot))
+	if(!all(is.na(stage.annot))) 
+	{
+		cat('Adding stage annotation for samples.\n')
+		d.cnv.all$stages = stage.annot
+		d.cnv.all$stages = d.cnv.all$stages[rownames(d.cnv.all$genotypes), , drop = FALSE]		
+	}
+	
 	cat(paste('*** Data extracted, returning ', ncol(d.cnv.all$genotypes),
 		' events (', length(unique(d.cnv.all$annotations[, 'event'])),' genes) and ', 
 		nrow(d.cnv.all$genotypes), ' samples.\n', sep=''));
+
 		
 	is.compliant(d.cnv.all, 'import.gistic: output')
 	# d.cnv.all <- d.cnv.all[,which(!apply(d.cnv.all ==0,2,all))]
