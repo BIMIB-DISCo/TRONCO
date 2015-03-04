@@ -69,7 +69,7 @@
 	y = list()
 	y$genotypes = x$genotypes[, valid]	
 	
-	y$annotations = as.matrix(x$annotations[valid, ])
+	y$annotations = as.matrix(x$annotations[valid, , drop = FALSE])
 	colnames(y$annotations) = c('type', 'event')
 	rownames(y$annotations) = colnames(y$genotypes)
 
