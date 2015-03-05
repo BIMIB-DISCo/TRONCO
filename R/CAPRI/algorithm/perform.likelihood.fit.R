@@ -17,7 +17,10 @@
 function(dataset, adj.matrix, command) {
 	
     #load the bnlearn library required for the likelihood fit with bic
-    require(bnlearn);
+    if (!require(bnlearn)) {
+      install.packages('bnlearn', dependencies = TRUE)
+      library(bnlearn)
+    }
     
     #adjacency matrix of the topology reconstructed by likelihood fit
     adj.matrix.bic = array(0,c(nrow(adj.matrix),ncol(adj.matrix)));
