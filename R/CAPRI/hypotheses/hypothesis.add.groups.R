@@ -9,8 +9,10 @@ hypothesis.add.group = function(x, FUN, group, ...) {
   effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
   effect = paste(effect, collapse = ', ')
 
-  cat(paste('*** Adding hypotheses for group: ', paste(group, collapse=', ', sep=''),
+  print(paste('*** Adding hypotheses for group: ', paste(group, collapse=', ', sep=''),
             ' with function ', op, ' and effect ', effect,'.\n', sep=''))
+      
+      
       
   ngroup = length(group)
   if(ngroup < 2) 
@@ -36,6 +38,8 @@ hypothesis.add.group = function(x, FUN, group, ...) {
   if (length(hom.group) > 0)
     cat('Genes with functional homologous found: ', unlist(hom.group), '\n')
   
+  flush.console() 
+
   # create a progress bar
   pb <- txtProgressBar(1, tot + 1, style = 3)
   pbPos = 2

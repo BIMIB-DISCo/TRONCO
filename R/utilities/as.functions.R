@@ -1,3 +1,11 @@
+# Return all genotypes. Colnames are the keys to access the database
+#
+# @x: the dataset.
+# @genes: a list of genes to query, if NA all genes are used.
+as.genotypes = function(x)
+{
+	return(x$genotypes)
+}
 
 # Return all samples IDs in the cohort.
 #

@@ -41,6 +41,8 @@ merge.types = function(x, ..., new.type='new.type', new.color='khaki') {
       
       # print pb
       cat('*** Merge \'', type.one, '\' and \'', type.two, '\'. \n', sep='')
+      	flush.console()
+
       pb <- txtProgressBar(1, nrow(cols), style = 3)
       
       for(i in 1:nrow(cols))

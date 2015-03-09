@@ -39,18 +39,23 @@ ebind = function(...)
     return(z)
   }
   
+  
 	input = list(...)
+
+  	cat('Binding events among ', length(input), ' datasets.\n')
 	
 	if(length(input) <= 1) return(input);
 		
 	# This could be done with a foldR
-  pb <- txtProgressBar(1, length(input), style = 3)
+	 flush.console()
+	 pb <- txtProgressBar(1, length(input), style = 3)
   
 	z = events.pairwise.bind(input[[1]], y=input[[2]])
   if (!(length(input) > 2)) {
-    # update pb
-    setTxtProgressBar(pb, 2)
-    return(z)
+     # update pb
+     setTxtProgressBar(pb, 2)
+      close(pb)
+	return(z)
   }
 	
   for(i in 3:length(input))

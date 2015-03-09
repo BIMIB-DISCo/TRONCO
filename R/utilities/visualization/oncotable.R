@@ -22,6 +22,8 @@ genes.table.report = function(x, name, dir=getwd(), maxrow=33,
     # max rows per page	
     npages = ceiling(nrow(table)/maxrow); 
     
+    	flush.console()
+
     pb = txtProgressBar(1, npages, style = 3);      
     for (i in 1:npages) 
     {

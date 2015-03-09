@@ -1,4 +1,3 @@
-
 # oncoPrint : plot a genotype
 # 
 # @param excl.soft A number
@@ -204,7 +203,7 @@ oncoprint <- function(x,
   }
   
   # Augment title
-  title = paste(title, '\n n = ', nsamples(x),' \t m = ', nevents(x), ' \t |G| = ', ngenes(x),  sep='')
+  title = paste(title, '\n n = ', nsamples(x),'    m = ', nevents(x), '    |G| = ', ngenes(x),  sep='')
   
   # Pheatmap
   if(ann.score == TRUE || ann.stage == TRUE || hasGroups)  
@@ -282,7 +281,6 @@ pathway.visualization = function(x, file, aggregate.pathways, names, ...)
                                        pathway.name=names[i], aggregate.pathway = aggregate.pathways))
   	}
   }
-  print(as.events(data.pathways))
 
 
   oncoprint(trim(data.pathways), title=paste('Pathways:', paste(names, collapse=', ', sep='')), 

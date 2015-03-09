@@ -73,7 +73,7 @@ delete.gene <- function(x, gene) {
     x$annotations = x$annotations[ -which (rownames(x$annotations) %in% drops), ]
     
     # TO DO: something better than this t(t(...))
-    x$types = t(t(x$types[ which(rownames(x$types) %in% unique(x$annotations[,"type"])), ]))
+    x$types = x$types[ which(rownames(x$types) %in% unique(x$annotations[,"type"])), , drop=FALSE]
     colnames(x$types) = 'color'
   } else {
     stop(paste(gene, 'not in as.types(x)'))

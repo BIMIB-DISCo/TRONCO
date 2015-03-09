@@ -46,6 +46,8 @@ function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, recon
   
   
   	# create a progress bar
+  		flush.console()
+
 	pb <- txtProgressBar(1, nboot, style = 3);
   
     for (num in 1:nboot) {
