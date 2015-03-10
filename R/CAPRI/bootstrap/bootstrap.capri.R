@@ -44,6 +44,7 @@ function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, recon
     colnames(bootstrap.results.bic) = colnames(dataset);
 	#perform nboot bootstrap resampling
   
+  
   	# create a progress bar
 	pb <- txtProgressBar(1, nboot, style = 3);
   
@@ -60,7 +61,7 @@ function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, recon
 			if(check.data$is.valid==TRUE) {
 				bootstrapped.dataset = check.data$dataset;
 				curr.hypotheses = hypotheses;
-				if(!is.na(check.data$invalid.events$removed.events[1])) {
+				if(!is.na(check.data$invalid.events$removed.events[1]) && !is.na(curr.hypotheses)) {
 					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%colnames(dataset)[check.data$invalid.events$removed.events]));
 				}
 				bootstrapped.hypotheses = curr.hypotheses;
@@ -121,7 +122,7 @@ function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, recon
 			if(check.data.pf$is.valid==TRUE) {
 				bootstrapped.dataset = check.data.pf$dataset;
 				curr.hypotheses = hypotheses;
-				if(!is.na(check.data.pf$invalid.events$removed.events[1])) {
+				if(!is.na(check.data.pf$invalid.events$removed.events[1]) && !is.na(curr.hypotheses)) {
 					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%colnames(dataset)[check.data$invalid.events$removed.events]));
 				}
 				bootstrapped.hypotheses = curr.hypotheses;
@@ -148,7 +149,7 @@ function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, recon
 			if(check.data.bic$is.valid==TRUE) {
 				bootstrapped.dataset = check.data.bic$dataset;
 				curr.hypotheses = hypotheses;
-				if(!is.na(check.data.bic$invalid.events$removed.events[1])) {
+				if(!is.na(check.data.bic$invalid.events$removed.events[1]) && !is.na(curr.hypotheses)) {
 					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%colnames(dataset)[check.data$invalid.events$removed.events]));
 				}
 				bootstrapped.hypotheses = curr.hypotheses;
