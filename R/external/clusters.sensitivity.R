@@ -58,8 +58,12 @@
    
   # Create annotations
   cn = colnames(cluster.map)
-  annotation = data.frame(stage = stages[cn,1], sensitivity=score, row.names=cn, stringsAsFactors=FALSE)
 
+  annotation = data.frame(sensitivity=score, row.names=cn, stringsAsFactors=FALSE)
+
+  if(!is.na(stages))
+  	annotation$stage = stages[cn,1]
+  	
   # Create colors 
   col = brewer.pal(n = length(id), name = 'Set1')
 

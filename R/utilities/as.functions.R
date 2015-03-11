@@ -126,7 +126,7 @@ duplicates = function(x) {
 show = function(x, view = 10)
 {
   is.compliant(x)
-  x = enforce.numeric(x)
+    x = enforce.numeric(x)
 	view = min(view, nevents(x))
     
 	cat(paste('Dataset: n=', nsamples(x), ', m=', nevents(x), ', |G|=', ngenes(x), '.\n', sep=''))
