@@ -1,4 +1,4 @@
-TCGA.multiple.samples = function(x)
+TCGA.multiple.samples.per.patient = function(x)
 {
   is.compliant(x)
   
@@ -21,16 +21,23 @@ TCGA.remove.multiple.samples = function(x)
 {
   is.compliant(x, err.fun='Removing TCGA multiple samples (input)')
 
-  dup = TCGA.duplicated.samples(x)
+  dup = TCGA.multiple.samples(x)
   dup.truncated = substring(dup, 0, 12)
   patients = unique(dup.truncated)
 
   for(i in 1:length(patients))
   {
-    cat('Patient', patients[i], 'with sample aliquotes\n' )
     patients.samples = which(dup.truncated == patients[i])
-    print(substring(dup[patients.samples], 14, 29))
-    cat('Selecting', max(dup[patients.samples]), '\n')
+    multiple.samples = dup[patients.samples]
+    
+    cat('Patient', patients[i], 'with sample aliquotes\n' )
+    print(substring(multiple.samples, 14, 29))
+
+    keep = max(multiple.samples)
+    discard = multiple.samples[which(multiple.samples != keep)]
+    
+    cat('Selecting', keep, '\n')
+    x = delete.samples(x, discard)
   }
     
   is.compliant(x, err.fun='Removing TCGA multiple samples (output)')
@@ -42,10 +49,10 @@ TCGA.shorten.barcodes = function(x)
   is.compliant(x, err.fun='Shartening TCGA barcodes (input)')
 
   # Check if it has duplicated barcodes
-  if(!all(is.na(TCGA.duplicated.samples(x))))
+  if(!all(is.na(TCGA.multiple.samples.per.patient(x))))
     stop(
       paste('This dataset contains multiple samples for some patients - cannot consolidate.',
-            '\n Samples with barcodes indicating multiple patients: \n', paste(TCGA.duplicated.samples(x), collapse = '\n'), '.'
+            '\n Samples with barcodes indicating multiple patients: \n', paste(TCGA.multiple.samples.per.patient(x), collapse = '\n'), '.'
             , sep =''))
   
   # Shorten sample barcodes
@@ -56,4 +63,26 @@ TCGA.shorten.barcodes = function(x)
   return(x)    
 }
   
+
+TCGA.map.clinical.data = function(file, sep='\t', column.samples, column.map)
+{
   
+  data = read.delim(
+    file = file,
+    sep = sep,
+    header = TRUE,
+    stringsAsFactors=F)
+  
+  if(!(column.samples %in% colnames(data))) 
+    stop(paste('Cannot find samples column \"', column.samples, '\". Available columns: \n\t',
+               paste(colnames(data), collapse='\n\t'), sep = ''))
+  
+  if(!(column.map %in% colnames(data))) 
+    stop(paste('Cannot find required map column \"', column.map, '\". Available columns: \n\t',
+               paste(colnames(data), collapse='\n\t'), sep = ''))
+  
+  map = data.frame(data[, column.map], row.names = data[, column.samples])
+  colnames(map) = column.map
+  
+  return(map)
+}

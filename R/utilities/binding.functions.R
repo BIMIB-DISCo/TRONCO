@@ -42,7 +42,7 @@ ebind = function(...)
   
 	input = list(...)
 
-  	cat('Binding events among ', length(input), ' datasets.\n')
+  cat('*** Binding events for', length(input), 'datasets.\n')
 	
 	if(length(input) <= 1) return(input);
 		

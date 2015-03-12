@@ -117,7 +117,7 @@ hypothesis.add.group = function(x, FUN, group, ...) {
 }
 
 
-hypothesis.add.homologous = function(x, ..., genes = as.genes(x)){
+hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN='OR'){
   # in questa funzione, per ogni gene che ha più di un tipo di alterazione
   # aggiungo l'OR
   
@@ -138,8 +138,8 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x)){
     setTxtProgressBar(pb, i)
     
     hypo.add = paste0('hypothesis.add(x, label.formula = \'', 
-                      'OR_', hom.group[[i]], 
-                      '\', lifted.formula = OR(\'',
+                      FUN, '_', hom.group[[i]], 
+                      '\', lifted.formula = ', FUN, '(\'',
                       hom.group[[i]],
                       '\'), ',
                       effect, 

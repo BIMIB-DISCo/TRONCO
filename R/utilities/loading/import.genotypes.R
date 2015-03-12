@@ -46,7 +46,7 @@ import.genotypes = function(geno, geno.annot=NA, stage.annot=NA, default.variant
 		x$annotations = geno.annot # TODO: debug this...
 					
 	# We create a mapping from columns in x$genotypes and row names in x$attributes
-	names.map = paste0('G', c(1:nc))
+	names.map = paste0('G', c(1:nc), sep='')
 	colnames(x$genotypes) = names.map
 	rownames(x$annotations) = names.map
 	
@@ -54,7 +54,7 @@ import.genotypes = function(geno, geno.annot=NA, stage.annot=NA, default.variant
 	num.types = length(unique(x$annotations[, 'type']))
 	
 	x$types = matrix(0, nrow=num.types, ncol=1)
-	rownames(x$types) = unique(x$annotations[,1])
+	rownames(x$types) = unique(x$annotations[, 1])
 	colnames(x$types) = c('color')
 
 	# If the input color is a ColorBrewer scheme

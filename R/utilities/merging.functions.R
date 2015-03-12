@@ -137,3 +137,6 @@ merge.types = function(x, ..., new.type='new.type', new.color='khaki') {
   return(z)
   
 }
+
+
+

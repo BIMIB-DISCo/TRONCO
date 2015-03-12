@@ -263,7 +263,7 @@ tronco.plot = function(x,
   # get hypotheses
   hypotheses = data$hypotheses
   hstruct = NULL
-  if (!is.null(hypotheses)) {
+  if (!is.null(hypotheses) && !is.na(hypotheses) ) {
     hstruct = hypotheses$hstructure
   }
   
@@ -495,9 +495,9 @@ tronco.plot = function(x,
     }
   }
   
-  cur.dev = dev.cur()
+  #cur.dev = dev.cur()
   
-  pdf(file=paste(name, as.character(disconnected), '.', as.character(pf),'.pdf', sep=''), height=11, width=8.5)
+  #pdf(file=paste(name, as.character(disconnected), '.', as.character(pf),'.pdf', sep=''), height=11, width=8.5)
   plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title)
   # Adds the legend to the plot
   if (legend) {
@@ -512,24 +512,5 @@ tronco.plot = function(x,
            col = legend_colors,
            xjust = 1,
            xpd = TRUE)
-  }
-  
-  dev.off()
-  dev.set(which=cur.dev)
-  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title)
-  # Adds the legend to the plot.
-  if (legend) {
-    legend(legend.pos,
-           legend = legend_names,
-           title = legend.title,
-           bty = 'n',
-           cex = legend.coeff,
-           pt.cex = 1.5,
-           pch = c(19,19),
-           ncol = legend.columns,
-           col = legend_colors,
-           xjust = 1,
-           xpd = TRUE)
-  }
-  
+  }  
 }

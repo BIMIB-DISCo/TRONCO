@@ -31,7 +31,7 @@ rename.gene <- function(x, old.name, new.name) {
   
   if (old.name %in% as.genes(x)) {
     x$annotations[ which(x$annotations[,'event'] == old.name), 'event' ] = new.name
-
+    
   } else {
     stop(paste(old.name, 'not in as.genes(x)'))
   }
@@ -43,9 +43,9 @@ rename.gene <- function(x, old.name, new.name) {
 delete.type <- function(x, type) {
   # if is compliant x
   is.compliant(x)
-
+  
   if (type %in% as.types(x)) {
-
+    
     drops = rownames(x$annotations[ x$annotations[, "type"] == type,])
     x$genotypes = x$genotypes[, -which( colnames(x$genotypes) %in% drops )]
     x$annotations = x$annotations[ -which (rownames(x$annotations) %in% drops), ]
@@ -106,15 +106,87 @@ delete.samples = function(x, samples) {
       del = append(del, sample)
     }
   }
-
+  
   x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, ]
   
   if("stages" %in% names(x)) {
-    x$stages = x$stages[!rownames(x$stages) %in% del, ]
+    x$stages = x$stages[!rownames(x$stages) %in% del, , drop=FALSE]
   }
   
   is.compliant(x)
   
-  x = trim(x)
+  return(x)
+}
+
+intersect.datasets = function(x,y)
+{
+  is.compliant(x)
+  is.compliant(y)
+  
+  # Common samples and genes
+  samples = intersect(as.samples(x), as.samples(y))
+  genes = intersect(as.genes(x), as.genes(y))
+  
+  report = data.frame(row.names = c('Samples', 'Genes'))
+  report$x = c(nsamples(x), ngenes(x))
+  report$y = c(nsamples(y), ngenes(y))
+  
+  # Restrict genes
+  x = events.selection(x, filter.in.names=genes)
+  y = events.selection(y, filter.in.names=genes)
+  
+  # TODO: check they have no events in common!
+  # if(as.events(x) )
+  
+  # Restric stamples
+  x = samples.selection(x, samples)
+  y = samples.selection(y, samples)
+  
+  # Result
+  z = ebind(x,y)
+  
+  
+  cat('*** Intersect dataset\n')
+  report$result = c(nsamples(z), ngenes(z))
+  print(report)
+  
+  return(z)    
+}
+
+annotate.stages = function(x, stages, match.TCGA.patients = FALSE)
+{
+  if(is.null(rownames(stages))) stop('Stages have no rownames - will not add annotation.')
+  
+  samples = as.samples(x)
+  
+  # Just for temporary - will be shortened to make a simple check...
+  samples.temporary = samples
+  if(match.TCGA.patients) samples.temporary = substring(samples.temporary, 0, 12)
+  
+  if(!any(samples.temporary %in% rownames(stages))) 
+    stop('There are no stages for samples in input dataset - will not add annotation.')  
+  
+  # Notify if something gets lost
+  if(has.stages(x)) warning('Stages in input dataset overwritten.')
+  
+  # Actual stages
+  x$stages = data.frame(row.names = samples, stringsAsFactors=FALSE)
+  x$stages[, 'stage'] = as.character(NA)
+  
+  for(i in 1:nsamples(x))
+  {
+    if(!match.TCGA.patients)
+      x$stages[i, ] = as.character(stages[as.samples(x)[i], ])
+    else 
+    {    
+      # Potential match if x's samples are long TCGA barcodes and stages are TCGA patients barcdodes (short)
+      short.name = substring(as.samples(x)[i], 0 , 12)
+      x$stages[i, 'stage'] = as.character(stages[short.name, ])
+    }
+  }
+  
+  count.na = is.na(x$stages)
+  if(any(count.na)) warning(paste(length(which(count.na)), ' missing stages were added as NA.'))
+  
   return(x)
 }
