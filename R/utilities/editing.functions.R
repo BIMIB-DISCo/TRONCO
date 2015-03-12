@@ -92,3 +92,29 @@ change.color = function(x, type, new.color)
   is.compliant(x)
   return(x)
 }
+
+delete.samples = function(x, samples) {
+  is.compliant(x)
+  
+  del = list()
+  actual.samples = as.samples(x)
+  samples = unique(samples)
+  for (sample in samples) {    
+    if(!sample %in% actual.samples) {
+      warning('Sample: ', sample, ' not in as.samples(x)')
+    } else {
+      del = append(del, sample)
+    }
+  }
+
+  x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, ]
+  
+  if("stages" %in% names(x)) {
+    x$stages = x$stages[!rownames(x$stages) %in% del, ]
+  }
+  
+  is.compliant(x)
+  
+  x = trim(x)
+  return(x)
+}
