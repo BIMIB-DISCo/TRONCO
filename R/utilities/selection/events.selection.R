@@ -22,9 +22,11 @@
 	{	
 		cat(paste('\nExtracting events with a minimum frequency of ', filter.freq, ' (', 
               round(nsamples(x) * filter.freq, 0),' alterations out of ', nsamples(x),' samples).\n', sep=''))
-    x = enforce.numeric(x)		
+        x = enforce.numeric(x)		
     
-		pb = txtProgressBar(1, nevents(x), style = 3);      
+	    	flush.console()
+
+		pb = txtProgressBar(1, nevents(x), style = 3)      
 		for(i in 1:nevents(x))
 		{		
 		  setTxtProgressBar(pb, i)  

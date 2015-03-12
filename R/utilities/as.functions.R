@@ -1,3 +1,11 @@
+# Return all genotypes. Colnames are the keys to access the database
+#
+# @x: the dataset.
+# @genes: a list of genes to query, if NA all genes are used.
+as.genotypes = function(x)
+{
+	return(x$genotypes)
+}
 
 # Return all samples IDs in the cohort.
 #
@@ -118,7 +126,7 @@ duplicates = function(x) {
 show = function(x, view = 10)
 {
   is.compliant(x)
-  x = enforce.numeric(x)
+    x = enforce.numeric(x)
 	view = min(view, nevents(x))
     
 	cat(paste('Dataset: n=', nsamples(x), ', m=', nevents(x), ', |G|=', ngenes(x), '.\n', sep=''))

@@ -1,4 +1,3 @@
-
 # oncoPrint : plot a genotype
 # 
 # @param excl.soft A number
@@ -7,9 +6,9 @@
 # @param device.new=FALSE 
 # @param file=NA
 # @param ann.stage=TRUE Show information about stage classification
-# @param ann.score=TRUE Show information about the score of a mutation
+# @param ann.hits=TRUE Show information about the hits in a gene
 # @param stage.color='YlOrRd' Color Palette to use with stage
-# @param score.color = 'Purples' Color Palette to use with score
+# @param hits.color = 'Purples' Color Palette to use with score
 # @param null.color='darkgray' Background color
 # @param border.color='white' 
 # @param font.size=7
@@ -22,10 +21,10 @@ oncoprint <- function(x,
                       col.cluster=FALSE, 
                       row.cluster=FALSE, 
                       file=NA, 
-                      ann.stage=TRUE, 
-                      ann.score=TRUE, 
+                      ann.stage = has.stages(x), 
+                      ann.hits=TRUE, 
                       stage.color='YlOrRd', 
-                      score.color = 'Purples',  
+                      hits.color = 'Purples',  
                       null.color='lightgray', 
                       border.color='white', 
                       font.size=7, 
@@ -74,7 +73,7 @@ oncoprint <- function(x,
     return(res);
   }
   
-  cat(paste('*** Oncoprint with attributes: stage=', ann.stage, ', score=', ann.score, '\n', sep=''))
+  cat(paste('*** Oncoprint with attributes: stage=', ann.stage, ', hits=', ann.hits, '\n', sep=''))
   is.compliant(x, 'oncoprint', stage=ann.stage)
   x = enforce.numeric(x)
   
@@ -129,22 +128,22 @@ oncoprint <- function(x,
   cn = colnames(data)
   rn = rownames(data)
   
-  ##### Heatmap annotations: score (total 1s per sample), stage or groups
+  ##### Heatmap annotations: hits (total 1s per sample), stage or groups
   nmut = colSums(data)
-  if(ann.score == TRUE && ann.stage == FALSE) annotation = data.frame(score=nmut)
-  if(ann.score == FALSE && ann.stage == TRUE) annotation = data.frame(stage=as.stages(x)[cn, 1])
-  if(ann.score == TRUE && ann.stage == TRUE)  annotation = data.frame(stage=as.stages(x)[cn, 1], score=nmut)
+  if(ann.hits == TRUE && ann.stage == FALSE) annotation = data.frame(hits=nmut)
+  if(ann.hits == FALSE && ann.stage == TRUE) annotation = data.frame(stage=as.stages(x)[cn, 1])
+  if(ann.hits == TRUE && ann.stage == TRUE)  annotation = data.frame(stage=as.stages(x)[cn, 1], hits=nmut)
   if(hasGroups) annotation$group = as.factor(group.samples[cn, 1])
 
   ##### Color each annotation 
-  if(ann.score || ann.stage || hasGroups) {
+  if(ann.hits || ann.stage || hasGroups) {
     rownames(annotation) = cn
     annotation_colors = list()
   }
 
-  if(ann.score == T){
-    score.gradient = (colorRampPalette(brewer.pal(6, score.color))) (max(nmut))
-    annotation_colors = append(annotation_colors, list(score=score.gradient))
+  if(ann.hits == T){
+    hits.gradient = (colorRampPalette(brewer.pal(6, hits.color))) (max(nmut))
+    annotation_colors = append(annotation_colors, list(hits=hits.gradient))
   }
   
   if(ann.stage == T){ 
@@ -193,7 +192,7 @@ oncoprint <- function(x,
   # Augment gene names with frequencies and prepare legend labels
   gene.names = x$annotations[rownames(data),2]
   rownames(data) = paste(round(100 * genes.freq, 0) ,'% ', gene.names, sep='')
-  legend.labels = c('0', unique(x$annotations[,1]))
+  legend.labels = c('none', unique(x$annotations[,1]))
     
   legend.labels = legend.labels[1:(max(data)+1)]
   
@@ -204,10 +203,10 @@ oncoprint <- function(x,
   }
   
   # Augment title
-  title = paste(title, '\n n = ', nsamples(x),' \t m = ', nevents(x), ' \t |G| = ', ngenes(x),  sep='')
+  title = paste(title, '\n n = ', nsamples(x),'    m = ', nevents(x), '    |G| = ', ngenes(x),  sep='')
   
   # Pheatmap
-  if(ann.score == TRUE || ann.stage == TRUE || hasGroups)  
+  if(ann.hits == TRUE || ann.stage == TRUE || hasGroups)  
     pheatmap(data, 
              scale = "none", 
              col = map.gradient, 
@@ -282,7 +281,6 @@ pathway.visualization = function(x, file, aggregate.pathways, names, ...)
                                        pathway.name=names[i], aggregate.pathway = aggregate.pathways))
   	}
   }
-  print(as.events(data.pathways))
 
 
   oncoprint(trim(data.pathways), title=paste('Pathways:', paste(names, collapse=', ', sep='')), 
