@@ -1,4 +1,4 @@
-TCGA.multiple.samples.per.patient = function(x)
+TCGA.multiple.samples = function(x)
 {
   is.compliant(x)
   
