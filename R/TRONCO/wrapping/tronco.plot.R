@@ -85,6 +85,22 @@ hypotheses.expansion <- function(input_matrix,
       for (node in final_node) {
         min_graph <- min_graph + edge(initial_node, node)
       }
+
+      # check if there are edge from atomic to hypo and recreate them
+      h_edge_in <- input_matrix[,h]
+      in_node <- names(h_edge_in)[which(h_edge_in==1)]
+      node_in_hypo = V(hypo_graph)$name
+      atomic_node_in_hypo = list()
+      for (node in node_in_hypo) {
+        if(!is.logic.node(node))
+        atomic_node_in_hypo = append(atomic_node_in_hypo, node)
+      }
+
+      for (pre in in_node) {
+        for (post in atomic_node_in_hypo) {
+          min_graph <- min_graph + edge(pre, post)
+        }
+      }
       
     }
     min_matrix = get.adjacency(min_graph, sparse = F)
@@ -152,13 +168,23 @@ hypotheses.expansion <- function(input_matrix,
   and_matrix = and_matrix[,order(colnames(and_matrix))]
   and_matrix = and_matrix[order(rownames(and_matrix)),]
   
-  #print(and_matrix)
-  
   # print(and_matrix)
   if(!is.null(conf_matrix)) {
     return(list(and_matrix, conf_matrix))
   }
   return(and_matrix)
+}
+
+is.logic.node <- function(node) {
+  if(substr(node, start=1, stop=3) == 'OR_')
+    return(TRUE)
+  if(substr(node, start=1, stop=4) == 'XOR_')
+    return(TRUE)
+  if(substr(node, start=1, stop=4) == 'AND_')
+    return(TRUE)
+  if(substr(node, start=1, stop=4) == 'NOT_')
+    return(TRUE)
+  return(FALSE)
 }
 
 ###########################
