@@ -19,11 +19,13 @@ hypotheses.expansion <- function(input_matrix,
   
   # get node list
   node_list <- colnames(input_matrix)
+  #print('input matrix')
   #print(input_matrix)
   
   # cut input matrix
   margin = length(node_list) - num_hypos
-  
+
+  cat('*** Hypos expansion:')
   # check if there are hypotheses
   if (num_hypos == 0) {
     # if no hypos do nothings..
@@ -89,8 +91,12 @@ hypotheses.expansion <- function(input_matrix,
     
   }
   
+  cat(' done')
+  
   # now expand the hidden AND
-  # print(min_matrix)
+  #print(min_matrix)
+  
+  cat('\n*** Expand hidden and:')
   
   and_matrix = NULL
   to_reconnect = list()
@@ -140,9 +146,13 @@ hypotheses.expansion <- function(input_matrix,
     and_matrix[paste0("*_", row),row] = 1
   }
   
+  cat(' done')
+  
   # sort col and row (igraph wants the same order)
   and_matrix = and_matrix[,order(colnames(and_matrix))]
   and_matrix = and_matrix[order(rownames(and_matrix)),]
+  
+  #print(and_matrix)
   
   # print(and_matrix)
   if(!is.null(conf_matrix)) {
@@ -188,9 +198,9 @@ hypotheses.expansion <- function(input_matrix,
 #' \dontrun{
 #'     types.load("data/types.txt");
 #'     events.load("data/events.txt");
-#'   	data.load("data/CGH.txt");
-#'   	topology <- tronco.caprese();
-#'   	tronco.plot(curr.topology, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
+#'    data.load("data/CGH.txt");
+#'    topology <- tronco.caprese();
+#'    tronco.plot(curr.topology, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
 #' }
 tronco.plot = function(x, 
                      fontsize=18, 
@@ -222,7 +232,8 @@ tronco.plot = function(x,
   }
   
   if (!require(Rgraphviz)) {
-    install.packages('Rgraphviz', dependencies = TRUE)
+    source("http://bioconductor.org/biocLite.R")
+    biocLite("Rgraphviz")
     library(Rgraphviz)
   }
   
@@ -235,6 +246,8 @@ tronco.plot = function(x,
   if(confidence && !exists('bootstrap', where=x)) {
     stop("To show confidence information, bootstrap execution is needed! See: the function tronco.bootstrap.", call.=FALSE);
   }
+  
+  logical_op = list("AND", "OR", "NOT", "XOR", "*")
   
   # get TRONCO object
   data = x$data
@@ -249,6 +262,10 @@ tronco.plot = function(x,
   if (pf) {
     c_matrix = adj.matrix$adj.matrix.pf
     marginal_p = x$probabilities$probabilities.pf$marginal.probs
+  }
+  
+  if (all(c_matrix == F)) {
+    stop('No edge in adjacency matrix! Nothing to show here.')
   }
   
   if (confidence) {
@@ -276,16 +293,22 @@ tronco.plot = function(x,
     conf_matrix = expansion[[2]]
   }
   
+  #print(hypo_mat)
+  
   # remove disconnected nodes
-  if(!disconnected) {	
+  if(!disconnected) { 
     del = which(rowSums(hypo_mat)+colSums(hypo_mat) == 0 )
     w = !(rownames(hypo_mat) %in% names(del))
     hypo_mat = hypo_mat[w,]
     hypo_mat = hypo_mat[,w]
   }
   
+  cat('\n*** Render graphics: ')
+  
   attrs = list(node = list(fixedsize = fixed.size))
       
+  #print(hypo_mat)
+  
   hypo_graph = graph.adjacency(hypo_mat)
   v_names = gsub("_.*$", "", V(hypo_graph)$name)
   new_name = list()
@@ -297,6 +320,10 @@ tronco.plot = function(x,
       new_name = append(new_name, v)
     }
   }
+    
+  #print(new_name)
+  #print(hypo_graph)
+  
   V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
 
@@ -323,8 +350,7 @@ tronco.plot = function(x,
   names(nAttrs$width) = node_names
   
   if (node.th.on) {
-    logical_op = list("AND", "OR", "NOT", "XOR", "*")
-
+    
     # foreach node
     for (node in node_names) {
       prefix = gsub("_.*$", "", node)
@@ -420,6 +446,8 @@ tronco.plot = function(x,
   eAttrs$logic = rep(F, length(edge_names))
   names(eAttrs$logic) = edge_names
   
+  cat('done')
+  
   if(confidence) {
     # for each edge..
     for(e in edge_names) {
@@ -450,28 +478,50 @@ tronco.plot = function(x,
       }
     }
   }
+
+  # remove arrows from logic node (hidden and)
+  for(e in edge_names) {
+    edge = unlist(strsplit(e, '~'))
+    from = substr(edge[1], start=1, stop=1)
+    
+    if (from == '*') {
+      eAttrs$logic[e] = T
+      eAttrs$color[e] = 'darkblue'
+    } 
+  }
   
   if(pf) {
     # for each edge..
     bic = adj.matrix$adj.matrix.bic
-    # print(bic)
+    #print(bic)
+    #print('logic edge')
+    #print(eAttrs$logic)
     
-    print(rownames(bic))
+    #print(rownames(bic))
     for(e in edge_names) {
       edge = unlist(strsplit(e, '~'))
       from = edge[1]
       to = edge[2]
+      if (substr(to, start=1, stop=1) == '*') {
+        to = substr(to, start=3, stop=nchar(to))
+      }
+      
       # ..checks if edge is present in BIC
 
-      print(paste('from:', from, 'to:', to))
-      # check if edge in BIC and not logic edge and to is not a fake and
-      if ( !(from %in% rownames(bic) && to %in% colnames(bic)) 
-           && !eAttrs$logic[e]
+      #print(paste('from:', from, 'to:', to))
+      #cat('\nfrom in bic? ', (from %in% rownames(bic)))
+      #cat('\nto in bic? ', (to %in% rownames(bic)))
+      #cat('\n!eAttrs$logic[e]', !eAttrs$logic[e], '\n')
+      # check if edge in BIC (valid only if not logic edge) and 'to' is not a fake and
+      if ( (from %in% rownames(bic)) &&
+           (to %in% colnames(bic)) &&
+           !eAttrs$logic[e] &&
+           bic[from, to] == 0
            ) {
-        print("prima facie!!!")
+        #print("prima facie!!!")
         eAttrs$color[e] = 'red'
       } else {
-        print('no PF!')
+        #print('no PF!')
       }
     }
   }
