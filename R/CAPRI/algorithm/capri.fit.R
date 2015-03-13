@@ -28,8 +28,8 @@ function(dataset, hypotheses = NA, command = "hc", do.boot = TRUE, nboot = 100, 
 	#consider the hypotheses if any
 	if(!is.na(hypotheses[1])) {
 		#set the invalid entries in the adj.matrix
-		#neither atomic events nor hypotheses can be causing any other hypothesis
-		adj.matrix[,(ncol(adj.matrix)-hypotheses$num.hypotheses+1):ncol(adj.matrix)] = 0;
+		#hypotheses can not be causing other hypotheses
+		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):ncol(adj.matrix),(ncol(adj.matrix)-hypotheses$num.hypotheses+1):ncol(adj.matrix)] = 0;
 		#consider the given hypotheses only toward the specified possible effects
 		hypotheses.matrix = array(0,c(hypotheses$num.hypotheses,ncol(adj.matrix)-hypotheses$num.hypotheses));		
 		for (i in 1:nrow(hypotheses$hlist)) {
@@ -40,6 +40,13 @@ function(dataset, hypotheses = NA, command = "hc", do.boot = TRUE, nboot = 100, 
 			}
 		}
 		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix),1:(ncol(adj.matrix)-hypotheses$num.hypotheses)] = hypotheses.matrix;
+		for(j in (ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix)) {
+			for(k in 1:(ncol(adj.matrix)-hypotheses$num.hypotheses)) {
+				if(adj.matrix[j,k] == 0) {
+					adj.matrix[k,j] = 0;
+				}
+			}
+		}
 	}
 	
 	#reconstruct the prima facie topology
