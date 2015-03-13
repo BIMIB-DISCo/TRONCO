@@ -49,10 +49,10 @@ TCGA.shorten.barcodes = function(x)
   is.compliant(x, err.fun='Shartening TCGA barcodes (input)')
 
   # Check if it has duplicated barcodes
-  if(!all(is.na(TCGA.multiple.samples.per.patient(x))))
+  if(!all(is.na(TCGA.multiple.samples(x))))
     stop(
       paste('This dataset contains multiple samples for some patients - cannot consolidate.',
-            '\n Samples with barcodes indicating multiple patients: \n', paste(TCGA.multiple.samples.per.patient(x), collapse = '\n'), '.'
+            '\n Samples with barcodes indicating multiple patients: \n', paste(TCGA.multiple.samples(x), collapse = '\n'), '.'
             , sep =''))
   
   # Shorten sample barcodes
