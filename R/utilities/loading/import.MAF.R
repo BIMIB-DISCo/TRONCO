@@ -39,8 +39,8 @@
 	{
 	  if(!('Validation_Status' %in% colnames(x)))
 	    warning('Missing Validation_Status flag in MAF file.')
-	  
-	  return(which(x[, 'Validation_Status'] == 'Valid'))
+	  else
+	    return(which(x[, 'Validation_Status'] == 'Valid'))
 	}
   
   as.TCGA.patients = function(x)
