@@ -71,7 +71,7 @@
     cat('[TCGA = TRUE] Number of TCGA patients:', length(TCGA.patients), '\n')
 
     if(length(TCGA.patients) != length(MAF.samples))
-      warning('This MAF contains duplicate samples for some patients - use TCGA.duplicate.samples() for further information')
+      warning('This MAF contains duplicate samples for some patients - use TCGA functions for further information')
   }      
   
   which.valid.calls = valid.calls(maf)
@@ -107,12 +107,29 @@
 	close(pb)
 	
 	cat('Starting conversion from MAF to TRONCO data type.\n')
-	tronco.data = import.genotypes(binary.mutations)
+	tronco.data = import.genotypes(binary.mutations, default.variant = 'Mutation')
   is.compliant(tronco.data)
 
 	return(tronco.data)
 }
 
-
 #data = import.MAF('TCGA_CRC_Suppl_Table2_Mutations_20120719.csv', sep=';', is.TCGA = F)
 #show(data)
+
+extract.MAF.HuGO.Entrez.map = function(file, sep='\t') 
+{
+  cat('*** Importing from file: ', file, ' ... ')
+  
+  maf = read.delim(file, comment.char = "#", sep = sep, header = TRUE, stringsAsFactors = FALSE)    
+  cat('DONE\n')
+  
+  map = unique(maf[, c('Hugo_Symbol', 'Entrez_Gene_Id')])
+  map.missing = which(map[, 'Entrez_Gene_Id'] == 0)
+  map.missing = map[map.missing, 'Hugo_Symbol', drop = FALSE]
+  
+  if(nrow(map.missing) > 0) warning('The are Hugo_Symbol with Entrez_Gene_Id equal to 0')
+  else cat('Map seem consistent (non-zero Entrez_Gene_Id) for', nrow(map), 'genes')
+  
+  return(map)  
+}
+  
