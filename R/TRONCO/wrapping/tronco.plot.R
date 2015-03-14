@@ -9,6 +9,7 @@
 hypotheses.expansion <- function(input_matrix, 
                                  map = list(),
                                  hidden_and = T,
+                                 expand = T,
                                  conf_matrix = NULL
                                  ) {
   
@@ -26,10 +27,11 @@ hypotheses.expansion <- function(input_matrix,
   
   # cut input matrix
   margin = length(node_list) - num_hypos
+  hypos_new_name = list()
 
   cat('*** Hypos expansion:')
   # check if there are hypotheses
-  if (num_hypos == 0) {
+  if (num_hypos == 0 || !expand) {
     # if no hypos do nothings..
     min_matrix = input_matrix
   } else {
@@ -45,8 +47,6 @@ hypotheses.expansion <- function(input_matrix,
     # for (h in ls(map)) {
     # print(h)
     # }
-    
-    hypos_new_name = list()
     
     
     for (h in ls(map)) {
@@ -270,7 +270,8 @@ tronco.plot = function(x,
                      # label.color = "black", 
                      label.edge.size = 12, 
                      node.th.on = FALSE,
-                     hidden.and = T) {
+                     hidden.and = T,
+                     expand = T) {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -331,17 +332,17 @@ tronco.plot = function(x,
   
   # expand hypotheses
   if (!confidence) {
-    expansion = hypotheses.expansion(c_matrix, hstruct, hidden.and)
+    expansion = hypotheses.expansion(c_matrix, hstruct, hidden.and, expand)
     hypo_mat = expansion[[1]]
     hypos_new_name = expansion[[2]]
   } else {
-    expansion = hypotheses.expansion(c_matrix, hstruct, hidden.and, conf_matrix)
+    expansion = hypotheses.expansion(c_matrix, hstruct, hidden.and, expand, conf_matrix)
     hypo_mat = expansion[[1]]
     hypos_new_name = expansion[[2]]
     conf_matrix = expansion[[3]]
   }
   
-  #print(hypo_mat)
+  # print(hypo_mat)
   
   # remove disconnected nodes
   if(!disconnected) { 
@@ -358,7 +359,13 @@ tronco.plot = function(x,
   #print(hypo_mat)
   
   hypo_graph = graph.adjacency(hypo_mat)
+  #cat('\n')
+  #print(V(hypo_graph)$name[26:30])
   v_names = gsub("_.*$", "", V(hypo_graph)$name)
+  if (!expand) {
+    v_names = gsub("^._[A-Z]([0-9]+)", "*", V(hypo_graph)$name)
+  }
+  #print(v_names[26:30])
   new_name = list()
   for(v in v_names) {
     if(v %in% rownames(data$annotations)) {
@@ -428,33 +435,35 @@ tronco.plot = function(x,
   nAttrs$shape = rep("ellipse", length(node_names))
   names(nAttrs$shape) = node_names
   
-  # set color, size fo and shape each logic nodes
-  w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
-  nAttrs$fillcolor[which(w)] = 'orange'
-  nAttrs$label[which(w)] = 'OR'
-  nAttrs$shape[which(w)] = 'circle'
-  nAttrs$color[which(w)] = 'darkblue'
-  nAttrs$fontsize[which(w)] = fontsize.logic
-  nAttrs$height[which(w)] = height.logic
-  nAttrs$width[which(w)] = width.logic
-  
-  w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
-  nAttrs$fillcolor[which(w)] = 'green'
-  nAttrs$label[which(w)] = 'AND'
-  nAttrs$shape[which(w)] = 'circle'
-  nAttrs$color[which(w)] = 'darkblue'
-  nAttrs$fontsize[which(w)] = fontsize.logic
-  nAttrs$height[which(w)] = height.logic
-  nAttrs$width[which(w)] = width.logic
-  
-  w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
-  nAttrs$fillcolor[which(w)] = 'red'
-  nAttrs$label[which(w)] = 'XOR'
-  nAttrs$shape[which(w)] = 'circle'
-  nAttrs$color[which(w)] = 'darkblue'
-  nAttrs$fontsize[which(w)] = fontsize.logic
-  nAttrs$height[which(w)] = height.logic
-  nAttrs$width[which(w)] = width.logic
+  # set color, size form and shape each logic nodes (if hypos expansion actived)
+  if (expand) {
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
+    nAttrs$fillcolor[which(w)] = 'orange'
+    nAttrs$label[which(w)] = 'OR'
+    nAttrs$shape[which(w)] = 'circle'
+    nAttrs$color[which(w)] = 'darkblue'
+    nAttrs$fontsize[which(w)] = fontsize.logic
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = width.logic
+    
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
+    nAttrs$fillcolor[which(w)] = 'green'
+    nAttrs$label[which(w)] = 'AND'
+    nAttrs$shape[which(w)] = 'circle'
+    nAttrs$color[which(w)] = 'darkblue'
+    nAttrs$fontsize[which(w)] = fontsize.logic
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = width.logic
+    
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
+    nAttrs$fillcolor[which(w)] = 'red'
+    nAttrs$label[which(w)] = 'XOR'
+    nAttrs$shape[which(w)] = 'circle'
+    nAttrs$color[which(w)] = 'darkblue'
+    nAttrs$fontsize[which(w)] = fontsize.logic
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = width.logic
+  }
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == '*'
   nAttrs$fillcolor[which(w)] = 'green'
