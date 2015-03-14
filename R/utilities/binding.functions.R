@@ -7,12 +7,17 @@ ebind = function(...)
   {  
     is.compliant(x, 'ebind: input x')
     is.compliant(y, 'ebind: input y')
-    
-    if(!all(as.samples(x) == as.samples(y)))
+	
+    samples.intersect = intersect(as.samples(x), as.samples(y))
+    if(!(setequal(samples.intersect, as.samples(x)) && setequal(samples.intersect, as.samples(y))))
       stop('Datasets have different samples, won\'t bind!')
     
     z = list()
-    
+
+	y$genotypes = y$genotypes[rownames(x$genotypes),]
+    y$stages = y$stages[rownames(y$genotypes), , drop=FALSE]
+   
+   
     # Copy genotype matrix, and sets its rownames (samples)
     z$genotypes = cbind(x$genotypes, y$genotypes)
     colnames(z$genotypes) = paste('G', 1:ncol(z$genotypes), sep='')
