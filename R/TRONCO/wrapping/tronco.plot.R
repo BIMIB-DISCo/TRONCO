@@ -8,7 +8,9 @@
 
 hypotheses.expansion <- function(input_matrix, 
                                  map = list(),
-                                 conf_matrix = NULL) {
+                                 hidden_and = T,
+                                 conf_matrix = NULL
+                                 ) {
   
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
@@ -43,6 +45,8 @@ hypotheses.expansion <- function(input_matrix,
     # for (h in ls(map)) {
     # print(h)
     # }
+    
+    hypos_new_name = list()
     
     
     for (h in ls(map)) {
@@ -81,6 +85,8 @@ hypotheses.expansion <- function(input_matrix,
         colnames(conf_matrix)[rownames(conf_matrix) == h] = initial_node
       }
       
+      hypos_new_name[initial_node] = h
+      
       # recreate lost edge
       for (node in final_node) {
         min_graph <- min_graph + edge(initial_node, node)
@@ -111,6 +117,18 @@ hypotheses.expansion <- function(input_matrix,
   
   # now expand the hidden AND
   #print(min_matrix)
+  
+  if(hidden_and == F) {
+    # sort col and row (igraph wants the same order)
+    min_matrix = min_matrix[,order(colnames(min_matrix))]
+    min_matrix = min_matrix[order(rownames(min_matrix)),]
+    
+    # print(min_matrix)
+    if(!is.null(conf_matrix)) {
+      return(list(min_matrix, hypos_new_name, conf_matrix))
+    }
+    return(list(min_matrix, hypos_new_name))
+  }
   
   cat('\n*** Expand hidden and:')
   
@@ -170,9 +188,9 @@ hypotheses.expansion <- function(input_matrix,
   
   # print(and_matrix)
   if(!is.null(conf_matrix)) {
-    return(list(and_matrix, conf_matrix))
+    return(list(and_matrix, hypos_new_name, conf_matrix))
   }
-  return(and_matrix)
+  return(list(and_matrix, hypos_new_name))
 }
 
 is.logic.node <- function(node) {
@@ -251,7 +269,8 @@ tronco.plot = function(x,
                      # label.coeff = 1, 
                      # label.color = "black", 
                      label.edge.size = 12, 
-                     node.th.on = FALSE) {
+                     node.th.on = FALSE,
+                     hidden.and = T) {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -312,11 +331,14 @@ tronco.plot = function(x,
   
   # expand hypotheses
   if (!confidence) {
-    hypo_mat = hypotheses.expansion(c_matrix, hstruct)
-  } else {
-    expansion = hypotheses.expansion(c_matrix, hstruct, conf_matrix)
+    expansion = hypotheses.expansion(c_matrix, hstruct, hidden.and)
     hypo_mat = expansion[[1]]
-    conf_matrix = expansion[[2]]
+    hypos_new_name = expansion[[2]]
+  } else {
+    expansion = hypotheses.expansion(c_matrix, hstruct, hidden.and, conf_matrix)
+    hypo_mat = expansion[[1]]
+    hypos_new_name = expansion[[2]]
+    conf_matrix = expansion[[3]]
   }
   
   #print(hypo_mat)
@@ -501,6 +523,7 @@ tronco.plot = function(x,
         # ..else this edge is located inside to an hypothesis, so no arrow to show
         eAttrs$logic[e] = T
         eAttrs$color[e] = 'darkblue'
+        eAttrs$lty[e] = 'dashed'
       }
     }
   }
@@ -509,12 +532,22 @@ tronco.plot = function(x,
   for(e in edge_names) {
     edge = unlist(strsplit(e, '~'))
     from = substr(edge[1], start=1, stop=1)
+    to = edge[2]
     
     if (from == '*') {
       eAttrs$logic[e] = T
       eAttrs$color[e] = 'darkblue'
+      eAttrs$lty[e] = 'dashed'
     } 
+    
+    if (is.logic.node(to)) {
+      eAttrs$logic[e] = T
+      eAttrs$color[e] = 'darkblue'
+      eAttrs$lty[e] = 'dashed'
+    }
   }
+  
+  #print(eAttrs$lty)
   
   if(pf) {
     # for each edge..
@@ -527,6 +560,11 @@ tronco.plot = function(x,
     for(e in edge_names) {
       edge = unlist(strsplit(e, '~'))
       from = edge[1]
+      old_name = hypos_new_name[[from]]
+      #cat('\n\nnodo from:', hypos_new_name[[from]])
+      if (!is.null(old_name)) {
+        from = old_name
+      }
       to = edge[2]
       if (substr(to, start=1, stop=1) == '*') {
         to = substr(to, start=3, stop=nchar(to))
@@ -534,27 +572,27 @@ tronco.plot = function(x,
       
       # ..checks if edge is present in BIC
 
-      #print(paste('from:', from, 'to:', to))
+      #cat('\nfrom:', from, 'to:', to)
       #cat('\nfrom in bic? ', (from %in% rownames(bic)))
       #cat('\nto in bic? ', (to %in% rownames(bic)))
-      #cat('\n!eAttrs$logic[e]', !eAttrs$logic[e], '\n')
+      #cat('\n!eAttrs$logic[e]', !eAttrs$logic[e])
       # check if edge in BIC (valid only if not logic edge) and 'to' is not a fake and
       if ( (from %in% rownames(bic)) &&
            (to %in% colnames(bic)) &&
            !eAttrs$logic[e] &&
            bic[from, to] == 0
            ) {
-        #print("prima facie!!!")
+        #cat("\nprima facie!!!")
         eAttrs$color[e] = 'red'
       } else {
-        #print('no PF!')
+        #cat('\nno PF!')
       }
     }
   }
   
   # set temporary edge shape
-  #eAttrs$lty = rep("dashed", length(edge_names))
-  #names(eAttrs$lty) = edge_names
+  eAttrs$lty = rep("solid", length(edge_names))
+  names(eAttrs$lty) = edge_names
   
   # set temporary edge arrow
   eAttrs$arrowhead = rep("open", length(edge_names))
