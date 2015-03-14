@@ -559,6 +559,7 @@ tronco.plot = function(x,
   #print(eAttrs$lty)
   
   if(pf) {
+    cat('\n*** Add prima facie edges: ')
     # for each edge..
     bic = adj.matrix$adj.matrix.bic
     #print(bic)
@@ -597,11 +598,12 @@ tronco.plot = function(x,
         #cat('\nno PF!')
       }
     }
+    cat('done')
   }
   
   # set temporary edge shape
-  eAttrs$lty = rep("solid", length(edge_names))
-  names(eAttrs$lty) = edge_names
+  #eAttrs$lty = rep("solid", length(edge_names))
+  #names(eAttrs$lty) = edge_names
   
   # set temporary edge arrow
   eAttrs$arrowhead = rep("open", length(edge_names))
