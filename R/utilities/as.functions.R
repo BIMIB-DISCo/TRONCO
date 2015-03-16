@@ -299,10 +299,10 @@ as.hypotheses = function(x)
   }
 }
 
-# Return all events involving certain genes and types.
-#
-# @x: the dataset.
-# @hypotheses: 
+#' Return all events involving certain genes and types.
+#'
+#' @x: the dataset.
+#' @hypotheses: 
 as.events.hypotheses = function(x, hypotheses=NULL)
 {
   is.compliant(x$data)
@@ -313,6 +313,9 @@ as.events.hypotheses = function(x, hypotheses=NULL)
   
   genes_list = NULL
   for(h in hypotheses) {
+    if(!h %in% as.hypotheses(x)) {
+      stop('Hypothesis ', h, ' not in as.hypotheses(x)')
+    }
     g = lapply(colnames(x$data$hypotheses$hstructure[[h]]), function(x){  if(length(i <- grep('^G([0-9]+)$', x))){x[i]}})
     genes_list = append(genes_list, g)
   }  
@@ -321,4 +324,14 @@ as.events.hypotheses = function(x, hypotheses=NULL)
   if(!(is.null(genes_list))) ann = ann[ which(rownames(ann) %in% genes_list) , , drop=FALSE] 
 
   return(ann)
+}
+
+# Return all gene symbols for given an hypotheses list
+#
+# @x: the dataset.
+# @hypotheses: the hypotheses to consider, if NULL all available hypotheses are used.
+as.genes.hypotheses = function(x, hypotheses=NULL) {
+  events = as.events.hypotheses(x, hypotheses)
+  genes = unique(events[,'event'])
+  return(genes)
 }
