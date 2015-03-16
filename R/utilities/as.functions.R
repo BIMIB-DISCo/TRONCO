@@ -275,3 +275,50 @@ sort.by.frequency = function(x)
 
   return(x)  
 }
+
+#' Return the number of hypotheses in the dataset
+#'
+#' @param x the dataset.
+nhypotheses = function(x)
+{
+  is.compliant(x$data)
+  if ('hstructure' %in% names(x$data$hypotheses)) {
+    return(length(ls(x$data$hypotheses$hstructure)))
+  }
+  return(0)
+}
+
+#' Return the name of hypotheses in the dataset
+#'
+#' @param x the dataset.
+as.hypotheses = function(x)
+{
+  is.compliant(x$data)
+  if ('hstructure' %in% names(x$data$hypotheses)) {
+    return(ls(x$data$hypotheses$hstructure))
+  }
+}
+
+# Return all events involving certain genes and types.
+#
+# @x: the dataset.
+# @hypotheses: 
+as.events.hypotheses = function(x, hypotheses=NA)
+{
+  is.compliant(x$data)
+  ann = x$data$annotations[, c('type', 'event'), drop=FALSE]
+  if (is.na(hypotheses)) {
+    hypotheses = as.hypotheses(x)
+  }
+  
+  genes_list = NULL
+  for(h in as.hypotheses(x)) {
+    g = lapply(colnames(x$data$hypotheses$hstructure[[h]]), function(x){  if(length(i <- grep('^G([0-9]+)$', x))){x[i]}})
+    genes_list = append(genes_list, g)
+  }  
+  genes_list = unique(unlist(genes_list))
+  
+  if(!(is.null(genes_list))) ann = ann[ which(rownames(ann) %in% genes_list) , , drop=FALSE] 
+
+  return(ann)
+}
