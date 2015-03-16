@@ -6,9 +6,11 @@
 #### information.
 
 rename.type <- function(x, old.name, new.name) {
-  # if is compliant x
-  is.compliant(x, 'rename.type: pre')
+ 
+  is.compliant(x, 'rename.type: input dataset')
   types = as.types(x)
+
+  if(old.name == new.name) return(x)	
   
   if (old.name %in% types) {
     x$annotations[ which(x$annotations[,'type'] == old.name), 'type' ] = new.name
@@ -20,7 +22,8 @@ rename.type <- function(x, old.name, new.name) {
   } else {
     stop(paste(old.name, 'not in as.types(x)'))
   }
-  print(x$types)
+  cat('Events of type', old.name, 'renamed as', new.name, '')
+  
   is.compliant(x, err.fun = 'rename.type: output')
   return(x)
 }
@@ -82,6 +85,28 @@ delete.gene <- function(x, gene) {
   is.compliant(x, 'delete:gene: output')
   return(x)
 }
+
+delete.event <- function(x, gene, type) {
+
+  is.compliant(x, 'delete.event: input')
+  
+  if (c(type, gene) %in% as.events(x)) {
+    
+    drops = rownames(as.events(x, genes = gene, types = type))
+    x$genotypes = x$genotypes[, -which( colnames(x$genotypes) %in% drops )]
+    x$annotations = x$annotations[ -which (rownames(x$annotations) %in% drops), ]
+    
+    # TO DO: something better than this t(t(...))
+    x$types = x$types[ which(rownames(x$types) %in% unique(x$annotations[,"type"])), , drop=FALSE]
+  } 
+  else {
+    stop(paste(type, gene, 'not in as.events(x)'))
+  }
+  
+  is.compliant(x, 'delete:gene: output')
+  return(x)
+}
+
 
 change.color = function(x, type, new.color)
 {

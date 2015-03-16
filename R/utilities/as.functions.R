@@ -106,7 +106,7 @@ has.duplicates = function(x) {
 
   # find duplicate over the dataset
   dup = duplicated(as.events(x))
-  
+   
   # return true if at least one duplicate is found
   return(any(dup))
 }
