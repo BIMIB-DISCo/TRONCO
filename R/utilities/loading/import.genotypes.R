@@ -52,41 +52,17 @@ import.genotypes = function(geno, stage.annot = NA, event.type = 'variant', colo
 	x$annotations[, 'type']  = event.type
 	x$annotations[, 'event'] = cn
 	
-	
-					
-	# We create a mapping from columns in x$genotypes and row names in x$attributes
-	names.map = paste0('G', c(1:nc), sep='')
-	colnames(x$genotypes) = names.map
-	rownames(x$annotations) = names.map
-	
 	# We create a map from types to colors
-	num.types = length(unique(x$annotations[, 'type']))
-	
-	x$types = matrix(0, nrow=num.types, ncol=1)
-	rownames(x$types) = unique(x$annotations[, 1])
+	x$types = matrix(color, nrow=1, ncol=1)
+	rownames(x$types) = event.type
 	colnames(x$types) = c('color')
-
-	# If the input color is a ColorBrewer scheme
-	my.palette = color;
 	
-	if(color %in% rownames(brewer.pal.info)) 
-		my.palette = brewer.pal(n=brewer.pal.info[color, 'maxcolors'], name=color); 
-
-	x$types[, 'color'] = colorRampPalette(my.palette)(num.types)
-	
-	
-	# Add stage, if given as input
-	if(!all(is.na(stage.annot)))
-	{
-		if(nrow(stage.annot) != nr)
-			cat(paste('Missing stage information for some samples (genotypes= ', nr, ', stages=', nrow(stage.annot),'), setting them as NA.\n', sep=''))
-				
-		x$stages = matrix('NA', nrow=nr, ncol=1)	
-		rownames(x$stages) = rownames(x$genotypes)
-		x$stages[,1] = as.character(stage.annot[rownames(x$genotypes), 1])
-		rownames(x$stages) = rownames(x$genotypes)
-	}
-		
+	# If the input color is a ColorBrewer scheme	
+	#	my.palette = color	
+	#if(color %in% rownames(brewer.pal.info)) 
+	#	my.palette = brewer.pal(n=brewer.pal.info[color, 'maxcolors'], name=color); 
+	#
+			
 	is.compliant(x, 'import.genotypes: output')		
 
 	return(x)

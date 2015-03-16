@@ -38,7 +38,7 @@ ebind = function(...)
       z$stages = as.stages(x)
       colnames(z$stages) = 'stage'
     }
-    
+
     is.compliant(z, 'ebind: output')
     
     return(z)
