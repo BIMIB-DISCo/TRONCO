@@ -303,21 +303,21 @@ as.hypotheses = function(x)
 #
 # @x: the dataset.
 # @hypotheses: 
-as.events.hypotheses = function(x, hypotheses=NA)
+as.events.hypotheses = function(x, hypotheses=NULL)
 {
   is.compliant(x$data)
   ann = x$data$annotations[, c('type', 'event'), drop=FALSE]
-  if (is.na(hypotheses)) {
+  if (is.null(hypotheses)) {
     hypotheses = as.hypotheses(x)
   }
   
   genes_list = NULL
-  for(h in as.hypotheses(x)) {
+  for(h in hypotheses) {
     g = lapply(colnames(x$data$hypotheses$hstructure[[h]]), function(x){  if(length(i <- grep('^G([0-9]+)$', x))){x[i]}})
     genes_list = append(genes_list, g)
   }  
   genes_list = unique(unlist(genes_list))
-  
+
   if(!(is.null(genes_list))) ann = ann[ which(rownames(ann) %in% genes_list) , , drop=FALSE] 
 
   return(ann)
