@@ -10,6 +10,7 @@ hypotheses.expansion <- function(input_matrix,
                                  map = list(),
                                  hidden_and = T,
                                  expand = T,
+                                 events = NULL,
                                  conf_matrix = NULL
                                  ) {
   
@@ -28,6 +29,30 @@ hypotheses.expansion <- function(input_matrix,
   # cut input matrix
   margin = length(node_list) - num_hypos
   hypos_new_name = list()
+  
+  # da finire!!!
+  if(is.vector(events) && F) {
+    cat('\n remove event is broken!!!\n')
+    print(events)
+    min_graph = graph.adjacency(input_matrix)
+    graph <- igraph.to.graphNEL(min_graph)
+    edge_names = edgeNames(graph)
+    print(edge_names)
+    for(e in edge_names) {
+      edge = unlist(strsplit(e, '~'))
+      print(edge)
+      from = edge[1]
+      to = edge[2]
+      check_from = any(unlist(strsplit(from, '_')) %in% events)
+      check_to = any(unlist(strsplit(to, '_')) %in% events)
+      if (!(check_from && check_to)) {
+        input_matrix[from, to] = 0
+      }
+    }
+    print(input_matrix)
+  }
+  
+  
 
   cat('*** Hypos expansion:')
   # check if there are hypotheses
@@ -114,6 +139,8 @@ hypotheses.expansion <- function(input_matrix,
   }
   
   cat(' done')
+
+  
   
   # now expand the hidden AND
   #print(min_matrix)
@@ -271,7 +298,8 @@ tronco.plot = function(x,
                      label.edge.size = 12, 
                      node.th.on = FALSE,
                      hidden.and = T,
-                     expand = T) {
+                     expand = T,
+                     genes = NULL) {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -317,7 +345,7 @@ tronco.plot = function(x,
   if (confidence) {
     conf_matrix = if (pf) x$bootstrap$edge.confidence$edge.confidence.pf else x$bootstrap$edge.confidence$edge.confidence.bic
   }
-  # print(c_matrix)
+  print(c_matrix)
   
   # get algorithm parameters
   parameters = x$parameters
@@ -329,14 +357,29 @@ tronco.plot = function(x,
   if (!is.null(hypotheses) && !is.na(hypotheses) ) {
     hstruct = hypotheses$hstructure
   }
+
+  # get event from genes list
+  events = NULL
+  if (is.vector(genes)) {
+    events = unlist(lapply(genes, function(x){names(which(as.events(data)[,'event'] == x))}))
+  }
   
   # expand hypotheses
   if (!confidence) {
-    expansion = hypotheses.expansion(c_matrix, hstruct, hidden.and, expand)
+    expansion = hypotheses.expansion(c_matrix, 
+                                     hstruct, 
+                                     hidden.and, 
+                                     expand, 
+                                     events)
     hypo_mat = expansion[[1]]
     hypos_new_name = expansion[[2]]
   } else {
-    expansion = hypotheses.expansion(c_matrix, hstruct, hidden.and, expand, conf_matrix)
+    expansion = hypotheses.expansion(c_matrix, 
+                                     hstruct, 
+                                     hidden.and, 
+                                     expand, 
+                                     events, 
+                                     conf_matrix)
     hypo_mat = expansion[[1]]
     hypos_new_name = expansion[[2]]
     conf_matrix = expansion[[3]]
@@ -356,7 +399,7 @@ tronco.plot = function(x,
   
   attrs = list(node = list(fixedsize = fixed.size))
       
-  #print(hypo_mat)
+  print(hypo_mat)
   
   hypo_graph = graph.adjacency(hypo_mat)
   #cat('\n')
@@ -376,18 +419,21 @@ tronco.plot = function(x,
     }
   }
     
-  #print(new_name)
+  print(V(hypo_graph)$name)
+  print(v_names)
+  print(new_name)
+  print(V(hypo_graph)$label)
   #print(hypo_graph)
   
   V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
-
+  
   node_names = nodes(graph)
   nAttrs = list()
   
   nAttrs$label = V(hypo_graph)$label
   names(nAttrs$label) = node_names
-    
+  
   # set a default color
   nAttrs$fillcolor =  rep('White', length(node_names))
   names(nAttrs$fillcolor) = node_names
