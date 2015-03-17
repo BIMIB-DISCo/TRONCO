@@ -276,26 +276,17 @@ is.logic.node <- function(node) {
 #' }
 tronco.plot = function(x, 
                      fontsize=18, 
-                     fontsize.logic=12, # via 
                      height=1,
-                     height.logic=0.5, # via
                      width=1.5,
-                     width.logic=0.5, # via
+                     height.logic = 0.5,
                      pf = FALSE, 
                      disconnected=FALSE,
-                     fixed.size=FALSE, # via --> scale.nodes 1.0/NA
+                     scale.nodes=NA,
                      name=deparse(substitute(capri)),
-                     title = paste("Progression model", x$parameters$algorithm), 
-                     # title.color = "black", 
+                     title = paste("Progression model", x$parameters$algorithm),  
                      confidence = FALSE, 
                      legend = TRUE, 
-                     legend.title = "Legend", 
-                     legend.columns = 1, 
-                     legend.inline = FALSE, # via
-                     legend.pos = "bottomright", # via
                      legend.cex = 1.0, 
-                     # label.coeff = 1, 
-                     # label.color = "black", 
                      label.edge.size = 12, 
                      node.th.on = FALSE, # via
                      hidden.and = T,
@@ -403,7 +394,7 @@ tronco.plot = function(x,
   
   cat('\n*** Render graphics: ')
   
-  attrs = list(node = list(fixedsize = fixed.size))
+  attrs = list(node = list())
       
   print(hypo_mat)
   
@@ -412,7 +403,7 @@ tronco.plot = function(x,
   #print(V(hypo_graph)$name[26:30])
   v_names = gsub("_.*$", "", V(hypo_graph)$name)
   if (!expand) {
-    v_names = gsub("^._[A-Z]([0-9]+)", "*", V(hypo_graph)$name)
+    v_names = gsub("^[*]_(.+)", "*", V(hypo_graph)$name)
   }
   #print(v_names[26:30])
   new_name = list()
@@ -456,13 +447,20 @@ tronco.plot = function(x,
   nAttrs$width = rep(width, length(node_names))
   names(nAttrs$width) = node_names
   
-  if (node.th.on) {
+  if (!is.na(scale.nodes)) {
     
     # foreach node
+    min_p = min(marginal_p)
+    max_p = max(marginal_p)
+    print(scale.nodes)
+
     for (node in node_names) {
       prefix = gsub("_.*$", "", node)
       if ( !(prefix %in% logical_op)) {
-        increase_coeff = log(marginal_p[node,] + 1.2)
+        #increase_coeff = sqrt(log(marginal_p[node,] + 1) * scale.nodes)
+        #increase_coeff = marginal_p[node,]
+        increase_coeff = scale.nodes + (marginal_p[node,] - min_p) / (max_p - min_p)
+        #increase_coeff = marginal_p[node,] + ((max_p - marginal_p[node,]) / scale.nodes)
         # print(increase_coeff)
         nAttrs$width[node] = nAttrs$width[node] * increase_coeff
         nAttrs$height[node] = nAttrs$height[node] * increase_coeff
@@ -491,6 +489,7 @@ tronco.plot = function(x,
   
   # set color, size form and shape each logic nodes (if hypos expansion actived)
   if (expand) {
+    
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
     if (any(w)) {
       legend_logic['OR'] = 'orange'
@@ -498,22 +497,20 @@ tronco.plot = function(x,
     nAttrs$fillcolor[which(w)] = 'orange'
     nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = 'circle'
-    nAttrs$color[which(w)] = 'darkblue'
-    nAttrs$fontsize[which(w)] = fontsize.logic
+    nAttrs$color[which(w)] = 'black'
     nAttrs$height[which(w)] = height.logic
-    nAttrs$width[which(w)] = width.logic
+    nAttrs$width[which(w)] = height.logic
     
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
     if (any(w)) {
-      legend_logic['AND'] = 'green'
+      legend_logic['AND'] = 'lightgreen'
     }
-    nAttrs$fillcolor[which(w)] = 'green'
+    nAttrs$fillcolor[which(w)] = 'lightgreen'
     nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = 'circle'
-    nAttrs$color[which(w)] = 'darkblue'
-    nAttrs$fontsize[which(w)] = fontsize.logic
+    nAttrs$color[which(w)] = 'black'
     nAttrs$height[which(w)] = height.logic
-    nAttrs$width[which(w)] = width.logic
+    nAttrs$width[which(w)] = height.logic
     
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
     if (any(w)) {
@@ -522,21 +519,22 @@ tronco.plot = function(x,
     nAttrs$fillcolor[which(w)] = 'red'
     nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = 'circle'
-    nAttrs$color[which(w)] = 'darkblue'
-    nAttrs$fontsize[which(w)] = fontsize.logic
+    nAttrs$color[which(w)] = 'black'
     nAttrs$height[which(w)] = height.logic
-    nAttrs$width[which(w)] = width.logic
+    nAttrs$width[which(w)] = height.logic
   }
   print(legend_logic)
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == '*'
-  nAttrs$fillcolor[which(w)] = 'green'
-  nAttrs$label[which(w)] = 'AND'
+  if (any(w)) {
+      legend_logic['AND'] = 'lightgreen'
+    }
+  nAttrs$fillcolor[which(w)] = 'lightgreen'
+  nAttrs$label[which(w)] = ''
   nAttrs$shape[which(w)] = 'circle'
-  nAttrs$color[which(w)] = 'darkblue'
-  nAttrs$fontsize[which(w)] = fontsize.logic
+  nAttrs$color[which(w)] = 'black'
   nAttrs$height[which(w)] = height.logic
-  nAttrs$width[which(w)] = width.logic
+  nAttrs$width[which(w)] = height.logic
   
   # edges properties
   
@@ -555,7 +553,7 @@ tronco.plot = function(x,
   eAttrs$label = rep('', length(edge_names))
   names(eAttrs$label) = edge_names
   
-  #set arrowdir to forward (default)
+  #set fontsize to label.edge.size (default)
   eAttrs$fontsize = rep(label.edge.size, length(edge_names))
   names(eAttrs$fontsize) = edge_names
   
@@ -595,8 +593,6 @@ tronco.plot = function(x,
       } else {
         # ..else this edge is located inside to an hypothesis, so no arrow to show
         eAttrs$logic[e] = T
-        eAttrs$color[e] = 'darkblue'
-        eAttrs$lty[e] = 'dashed'
       }
     }
   }
@@ -609,14 +605,10 @@ tronco.plot = function(x,
     
     if (from == '*') {
       eAttrs$logic[e] = T
-      eAttrs$color[e] = 'darkblue'
-      eAttrs$lty[e] = 'dashed'
     } 
     
     if (is.logic.node(to)) {
       eAttrs$logic[e] = T
-      eAttrs$color[e] = 'darkblue'
-      eAttrs$lty[e] = 'dashed'
     }
   }
   
@@ -665,13 +657,20 @@ tronco.plot = function(x,
     cat('done')
   }
   
-  # set temporary edge shape
-  #eAttrs$lty = rep("solid", length(edge_names))
-  #names(eAttrs$lty) = edge_names
-  
   # set temporary edge arrow
-  eAttrs$arrowhead = rep("open", length(edge_names))
-  names(eAttrs$arrowhead) = edge_names
+  #eAttrs$dir = rep("both", length(edge_names))
+  #names(eAttrs$dir) = edge_names
+
+  #eAttrs$arrowhead = rep("open", length(edge_names))
+  #names(eAttrs$arrowhead) = edge_names
+
+  #eAttrs$arrowtail = rep("open", length(edge_names))
+  #names(eAttrs$arrowtail) = edge_names
+
+  
+
+  #print(eAttrs$arrowhead)
+  #print(eAttrs$arrowtail)
   
   # print(eAttrs)
     
@@ -685,9 +684,9 @@ tronco.plot = function(x,
     legend_names = unique(data$annotations[which(rownames(data$annotations) %in% valid_events), 'type'])
     legend_colors = data$types[legend_names, 'color']
     
-    legend(legend.pos,
+    legend('bottomright',
            legend = legend_names,
-           title = legend.title,
+           title = 'events',
            bty = 'n',
            cex = legend.cex,
            pt.cex = 1.5,
@@ -698,7 +697,7 @@ tronco.plot = function(x,
   }  
 
   # add logic nodes legend
-  if (legend && expand && length(legend_logic) > 0) {
+  if (legend && length(legend_logic) > 0) {
     legend('bottom',
            legend = names(legend_logic),
            title = 'logic',
@@ -710,5 +709,34 @@ tronco.plot = function(x,
            col = legend_logic,
            xjust = 1,
            xpd = TRUE)
+  }
+
+  #add thickness legend
+  if (legend && !is.na(scale.nodes)) {
+    valid_names = node_names
+    if(expand) {
+      valid_names = node_names[unlist(lapply(node_names, function(x){!is.logic.node(x)}))]
+    }
+    valid_names = grep('^[*]_(.+)$', valid_names, value = T, invert=T)
+    print(valid_names)
+    dim = nAttrs$height[valid_names]
+    #print(dim)
+    prob = marginal_p[valid_names, ]
+    #print(prob)
+    min = min(dim)
+    p_min = min(prob)
+    max = max(dim)
+    p_max = max(prob)
+    legend('bottomleft',
+           legend = c(round(p_min, 2), round(p_max, 2)),
+           title = 'thickness',
+           bty = 'n',
+           pch = c(19,19),
+           pt.cex = c(min * 3, max * 3),
+           ncol = 2,
+           cex = legend.cex,
+           xjust = 1,
+           xpd = TRUE
+      )
   }
 }
