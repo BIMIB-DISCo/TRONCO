@@ -293,7 +293,7 @@ tronco.plot = function(x,
                      legend.columns = 1, 
                      legend.inline = FALSE, # via
                      legend.pos = "bottomright", # via
-                     legend.coeff = 1, 
+                     legend.cex = 1.0, 
                      # label.coeff = 1, 
                      # label.color = "black", 
                      label.edge.size = 12, 
@@ -302,7 +302,7 @@ tronco.plot = function(x,
                      expand = T,
                      genes = NULL
 
-                     file = .... # print to pdf	
+                     #file = .... # print to pdf	
                      ) 
 {
   if (!require(igraph)) {
@@ -486,12 +486,17 @@ tronco.plot = function(x,
   # Set shape
   nAttrs$shape = rep("ellipse", length(node_names))
   names(nAttrs$shape) = node_names
+
+  legend_logic = NULL
   
   # set color, size form and shape each logic nodes (if hypos expansion actived)
   if (expand) {
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
+    if (any(w)) {
+      legend_logic['OR'] = 'orange'
+    }
     nAttrs$fillcolor[which(w)] = 'orange'
-    nAttrs$label[which(w)] = 'OR'
+    nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = 'circle'
     nAttrs$color[which(w)] = 'darkblue'
     nAttrs$fontsize[which(w)] = fontsize.logic
@@ -499,8 +504,11 @@ tronco.plot = function(x,
     nAttrs$width[which(w)] = width.logic
     
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
+    if (any(w)) {
+      legend_logic['AND'] = 'green'
+    }
     nAttrs$fillcolor[which(w)] = 'green'
-    nAttrs$label[which(w)] = 'AND'
+    nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = 'circle'
     nAttrs$color[which(w)] = 'darkblue'
     nAttrs$fontsize[which(w)] = fontsize.logic
@@ -508,14 +516,18 @@ tronco.plot = function(x,
     nAttrs$width[which(w)] = width.logic
     
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
+    if (any(w)) {
+      legend_logic['XOR'] = 'red'
+    }
     nAttrs$fillcolor[which(w)] = 'red'
-    nAttrs$label[which(w)] = 'XOR'
+    nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = 'circle'
     nAttrs$color[which(w)] = 'darkblue'
     nAttrs$fontsize[which(w)] = fontsize.logic
     nAttrs$height[which(w)] = height.logic
     nAttrs$width[which(w)] = width.logic
   }
+  print(legend_logic)
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == '*'
   nAttrs$fillcolor[which(w)] = 'green'
@@ -663,31 +675,40 @@ tronco.plot = function(x,
   
   # print(eAttrs)
     
-  # create legend
-  if (legend) {
-    legend_colors = data$types[data$types[, "color"] != '#FFFFFF',]
-    legend_names = names(legend_colors)
-    if(legend.inline) {
-      legend.columns  = length(legend_names);
-    }
-  }
-  
   #cur.dev = dev.cur()
   
   #pdf(file=paste(name, as.character(disconnected), '.', as.character(pf),'.pdf', sep=''), height=11, width=8.5)
   plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title)
   # Adds the legend to the plot
   if (legend) {
+    valid_events = colnames(hypo_mat)[which(colnames(hypo_mat) %in% colnames(c_matrix))]
+    legend_names = unique(data$annotations[which(rownames(data$annotations) %in% valid_events), 'type'])
+    legend_colors = data$types[legend_names, 'color']
+    
     legend(legend.pos,
            legend = legend_names,
            title = legend.title,
            bty = 'n',
-           cex = legend.coeff,
+           cex = legend.cex,
            pt.cex = 1.5,
            pch = c(19,19),
-           ncol = legend.columns,
            col = legend_colors,
            xjust = 1,
            xpd = TRUE)
   }  
+
+  # add logic nodes legend
+  if (legend && expand && length(legend_logic) > 0) {
+    legend('bottom',
+           legend = names(legend_logic),
+           title = 'logic',
+           bty = 'n',
+           cex = legend.cex,
+           pt.cex = 1.5,
+           pch = c(19,19),
+           ncol = length(legend_logic),
+           col = legend_logic,
+           xjust = 1,
+           xpd = TRUE)
+  }
 }
