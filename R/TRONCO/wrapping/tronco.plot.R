@@ -162,7 +162,8 @@ hypotheses.expansion <- function(input_matrix,
   and_matrix = NULL
   to_reconnect = list()
   logical_op = list("AND", "OR", "NOT", "XOR")
-  
+#   logical_op = list("", "", "", "")
+ 
   # foreach AND column
   for (col in colnames(min_matrix)) {
     prefix = gsub("_.*$", "", col)
@@ -275,14 +276,14 @@ is.logic.node <- function(node) {
 #' }
 tronco.plot = function(x, 
                      fontsize=18, 
-                     fontsize.logic=12, 
+                     fontsize.logic=12, # via 
                      height=1,
-                     height.logic=0.5,
+                     height.logic=0.5, # via
                      width=1.5,
-                     width.logic=0.5,
+                     width.logic=0.5, # via
                      pf = FALSE, 
                      disconnected=FALSE,
-                     fixed.size=FALSE,
+                     fixed.size=FALSE, # via --> scale.nodes 1.0/NA
                      name=deparse(substitute(capri)),
                      title = paste("Progression model", x$parameters$algorithm), 
                      # title.color = "black", 
@@ -290,16 +291,20 @@ tronco.plot = function(x,
                      legend = TRUE, 
                      legend.title = "Legend", 
                      legend.columns = 1, 
-                     legend.inline = FALSE, 
-                     legend.pos = "bottomright", 
+                     legend.inline = FALSE, # via
+                     legend.pos = "bottomright", # via
                      legend.coeff = 1, 
                      # label.coeff = 1, 
                      # label.color = "black", 
                      label.edge.size = 12, 
-                     node.th.on = FALSE,
+                     node.th.on = FALSE, # via
                      hidden.and = T,
                      expand = T,
-                     genes = NULL) {
+                     genes = NULL
+
+                     file = .... # print to pdf	
+                     ) 
+{
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -322,7 +327,8 @@ tronco.plot = function(x,
   }
   
   logical_op = list("AND", "OR", "NOT", "XOR", "*")
-  
+  #logical_op = list("", "", "", "")
+ 
   # get TRONCO object
   data = x$data
   # print(data)
