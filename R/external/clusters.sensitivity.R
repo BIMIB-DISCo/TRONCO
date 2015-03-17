@@ -61,7 +61,7 @@
 
   annotation = data.frame(sensitivity=score, row.names=cn, stringsAsFactors=FALSE)
 
-  if(!is.na(stages))
+  if(!all(is.na(stages)))
   	annotation$stage = stages[cn,1]
   	
   # Create colors 

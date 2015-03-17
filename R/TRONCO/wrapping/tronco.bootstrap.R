@@ -6,7 +6,7 @@
 #### information.
 
 
-tronco.bootstrap <- function( topology, type="non-parametric", nboot=100 ) {
+tronco.bootstrap <- function( topology, type="non-parametric", nboot=100) {
 	#check for the inputs to be correct
 	if(is.null(topology)) {
 		stop("A valid reconstruction has to be provided in order to estimate its confidence.",call.=FALSE);
@@ -38,6 +38,7 @@ tronco.bootstrap <- function( topology, type="non-parametric", nboot=100 ) {
 				hypotheses = NA;
 			}
 			command.capri = do.boot = topology$parameters$command;
+	
 			do.boot = topology$parameters$do.boot;
 			nboot.capri = topology$parameters$nboot;
 			pvalue = topology$parameters$pvalue;
@@ -79,10 +80,10 @@ tronco.bootstrap <- function( topology, type="non-parametric", nboot=100 ) {
     }
     else if(topology$parameters$algorithm=="CAPRI") {
 		if(type=="non-parametric") {
-			curr.boot = bootstrap.capri(dataset,hypotheses,command.capri,do.boot,nboot.capri,pvalue,adj.matrix.pf,adj.matrix.bic,type,NA,NA,NA,NA,NA,NA,NA,NA,nboot);
+			curr.boot = bootstrap.capri(dataset,hypotheses,command.capri,do.boot,nboot.capri,pvalue,adj.matrix.pf,adj.matrix.bic,type,NA,NA,NA,NA,NA,NA,NA,NA,nboot, 				REGULARIZATION=topology$parameters$REGULARIZATION);
 		}
 		else if(type=="parametric") {
-			curr.boot = bootstrap.capri(dataset,hypotheses,command.capri,do.boot,nboot.capri,pvalue,adj.matrix.pf,adj.matrix.bic,type,estimated.marginal.probs.pf,estimated.conditional.probs.pf,parents.pos.pf,error.rates.pf,estimated.marginal.probs.bic,estimated.conditional.probs.bic,parents.pos.bic,error.rates.bic,nboot);
+			curr.boot = bootstrap.capri(dataset,hypotheses,command.capri,do.boot,nboot.capri,pvalue,adj.matrix.pf,adj.matrix.bic,type,estimated.marginal.probs.pf,estimated.conditional.probs.pf,parents.pos.pf,error.rates.pf,estimated.marginal.probs.bic,estimated.conditional.probs.bic,parents.pos.bic,error.rates.bic,nboot, REGULARIZATION=topology$parameters$REGULARIZATION);
 		}
 		topology$bootstrap = curr.boot;
 		cat("\nConfidence overall \"prima facie\" value:",curr.boot$confidence$confidence.pf$overall.value.pf);

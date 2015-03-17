@@ -29,7 +29,7 @@
 #RETURN:
 #bootstrap.statistics: statistics of the bootstrap
 "bootstrap.capri" <-
-function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, reconstructed.topology.bic, command = "non-parametric", estimated.marginal.probabilities.pf, estimated.conditional.probabilities.pf, parents.pos.pf, error.rates.pf, estimated.marginal.probabilities.bic, estimated.conditional.probabilities.bic, parents.pos.bic, error.rates.bic, nboot) {
+function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, reconstructed.topology.pf, reconstructed.topology.bic, command = "non-parametric", estimated.marginal.probabilities.pf, estimated.conditional.probabilities.pf, parents.pos.pf, error.rates.pf, estimated.marginal.probabilities.bic, estimated.conditional.probabilities.bic, parents.pos.bic, error.rates.bic, nboot, REGULARIZATION) {
     #structure to save the statistics of the bootstrap
     bootstrap.adj.matrix.pf = array(0,c(ncol(dataset)+1,ncol(dataset)+1));
     colnames(bootstrap.adj.matrix.pf) = c("None",colnames(dataset));
@@ -67,7 +67,7 @@ function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, recon
 					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%colnames(dataset)[check.data$invalid.events$removed.events]));
 				}
 				bootstrapped.hypotheses = curr.hypotheses;
-				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
+				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE, REGULARIZATION=REGULARIZATION);
 				#set the reconstructed causal edges
 				parents.pos.pf = array(list(),c(ncol(bootstrapped.topology$data),1));
 				parents.pos.bic = array(list(),c(ncol(bootstrapped.topology$data),1));
@@ -128,7 +128,7 @@ function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, recon
 					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%colnames(dataset)[check.data$invalid.events$removed.events]));
 				}
 				bootstrapped.hypotheses = curr.hypotheses;
-				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
+				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE, REGULARIZATION= REGULARIZATION);
 				#set the reconstructed causal edges
 				parents.pos.pf = array(list(),c(ncol(bootstrapped.topology$data),1));
 				for(i in 1:ncol(bootstrapped.topology$data)) {
@@ -155,7 +155,7 @@ function(dataset, hypotheses, command.capri, do.boot, nboot.capri, pvalue, recon
 					curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses-length(which(unique(hypotheses$hlist[,"cause"])%in%colnames(dataset)[check.data$invalid.events$removed.events]));
 				}
 				bootstrapped.hypotheses = curr.hypotheses;
-				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE);
+				bootstrapped.topology = capri.fit(bootstrapped.dataset,bootstrapped.hypotheses,command.capri,do.boot,nboot.capri,pvalue,FALSE, REGULARIZATION= REGULARIZATION);
 				#set the reconstructed causal edges
 				parents.pos.bic = array(list(),c(ncol(bootstrapped.topology$data),1));
 				for(i in 1:ncol(bootstrapped.topology$data)) {

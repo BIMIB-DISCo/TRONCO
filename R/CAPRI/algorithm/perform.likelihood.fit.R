@@ -14,7 +14,7 @@
 #RETURN:
 #topology: the adjacency matrix of both the prima facie and causal topologies
 "perform.likelihood.fit" <-
-function(dataset, adj.matrix, command) {
+function(dataset, adj.matrix, command, REGULARIZATION) {
 	
     #load the bnlearn library required for the likelihood fit with bic
     if (!require(bnlearn)) {
@@ -67,20 +67,24 @@ function(dataset, adj.matrix, command) {
     #perform the reconstruction by likelihood fit with bic
     #either the hill climbing or the tabu search is used as the mathematical optimization technique
     if(cont>0) {
+    	
+    	cat('Performing likelihood-fit with regularization:', REGULARIZATION, '(bnlearn)\n')
+    	cat('Heuristic search method:', command, ' (bnlearn)\n')
+    	
         blacklist = data.frame(from = parent,to = child);
         if(command=="hc") {
-        		my.net = hc(data,score="bic",blacklist=blacklist);
+        		my.net = hc(data,score= REGULARIZATION,blacklist=blacklist);
         }
         else if(command=="tabu") {
-        		my.net = tabu(data,score="bic",blacklist=blacklist);
+        		my.net = tabu(data,score= REGULARIZATION,blacklist=blacklist);
         }
     }
     else {
     		if(command=="hc") {
-        		my.net = hc(data,score="bic");
+        		my.net = hc(data,score= REGULARIZATION);
         }
         else if(command=="tabu") {
-        		my.net = tabu(data,score="bic");
+        		my.net = tabu(data,score= REGULARIZATION);
         }
     }
     my.arcs = my.net$arcs;

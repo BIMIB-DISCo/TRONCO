@@ -6,7 +6,7 @@
 #### information.
 
 
-tronco.capri <- function(data, command = "hc", do.boot = TRUE, nboot = 100, pvalue = 0.05, do.estimation = FALSE) {
+tronco.capri <- function(data, command = "hc", REGULARIZATION = "bic", do.boot = TRUE, nboot = 100, pvalue = 0.05, do.estimation = FALSE) {
 	#check for the inputs to be correct
 	if(is.null(data) || is.null(data$genotypes)) {
 		stop("The dataset given as input is not valid.");
@@ -22,7 +22,7 @@ tronco.capri <- function(data, command = "hc", do.boot = TRUE, nboot = 100, pval
 	}
 	#reconstruct the topology with CAPRI
 	cat(paste("Running CAPRI algorithm.","\n"));
-	topology = capri.fit(data$genotypes,data$hypotheses,command,do.boot,nboot,pvalue,do.estimation);
+	topology = capri.fit(data$genotypes,data$hypotheses,command,do.boot,nboot,pvalue,do.estimation, REGULARIZATION = REGULARIZATION);
 	topology$data = data;
 	#set rownames and colnames to the results
 	rownames(topology$probabilities$probabilities.pf$marginal.probs) = colnames(data$genotypes);

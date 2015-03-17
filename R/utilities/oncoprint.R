@@ -141,12 +141,12 @@ oncoprint <- function(x,
     annotation_colors = list()
   }
 
-  if(ann.hits == T){
+  if(ann.hits){
     hits.gradient = (colorRampPalette(brewer.pal(6, hits.color))) (max(nmut))
     annotation_colors = append(annotation_colors, list(hits=hits.gradient))
   }
   
-  if(ann.stage == T){ 
+  if(ann.stage){ 
     different.stages = sort(unique(annotation$stage))
     num.stages = length(different.stages)
     stage.color.attr = append(brewer.pal(n=num.stages, name=stage.color), "#FFFFFF")

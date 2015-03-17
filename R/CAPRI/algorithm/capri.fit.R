@@ -18,7 +18,7 @@
 #RETURN:
 #topology: the reconstructed tree topology
 "capri.fit" <-
-function(dataset, hypotheses = NA, command = "hc", do.boot = TRUE, nboot = 100, pvalue = 0.05, do.estimation = FALSE) {
+function(dataset, hypotheses = NA, command = "hc", REGULARIZATION = "bic", do.boot = TRUE, nboot = 100, pvalue = 0.05, do.estimation = FALSE) {
 	
 	#structure with the set of valid edges
 	#I start from the complete graph, i.e., I have no prior and all the connections are possibly causal
@@ -59,7 +59,7 @@ function(dataset, hypotheses = NA, command = "hc", do.boot = TRUE, nboot = 100, 
     }
     
 	#perform the likelihood fit by BIC score on the prima facie topology
-	best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command);
+	best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command, REGULARIZATION=REGULARIZATION);
 	
 	#set the structure to save the conditional probabilities and the confidences of the reconstructed topology
 	parents.pos.pf = array(list(),c(ncol(dataset),1));
@@ -140,7 +140,7 @@ function(dataset, hypotheses = NA, command = "hc", do.boot = TRUE, nboot = 100, 
     probabilities = list(probabilities.pf=probabilities.pf,probabilities.bic=probabilities.bic);
     parents.pos = list(parents.pos.pf=parents.pos.pf,parents.pos.bic=parents.pos.bic);
     error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.bic=estimated.error.rates.bic);
-	parameters = list(algorithm="CAPRI",command=command,do.boot=do.boot,nboot=nboot,pvalue=pvalue,do.estimation=do.estimation);
+	parameters = list(algorithm="CAPRI",command=command,do.boot=do.boot,nboot=nboot,pvalue=pvalue,do.estimation=do.estimation, REGULARIZATION= REGULARIZATION);
 	
     #return the results
     topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,confidence=confidence,adj.matrix=best.parents$adj.matrix,parameters=parameters);
