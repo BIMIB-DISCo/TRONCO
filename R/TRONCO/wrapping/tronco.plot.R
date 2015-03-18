@@ -488,9 +488,10 @@ tronco.plot = function(x,
   legend_logic = NULL
   
   # set color, size form and shape each logic nodes (if hypos expansion actived)
+  node.type = 'box'
   if (expand) {
     
-    node.type = 'box'
+    
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
     if (any(w)) {
       legend_logic['OR'] = 'orange'
@@ -684,6 +685,15 @@ tronco.plot = function(x,
     valid_events = colnames(hypo_mat)[which(colnames(hypo_mat) %in% colnames(c_matrix))]
     legend_names = unique(data$annotations[which(rownames(data$annotations) %in% valid_events), 'type'])
     legend_colors = data$types[legend_names, 'color']
+    pt_bg = legend_colors
+    pch = rep(21, length(legend_names))
+    if (length(legend_logic) > 0) {
+      pch = c(pch, 0, 0, rep(22, length(legend_logic)))
+      legend_names = c(legend_names, ' ', expression(bold('Patterns')), names(legend_logic))
+      legend_colors = c(rep('black', length(legend_colors)), 'white', 'white', rep('black', length(legend_logic)))
+      pt_bg = c(pt_bg, 'white', 'white', legend_logic)
+      
+    }
     
     legend('bottomright',
            legend = legend_names,
@@ -691,29 +701,13 @@ tronco.plot = function(x,
            bty = 'n',
            cex = legend.cex,
            pt.cex = 1.5 * legend.cex,
-           pch = c(19,19),
+           pch = pch,
            col = legend_colors,
-           xjust = 1,
-           xpd = TRUE)
+           pt.bg = pt_bg)
   }  
 
-  # add logic nodes legend
-  if (legend && length(legend_logic) > 0) {
-    legend('bottom',
-           legend = names(legend_logic),
-           title = 'Symbols',
-           bty = 'n',
-           cex = legend.cex,
-           pt.cex = 1.5 * legend.cex,
-           pch = c(19,19),
-           ncol = length(legend_logic),
-           col = legend_logic,
-           xjust = 1,
-           xpd = TRUE)
-  }
-
   #add thickness legend
-  if (legend && !is.na(scale.nodes)) {
+  if (legend) {
     valid_names = node_names
     if(expand) {
       valid_names = node_names[unlist(lapply(node_names, function(x){!is.logic.node(x)}))]
@@ -759,8 +753,8 @@ tronco.plot = function(x,
 	
 	stat.pch = c(19,19)
     stat.col = c(
-    		as.colors(capri.non.parametric$data)[label.min[, 'type']], 
-    	as.colors(capri.non.parametric$data)[label.max[, 'type']]
+    		as.colors(x$data)[label.min[, 'type']], 
+    	as.colors(x$data)[label.max[, 'type']]
     	)
     	
     	
