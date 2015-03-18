@@ -601,7 +601,7 @@ tronco.plot = function(x,
         }
 
         hyper_geom = x$confidence[[3]][conf_from, conf_to]
-        if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 3)}
+        if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
         eAttrs$label[e] = paste(eAttrs$label[e], ' / ', hyper_geom)
 
 
