@@ -45,10 +45,10 @@ import.GISTIC <- function(x, stage.annot = NA) {
   d.high[d.high == 2] <- 1
     
   cat('Transforming events in TRONCO data types ..... \n')
-  d.homo = trim(import.genotypes(d.homo, default.variant='Homozygous Loss', color = 'dodgerblue4'))
-  d.het  = trim(import.genotypes(d.het, default.variant='Heterozygous Loss', color = 'dodgerblue1'))
-  d.low  = trim(import.genotypes(d.low, default.variant='Low-level Gain', color = 'firebrick1'))
-  d.high  = trim(import.genotypes(d.high, default.variant='High-level Gain', color = 'firebrick4'))
+  d.homo = trim(import.genotypes(d.homo, event.type='Homozygous Loss', color = 'dodgerblue4'))
+  d.het  = trim(import.genotypes(d.het, event.type='Heterozygous Loss', color = 'dodgerblue1'))
+  d.low  = trim(import.genotypes(d.low, event.type='Low-level Gain', color = 'firebrick1'))
+  d.high  = trim(import.genotypes(d.high, event.type='High-level Gain', color = 'firebrick4'))
   
   d.cnv.all = ebind(d.homo, d.het, d.low, d.high)
   

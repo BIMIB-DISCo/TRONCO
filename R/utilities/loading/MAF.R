@@ -107,7 +107,7 @@
 	close(pb)
 	
 	cat('Starting conversion from MAF to TRONCO data type.\n')
-	tronco.data = import.genotypes(binary.mutations, default.variant = 'Mutation')
+	tronco.data = import.genotypes(binary.mutations, event.type = 'Mutation')
   is.compliant(tronco.data)
 
 	return(tronco.data)
