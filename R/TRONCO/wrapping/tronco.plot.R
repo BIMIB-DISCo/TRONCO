@@ -684,13 +684,13 @@ tronco.plot = function(x,
   if (legend) {
     valid_events = colnames(hypo_mat)[which(colnames(hypo_mat) %in% colnames(c_matrix))]
     legend_names = unique(data$annotations[which(rownames(data$annotations) %in% valid_events), 'type'])
-    legend_colors = data$types[legend_names, 'color']
-    pt_bg = legend_colors
+    pt_bg = data$types[legend_names, 'color']
+    legend_colors = rep('black', length(legend_names))
     pch = rep(21, length(legend_names))
     if (length(legend_logic) > 0) {
       pch = c(pch, 0, 0, rep(22, length(legend_logic)))
       legend_names = c(legend_names, ' ', expression(bold('Patterns')), names(legend_logic))
-      legend_colors = c(rep('black', length(legend_colors)), 'white', 'white', rep('black', length(legend_logic)))
+      legend_colors = c(legend_colors, 'white', 'white', rep('black', length(legend_logic)))
       pt_bg = c(pt_bg, 'white', 'white', legend_logic)
       
     }
