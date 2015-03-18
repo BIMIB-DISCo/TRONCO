@@ -293,7 +293,7 @@ tronco.plot = function(x,
                      expand = T,
                      genes = NULL
 
-                     #file = .... # print to pdf	
+                     #file = .... # print to pdf  
                      ) 
 {
   if (!require(igraph)) {
@@ -342,7 +342,7 @@ tronco.plot = function(x,
   if (confidence) {
     conf_matrix = if (pf) x$bootstrap$edge.confidence$edge.confidence.pf else x$bootstrap$edge.confidence$edge.confidence.bic
   }
-  print(c_matrix)
+  #print(c_matrix)
   
   # get algorithm parameters
   parameters = x$parameters
@@ -396,7 +396,7 @@ tronco.plot = function(x,
   
   attrs = list(node = list())
       
-  print(hypo_mat)
+  #print(hypo_mat)
   
   hypo_graph = graph.adjacency(hypo_mat)
   #cat('\n')
@@ -416,10 +416,10 @@ tronco.plot = function(x,
     }
   }
     
-  print(V(hypo_graph)$name)
-  print(v_names)
-  print(new_name)
-  print(V(hypo_graph)$label)
+  #print(V(hypo_graph)$name)
+  #print(v_names)
+  #print(new_name)
+  #print(V(hypo_graph)$label)
   #print(hypo_graph)
   
   V(hypo_graph)$label = new_name
@@ -452,7 +452,7 @@ tronco.plot = function(x,
     # foreach node
     min_p = min(marginal_p)
     max_p = max(marginal_p)
-    print(scale.nodes)
+    #print(scale.nodes)
 
     for (node in node_names) {
       prefix = gsub("_.*$", "", node)
@@ -494,7 +494,7 @@ tronco.plot = function(x,
     
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
     if (any(w)) {
-      legend_logic['OR'] = 'orange'
+      legend_logic['Exclusivity (soft)'] = 'orange'
     }
     nAttrs$fillcolor[which(w)] = 'orange'
     nAttrs$label[which(w)] = ''
@@ -505,7 +505,7 @@ tronco.plot = function(x,
     
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
     if (any(w)) {
-      legend_logic['AND'] = 'lightgreen'
+      legend_logic['Co-occurence'] = 'lightgreen'
     }
     nAttrs$fillcolor[which(w)] = 'lightgreen'
     nAttrs$label[which(w)] = ''
@@ -516,7 +516,7 @@ tronco.plot = function(x,
     
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
     if (any(w)) {
-      legend_logic['XOR'] = 'red'
+      legend_logic['Exclusivity (hard)'] = 'red'
     }
     nAttrs$fillcolor[which(w)] = 'red'
     nAttrs$label[which(w)] = ''
@@ -525,11 +525,11 @@ tronco.plot = function(x,
     nAttrs$height[which(w)] = height.logic
     nAttrs$width[which(w)] = height.logic
   }
-  print(legend_logic)
+  #print(legend_logic)
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == '*'
   if (any(w)) {
-      legend_logic['AND'] = 'lightgreen'
+      legend_logic['Co-occurence'] = 'lightgreen'
     }
   nAttrs$fillcolor[which(w)] = 'lightgreen'
   nAttrs$label[which(w)] = ''
@@ -659,27 +659,10 @@ tronco.plot = function(x,
     cat('done')
   }
   
-  # set temporary edge arrow
-  #eAttrs$dir = rep("both", length(edge_names))
-  #names(eAttrs$dir) = edge_names
-
-  #eAttrs$arrowhead = rep("open", length(edge_names))
-  #names(eAttrs$arrowhead) = edge_names
-
-  #eAttrs$arrowtail = rep("open", length(edge_names))
-  #names(eAttrs$arrowtail) = edge_names
-
   
 
-  #print(eAttrs$arrowhead)
-  #print(eAttrs$arrowtail)
-  
-  # print(eAttrs)
-    
-  #cur.dev = dev.cur()
-  
-  #pdf(file=paste(name, as.character(disconnected), '.', as.character(pf),'.pdf', sep=''), height=11, width=8.5)
   plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title)
+  
   # Adds the legend to the plot
   if (legend) {
     valid_events = colnames(hypo_mat)[which(colnames(hypo_mat) %in% colnames(c_matrix))]
@@ -687,12 +670,12 @@ tronco.plot = function(x,
     pt_bg = data$types[legend_names, 'color']
     legend_colors = rep('black', length(legend_names))
     pch = rep(21, length(legend_names))
+    
     if (length(legend_logic) > 0) {
       pch = c(pch, 0, 0, rep(22, length(legend_logic)))
       legend_names = c(legend_names, ' ', expression(bold('Patterns')), names(legend_logic))
       legend_colors = c(legend_colors, 'white', 'white', rep('black', length(legend_logic)))
-      pt_bg = c(pt_bg, 'white', 'white', legend_logic)
-      
+      pt_bg = c(pt_bg, 'white', 'white', legend_logic)  
     }
     
     legend('bottomright',
@@ -704,20 +687,15 @@ tronco.plot = function(x,
            pch = pch,
            col = legend_colors,
            pt.bg = pt_bg)
-  }  
 
-  #add thickness legend
-  if (legend) {
+    #add thickness legend
     valid_names = node_names
     if(expand) {
       valid_names = node_names[unlist(lapply(node_names, function(x){!is.logic.node(x)}))]
     }
     valid_names = grep('^[*]_(.+)$', valid_names, value = T, invert=T)
-    #print(valid_names)
     dim = nAttrs$height[valid_names]
-    #print(dim)
     prob = marginal_p[valid_names, ]
-    #print(prob)
     
     min = min(dim)
     p_min = round(min(prob) * 100, 0)
@@ -725,55 +703,51 @@ tronco.plot = function(x,
     p_max = round(max(prob) * 100, 0)
     
     
-    # This is good only if expand = T
-    cat('\n\nGIULGIOLGIOGOIOGLGIOG\n\n')
-    
+    # This is good only if expand = T   
     # throw away hypotheses - cut marginal_p accordingly
     hypo.names = rownames(as.events(x$data, types='Hypothesis'))
     nonhypo.names = setdiff(rownames(as.events(x$data)), hypo.names)
     
- 	marginal_p = marginal_p[nonhypo.names, , drop = FALSE]
+    marginal_p = marginal_p[nonhypo.names, , drop = FALSE]
 
-	# Get label of the (first) event with minimum marginale 
- 	min.p = 	rownames(marginal_p)[which(min(marginal_p) == marginal_p) ]
- 	label.min = as.events(x$data)[ min.p[1] , , drop = FALSE]
+    # Get label of the (first) event with minimum marginale 
+    min.p =   rownames(marginal_p)[which(min(marginal_p) == marginal_p) ]
+    label.min = as.events(x$data)[ min.p[1] , , drop = FALSE]
 
-	# Get label of the (first) event with max marginale 
- 	max.p = rownames(marginal_p)[which(max(marginal_p) == marginal_p) ]
- 	label.max = as.events(x$data)[ max.p[1] , ,  drop = FALSE]
+    # Get label of the (first) event with max marginale 
+    max.p = rownames(marginal_p)[which(max(marginal_p) == marginal_p) ]
+    label.max = as.events(x$data)[ max.p[1] , ,  drop = FALSE]
 
-	# Frequency labels
-	min.freq = round(min(marginal_p) * 100, 0)
-	max.freq = round(max(marginal_p) * 100, 0)
-	
-	freq.labels = c( 
-		paste0(min.freq, ifelse((min.freq < 10 && max.freq > 9), '%  ', '%'), ' ', label.min[, 'event']),
-		paste0(max.freq, '% ', label.max[, 'event'])
-		)
-	
-	stat.pch = c(19,19)
-    stat.col = c(
-    		as.colors(x$data)[label.min[, 'type']], 
-    	as.colors(x$data)[label.max[, 'type']]
-    	)
-    	
-    	
+    # Frequency labels
+    min.freq = round(min(marginal_p) * 100, 0)
+    max.freq = round(max(marginal_p) * 100, 0)
+    
+    freq.labels = c( 
+      paste0(min.freq, ifelse((min.freq < 10 && max.freq > 9), '%  ', '%'), ' ', label.min[, 'event']),
+      paste0(max.freq, '% ', label.max[, 'event'])
+    )
+  
+    stat.pch = c(21, 21)
+    pt.bg = c(
+        as.colors(x$data)[label.min[, 'type']], 
+      as.colors(x$data)[label.max[, 'type']]
+      )
+    col = c('black', 'black')
+        
     # Further stats
     y = delete.type(x$data, 'Hypothesis')
     
     freq.labels = c(freq.labels, 
-        ' ',
-        expression(bold('Sample size')),
-    	paste0('n = ', nsamples(y)),
-    	paste0('m = ', nevents(y)),
-    	paste0('|G| = ', ngenes(y))    	
-    	)	
+      ' ',
+      expression(bold('Sample size')),
+      paste0('n = ', nsamples(y)),
+      paste0('m = ', nevents(y)),
+      paste0('|G| = ', ngenes(y))     
+    ) 
      
-     stat.pch = c(stat.pch, 0, 0, 20,  20, 20)
-     stat.col = c(stat.col, 'white', 'white', rep('black', 3))
-     
-     #box.lty, box.lwd, box.col
-     
+    stat.pch = c(stat.pch, 0, 0, 20,  20, 20)
+    pt.bg = c(pt.bg, 'white', 'white', rep('black', 3))
+    col = c(col, 'white', 'white', rep('black', 3)) 
     
     legend('bottomleft',
            legend = freq.labels,
@@ -784,22 +758,8 @@ tronco.plot = function(x,
            pch = stat.pch,
            pt.cex = 1.5  * legend.cex,
            ncol = 1,
-           col = stat.col,
+           pt.bg = pt.bg,
            cex = legend.cex,
-           xjust = 1,
-           xpd = TRUE
-      )
-    
-    # legend('bottomleft',
-           # legend = paste0(c(p_min, p_max), '%'),
-           # title = 'Frequency',
-           # bty = 'n',
-           # pch = c(1,1),
-           # pt.cex = c(min * 2, max * 2) * legend.cex,
-           # ncol = 2,
-           # cex = legend.cex,
-           # xjust = 1,
-           # xpd = TRUE
-      # )
+           col = col)
   }
 }
