@@ -490,13 +490,14 @@ tronco.plot = function(x,
   # set color, size form and shape each logic nodes (if hypos expansion actived)
   if (expand) {
     
+    node.type = 'box'
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
     if (any(w)) {
       legend_logic['OR'] = 'orange'
     }
     nAttrs$fillcolor[which(w)] = 'orange'
     nAttrs$label[which(w)] = ''
-    nAttrs$shape[which(w)] = 'circle'
+    nAttrs$shape[which(w)] = node.type
     nAttrs$color[which(w)] = 'black'
     nAttrs$height[which(w)] = height.logic
     nAttrs$width[which(w)] = height.logic
@@ -507,7 +508,7 @@ tronco.plot = function(x,
     }
     nAttrs$fillcolor[which(w)] = 'lightgreen'
     nAttrs$label[which(w)] = ''
-    nAttrs$shape[which(w)] = 'circle'
+    nAttrs$shape[which(w)] = node.type
     nAttrs$color[which(w)] = 'black'
     nAttrs$height[which(w)] = height.logic
     nAttrs$width[which(w)] = height.logic
@@ -518,7 +519,7 @@ tronco.plot = function(x,
     }
     nAttrs$fillcolor[which(w)] = 'red'
     nAttrs$label[which(w)] = ''
-    nAttrs$shape[which(w)] = 'circle'
+    nAttrs$shape[which(w)] = node.type
     nAttrs$color[which(w)] = 'black'
     nAttrs$height[which(w)] = height.logic
     nAttrs$width[which(w)] = height.logic
@@ -531,7 +532,7 @@ tronco.plot = function(x,
     }
   nAttrs$fillcolor[which(w)] = 'lightgreen'
   nAttrs$label[which(w)] = ''
-  nAttrs$shape[which(w)] = 'circle'
+  nAttrs$shape[which(w)] = node.type
   nAttrs$color[which(w)] = 'black'
   nAttrs$height[which(w)] = height.logic
   nAttrs$width[which(w)] = height.logic
@@ -686,10 +687,10 @@ tronco.plot = function(x,
     
     legend('bottomright',
            legend = legend_names,
-           title = 'events',
+           title = expression(bold('Events type')),
            bty = 'n',
            cex = legend.cex,
-           pt.cex = 1.5,
+           pt.cex = 1.5 * legend.cex,
            pch = c(19,19),
            col = legend_colors,
            xjust = 1,
@@ -700,10 +701,10 @@ tronco.plot = function(x,
   if (legend && length(legend_logic) > 0) {
     legend('bottom',
            legend = names(legend_logic),
-           title = 'logic',
+           title = 'Symbols',
            bty = 'n',
            cex = legend.cex,
-           pt.cex = 1.5,
+           pt.cex = 1.5 * legend.cex,
            pch = c(19,19),
            ncol = length(legend_logic),
            col = legend_logic,
@@ -718,25 +719,93 @@ tronco.plot = function(x,
       valid_names = node_names[unlist(lapply(node_names, function(x){!is.logic.node(x)}))]
     }
     valid_names = grep('^[*]_(.+)$', valid_names, value = T, invert=T)
-    print(valid_names)
+    #print(valid_names)
     dim = nAttrs$height[valid_names]
     #print(dim)
     prob = marginal_p[valid_names, ]
     #print(prob)
+    
     min = min(dim)
-    p_min = min(prob)
+    p_min = round(min(prob) * 100, 0)
     max = max(dim)
-    p_max = max(prob)
+    p_max = round(max(prob) * 100, 0)
+    
+    
+    # This is good only if expand = T
+    cat('\n\nGIULGIOLGIOGOIOGLGIOG\n\n')
+    
+    # throw away hypotheses - cut marginal_p accordingly
+    hypo.names = rownames(as.events(x$data, types='Hypothesis'))
+    nonhypo.names = setdiff(rownames(as.events(x$data)), hypo.names)
+    
+ 	marginal_p = marginal_p[nonhypo.names, , drop = FALSE]
+
+	# Get label of the (first) event with minimum marginale 
+ 	min.p = 	rownames(marginal_p)[which(min(marginal_p) == marginal_p) ]
+ 	label.min = as.events(x$data)[ min.p[1] , , drop = FALSE]
+
+	# Get label of the (first) event with max marginale 
+ 	max.p = rownames(marginal_p)[which(max(marginal_p) == marginal_p) ]
+ 	label.max = as.events(x$data)[ max.p[1] , ,  drop = FALSE]
+
+	# Frequency labels
+	min.freq = round(min(marginal_p) * 100, 0)
+	max.freq = round(max(marginal_p) * 100, 0)
+	
+	freq.labels = c( 
+		paste0(min.freq, ifelse((min.freq < 10 && max.freq > 9), '%  ', '%'), ' ', label.min[, 'event']),
+		paste0(max.freq, '% ', label.max[, 'event'])
+		)
+	
+	stat.pch = c(19,19)
+    stat.col = c(
+    		as.colors(capri.non.parametric$data)[label.min[, 'type']], 
+    	as.colors(capri.non.parametric$data)[label.max[, 'type']]
+    	)
+    	
+    	
+    # Further stats
+    y = delete.type(x$data, 'Hypothesis')
+    
+    freq.labels = c(freq.labels, 
+        ' ',
+        expression(bold('Sample size')),
+    	paste0('n = ', nsamples(y)),
+    	paste0('m = ', nevents(y)),
+    	paste0('|G| = ', ngenes(y))    	
+    	)	
+     
+     stat.pch = c(stat.pch, 0, 0, 20,  20, 20)
+     stat.col = c(stat.col, 'white', 'white', rep('black', 3))
+     
+     #box.lty, box.lwd, box.col
+     
+    
     legend('bottomleft',
-           legend = c(round(p_min, 2), round(p_max, 2)),
-           title = 'thickness',
+           legend = freq.labels,
+           title = expression(bold('Statistics')),
            bty = 'n',
-           pch = c(19,19),
-           pt.cex = c(min * 3, max * 3),
-           ncol = 2,
+           box.lty = 3,
+           box.lwd = .3,
+           pch = stat.pch,
+           pt.cex = 1.5  * legend.cex,
+           ncol = 1,
+           col = stat.col,
            cex = legend.cex,
            xjust = 1,
            xpd = TRUE
       )
+    
+    # legend('bottomleft',
+           # legend = paste0(c(p_min, p_max), '%'),
+           # title = 'Frequency',
+           # bty = 'n',
+           # pch = c(1,1),
+           # pt.cex = c(min * 2, max * 2) * legend.cex,
+           # ncol = 2,
+           # cex = legend.cex,
+           # xjust = 1,
+           # xpd = TRUE
+      # )
   }
 }
