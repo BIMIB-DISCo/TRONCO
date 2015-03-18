@@ -45,31 +45,10 @@ ebind = function(...)
   }
   
   
-	input = list(...)
+  input = list(...)
 
   cat('*** Binding events for', length(input), 'datasets.\n')
-	
-	if(length(input) <= 1) return(input);
-		
-	# This could be done with a foldR
-	 flush.console()
-	 pb <- txtProgressBar(1, length(input), style = 3)
-  
-	z = events.pairwise.bind(input[[1]], y=input[[2]])
-  if (!(length(input) > 2)) {
-     # update pb
-     setTxtProgressBar(pb, 2)
-      close(pb)
-	return(z)
-  }
-	
-  for(i in 3:length(input))
-	{
-    setTxtProgressBar(pb, i)    
-    z = events.pairwise.bind(z, input[[i]])
-	}  
-  close(pb)
-	return(z)
+  return(Reduce(events.pairwise.bind, input))
  }
 
 # Binds samples from one or more datasets, which must be defined over the same set of events
@@ -115,16 +94,5 @@ sbind = function(...)
   }
   
   input = list(...)
-  
-  if(length(input) <= 1) return(input);
-  
-  # This could be done with a foldR
-  z = samples.pairwise.bind(input[[1]], y=input[[2]])
-  if (!(length(input) > 2)) {
-    return(z)
-  }
-  for(i in 3:length(input))
-    z = samples.pairwise.bind(z, input[[i]])
-  
-  return(z)
+  return(Reduce(samples.pairwise.bind, input))
 }

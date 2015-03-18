@@ -3,9 +3,8 @@
 # If these parameters are specified, they should be compliant with TRONCO's input (explain this better)
 #
 # - geno: a dataframe with the genotypes (this is not constrained to be 0/1)
-# - geno.annot: a ncol(geno)x2 dataframe where geno.annot[i,] denotes the event associated to geno[,i]. Column should contain event type and label
 # - stage.annot: a nrow(geno)x2 dataframe where stage.annot[i,] denotes the stage associated to geno[i,]. 
-# - default.variant: default type label used if geno.annot=NA
+# - event.type: type label to be used
 # - color: R Brewer palette from which random colors are sampled
 # Returns: a list of dataframes compliant with TRONCO's specifications.
 import.genotypes = function(geno, stage.annot = NA, event.type = 'variant', color = 'Accent')
