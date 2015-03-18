@@ -570,6 +570,10 @@ tronco.plot = function(x,
   cat('done')
   
   if(confidence) {
+
+    #print(x$confidence[[3]])
+    #print(hypos_new_name)
+
     # for each edge..
     for(e in edge_names) {
       edge = unlist(strsplit(e, '~'))
@@ -577,21 +581,30 @@ tronco.plot = function(x,
       to = edge[2]
       # ..checks if confidence is available
       if (from %in% rownames(conf_matrix) && to %in% colnames(conf_matrix)) {
+        if(from %in% names(hypos_new_name)){ conf_from = hypos_new_name[[from]] } else { conf_from = from }
+        if(to %in% names(hypos_new_name)){ conf_to = hypos_new_name[[to]] } else { conf_to = to }
         # if confidence > 0..
         # print(paste('from', from, 'to', to, ':', conf_matrix[from, to]))
         if (conf_matrix[from, to] == 1) {
           # ..set edge thickness and label..
-          eAttrs$label[e] = '      1'
+          eAttrs$label[e] = '                  1'
           eAttrs$lwd[e] = log(150)
         } else if (conf_matrix[from, to] >= 0.01) {
           # ..draw it on the graph..
-          eAttrs$label[e] = paste0('      ', substr(conf_matrix[from, to], 2, 4))
+
+          eAttrs$label[e] = paste0('                  ', substr(conf_matrix[from, to], 2, 4))
           eAttrs$lwd[e] = log(conf_matrix[from, to] * 150)
         } else {
           # ..else set the style of the edge to dashed
-          eAttrs$label[e] = "       <.01"
+          eAttrs$label[e] = "                   <.01"
           eAttrs$lwd[e] = log(1.5)
         }
+
+        hyper_geom = x$confidence[[3]][conf_from, conf_to]
+        if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 3)}
+        eAttrs$label[e] = paste(eAttrs$label[e], ' / ', hyper_geom)
+
+
       } else {
         # ..else this edge is located inside to an hypothesis, so no arrow to show
         eAttrs$logic[e] = T
