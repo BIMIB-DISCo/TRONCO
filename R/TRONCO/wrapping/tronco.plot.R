@@ -587,22 +587,22 @@ tronco.plot = function(x,
         # print(paste('from', from, 'to', to, ':', conf_matrix[from, to]))
         if (conf_matrix[from, to] == 1) {
           # ..set edge thickness and label..
-          eAttrs$label[e] = '                  1'
+          eAttrs$label[e] = '100%'
           eAttrs$lwd[e] = log(150)
         } else if (conf_matrix[from, to] >= 0.01) {
           # ..draw it on the graph..
 
-          eAttrs$label[e] = paste0('                  ', substr(conf_matrix[from, to], 2, 4))
+          eAttrs$label[e] = paste0('', round(conf_matrix[from, to] * 100, 0), '%')
           eAttrs$lwd[e] = log(conf_matrix[from, to] * 150)
         } else {
           # ..else set the style of the edge to dashed
-          eAttrs$label[e] = "                   <.01"
+          eAttrs$label[e] = "< 1%"
           eAttrs$lwd[e] = log(1.5)
         }
 
         hyper_geom = x$confidence[[3]][conf_from, conf_to]
         if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
-        eAttrs$label[e] = paste(eAttrs$label[e], ' / ', hyper_geom)
+        eAttrs$label[e] = paste(eAttrs$label[e], '         ', hyper_geom)
 
 
       } else {
