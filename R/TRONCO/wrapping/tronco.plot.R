@@ -291,7 +291,8 @@ tronco.plot = function(x,
                      node.th.on = FALSE, # via
                      hidden.and = T,
                      expand = T,
-                     genes = NULL
+                     genes = NULL,
+                     edge.color = 'black'
 
                      #file = .... # print to pdf  
                      ) 
@@ -560,7 +561,7 @@ tronco.plot = function(x,
   names(eAttrs$fontsize) = edge_names
   
   #set edge color to black (default)
-  eAttrs$color = rep('black', length(edge_names))
+  eAttrs$color = rep(edge.color, length(edge_names))
   names(eAttrs$color) = edge_names
   
   #record logic edge
@@ -602,7 +603,7 @@ tronco.plot = function(x,
 
         hyper_geom = x$confidence[[3]][conf_from, conf_to]
         if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
-        eAttrs$label[e] = paste(eAttrs$label[e], '         ', hyper_geom)
+        eAttrs$label[e] = paste(eAttrs$label[e], '   ', hyper_geom)
 
 
       } else {
