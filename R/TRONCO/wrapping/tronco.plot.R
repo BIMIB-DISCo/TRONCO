@@ -737,8 +737,8 @@ tronco.plot = function(x,
     max.freq = round(max(marginal_p) * 100, 0)
     
     freq.labels = c( 
-      paste0(min.freq, ifelse((min.freq < 10 && max.freq > 9), '%  ', '%'), ' ', label.min[, 'event']),
-      paste0(max.freq, '% ', label.max[, 'event'])
+      paste0(min.freq, ifelse((min.freq < 10 && max.freq > 9), '%  ', '%'), ' ', label.min[, 'event'], ' (min)'),
+      paste0(max.freq, '% ', label.max[, 'event'], ' (max)')
     )
   
     stat.pch = c(21, 21)
@@ -765,7 +765,7 @@ tronco.plot = function(x,
     
     legend('bottomleft',
            legend = freq.labels,
-           title = expression(bold('Statistics')),
+           title = expression(bold('Events frequency')),
            bty = 'n',
            box.lty = 3,
            box.lwd = .3,
