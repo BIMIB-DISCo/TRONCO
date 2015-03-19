@@ -66,7 +66,7 @@ is.compliant = function(x, err.fun='[ERR]', stage=has.stages(x))
   
   if(has.duplicates(x)) {
     cat("Duplicated events in \'x\': \n")
-    print(duplicates(x))
+    print(head(duplicates(x)))
     stop('duplicated events found in annotations')
   }
  }

@@ -140,7 +140,7 @@ samples.selection = function(x, samples)
   is.compliant(x)
   
   missing = setdiff(samples, as.samples(x))
-  if(length(missing) > 0) warning(paste('Missing samples: ', paste(missing, collapse='\n')))
+  if(length(missing) > 0) warning(paste('Missing samples: ', paste(missing, collapse=', ')))
   
   delete = setdiff(as.samples(x), samples)
   return(delete.samples(x, delete))

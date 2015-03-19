@@ -142,7 +142,11 @@ show = function(x, view = 10)
 	}
 
 	cat(paste('Events (', view, ' shown):\n', sep=''))
-	cat(paste(paste('\t', rownames(as.events(x)[1: view,]), ':', as.events(x)[1: view, 1], as.events(x)[1: view, 2], sep=' '), collapse='\n'))
+	to.show = paste( '\t',
+				rownames(as.events(x)[1: view,]), ':', 
+				as.events(x)[1: view, 1], as.events(x)[1: view, 2], sep=' ')
+
+	cat(paste(to.show, collapse = '\n'))
 
 	cat(paste('\nGenotypes (', view, ' shown):\n', sep=''))
 	print(head(x$genotypes[,1:view, drop=FALSE]))
