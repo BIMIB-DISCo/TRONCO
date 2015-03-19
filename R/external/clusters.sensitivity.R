@@ -39,6 +39,10 @@
   subdata = cluster.map[-ref.clust,]
   refcol = cluster.map[ref.clust,]
   urefcol = unique(refcol)
+  
+  cat('Found the following cluster labels:', urefcol, '\n')
+
+  cat('Computing clustering scores ... ')
 
   score = rep(0, ncol(cluster.map))
  
@@ -55,6 +59,8 @@
     
     score[which(refcol==i)] = 1 - (curr.score/nrow(tmp))
   }
+    cat('DONE\n')
+
    
   # Create annotations
   cn = colnames(cluster.map)
@@ -78,30 +84,36 @@
   annotation_colors = list(stage=stage.color, sensitivity=score.color)
   
   # Settings
-  main = paste0("Sensitivity of clustering assigment for ", reference,', with respect to clusters detected for ', paste(rownames(subdata), collapse=', ')) 
+  main = paste0("Sensitivity of clustering assigment\n Reference: ", 
+  	reference,', Against:', paste(rownames(subdata), collapse=', '),
+  	 '(cluster labels are unmatched)') 
   
   fontsize_col = 3
-
+  
+  cat('Clustering rows in', nrow(cluster.map), 'clusters.\n')
+  order = sort(cluster.map[ref.clust, ], decreasing=FALSE, index.return=TRUE) 
+  
   pheatmap(cluster.map, 
            scale = "none", 
            cluster_col= F, 
-           cluster_rows = F, 
+           cluster_rows = T, 
            col=col, 
            main=main,
-           fontsize=7,
+           fontsize=10,
            fontsize_col=fontsize_col,
            annotation = annotation,
            annotation_colors = annotation_colors,	
            border_color='lightgray',
            border=T,
            margins=c(10,10),
-           cellwidth = 3, 
+           cellwidth = 6, 
            cellheight = 25,
-           #legend_labels = unlist(unique(id)),
            legend=F,
-           #	legend_breaks=-1:4
-           #treeheight_column = 20,
-           filename=file
+           filename=file,
+           display_numbers = T,
+           cutree_rows = nrow(cluster.map),   
+           gaps_col = (match(urefcol, order$x) - 1),        
+           number_format = '%d',  			         
   )
   
   return(cluster.map)

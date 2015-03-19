@@ -14,10 +14,9 @@ ebind = function(...)
     
     z = list()
 
-	y$genotypes = y$genotypes[rownames(x$genotypes),]
+	  y$genotypes = y$genotypes[rownames(x$genotypes),]
     y$stages = y$stages[rownames(y$genotypes), , drop=FALSE]
-   
-   
+     
     # Copy genotype matrix, and sets its rownames (samples)
     z$genotypes = cbind(x$genotypes, y$genotypes)
     colnames(z$genotypes) = paste('G', 1:ncol(z$genotypes), sep='')

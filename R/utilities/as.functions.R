@@ -253,7 +253,7 @@ as.pathway <- function(x, pathway.genes, pathway.name,
   colnames(pathway.genotype) = pathway.name
   rownames(pathway.genotype) = as.samples(y)
   
-  res = import.genotypes(pathway.genotype, default.variant='Pathway', color=pathway.color)
+  res = import.genotypes(pathway.genotype, event.type = 'Pathway', color=pathway.color)
   
   if(!aggregate.pathway) res = ebind(res, y)
   if(has.stages(y)) res$stages = as.stages(y)

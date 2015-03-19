@@ -4,7 +4,8 @@
 
 "import.MAF" <- function(file, sep='\t', is.TCGA=TRUE) 
 {
-	cat('*** Importing from file: ', file, ' ... ')
+	cat('*** Importing from file: ', file, '\n')
+	cat('Loading MAF file ...')
   maf = read.delim(file, comment.char = "#", sep = sep, header = TRUE, stringsAsFactors = FALSE)    
   cat('DONE\n')
   
@@ -118,7 +119,8 @@
 
 extract.MAF.HuGO.Entrez.map = function(file, sep='\t') 
 {
-  cat('*** Importing from file: ', file, ' ... ')
+  cat('*** Importing from file: ', file, '\n')
+	cat('Loading MAF file ...')
   
   maf = read.delim(file, comment.char = "#", sep = sep, header = TRUE, stringsAsFactors = FALSE)    
   cat('DONE\n')

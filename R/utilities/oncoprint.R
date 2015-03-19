@@ -205,9 +205,11 @@ oncoprint <- function(x,
   # Augment title
   title = paste(title, '\n n = ', nsamples(x),'    m = ', nevents(x), '    |G| = ', ngenes(x),  sep='')
   
+  print(list(...))
+  
   # Pheatmap
   if(ann.hits == TRUE || ann.stage == TRUE || hasGroups)  
-    pheatmap(data, 
+   ret = pheatmap(data, 
              scale = "none", 
              col = map.gradient, 
              cluster_cols = col.cluster,
@@ -232,7 +234,7 @@ oncoprint <- function(x,
              ...
     )
   else
-    pheatmap(data, 
+    ret = pheatmap(data, 
              scale = "none", 
              col = map.gradient, 
              cluster_cols = col.cluster,
@@ -253,6 +255,8 @@ oncoprint <- function(x,
              filename=file,
              ...
     )
+    
+    return(ret)
 }
 
 
