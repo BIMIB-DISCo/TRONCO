@@ -292,9 +292,10 @@ tronco.plot = function(x,
                      hidden.and = T,
                      expand = T,
                      genes = NULL,
-                     edge.color = 'black'
-
-                     #file = .... # print to pdf  
+                     edge.color = 'black',
+                     file = NA, # print to pdf,
+                     legend.pos = 'bottom',
+                     ...
                      ) 
 {
   if (!require(igraph)) {
@@ -575,6 +576,9 @@ tronco.plot = function(x,
     #print(x$confidence[[3]])
     #print(hypos_new_name)
 
+
+	#print(edge_names)
+	
     # for each edge..
     for(e in edge_names) {
       edge = unlist(strsplit(e, '~'))
@@ -601,6 +605,11 @@ tronco.plot = function(x,
           eAttrs$lwd[e] = log(1.5)
         }
 
+
+		#print(conf_from)
+		#print(conf_to)
+		
+		
         hyper_geom = x$confidence[[3]][conf_from, conf_to]
         if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
         eAttrs$label[e] = paste(eAttrs$label[e], '   ', hyper_geom)
@@ -675,7 +684,8 @@ tronco.plot = function(x,
   
   
 
-  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title)
+  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title, ... )
+  
   
   # Adds the legend to the plot
   if (legend) {
@@ -692,7 +702,7 @@ tronco.plot = function(x,
       pt_bg = c(pt_bg, 'white', 'white', legend_logic)  
     }
     
-    legend('bottomright',
+    legend(ifelse(legend.pos == 'bottom', 'bottomright', 'topright'),
            legend = legend_names,
            title = expression(bold('Events type')),
            bty = 'n',
@@ -719,7 +729,10 @@ tronco.plot = function(x,
     
     # This is good only if expand = T   
     # throw away hypotheses - cut marginal_p accordingly
-    hypo.names = rownames(as.events(x$data, types='Hypothesis'))
+    
+    if( 'Hypothesis' %in% as.types(x$data) ) hypo.names = rownames(as.events(x$data, types='Hypothesis'))
+	else hypo.names = NA
+	
     nonhypo.names = setdiff(rownames(as.events(x$data)), hypo.names)
     
     marginal_p = marginal_p[nonhypo.names, , drop = FALSE]
@@ -749,7 +762,7 @@ tronco.plot = function(x,
     col = c('black', 'black')
         
     # Further stats
-    y = delete.type(x$data, 'Hypothesis')
+    y = ifelse('Hypothesis' %in% as.types(x$data), delete.type(x$data, 'Hypothesis'), x)
     
     freq.labels = c(freq.labels, 
       ' ',
@@ -763,7 +776,7 @@ tronco.plot = function(x,
     pt.bg = c(pt.bg, 'white', 'white', rep('black', 3))
     col = c(col, 'white', 'white', rep('black', 3)) 
     
-    legend('bottomleft',
+    legend(ifelse(legend.pos == 'bottom', 'bottomleft', 'topleft'),
            legend = freq.labels,
            title = expression(bold('Events frequency')),
            bty = 'n',
@@ -775,5 +788,11 @@ tronco.plot = function(x,
            pt.bg = pt.bg,
            cex = legend.cex,
            col = col)
+       
   }
+  
+#  if(!is.na(file))
+#  {
+#  	pdf(file = file)
+#  }
 }

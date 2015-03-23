@@ -6,10 +6,9 @@
 #### information.
 
 rename.type <- function(x, old.name, new.name) {
- 
   is.compliant(x, 'rename.type: input dataset')
   types = as.types(x)
-
+  
   if(old.name == new.name) return(x)	
   
   if (old.name %in% types) {
@@ -87,9 +86,9 @@ delete.gene <- function(x, gene) {
 }
 
 delete.event <- function(x, gene, type) {
-
+  
   is.compliant(x, 'delete.event: input')
-    
+  
   if (all(c(type, gene) %in% as.events(x))) 
   {    
     drops = rownames(as.events(x, genes = gene, types = type))
@@ -143,22 +142,29 @@ delete.samples = function(x, samples) {
   return(x)
 }
 
-intersect.datasets = function(x,y)
+
+# intersect.genomes = F -> just samples 
+intersect.datasets = function(x,y, intersect.genomes = TRUE)
 {
   is.compliant(x)
   is.compliant(y)
   
-  # Common samples and genes
+  # Common samples and genes (according to intersect.genomes)
   samples = intersect(as.samples(x), as.samples(y))
-  genes = intersect(as.genes(x), as.genes(y))
+  genes = ifelse(intersect.genomes, 
+                 intersect(as.genes(x), as.genes(y)), #  intersect.genomes -> INTERSECTION
+                 unique(c(as.genes(x), as.genes(y)))) # !intersect.genomes -> UNION
   
   report = data.frame(row.names = c('Samples', 'Genes'))
   report$x = c(nsamples(x), ngenes(x))
   report$y = c(nsamples(y), ngenes(y))
   
-  # Restrict genes
-  x = events.selection(x, filter.in.names=genes)
-  y = events.selection(y, filter.in.names=genes)
+  # Restrict genes - only if intersect.genomes = T
+  if(intersect.genomes)
+  {
+    x = events.selection(x, filter.in.names=genes)
+    y = events.selection(y, filter.in.names=genes)
+  }
   
   # TODO: check they have no events in common!
   # if(as.events(x) )
@@ -171,12 +177,14 @@ intersect.datasets = function(x,y)
   z = ebind(x,y)
   
   
-  cat('*** Intersect dataset\n')
+  cat('*** Intersect dataset [ intersect.genomes =', intersect.genomes, ']\n')
   report$result = c(nsamples(z), ngenes(z))
   print(report)
   
   return(z)    
 }
+
+
 
 annotate.stages = function(x, stages, match.TCGA.patients = FALSE)
 {

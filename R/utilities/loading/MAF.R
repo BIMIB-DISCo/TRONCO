@@ -114,8 +114,6 @@
 	return(tronco.data)
 }
 
-#data = import.MAF('TCGA_CRC_Suppl_Table2_Mutations_20120719.csv', sep=';', is.TCGA = F)
-#show(data)
 
 extract.MAF.HuGO.Entrez.map = function(file, sep='\t') 
 {
