@@ -264,8 +264,6 @@ is.logic.node <- function(node) {
 #' @param label.edge.size double; size of the confidence label, when used (default is 12)
 #' 
 #' @param confidence bool; plot edges according to confidence (default is f)
-#' @param node.th.on controls the node thickness, based on the margina probabilty for each event
-#' @param node.th; the node thickness, default 2. Ignored if node.th.on is not set.  
 #' @examples
 #' \dontrun{
 #'     types.load("data/types.txt");
@@ -288,13 +286,13 @@ tronco.plot = function(x,
                      legend = TRUE, 
                      legend.cex = 1.0, 
                      label.edge.size = 12, 
-                     node.th.on = FALSE, # via
                      hidden.and = T,
                      expand = T,
                      genes = NULL,
                      edge.color = 'black',
                      file = NA, # print to pdf,
                      legend.pos = 'bottom',
+                     pathways = NA,
                      ...
                      ) 
 {
