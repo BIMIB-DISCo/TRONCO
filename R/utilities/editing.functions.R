@@ -92,8 +92,8 @@ delete.event <- function(x, gene, type) {
   if (all(c(type, gene) %in% as.events(x))) 
   {    
     drops = rownames(as.events(x, genes = gene, types = type))
-    x$genotypes = x$genotypes[, -which( colnames(x$genotypes) %in% drops )]
-    x$annotations = x$annotations[ -which (rownames(x$annotations) %in% drops), ]
+    x$genotypes = x$genotypes[, -which( colnames(x$genotypes) %in% drops ), drop = FALSE]
+    x$annotations = x$annotations[ -which (rownames(x$annotations) %in% drops), , drop = FALSE]
     
     # TO DO: something better than this t(t(...))
     x$types = x$types[ which(rownames(x$types) %in% unique(x$annotations[,"type"])), , drop=FALSE]
