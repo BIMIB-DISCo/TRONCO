@@ -292,7 +292,7 @@ tronco.plot = function(x,
                      edge.color = 'black',
                      file = NA, # print to pdf,
                      legend.pos = 'bottom',
-                     pathways = NA,
+                     pathways = NULL,
                      ...
                      ) 
 {
@@ -477,7 +477,11 @@ tronco.plot = function(x,
     }))
   nAttrs$fillcolor[] = w
   
-  # hide node border
+  # node border to black
+  nAttrs$color = rep("black", length(node_names))
+  names(nAttrs$color) = node_names
+
+  # node border thickness
   nAttrs$color = rep("black", length(node_names))
   names(nAttrs$color) = node_names
   
@@ -537,6 +541,22 @@ tronco.plot = function(x,
   nAttrs$color[which(w)] = 'black'
   nAttrs$height[which(w)] = height.logic
   nAttrs$width[which(w)] = height.logic
+
+  # set node border based on pathways information
+  cat('\n')
+  if(!is.null(pathways)) {
+    for(path in names(pathways)) {
+      cat('\npath: ', pathways[[path]])
+      n = nAttrs$label[which(nAttrs$label %in% pathways[[path]])]
+      cat('\nfound: ', unlist(n), unlist(names(n)))
+      cat('\n')
+      nAttrs$color[unlist(names(n))] = 'red'
+    }
+
+  }
+  cat('\n')
+
+
   
   # edges properties
   
