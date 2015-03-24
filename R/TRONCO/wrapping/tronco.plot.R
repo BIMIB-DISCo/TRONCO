@@ -577,8 +577,8 @@ tronco.plot = function(x,
     #print(hypos_new_name)
 
 
-	#print(edge_names)
-	
+  #print(edge_names)
+  
     # for each edge..
     for(e in edge_names) {
       edge = unlist(strsplit(e, '~'))
@@ -606,10 +606,10 @@ tronco.plot = function(x,
         }
 
 
-		#print(conf_from)
-		#print(conf_to)
-		
-		
+    #print(conf_from)
+    #print(conf_to)
+    
+    
         hyper_geom = x$confidence[[3]][conf_from, conf_to]
         if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
         eAttrs$label[e] = paste(eAttrs$label[e], '   ', hyper_geom)
@@ -731,8 +731,8 @@ tronco.plot = function(x,
     # throw away hypotheses - cut marginal_p accordingly
     
     if( 'Hypothesis' %in% as.types(x$data) ) hypo.names = rownames(as.events(x$data, types='Hypothesis'))
-	else hypo.names = NA
-	
+  else hypo.names = NA
+  
     nonhypo.names = setdiff(rownames(as.events(x$data)), hypo.names)
     
     marginal_p = marginal_p[nonhypo.names, , drop = FALSE]
@@ -791,8 +791,9 @@ tronco.plot = function(x,
        
   }
   
-#  if(!is.na(file))
-#  {
-#  	pdf(file = file)
-#  }
+  if(!is.na(file))
+  {
+    dev.copy2pdf(file = file)
+  }
+  cat('\n')
 }
