@@ -306,6 +306,11 @@ tronco.plot = function(x,
     biocLite("Rgraphviz")
     library(Rgraphviz)
   }
+
+  if (!require("RColorBrewer")) {
+    install.packages("RColorBrewer")
+    library(RColorBrewer)
+  }
   
   # Checks if topology exists
   if(missing(x)) {
@@ -482,8 +487,8 @@ tronco.plot = function(x,
   names(nAttrs$color) = node_names
 
   # node border thickness
-  nAttrs$color = rep("black", length(node_names))
-  names(nAttrs$color) = node_names
+  nAttrs$lwd = rep(1, length(node_names))
+  names(nAttrs$lwd) = node_names
   
   # Set shape
   nAttrs$shape = rep("ellipse", length(node_names))
@@ -543,18 +548,34 @@ tronco.plot = function(x,
   nAttrs$width[which(w)] = height.logic
 
   # set node border based on pathways information
-  cat('\n')
+  #cat('\n')
+  legend_pathways = NULL
   if(!is.null(pathways)) {
+    cols = brewer.pal(length(pathways), name='Accent')
+    names(cols) = names(pathways)
+    #print(cols)
+
+
+
+    nAttrs$lwd = rep(10, length(node_names))
+    names(nAttrs$lwd) = node_names
+
     for(path in names(pathways)) {
-      cat('\npath: ', pathways[[path]])
+      #cat('\npath: ', pathways[[path]])
       n = nAttrs$label[which(nAttrs$label %in% pathways[[path]])]
-      cat('\nfound: ', unlist(n), unlist(names(n)))
-      cat('\n')
-      nAttrs$color[unlist(names(n))] = 'red'
+      #cat('\nfound: ', unlist(n), unlist(names(n)))
+      #cat('color: ', cols[[path]])
+      #cat('\n')
+      nAttrs$color[unlist(names(n))] = cols[[path]]
+      if(length(n) > 0) {
+        legend_pathways[path] = cols[[path]]
+      }
     }
 
   }
-  cat('\n')
+  #cat('\n')
+
+  print(legend_pathways)
 
 
   
@@ -718,6 +739,13 @@ tronco.plot = function(x,
       legend_names = c(legend_names, ' ', expression(bold('Patterns')), names(legend_logic))
       legend_colors = c(legend_colors, 'white', 'white', rep('black', length(legend_logic)))
       pt_bg = c(pt_bg, 'white', 'white', legend_logic)  
+    }
+
+    if (length(legend_pathways) > 0) {
+      pch = c(pch, 0, 0, rep(21, length(legend_pathways)))
+      legend_names = c(legend_names, ' ', expression(bold('Pathways')), names(legend_pathways))
+      pt_bg = c(pt_bg, 'white', 'white', rep('white', length(legend_pathways)))
+      legend_colors = c(legend_colors, 'white', 'white', legend_pathways)  
     }
     
     legend(ifelse(legend.pos == 'bottom', 'bottomright', 'topright'),
