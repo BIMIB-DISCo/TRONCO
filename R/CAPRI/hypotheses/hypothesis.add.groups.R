@@ -1,6 +1,6 @@
 # commenti
 
-hypothesis.add.group = function(x, FUN, group, dim.max = 4, ...) {
+hypothesis.add.group = function(x, FUN, group, dim.max = length(group), min.prob = 0, ...) {
 	op = deparse(substitute(FUN))
 
 	#print(length(unlist(group)))
@@ -9,13 +9,29 @@ hypothesis.add.group = function(x, FUN, group, dim.max = 4, ...) {
 	effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
 	effect = paste(effect, collapse = ", ")
 
-	print(paste("*** Adding hypotheses for group: ", paste(group, collapse = ", ", sep = ""), " with function ", op, " and effect ", effect, ".\n", sep = ""))
+	cat("*** Adding Group Hypotheses\n")
+	cat('Group:', paste(group, collapse = ", ", sep = ""), '\n')
+	cat('Function:', op, '\n')
+	cat('Effect:', effect, "\n")
 
-
+	if(min.prob > 0)
+	{
+		cat('Filtering genes within the group with alteration frequency below', min.prob, '\n')
+		
+		temp = events.selection(x, filter.in.names = group)
+		
+		#show(temp)
+		temp = as.alterations(temp)
+		temp = events.selection(temp, filter.freq = min.prob)
+		
+		group = as.genes(temp)
+		cat('New group:', paste(group, collapse = ", ", sep = ""), '\n')
+	}
+	
 	ngroup = length(group)
 	if (ngroup < 2) {
 		warning("No hypothesis can be created for groups with less than 2 elements.")
-		return()
+		return(x)
 	}
 	hom.group = lapply(group, function(g, x) {
 		if (nevents(x, genes = g) > 1) 
@@ -32,29 +48,18 @@ hypothesis.add.group = function(x, FUN, group, dim.max = 4, ...) {
 
 
 	max.groupsize = min(dim.max, ngroup)
-	print(dim.max)
-	print(ngroup)
-	cat('Max group size:', max.groupsize, '\n')
-
+	cat('Maximum pattern size:', max.groupsize, '\n')
 	
-	tot = 2^(max.groupsize) - max.groupsize - 1
-	
-	cat("Number of hypothses to be generated: ", tot, "\n")
 	if (length(hom.group) > 0) 
-		cat("Genes with functional homologous found: ", unlist(hom.group), "\n")
-
-
+		cat("[Functional homologous] Genes with multiple events: ", paste(unlist(hom.group), collaps=', ', sep=''), "\n")
 	
 	error.summary = data.frame()
 
-	
-
-	
 	for (i in 2:max.groupsize) {
 		gr = combn(unlist(group), i)
-
+		
 		# create a progress bar
-		cat('Adding hypothesis with pattern group size', i, '\n')		
+		cat('Generating hypothesis for', ncol(gr), ' patterns with size', i, '\n')		
 		pb <- txtProgressBar(1, ncol(gr) + 1, style = 3)
 		pbPos = 2
 	

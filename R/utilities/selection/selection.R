@@ -11,7 +11,7 @@
   
   cat(paste('*** Events selection: #events=', nevents(x), ', #types=', ntypes(x),  sep=''))
   
-  cat(paste(' Filters\t freq|in|out = {', 
+  cat(paste(' Filters freq|in|out = {', 
             !is.na(filter.freq), ', ',
             !any(is.na(filter.in.names)), ', ',
             !any(is.na(filter.out.names)), '}', sep=''))
@@ -48,7 +48,7 @@
   {
     shown = min(5, length(filter.in.names))
     
-    cat(paste('\nEvents selected (filter.in): ', 
+    cat(paste('\n[filter.in] Genes hold: ', 
               sep='', paste(filter.in.names[1:shown], collapse=', '), '(', shown, ' shown)'))
     
     colnames = which(x$annotations[,2] %in% filter.in.names, arr.ind=T)
@@ -66,7 +66,7 @@
   {
     shown = min(5, length(filter.out.names))
     
-    cat(paste('\nEvents dropped (filter.in): ', 
+    cat(paste('\n[filter.out] Genes dropped: ', 
               sep='', paste(filter.out.names[1:shown], collapse=', '), '(', shown, ' shown)'))
     
     colnames = which(x$annotations[,2] %in% filter.out.names, arr.ind=T)

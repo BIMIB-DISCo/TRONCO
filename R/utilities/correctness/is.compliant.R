@@ -46,8 +46,13 @@ is.compliant = function(x, err.fun='[ERR]', stage=has.stages(x))
 
 	# Types should be defined for every annotation
    	if(nrow(x$types) != length(unique(x$annotations[,1]))) 
+	{
+		message('[ERROR] rownames(x$types):', paste(rownames(x$types), collapse=', ', sep=''))
+		message('[ERROR] Annotated event types:', paste(unique(x$annotations[,1]), collapse=', ', sep=''))
+	
 		stop(paste(err.fun, ': input \'x\' has less types than expected.'))			
-
+	}
+	
  	if(!all(unique(x$annotations[,'type']) %in% rownames(x$types))) 
 	{
 		stop(paste(err.fun, ': input \'x\' has inconsistent types (', 
