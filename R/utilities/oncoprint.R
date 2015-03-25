@@ -103,6 +103,7 @@ oncoprint <- function(x,
     data = sorted.data$M	
   }
   
+  
   if(hasGroups)
   {
   	grn = rownames(group.samples)
@@ -118,7 +119,8 @@ oncoprint <- function(x,
  	order = order(group.samples)
   	group.samples = group.samples[order, , drop=FALSE]
   	
-  	data = data[, rownames(group.samples)]  	  	
+  	data = data[, rownames(group.samples)]  	  	  	
+  	data = data[order(rowSums(data), decreasing = TRUE), ]  	
   }	
   
   ##### If group.by.label group events involving the gene symbol
@@ -138,7 +140,7 @@ oncoprint <- function(x,
   if(ann.hits == TRUE && ann.stage == FALSE) samples.annotation = data.frame(hits=nmut)
   if(ann.hits == FALSE && ann.stage == TRUE) samples.annotation = data.frame(stage=as.stages(x)[cn, 1])
   if(ann.hits == TRUE && ann.stage == TRUE)  samples.annotation = data.frame(stage=as.stages(x)[cn, 1], hits=nmut)
-  if(hasGroups) samples.annotation $group = as.factor(group.samples[cn, 1])
+  if(hasGroups) samples.annotation$group = group.samples[cn, 1]
 
   ##### Color each annotation 
   if(ann.hits || ann.stage || hasGroups) {
@@ -162,7 +164,11 @@ oncoprint <- function(x,
   if(hasGroups)	{
   	ngroups = length(unique(group.samples[,1]))
   	group.color.attr = brewer.pal(n=ngroups, name='Accent')
-  	names(group.color.attr) = levels(as.factor(unlist(unique(group.samples[,1]))))
+	# print(group.color.attr)
+	# print(unique(group.samples[,1]))
+	# print(samples.annotation)
+	
+  	names(group.color.attr) = unique(group.samples[,1])
     annotation_colors = append(annotation_colors, list(group=group.color.attr))
    }
 
@@ -171,6 +177,7 @@ oncoprint <- function(x,
      gene.names = x$annotations[rownames(data),2]
      gene.names = paste(round(100 * genes.freq, 0) ,'% ', gene.names, sep='') # row labels
 
+	# print(gene.names)
 
 	# GENES ANNOTATIONS - PATHWAYS
 	genes.annotation = NA
@@ -292,34 +299,53 @@ oncoprint <- function(x,
 
 
 ##### Pathway print
-pathway.visualization = function(x, file, aggregate.pathways, names, ...) 
+pathway.visualization = function(x, title =paste('Pathways:', paste(names, collapse=', ', sep='')), file, pathway.colors = 'Set2', aggregate.pathways, names, ...) 
 {	
 	input = list(...)
 
   if(length(names) != length(input))
+   {
+   	message('Names: ', paste(names, collapse=', '))
+   	message('#Pathways : ', length(input))
+   	
+   	message(input)
+   	
     stop('Missing pathway names...')
+    }
+  colors = brewer.pal(n=length(names), name=pathway.colors) 
   
-	#name=deparse(substitute(data)),
-  cat(paste('*** Processing pathways: ', paste(names, collapse=', ', sep=''), '\n', sep=''))
+ cat(paste('*** Processing pathways: ', paste(names, collapse=', ', sep=''), '\n', sep=''))
   
 	cat(paste('\n[PATHWAY \"', names[1],'\"] ', paste(unlist(input[1]), collapse=', ', sep=''), '\n', sep=''))
-  data.pathways = as.pathway(x, pathway.genes=unlist(input[1]), 
+    data.pathways = as.pathway(x, pathway.genes=unlist(input[1]), 
                              pathway.name=names[1], aggregate.pathway = aggregate.pathways)
 	
+	data.pathways = change.color(data.pathways, 'Pathway', colors[1])
+	data.pathways = rename.type(data.pathways, 'Pathway', names[1])
+
   if(length(names) > 1)
   {  
     for(i in 2:length(input))
   	{
   	  cat(paste('\n\n[PATHWAY \"', names[i],'\"] ', paste(unlist(input[i]), collapse=', ', sep=''), '\n', sep=''))
-  	  data.pathways = ebind(data.pathways,
-                            as.pathway(x, pathway.genes=unlist(input[i]), 
-                                       pathway.name=names[i], aggregate.pathway = aggregate.pathways))
+  	  pathway = as.pathway(x, pathway.genes=unlist(input[i]), pathway.name=names[i], aggregate.pathway = aggregate.pathways)
+                                       
+	  pathway = change.color(pathway, 'Pathway', colors[i])
+      pathway = rename.type(pathway, 'Pathway', names[i])
+     
+      # show(pathway)
+      # # print(has.stages(pathway))
+       # print('bindo..')
+	  # print(has.stages(data.pathways))
+
+  	  data.pathways = ebind(data.pathways, pathway)
+      # show(data.pathways)
   	}
   }
 
-
-  oncoprint(trim(data.pathways), title=paste('Pathways:', paste(names, collapse=', ', sep='')), 
-          file=file)
+  # data.pathways = enforce.numeric(data.pathways)
+ # show(data.pathways)
+  oncoprint(trim(data.pathways), title=title, file=file, legend = FALSE)
 
   return(data.pathways)
 }

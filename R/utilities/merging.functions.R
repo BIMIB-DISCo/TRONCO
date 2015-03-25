@@ -153,7 +153,7 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
 	close(pb)
 
 
-	z = import.genotypes(geno.matrix, event.type = "Alteration", color = new.color)
+	z = import.genotypes(geno.matrix, event.type = new.type, color = new.color)
 	if (has.stages(x)) 
 		z = annotate.stages(z, as.stages(x))
 

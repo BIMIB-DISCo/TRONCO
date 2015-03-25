@@ -250,21 +250,21 @@ as.pathway <- function(x, pathway.genes, pathway.name,
   # Extend genotypes
   y = enforce.numeric(y)
   
-  pathway.genotype = rowSums(y$genotypes)
-  pathway.genotype[pathway.genotype > 1] = 1 # Any hit is enough
+  pathway = data.frame(rowSums(as.genotypes(y)), row.names = as.samples(y), stringsAsFactors = FALSE)
+  pathway[pathway > 1, ] =  1
+  colnames(pathway) = pathway.name 
+
+  pathway = import.genotypes(pathway, event.type = 'Pathway', color = pathway.color)
+
+  cat('Pathway extracted succesfully.\n')
   
-  pathway.genotype = matrix(pathway.genotype, ncol=1)
-  colnames(pathway.genotype) = pathway.name
-  rownames(pathway.genotype) = as.samples(y)
+  if(!aggregate.pathway) pathway = ebind(pathway, y)
   
-  res = import.genotypes(pathway.genotype, event.type = 'Pathway', color=pathway.color)
+  if(has.stages(y)) pathway = annotate.stages(pathway, as.stages(y))
   
-  if(!aggregate.pathway) res = ebind(res, y)
-  if(has.stages(y)) res$stages = as.stages(y)
+  is.compliant(pathway, 'as.pathway: output')
   
-  is.compliant(res, 'as.pathway: output')
-  
-  return(res)
+  return(pathway)
 }
 
 sort.by.frequency = function(x)
