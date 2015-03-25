@@ -433,7 +433,6 @@ tronco.plot = function(x,
   
   node_names = nodes(graph)
   nAttrs = list()
-  nAttrs_render = list()
   
   nAttrs$label = V(hypo_graph)$label
   names(nAttrs$label) = node_names
@@ -589,7 +588,6 @@ tronco.plot = function(x,
   
   edge_names = edgeNames(graph)
   eAttrs = list()
-  eAttrs_render = list()
   
   # set temporary edge shape
   eAttrs$lty = rep("solid", length(edge_names))
