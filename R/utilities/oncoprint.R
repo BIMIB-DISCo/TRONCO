@@ -34,10 +34,13 @@ oncoprint <- function(x,
                       sample.id = FALSE,
                       hide.zeroes = FALSE,
                       legend = TRUE,
+                      legend.cex = 1.0,
                       cellwidth = 5, 
                       cellheigth = 10,
                       group.by.label = FALSE,
                       group.samples = NA,
+                      pathways = NA,
+                      pathways.color = 'Set1',
                       ...) 
 {
   if (!require('pheatmap')) {
@@ -128,16 +131,18 @@ oncoprint <- function(x,
   cn = colnames(data)
   rn = rownames(data)
   
-  ##### Heatmap annotations: hits (total 1s per sample), stage or groups
+  ##### SAMPLES annotations: hits (total 1s per sample), stage or groups
+  samples.annotation = NA
   nmut = colSums(data)
-  if(ann.hits == TRUE && ann.stage == FALSE) annotation = data.frame(hits=nmut)
-  if(ann.hits == FALSE && ann.stage == TRUE) annotation = data.frame(stage=as.stages(x)[cn, 1])
-  if(ann.hits == TRUE && ann.stage == TRUE)  annotation = data.frame(stage=as.stages(x)[cn, 1], hits=nmut)
-  if(hasGroups) annotation$group = as.factor(group.samples[cn, 1])
+  
+  if(ann.hits == TRUE && ann.stage == FALSE) samples.annotation = data.frame(hits=nmut)
+  if(ann.hits == FALSE && ann.stage == TRUE) samples.annotation = data.frame(stage=as.stages(x)[cn, 1])
+  if(ann.hits == TRUE && ann.stage == TRUE)  samples.annotation = data.frame(stage=as.stages(x)[cn, 1], hits=nmut)
+  if(hasGroups) samples.annotation $group = as.factor(group.samples[cn, 1])
 
   ##### Color each annotation 
   if(ann.hits || ann.stage || hasGroups) {
-    rownames(annotation) = cn
+    rownames(samples.annotation) = cn
     annotation_colors = list()
   }
 
@@ -147,7 +152,7 @@ oncoprint <- function(x,
   }
   
   if(ann.stage){ 
-    different.stages = sort(unique(annotation$stage))
+    different.stages = sort(unique(samples.annotation$stage))
     num.stages = length(different.stages)
     stage.color.attr = append(brewer.pal(n=num.stages, name=stage.color), "#FFFFFF")
     names(stage.color.attr) = append(levels(different.stages), NA)
@@ -161,56 +166,37 @@ oncoprint <- function(x,
     annotation_colors = append(annotation_colors, list(group=group.color.attr))
    }
    
-    different.pathways = c('stronzo', 'merda')
-    num.pathways = length(different.pathways)
-    pathways.color.attr = c('red', 'yellow')
-    names(pathways.color.attr) = levels(different.pathways)
+    # Augment gene names with frequencies and prepare labels 	
+ 	 genes.freq = rowSums(data)/nsamples(x)
+     gene.names = x$annotations[rownames(data),2]
+     gene.names = paste(round(100 * genes.freq, 0) ,'% ', gene.names, sep='') # row labels
 
 
-	print(nrow(data))
-   path = matrix(c(rep('merda', nrow(data)/2+1), 
-   	rep('stronzo', nrow(data)/2) ), ncol=1)
-   	
-      
-   # print(path)
-   # genes.annotation = data.frame(pathway = as.factor(path))
-	# print(rn)
-   # rownames(genes.annotation) = rn
-      # print((genes.annotation))
+	# GENES ANNOTATIONS - PATHWAYS
+	genes.annotation = NA
 
+    if(!all(is.na(pathways)))
+    {
+		names = names(pathways)  	
+				
+		genes.annotation = data.frame(row.names = rn, stringsAsFactors = FALSE)
+		genes.annotation$pathway = rep(NA, nrow(data))
+		
+		for(i in 1:length(names)) 
+		{
+			pathway = names[i]
+			genes.pathway = rownames(as.events(x, genes=pathways[[names[i]]]))
+			genes.annotation[genes.pathway, 'pathway'] = names[i] 
+		}
 
-   # test = matrix(rnorm(200), 20, 10) 
-   # test[1:10, seq(1, 10, 2)] = test[1:10, seq(1, 10, 2)] + 3 
-   # test[11:20, seq(2, 10, 2)] = test[11:20, seq(2, 10, 2)] + 2 
-   # test[15:20, seq(2, 10, 2)] = test[15:20, seq(2, 10, 2)] + 4 
-   # colnames(test) = paste("Test", 1:10, sep = "") 
-   # rownames(test) = paste("Gene", 1:20, sep = "")
-   
-   # # Generate annotations for rows and columns 
-   # annotation_col = data.frame( CellType = factor(rep(c("CT1", "CT2"), 5)), Time = 1:5 ) 
-   # rownames(annotation_col) = paste("Test", 1:10, sep = "") 
-   # annotation_row = data.frame( GeneClass = factor(rep(c("Path1", "Path2", "Path3"), c(10, 4, 6))) ) 
-   # rownames(annotation_row) = paste("Gene", 1:20, sep = "") 
-   # # Display row and color annotations 
-   # pheatmap(test, annotation_col = annotation_col) 
-   # pheatmap(test, annotation_col = annotation_col, annotation_legend = FALSE) 
-   # pheatmap(test, annotation_col = annotation_col, annotation_row = annotation_row) 
-   # # Specify colors 
-   # ann_colors = list( Time = c("white", "firebrick"), CellType = c(CT1 = "#1B9E77", CT2 = "#D95F02"), GeneClass = c(Path1 = "#7570B3", Path2 = "#E7298A", Path3 = "#66A61E") )
-   
-   # pheatmap(test, annotation_col = annotation_col, annotation_row = annotation_row, annotation_colors = ann_colors) 
-   # stop('ss')
-  # # annotation_colors = append(annotation_colors, list(pathway = pathways.color.attr))
-   # print((annotation_colors)	)
-   # print((genes.annotation))
-   
-   # print(str(genes.annotation))
-  # print(str(annotation))
-   # print(str(annotation_colors))
-   
-  
-  # Display also event frequency, which gets computed now
-  genes.freq = rowSums(data)/nsamples(x)
+		# print(annotation_colors)			
+
+		pathway.colors = append(brewer.pal(n=length(names), name=pathways.color), "#FFFFFF")
+		names(pathway.colors) = append(names, NA)
+
+		annotation_colors = append(annotation_colors, list(pathway=pathway.colors))
+		# print(annotation_colors)				   	
+   }   
   
   # Augment data to make type-dependent colored plots
   types = as.types(x)
@@ -236,23 +222,20 @@ oncoprint <- function(x,
       map.gradient = cbind(map.gradient, as.colors(x)[i])
     }
   }
-  
-  # Augment gene names with frequencies and prepare legend labels
-  gene.names = x$annotations[rownames(data),2]
-  rownames(data) = paste(round(100 * genes.freq, 0) ,'% ', gene.names, sep='')
-  legend.labels = c('none', unique(x$annotations[,1]))
     
-  legend.labels = legend.labels[1:(max(data)+1)]
-  
   if(is.na(font.row)) 
   {
     font.row = max(c(15 * exp(-0.02 * nrow(data)), 2))    
-    cat(paste('Setting automatic font (exp. scaling): ', round(font.row, 1), '\n', sep=''))
+    cat(paste('Setting automatic font (exponential scaling): ', round(font.row, 1), '\n', sep=''))
   }
   
   # Augment title
   title = paste(title, '\n n = ', nsamples(x),'    m = ', nevents(x), '    |G| = ', ngenes(x),  sep='')
   
+    legend.labels = c('none', unique(x$annotations[,1]))
+    
+     legend.labels = legend.labels[1:(max(data)+1)]
+
   
   # Pheatmap
   if(ann.hits == TRUE || ann.stage == TRUE || hasGroups)  
@@ -262,20 +245,22 @@ oncoprint <- function(x,
              cluster_cols = col.cluster,
              cluster_rows = row.cluster,
              main= title,
-             fontsize= font.size,
+             fontsize = font.size,
              fontsize_col= font.column,
              fontsize_row= font.row,
-             annotation_col = annotation,
-             #annotation_row = genes.annotation,
+             annotation_col = samples.annotation,
+             annotation_row = genes.annotation,
              annotation_colors = annotation_colors,	
              border_color = border.color,
              border=T,
-             margins=c(10,10),
+             #margins=c(10,10),
              cellwidth = cellwidth, 
              cellheigth = cellheigth,
              legend=legend,
              legend_breaks = c(0:max(data)),
              legend_labels = legend.labels,
+             legend.cex = legend.cex,
+             labels_row = gene.names,
              drop_levels=T,
              show_colnames = sample.id,
              filename=file,
@@ -304,7 +289,6 @@ oncoprint <- function(x,
              ...
     )
     
-    return( )
 }
 
 
