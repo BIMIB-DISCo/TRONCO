@@ -75,8 +75,8 @@ as.gene = function(x, genes, types=NA)
 {
   keys = as.events(x, genes=genes, types=types)
   
-	data = data.frame(x$genotypes[, rownames(keys)], row.names = as.samples(x))
-  colnames(data) = keys[, 'type']
+   data = data.frame(x$genotypes[, rownames(keys), drop = FALSE], row.names = as.samples(x))
+   colnames(data) = keys[, 'type']
 	
 	return(data)
 }

@@ -29,8 +29,11 @@ ebind = function(...)
     z$types = unique(rbind(x$types, y$types))	
     
     # Copy stages, if present
-    if(has.stages(x) && has.stages(y) && !all(as.stages(x) == as.stages(y), na.rm=TRUE))
-      stop('Patients have different stages, won\'t merge!')
+    #print(as.stages(x))
+    #print(as.events(y))
+    
+    #if(has.stages(x) && has.stages(y) && !all(as.stages(x) == as.stages(y)))
+    #  stop('Patients have different stages, won\'t merge!')
     
     if(has.stages(x)) 
     {

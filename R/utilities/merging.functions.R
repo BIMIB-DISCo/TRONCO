@@ -6,6 +6,8 @@
 # @ new.type: label for the new type to create
 # @ new.color: color for the new type to create
 merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
+	
+	
 
 	# internal function, merge two types
 	merge.two.types = function(x, type.one, type.two, new.type = paste(type.one, type.two, sep = ":"), new.color = "khaki") {
@@ -127,12 +129,37 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
 		stop(paste0(new.type, "is already used in input dataset, will not merge"))
 	}
 
-	z = merge.two.types(x, input[[1]], input[[2]], new.type, new.color)
-	if (!(length(input) > 2)) 
-		return(z)
+	input = unlist(input)
+	genes = as.genes(x, types = input)
+	cat('Dropping event types', paste(input, collapse=', ', sep=''), 'for', length(genes), 'genes.\n')
+	
+	geno.matrix = matrix(, nrow = nsamples(x), ncol=length(genes))
+	
+    pb = txtProgressBar(1, length(genes), style = 3)      
+    flush.console()
 
+	for(i in 1:length(genes))
+	{
+        setTxtProgressBar(pb, i)  
 
-	for (i in 3:length(input)) z = merge.two.types(z, new.type, input[[i]], new.type, new.color)
+		geno = as.matrix(rowSums(as.gene(x, genes[i], types = input)))
+		geno[geno > 1] = 1
+		
+		geno.matrix[, i] = geno 
+	}
+
+	rownames(geno.matrix) = as.samples(x)
+	colnames(geno.matrix) = genes
+
+    close(pb)
+
+	
+	z = import.genotypes(geno.matrix, event.type = 'Alteration', color = new.color)
+
+	#z = merge.two.types(x, input[[1]], input[[2]], new.type, new.color)
+	#if (!(length(input) > 2)) 
+	#	return(z)
+	# for (i in 3:length(input)) z = merge.two.types(z, new.type, input[[i]], new.type, new.color)
 
 	return(z)
 

@@ -487,8 +487,9 @@ tronco.plot = function(x,
   names(nAttrs$color) = node_names
 
   # node border thickness
-  nAttrs$lwd = rep(1, length(node_names))
-  names(nAttrs$lwd) = node_names
+  #nAttrs$lwd = rep(1, length(node_names))
+  #names(nAttrs$lwd) = node_names
+  
   
   # Set shape
   nAttrs$shape = rep("ellipse", length(node_names))
@@ -551,14 +552,16 @@ tronco.plot = function(x,
   #cat('\n')
   legend_pathways = NULL
   if(!is.null(pathways)) {
-    cols = brewer.pal(length(pathways), name='Accent')
+    cols = brewer.pal(length(pathways), name='Dark2')
     names(cols) = names(pathways)
     #print(cols)
 
 
 
-    nAttrs$lwd = rep(10, length(node_names))
-    names(nAttrs$lwd) = node_names
+    #nAttrs$lwd = rep(10, length(node_names))
+    #names(nAttrs$lwd) = node_names
+    #print('DIOCA')
+    #print(nAttrs$lwd)
 
     for(path in names(pathways)) {
       #cat('\npath: ', pathways[[path]])
@@ -723,7 +726,8 @@ tronco.plot = function(x,
   
   
 
-  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title, ... )
+  #par(lwd=4)
+  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title,  ... )
   
   
   # Adds the legend to the plot

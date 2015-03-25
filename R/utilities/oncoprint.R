@@ -160,7 +160,55 @@ oncoprint <- function(x,
   	names(group.color.attr) = levels(as.factor(unlist(unique(group.samples[,1]))))
     annotation_colors = append(annotation_colors, list(group=group.color.attr))
    }
+   
+    different.pathways = c('stronzo', 'merda')
+    num.pathways = length(different.pathways)
+    pathways.color.attr = c('red', 'yellow')
+    names(pathways.color.attr) = levels(different.pathways)
 
+
+	print(nrow(data))
+   path = matrix(c(rep('merda', nrow(data)/2+1), 
+   	rep('stronzo', nrow(data)/2) ), ncol=1)
+   	
+      
+   # print(path)
+   # genes.annotation = data.frame(pathway = as.factor(path))
+	# print(rn)
+   # rownames(genes.annotation) = rn
+      # print((genes.annotation))
+
+
+   # test = matrix(rnorm(200), 20, 10) 
+   # test[1:10, seq(1, 10, 2)] = test[1:10, seq(1, 10, 2)] + 3 
+   # test[11:20, seq(2, 10, 2)] = test[11:20, seq(2, 10, 2)] + 2 
+   # test[15:20, seq(2, 10, 2)] = test[15:20, seq(2, 10, 2)] + 4 
+   # colnames(test) = paste("Test", 1:10, sep = "") 
+   # rownames(test) = paste("Gene", 1:20, sep = "")
+   
+   # # Generate annotations for rows and columns 
+   # annotation_col = data.frame( CellType = factor(rep(c("CT1", "CT2"), 5)), Time = 1:5 ) 
+   # rownames(annotation_col) = paste("Test", 1:10, sep = "") 
+   # annotation_row = data.frame( GeneClass = factor(rep(c("Path1", "Path2", "Path3"), c(10, 4, 6))) ) 
+   # rownames(annotation_row) = paste("Gene", 1:20, sep = "") 
+   # # Display row and color annotations 
+   # pheatmap(test, annotation_col = annotation_col) 
+   # pheatmap(test, annotation_col = annotation_col, annotation_legend = FALSE) 
+   # pheatmap(test, annotation_col = annotation_col, annotation_row = annotation_row) 
+   # # Specify colors 
+   # ann_colors = list( Time = c("white", "firebrick"), CellType = c(CT1 = "#1B9E77", CT2 = "#D95F02"), GeneClass = c(Path1 = "#7570B3", Path2 = "#E7298A", Path3 = "#66A61E") )
+   
+   # pheatmap(test, annotation_col = annotation_col, annotation_row = annotation_row, annotation_colors = ann_colors) 
+   # stop('ss')
+  # # annotation_colors = append(annotation_colors, list(pathway = pathways.color.attr))
+   # print((annotation_colors)	)
+   # print((genes.annotation))
+   
+   # print(str(genes.annotation))
+  # print(str(annotation))
+   # print(str(annotation_colors))
+   
+  
   # Display also event frequency, which gets computed now
   genes.freq = rowSums(data)/nsamples(x)
   
@@ -205,7 +253,6 @@ oncoprint <- function(x,
   # Augment title
   title = paste(title, '\n n = ', nsamples(x),'    m = ', nevents(x), '    |G| = ', ngenes(x),  sep='')
   
-  print(list(...))
   
   # Pheatmap
   if(ann.hits == TRUE || ann.stage == TRUE || hasGroups)  
@@ -218,7 +265,8 @@ oncoprint <- function(x,
              fontsize= font.size,
              fontsize_col= font.column,
              fontsize_row= font.row,
-             annotation = annotation,
+             annotation_col = annotation,
+             #annotation_row = genes.annotation,
              annotation_colors = annotation_colors,	
              border_color = border.color,
              border=T,
@@ -256,7 +304,7 @@ oncoprint <- function(x,
              ...
     )
     
-    return(ret)
+    return( )
 }
 
 
