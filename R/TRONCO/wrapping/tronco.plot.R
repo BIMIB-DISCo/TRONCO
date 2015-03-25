@@ -274,9 +274,9 @@ is.logic.node <- function(node) {
 #' }
 tronco.plot = function(x, 
                      fontsize=18, 
-                     height=1,
-                     width=1.5,
-                     height.logic = 0.5,
+                     height=30,
+                     width=90,
+                     height.logic = 10,
                      pf = FALSE, 
                      disconnected=FALSE,
                      scale.nodes=NA,
@@ -293,6 +293,7 @@ tronco.plot = function(x,
                      file = NA, # print to pdf,
                      legend.pos = 'bottom',
                      pathways = NULL,
+                     lwd = 3,
                      ...
                      ) 
 {
@@ -437,21 +438,27 @@ tronco.plot = function(x,
   names(nAttrs$label) = node_names
   
   # set a default color
-  nAttrs$fillcolor =  rep('White', length(node_names))
-  names(nAttrs$fillcolor) = node_names
+  nAttrs$fill =  rep('White', length(node_names))
+  names(nAttrs$fill) = node_names
   
   # set fontsize
   nAttrs$fontsize = rep(fontsize, length(node_names))
   names(nAttrs$fontsize) = node_names
-  
+
+  # set node shape
+  nAttrs$shape = rep('ellipse', length(node_names))
+  names(nAttrs$shape) = node_names
+
   # set node height
   nAttrs$height = rep(height, length(node_names))
   names(nAttrs$height) = node_names
   
   # set node width
-  nAttrs$width = rep(width, length(node_names))
-  names(nAttrs$width) = node_names
-  
+  nAttrs$lWidth = rep(width/2, length(node_names))
+  names(nAttrs$lWidth) = node_names
+  nAttrs$rWidth = rep(width/2, length(node_names))
+  names(nAttrs$rWidth) = node_names
+
   if (!is.na(scale.nodes)) {
     
     # foreach node
@@ -467,34 +474,29 @@ tronco.plot = function(x,
         increase_coeff = scale.nodes + (marginal_p[node,] - min_p) / (max_p - min_p)
         #increase_coeff = marginal_p[node,] + ((max_p - marginal_p[node,]) / scale.nodes)
         # print(increase_coeff)
-        nAttrs$width[node] = nAttrs$width[node] * increase_coeff
+        nAttrs$lWidth[node] = nAttrs$lWidth[node] * increase_coeff
+        nAttrs$rWidth[node] = nAttrs$rWidth[node] * increase_coeff
         nAttrs$height[node] = nAttrs$height[node] * increase_coeff
       }
     }
   }
   
   # use colors defined in tronco$types
-  w = unlist(lapply(names(nAttrs$fillcolor), function(x){
+  w = unlist(lapply(names(nAttrs$fill), function(x){
     if (x %in% rownames(data$annotations))
       data$types[data$annotations[x,'type'], 'color']
     else
       'White'
     }))
-  nAttrs$fillcolor[] = w
+  nAttrs$fill[] = w
   
   # node border to black
-  nAttrs$color = rep("black", length(node_names))
-  names(nAttrs$color) = node_names
+  nAttrs$col = rep("black", length(node_names))
+  names(nAttrs$col) = node_names
 
   # node border thickness
-  #nAttrs$lwd = rep(1, length(node_names))
-  #names(nAttrs$lwd) = node_names
+  nAttrs$lwd = 1
   
-  
-  # Set shape
-  nAttrs$shape = rep("ellipse", length(node_names))
-  names(nAttrs$shape) = node_names
-
   legend_logic = NULL
   
   # set color, size form and shape each logic nodes (if hypos expansion actived)
@@ -502,51 +504,55 @@ tronco.plot = function(x,
   if (expand) {
     
     
-    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
+    w = unlist(nAttrs$label[names(nAttrs$fill)]) == 'OR'
     if (any(w)) {
       legend_logic['Exclusivity (soft)'] = 'orange'
     }
-    nAttrs$fillcolor[which(w)] = 'orange'
+    nAttrs$fill[which(w)] = 'orange'
     nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = node.type
     nAttrs$color[which(w)] = 'black'
     nAttrs$height[which(w)] = height.logic
-    nAttrs$width[which(w)] = height.logic
+    nAttrs$lWidth[which(w)] = height.logic/2
+    nAttrs$rWidth[which(w)] = height.logic/2
     
-    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
+    w = unlist(nAttrs$label[names(nAttrs$fill)]) == 'AND'
     if (any(w)) {
       legend_logic['Co-occurence'] = 'lightgreen'
     }
-    nAttrs$fillcolor[which(w)] = 'lightgreen'
+    nAttrs$fill[which(w)] = 'lightgreen'
     nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = node.type
     nAttrs$color[which(w)] = 'black'
     nAttrs$height[which(w)] = height.logic
-    nAttrs$width[which(w)] = height.logic
+    nAttrs$lWidth[which(w)] = height.logic/2
+    nAttrs$rWidth[which(w)] = height.logic/2
     
-    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
+    w = unlist(nAttrs$label[names(nAttrs$fill)]) == 'XOR'
     if (any(w)) {
       legend_logic['Exclusivity (hard)'] = 'red'
     }
-    nAttrs$fillcolor[which(w)] = 'red'
+    nAttrs$fill[which(w)] = 'red'
     nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = node.type
     nAttrs$color[which(w)] = 'black'
     nAttrs$height[which(w)] = height.logic
-    nAttrs$width[which(w)] = height.logic
+    nAttrs$lWidth[which(w)] = height.logic/2
+    nAttrs$rWidth[which(w)] = height.logic/2
   }
   #print(legend_logic)
   
-  w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == '*'
+  w = unlist(nAttrs$label[names(nAttrs$fill)]) == '*'
   if (any(w)) {
       legend_logic['Co-occurence'] = 'lightgreen'
     }
-  nAttrs$fillcolor[which(w)] = 'lightgreen'
+  nAttrs$fill[which(w)] = 'lightgreen'
   nAttrs$label[which(w)] = ''
   nAttrs$shape[which(w)] = node.type
   nAttrs$color[which(w)] = 'black'
   nAttrs$height[which(w)] = height.logic
-  nAttrs$width[which(w)] = height.logic
+  nAttrs$lWidth[which(w)] = height.logic/2
+  nAttrs$rWidth[which(w)] = height.logic/2
 
   # set node border based on pathways information
   #cat('\n')
@@ -556,12 +562,8 @@ tronco.plot = function(x,
     names(cols) = names(pathways)
     #print(cols)
 
+    nAttrs$lwd = lwd
 
-
-    #nAttrs$lwd = rep(10, length(node_names))
-    #names(nAttrs$lwd) = node_names
-    #print('DIOCA')
-    #print(nAttrs$lwd)
 
     for(path in names(pathways)) {
       #cat('\npath: ', pathways[[path]])
@@ -569,7 +571,7 @@ tronco.plot = function(x,
       #cat('\nfound: ', unlist(n), unlist(names(n)))
       #cat('color: ', cols[[path]])
       #cat('\n')
-      nAttrs$color[unlist(names(n))] = cols[[path]]
+      nAttrs$col[unlist(names(n))] = cols[[path]]
       if(length(n) > 0) {
         legend_pathways[path] = cols[[path]]
       }
@@ -578,7 +580,7 @@ tronco.plot = function(x,
   }
   #cat('\n')
 
-  print(legend_pathways)
+  #print(nAttrs$lwd)
 
 
   
@@ -592,24 +594,24 @@ tronco.plot = function(x,
   names(eAttrs$lty) = edge_names
   
   #set edge thikness based on prob
-  eAttrs$lwd = rep(1, length(edge_names))
-  names(eAttrs$lwd) = edge_names
+  #eAttrs$lwd = rep(1, length(edge_names))
+  #names(eAttrs$lwd) = edge_names
   
   #set edge name based on prob
-  eAttrs$label = rep('', length(edge_names))
-  names(eAttrs$label) = edge_names
+  #eAttrs$label = rep('', length(edge_names))
+  #names(eAttrs$label) = edge_names
   
   #set fontsize to label.edge.size (default)
-  eAttrs$fontsize = rep(label.edge.size, length(edge_names))
-  names(eAttrs$fontsize) = edge_names
+  #eAttrs$fontsize = rep(label.edge.size, length(edge_names))
+  #names(eAttrs$fontsize) = edge_names
   
   #set edge color to black (default)
-  eAttrs$color = rep(edge.color, length(edge_names))
-  names(eAttrs$color) = edge_names
+  #eAttrs$color = rep(edge.color, length(edge_names))
+  #names(eAttrs$color) = edge_names
   
   #record logic edge
-  eAttrs$logic = rep(F, length(edge_names))
-  names(eAttrs$logic) = edge_names
+  #eAttrs$logic = rep(F, length(edge_names))
+  #names(eAttrs$logic) = edge_names
   
   cat('done')
   
@@ -634,17 +636,17 @@ tronco.plot = function(x,
         # print(paste('from', from, 'to', to, ':', conf_matrix[from, to]))
         if (conf_matrix[from, to] == 1) {
           # ..set edge thickness and label..
-          eAttrs$label[e] = '100%'
-          eAttrs$lwd[e] = log(150)
+          #eAttrs$label[e] = '100%'
+          #eAttrs$lwd[e] = log(150)
         } else if (conf_matrix[from, to] >= 0.01) {
           # ..draw it on the graph..
 
-          eAttrs$label[e] = paste0('', round(conf_matrix[from, to] * 100, 0), '%')
-          eAttrs$lwd[e] = log(conf_matrix[from, to] * 150)
+          #eAttrs$label[e] = paste0('', round(conf_matrix[from, to] * 100, 0), '%')
+          #eAttrs$lwd[e] = log(conf_matrix[from, to] * 150)
         } else {
           # ..else set the style of the edge to dashed
-          eAttrs$label[e] = "< 1%"
-          eAttrs$lwd[e] = log(1.5)
+          #eAttrs$label[e] = "< 1%"
+          #eAttrs$lwd[e] = log(1.5)
         }
 
 
@@ -654,12 +656,12 @@ tronco.plot = function(x,
     
         hyper_geom = x$confidence[[3]][conf_from, conf_to]
         if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
-        eAttrs$label[e] = paste(eAttrs$label[e], '   ', hyper_geom)
+        #eAttrs$label[e] = paste(eAttrs$label[e], '   ', hyper_geom)
 
 
       } else {
         # ..else this edge is located inside to an hypothesis, so no arrow to show
-        eAttrs$logic[e] = T
+        #eAttrs$logic[e] = T
       }
     }
   }
@@ -671,11 +673,11 @@ tronco.plot = function(x,
     to = edge[2]
     
     if (from == '*') {
-      eAttrs$logic[e] = T
+      #eAttrs$logic[e] = T
     } 
     
     if (is.logic.node(to)) {
-      eAttrs$logic[e] = T
+      #eAttrs$logic[e] = T
     }
   }
   
@@ -716,7 +718,7 @@ tronco.plot = function(x,
            bic[from, to] == 0
            ) {
         #cat("\nprima facie!!!")
-        eAttrs$color[e] = 'red'
+        #eAttrs$color[e] = 'red'
       } else {
         #cat('\nno PF!')
       }
@@ -725,10 +727,14 @@ tronco.plot = function(x,
   }
   
   
-
-  #par(lwd=4)
-  plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title,  ... )
-  
+  #par = (lwd=4)
+  #plot(graph, nodeAttrs=nAttrs, attrs=attrs, edgeAttrs=eAttrs, main=title, ... )
+  graph = layoutGraph(graph)
+  # nodes=nAttrs, edges=eAttrs,
+  #print(nAttrs$label) 
+  nodeRenderInfo(graph) = nAttrs
+  graph.par(graph=list(main=title, ...))
+  renderGraph(graph)
   
   # Adds the legend to the plot
   if (legend) {
