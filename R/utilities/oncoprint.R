@@ -165,7 +165,7 @@ oncoprint <- function(x,
   	names(group.color.attr) = levels(as.factor(unlist(unique(group.samples[,1]))))
     annotation_colors = append(annotation_colors, list(group=group.color.attr))
    }
-   
+
     # Augment gene names with frequencies and prepare labels 	
  	 genes.freq = rowSums(data)/nsamples(x)
      gene.names = x$annotations[rownames(data),2]
@@ -235,7 +235,6 @@ oncoprint <- function(x,
     legend.labels = c('none', unique(x$annotations[,1]))
     
      legend.labels = legend.labels[1:(max(data)+1)]
-
   
   # Pheatmap
   if(ann.hits == TRUE || ann.stage == TRUE || hasGroups)  
