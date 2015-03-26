@@ -52,10 +52,10 @@ function(dataset, hypotheses = NA, command = "hc", REGULARIZATION = "bic", do.bo
 	#reconstruct the prima facie topology
     #should I perform bootstrap? Yes if TRUE, no otherwise
     if(do.boot==TRUE) {
-        prima.facie.parents = get.prima.facie.parents.do.boot(dataset,nboot,pvalue,adj.matrix);
+        prima.facie.parents = get.prima.facie.parents.do.boot(dataset,hypotheses,nboot,pvalue,adj.matrix);
     }
     else {
-        prima.facie.parents = get.prima.facie.parents.no.boot(dataset,adj.matrix);
+        prima.facie.parents = get.prima.facie.parents.no.boot(dataset,hypotheses,adj.matrix);
     }
     
 	#perform the likelihood fit by BIC score on the prima facie topology

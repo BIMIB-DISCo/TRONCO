@@ -260,6 +260,14 @@
       if(length(hypotheses$hstructure)==0) {
         hypotheses$hstructure = new.env(hash=TRUE,parent=emptyenv());
       }
+      
+      #add the atoms in the hypothesis
+      if(length(hypotheses$patterns)==0) {
+      	hypotheses$patterns = list()
+      }
+      hypotheses$patterns[label.formula] = lifted.formula$hypotheses$llist;
+      
+      
       hypotheses$hstructure[[label.formula]] = get.lifted.formula(hstructure);
       #add the new hypothesis in the annotations
       annotations = rbind(data$annotations,c("Hypothesis", label.formula));

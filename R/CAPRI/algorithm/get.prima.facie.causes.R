@@ -16,7 +16,7 @@
 #RETURN:
 #prima.facie.topology: list describing the topology of the prima facie causes
 "get.prima.facie.causes.do.boot" <-
-function(adj.matrix, marginal.probs.distributions, prima.facie.model.distributions, prima.facie.null.distributions, pvalue) {
+function(adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.model.distributions, prima.facie.null.distributions, pvalue) {
 	
     #structure to save the confidence of the edges
     edge.confidence.matrix <- array(list(), c(2,1));
@@ -30,6 +30,14 @@ function(adj.matrix, marginal.probs.distributions, prima.facie.model.distributio
     
     #verify the probability raising and background context conditions
     probability.raising = verify.probability.raising.do.boot(prima.facie.model.distributions,prima.facie.null.distributions,pvalue,temporal.priority$adj.matrix,temporal.priority$edge.confidence.matrix);
+    
+    #patterns related the the hypotheses
+	if(!is.na(hypotheses)[1]) {
+		data = list();
+		data$hypotheses = hypotheses;
+		print(as.patterns(data))
+		print(pattern.events(data,as.patterns(data)[1]))
+	}
     
     #remove any cycle
     if(length(temporal.priority$not.ordered)>0) {
@@ -57,7 +65,7 @@ function(adj.matrix, marginal.probs.distributions, prima.facie.model.distributio
 #RETURN:
 #prima.facie.topology: adjacency matrix of the prima facie causes
 "get.prima.facie.causes.no.boot" <-
-function(adj.matrix, marginal.probs, prima.facie.model, prima.facie.null) {
+function(adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie.null) {
 	
     #verify Suppes' conditions for prima facie causes
     #i.e., i --> j implies P(i)>P(j) (temporal priority) and P(j|i)>P(j|not i) (probability raising)
@@ -66,6 +74,14 @@ function(adj.matrix, marginal.probs, prima.facie.model, prima.facie.null) {
     
     #verify the probability raising and background context conditions
     probability.raising = verify.probability.raising.no.boot(prima.facie.model,prima.facie.null,temporal.priority);
+    
+    #patterns related the the hypotheses
+	if(!is.na(hypotheses[1])) {
+		data = list();
+		data$hypotheses = hypotheses;
+		print(as.patterns(data))
+		print(pattern.events(data,as.patterns(data)[1]))
+	}
     
     #save the results and return them
     prima.facie.topology = probability.raising;
