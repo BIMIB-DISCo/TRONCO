@@ -527,7 +527,7 @@ tronco.plot = function(x,
 
   }
   
-  #print(nAttrs$col)
+  # print(nAttrs$col)
 
   legend_logic = NULL
   
@@ -535,6 +535,8 @@ tronco.plot = function(x,
   node.type = 'box'
   if (expand) {
     
+    # border - logical nodes should be neutral
+    border.logical.nodes = 'white'
     
     w = unlist(nAttrs$label[names(nAttrs$fill)]) == 'OR'
     if (any(w)) {
@@ -543,7 +545,7 @@ tronco.plot = function(x,
     nAttrs$fill[which(w)] = 'orange'
     nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = node.type
-    nAttrs$col[which(w)] = 'black'
+    nAttrs$col[which(w)] = border.logical.nodes
     nAttrs$height[which(w)] = height.logic
     nAttrs$lWidth[which(w)] = height.logic/2
     nAttrs$rWidth[which(w)] = height.logic/2
@@ -555,7 +557,7 @@ tronco.plot = function(x,
     nAttrs$fill[which(w)] = 'lightgreen'
     nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = node.type
-    nAttrs$col[which(w)] = 'black'
+    nAttrs$col[which(w)] = border.logical.nodes
     nAttrs$height[which(w)] = height.logic
     nAttrs$lWidth[which(w)] = height.logic/2
     nAttrs$rWidth[which(w)] = height.logic/2
@@ -567,7 +569,7 @@ tronco.plot = function(x,
     nAttrs$fill[which(w)] = 'red'
     nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = node.type
-    nAttrs$col[which(w)] = 'black'
+    nAttrs$col[which(w)] = border.logical.nodes
     nAttrs$height[which(w)] = height.logic
     nAttrs$lWidth[which(w)] = height.logic/2
     nAttrs$rWidth[which(w)] = height.logic/2
@@ -581,12 +583,13 @@ tronco.plot = function(x,
   nAttrs$fill[which(w)] = 'lightgreen'
   nAttrs$label[which(w)] = ''
   nAttrs$shape[which(w)] = node.type
-  nAttrs$col[which(w)] = 'black'
+  nAttrs$col[which(w)] = border.logical.nodes
   nAttrs$height[which(w)] = height.logic
   nAttrs$lWidth[which(w)] = height.logic/2
   nAttrs$rWidth[which(w)] = height.logic/2
 
-  
+    print(nAttrs$col)
+
   #cat('\n')
 
   #print(nAttrs$lwd)
@@ -828,8 +831,10 @@ tronco.plot = function(x,
     col = c('black', 'black')
         
     # Further stats
-    y = ifelse('Hypothesis' %in% as.types(x$data), delete.type(x$data, 'Hypothesis'), x)
-    
+	y = x
+    if('Hypothesis' %in% as.types(x$data)) 
+    		y = delete.type(x$data, 'Hypothesis')
+    		
     freq.labels = c(freq.labels, 
       ' ',
       expression(bold('Sample size')),
