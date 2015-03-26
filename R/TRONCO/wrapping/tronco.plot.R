@@ -492,7 +492,62 @@ tronco.plot = function(x,
     }))
   nAttrs$fill[] = w
   
+  #print(nAttrs$col)
 
+  legend_logic = NULL
+  
+  # set color, size form and shape each logic nodes (if hypos expansion actived)
+  node.type = 'box'
+  if (expand) {
+    
+    
+    w = unlist(nAttrs$label[names(nAttrs$fill)]) == 'OR'
+    if (any(w)) {
+      legend_logic['Exclusivity (soft)'] = 'orange'
+    }
+    nAttrs$fill[which(w)] = 'orange'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$lWidth[which(w)] = height.logic/2
+    nAttrs$rWidth[which(w)] = height.logic/2
+    
+    w = unlist(nAttrs$label[names(nAttrs$fill)]) == 'AND'
+    if (any(w)) {
+      legend_logic['Co-occurence'] = 'lightgreen'
+    }
+    nAttrs$fill[which(w)] = 'lightgreen'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$lWidth[which(w)] = height.logic/2
+    nAttrs$rWidth[which(w)] = height.logic/2
+    
+    w = unlist(nAttrs$label[names(nAttrs$fill)]) == 'XOR'
+    if (any(w)) {
+      legend_logic['Exclusivity (hard)'] = 'red'
+    }
+    nAttrs$fill[which(w)] = 'red'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$lWidth[which(w)] = height.logic/2
+    nAttrs$rWidth[which(w)] = height.logic/2
+  }
+  #print(legend_logic)
+  
+  w = unlist(nAttrs$label[names(nAttrs$fill)]) == '*'
+  if (any(w)) {
+      legend_logic['Co-occurence'] = 'lightgreen'
+    }
+  nAttrs$fill[which(w)] = 'lightgreen'
+  nAttrs$label[which(w)] = ''
+  nAttrs$shape[which(w)] = node.type
+  nAttrs$height[which(w)] = height.logic
+  nAttrs$lWidth[which(w)] = height.logic/2
+  nAttrs$rWidth[which(w)] = height.logic/2
+
+  
   # node border thickness
   nAttrs$lwd = 1
 
@@ -526,72 +581,6 @@ tronco.plot = function(x,
     }
 
   }
-  
-  #print(nAttrs$col)
-
-  legend_logic = NULL
-  
-  # set color, size form and shape each logic nodes (if hypos expansion actived)
-  node.type = 'box'
-  if (expand) {
-    
-    
-    w = unlist(nAttrs$label[names(nAttrs$fill)]) == 'OR'
-    if (any(w)) {
-      legend_logic['Exclusivity (soft)'] = 'orange'
-    }
-    nAttrs$fill[which(w)] = 'orange'
-    nAttrs$label[which(w)] = ''
-    nAttrs$shape[which(w)] = node.type
-    nAttrs$col[which(w)] = 'black'
-    nAttrs$height[which(w)] = height.logic
-    nAttrs$lWidth[which(w)] = height.logic/2
-    nAttrs$rWidth[which(w)] = height.logic/2
-    
-    w = unlist(nAttrs$label[names(nAttrs$fill)]) == 'AND'
-    if (any(w)) {
-      legend_logic['Co-occurence'] = 'lightgreen'
-    }
-    nAttrs$fill[which(w)] = 'lightgreen'
-    nAttrs$label[which(w)] = ''
-    nAttrs$shape[which(w)] = node.type
-    nAttrs$col[which(w)] = 'black'
-    nAttrs$height[which(w)] = height.logic
-    nAttrs$lWidth[which(w)] = height.logic/2
-    nAttrs$rWidth[which(w)] = height.logic/2
-    
-    w = unlist(nAttrs$label[names(nAttrs$fill)]) == 'XOR'
-    if (any(w)) {
-      legend_logic['Exclusivity (hard)'] = 'red'
-    }
-    nAttrs$fill[which(w)] = 'red'
-    nAttrs$label[which(w)] = ''
-    nAttrs$shape[which(w)] = node.type
-    nAttrs$col[which(w)] = 'black'
-    nAttrs$height[which(w)] = height.logic
-    nAttrs$lWidth[which(w)] = height.logic/2
-    nAttrs$rWidth[which(w)] = height.logic/2
-  }
-  #print(legend_logic)
-  
-  w = unlist(nAttrs$label[names(nAttrs$fill)]) == '*'
-  if (any(w)) {
-      legend_logic['Co-occurence'] = 'lightgreen'
-    }
-  nAttrs$fill[which(w)] = 'lightgreen'
-  nAttrs$label[which(w)] = ''
-  nAttrs$shape[which(w)] = node.type
-  nAttrs$col[which(w)] = 'black'
-  nAttrs$height[which(w)] = height.logic
-  nAttrs$lWidth[which(w)] = height.logic/2
-  nAttrs$rWidth[which(w)] = height.logic/2
-
-  
-  #cat('\n')
-
-  #print(nAttrs$lwd)
-
-
   
   # edges properties
   
