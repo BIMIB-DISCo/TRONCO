@@ -15,13 +15,13 @@
 #RETURN:
 #prima.facie.parents: list of the set (if any) of prima facie parents for each node
 "get.prima.facie.parents.do.boot" <-
-function(dataset, nboot, pvalue, adj.matrix) {
+function(dataset, hypotheses, nboot, pvalue, adj.matrix) {
 	
 	#compute a robust estimation of the scores using rejection sampling bootstrap
 	scores = get.bootstapped.scores(dataset,nboot,adj.matrix);
 	
     #remove all the edges not representing a prima facie causes
-    prima.facie.topology = get.prima.facie.causes.do.boot(adj.matrix,scores$marginal.probs.distributions,scores$prima.facie.model.distributions,scores$prima.facie.null.distributions,pvalue);
+    prima.facie.topology = get.prima.facie.causes.do.boot(adj.matrix,hypotheses,scores$marginal.probs.distributions,scores$prima.facie.model.distributions,scores$prima.facie.null.distributions,pvalue);
     
     #compute the observed and joint probabilities as the mean of the bootstrapped values
     marginal.probs = array(-1,dim=c(ncol(dataset),1));
@@ -50,13 +50,13 @@ function(dataset, nboot, pvalue, adj.matrix) {
 #RETURN:
 #prima.facie.parents: list of the set (if any) of prima facie parents for each node
 "get.prima.facie.parents.no.boot" <-
-function(dataset, adj.matrix) {
+function(dataset, hypotheses, adj.matrix) {
 	
 	#compute the scores from the dataset
 	scores = get.dag.scores(dataset,adj.matrix);
 	
     #remove all the edges not representing a prima facie causes
-    prima.facie.topology = get.prima.facie.causes.no.boot(adj.matrix,scores$marginal.probs,scores$prima.facie.model,scores$prima.facie.null);
+    prima.facie.topology = get.prima.facie.causes.no.boot(adj.matrix,hypotheses,scores$marginal.probs,scores$prima.facie.model,scores$prima.facie.null);
     
     #save the results return them
     prima.facie.parents <- list(marginal.probs=scores$marginal.probs,joint.probs=scores$joint.probs,adj.matrix=prima.facie.topology,pf.confidence=NA);
