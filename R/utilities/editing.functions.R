@@ -21,7 +21,7 @@ rename.type <- function(x, old.name, new.name) {
   } else {
     stop(paste(old.name, 'not in as.types(x)'))
   }
-  cat('Events of type', old.name, 'renamed as', new.name, '')
+  cat('Events of type', old.name, 'renamed as', new.name, '.\n')
   
   is.compliant(x, err.fun = 'rename.type: output')
   return(x)

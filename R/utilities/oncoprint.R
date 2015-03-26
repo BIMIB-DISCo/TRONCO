@@ -34,10 +34,13 @@ oncoprint <- function(x,
                       sample.id = FALSE,
                       hide.zeroes = FALSE,
                       legend = TRUE,
+                      legend.cex = 1.0,
                       cellwidth = 5, 
                       cellheigth = 10,
                       group.by.label = FALSE,
                       group.samples = NA,
+                      pathways = NA,
+                      pathways.color = 'Set1',
                       ...) 
 {
   if (!require('pheatmap')) {
@@ -100,6 +103,7 @@ oncoprint <- function(x,
     data = sorted.data$M	
   }
   
+  
   if(hasGroups)
   {
   	grn = rownames(group.samples)
@@ -115,7 +119,8 @@ oncoprint <- function(x,
  	order = order(group.samples)
   	group.samples = group.samples[order, , drop=FALSE]
   	
-  	data = data[, rownames(group.samples)]  	  	
+  	data = data[, rownames(group.samples)]  	  	  	
+  	data = data[order(rowSums(data), decreasing = TRUE), ]  	
   }	
   
   ##### If group.by.label group events involving the gene symbol
@@ -128,16 +133,18 @@ oncoprint <- function(x,
   cn = colnames(data)
   rn = rownames(data)
   
-  ##### Heatmap annotations: hits (total 1s per sample), stage or groups
+  ##### SAMPLES annotations: hits (total 1s per sample), stage or groups
+  samples.annotation = NA
   nmut = colSums(data)
-  if(ann.hits == TRUE && ann.stage == FALSE) annotation = data.frame(hits=nmut)
-  if(ann.hits == FALSE && ann.stage == TRUE) annotation = data.frame(stage=as.stages(x)[cn, 1])
-  if(ann.hits == TRUE && ann.stage == TRUE)  annotation = data.frame(stage=as.stages(x)[cn, 1], hits=nmut)
-  if(hasGroups) annotation$group = as.factor(group.samples[cn, 1])
+  
+  if(ann.hits == TRUE && ann.stage == FALSE) samples.annotation = data.frame(hits=nmut)
+  if(ann.hits == FALSE && ann.stage == TRUE) samples.annotation = data.frame(stage=as.stages(x)[cn, 1])
+  if(ann.hits == TRUE && ann.stage == TRUE)  samples.annotation = data.frame(stage=as.stages(x)[cn, 1], hits=nmut)
+  if(hasGroups) samples.annotation$group = group.samples[cn, 1]
 
   ##### Color each annotation 
   if(ann.hits || ann.stage || hasGroups) {
-    rownames(annotation) = cn
+    rownames(samples.annotation) = cn
     annotation_colors = list()
   }
 
@@ -147,7 +154,7 @@ oncoprint <- function(x,
   }
   
   if(ann.stage){ 
-    different.stages = sort(unique(annotation$stage))
+    different.stages = sort(unique(samples.annotation$stage))
     num.stages = length(different.stages)
     stage.color.attr = append(brewer.pal(n=num.stages, name=stage.color), "#FFFFFF")
     names(stage.color.attr) = append(levels(different.stages), NA)
@@ -157,12 +164,46 @@ oncoprint <- function(x,
   if(hasGroups)	{
   	ngroups = length(unique(group.samples[,1]))
   	group.color.attr = brewer.pal(n=ngroups, name='Accent')
-  	names(group.color.attr) = levels(as.factor(unlist(unique(group.samples[,1]))))
+	# print(group.color.attr)
+	# print(unique(group.samples[,1]))
+	# print(samples.annotation)
+	
+  	names(group.color.attr) = unique(group.samples[,1])
     annotation_colors = append(annotation_colors, list(group=group.color.attr))
    }
 
-  # Display also event frequency, which gets computed now
-  genes.freq = rowSums(data)/nsamples(x)
+    # Augment gene names with frequencies and prepare labels 	
+ 	 genes.freq = rowSums(data)/nsamples(x)
+     gene.names = x$annotations[rownames(data),2]
+     gene.names = paste(round(100 * genes.freq, 0) ,'% ', gene.names, sep='') # row labels
+
+	# print(gene.names)
+
+	# GENES ANNOTATIONS - PATHWAYS
+	genes.annotation = NA
+
+    if(!all(is.na(pathways)))
+    {
+		names = names(pathways)  	
+				
+		genes.annotation = data.frame(row.names = rn, stringsAsFactors = FALSE)
+		genes.annotation$pathway = rep(NA, nrow(data))
+		
+		for(i in 1:length(names)) 
+		{
+			pathway = names[i]
+			genes.pathway = rownames(as.events(x, genes=pathways[[names[i]]]))
+			genes.annotation[genes.pathway, 'pathway'] = names[i] 
+		}
+
+		# print(annotation_colors)			
+
+		pathway.colors = append(brewer.pal(n=length(names), name=pathways.color), "#FFFFFF")
+		names(pathway.colors) = append(names, NA)
+
+		annotation_colors = append(annotation_colors, list(pathway=pathway.colors))
+		# print(annotation_colors)				   	
+   }   
   
   # Augment data to make type-dependent colored plots
   types = as.types(x)
@@ -188,24 +229,19 @@ oncoprint <- function(x,
       map.gradient = cbind(map.gradient, as.colors(x)[i])
     }
   }
-  
-  # Augment gene names with frequencies and prepare legend labels
-  gene.names = x$annotations[rownames(data),2]
-  rownames(data) = paste(round(100 * genes.freq, 0) ,'% ', gene.names, sep='')
-  legend.labels = c('none', unique(x$annotations[,1]))
     
-  legend.labels = legend.labels[1:(max(data)+1)]
-  
   if(is.na(font.row)) 
   {
     font.row = max(c(15 * exp(-0.02 * nrow(data)), 2))    
-    cat(paste('Setting automatic font (exp. scaling): ', round(font.row, 1), '\n', sep=''))
+    cat(paste('Setting automatic font (exponential scaling): ', round(font.row, 1), '\n', sep=''))
   }
   
   # Augment title
   title = paste(title, '\n n = ', nsamples(x),'    m = ', nevents(x), '    |G| = ', ngenes(x),  sep='')
   
-  print(list(...))
+    legend.labels = c('none', unique(x$annotations[,1]))
+    
+     legend.labels = legend.labels[1:(max(data)+1)]
   
   # Pheatmap
   if(ann.hits == TRUE || ann.stage == TRUE || hasGroups)  
@@ -215,19 +251,22 @@ oncoprint <- function(x,
              cluster_cols = col.cluster,
              cluster_rows = row.cluster,
              main= title,
-             fontsize= font.size,
+             fontsize = font.size,
              fontsize_col= font.column,
              fontsize_row= font.row,
-             annotation = annotation,
+             annotation_col = samples.annotation,
+             annotation_row = genes.annotation,
              annotation_colors = annotation_colors,	
              border_color = border.color,
              border=T,
-             margins=c(10,10),
+             #margins=c(10,10),
              cellwidth = cellwidth, 
              cellheigth = cellheigth,
              legend=legend,
              legend_breaks = c(0:max(data)),
              legend_labels = legend.labels,
+             legend.cex = legend.cex,
+             labels_row = gene.names,
              drop_levels=T,
              show_colnames = sample.id,
              filename=file,
@@ -256,39 +295,57 @@ oncoprint <- function(x,
              ...
     )
     
-    return(ret)
 }
 
 
 ##### Pathway print
-pathway.visualization = function(x, file, aggregate.pathways, names, ...) 
+pathway.visualization = function(x, title =paste('Pathways:', paste(names, collapse=', ', sep='')), file, pathway.colors = 'Set2', aggregate.pathways, names, ...) 
 {	
 	input = list(...)
 
   if(length(names) != length(input))
+   {
+   	message('Names: ', paste(names, collapse=', '))
+   	message('#Pathways : ', length(input))
+   	
+   	message(input)
+   	
     stop('Missing pathway names...')
+    }
+  colors = brewer.pal(n=length(names), name=pathway.colors) 
   
-	#name=deparse(substitute(data)),
-  cat(paste('*** Processing pathways: ', paste(names, collapse=', ', sep=''), '\n', sep=''))
+ cat(paste('*** Processing pathways: ', paste(names, collapse=', ', sep=''), '\n', sep=''))
   
 	cat(paste('\n[PATHWAY \"', names[1],'\"] ', paste(unlist(input[1]), collapse=', ', sep=''), '\n', sep=''))
-  data.pathways = as.pathway(x, pathway.genes=unlist(input[1]), 
+    data.pathways = as.pathway(x, pathway.genes=unlist(input[1]), 
                              pathway.name=names[1], aggregate.pathway = aggregate.pathways)
 	
+	data.pathways = change.color(data.pathways, 'Pathway', colors[1])
+	data.pathways = rename.type(data.pathways, 'Pathway', names[1])
+
   if(length(names) > 1)
   {  
     for(i in 2:length(input))
   	{
   	  cat(paste('\n\n[PATHWAY \"', names[i],'\"] ', paste(unlist(input[i]), collapse=', ', sep=''), '\n', sep=''))
-  	  data.pathways = ebind(data.pathways,
-                            as.pathway(x, pathway.genes=unlist(input[i]), 
-                                       pathway.name=names[i], aggregate.pathway = aggregate.pathways))
+  	  pathway = as.pathway(x, pathway.genes=unlist(input[i]), pathway.name=names[i], aggregate.pathway = aggregate.pathways)
+                                       
+	  pathway = change.color(pathway, 'Pathway', colors[i])
+      pathway = rename.type(pathway, 'Pathway', names[i])
+     
+      # show(pathway)
+      # # print(has.stages(pathway))
+       # print('bindo..')
+	  # print(has.stages(data.pathways))
+
+  	  data.pathways = ebind(data.pathways, pathway)
+      # show(data.pathways)
   	}
   }
 
-
-  oncoprint(trim(data.pathways), title=paste('Pathways:', paste(names, collapse=', ', sep='')), 
-          file=file)
+  # data.pathways = enforce.numeric(data.pathways)
+ # show(data.pathways)
+  oncoprint(trim(data.pathways), title=title, file=file, legend = FALSE)
 
   return(data.pathways)
 }

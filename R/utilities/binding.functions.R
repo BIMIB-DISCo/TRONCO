@@ -14,7 +14,7 @@ ebind = function(...)
     
     z = list()
 
-	  y$genotypes = y$genotypes[rownames(x$genotypes),]
+	y$genotypes = y$genotypes[rownames(x$genotypes), , drop = FALSE]
     y$stages = y$stages[rownames(y$genotypes), , drop=FALSE]
      
     # Copy genotype matrix, and sets its rownames (samples)
@@ -27,16 +27,28 @@ ebind = function(...)
     
     # Copy types
     z$types = unique(rbind(x$types, y$types))	
+
+    # print(x)
+    # print(y)
+    # print(has.stages(x))
+    # print(has.stages(y))
+    # print(as.stages(x) == as.stages(y))
     
-    # Copy stages, if present
-    if(has.stages(x) && has.stages(y) && !all(as.stages(x) == as.stages(y), na.rm=TRUE))
-      stop('Patients have different stages, won\'t merge!')
+    # Copy stages, if present 
+    if(has.stages(x) && has.stages(y))
+    {
+    		stages.x = as.stages(x)
+    		stages.y = as.stages(y)
+    		
+    		stages.x = stages.x[!is.na(stages.x)]
+    	stages.y = stages.y[!is.na(stages.y)]
+    	
+     	if(any(stages.x != stages.y))
+      		stop('Patients have different stages, won\'t merge!')
+    }
     
     if(has.stages(x)) 
-    {
-      z$stages = as.stages(x)
-      colnames(z$stages) = 'stage'
-    }
+    		z = annotate.stages(z, as.stages(x))
 
     is.compliant(z, 'ebind: output')
     
