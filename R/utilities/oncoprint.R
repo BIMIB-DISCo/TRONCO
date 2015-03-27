@@ -35,8 +35,8 @@ oncoprint <- function(x,
                       hide.zeroes = FALSE,
                       legend = TRUE,
                       legend.cex = 1.0,
-                      cellwidth = 5, 
-                      cellheigth = 10,
+                      cellwidth = NA, 
+                      cellheight = NA,
                       group.by.label = FALSE,
                       group.samples = NA,
                       pathways = NA,
@@ -270,10 +270,10 @@ oncoprint <- function(x,
              annotation_colors = annotation_colors,	
              border_color = border.color,
              border=T,
-             #margins=c(10,10),
+             # margins=c(10,10),
              cellwidth = cellwidth, 
-             cellheigth = cellheigth,
-             legend=legend,
+             cellheight = cellheight,
+             legend = legend,             
              legend_breaks = c(0:max(data)),
              legend_labels = legend.labels,
              legend.cex = legend.cex,
@@ -306,42 +306,56 @@ oncoprint <- function(x,
              ...
     )
     
+    return(ret)
 }
 
 
 ##### Pathway print
-pathway.visualization = function(x, title =paste('Pathways:', paste(names, collapse=', ', sep='')), file, pathway.colors = 'Set2', aggregate.pathways, names, ...) 
+pathway.visualization = function(x, 
+	title = paste('Pathways:', paste(names(pathways), collapse=', ', sep='')), 
+	file, 
+	pathways.color = 'Set2', 
+	aggregate.pathways, 
+	pathways,
+	...) 
 {	
-	input = list(...)
+	names = names(pathways)
+	    
+    if(length(pathways.color) == 1 && pathways.color %in% rownames(brewer.pal.info))
+	{
+		cat('Annotating pathways with RColorBrewer color palette', pathways.color, '.\n')
+		pathway.colors = brewer.pal(n=length(names), name=pathways.color)
+	}
+	else{
+		print(pathways.color)		
+		if(length(pathways.color) != length(names)) 
+			stop('You did not provide enough colors to annotate ', length(names), ' pathways. 
+					Either set pathways.color to a valid RColorBrewer palette or provide the explicit correct number of colors.')
+				
+		cat('Annotating pathways with custom colors', paste(pathways.color, collapse=','), '.\n')
+		pathway.colors = pathways.color
+	}
+	
+	names(pathway.colors) = names
+	
+    cat(paste('*** Processing pathways: ', paste(names, collapse=', ', sep=''), '\n', sep=''))
+  
+	cat(paste('\n[PATHWAY \"', names[1],'\"] ', paste(pathways[[1]], collapse=', ', sep=''), '\n', sep=''))
 
-  if(length(names) != length(input))
-   {
-   	message('Names: ', paste(names, collapse=', '))
-   	message('#Pathways : ', length(input))
-   	
-   	message(input)
-   	
-    stop('Missing pathway names...')
-    }
-  colors = brewer.pal(n=length(names), name=pathway.colors) 
-  
- cat(paste('*** Processing pathways: ', paste(names, collapse=', ', sep=''), '\n', sep=''))
-  
-	cat(paste('\n[PATHWAY \"', names[1],'\"] ', paste(unlist(input[1]), collapse=', ', sep=''), '\n', sep=''))
-    data.pathways = as.pathway(x, pathway.genes=unlist(input[1]), 
+    data.pathways = as.pathway(x, pathway.genes=pathways[[1]], 
                              pathway.name=names[1], aggregate.pathway = aggregate.pathways)
 	
-	data.pathways = change.color(data.pathways, 'Pathway', colors[1])
+	data.pathways = change.color(data.pathways, 'Pathway', pathways.color[1])
 	data.pathways = rename.type(data.pathways, 'Pathway', names[1])
 
   if(length(names) > 1)
   {  
-    for(i in 2:length(input))
+    for(i in 2:length(pathways))
   	{
-  	  cat(paste('\n\n[PATHWAY \"', names[i],'\"] ', paste(unlist(input[i]), collapse=', ', sep=''), '\n', sep=''))
-  	  pathway = as.pathway(x, pathway.genes=unlist(input[i]), pathway.name=names[i], aggregate.pathway = aggregate.pathways)
+  	  cat(paste('\n\n[PATHWAY \"', names[i],'\"] ', paste(pathways[[i]], collapse=', ', sep=''), '\n', sep=''))
+  	  pathway = as.pathway(x, pathway.genes=pathways[[i]], pathway.name=names[i], aggregate.pathway = aggregate.pathways)
                                        
-	  pathway = change.color(pathway, 'Pathway', colors[i])
+	  pathway = change.color(pathway, 'Pathway', pathway.colors[i])
       pathway = rename.type(pathway, 'Pathway', names[i])
      
       # show(pathway)
@@ -356,8 +370,8 @@ pathway.visualization = function(x, title =paste('Pathways:', paste(names, colla
 
   # data.pathways = enforce.numeric(data.pathways)
  # show(data.pathways)
-  oncoprint(trim(data.pathways), title=title, file=file, legend = FALSE)
+  ret = oncoprint(trim(data.pathways), title=title, file=file, ...)
 
-  return(data.pathways)
+  return(ret)
 }
 
