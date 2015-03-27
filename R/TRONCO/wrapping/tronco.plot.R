@@ -285,6 +285,7 @@ tronco.plot = function(x,
                      confidence = FALSE, 
                      legend = TRUE, 
                      legend.cex = 1.0, 
+                     edge.cex = 1.0,
                      label.edge.size = 12, 
                      hidden.and = T,
                      expand = T,
@@ -624,7 +625,7 @@ tronco.plot = function(x,
   names(eAttrs$color) = edge_names
 
   #set edge arrowsize to 1 (default)
-  eAttrs$arrowsize = rep(1, length(edge_names))
+  eAttrs$arrowsize = rep(1 * edge.cex, length(edge_names))
   names(eAttrs$arrowsize) = edge_names
   
   #record logic edge
@@ -698,6 +699,7 @@ tronco.plot = function(x,
     if (is.logic.node(to)) {
       eAttrs$logic[e] = T
       eAttrs$arrowsize[e] = 0
+      
     }
   }
   
