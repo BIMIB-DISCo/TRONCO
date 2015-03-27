@@ -197,8 +197,19 @@ oncoprint <- function(x,
 		}
 
 		# print(annotation_colors)			
-
-		pathway.colors = append(brewer.pal(n=length(names), name=pathways.color), "#FFFFFF")
+		if(pathways.color %in% rownames(brewer.pal.info))
+		{
+			cat('Annotating pathways with RColorBrewer color palette', pathways.color, '.\n')
+			pathway.colors = append(brewer.pal(n=length(names), name=pathways.color), "#FFFFFF")
+		}
+		else{
+			if(length(pathways.color) != length(names)) 
+				stop('You did not provide enough colors to annotate', length(names), 'pathways. 
+						Either set pathways.color to a valid RColorBrewer palette or provide the explicit correct number of colors.')
+				
+			cat('Annotating pathways with custom colors', paste(pathways.color, collapse=','), '.\n')
+			pathway.colors = append(pathways.color, "#FFFFFF")
+		}
 		names(pathway.colors) = append(names, NA)
 
 		annotation_colors = append(annotation_colors, list(pathway=pathway.colors))

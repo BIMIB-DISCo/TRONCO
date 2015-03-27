@@ -290,7 +290,7 @@ tronco.plot = function(x,
                      expand = T,
                      genes = NULL,
                      edge.color = 'black',
-                     color = 'Set2',
+                     pathways.color = 'Set1',
                      file = NA, # print to pdf,
                      legend.pos = 'bottom',
                      pathways = NULL,
@@ -555,7 +555,26 @@ tronco.plot = function(x,
   #cat('\n')
   legend_pathways = NULL
   if(!is.null(pathways)) {
-    cols = brewer.pal(length(pathways), name=color)
+  	
+  	
+  	if(pathways.color %in% rownames(brewer.pal.info)) 
+  	{
+		cat('Annotating pathways with RColorBrewer color palette', pathways.color, '.\n')
+		cols = brewer.pal(n=length(names(pathways)), name=pathways.color)
+	}
+	else
+	{
+		if(length(pathways.color) != length(names(pathways))) 
+			stop('You did not provide enough colors to annotate', length(names(pathways)), 'pathways. 
+					Either set pathways.color to a valid RColorBrewer palette or provide the explicit correct number of colors.')
+		cols = pathways.color
+	}
+	
+	# print(cols)	
+	# print(names(cols))
+	# print(names(pathways))
+		
+	
     names(cols) = names(pathways)
     #print(cols)
 
