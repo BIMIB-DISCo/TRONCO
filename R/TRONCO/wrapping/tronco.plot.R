@@ -585,28 +585,28 @@ tronco.plot = function(x,
   eAttrs = list()
   
   # set temporary edge shape
-  #eAttrs$lty = rep("solid", length(edge_names))
-  #names(eAttrs$lty) = edge_names
+  eAttrs$lty = rep("solid", length(edge_names))
+  names(eAttrs$lty) = edge_names
   
   #set edge thikness based on prob
-  #eAttrs$lwd = rep(1, length(edge_names))
-  #names(eAttrs$lwd) = edge_names
+  eAttrs$lwd = rep(1, length(edge_names))
+  names(eAttrs$lwd) = edge_names
   
   #set edge name based on prob
-  eAttrs.label = rep('', length(edge_names))
-  names(eAttrs.label) = edge_names
+  eAttrs$label = rep('', length(edge_names))
+  names(eAttrs$label) = edge_names
   
   #set fontsize to label.edge.size (default)
-  eAttrs.fontsize = rep(label.edge.size, length(edge_names))
-  names(eAttrs.fontsize) = edge_names
+  eAttrs$fontsize = rep(label.edge.size, length(edge_names))
+  names(eAttrs$fontsize) = edge_names
   
   #set edge color to black (default)
-  #eAttrs$color = rep(edge.color, length(edge_names))
-  #names(eAttrs$color) = edge_names
+  eAttrs$color = rep(edge.color, length(edge_names))
+  names(eAttrs$color) = edge_names
   
   #record logic edge
-  #eAttrs$logic = rep(F, length(edge_names))
-  #names(eAttrs$logic) = edge_names
+  eAttrs$logic = rep(F, length(edge_names))
+  names(eAttrs$logic) = edge_names
   
   cat('done')
   
@@ -631,17 +631,17 @@ tronco.plot = function(x,
         # print(paste('from', from, 'to', to, ':', conf_matrix[from, to]))
         if (conf_matrix[from, to] == 1) {
           # ..set edge thickness and label..
-          eAttrs.label[e] = '100%'
-          #eAttrs$lwd[e] = log(150)
+          eAttrs$label[e] = '100%'
+          eAttrs$lwd[e] = log(150)
         } else if (conf_matrix[from, to] >= 0.01) {
           # ..draw it on the graph..
 
-          eAttrs.label[e] = paste0('', round(conf_matrix[from, to] * 100, 0), '%')
-          #eAttrs$lwd[e] = log(conf_matrix[from, to] * 150)
+          eAttrs$label[e] = paste0('', round(conf_matrix[from, to] * 100, 0), '%')
+          eAttrs$lwd[e] = log(conf_matrix[from, to] * 150)
         } else {
           # ..else set the style of the edge to dashed
-          eAttrs.label[e] = "< 1%"
-          #eAttrs$lwd[e] = log(1.5)
+          eAttrs$label[e] = "< 1%"
+          eAttrs$lwd[e] = log(1.5)
         }
 
 
@@ -651,12 +651,12 @@ tronco.plot = function(x,
     
         hyper_geom = x$confidence[[3]][conf_from, conf_to]
         if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
-        eAttrs.label[e] = paste(eAttrs.label[e], '   ', hyper_geom)
+        eAttrs$label[e] = paste(eAttrs$label[e], '   ', hyper_geom)
 
 
       } else {
         # ..else this edge is located inside to an hypothesis, so no arrow to show
-        #eAttrs$logic[e] = T
+        eAttrs$logic[e] = T
       }
     }
   }
@@ -668,11 +668,11 @@ tronco.plot = function(x,
     to = edge[2]
     
     if (from == '*') {
-      #eAttrs$logic[e] = T
+      eAttrs$logic[e] = T
     } 
     
     if (is.logic.node(to)) {
-      #eAttrs$logic[e] = T
+      eAttrs$logic[e] = T
     }
   }
   
@@ -713,7 +713,7 @@ tronco.plot = function(x,
            bic[from, to] == 0
            ) {
         #cat("\nprima facie!!!")
-        #eAttrs$color[e] = 'red'
+        eAttrs$color[e] = 'red'
       } else {
         #cat('\nno PF!')
       }
@@ -732,7 +732,7 @@ tronco.plot = function(x,
   # graph.par(graph=list(main=title, ...))
   #par(mar = c(5, 4, 4, 2) + 0.1)
   #par(xpd=TRUE, mar=par()$mar+c(0,0,0,5))
-  plot(graph, nodeAttrs=nAttrs, main=title, ... )
+  plot(graph, nodeAttrs=nAttrs, edgeAttrs=eAttrs, main=title, ... )
   #plot(1:3, rnorm(3), pch = 1, lty = 1, type = "o", ylim=c(-2,2))
   #par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
   
