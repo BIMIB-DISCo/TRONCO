@@ -603,6 +603,10 @@ tronco.plot = function(x,
   #set edge color to black (default)
   eAttrs$color = rep(edge.color, length(edge_names))
   names(eAttrs$color) = edge_names
+
+  #set edge arrowsize to 1 (default)
+  eAttrs$arrowsize = rep(1, length(edge_names))
+  names(eAttrs$arrowsize) = edge_names
   
   #record logic edge
   eAttrs$logic = rep(F, length(edge_names))
@@ -651,7 +655,7 @@ tronco.plot = function(x,
     
         hyper_geom = x$confidence[[3]][conf_from, conf_to]
         if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
-        eAttrs$label[e] = paste(eAttrs$label[e], '   ', hyper_geom)
+        eAttrs$label[e] = paste(eAttrs$label[e], '  ', hyper_geom)
 
 
       } else {
@@ -669,10 +673,12 @@ tronco.plot = function(x,
     
     if (from == '*') {
       eAttrs$logic[e] = T
+      eAttrs$arrowsize[e] = 0
     } 
     
     if (is.logic.node(to)) {
       eAttrs$logic[e] = T
+      eAttrs$arrowsize[e] = 0
     }
   }
   
@@ -758,8 +764,18 @@ tronco.plot = function(x,
       legend_colors = c(legend_colors, 'white', 'white', legend_pathways)  
     }
     
-    #legend(ifelse(legend.pos == 'bottom', 'bottomright', 'topright'),
-    legend(locator(1),
+    if (legend.pos == 'bottom') {
+      legend.pos.l = 'bottomleft'
+      legend.pos.r = 'bottomright'
+    } else if (legend.pos == 'top') {
+      legend.pos.l = 'topleft'
+      legend.pos.r = 'topright'
+    } else {
+      legend.pos.l = locator(1)
+      legend.pos.r = locator(1)
+    }
+
+    legend(legend.pos.r,
            legend = legend_names,
            title = expression(bold('Events type')),
            bty = 'n',
@@ -835,8 +851,7 @@ tronco.plot = function(x,
     pt.bg = c(pt.bg, 'white', 'white', rep('black', 3))
     col = c(col, 'white', 'white', rep('black', 3)) 
     
-    #legend(ifelse(legend.pos == 'bottom', 'bottomleft', 'topleft'),
-    legend(locator(1),
+    legend(legend.pos.l,
            legend = freq.labels,
            title = expression(bold('Events frequency')),
            bty = 'n',
