@@ -557,7 +557,7 @@ tronco.plot = function(x,
   if(!is.null(pathways)) {
   	
   	
-  	if(pathways.color %in% rownames(brewer.pal.info)) 
+  	if(length(pathways.color) == 1 && pathways.color %in% rownames(brewer.pal.info)) 
   	{
 		cat('Annotating pathways with RColorBrewer color palette', pathways.color, '.\n')
 		cols = brewer.pal(n=length(names(pathways)), name=pathways.color)
