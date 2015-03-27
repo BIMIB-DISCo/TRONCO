@@ -23,6 +23,8 @@ function(dataset, hypotheses = NA, command = "hc", REGULARIZATION = "bic", do.bo
 	#structure with the set of valid edges
 	#I start from the complete graph, i.e., I have no prior and all the connections are possibly causal
 	adj.matrix = array(1,c(ncol(dataset),ncol(dataset)));
+	colnames(adj.matrix) = colnames(dataset);
+	rownames(adj.matrix) = colnames(dataset);
 	#the diagonal of the adjacency matrix should not be considered, i.e., no self cause is allowed
 	diag(adj.matrix) = 0;
 	#consider the hypotheses if any

@@ -31,18 +31,10 @@ function(adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.model
     #verify the probability raising and background context conditions
     probability.raising = verify.probability.raising.do.boot(prima.facie.model.distributions,prima.facie.null.distributions,pvalue,temporal.priority$adj.matrix,temporal.priority$edge.confidence.matrix);
     
-    #patterns related the the hypotheses
-	if(!is.na(hypotheses)[1]) {
-		data = list();
-		data$hypotheses = hypotheses;
-		print(as.patterns(data))
-		print(pattern.events(data,as.patterns(data)[1]))
-	}
-    
     #remove any cycle
-    if(length(temporal.priority$not.ordered)>0) {
+    if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
         weights.matrix = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]];
-        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.matrix,temporal.priority$not.ordered);
+        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.matrix,temporal.priority$not.ordered,hypotheses);
         adj.matrix = acyclic.topology$adj.matrix;
     }
     else {
@@ -75,16 +67,17 @@ function(adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie.
     #verify the probability raising and background context conditions
     probability.raising = verify.probability.raising.no.boot(prima.facie.model,prima.facie.null,temporal.priority);
     
-    #patterns related the the hypotheses
-	if(!is.na(hypotheses[1])) {
-		data = list();
-		data$hypotheses = hypotheses;
-		print(as.patterns(data))
-		print(pattern.events(data,as.patterns(data)[1]))
-	}
+    #remove any cycle
+    if(!is.na(hypotheses[1])) {
+        weights.matrix = array(1,c(nrow(adj.matrix),ncol(adj.matrix)));
+        acyclic.topology = remove.cycles(probability.raising,weights.matrix,vector(),hypotheses);
+        prima.facie.topology = acyclic.topology$adj.matrix;
+    }
+    else {
+    	prima.facie.topology = probability.raising;
+    }
     
     #save the results and return them
-    prima.facie.topology = probability.raising;
     return(prima.facie.topology);
 
 }
