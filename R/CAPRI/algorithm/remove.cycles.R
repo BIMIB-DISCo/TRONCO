@@ -80,6 +80,10 @@ function(adj.matrix, weights.matrix, not.ordered, hypotheses = NA) {
             			else if(curr.edge[3,1]==2) {
             				is.path = find.path(adj.matrix,atomic.pool[j],curr.edge.i,vector());
             			}
+            			
+            			if(is.path==1) {
+            				break;
+            			}
             		}
             }
             #if there is a path between the two nodes, remove edge i --> j
