@@ -196,7 +196,7 @@ oncoprint <- function(x,
 			genes.annotation[genes.pathway, 'pathway'] = names[i] 
 		}
 
-		# print(annotation_colors)			
+
 		if(length(pathways.color) == 1 && pathways.color %in% rownames(brewer.pal.info))
 		{
 			cat('Annotating pathways with RColorBrewer color palette', pathways.color, '.\n')
@@ -212,6 +212,8 @@ oncoprint <- function(x,
 		}
 		names(pathway.colors) = append(names, NA)
 
+		pathway.colors = pathway.colors[ unique(genes.annotation$pathway) ]
+		
 		annotation_colors = append(annotation_colors, list(pathway=pathway.colors))
 		# print(annotation_colors)				   	
    }   
