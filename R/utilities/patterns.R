@@ -1,7 +1,7 @@
 #' Return all events involving certain genes and types
 pattern.events = function(x, hypothesis)
 {
-	hevents = x$hypotheses$patterns[[hypothesis]]
+	hevents = x$patterns[[hypothesis]]
 	if(length(hevents)==0){
 		stop('The hypothesis is not valid!')
 	}
@@ -11,5 +11,5 @@ pattern.events = function(x, hypothesis)
 # Return the names of the patterns in the dataset
 as.patterns = function(x)
 {
-	return(names(x$hypotheses$patterns))
+	return(names(x$patterns))
 }

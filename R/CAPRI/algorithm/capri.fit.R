@@ -61,7 +61,11 @@ function(dataset, hypotheses = NA, command = "hc", REGULARIZATION = "bic", do.bo
     }
     
 	#perform the likelihood fit by BIC score on the prima facie topology
-	best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command, REGULARIZATION=REGULARIZATION);
+	best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command, regularization=REGULARIZATION);
+    
+    ###TMP###
+    best.parents$adj.matrix$adj.matrix.bic = best.parents$adj.matrix$adj.matrix.fit;
+    #########
 	
 	#set the structure to save the conditional probabilities and the confidences of the reconstructed topology
 	parents.pos.pf = array(list(),c(ncol(dataset),1));

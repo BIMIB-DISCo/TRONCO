@@ -6,26 +6,27 @@
 #### information.
 
 
-#reconstruct the best minimal causal topology by likelihood fit
-#INPUT:
-#dataset: a valid dataset
-#adj.matrix: the adjacency matrix of the prima facie causes
-#command: type of search, either hill climbing (hc) or tabu (tabu)
-#RETURN:
-#topology: the adjacency matrix of both the prima facie and causal topologies
+# reconstruct the best causal topology by likelihood fit
+# INPUT:
+# dataset: a valid dataset
+# adj.matrix: the adjacency matrix of the prima facie causes
+# command: type of search, either hill climbing (hc) or tabu (tabu)
+# regularization: regularization term to be used in the likelihood fit
+# RETURN:
+# topology: the adjacency matrix of both the prima facie and causal topologies
 "perform.likelihood.fit" <-
-function(dataset, adj.matrix, command, REGULARIZATION) {
+function( dataset, adj.matrix, command, regularization ) {
 	
-    #load the bnlearn library required for the likelihood fit with bic
+    # load the bnlearn library required for the likelihood fit with bic
     if (!require(bnlearn)) {
-      install.packages('bnlearn', dependencies = TRUE)
-      library(bnlearn)
+    		install.packages('bnlearn', dependencies = TRUE);
+      	library(bnlearn);
     }
     
-    #adjacency matrix of the topology reconstructed by likelihood fit
-    adj.matrix.bic = array(0,c(nrow(adj.matrix),ncol(adj.matrix)));
+    # adjacency matrix of the topology reconstructed by likelihood fit
+    adj.matrix.fit = array(0,c(nrow(adj.matrix),ncol(adj.matrix)));
 
-    #create a categorical data frame from the dataset
+    # create a categorical data frame from the dataset
     data = array("missing",c(nrow(dataset),ncol(dataset)));
     for (i in 1:nrow(dataset)) {
         for (j in 1:ncol(dataset)) {
@@ -41,7 +42,7 @@ function(dataset, adj.matrix, command, REGULARIZATION) {
     }
     names(data) = my.names;
     
-    #create the blacklist based on the prima facie topology
+    # create the blacklist based on the prima facie topology
     cont = 0;
     parent = -1;
     child = -1;
@@ -49,7 +50,7 @@ function(dataset, adj.matrix, command, REGULARIZATION) {
         for (j in 1:ncol(adj.matrix)) {
             if(i!=j) {
                 if(adj.matrix[i,j]==0) {
-                    #[i,j] refers to causation i --> j
+                    # [i,j] refers to causation i --> j
                     cont = cont + 1;
                     if(cont==1) {
                         parent = toString(i);
@@ -64,41 +65,41 @@ function(dataset, adj.matrix, command, REGULARIZATION) {
         }
     }
 
-    #perform the reconstruction by likelihood fit with bic
-    #either the hill climbing or the tabu search is used as the mathematical optimization technique
+    # perform the reconstruction by likelihood fit with regularization
+    # either the hill climbing or the tabu search is used as the mathematical optimization technique
+    
+    cat('Performing likelihood-fit with regularization:', regularization, '(bnlearn)\n');
+    cat('Heuristic search method:', command, '(bnlearn)\n');
+    
     if(cont>0) {
-    	
-    	cat('Performing likelihood-fit with regularization:', REGULARIZATION, '(bnlearn)\n')
-    	cat('Heuristic search method:', command, ' (bnlearn)\n')
-    	
         blacklist = data.frame(from = parent,to = child);
         if(command=="hc") {
-        		my.net = hc(data,score= REGULARIZATION,blacklist=blacklist);
+        		my.net = hc(data,score= regularization,blacklist=blacklist);
         }
         else if(command=="tabu") {
-        		my.net = tabu(data,score= REGULARIZATION,blacklist=blacklist);
+        		my.net = tabu(data,score= regularization,blacklist=blacklist);
         }
     }
     else {
     		if(command=="hc") {
-        		my.net = hc(data,score= REGULARIZATION);
+        		my.net = hc(data,score= regularization);
         }
         else if(command=="tabu") {
-        		my.net = tabu(data,score= REGULARIZATION);
+        		my.net = tabu(data,score= regularization);
         }
     }
     my.arcs = my.net$arcs;
     
-    #make the adjacency matrix of the reconstructed topology
+    # build the adjacency matrix of the reconstructed topology
     if(length(nrow(my.arcs))>0 && nrow(my.arcs)>0) {
         for (i in 1:nrow(my.arcs)) {
-            #[i,j] refers to causation i --> j
-            adj.matrix.bic[as.numeric(my.arcs[i,1]),as.numeric(my.arcs[i,2])] = 1;
+            # [i,j] refers to causation i --> j
+            adj.matrix.fit[as.numeric(my.arcs[i,1]),as.numeric(my.arcs[i,2])] = 1;
         }
     }
     
-    #save the results and return them
-    adj.matrix = list(adj.matrix.pf=adj.matrix,adj.matrix.bic=adj.matrix.bic);
+    # save the results and return them
+    adj.matrix = list(adj.matrix.pf=adj.matrix,adj.matrix.fit=adj.matrix.fit);
     topology = list(adj.matrix=adj.matrix);
     return(topology);
 

@@ -6,34 +6,56 @@
 #### information.
 
 
-#select the best set of prima facie causes per node
-#INPUT:
-#adj.matrix: adjacency matrix of the initially valid edges
-#marginal.probs.distributions: distributions of the bootstrapped marginal probabilities
-#prima.facie.model.distributions: distributions of the prima facie model
-#prima.facie.null.distributions: distributions of the prima facie null
-#pvalue: minimum pvalue for the Mann-Whitney U tests to be significant
-#RETURN:
-#prima.facie.topology: list describing the topology of the prima facie causes
+# select the best set of prima facie causes per node
+# INPUT:
+# adj.matrix: adjacency matrix of the initially valid edges
+# hypotheses: hypotheses to be considered
+# marginal.probs.distributions: distributions of the bootstrapped marginal probabilities
+# prima.facie.model.distributions: distributions of the prima facie model
+# prima.facie.null.distributions: distributions of the prima facie null
+# pvalue: minimum pvalue for the Mann-Whitney U tests to be significant
+# dataset: a valid dataset
+# marginal.probs: observed marginal probabilities
+# joint.probs: observed joint probabilities
+# RETURN:
+# prima.facie.topology: list describing the topology of the prima facie causes
 "get.prima.facie.causes.do.boot" <-
-function(adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.model.distributions, prima.facie.null.distributions, pvalue) {
+function( adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.model.distributions, prima.facie.null.distributions, pvalue, dataset, marginal.probs, joint.probs ) {
 	
-    #structure to save the confidence of the edges
-    edge.confidence.matrix <- array(list(), c(2,1));
+    # structure to save the confidence of the edges
+    edge.confidence.matrix <- array(list(), c(3,1));
     edge.confidence.matrix[[1,1]] = array(1, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
     edge.confidence.matrix[[2,1]] = array(0, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
+    edge.confidence.matrix[[3,1]] = array(1, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
     
-    #verify Suppes' conditions for prima facie causes
-    #i.e., i --> j implies P(i)>P(j) (temporal priority) and P(j|i)>P(j|not i) (probability raising)
-    #verify the temporal priority condition
+    # verify Suppes' conditions for prima facie causes
+    # i.e., i --> j implies P(i)>P(j) (temporal priority) and P(j|i)>P(j|not i) (probability raising)
+    # verify the temporal priority condition
+    cat('Evaluating temporal priority condition with pvalue:', pvalue, '\n');
     temporal.priority = verify.temporal.priority.do.boot(marginal.probs.distributions,pvalue,adj.matrix,edge.confidence.matrix);
     
-    #verify the probability raising and background context conditions
+    # verify the probability raising condition
+    cat('Evaluating probability raising condition with pvalue:', pvalue, '\n');
     probability.raising = verify.probability.raising.do.boot(prima.facie.model.distributions,prima.facie.null.distributions,pvalue,temporal.priority$adj.matrix,temporal.priority$edge.confidence.matrix);
     
-    #remove any cycle
+    # perform the hypergeometric test for each pair of events
+    for(i in 1:ncol(adj.matrix)) {
+		for(j in i:nrow(adj.matrix)) {
+			
+			# the diagonal (self cause) has not to be considered
+			if(i!=j) {
+				#compute the confidence by hypergeometric test for both j --> i and i --> j
+				probability.raising$edge.confidence.matrix[[3,1]][i,j] = phyper(joint.probs[i,j]*nrow(dataset),marginal.probs[i]*nrow(dataset),nrow(dataset)-marginal.probs[i]*nrow(dataset),marginal.probs[j]*nrow(dataset),lower.tail=FALSE);
+				probability.raising$edge.confidence.matrix[[3,1]][j,i] = probability.raising$edge.confidence.matrix[[3,1]][i,j];
+			}
+        
+		}
+    }
+    
+    # remove any cycle
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
-        weights.matrix = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]];
+    		cat('Removing the loops.\n');
+        weights.matrix = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]]+probability.raising$edge.confidence.matrix[[3,1]];
         acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.matrix,temporal.priority$not.ordered,hypotheses);
         adj.matrix = acyclic.topology$adj.matrix;
     }
@@ -41,43 +63,70 @@ function(adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.model
         adj.matrix = probability.raising$adj.matrix;
     }
     
-    #save the results and return them
+    # save the results and return them
     prima.facie.topology <- list(adj.matrix=adj.matrix,edge.confidence.matrix=probability.raising$edge.confidence.matrix);
     return(prima.facie.topology);
 
 }
 
 
-#select the best set of prima facie causes per node without bootstrap
-#INPUT:
-#adj.matrix: adjacency matrix of the initially valid edges
-#marginal.probs: marginal probabilities
-#prima.facie.model: prima facie model
-#prima.facie.null: prima facie null
-#RETURN:
-#prima.facie.topology: adjacency matrix of the prima facie causes
+# select the best set of prima facie causes per node without bootstrap
+# INPUT:
+# adj.matrix: adjacency matrix of the initially valid edges
+# marginal.probs: marginal probabilities
+# prima.facie.model: prima facie model
+# prima.facie.null: prima facie null
+# dataset: a valid dataset
+# marginal.probs: observed marginal probabilities
+# joint.probs: observed joint probabilities
+# RETURN:
+# prima.facie.topology: adjacency matrix of the prima facie causes
 "get.prima.facie.causes.no.boot" <-
-function(adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie.null) {
+function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie.null, dataset, joint.probs ) {
 	
-    #verify Suppes' conditions for prima facie causes
-    #i.e., i --> j implies P(i)>P(j) (temporal priority) and P(j|i)>P(j|not i) (probability raising)
-    #verify the temporal priority condition
+    # structure to save the confidence of the edges
+    edge.confidence.matrix <- array(list(), c(3,1));
+    edge.confidence.matrix[[1,1]] = array(NA, c(ncol(adj.matrix),ncol(adj.matrix)));
+    edge.confidence.matrix[[2,1]] = array(NA, c(ncol(adj.matrix),ncol(adj.matrix)));
+    edge.confidence.matrix[[3,1]] = array(1, c(ncol(adj.matrix),ncol(adj.matrix)));
+    
+    # verify Suppes' conditions for prima facie causes
+    # i.e., i --> j implies P(i)>P(j) (temporal priority) and P(j|i)>P(j|not i) (probability raising)
+    # verify the temporal priority condition
+    cat('Evaluating temporal priority condition.\n');
     temporal.priority = verify.temporal.priority.no.boot(marginal.probs,adj.matrix);
     
-    #verify the probability raising and background context conditions
-    probability.raising = verify.probability.raising.no.boot(prima.facie.model,prima.facie.null,temporal.priority);
+    # verify the probability raising condition
+    cat('Evaluating probability raising condition.\n');
+    probability.raising = verify.probability.raising.no.boot(prima.facie.model,prima.facie.null,temporal.priority$adj.matrix);
     
-    #remove any cycle
-    if(!is.na(hypotheses[1])) {
-        weights.matrix = array(1,c(nrow(adj.matrix),ncol(adj.matrix)));
-        acyclic.topology = remove.cycles(probability.raising,weights.matrix,vector(),hypotheses);
-        prima.facie.topology = acyclic.topology$adj.matrix;
+    # perform the hypergeometric test for each pair of events
+    for(i in 1:ncol(adj.matrix)) {
+		for(j in i:nrow(adj.matrix)) {
+			
+			# the diagonal (self cause) has not to be considered
+			if(i!=j) {
+				#compute the confidence by hypergeometric test for both j --> i and i --> j
+				edge.confidence.matrix[[3,1]][i,j] = phyper(joint.probs[i,j]*nrow(dataset),marginal.probs[i]*nrow(dataset),nrow(dataset)-marginal.probs[i]*nrow(dataset),marginal.probs[j]*nrow(dataset),lower.tail=FALSE);
+				edge.confidence.matrix[[3,1]][j,i] = edge.confidence.matrix[[3,1]][i,j];
+			}
+        
+		}
+    }
+    
+    # remove any cycle
+    if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
+    	cat('Removing the loops.\n');
+        weights.matrix = edge.confidence.matrix[[3,1]];
+        acyclic.topology = remove.cycles(probability.raising,weights.matrix,temporal.priority$not.ordered,hypotheses);
+        adj.matrix = acyclic.topology$adj.matrix;
     }
     else {
-    	prima.facie.topology = probability.raising;
+        adj.matrix = probability.raising;
     }
     
-    #save the results and return them
+    # save the results and return them
+    prima.facie.topology <- list(adj.matrix=adj.matrix,edge.confidence.matrix=edge.confidence.matrix);
     return(prima.facie.topology);
 
 }

@@ -11,7 +11,7 @@
 #data: input dataset and its hypotheses
 #adj.matrix: adjacency matrix of the topology
 #hypotheses.labels: label of the existing hypotheses
-"hypothesis.cycles" <-
+"hypothesis.evaluate.cycles" <-
 function(data, adj.matrix, hypotheses.labels, weights.matrix) {
 	
 	#create the structures where to save the weights in increasing order of confidence
