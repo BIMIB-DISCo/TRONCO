@@ -114,8 +114,7 @@ bootstrap.capri <- function(dataset,
                         if(i != j && bootstrapped.topology$adj.matrix$adj.matrix.pf[i, j] == 1) {
                             parents.pos.pf[j, 1] = list(c(unlist(parents.pos.pf[j, 1]), i))
                         }
-
-                        if(i != j && bootstrapped.topology$adj.matrix$adj.matrix.bic[i, j] == 1) {
+                        if(i != j && bootstrapped.topology$adj.matrix$adj.matrix.fit[i, j] == 1) {
                             parents.pos.bic[j, 1] = list(c(unlist(parents.pos.bic[j, 1]), i))
                         }
                     }
@@ -263,7 +262,7 @@ bootstrap.capri <- function(dataset,
 
                 for(i in 1:ncol(bootstrapped.topology$data)) {
                     for(j in 1:ncol(bootstrapped.topology$data)) {
-                        if(i != j && bootstrapped.topology$adj.matrix$adj.matrix.bic[i, j] == 1) {
+                        if(i != j && bootstrapped.topology$adj.matrix$adj.matrix.fit[i, j] == 1) {
                             parents.pos.bic[j, 1] = list(c(unlist(parents.pos.bic[j, 1]), i))
                         }
                     }
