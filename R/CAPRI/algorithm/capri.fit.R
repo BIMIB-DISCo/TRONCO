@@ -25,6 +25,9 @@ function(dataset, hypotheses = NA, command = "hc", REGULARIZATION = "bic", do.bo
 	adj.matrix = array(1,c(ncol(dataset),ncol(dataset)));
 	colnames(adj.matrix) = colnames(dataset);
 	rownames(adj.matrix) = colnames(dataset);
+
+    
+
 	#the diagonal of the adjacency matrix should not be considered, i.e., no self cause is allowed
 	diag(adj.matrix) = 0;
 	#consider the hypotheses if any
@@ -50,6 +53,11 @@ function(dataset, hypotheses = NA, command = "hc", REGULARIZATION = "bic", do.bo
 			}
 		}
 	}
+
+    print('matriciozza')
+    #print(adj.matrix)
+    print(colnames(adj.matrix))
+    print(rownames(adj.matrix))
 	
 	#reconstruct the prima facie topology
     #should I perform bootstrap? Yes if TRUE, no otherwise
@@ -59,6 +67,7 @@ function(dataset, hypotheses = NA, command = "hc", REGULARIZATION = "bic", do.bo
     else {
         prima.facie.parents = get.prima.facie.parents.no.boot(dataset,hypotheses,adj.matrix);
     }
+
     
 	#perform the likelihood fit by BIC score on the prima facie topology
 	best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command, regularization=REGULARIZATION);
