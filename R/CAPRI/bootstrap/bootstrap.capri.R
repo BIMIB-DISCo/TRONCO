@@ -103,7 +103,7 @@ bootstrap.capri <- function(dataset,
                                                   nboot.capri,
                                                   pvalue,
                                                   FALSE,
-                                                  REGULARIZATION = REGULARIZATION)
+                                                  regularization = REGULARIZATION)
                 
                 #set the reconstructed causal edges
                 parents.pos.pf = array(list(), c(ncol(bootstrapped.topology$data), 1))
@@ -211,7 +211,7 @@ bootstrap.capri <- function(dataset,
                                                   nboot.capri,
                                                   pvalue,
                                                   FALSE,
-                                                  REGULARIZATION = REGULARIZATION)
+                                                  regularization = REGULARIZATION)
                 
                 #set the reconstructed causal edges
                 parents.pos.pf = array(list(), c(ncol(bootstrapped.topology$data), 1))
@@ -256,7 +256,7 @@ bootstrap.capri <- function(dataset,
                                                   nboot.capri,
                                                   pvalue,
                                                   FALSE,
-                                                  REGULARIZATION = REGULARIZATION)
+                                                  regularization = REGULARIZATION)
 
                 #set the reconstructed causal edges
                 parents.pos.bic = array(list(), c(ncol(bootstrapped.topology$data), 1))
