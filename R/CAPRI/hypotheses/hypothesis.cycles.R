@@ -99,5 +99,33 @@ function(label, events, incoming, outgoing, hnames, hatomic, weights.matrix) {
 	return(list(ordered.weights=ordered.weights,ordered.edges=ordered.edges,hatomic=hatomic));
 }
 
+#given the hypotheses and the adj.matrix, return the updated adj.matrix
+"hypothesis.adj.matrix" <-
+function(hypotheses, adj.matrix) {
+	if(!is.na(hypotheses[1])) {
+		# set the invalid entries in the adj.matrix
+		# hypotheses can not be causing other hypotheses
+		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):ncol(adj.matrix),(ncol(adj.matrix)-hypotheses$num.hypotheses+1):ncol(adj.matrix)] = 0;
+		# consider the given hypotheses only toward the specified possible effects
+		hypotheses.matrix = array(0,c(hypotheses$num.hypotheses,ncol(adj.matrix)-hypotheses$num.hypotheses));		
+		for (i in 1:nrow(hypotheses$hlist)) {
+			cause = which(hypotheses$hlist[i,1]==colnames(adj.matrix));
+			effect = which(hypotheses$hlist[i,2]==colnames(adj.matrix));
+			if(length(cause)>0 && length(effect)>0) {
+				hypotheses.matrix[cause-ncol(adj.matrix)+hypotheses$num.hypotheses,effect] = 1;
+			}
+		}
+		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix),1:(ncol(adj.matrix)-hypotheses$num.hypotheses)] = hypotheses.matrix;
+		for(j in (ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix)) {
+			for(k in 1:(ncol(adj.matrix)-hypotheses$num.hypotheses)) {
+				if(adj.matrix[j,k] == 0) {
+					adj.matrix[k,j] = 0;
+				}
+			}
+		}
+	}
+	return(adj.matrix);
+}
+
 
 #### end of file -- hypothesis.cycles.R

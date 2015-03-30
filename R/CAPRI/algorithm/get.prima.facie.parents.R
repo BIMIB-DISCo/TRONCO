@@ -12,13 +12,16 @@
 # nboot: integer number (greater than 0) of bootstrap sampling to be performed
 # pvalue: pvalue for the tests (value between 0 and 1)
 # adj.matrix: adjacency matrix of the initially valid edges
+# min.boot: minimum number of bootstrapping to be performed
+# min.stat: should I keep bootstrapping untill I have nboot valid values?
+# boot.seed: seed to be used for the sampling
 # RETURN:
 # prima.facie.parents: list of the set (if any) of prima facie parents for each node
 "get.prima.facie.parents.do.boot" <-
-function(dataset, hypotheses, nboot, pvalue, adj.matrix) {
+function( dataset, hypotheses, nboot, pvalue, adj.matrix, min.boot, min.stat, boot.seed ) {
 	
 	# perform a robust estimation of the scores using rejection sampling bootstrap
-	scores = get.bootstapped.scores(dataset,nboot,adj.matrix);
+	scores = get.bootstapped.scores(dataset,nboot,adj.matrix,min.boot,min.stat,boot.seed);
 	
 	# compute the observed and joint probabilities as the mean of the bootstrapped values
     marginal.probs = array(-1,dim=c(ncol(dataset),1));
@@ -50,7 +53,7 @@ function(dataset, hypotheses, nboot, pvalue, adj.matrix) {
 # RETURN:
 # prima.facie.parents: list of the set (if any) of prima facie parents for each node
 "get.prima.facie.parents.no.boot" <-
-function(dataset, hypotheses, adj.matrix) {
+function( dataset, hypotheses, adj.matrix ) {
 	
 	# compute the scores from the dataset
 	scores = get.dag.scores(dataset,adj.matrix);
