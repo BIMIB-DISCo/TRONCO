@@ -471,13 +471,22 @@ tronco.plot = function(x,
     for (node in node_names) {
       prefix = gsub("_.*$", "", node)
       if ( !(prefix %in% logical_op)) {
-        #increase_coeff = sqrt(log(marginal_p[node,] + 1) * scale.nodes)
-        #increase_coeff = marginal_p[node,]
-        increase_coeff = scale.nodes + (marginal_p[node,] - min_p) / (max_p - min_p)
-        #increase_coeff = marginal_p[node,] + ((max_p - marginal_p[node,]) / scale.nodes)
+        # Scaling ANDRE
+         increase_coeff = scale.nodes + (marginal_p[node,] - min_p) / (max_p - min_p)
+         nAttrs$width[node] = nAttrs$width[node] * increase_coeff
+         nAttrs$height[node] = nAttrs$height[node] * increase_coeff
+        
+        # increase_coeff = (1- (max_p - marginal_p[node,])) * scale.nodes
+        
+# #         print('***')
+        # print(marginal_p[node,])
+        # print(max_p)
         # print(increase_coeff)
-        nAttrs$width[node] = nAttrs$width[node] * increase_coeff
-        nAttrs$height[node] = nAttrs$height[node] * increase_coeff
+        
+        # nAttrs$width[node] = nAttrs$width[node] + increase_coeff
+        # nAttrs$height[node] = nAttrs$height[node] + increase_coeff
+        
+		print(nAttrs$width[node])        
       }
     }
   }

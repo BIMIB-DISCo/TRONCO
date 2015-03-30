@@ -28,7 +28,7 @@ as.patterns = function(x)
 ## SPOSTARE IN UN FILE APPOSITO?
 #
 #
-pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex = 1.0, title=paste(to[1], to[2] ))
+pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex = 1.0, title=paste(to[1], to[2]), mode = 'barplot')
 {
 	# keys
 	events = as.events(x)
@@ -51,7 +51,7 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 	# SOFT exclusivity: 1
 	# OTHERS: 1 
 	matrix = matrix(0, nrow = length(keys) + 3, ncol = 1)
-	rownames(matrix) = c(keys, 'soft', 'co-occ', 'other')
+	rownames(matrix) = c(keys, 'soft', 'co-occurrence', 'other')
 	# colnames(matrix) = paste(to, collapse=':')
 	colnames(matrix) = to[1]
 	
@@ -89,8 +89,8 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 	# CO-OCCURRENCES	
 	pattern.co.occurrences = Reduce(intersect, pattern.samples)
 	co.occurrences = intersect(to.samples, pattern.co.occurrences)
-	matrix['co-occ', ] = length(co.occurrences)
-	cat('Co-occurrence in #samples: ', matrix['co-occ', ], '\n')
+	matrix['co-occurrence', ] = length(co.occurrences)
+	cat('Co-occurrence in #samples: ', matrix['co-occurrence', ], '\n')
 
 	# HARD EXCLUSIVITY		
 	for(i in 1:length(keys))
@@ -127,7 +127,7 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 	# print(link.color)
 		
 	link.color['soft'] = 'orange'
-	link.color['co-occ'] = 'darkgreen'
+	link.color['co-occurrence'] = 'darkgreen'
 	
 	
 	idx.max = which(matrix == max(matrix))
@@ -135,7 +135,7 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 	rownames(link.style) = rownames(matrix)
 	colnames(link.style) = colnames(matrix)
 	link.style[idx.max, 1] = 5
-	print(link.style)
+	# print(link.style)
 	
 	# link.color[idx.max] = add.alpha(link.color[idx.max], .3)
 	# print(link.color)
@@ -144,8 +144,7 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 	# Sector colors - event types	
 	sector.color[1:length(keys)] = 'red' # XOR
 	sector.color['soft'] = 'orange'      # OR
-	sector.color['co-occ'] = 'darkgreen' # AND
-	sector.color['co-occ'] = 'darkgreen' # targer
+	sector.color['co-occurrence'] = 'darkgreen' # AND
 	sector.color[colnames(matrix)] = as.colors(x)[as.events(x, genes = to[1], types=to[2])[, 'type' ]]
 	
 	# print(link.color)
@@ -162,6 +161,10 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 		names(sector.color)[i] = rownames(matrix)[i]		
 	}
 
+	
+	if( mode == 'circos')	
+	{	
+
 	cat('Circlize matrix.\n')
 	print(matrix)
 
@@ -175,9 +178,6 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 		# matrix = matrix[ order(matrix[, 1], decreasing = T) , , drop = FALSE]	
 		# print(matrix)
 		
-	
-		
-		
 	chordDiagram(matrix, 
 		grid.col = sector.color,
 		annotationTrack = "grid", 
@@ -188,11 +188,11 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 		link.lwd = 0.3
 		)
 		
-	for(si in get.all.sector.index()) 
-	{ 
-		# here the index for the grid track is 2 
-		circos.axis(h = "top", labels.cex = 0.3, major.tick.percentage = .4, sector.index = si, track.index = 2) 
-	}	
+	# for(si in get.all.sector.index()) 
+	# { 
+		# # here the index for the grid track is 2 
+		# circos.axis(h = "top", labels.cex = 0.3, major.tick.percentage = .4, sector.index = si, track.index = 2) 
+	# }	
 	
 	circos.trackPlotRegion(
 		track.index = 1, 
@@ -204,29 +204,111 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 				circos.text(mean(xlim), cex = 1.0 * label.cex, ylim[1], sector.name, facing = "clockwise", niceFacing = TRUE, adj = c(0, 0.5)) 
 				},
 		 bg.border = NA)	
+		 
+	}
+	else # barplot
+	{
+		layout(matrix(c(1,2,3,3), ncol=2, byrow=TRUE), heights=c(4, 1))
+		par(mai=rep(0.5, 4))
+		
+		basic.unit = 2
+		widths = c(
+			rep(basic.unit, length(keys)), 
+			rep(basic.unit * 2, 3)
+			)
+		
+		spaces = c(
+			rep(0, length(keys)),
+			3, 
+			rep(.5, 2)
+			)
+			
+			print(matrix)
+		
+		# barplot(matrix[, 1], widths, space = 0)
+
+		rownames(matrix)[length(keys) + 1] = '2 or more\n(soft-exclusivity)'
+		rownames(matrix)[length(keys) + 2] = 'all together\n(co-occurrence)'
+		
+		rownames(matrix)[nrow(matrix)] = 'none of the\nevents'
+		
+		library(gridBase)
+
+	summary = matrix[ (length(keys) + 1):nrow(matrix), 1, drop = FALSE]
+	summary = rbind( sum(matrix[1:length(keys),]), summary)
+	rownames(summary) = NULL
+	colnames(summary) = paste(to[1], to[2])
+	print(summary)	
+
+	## Plot, but suppress the labels
 	
-	group.legend = c(
-		expression(bold('Group')),
-		as.vector(unique(events.names[, 'event'])),
-		expression(bold('Target')),
-		to[1]
-	)
 	
-	print(group.legend)
+	midpts <- barplot(
+		summary,  
+		5,  
+		col = c('red', 'orange', 'darkgreen', 'gray'), 
+		horiz = F, 
+		space = 1, 
+		las = 1,
+		main = paste0('Combination of group events \n in ', sum(summary),' samples with ', to[1],' ', to[2]),
+		cex.main = .6,
+		cex.names = .5,
+		cex.axis = .5 )
+
+	exclus = matrix[1:length(keys), 1, drop = FALSE]
+	# print(exclus)	
+
+	events.legend.pch = rep(19, length(unique(events.names[, 'type'])))	
 	
-	legend('bottomleft', 
+		
+	midpts <- barplot(
+		exclus[, 1],  
+		# widths,  
+		col = link.color[1:length(keys)], 
+		horiz = T, 
+		space = 1, 
+		las = 2,
+		main = paste0('Observations supporting \n hard-exclusivity'),
+		cex.main = .6,
+		# xlab = 'number of observations (given KRAS)',
+		cex.names=.5,
+		cex.axis=.5 )
+	
+		par(mai=c(0,0,0,0))
+	   plot.new()
+	
+
+	legend("topleft", 
+		cex = 0.6  * legend.cex, 
+		pt.cex = 1, 
+		title = expression(bold('Table of observations')), 
+		horiz=F, 
+		bty='n', 
+		legend = c(
+				paste(sum(matrix[1:length(keys) ,]), 'with 1 event (hard exclusivity)'), 
+				paste(matrix[length(keys) + 1, ],  'with 2 or more events'),
+				paste(matrix[length(keys) + 2, ], 'with all events (co-occurrence)'),
+				paste(matrix[length(keys) + 3, ], 'with no events')
+				),
+			fill= c('red', 'orange', 'darkgreen', 'gray')
+			)
+	
+	group.legend = apply(group, 1, paste, collapse=' in ')
+		
+	legend('top', 
 		cex = .6 * legend.cex, 
 		pt.cex = 1, 
+		title = expression(bold('Input group')),
 		bty='n',
 		legend = group.legend
 		)
 		
-	events.legend.pch = rep(19, length(unique(events.names[, 'type'])))	
 		
-	legend('bottomright',
-           legend = unique(events.names[, 'type']),
+		legend(x = 'topright',
+		    legend = unique(events.names[, 'type']),
            title = expression(bold('Events type')),
            bty = 'n',
+           inset  = +.05,
            cex = .6 * legend.cex,
            pt.cex = 1,
            pch = events.legend.pch,
@@ -234,22 +316,49 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
            # pt.bg = pt_bg
            )
 		
-	legend("topright", 
-		cex = 0.6  * legend.cex, 
-		pt.cex = 1, 
-		title = expression(bold('Observations')), 
-		horiz=F, 
-		bty='n', 
-		legend = c(
-				paste(sum(matrix[1:length(keys) ,]), 'hard exclusivity'), 
-				paste(matrix[length(keys) + 1, ],  'soft exclusivity'),
-				paste(matrix[length(keys) + 2, ], 'co-occurrence'),
-				paste(matrix[length(keys) + 3, ], 'none')
-				),
-			fill= c('red', 'orange', 'darkgreen', 'gray')
-			)
+
+		
+	# text(0, (length(keys) + 1) * basic.unit, 
+			# expression(bold('Observations supporting hard-exclusivity:')), cex = .5)
+	# text(0, 0, expression(bold('Observations supporting hard-exclusivity:')), cex = .5)
+
+
+	# text(0, -0.2, #,(max(matrix) + 1), 
+			# expression(bold('GIULIO Observations supporting hard-exclusivity:')), cex = .5)
 	
-	if(!is.na(title)) title(title, cex.main = 1.0 * label.cex)
+	# grid.text('Observations supporting hard-exclusivity',
+	    # x = unit(0, "native"), y=unit(-.1, "lines"),
+	    # just="right", rot=0, gpar(cex=.8))	
+	 
+	
+	# text(basic.unit * length(keys) / 2, 
+		 # # length(keys) * basic.unit + 3 * (2 * basic.unit) + 2*sum(spaces) + 6, 
+		 # # length(keys) * basic.unit +  (2 * basic.unit) + sum(spaces), 
+		 # max(matrix) + .4,
+		# expression(bold('Observations supporting hard-exclusivity')), 
+		# cex = .5)
+
+	# print(midpts)
+	# vps <- baseViewports()
+	# pushViewport(vps$inner, vps$figure, vps$plot)
+	 # popViewport(3)
+	
+	# Use grid to add the labels    
+	 # vps <- baseViewports()
+	 # pushViewport(vps$inner, vps$figure, vps$plot)
+	
+	# # grid.text(rownames(matrix),
+	    # # x = unit(midpts, "native"), y=unit(-1, "lines"),
+	    # # just="right", rot=50, gpar(cex=.03))	
+	 # popViewport(3)
+	
+			# library(ggplot2)
+
+	}	 
+	
+	
+		
+			# if(!is.na(title)) title(title, cex.main = 1.0 * label.cex)
 }
 
 

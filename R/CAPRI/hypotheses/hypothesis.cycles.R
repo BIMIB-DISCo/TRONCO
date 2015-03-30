@@ -45,6 +45,7 @@ function(data, adj.matrix, hypotheses.labels, weights.matrix) {
 #hypotheses.label: label of the hypothesis
 "hypothesis.connections" <-
 function(adj.matrix, hypotheses.label) {
+	#cat('\nhl', hypotheses.label, '\n nomi colonne:\n', paste(colnames(adj.matrix)), 'asd')
 	incoming = rownames(adj.matrix)[which(adj.matrix[,hypotheses.label]==1)];
 	outgoing = colnames(adj.matrix)[which(adj.matrix[hypotheses.label,]==1)];
 	connections = list(incoming=incoming,outgoing=outgoing);

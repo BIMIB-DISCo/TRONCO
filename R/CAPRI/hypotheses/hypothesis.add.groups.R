@@ -134,7 +134,7 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 	cat("*** Genes with functional homologous found: ", hom.group, "\n")
 
 	# create a progress bar
-	pb <- txtProgressBar(1, length(hom.group), style = 3)
+	# pb <- txtProgressBar(1, length(hom.group), style = 3)
 
 
 	error.summary = data.frame()
@@ -142,7 +142,7 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 	for (i in 1:length(hom.group)) {
 
 		#start the progress bar
-		setTxtProgressBar(pb, i)
+		# setTxtProgressBar(pb, i)
 
 		hypo.add = paste0("hypothesis.add(x, label.formula = '", FUN, "_", hom.group[[i]], "', lifted.formula = ", FUN, "('", hom.group[[i]], "'), ", effect, 
 			")")
@@ -166,7 +166,7 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 	}
 
 	# close progress bar
-	close(pb)
+	# close(pb)
 
 	if (nrow(error.summary) > 0) {
 		cat(paste(nrow(error.summary), " patterns could not be added -- showing errors\n", sep = ""))
