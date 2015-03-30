@@ -97,7 +97,7 @@ oncoprint <- function(x,
   if(excl.sort && hasGroups) 
   	stop('Disable sorting for mutual exclusivity (excl.sort=FALSE) or avoid using grouped samples (group.samples=NA).')
 
-  if(excl.sort) {
+  if(excl.sort && nevents(x) > 1) {
     cat(paste('Sorting samples ordering to enhance exclusivity patterns.\n', sep=''))
     sorted.data = exclusivity.sort(data)
     data = sorted.data$M	
@@ -229,7 +229,7 @@ oncoprint <- function(x,
     
     if (ntypes(x) > 1) {
       keys.subset = keys[unlist(lapply(keys, function(x, data){if (x %in% data) T else F}, rownames(data)))]
-      sub.data = data[keys.subset, ]
+      sub.data = data[keys.subset, , drop = FALSE]
       
       # shift 1s to 'i', add color to the map  
       idx = which(sub.data == 1)

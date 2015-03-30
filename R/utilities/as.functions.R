@@ -202,7 +202,7 @@ ntypes = function(x, genes=NA)
 # @x: the dataset.
 enforce.numeric = function(x)
 {
-  if(!is.numeric(x$genotypes[1,1]))
+  if(!all(is.numeric(x$genotypes[1,])))
   {
     rn = as.samples(x)
     x$genotypes = apply(x$genotypes, 2, as.numeric)
@@ -217,7 +217,7 @@ enforce.numeric = function(x)
 # @x: the dataset.
 enforce.string = function(x)
 {
-  if(!is.character(x$genotypes[1,1]))
+  if(!all(is.character(x$genotypes[1,])))
   {
     rn = as.samples(x)
     x$genotypes = apply(x$genotypes, 2, as.character)
@@ -250,7 +250,7 @@ as.pathway <- function(x, pathway.genes, pathway.name,
   # Extend genotypes
   y = enforce.numeric(y)
   
-  pathway = data.frame(rowSums(as.genotypes(y)), row.names = as.samples(y), stringsAsFactors = FALSE)
+  pathway = data.frame(rowSums(as.genotypes(y)), row.names = as.samples(y), stringsAsFactors = FALSE)  
   pathway[pathway > 1, ] =  1
   colnames(pathway) = pathway.name 
 
@@ -274,8 +274,8 @@ sort.by.frequency = function(x)
   x = enforce.numeric(x)
   sums = colSums(x$genotypes)
     
-  x$genotypes = x$genotypes[, order(sums, decreasing = TRUE)]
-  x$annotations = x$annotations[colnames(x$genotypes), ]
+  x$genotypes = x$genotypes[, order(sums, decreasing = TRUE), DROP = F]
+  x$annotations = x$annotations[colnames(x$genotypes), , DROP = F]
 
   return(x)  
 }
