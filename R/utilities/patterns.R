@@ -13,6 +13,20 @@ pattern.events = function(x, hypothesis)
 	return(hevents)
 }
 
+#' Return all hypotheses involving certain events
+events.pattern = function(x, event)
+{
+	if(is.null(x$atoms)) 
+		hhypothesis = x$hypotheses$atoms[[event]]
+	else
+		hhypothesis = x$atoms[[event]]
+
+	if(length(hhypothesis)==0){
+		hhypothesis = NA;
+	}
+	return(hhypothesis)
+}
+
 # Return the names of the patterns in the dataset
 as.patterns = function(x)
 {

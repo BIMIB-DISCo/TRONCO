@@ -11,24 +11,54 @@
 # adj.matrix: adjacency matrix of the topology
 # first.node: first node of the path
 # last.node: last node of the path
+# hypotheses: all the hypotheses
+# hatomic: map of the hypotheses and their atomic events
 # visited.nodes: list of all the visited nodes
 # RETURN:
 # is.path: 0 if there is not a path from first.node to last.node, 1 if there is
 "find.path" <-
-function(adj.matrix, first.node, last.node, visited.nodes) {
+function(adj.matrix, first.node, last.node, hypotheses = NA, hatomic = NA, visited.nodes) {
 	
-    # suppose that there is no path from first.node to last.node
+	# suppose that there is no path from first.node to last.node
     is.path = 0;
     
     # recursion base case: first.node==last.node
     if(first.node==last.node) {
         is.path = 1;
     }
+    
     # start the recursive search
     else {
+    	
         # find the possible paths starting from first.node
         # [first.node,] are the nodes directly caused by first.node
         possible.paths = which(adj.matrix[first.node,]==1);
+        
+        #expand the possible paths considering the atomic events of each hypothesis
+        if(length(possible.paths)>0 && length(hatomic)>0) {
+        		curr.atomic.pool = vector();
+        		for(i in 1:length(possible.paths)) {
+        			# get any atomic element of the current hypothesis
+        			if(exists(toString(possible.paths[i]), envir = hatomic)) {
+        				curr.atomic.pool = unique(c(curr.atomic.pool,hatomic[[toString(possible.paths[i])]]));
+        			}
+        		}
+        		possible.paths = unique(c(possible.paths,curr.atomic.pool));
+        }
+        
+        #expand the possible paths considering the hypotheses of each atomic event
+        if(length(possible.paths)>0 && !is.na(hypotheses[1])) {
+        		curr.hypotheses.pool = vector();
+        		for(i in 1:length(possible.paths)) {
+        			# get any hypothesis of the current atomic element
+        			new.hypotheses.pool = events.pattern(hypotheses,colnames(adj.matrix)[possible.paths[i]]);
+        			if(!is.na(new.hypotheses.pool)) {
+        				curr.hypotheses.pool = unique(c(curr.hypotheses.pool,which(colnames(adj.matrix)%in%new.hypotheses.pool)));
+        			}
+        		}
+        		possible.paths = unique(c(possible.paths,curr.hypotheses.pool));
+        }
+        
         # recursive case: there are paths starting from first.node
         if(length(possible.paths)>0) {
             curr.path = 0;
@@ -45,11 +75,12 @@ function(adj.matrix, first.node, last.node, visited.nodes) {
                         is.path = 1;
                     }
                     else {
-                        find.path(adj.matrix,possible.paths[curr.path],last.node,visited.nodes);
+                        find.path(adj.matrix,possible.paths[curr.path],last.node,hypotheses,hatomic,visited.nodes);
                     }
                 }
             }
         }
+        
     }
     
     # return the results

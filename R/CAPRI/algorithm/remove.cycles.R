@@ -17,7 +17,7 @@
 "remove.cycles" <-
 function( adj.matrix, weights.matrix, not.ordered, hypotheses = NA ) {
 	
-    # create the structures where to save the weights in increasing order of confidence
+	# create the structures where to save the weights in increasing order of confidence
     ordered.weights <- vector();
     ordered.edges <- list();
     
@@ -86,7 +86,7 @@ function( adj.matrix, weights.matrix, not.ordered, hypotheses = NA ) {
             
             # if this edge does not involve any hypothesis
             if(curr.edge[3,1]==0) {
-            		is.path = find.path(adj.matrix,curr.edge.j,curr.edge.i,vector());
+            		is.path = find.path(adj.matrix,curr.edge.j,curr.edge.i,hypotheses,hatomic,vector());
             }
             
             # otherwise, if this edge does involve an hypothesis
@@ -99,11 +99,12 @@ function( adj.matrix, weights.matrix, not.ordered, hypotheses = NA ) {
             		for(j in 1:length(atomic.pool)) {
             			
             			# search for any loop on the incoming at outgoing edges involving any hypothesis
+            			is.path = 0;
             			if(curr.edge[3,1]==1) {
-            				is.path = find.path(adj.matrix,curr.edge.j,atomic.pool[j],vector());
+            				is.path = find.path(adj.matrix,curr.edge.j,atomic.pool[j],hypotheses,hatomic,vector());
             			}
             			else if(curr.edge[3,1]==2) {
-            				is.path = find.path(adj.matrix,atomic.pool[j],curr.edge.i,vector());
+            				is.path = find.path(adj.matrix,atomic.pool[j],curr.edge.i,hypotheses,hatomic,vector());
             			}
             			
             			# if I find the first loop, stop searching

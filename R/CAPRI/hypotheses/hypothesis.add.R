@@ -267,7 +267,6 @@
       }
       hypotheses$patterns[label.formula] = lifted.formula$hypotheses$llist;
       
-      
       hypotheses$hstructure[[label.formula]] = get.lifted.formula(hstructure);
       #add the new hypothesis in the annotations
       annotations = rbind(data$annotations,c("Hypothesis", label.formula));
@@ -278,6 +277,20 @@
         rownames(types)[nrow(types)] = "Hypothesis";
         data$types = types;
       }
+      
+      #add the hypotheses in the atoms
+      if(length(hypotheses$atoms)==0) {
+      	hypotheses$atoms = vector(mode="list",length=(ncol(dataset)-hypotheses$num.hypotheses));
+      	names(hypotheses$atoms) = colnames(dataset)[1:(ncol(dataset)-hypotheses$num.hypotheses)];
+      }
+      atoms.in.formula = which(names(hypotheses$atoms)%in%unlist(hypotheses$patterns[label.formula]));
+      if(length(atoms.in.formula)>0) {
+      	for (i in 1:length(atoms.in.formula)) {
+      		hypotheses$atoms[[atoms.in.formula[i]]] = append(hypotheses$atoms[[atoms.in.formula[i]]], label.formula);
+      	}
+      }
+      
+      
       #return the new data as result
       data$genotypes = dataset;
       data$hypotheses = hypotheses;
