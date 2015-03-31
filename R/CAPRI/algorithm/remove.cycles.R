@@ -118,7 +118,7 @@ function( adj.matrix, weights.matrix, not.ordered, hypotheses = NA ) {
             
             # if there is a path between the two nodes, remove edge i --> j
             if(is.path==1) {
-                adj.matrix[curr.edge.i,curr.edge.j] = 0;
+            		adj.matrix[curr.edge.i,curr.edge.j] = 0;
             }
             
         }
