@@ -486,7 +486,7 @@ tronco.plot = function(x,
         # nAttrs$width[node] = nAttrs$width[node] + increase_coeff
         # nAttrs$height[node] = nAttrs$height[node] + increase_coeff
         
-		print(nAttrs$width[node])        
+		# print(nAttrs$width[node])        
       }
     }
   }

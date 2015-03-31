@@ -22,7 +22,7 @@ oncoprint <- function(x,
                       row.cluster=FALSE, 
                       file=NA, 
                       ann.stage = has.stages(x), 
-                      ann.hits=TRUE, 
+                      ann.hits = TRUE, 
                       stage.color='YlOrRd', 
                       hits.color = 'Purples',  
                       null.color='lightgray', 
@@ -252,9 +252,9 @@ oncoprint <- function(x,
   # Augment title
   title = paste(title, '\n n = ', nsamples(x),'    m = ', nevents(x), '    |G| = ', ngenes(x),  sep='')
   
-    legend.labels = c('none', unique(x$annotations[,1]))
+  legend.labels = c('none', unique(x$annotations[,1]))
     
-     legend.labels = legend.labels[1:(max(data)+1)]
+  legend.labels = legend.labels[1:(max(data)+1)]
   
   # Pheatmap
   if(ann.hits == TRUE || ann.stage == TRUE || hasGroups)  
