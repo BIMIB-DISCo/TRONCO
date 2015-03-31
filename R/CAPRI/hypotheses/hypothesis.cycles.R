@@ -45,10 +45,29 @@ function(data, adj.matrix, hypotheses.labels, weights.matrix) {
 #hypotheses.label: label of the hypothesis
 "hypothesis.connections" <-
 function(adj.matrix, hypotheses.label) {
-	#cat('\nhl', hypotheses.label, '\n nomi colonne:\n', paste(colnames(adj.matrix)), 'asd')
+	# cat('\nhl', hypotheses.label, '\n nomi colonne:\n',
+	 # paste(colnames(adj.matrix)), 'asd')
+	
+	#### EROS FIX
+	# print('*** PRE')
+	# print(hypotheses.label)
+	# print('*** POST')
+	# foo = hypotheses.label
+	hypotheses.label = hypotheses.label[hypotheses.label %in% rownames(adj.matrix)]
+	# print(hypotheses.label)
+	# if(length(hypotheses.label) == 0) {
+		# print(rownames(adj.matrix))
+		# print(foo)
+		# print(foo %in% rownames(adj.matrix))
+		# }
+	
+	
 	incoming = rownames(adj.matrix)[which(adj.matrix[,hypotheses.label]==1)];
 	outgoing = colnames(adj.matrix)[which(adj.matrix[hypotheses.label,]==1)];
 	connections = list(incoming=incoming,outgoing=outgoing);
+	
+	#### EROS FIX
+	# print(connections)
 	return(connections);
 }
 
@@ -93,8 +112,17 @@ function(label, events, incoming, outgoing, hnames, hatomic, weights.matrix) {
 		}
 	}
 	
-	#add to the map the atomic events of this hypothesis
-	hatomic[[toString(hypothesis.pos)]] = which(hnames%in%events);
+	#### EROS FIX
+	# print('****')
+	# print(hypothesis.pos)
+	# print('hnames')
+	# print(hnames)
+	# print('events')
+	# print(events)
+	if(length(hypothesis.pos) > 0)
+		hatomic[[toString(hypothesis.pos)]] = which(hnames%in%events) 	#add to the map the atomic events of this hypothesis
+	else
+		print('hypothesis.pos == 0!')
 	
 	#return the results
 	return(list(ordered.weights=ordered.weights,ordered.edges=ordered.edges,hatomic=hatomic));

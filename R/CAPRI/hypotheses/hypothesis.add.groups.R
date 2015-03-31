@@ -154,7 +154,7 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 			code = strsplit(as.character(cond), " ")[[1]]
 			idx.errcode = which(code == "[ERR]", arr.ind = TRUE) + 1
 
-			return(data.frame(pattern = paste(unlist(genes), collapse = ", ", sep = ""), error = paste(code[idx.errcode:length(code)], collapse = " ")))
+			return(data.frame(pattern = paste(unlist(hom.group[[i]]), collapse = ", ", sep = ""), error = paste(code[idx.errcode:length(code)], collapse = " ")))
 
 		}, warning = function(cond) {
 			m = paste("Warning on", hypo.add, ".\n", cond)
