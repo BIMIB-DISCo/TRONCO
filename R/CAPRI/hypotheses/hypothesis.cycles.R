@@ -19,24 +19,35 @@ function(data, adj.matrix, hypotheses.labels, weights.matrix) {
     ordered.edges <- list();
     
 	#create a map structure where to save the atomic events of each hypothesis
-	hatomic = new.env(hash=TRUE,parent=emptyenv());
+	matomic = new.env(hash=TRUE,parent=emptyenv());
+	
+	#create a map structure where to save the hypotheses of each atomic event
+	mhypotheses = new.env(hash=TRUE,parent=emptyenv());
 	
 	#evaluate all the existing hypotheses
 	for (i in 1:length(hypotheses.labels)) {
 		
 		#evaluate the current hypothesis
 		connections = hypothesis.connections(adj.matrix, hypotheses.labels[i]);
-		connections = hypothesis.expand.connections(label=hypotheses.labels[i],events=pattern.events(data,hypotheses.labels[i]),incoming=connections$incoming,outgoing=connections$outgoing,hnames=colnames(adj.matrix),hatomic=hatomic,weights.matrix=weights.matrix);
+		connections = hypothesis.expand.connections(label=hypotheses.labels[i],events=pattern.events(data,hypotheses.labels[i]),incoming=connections$incoming,outgoing=connections$outgoing,hnames=colnames(adj.matrix),matomic=matomic,weights.matrix=weights.matrix);
 		
 		#save the results for the current hypothesis
 		ordered.weights = c(ordered.weights,connections$ordered.weights);
 		ordered.edges = c(ordered.edges,connections$ordered.edges);
-		hatomic = connections$hatomic;
+		matomic = connections$matomic;
 		
 	}
 	
+	#add to the map the link between atomic to pattern
+	for (i in 1:ncol(adj.matrix)) {
+		if(!is.null(data$atoms[[colnames(adj.matrix)[i]]])) {
+			#add to the map the hypotheses of this atomic event
+			mhypotheses[[toString(i)]] = which(colnames(adj.matrix)%in%data$atoms[[colnames(adj.matrix)[i]]]);
+		}
+	}
+	
 	#return the results
-	return(list(ordered.weights=ordered.weights,ordered.edges=ordered.edges,hatomic=hatomic));
+	return(list(ordered.weights=ordered.weights,ordered.edges=ordered.edges,matomic=matomic,mhypotheses=mhypotheses));
 }
 
 #given the adj.matrix, return the incoming and outgoing connections for any hypothesis
@@ -78,7 +89,7 @@ function(adj.matrix, hypotheses.label) {
 #incoming: incoming connections
 #outgoing: outgoing connections
 "hypothesis.expand.connections" <-
-function(label, events, incoming, outgoing, hnames, hatomic, weights.matrix) {
+function(label, events, incoming, outgoing, hnames, matomic, weights.matrix) {
 	
 	#create the structures where to save the weights in increasing order of confidence
     ordered.weights <- vector();
@@ -93,21 +104,19 @@ function(label, events, incoming, outgoing, hnames, hatomic, weights.matrix) {
 		for(i in 1:length(incoming)) {
 			ordered.weights = rbind(ordered.weights,weights.matrix[which(hnames==incoming[i]),hypothesis.pos]);
 			curr.edge.pos = curr.edge.pos + 1;
-        	new.edge <- array(0, c(3,1));
-        	new.edge[1,1] = which(hnames==incoming[i]);
-        	new.edge[2,1] = hypothesis.pos;
-        	new.edge[3,1] = 2;
-        	ordered.edges[curr.edge.pos] = list(new.edge);
+			new.edge <- array(0, c(2,1));
+        		new.edge[1,1] = which(hnames==incoming[i]);
+        		new.edge[2,1] = hypothesis.pos;
+        		ordered.edges[curr.edge.pos] = list(new.edge);
 		}
 	}
     if(length(outgoing)>0) {
 		for(i in 1:length(outgoing)) {
 			ordered.weights = rbind(ordered.weights,weights.matrix[hypothesis.pos,which(hnames==outgoing[i])]);
 			curr.edge.pos = curr.edge.pos + 1;
-        		new.edge <- array(0, c(3,1));
+        		new.edge <- array(0, c(2,1));
         		new.edge[1,1] = hypothesis.pos;
         		new.edge[2,1] = which(hnames==outgoing[i]);
-        		new.edge[3,1] = 1;
         		ordered.edges[curr.edge.pos] = list(new.edge);
 		}
 	}
@@ -120,12 +129,12 @@ function(label, events, incoming, outgoing, hnames, hatomic, weights.matrix) {
 	# print('events')
 	# print(events)
 	if(length(hypothesis.pos) > 0)
-		hatomic[[toString(hypothesis.pos)]] = which(hnames%in%events) 	#add to the map the atomic events of this hypothesis
+		matomic[[toString(hypothesis.pos)]] = which(hnames%in%events)	#add to the map the atomic events of this hypothesis
 	else
 		print('hypothesis.pos == 0!')
 	
 	#return the results
-	return(list(ordered.weights=ordered.weights,ordered.edges=ordered.edges,hatomic=hatomic));
+	return(list(ordered.weights=ordered.weights,ordered.edges=ordered.edges,matomic=matomic));
 }
 
 #given the hypotheses and the adj.matrix, return the updated adj.matrix

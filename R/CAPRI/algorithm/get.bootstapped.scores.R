@@ -49,8 +49,8 @@ function( dataset, nboot, adj.matrix, min.boot = 3, min.stat = TRUE, boot.seed =
     set.seed(boot.seed);
     
     # create a progress bar
-    pb <- txtProgressBar(curr.iteration, nboot, style = 3);
     flush.console();
+    pb <- txtProgressBar(curr.iteration, nboot, style = 3);
     
     while(curr.iteration<nboot) {
     		

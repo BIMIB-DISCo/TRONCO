@@ -54,7 +54,7 @@ function( adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.mode
     
     # remove any cycle
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
-    		cat('Removing the loops.\n');
+    		cat('Removing any loop.\n');
         weights.matrix = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]]+probability.raising$edge.confidence.matrix[[3,1]];
         acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.matrix,temporal.priority$not.ordered,hypotheses);
         adj.matrix = acyclic.topology$adj.matrix;
@@ -116,7 +116,7 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
     
     # remove any cycle
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
-    	cat('Removing the loops.\n');
+    	cat('Removing any loop.\n');
         weights.matrix = edge.confidence.matrix[[3,1]];
         acyclic.topology = remove.cycles(probability.raising,weights.matrix,temporal.priority$not.ordered,hypotheses);
         adj.matrix = acyclic.topology$adj.matrix;
