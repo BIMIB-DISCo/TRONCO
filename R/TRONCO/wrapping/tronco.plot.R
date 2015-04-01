@@ -272,32 +272,33 @@ is.logic.node <- function(node) {
 #'    topology <- tronco.caprese();
 #'    tronco.plot(curr.topology, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
 #' }
-tronco.plot = function(x, 
-                     fontsize=18, 
-                     height=2,
-                     width=3,
-                     height.logic = 1,
-                     pf = FALSE, 
-                     disconnected=FALSE,
-                     scale.nodes=NA,
-                     name=deparse(substitute(capri)),
-                     title = paste("Progression model", x$parameters$algorithm),  
-                     confidence = FALSE, 
-                     legend = TRUE, 
-                     legend.cex = 1.0, 
-                     edge.cex = 1.0,
-                     label.edge.size = 12, 
-                     hidden.and = T,
-                     expand = T,
-                     genes = NULL,
-                     edge.color = 'black',
-                     pathways.color = 'Set1',
-                     file = NA, # print to pdf,
-                     legend.pos = 'bottom',
-                     pathways = NULL,
-                     lwd = 3,
-                     ...
-                     ) 
+tronco.plot = function(x,
+                       secondary=NULL, 
+                       fontsize=18, 
+                       height=2,
+                       width=3,
+                       height.logic = 1,
+                       pf = FALSE, 
+                       disconnected=FALSE,
+                       scale.nodes=NA,
+                       name=deparse(substitute(capri)),
+                       title = paste("Progression model", x$parameters$algorithm),  
+                       confidence = FALSE, 
+                       legend = TRUE, 
+                       legend.cex = 1.0, 
+                       edge.cex = 1.0,
+                       label.edge.size = 12, 
+                       hidden.and = T,
+                       expand = T,
+                       genes = NULL,
+                       edge.color = 'black',
+                       pathways.color = 'Set1',
+                       file = NA, # print to pdf,
+                       legend.pos = 'bottom',
+                       pathways = NULL,
+                       lwd = 3,
+                       ...
+                       ) 
 {
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
@@ -328,32 +329,60 @@ tronco.plot = function(x,
   logical_op = list("AND", "OR", "NOT", "XOR", "*")
   #logical_op = list("", "", "", "")
  
+  sec = FALSE
+  if(!is.null(secondary)) {
+    sec = TRUE
+    if(!all( rownames(x$adj.matrix$adj.matrix.bic) %in% rownames(secondary$adj.matrix$adj.matrix.bic))) {
+      stop("x and secondary must have the same adj.matrix! See: the function tronco.bootstrap.", call.=FALSE);
+    }
+  }
+
   # get TRONCO object
   data = x$data
+  if(sec) {
+    data = secondary$data
+  }
   # print(data)
   
   # get the adjacency matrix
   adj.matrix = x$adj.matrix
+  if(sec) {
+    adj.matrix = secondary$adj.matrix
+  }
   c_matrix = adj.matrix$adj.matrix.bic
-  marginal_p = x$probabilities$probabilities.bic$marginal.probs
+
+  probabilities = x$probabilities
+  if(sec) {
+    probabilities = secondary$probabilities
+  }
+
+  marginal_p = probabilities$probabilities.bic$marginal.probs
   
   
   if (pf) {
     c_matrix = adj.matrix$adj.matrix.pf
-    marginal_p = x$probabilities$probabilities.pf$marginal.probs
+    marginal_p = probabilities$probabilities.pf$marginal.probs
   }
   
   if (all(c_matrix == F)) {
     stop('No edge in adjacency matrix! Nothing to show here.')
   }
   
+  bootstrap = x$bootstrap
+  if(sec) {
+    bootstrap = secondary$bootstrap
+  }
+
   if (confidence) {
-    conf_matrix = if (pf) x$bootstrap$edge.confidence$edge.confidence.pf else x$bootstrap$edge.confidence$edge.confidence.bic
+    conf_matrix = if (pf) bootstrap$edge.confidence$edge.confidence.pf else bootstrap$edge.confidence$edge.confidence.bic
   }
   #print(c_matrix)
   
   # get algorithm parameters
   parameters = x$parameters
+  if(sec) {
+    parameters = secondary$parameters
+  }
   # print(parameters)
   
   # get hypotheses
@@ -630,7 +659,7 @@ tronco.plot = function(x,
   names(eAttrs$fontsize) = edge_names
   
   #set edge color to black (default)
-  eAttrs$color = rep(edge.color, length(edge_names))
+  eAttrs$color = rep(ifelse(sec, 'darkgrey', edge.color), length(edge_names))
   names(eAttrs$color) = edge_names
 
   #set edge arrowsize to 1 (default)
@@ -690,6 +719,7 @@ tronco.plot = function(x,
       } else {
         # ..else this edge is located inside to an hypothesis, so no arrow to show
         eAttrs$logic[e] = T
+        eAttrs$color[e] = 'black'
       }
     }
   }
@@ -703,11 +733,13 @@ tronco.plot = function(x,
     if (from == '*') {
       eAttrs$logic[e] = T
       eAttrs$arrowsize[e] = 0
+      eAttrs$color[e] = 'black'
     } 
     
     if (is.logic.node(to)) {
       eAttrs$logic[e] = T
       eAttrs$arrowsize[e] = 0
+      eAttrs$color[e] = 'black'
       
     }
   }
@@ -755,6 +787,29 @@ tronco.plot = function(x,
       }
     }
     cat('done')
+  }
+
+  if (sec) {
+    #print(edge_names)
+    
+    pri.adj = x$adj.matrix$adj.matrix.bic
+    #print(rownames(pri.adj))
+    #print(hypos_new_name)
+    for(from in rownames(pri.adj)) {
+      for(to in colnames(pri.adj)) {
+        from.alt.name = from
+        if (from %in% hypos_new_name) {
+          from.alt.name = names(which(hypos_new_name == from))
+        }
+
+        if(pri.adj[from, to] == 1) {
+          eAttrs$color[paste(from.alt.name, to, sep='~')] = edge.color
+        }
+
+
+        #cat('\nfrom: ', from.alt.name, ' to: ', to)
+      }
+    }
   }
   
   
