@@ -90,10 +90,11 @@ function( marginal.probs.distributions, pvalue, adj.matrix, edge.confidence.matr
 # INPUT:
 # marginal.probs: marginal probabilities
 # adj.matrix: adjacency matrix of the topology
+# edge.confidence.matrix: matrix of the confidence of each edge
 # RETURN:
 # temporal.priority: adjacency matrix where temporal priority is verified
 "verify.temporal.priority.no.boot" <-
-function( marginal.probs, adj.matrix ) {
+function( marginal.probs, adj.matrix, edge.confidence.matrix ) {
 	
     # evalutate the temporal priority condition for each pair of edges
     not.ordered = list();
@@ -126,13 +127,25 @@ function( marginal.probs, adj.matrix ) {
                     not.ordered[counter] = list(curr.not.ordered);
                 }
                 
+                # save the confidence for i --> j and j --> i
+                tmp = edge.confidence.matrix[[1,1]];
+                tmp[i,j] = min(marginal.probs[j,1]/marginal.probs[i,1],1);
+                tmp[j,i] = min(marginal.probs[i,1]/marginal.probs[j,1],1);
+                edge.confidence.matrix[1,1] = list(tmp);
+                
+            }
+            else {
+                tmp = edge.confidence.matrix[[1,1]];
+                tmp[i,j] = 1;
+                tmp[j,i] = 1;
+                edge.confidence.matrix[1,1] = list(tmp);
             }
             
         }
     }
     
     # save the results and return them
-    temporal.priority <- list(adj.matrix=adj.matrix,not.ordered=not.ordered);
+    temporal.priority <- list(adj.matrix=adj.matrix,edge.confidence.matrix=edge.confidence.matrix,not.ordered=not.ordered);
     return(temporal.priority);
 
 }

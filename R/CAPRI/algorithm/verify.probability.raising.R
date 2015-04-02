@@ -18,7 +18,7 @@
 "verify.probability.raising.do.boot" <-
 function( prima.facie.model.distributions, prima.facie.null.distributions, pvalue, adj.matrix, edge.confidence.matrix ) {
 	
-    # compute the pvalues for the probability raising conditions
+    # evaluate the probability raising condition
     for(i in 1:nrow(adj.matrix)) {
         for(j in i:ncol(adj.matrix)) {
         	
@@ -58,8 +58,8 @@ function( prima.facie.model.distributions, prima.facie.null.distributions, pvalu
             }
             else {
                 tmp = edge.confidence.matrix[[2,1]];
-                tmp[i,j] = 0;
-                tmp[j,i] = 0;
+                tmp[i,j] = 1;
+                tmp[j,i] = 1;
                 edge.confidence.matrix[2,1] = list(tmp);
             }
             
@@ -79,34 +79,49 @@ function( prima.facie.model.distributions, prima.facie.null.distributions, pvalu
 # prima.facie.model: prima facie model
 # prima.facie.null: prima facie null
 # adj.matrix: adjacency matrix of the topology
+# edge.confidence.matrix: matrix of the confidence of each edge
 # RETURN:
 # probability.raising: adjacency matrix where temporal priority is verified
 "verify.probability.raising.no.boot" <-
-function( prima.facie.model, prima.facie.null, adj.matrix ) {
+function( prima.facie.model, prima.facie.null, adj.matrix, edge.confidence.matrix ) {
 	
+    # evaluate the probability raising condition
     for(i in 1:nrow(adj.matrix)) {
         for(j in i:ncol(adj.matrix)) {
         	
             # the diagonal (self cause) and the other invalid edges have not to be considered
-            # temporal priority condition: if P(j|i)>P(j|not i) the edge i --> j is valid for temporal priority
-            if(adj.matrix[i,j]!=0) {
-                # verify i --> j
+            # probability raising condition: if P(j|i)>P(j|not i) the edge i --> j is valid for probability raising
+            if(adj.matrix[i,j]!=0 || adj.matrix[j,i]!=0) {
+            	
+                # in this case i --> j is not valid
                 if(prima.facie.model[i,j]<=prima.facie.null[i,j]) {
                     adj.matrix[i,j] = 0;
                 }
-            }
-            if(adj.matrix[j,i]!=0) {
-                # verify j --> i
+                
+                # in this case j --> i is not valid
                 if(prima.facie.model[j,i]<=prima.facie.null[j,i]) {
                     adj.matrix[j,i] = 0;
                 }
+                
+                # save the confidence for i-->j and j --> i
+                tmp = edge.confidence.matrix[[2,1]];
+                tmp[i,j] = min(prima.facie.null[i,j]/prima.facie.model[i,j],1);
+                tmp[j,i] = min(prima.facie.null[j,i]/prima.facie.model[j,i],1);
+                edge.confidence.matrix[2,1] = list(tmp);
+                
+            }
+            else {
+                tmp = edge.confidence.matrix[[2,1]];
+                tmp[i,j] = 1;
+                tmp[j,i] = 1;
+                edge.confidence.matrix[2,1] = list(tmp);
             }
             
         }
     }
     
     # save the results and return them
-    probability.raising = adj.matrix;
+    probability.raising <- list(adj.matrix=adj.matrix,edge.confidence.matrix=edge.confidence.matrix);
     return(probability.raising);
 }
 
