@@ -6,7 +6,17 @@
 #### information.
 
 
-tronco.capri <- function( data, command = "hc", REGULARIZATION = "bic", do.boot = TRUE, nboot = 100, pvalue = 0.05, do.estimation = FALSE, min.boot = 3, min.stat = TRUE, boot.seed = 12345 ) {
+tronco.capri <- function( data, 
+	command = "hc", 
+	REGULARIZATION = "bic", 
+	do.boot = TRUE, 
+	nboot = 100, 
+	pvalue = 0.05, 
+	do.estimation = FALSE, 
+	min.boot = 3, 
+	min.stat = TRUE, 
+	boot.seed = 12345 ) 
+{
 	#check for the inputs to be correct
 	if(is.null(data) || is.null(data$genotypes)) {
 		stop("The dataset given as input is not valid.");
@@ -20,8 +30,20 @@ tronco.capri <- function( data, command = "hc", REGULARIZATION = "bic", do.boot 
 	if(pvalue < 0 || pvalue > 1) {
 		stop("The value of the pvalue has to be in [0:1]!",call.=FALSE);
 	}
+	
+	# cat(..)
+	
 	#reconstruct the topology with CAPRI
-	cat(paste("Running CAPRI algorithm.","\n"));
+	cat(paste0(
+		'*** Inferring a progression model with the following settings.\n',
+		'\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
+		'\tAlgorithm: CAPRI with \"', REGULARIZATION, '\" regularization and \"', command, '\" likelihood-fit strategy.\n',
+		'\tRandom seed: ', boot.seed, '.\n',
+		'\tBootstrap iterations (Wilcoxon): ', ifelse(do.boot, nboot, 'disabled'), '.\n',
+		ifelse(do.boot, 
+			paste0('\t\texhaustive bootstrap: ', min.stat, '.\n\t\tp-value: ', pvalue, '.\n\t\tminimum bootstrapped scores: ', min.boot, '.\n'), '')		
+		))
+		
 	topology = capri.fit(data$genotypes,data$hypotheses,command=command,do.boot=do.boot,nboot=nboot,pvalue=pvalue,do.estimation=do.estimation,regularization=REGULARIZATION,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed);
 	topology$data = data;
 	

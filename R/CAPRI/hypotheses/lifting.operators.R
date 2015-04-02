@@ -50,8 +50,7 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 				} 
         
 				if(col.num[1] == -1) {
-					stop(paste("[ERR] Event(s) for gene ", paste(clauses[[i]], collapse=', ', sep=''),
-                     " do no not exist.", sep=''))
+					stop(paste("[ERR] No events for gene ", paste(clauses[[i]], collapse=', ', sep='')))
 				} else {
 					curr_dataset[,i] = dataset[,col.num[1]]
 					if(length(col.num)>1) {

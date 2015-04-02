@@ -10,13 +10,13 @@ hypothesis.add.group = function(x, FUN, group, dim.max = length(group), min.prob
 	effect = paste(effect, collapse = ", ")
 
 	cat("*** Adding Group Hypotheses\n")
-	cat('Group:', paste(group, collapse = ", ", sep = ""), '\n')
-	cat('Function:', op, '\n')
-	cat('Effect:', effect, "\n")
+	cat('Group:', paste(group, collapse = ", ", sep = ""))
+	cat(' Function:', op)
+	cat(' Effect:', effect)
 
 	if(min.prob > 0)
 	{
-		cat('Filtering genes within the group with alteration frequency below', min.prob, '\n')
+		cat('\nFiltering genes within the group with alteration frequency below', min.prob, '\n')
 		
 		temp = events.selection(x, filter.in.names = group)
 		
@@ -33,6 +33,7 @@ hypothesis.add.group = function(x, FUN, group, dim.max = length(group), min.prob
 		warning("No hypothesis can be created for groups with less than 2 elements.")
 		return(x)
 	}
+	
 	hom.group = lapply(group, function(g, x) {
 		if (nevents(x, genes = g) > 1) 
 			T
@@ -46,31 +47,33 @@ hypothesis.add.group = function(x, FUN, group, dim.max = length(group), min.prob
 		return(paste0("'", g, "'"))
 	}
 
-
 	max.groupsize = min(dim.max, ngroup)
-	cat('Maximum pattern size:', max.groupsize, '\n')
+	cat(' Maximum pattern size:', max.groupsize, '\n')
 	
 	if (length(hom.group) > 0) 
-		cat("[Functional homologous] Genes with multiple events: ", paste(unlist(hom.group), collaps=', ', sep=''), "\n")
+		cat("[Functional homologous] Genes with multiple events: ", paste(unlist(hom.group), collapse=', ', sep=''), "\n")
 	
 	error.summary = data.frame()
 
+	# Get an analytical formula... !
+	tot.patterns = 0
+	for (i in 2:max.groupsize) tot.patterns = tot.patterns + ncol(combn(unlist(group), i))
+	
+	# create a progress bar
+	cat('Generating ', tot.patterns ,'patterns.\n')		
+	pb <- txtProgressBar(0, tot.patterns, style = 3)
+	flush.console()
+
+	pbPos = 0
 	for (i in 2:max.groupsize) {
 		gr = combn(unlist(group), i)
 		
-		# create a progress bar
-		cat('Generating hypothesis for', ncol(gr), ' patterns with size', i, '\n')		
-		pb <- txtProgressBar(1, ncol(gr) + 1, style = 3)
-		pbPos = 2
-	
-		flush.console()
-
 		for (j in 1:ncol(gr)) {
 			genes = as.list(gr[, j])
 
 			#start the progress bar
-			setTxtProgressBar(pb, pbPos)
 			pbPos = pbPos + 1
+			setTxtProgressBar(pb, pbPos)
 
 			hypo.name = paste(unlist(genes), sep = "_", collapse = "_")
 			hypo.genes = paste(lapply(genes, function(g, hom.group) {
@@ -90,7 +93,11 @@ hypothesis.add.group = function(x, FUN, group, dim.max = length(group), min.prob
 					code = strsplit(as.character(cond), " ")[[1]]
 					idx.errcode = which(code == "[ERR]", arr.ind = TRUE) + 1
 
-					return(data.frame(pattern = paste(unlist(genes), collapse = ", ", sep = ""), error = paste(code[idx.errcode:length(code)], collapse = " ")))
+					return(
+						data.frame(
+							pattern = paste(unlist(genes), collapse = ", ", sep = ""), 
+							error = paste(code[idx.errcode:length(code)], collapse = " ")
+							))
 
 				}, warning = function(cond) {
 					m = paste("Warning on", hypo.add, ".\n", cond)
@@ -100,18 +107,15 @@ hypothesis.add.group = function(x, FUN, group, dim.max = length(group), min.prob
 				if (!("genotypes" %in% names(err))) 
 					error.summary = rbind(error.summary, err)
 			}
-		
-
-			# close progress bar
-			close(pb)
-
 	}
+	# close progress bar
+	close(pb)
 
 
 	if (nrow(error.summary) > 0) {
 		cat(paste(nrow(error.summary), " genes pattern could not be added -- showing errors\n", sep = ""))
 		print(error.summary)
-	} else cat("Hypothesis created for all possible gene patterns.\n")
+	} else cat("Hypothesis created for all possible patterns.\n")
 
 	return(x)
 }
@@ -131,10 +135,11 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 	}, x)
 	hom.group = genes[unlist(hom.group)]
 
-	cat("*** Genes with functional homologous found: ", hom.group, "\n")
-
+	if (length(hom.group) > 0) 
+		cat("[Functional homologous] Genes with multiple events: ", paste(unlist(hom.group), collapse=', ', sep=''), "\n")
+	
 	# create a progress bar
-	# pb <- txtProgressBar(1, length(hom.group), style = 3)
+	pb <- txtProgressBar(0, length(hom.group), style = 3)
 
 
 	error.summary = data.frame()
@@ -142,7 +147,7 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 	for (i in 1:length(hom.group)) {
 
 		#start the progress bar
-		# setTxtProgressBar(pb, i)
+		setTxtProgressBar(pb, i)
 
 		hypo.add = paste0("hypothesis.add(x, label.formula = '", FUN, "_", hom.group[[i]], "', lifted.formula = ", FUN, "('", hom.group[[i]], "'), ", effect, 
 			")")
@@ -166,7 +171,7 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 	}
 
 	# close progress bar
-	# close(pb)
+	close(pb)
 
 	if (nrow(error.summary) > 0) {
 		cat(paste(nrow(error.summary), " patterns could not be added -- showing errors\n", sep = ""))

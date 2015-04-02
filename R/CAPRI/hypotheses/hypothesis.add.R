@@ -166,7 +166,7 @@
           #check the formula to be well-formed
           #if the effect is in the formula, the formula is not well-formed
           if(length(which(unlist(curr_hypotheses$llist)%in%events.name))>0) {
-                  stop(paste("[ERR] Bad forme formula, event \"", curr.label.effect,
+                  stop(paste("[ERR] Bad formed formula, event \"", curr.label.effect,
                        "\" yields a loop.",,sep=''));          
             }
         }
@@ -215,8 +215,8 @@
           #if the two considered events are not distinguishable
           if((joint.probs[i,j]/marginal.probs[i])==1 && (joint.probs[i,j]/marginal.probs[j])==1) 
           {
-            stop(paste("[ERR] The formula duplicates event (", paste(as.events(data)[j, ], collapse=', ', sep=''), 
-                       ").", sep=''));
+            stop(paste("[ERR] Pattern duplicates ", paste(as.events(data)[j, ], collapse=' ', sep=''), 
+                       ".", sep=''));
           }
         }
       }

@@ -96,6 +96,8 @@ function( adj.matrix, weights.matrix, not.ordered, hypotheses = NA ) {
     # visit the ordered edges and remove the ones that are causing cycles, if any
     if(length(ordered.edges)>0) {
     	
+    		total.edges = length(which(adj.matrix == 1))
+    		removed = 0
         for(i in 1:length(ordered.edges)) {
         	
             # consider the edge i-->j
@@ -108,12 +110,14 @@ function( adj.matrix, weights.matrix, not.ordered, hypotheses = NA ) {
             
             # if there is a path between the two nodes, remove edge i --> j
             if(is.path==1) {
-            		cat("Removing edge ",colnames(adj.matrix)[curr.edge.i]," to ",colnames(adj.matrix)[curr.edge.j],"\n");
+				removed = removed + 1
+            		# cat("Removing edge ",colnames(adj.matrix)[curr.edge.i]," to ",colnames(adj.matrix)[curr.edge.j],"\n");
             		adj.matrix[curr.edge.i,curr.edge.j] = 0;
             }
             
         }
         
+        cat(paste0('\tRemoved ', removed, ' edges out of ', total.edges ,' (', round(100 * removed/total.edges, 0),'%)\n'))
     }
     
     # save the results and return them

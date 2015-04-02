@@ -68,8 +68,8 @@ function( dataset, adj.matrix, command, regularization ) {
     # perform the reconstruction by likelihood fit with regularization
     # either the hill climbing or the tabu search is used as the mathematical optimization technique
     
-    cat('Performing likelihood-fit with regularization:', regularization, '(bnlearn)\n');
-    cat('Heuristic search method:', command, '(bnlearn)\n');
+    # cat('Performing likelihood-fit with regularization:', regularization, '(bnlearn)\n');
+    # cat('Heuristic search method:', command, '(bnlearn)\n');
     
     if(cont>0) {
         blacklist = data.frame(from = parent,to = child);

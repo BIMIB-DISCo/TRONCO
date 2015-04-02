@@ -21,7 +21,7 @@
 # RETURN:
 # topology: the reconstructed tree topology
 "capri.fit" <-
-function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE, boot.seed = 12345, do.estimation = FALSE ) {
+function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE, boot.seed = 12345, do.estimation = FALSE, silent = FALSE ) {
 	
 	# structure with the set of valid edges
 	# I start from the complete graph, i.e., I have no prior and all the connections are possibly causal
@@ -37,14 +37,19 @@ function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.b
 	
 	# reconstruct the prima facie topology
     # should I perform bootstrap? Yes if TRUE, no otherwise
+   
     if(do.boot==TRUE) {
+	   	if(!silent) cat('*** Bootstraping scores for selective advantage.\n')
         prima.facie.parents = get.prima.facie.parents.do.boot(dataset,hypotheses,nboot,pvalue,adj.matrix,min.boot,min.stat,boot.seed);
     }
     else {
+		   	if(!silent) cat('*** Computing scores for selective advantage.\n')
+
         prima.facie.parents = get.prima.facie.parents.no.boot(dataset,hypotheses,adj.matrix);
     }
     
 	# perform the likelihood fit by BIC score on the prima facie topology
+	if(!silent) cat('*** Performing likelihood-fit with regularization.\n')
 	best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command,regularization=regularization);
 	
 	# set the structure to save the conditional probabilities of the reconstructed topology
