@@ -42,11 +42,15 @@ function( adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.mode
     for(i in 1:ncol(adj.matrix)) {
 		for(j in i:nrow(adj.matrix)) {
 			
-			# the diagonal (self cause) has not to be considered
-			if(i!=j) {
+			# the diagonal (self cause) and the other invalid edges have not to be considered
+			if(adj.matrix[i,j]!=0 || adj.matrix[j,i]!=0) {
 				#compute the confidence by hypergeometric test for both j --> i and i --> j
 				probability.raising$edge.confidence.matrix[[3,1]][i,j] = phyper(joint.probs[i,j]*nrow(dataset),marginal.probs[i]*nrow(dataset),nrow(dataset)-marginal.probs[i]*nrow(dataset),marginal.probs[j]*nrow(dataset),lower.tail=FALSE);
 				probability.raising$edge.confidence.matrix[[3,1]][j,i] = probability.raising$edge.confidence.matrix[[3,1]][i,j];
+			}
+			else {
+				probability.raising$edge.confidence.matrix[[3,1]][i,j] = 1;
+				probability.raising$edge.confidence.matrix[[3,1]][j,i] = 1;
 			}
         
 		}
@@ -105,11 +109,15 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
     for(i in 1:ncol(adj.matrix)) {
 		for(j in i:nrow(adj.matrix)) {
 			
-			# the diagonal (self cause) has not to be considered
-			if(i!=j) {
+			# the diagonal (self cause) and the other invalid edges have not to be considered
+			if(adj.matrix[i,j]!=0 || adj.matrix[j,i]!=0) {
 				#compute the confidence by hypergeometric test for both j --> i and i --> j
 				probability.raising$edge.confidence.matrix[[3,1]][i,j] = phyper(joint.probs[i,j]*nrow(dataset),marginal.probs[i]*nrow(dataset),nrow(dataset)-marginal.probs[i]*nrow(dataset),marginal.probs[j]*nrow(dataset),lower.tail=FALSE);
 				probability.raising$edge.confidence.matrix[[3,1]][j,i] = probability.raising$edge.confidence.matrix[[3,1]][i,j];
+			}
+			else {
+				probability.raising$edge.confidence.matrix[[3,1]][i,j] = 1;
+				probability.raising$edge.confidence.matrix[[3,1]][j,i] = 1;
 			}
         
 		}
@@ -128,7 +136,7 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
     }
     
     # save the results and return them
-    prima.facie.topology <- list(adj.matrix=adj.matrix,edge.confidence.matrix=edge.confidence.matrix);
+    prima.facie.topology <- list(adj.matrix=adj.matrix,edge.confidence.matrix=probability.raising$edge.confidence.matrix);
     return(prima.facie.topology);
 
 }

@@ -11,7 +11,8 @@ hypotheses.expansion <- function(input_matrix,
                                  hidden_and = T,
                                  expand = T,
                                  events = NULL,
-                                 conf_matrix = NULL
+                                 conf_matrix = NULL,
+                                 skip.disconnected = TRUE
                                  ) {
   
   if (!require(igraph)) {
@@ -82,7 +83,7 @@ hypotheses.expansion <- function(input_matrix,
       
       
       
-      if(length(which(input_matrix[h,] == 1)) == 0) {
+      if(length(which(input_matrix[h,] == 1)) == 0 && skip.disconnected) {
         next
       }
       

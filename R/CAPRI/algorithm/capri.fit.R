@@ -43,9 +43,8 @@ function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.b
         prima.facie.parents = get.prima.facie.parents.do.boot(dataset,hypotheses,nboot,pvalue,adj.matrix,min.boot,min.stat,boot.seed);
     }
     else {
-		   	if(!silent) cat('*** Computing scores for selective advantage.\n')
-
-        prima.facie.parents = get.prima.facie.parents.no.boot(dataset,hypotheses,adj.matrix);
+    		if(!silent) cat('*** Computing scores for selective advantage.\n')
+    		prima.facie.parents = get.prima.facie.parents.no.boot(dataset,hypotheses,adj.matrix);
     }
     
 	# perform the likelihood fit by BIC score on the prima facie topology

@@ -66,15 +66,6 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
     # consider the patterns related the hypotheses
 	if(!is.na(hypotheses[1])) {
 		
-		# evaluate any hypothesis
-		res = hypothesis.evaluate.cycles(hypotheses,adj.matrix,as.patterns(hypotheses),weights.matrix);
-		
-		# matomic provides a map from the atomic events to the hypothesis
-		matomic = res$matomic;
-		
-		# mhypotheses provides a map from the hypotheses to the atomic events
-		mhypotheses = res$mhypotheses;
-	
 		# if I have hypotheses, add the edges to be evaluated during the loop removal
 		curr.edge.pos = 0;
 		for(i in 1:nrow(adj.matrix)) {
@@ -82,10 +73,10 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
 				if(adj.matrix[i,j]==1) {
 					ordered.weights = rbind(ordered.weights,weights.matrix[i,j]);
 					curr.edge.pos = curr.edge.pos + 1;
-            		new.edge <- array(0, c(2,1));
-            		new.edge[1,1] = i;
-            		new.edge[2,1] = j;
-            		ordered.edges[curr.edge.pos] = list(new.edge);
+            			new.edge <- array(0, c(2,1));
+            			new.edge[1,1] = i;
+            			new.edge[2,1] = j;
+            			ordered.edges[curr.edge.pos] = list(new.edge);
 				}
 			}
 		}
@@ -97,6 +88,15 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
     
     # visit the ordered edges and remove the ones that are causing any cycle
     if(length(ordered.edges)>0) {
+    		
+    		# expanded matrix to be considered in removing the loops
+    		expansion = hypotheses.expansion(input_matrix=adj.matrix,map=hypotheses$hstructure,hidden_and=F,expand=T,skip.disconnected=F);
+    		
+        # load the igraph library required for the loop detection
+    	if (!require(igraph)) {
+    		install.packages('igraph', dependencies = TRUE);
+      		library(igraph);
+    	}
     	
         for(i in 1:length(ordered.edges)) {
         	
@@ -105,13 +105,29 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
             curr.edge.i = curr.edge[1,1];
             curr.edge.j = curr.edge[2,1];
             
+            # resolve the mapping from the adj.matrix to the expanded one both for curr.edge.i and curr.edge.j
+            if(colnames(adj.matrix)[curr.edge.i]%in%expansion[[2]]) {
+            		curr.edge.i.exp = which(colnames(expansion[[1]])%in%names(expansion[[2]])[which(expansion[[2]]%in%colnames(adj.matrix)[curr.edge.i])]);
+            }
+            else {
+            		curr.edge.i.exp = which(colnames(expansion[[1]])%in%colnames(adj.matrix)[curr.edge.i]);
+            }
+            if(colnames(adj.matrix)[curr.edge.j]%in%expansion[[2]]) {
+            		curr.edge.j.exp = which(colnames(expansion[[1]])%in%names(expansion[[2]])[which(expansion[[2]]%in%colnames(adj.matrix)[curr.edge.j])]);
+            }
+            else {
+            		curr.edge.j.exp = which(colnames(expansion[[1]])%in%colnames(adj.matrix)[curr.edge.j]);
+            }
+            
             # search for loops between curr.edge.i and curr.edge.j
-            is.path = find.path(adj.matrix,curr.edge.j,curr.edge.i,matomic,mhypotheses,vector());
+            curr.graph = graph.adjacency(expansion[[1]], mode="directed");
+            	is.path = length(unlist(get.shortest.paths(curr.graph, curr.edge.j.exp, curr.edge.i.exp)$vpath));
             
             # if there is a path between the two nodes, remove edge i --> j
-            if(is.path==1) {
-				removed = removed + 1
+            if(is.path>0) {
+            		removed = removed + 1
             		# cat("Removing edge ",colnames(adj.matrix)[curr.edge.i]," to ",colnames(adj.matrix)[curr.edge.j],"\n");
+            		expansion[[1]][curr.edge.i.exp,curr.edge.j.exp] = 0;
             		adj.matrix[curr.edge.i,curr.edge.j] = 0;
             }
             
