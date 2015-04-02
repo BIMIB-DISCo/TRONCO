@@ -18,6 +18,9 @@
 "remove.cycles" <-
 function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hypotheses = NA ) {
 	
+	total.edges = length(which(adj.matrix == 1))
+    removed = 0
+	
 	# evaluate the possible cycles involving atomic events
     if(length(not.ordered)>0) {
     	
@@ -37,17 +40,19 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
         			curr.score.i.j = weights.temporal.priority[curr.edge.i,curr.edge.j];
         			curr.score.j.i = weights.temporal.priority[curr.edge.j,curr.edge.i];
         			
-        		# choose an edge based on the score
-        		if(curr.score.i.j<curr.score.j.i) {
-        			# if i --> j is more confident (lower score) then j --> i
-            		cat("Removing edge ",colnames(adj.matrix)[curr.edge.j]," to ",colnames(adj.matrix)[curr.edge.i],"\n");
-            		adj.matrix[curr.edge.j,curr.edge.i] = 0;
-        		}
-        		else {
-        			# otherwise
-            		cat("Removing edge ",colnames(adj.matrix)[curr.edge.i]," to ",colnames(adj.matrix)[curr.edge.j],"\n");
-            		adj.matrix[curr.edge.i,curr.edge.j] = 0;
-        		}
+	        		# choose an edge based on the score
+	        		if(curr.score.i.j<curr.score.j.i) {
+	        			# if i --> j is more confident (lower score) then j --> i
+	        			removed = removed + 1
+	            		# cat("Removing edge ",colnames(adj.matrix)[curr.edge.j]," to ",colnames(adj.matrix)[curr.edge.i],"\n");
+	            		adj.matrix[curr.edge.j,curr.edge.i] = 0;
+	        		}
+	        		else {
+	        			# otherwise
+	        			removed = removed + 1
+	            		# cat("Removing edge ",colnames(adj.matrix)[curr.edge.i]," to ",colnames(adj.matrix)[curr.edge.j],"\n");
+	            		adj.matrix[curr.edge.i,curr.edge.j] = 0;
+	        		}
         		}
         		
     		}
@@ -86,15 +91,13 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
 		}
 	
 		# sort the edges in increasing order of confidence (i.e. the edges with lower pvalue are the most confident)
-    	ordered.edges = ordered.edges[sort(unlist(ordered.weights),decreasing=TRUE,index.return=TRUE)$ix];
+    		ordered.edges = ordered.edges[sort(unlist(ordered.weights),decreasing=TRUE,index.return=TRUE)$ix];
 	
 	}
     
     # visit the ordered edges and remove the ones that are causing any cycle
     if(length(ordered.edges)>0) {
     	
-    		total.edges = length(which(adj.matrix == 1))
-    		removed = 0
         for(i in 1:length(ordered.edges)) {
         	
             # consider the edge i-->j

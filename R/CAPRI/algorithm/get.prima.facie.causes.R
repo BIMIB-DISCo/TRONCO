@@ -24,9 +24,9 @@ function( adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.mode
 	
     # structure to save the confidence of the edges
     edge.confidence.matrix <- array(list(), c(3,1));
-    edge.confidence.matrix[[1,1]] = array(1, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
-    edge.confidence.matrix[[2,1]] = array(0, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
-    edge.confidence.matrix[[3,1]] = array(1, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
+    edge.confidence.matrix[[1,1]] = array(NA, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
+    edge.confidence.matrix[[2,1]] = array(NA, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
+    edge.confidence.matrix[[3,1]] = array(NA, c(ncol(prima.facie.model.distributions),ncol(prima.facie.model.distributions)));
     
     # verify Suppes' conditions for prima facie causes
     # i.e., i --> j implies P(i)>P(j) (temporal priority) and P(j|i)>P(j|not i) (probability raising)
@@ -55,8 +55,9 @@ function( adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.mode
     # remove any cycle
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
     		if(!silent) cat('*** Loop detection found loops to break.\n')
-        weights.matrix = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]]+probability.raising$edge.confidence.matrix[[3,1]];
-        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.matrix,temporal.priority$not.ordered,hypotheses);
+    		weights.temporal.priority = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]];
+        weights.matrix = probability.raising$edge.confidence.matrix[[2,1]]+probability.raising$edge.confidence.matrix[[3,1]];
+        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses);
         adj.matrix = acyclic.topology$adj.matrix;
     }
     else {
@@ -88,18 +89,17 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
     edge.confidence.matrix <- array(list(), c(3,1));
     edge.confidence.matrix[[1,1]] = array(NA, c(ncol(adj.matrix),ncol(adj.matrix)));
     edge.confidence.matrix[[2,1]] = array(NA, c(ncol(adj.matrix),ncol(adj.matrix)));
-    edge.confidence.matrix[[3,1]] = array(1, c(ncol(adj.matrix),ncol(adj.matrix)));
+    edge.confidence.matrix[[3,1]] = array(NA, c(ncol(adj.matrix),ncol(adj.matrix)));
     
     # verify Suppes' conditions for prima facie causes
     # i.e., i --> j implies P(i)>P(j) (temporal priority) and P(j|i)>P(j|not i) (probability raising)
     # verify the temporal priority condition
- 
-   if(!silent) cat(paste0('\tEvaluating \"temporal priority\".\n'));
-   temporal.priority = verify.temporal.priority.no.boot(marginal.probs,adj.matrix);
+    if(!silent) cat(paste0('\tEvaluating \"temporal priority\".\n'));
+    temporal.priority = verify.temporal.priority.no.boot(marginal.probs,adj.matrix,edge.confidence.matrix);
     
     # verify the probability raising condition
     if(!silent) cat(paste0('\tEvaluating \"probability raising\".\n'));
-   probability.raising = verify.probability.raising.no.boot(prima.facie.model,prima.facie.null,temporal.priority$adj.matrix);
+    probability.raising = verify.probability.raising.no.boot(prima.facie.model,prima.facie.null,temporal.priority$adj.matrix,temporal.priority$edge.confidence.matrix);
     
     # perform the hypergeometric test for each pair of events
     for(i in 1:ncol(adj.matrix)) {
@@ -108,8 +108,8 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
 			# the diagonal (self cause) has not to be considered
 			if(i!=j) {
 				#compute the confidence by hypergeometric test for both j --> i and i --> j
-				edge.confidence.matrix[[3,1]][i,j] = phyper(joint.probs[i,j]*nrow(dataset),marginal.probs[i]*nrow(dataset),nrow(dataset)-marginal.probs[i]*nrow(dataset),marginal.probs[j]*nrow(dataset),lower.tail=FALSE);
-				edge.confidence.matrix[[3,1]][j,i] = edge.confidence.matrix[[3,1]][i,j];
+				probability.raising$edge.confidence.matrix[[3,1]][i,j] = phyper(joint.probs[i,j]*nrow(dataset),marginal.probs[i]*nrow(dataset),nrow(dataset)-marginal.probs[i]*nrow(dataset),marginal.probs[j]*nrow(dataset),lower.tail=FALSE);
+				probability.raising$edge.confidence.matrix[[3,1]][j,i] = probability.raising$edge.confidence.matrix[[3,1]][i,j];
 			}
         
 		}
@@ -118,12 +118,13 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
     # remove any cycle
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
     		if(!silent) cat('*** Loop detection found loops to break.\n')
-	     weights.matrix = edge.confidence.matrix[[3,1]];
-        acyclic.topology = remove.cycles(probability.raising,weights.matrix,temporal.priority$not.ordered,hypotheses);
+    		weights.temporal.priority = probability.raising$edge.confidence.matrix[[2,1]];
+        weights.matrix = probability.raising$edge.confidence.matrix[[3,1]];
+        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses);
         adj.matrix = acyclic.topology$adj.matrix;
     }
     else {
-        adj.matrix = probability.raising;
+        adj.matrix = probability.raising$adj.matrix;
     }
     
     # save the results and return them
