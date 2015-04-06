@@ -202,7 +202,7 @@ hypotheses.expansion <- function(input_matrix,
   
   and_matrix = NULL
   to_reconnect = list()
-  logical_op = list("AND", "OR", "NOT", "XOR")
+  logical_op = list("AND", "OR", "NOT", "XOR", "UPAND", 'UPOR', 'UPXOR')
 #   logical_op = list("", "", "", "")
  
   # foreach AND column
@@ -369,7 +369,7 @@ tronco.plot = function(x,
     stop("To show confidence information, bootstrap execution is needed! See: the function tronco.bootstrap.", call.=FALSE);
   }
   
-  logical_op = list("AND", "OR", "NOT", "XOR", "*")
+  logical_op = list("AND", "OR", "NOT", "XOR", "*", "UPAND", "UPOR", "UPXOR")
   #logical_op = list("", "", "", "")
  
   sec = FALSE
