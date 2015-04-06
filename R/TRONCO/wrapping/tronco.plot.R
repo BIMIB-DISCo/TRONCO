@@ -76,18 +76,13 @@ hypotheses.expansion <- function(input_matrix,
     
     
     for (h in ls(map)) {
-      
-      # print(input_matrix[h,])
-      
-      # print(any(input_matrix[h,] == 1))
-      
+          
       
       # eros! please give me the transposed matrix
       hypo = map[[h]]
       
       # create graph from hypo
       hypo_graph = graph.adjacency(hypo)
-      #print(hypo)
       
 
       # name of this node
@@ -96,6 +91,8 @@ hypotheses.expansion <- function(input_matrix,
       initial_node <- names(h_mat)[which(h_mat==0)]
       hypos_new_name[initial_node] = h
       
+
+      # reconnect down
       if (length(which(input_matrix[h,] == 1)) != 0) {
 
         # edge to reconstruct
@@ -134,6 +131,27 @@ hypotheses.expansion <- function(input_matrix,
         }
 
       }
+
+      # reconnect UP
+      if (length(which(input_matrix[, h] == 1)) != 0) {
+        print('Ipotesi con PRE!!!')
+
+        hypo_pre = t(hypo)
+        print(hypo_pre)
+
+        # create graph from hypo
+        hypo_graph_pre = graph.adjacency(hypo_pre)
+
+        # name of this node
+        h_mat_pre <- colSums(get.adjacency(hypo_graph_pre, sparse=FALSE))
+
+        initial_node <- paste0('UP_', names(h_mat_pre)[which(h_mat==0)])
+
+        print('Initial node')
+        print(initial_node)
+
+      }
+
       
     }
     min_matrix = get.adjacency(min_graph, sparse = F)
