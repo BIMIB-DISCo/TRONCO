@@ -90,8 +90,13 @@ hypotheses.expansion <- function(input_matrix,
       
       initial_node <- names(h_mat)[which(h_mat==0)]
       hypos_new_name[initial_node] = h
-      
 
+      # change names in confidence matrix according to hypotesis
+      if(!is.null(conf_matrix)) {
+        rownames(conf_matrix)[rownames(conf_matrix) == h] = initial_node
+        colnames(conf_matrix)[rownames(conf_matrix) == h] = initial_node
+      }
+      
       # reconnect down
       if (length(which(input_matrix[h,] == 1)) != 0) {
 
@@ -101,13 +106,6 @@ hypotheses.expansion <- function(input_matrix,
 
         # add this graph to main graph
         min_graph = graph.union(min_graph, hypo_graph)
-
-
-        # change names in confidence matrix according to hypotesis
-        if(!is.null(conf_matrix)) {
-          rownames(conf_matrix)[rownames(conf_matrix) == h] = initial_node
-          colnames(conf_matrix)[rownames(conf_matrix) == h] = initial_node
-        }
         
         # recreate lost edge
         for (node in final_node) {
@@ -115,20 +113,20 @@ hypotheses.expansion <- function(input_matrix,
         }
 
         # check if there are edge from atomic to hypo and recreate them
-        h_edge_in <- input_matrix[,h]
-        in_node <- names(h_edge_in)[which(h_edge_in==1)]
-        node_in_hypo = V(hypo_graph)$name
-        atomic_node_in_hypo = list()
-        for (node in node_in_hypo) {
-          if(!is.logic.node(node))
-          atomic_node_in_hypo = append(atomic_node_in_hypo, node)
-        }
+        #h_edge_in <- input_matrix[,h]
+        #in_node <- names(h_edge_in)[which(h_edge_in==1)]
+        #node_in_hypo = V(hypo_graph)$name
+        #atomic_node_in_hypo = list()
+        #for (node in node_in_hypo) {
+        #  if(!is.logic.node(node))
+        #  atomic_node_in_hypo = append(atomic_node_in_hypo, node)
+        #}
 
-        for (pre in in_node) {
-          for (post in atomic_node_in_hypo) {
-            min_graph <- min_graph + edge(pre, post)
-          }
-        }
+        #for (pre in in_node) {
+        #  for (post in atomic_node_in_hypo) {
+        #    min_graph <- min_graph + edge(pre, post)
+        #  }
+        #}
 
       }
 
@@ -139,16 +137,39 @@ hypotheses.expansion <- function(input_matrix,
         hypo_pre = t(hypo)
         print(hypo_pre)
 
+        node_names = rownames(hypo_pre)
+        node_names = lapply(node_names, function(x){ if(is.logic.node(x)) { paste0('UP', x) } else { return(x) }  })
+
+        rownames(hypo_pre) = node_names
+        colnames(hypo_pre) = node_names
+
+        print(hypo_pre)
+
         # create graph from hypo
         hypo_graph_pre = graph.adjacency(hypo_pre)
 
         # name of this node
         h_mat_pre <- colSums(get.adjacency(hypo_graph_pre, sparse=FALSE))
 
-        initial_node <- paste0('UP_', names(h_mat_pre)[which(h_mat==0)])
+        final_node <- names(h_mat_pre)[which(h_mat==0)]
+
+        print('Final node')
+        print(final_node)
+
+        # edge to reconstruct
+        h_edge <- input_matrix[, h]
+        initial_node <- names(h_edge)[which(h_edge==1)]
 
         print('Initial node')
         print(initial_node)
+
+        # add this graph to main graph
+        min_graph = graph.union(min_graph, hypo_graph_pre)
+
+        # recreate lost edge
+        for (node in initial_node) {
+          min_graph <- min_graph + edge(node, final_node)
+        }
 
       }
 
@@ -249,6 +270,8 @@ is.logic.node <- function(node) {
   if(substr(node, start=1, stop=4) == 'AND_')
     return(TRUE)
   if(substr(node, start=1, stop=4) == 'NOT_')
+    return(TRUE)
+  if(substr(node, start=1, stop=2) == 'UP')
     return(TRUE)
   return(FALSE)
 }
@@ -577,6 +600,36 @@ tronco.plot = function(x,
     nAttrs$width[which(w)] = height.logic
     
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
+    if (any(w)) {
+      legend_logic['Exclusivity (hard)'] = 'red'
+    }
+    nAttrs$fillcolor[which(w)] = 'red'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = height.logic
+
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'UPOR'
+    if (any(w)) {
+      legend_logic['Exclusivity (soft)'] = 'orange'
+    }
+    nAttrs$fillcolor[which(w)] = 'orange'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = height.logic
+    
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'UPAND'
+    if (any(w)) {
+      legend_logic['Co-occurence'] = 'lightgreen'
+    }
+    nAttrs$fillcolor[which(w)] = 'lightgreen'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = height.logic
+    
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'UPXOR'
     if (any(w)) {
       legend_logic['Exclusivity (hard)'] = 'red'
     }
