@@ -377,3 +377,5 @@ pathway.visualization = function(x,
   return(ret)
 }
 
+
+#### Consensus matrix (intra-clusters)

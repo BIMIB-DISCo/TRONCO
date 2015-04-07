@@ -958,3 +958,579 @@ tronco.plot = function(x,
   }
   cat('\n')
 }
+
+
+tronco.consensus.plot = function(models,
+                       secondary=NULL, 
+                       fontsize=18, 
+                       MIN.HITS = 1,
+                       height=2,
+                       width=3,
+                       height.logic = 1,
+                       pf = FALSE, 
+                       disconnected=FALSE,
+                       scale.nodes=NA,
+                       title = paste("Consensus Progression model"),  
+                       confidence = FALSE, 
+                       legend = TRUE, 
+                       legend.cex = 1.0, 
+                       edge.cex = 1.0,
+                       label.edge.size = 12, 
+                       hidden.and = T,
+                       expand = T,
+                       edge.color = 'black',
+                       pathways.color = 'Set1',
+                       file = NA, # print to pdf,
+                       legend.pos = 'bottom',
+                       pathways = NULL,
+                       ...
+                       ) 
+{
+  if (!require(igraph)) {
+    install.packages('igraph', dependencies = TRUE)
+    library(igraph)
+  }
+  
+  if (!require(Rgraphviz)) {
+    source("http://bioconductor.org/biocLite.R")
+    biocLite("Rgraphviz")
+    library(Rgraphviz)
+  }
+
+  if (!require("RColorBrewer")) {
+    install.packages("RColorBrewer")
+    library(RColorBrewer)
+  }
+  
+  # Checks if topology exists
+  if(missing(models) || !is.list(models)) {
+    stop("Models missing, usage: ... ...", call.=FALSE);
+  }
+    
+  logical_op = list("AND", "OR", "NOT", "XOR", "*")
+  
+  
+smaller.to.bigger = function(m,cn)
+{
+	x = matrix(0, nrow = length(cn), ncol = length(cn))
+	rownames(x) = cn
+	colnames(x) = cn
+ 
+	
+	for(i in 1:nrow(m))
+		for(j in 1:nrow(m))
+			x[rownames(m)[i], rownames(m)[j]] = ifelse(m[i,j] == 1, 1, 0) 
+	return(x)
+}
+
+
+	# All the adjacency matrices
+	matrices = list()
+	for(i in 1:length(models))
+		matrices = append(matrices, list(models[[i]]$adj.matrix$adj.matrix.bic))
+
+	# All their colnames - all possible eventsand types
+	cn = unique(Reduce(union, lapply(matrices, colnames)))
+	
+	all.events = NULL
+	for(i in 1:length(models)) all.events = rbind(all.events, as.events(models[[i]]$data))
+	all.events = unique(all.events)
+
+	all.types = NULL
+	for(i in 1:length(models)) all.types = rbind(all.types, models[[i]]$data$types)
+	all.types = unique(all.types)
+	
+	# Consensus + overall adjacency matrix
+	consensus = Reduce('+', lapply(matrices, smaller.to.bigger, cn=cn))
+	adjacency = consensus
+	adjacency[adjacency < MIN.HITS] = 0 
+	adjacency[adjacency > 1] = 1 
+		
+	cat('Consensus adjacency matrix:', nrow(adjacency), 'x', ncol(adjacency), ', minimum consensus', MIN.HITS, '\n')
+
+	# All the marginal probabilities - entries from each input model
+	marginal.probabilities = matrix(nrow = nrow(adjacency), ncol = 1)
+	rownames(marginal.probabilities) = rownames(adjacency)
+  
+	for(i in 1:length(models))
+	{
+		model.marginals = models[[i]]$probabilities$probabilities.bic$marginal.probs
+		marginal.probabilities[rownames(model.marginals),] = model.marginals
+	}
+
+ 	# Algorithm parameters should be the same for each model
+ 	parameters = models[[1]]$parameters
+  
+	# Retrieve all hypotheses - TODO constraint this to a model with hypotheses
+	all.hypos = list()
+	for(i in 1:length(models))
+		all.hypos = append(all.hypos, models[[i]]$data$hypotheses$hstructure)
+	
+	# We unpack the env and collapse it back
+	all.hypos = sapply(all.hypos, as.list) # make them as list
+	all.hypos.names = NULL
+	hstruct = list()
+	for(i in 1:length(all.hypos))
+	{
+		# Get hypotheses missing in hstruct
+		local.env = all.hypos[[i]]
+		local.env.names = names(local.env)[which( !(names(local.env) %in% names(hstruct)) )]
+		
+		all.hypos.names = c(all.hypos.names, local.env.names)
+		hstruct = append(hstruct, local.env[local.env.names])
+	}
+	
+	cat('Found', length(hstruct), 'hypotheses\n')
+	hstruct = as.environment(hstruct)
+
+	print('originale ordine')	
+	     print(colnames(adjacency))
+     print('**')
+    # print(colnames(consensus))
+     # print('**')
+
+
+	# hypotheses.expansion requires hypotheses to be stored as rightmost columns
+	adjacency = adjacency[, c(setdiff(colnames(adjacency), all.hypos.names), all.hypos.names)]
+	adjacency = adjacency[c(setdiff(colnames(adjacency), all.hypos.names), all.hypos.names), ]
+	
+	consensus = consensus[, c(setdiff(colnames(consensus), all.hypos.names), all.hypos.names)]
+	consensus = consensus[c(setdiff(colnames(consensus), all.hypos.names), all.hypos.names), ]
+	
+	all.events = all.events[colnames(adjacency), ]
+
+	print('nuovo ordine')	
+
+	     print(colnames(adjacency))
+     print('**')
+    # print(colnames(consensus))
+     # print('**')
+	
+	# Expand hypotheses
+    expansion = hypotheses.expansion(adjacency, 
+                                     hstruct, 
+                                     hidden.and, 
+                                     expand)
+    hypo_mat = expansion[[1]]
+    hypos_new_name = expansion[[2]]
+    print(hypos_new_name)
+    
+    print('** espansa')
+    print(colnames(hypo_mat))
+
+	print('\n\n\n\n')
+
+    # df = data.frame(rep('NA', ncol(adjacency)), row.names=paste(1:ncol(adjacency)))
+    # df$adj = colnames(adjacency)
+    # df$con = colnames(consensus)
+    # df$hypo = colnames(hypo_mat)
+    
+    # print(df)
+
+  # Remove disconnected nodes
+  if(!disconnected) { 
+    del = which(rowSums(hypo_mat)+colSums(hypo_mat) == 0 )
+    w = !(rownames(hypo_mat) %in% names(del))
+    hypo_mat = hypo_mat[w,]
+    hypo_mat = hypo_mat[,w]
+  }
+  
+  cat('\n*** Render graphics: ')
+  
+  attrs = list(node = list())
+      
+  hypo_graph = graph.adjacency(hypo_mat)
+
+  v_names = gsub("_.*$", "", V(hypo_graph)$name)
+  if (!expand) {
+    v_names = gsub("^[*]_(.+)", "*", V(hypo_graph)$name)
+  }
+
+  new_name = list()
+  for(v in v_names) {
+    if(v %in% rownames(all.events)) {
+      n = all.events[v,"event"]
+      new_name = append(new_name, n)
+    } else {
+      new_name = append(new_name, v)
+    }
+  }
+
+  V(hypo_graph)$label = new_name
+  graph <- igraph.to.graphNEL(hypo_graph)
+  
+  node_names = nodes(graph)
+  nAttrs = list()
+  
+  nAttrs$label = V(hypo_graph)$label
+  names(nAttrs$label) = node_names
+  
+  # set a default color
+  nAttrs$fillcolor =  rep('White', length(node_names))
+  names(nAttrs$fillcolor) = node_names
+  
+  # set fontsize
+  nAttrs$fontsize = rep(fontsize, length(node_names))
+  names(nAttrs$fontsize) = node_names
+
+  # set node shape
+  nAttrs$shape = rep('ellipse', length(node_names))
+  names(nAttrs$shape) = node_names
+
+  # set node height
+  nAttrs$height = rep(height, length(node_names))
+  names(nAttrs$height) = node_names
+  
+  # set node width
+  nAttrs$width = rep(width, length(node_names))
+  names(nAttrs$width) = node_names
+  
+  if (!is.na(scale.nodes)) {
+
+    min_p = min(marginal.probabilities)
+    max_p = max(marginal.probabilities)
+
+    for (node in node_names) {
+      prefix = gsub("_.*$", "", node)
+      if ( !(prefix %in% logical_op)) {
+        # Scaling ANDRE
+         increase_coeff = scale.nodes + (marginal.probabilities[node,] - min_p) / (max_p - min_p)
+         nAttrs$width[node] = nAttrs$width[node] * increase_coeff
+         nAttrs$height[node] = nAttrs$height[node] * increase_coeff     
+      }
+    }
+  }
+    
+  # use colors defined in tronco$types
+  w = unlist(lapply(names(nAttrs$fillcolor), function(x){
+    if (x %in% rownames(all.events))
+      all.types[all.events[x,'type'], 'color']
+    else
+      'White'
+    }))
+  nAttrs$fillcolor[] = w
+  
+
+  legend_logic = NULL
+  
+  # set color, size form and shape each logic nodes (if hypos expansion actived)
+  node.type = 'box'
+  if (expand) {
+    
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'OR'
+    if (any(w)) {
+      legend_logic['Exclusivity (soft)'] = 'orange'
+    }
+    nAttrs$fillcolor[which(w)] = 'orange'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = height.logic
+    
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
+    if (any(w)) {
+      legend_logic['Co-occurence'] = 'lightgreen'
+    }
+    nAttrs$fillcolor[which(w)] = 'lightgreen'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = height.logic
+    
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
+    if (any(w)) {
+      legend_logic['Exclusivity (hard)'] = 'red'
+    }
+    nAttrs$fillcolor[which(w)] = 'red'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = height.logic
+
+  }
+  #print(legend_logic)
+  
+  w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == '*'
+  if (any(w)) {
+      legend_logic['Co-occurence'] = 'lightgreen'
+    }
+  nAttrs$fillcolor[which(w)] = 'lightgreen'
+  nAttrs$label[which(w)] = ''
+  nAttrs$shape[which(w)] = node.type
+  nAttrs$height[which(w)] = height.logic
+  nAttrs$width[which(w)] = height.logic
+  
+  # node border to black
+  nAttrs$color = rep("black", length(node_names))
+  names(nAttrs$color) = node_names
+
+  nAttrs$fontcolor = rep("black", length(node_names))
+  names(nAttrs$fontcolor) = node_names
+
+  # set node border based on pathways information
+  legend_pathways = NULL
+  if(!is.null(pathways)) {
+  	
+  	
+  	if(length(pathways.color) == 1 && pathways.color %in% rownames(brewer.pal.info)) 
+  	{
+		cat('Annotating pathways with RColorBrewer color palette', pathways.color, '.\n')
+		cols = brewer.pal(n=length(names(pathways)), name=pathways.color)
+	}
+	else
+	{
+		if(length(pathways.color) != length(names(pathways))) 
+			stop('You did not provide enough colors to annotate', length(names(pathways)), 'pathways. 
+					Either set pathways.color to a valid RColorBrewer palette or provide the explicit correct number of colors.')
+		cols = pathways.color
+	}
+	
+	names(cols) = names(pathways)
+    names(nAttrs$col) = node_names
+
+
+    for(path in names(pathways)) {
+      n = nAttrs$label[which(nAttrs$label %in% pathways[[path]])]
+      nAttrs$color[unlist(names(n))] = cols[[path]]
+      nAttrs$fontcolor[unlist(names(n))] = cols[[path]]
+      if(length(n) > 0) {
+        legend_pathways[path] = cols[[path]]
+      }
+    }
+
+  }
+  
+  # edges properties
+  
+  edge_names = edgeNames(graph)
+  eAttrs = list()
+  
+  # print(edge_names)
+  
+  # set temporary edge shape
+  eAttrs$lty = rep("solid", length(edge_names))
+  names(eAttrs$lty) = edge_names
+  
+  #set edge thikness based on prob
+  eAttrs$lwd = rep(1, length(edge_names))
+  names(eAttrs$lwd) = edge_names
+  
+  #set edge name based on prob
+  eAttrs$label = rep('', length(edge_names))
+  names(eAttrs$label) = edge_names
+  
+  #set fontsize to label.edge.size (default)
+  eAttrs$fontsize = rep(label.edge.size, length(edge_names))
+  names(eAttrs$fontsize) = edge_names
+  
+  #set edge color to black (default)
+  eAttrs$color = rep(edge.color, length(edge_names))
+  names(eAttrs$color) = edge_names
+
+  #set edge arrowsize to 1 (default)
+  eAttrs$arrowsize = rep(1 * edge.cex, length(edge_names))
+  names(eAttrs$arrowsize) = edge_names
+  
+  #record logic edge
+  eAttrs$logic = rep(F, length(edge_names))
+  names(eAttrs$logic) = edge_names
+  
+  cat('done')
+   
+  
+  print('RINOCERONTE') 
+   
+    # for each edge..
+    for(e in edge_names) {
+      edge = unlist(strsplit(e, '~'))
+      from = edge[1]
+      to = edge[2]
+      # print('*(***)')
+      cat('=====FROM', from, '\n')
+      cat('to', to, '\n')
+      # print(consensus[from, to])
+      # print(sort(colnames(consensus)))
+      # print(rownames(consensus))
+      # idx.from = which(rownames())
+      
+      
+      if(from %in% names(hypos_new_name)) 
+      {
+      	print('** FROM')
+      	old.name = hypos_new_name[from]
+      
+      	print(old.name)
+      	idx.from = which(rownames(consensus) == old.name)
+      	# print(rownames(consensus)[idx.from])
+      	from = idx.from
+
+      }
+
+   if(to %in% names(hypos_new_name)) 
+      {
+      print('** TO')
+  	   	old.name = hypos_new_name[to]
+      
+      	print(old.name)
+      	idx.to = which(colnames(consensus) == old.name)
+      	# print(rownames(consensus)[idx.from])
+      	to = idx.to
+      }
+		print(names(hypos_new_name))
+      
+      ### BUG HERE
+     # eAttrs$label[e] = paste0('', consensus[from, to])
+     # eAttrs$lwd[e] = consensus[from, to]
+    }
+	# print(sort(colnames(consensus)))
+
+  # remove arrows from logic node (hidden and)
+  for(e in edge_names) {
+    edge = unlist(strsplit(e, '~'))
+    from = substr(edge[1], start=1, stop=1)
+    to = edge[2]
+    
+    if (from == '*') {
+      eAttrs$logic[e] = T
+      eAttrs$arrowsize[e] = 0
+      eAttrs$color[e] = 'black'
+    } 
+    
+    if (is.logic.node(to)) {
+      eAttrs$logic[e] = T
+      eAttrs$arrowsize[e] = 0
+      eAttrs$color[e] = 'black'
+      
+    }
+  }
+  
+    plot(graph, nodeAttrs=nAttrs, edgeAttrs=eAttrs, main=title, ... )
+  
+  # Adds the legend to the plot
+  # if (legend) {
+    # valid_events = colnames(hypo_mat)[which(colnames(hypo_mat) %in% colnames(adjacency))]
+    # legend_names = unique(all.events[which(rownames(all.events) %in% valid_events), 'type'])
+    # pt_bg = all.types[legend_names, 'color']
+    # legend_colors = rep('black', length(legend_names))
+    # pch = rep(21, length(legend_names))
+    
+    # if (length(legend_logic) > 0) {
+      # pch = c(pch, 0, 0, rep(22, length(legend_logic)))
+      # legend_names = c(legend_names, ' ', expression(bold('Patterns')), names(legend_logic))
+      # legend_colors = c(legend_colors, 'white', 'white', rep('black', length(legend_logic)))
+      # pt_bg = c(pt_bg, 'white', 'white', legend_logic)  
+    # }
+
+    # if (length(legend_pathways) > 0) {
+      # pch = c(pch, 0, 0, rep(21, length(legend_pathways)))
+      # legend_names = c(legend_names, ' ', expression(bold('Pathways')), names(legend_pathways))
+      # pt_bg = c(pt_bg, 'white', 'white', rep('white', length(legend_pathways)))
+      # legend_colors = c(legend_colors, 'white', 'white', legend_pathways)  
+    # }
+    
+    # if (legend.pos == 'bottom') {
+      # legend.pos.l = 'bottomleft'
+      # legend.pos.r = 'bottomright'
+    # } else if (legend.pos == 'top') {
+      # legend.pos.l = 'topleft'
+      # legend.pos.r = 'topright'
+    # } else {
+      # legend.pos.l = locator(1)
+      # legend.pos.r = locator(1)
+    # }
+
+    # legend(legend.pos.r,
+           # legend = legend_names,
+           # title = expression(bold('Events type')),
+           # bty = 'n',
+           # cex = legend.cex,
+           # pt.cex = 1.5 * legend.cex,
+           # pch = pch,
+           # col = legend_colors,
+           # pt.bg = pt_bg)
+
+    # #add thickness legend
+    # valid_names = node_names
+    # if(expand) {
+      # valid_names = node_names[unlist(lapply(node_names, function(x){!is.logic.node(x)}))]
+    # }
+    # valid_names = grep('^[*]_(.+)$', valid_names, value = T, invert=T)
+    # dim = nAttrs$height[valid_names]
+    # prob = marginal_p[valid_names, ]
+    
+    # min = min(dim)
+    # p_min = round(min(prob) * 100, 0)
+    # max = max(dim)
+    # p_max = round(max(prob) * 100, 0)
+    
+    
+    
+     # # if( 'Hypothesis' %in% all.types ) hypo.names = rownames(all.events$types='Hypothesis'))
+  # # else hypo.names = NA
+  
+    # nonhypo.names = setdiff(rownames(all.events, hypo.names)
+    
+    # marginal_p = marginal_p[nonhypo.names, , drop = FALSE]
+
+    # # Get label of the (first) event with minimum marginale 
+    # min.p =   rownames(marginal_p)[which(min(marginal_p) == marginal_p) ]
+    # label.min = as.events(x$data)[ min.p[1] , , drop = FALSE]
+
+    # # Get label of the (first) event with max marginale 
+    # max.p = rownames(marginal_p)[which(max(marginal_p) == marginal_p) ]
+    # label.max = as.events(x$data)[ max.p[1] , ,  drop = FALSE]
+
+    # # Frequency labels
+    # min.freq = round(min(marginal_p) * 100, 0)
+    # max.freq = round(max(marginal_p) * 100, 0)
+    
+    # freq.labels = c( 
+      # paste0(min.freq, ifelse((min.freq < 10 && max.freq > 9), '%  ', '%'), ' ', label.min[, 'event'], ' (min)'),
+      # paste0(max.freq, '% ', label.max[, 'event'], ' (max)')
+    # )
+  
+    # stat.pch = c(21, 21)
+    # pt.bg = c(
+        # as.colors(x$data)[label.min[, 'type']], 
+      # as.colors(x$data)[label.max[, 'type']]
+      # )
+    # col = c('black', 'black')
+        
+    # # Further stats
+	# y = x
+    # if('Hypothesis' %in% as.types(x$data)) 
+    		# y = delete.type(x$data, 'Hypothesis')
+    		
+    # freq.labels = c(freq.labels, 
+      # ' ',
+      # expression(bold('Sample size')),
+      # paste0('n = ', nsamples(y)),
+      # paste0('m = ', nevents(y)),
+      # paste0('|G| = ', ngenes(y))     
+    # ) 
+     
+    # stat.pch = c(stat.pch, 0, 0, 20,  20, 20)
+    # pt.bg = c(pt.bg, 'white', 'white', rep('black', 3))
+    # col = c(col, 'white', 'white', rep('black', 3)) 
+    
+    # legend(legend.pos.l,
+           # legend = freq.labels,
+           # title = expression(bold('Events frequency')),
+           # bty = 'n',
+           # box.lty = 3,
+           # box.lwd = .3,
+           # pch = stat.pch,
+           # pt.cex = 1.5  * legend.cex,
+           # ncol = 1,
+           # pt.bg = pt.bg,
+           # cex = legend.cex,
+           # col = col)
+       
+  # }
+  
+  if(!is.na(file))
+  {
+    dev.copy2pdf(file = file)
+  }
+  # cat('\n')
+}
