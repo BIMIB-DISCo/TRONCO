@@ -106,6 +106,11 @@ hypotheses.expansion <- function(input_matrix,
       if (length(which(input_matrix[h, ] == 1)) != 0) {
         display.down = TRUE
       }
+      
+      print('***')
+      print(h)
+      print(display.up)
+      print(display.down)
 
       # display up hypo and reconnect
       if (display.up) {
@@ -142,7 +147,9 @@ hypotheses.expansion <- function(input_matrix,
 
       
       # display down hypo
-      if (display.up || display.down) {
+     # if (display.up || display.down) {
+     if (display.down) {
+     
 
         # edge to reconstruct
         h_edge <- input_matrix[h,]
@@ -156,6 +163,7 @@ hypotheses.expansion <- function(input_matrix,
 
       # reconnect down hypo
       if (display.down) {
+      	# print(final_node)
         # recreate lost edge
         for (node in final_node) {
           min_graph <- min_graph + edge(initial_node, node)
