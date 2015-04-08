@@ -58,10 +58,10 @@ set.seed("12345");
 caprese.parametric = tronco.bootstrap(caprese,type="parametric");
 
 #perform the reconstruction with CAPRI
-data = hypothesis.add(data,"H1",OR(XOR(c("8q+","Gain"),c("4q-","Loss")),AND(c("3q+","Gain"),c("5q-","Loss")),c("8p-","Loss"),c("1q+","Gain")),c("Xp-","Loss"));
-data = hypothesis.add(data,"H2",AND(XOR(c("8q+","Gain"),c("4q-","Loss")),OR(c("3q+","Gain"),c("5q-","Loss")),c("8p-","Loss"),c("1q+","Gain")),c("Xp-","Loss"));
-data = hypothesis.add(data,"H3",OR(XOR(c("8q+","Gain"),c("4q-","Loss")),c("8p-","Loss")),"*");
-data = hypothesis.add(data,"H4",OR(AND(c("8q+","Gain"),c("4q-","Loss")),c("8p-","Loss")),c("1q+","Gain"),c("Xp-","Loss"));
+data = hypothesis.add(data,"H1",pvalue=0.05,OR(XOR(c("8q+","Gain"),c("4q-","Loss")),AND(c("3q+","Gain"),c("5q-","Loss")),c("8p-","Loss"),c("1q+","Gain")),c("Xp-","Loss"));
+data = hypothesis.add(data,"H2",pvalue=0.05,AND(XOR(c("8q+","Gain"),c("4q-","Loss")),OR(c("3q+","Gain"),c("5q-","Loss")),c("8p-","Loss"),c("1q+","Gain")),c("Xp-","Loss"));
+data = hypothesis.add(data,"H3",pvalue=0.05,OR(XOR(c("8q+","Gain"),c("4q-","Loss")),c("8p-","Loss")),"*");
+data = hypothesis.add(data,"H4",pvalue=0.05,OR(AND(c("8q+","Gain"),c("4q-","Loss")),c("8p-","Loss")),c("1q+","Gain"),c("Xp-","Loss"));
 capri.with.bootstrap.no.estimations = tronco.capri(data);
 capri.without.bootstrap = tronco.capri(data,do.boot=FALSE,do.estimation=TRUE);
 

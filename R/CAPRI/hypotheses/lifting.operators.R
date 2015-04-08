@@ -85,13 +85,15 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 		result = list(curr_dataset=curr_dataset,
                   hypotheses=hypotheses,
                   function.name=function.name,
-                  function.inputs=function.inputs)
+                  function.inputs=function.inputs,
+                  tests = pairwise.fisher.test(curr_dataset))
     
 		#save the new edges
 		for(k in 1:length(result$function.inputs)) {
 			lifting.edges = rbind(lifting.edges, c(result$function.inputs[[k]], result$function.name))
 			assign("lifting.edges", lifting.edges, envir=.GlobalEnv)
 		}
+		
 		return(result)
 	} else {
 		stop("Either the dataset or the formula not provided! No hypothesis will be created.")
@@ -105,6 +107,7 @@ function( ... ) {
 	# look for the global variables named lifting.dataset and lifting.annotations
 	dataset = lifting.dataset;
 	annotations = lifting.annotations;
+	pvalue = lifting.pvalue;
   	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
 		# get the vector of the clauses of the formula from the dataset
 		result = aux.log(dataset,annotations, "AND" ,...);
@@ -112,6 +115,26 @@ function( ... ) {
 		hypotheses = result$hypotheses;
 		function.name = result$function.name;
 		function.inputs = result$function.inputs;
+		
+		#verify the fisher exact tests
+		fisher.pvalues = vector();
+		if(length(result$tests)>0) {
+			for(i in 1:length(result$tests)) {
+				curr.test = result$tests[[i]];
+				if(curr.test[2]<=0) {
+					curr.pvalue = 1;
+				}
+				else {
+					curr.pvalue = curr.test[1];
+				}
+				if(curr.pvalue>pvalue) {
+					stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
+				}
+				fisher.pvalues = append(fisher.pvalues,curr.pvalue)
+			}
+		}
+		#print(fisher.pvalues)
+		
 		# evaluate the AND operator
 		formula = rep(0,nrow(dataset));
 		for (i in 1:nrow(dataset)) {
@@ -139,6 +162,7 @@ function( ... ) {
 	#look for the global variables named lifting.dataset and lifting.annotations
 	dataset = lifting.dataset;
 	annotations = lifting.annotations;
+	pvalue = lifting.pvalue;
 	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
 		#get the vector of the clauses of the formula from the dataset
 		result = aux.log(dataset,annotations,"OR",...);
@@ -146,7 +170,22 @@ function( ... ) {
 		hypotheses = result$hypotheses;
 		function.name = result$function.name;
 		function.inputs = result$function.inputs;
-		#evaluate the OR operator
+		
+		#verify the fisher exact tests
+		fisher.pvalues = vector();
+		if(length(result$tests)>0) {
+			for(i in 1:length(result$tests)) {
+				curr.test = result$tests[[i]];
+				curr.pvalue = 1 - curr.test[1];
+				if(curr.pvalue>pvalue) {
+					stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
+				}
+				fisher.pvalues = append(fisher.pvalues,curr.pvalue)
+			}
+		}
+		#print(fisher.pvalues)
+		
+		# evaluate the OR operator
 		formula = rep(0,nrow(dataset));
 		for (i in 1:nrow(dataset)) {
 			formula[i] = sum(curr_dataset[i,]);
@@ -170,6 +209,7 @@ function( ... ) {
 	#look for the global variables named lifting.dataset and lifting.annotations
 	dataset = lifting.dataset;
 	annotations = lifting.annotations;
+	pvalue = lifting.pvalue;
 	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
 		#get the vector of the clauses of the formula from the dataset
 		result = aux.log(dataset,annotations,"XOR",...);
@@ -177,7 +217,27 @@ function( ... ) {
 		hypotheses = result$hypotheses;
 		function.name = result$function.name;
 		function.inputs = result$function.inputs;
-		#evaluate the XOR operator
+		
+		#verify the fisher exact tests
+		fisher.pvalues = vector();
+		if(length(result$tests)>0) {
+			for(i in 1:length(result$tests)) {
+				curr.test = result$tests[[i]];
+				if(curr.test[2]>=0) {
+					curr.pvalue = 1;
+				}
+				else {
+					curr.pvalue = curr.test[1];
+				}
+				if(curr.pvalue>pvalue) {
+					stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
+				}
+				fisher.pvalues = append(fisher.pvalues,curr.pvalue)
+			}
+		}
+		#print(fisher.pvalues)
+		
+		# evaluate the XOR operator
 		formula = rep(0,nrow(dataset));
 		for (i in 1:nrow(dataset)) {
 			formula[i] = sum(curr_dataset[i,]);
@@ -193,6 +253,106 @@ function( ... ) {
 		stop("Either the dataset or the formula not provided! No hypothesis will be created.");
 	}
 	return(NA);
+}
+
+testing = function(data, g1, g2) {
+
+	# Dataframe di tutto il dataset
+	df = data.frame(row.names=as.samples(data))
+	df$x = rowSums(as.gene(data, genes=g1))
+	df$y = rowSums(as.gene(data, genes=g2))
+	
+	# Lifting xor
+	df$xor = df$x + df$y
+	df$xor[ df$xor > 1] = 0
+	
+	# Lifting or
+	df$or = df$x + df$y
+	df$or[ df$or > 1] = 1
+	
+	# Lifting and
+	df$and = df$x + df$y
+	df$and[ df$and < 2] = 0
+	df$and[ df$and == 2] = 1
+	
+	# Nomi per accedere successivamente 
+	names(df$x) = g1
+	names(df$y) = g2
+	names(df$xor) = 'xor'
+	names(df$or) = 'or'
+	names(df$and) = 'and'
+	
+	cat('DATASET\n')
+	print(df)
+	
+	# Tabella di contingenza 2x2
+	table.xor = rbind(
+		c(nrow(df) - sum(df$or), sum(df$or - df$y)),
+		c(sum(df$or - df$x), sum(df$and))
+	)
+	
+	colnames(table.xor) = c(paste0('-', g1), paste0('+', g1))
+	rownames(table.xor) = c(paste0('-', g2), paste0('+', g2))
+	
+	cat('\nCATEGORICAL\n')
+	print(table.xor)
+	
+	# Fisher 2-sided
+	test = fisher.test(table.xor)
+	
+	# p-value e log dell’odds ratio
+	cat('p-value (2-sided): ', test$p.value, '\n')
+	cat('log(odds ratio): ', log(test$estimate['odds ratio']))
+}
+
+# performs pairwise exact fisher test
+pairwise.fisher.test = function(data) {
+	
+	# structure to save the results
+	results = vector();
+	
+	if(ncol(data)>1) {
+		for(i in 1:ncol(data)) {
+			for(j in i:ncol(data)) {
+				if(i!=j) {
+					
+					df = data[,c(i,j)]
+					df_x = data[,1]
+					df_y = data[,2]
+					
+					# Lifting xor
+					df_xor = df_x + df_y
+					df_xor[ df_xor > 1] = 0
+					
+					# Lifting or
+					df_or = df_x + df_y
+					df_or[ df_or > 1] = 1
+					
+					# Lifting and
+					df_and = df_x + df_y
+					df_and[ df_and < 2] = 0
+					df_and[ df_and == 2] = 1
+					
+					# 2x2 contingency table
+					table.xor = rbind(
+						c(nrow(df) - sum(df_or), sum(df_or - df_y)),
+						c(sum(df_or - df_x), sum(df_and))
+					)
+					
+					# Fisher 2-sided
+					test = fisher.test(table.xor)
+					
+					# save the results
+					curr_result = c(test$p.value,log(test$estimate['odds ratio']))
+					results = append(results, list(curr_result))
+					
+				}
+			}
+		}
+	}
+	
+	return(results)
+	
 }
 
 #### end of file -- lifting.operators.R

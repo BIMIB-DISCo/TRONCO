@@ -8,7 +8,7 @@
 
 # Add a new hypothesis by creating a new causal event and adding it to the dateset
 "hypothesis.add" <-
-  function( data, label.formula, lifted.formula,  ... ) {
+  function( data, label.formula, pvalue = 0.5, lifted.formula,  ... ) {
 
     label.effect = list(...);
     #print(label.effect)
@@ -64,6 +64,15 @@
       }
       assign("lifting.edges",NULL,envir=.GlobalEnv);
       
+      # I need a global variable to save the pvalue to be used for the fisher exact test
+      # if there is already a global variable named lifting.pvalue, make the backup of it
+      do.roll.back.lifting.pvalue = FALSE;      
+      if(exists("lifting.pvalue")) {
+        roll.back.lifting.pvalue = lifting.pvalue;
+        do.roll.back.lifting.pvalue = TRUE;
+      }
+      assign("lifting.pvalue",pvalue,envir=.GlobalEnv);
+      
       #print('lifted.formula')
       #print(lifted.formula)
       
@@ -74,7 +83,6 @@
       # save the lifted dataset and its hypotheses for the current formula
       curr_formula = lifted.formula$formula;
       curr_hypotheses = lifted.formula$hypotheses;
-      
 
 
       #print('cur formula')
@@ -107,6 +115,14 @@
       else {
         rm(lifting.edges,pos=".GlobalEnv");
       }
+      # roll back to the previous value of the global variable lifting.pvalue if any or remove it
+      if(do.roll.back.lifting.pvalue) {
+        assign("lifting.pvalue",roll.back.lifting.pvalue,envir=.GlobalEnv);
+      }
+      else {
+        rm(lifting.pvalue,pos=".GlobalEnv");
+      }
+      
       # set the hypotheses number
       if(!is.na(hypotheses[1])) {
         num.hypotheses = hypotheses$num.hypotheses;
