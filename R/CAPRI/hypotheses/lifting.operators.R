@@ -82,6 +82,7 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 			}
 		}
     
+    		# print(curr_dataset)
 		result = list(curr_dataset=curr_dataset,
                   hypotheses=hypotheses,
                   function.name=function.name,
@@ -96,7 +97,7 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 		
 		return(result)
 	} else {
-		stop("Either the dataset or the formula not provided! No hypothesis will be created.")
+		stop("[ERR] Either the dataset or the formula not provided! No hypothesis will be created.")
 	}
 	return(NA)
 }
@@ -121,16 +122,23 @@ function( ... ) {
 		if(length(result$tests)>0) {
 			for(i in 1:length(result$tests)) {
 				curr.test = result$tests[[i]];
-				if(curr.test[2]<=0) {
-					curr.pvalue = 1;
-				}
-				else {
-					curr.pvalue = curr.test[1];
-				}
-				if(curr.pvalue>pvalue) {
-					stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
-				}
-				fisher.pvalues = append(fisher.pvalues,curr.pvalue)
+				odds.ratio = curr.test[2]
+				p.value = curr.test[1]
+	
+				# print(p.value)
+				# if(p.value > pvalue) stop('[ERR] AND: Fisher pvalue >', pvalue, ' (p=', p.value, ') - statistics for 2 genes is not significant.') 			
+				# if(odds.ratio <= 0) stop('[ERR] AND: Odds ratio <= 0 (', odds.ratio, ') - 2 of these genes suggest an exclusivity trend.')
+	
+				# if(curr.test[2]<=0) {
+					# curr.pvalue = 1;
+				# }
+				# else {
+					# curr.pvalue = curr.test[1];
+				# }
+				# if(curr.pvalue>pvalue) {
+					# stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
+				# }
+				fisher.pvalues = append(fisher.pvalues, p.value)
 			}
 		}
 		#print(fisher.pvalues)
@@ -176,11 +184,14 @@ function( ... ) {
 		if(length(result$tests)>0) {
 			for(i in 1:length(result$tests)) {
 				curr.test = result$tests[[i]];
-				curr.pvalue = 1 - curr.test[1];
-				if(curr.pvalue>pvalue) {
-					stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
-				}
-				fisher.pvalues = append(fisher.pvalues,curr.pvalue)
+				p.value = 1 - curr.test[1];
+	
+				# print(curr.test)
+				# if(p.value > pvalue) stop('[ERR] OR: Fisher pvalue >', pvalue, ' (p=', curr.pvalue, ') - statistics for 2 genes is not significant.') 				
+				# if(curr.pvalue>pvalue) {
+					# stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
+				# }
+				fisher.pvalues = append(fisher.pvalues, p.value)
 			}
 		}
 		#print(fisher.pvalues)
@@ -223,16 +234,23 @@ function( ... ) {
 		if(length(result$tests)>0) {
 			for(i in 1:length(result$tests)) {
 				curr.test = result$tests[[i]];
-				if(curr.test[2]>=0) {
-					curr.pvalue = 1;
-				}
-				else {
-					curr.pvalue = curr.test[1];
-				}
-				if(curr.pvalue>pvalue) {
-					stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
-				}
-				fisher.pvalues = append(fisher.pvalues,curr.pvalue)
+				odds.ratio = curr.test[2]
+				p.value = curr.test[1]
+		
+				# if(p.value > pvalue) stop('[ERR] XOR: Fisher pvalue >', pvalue, '(p=', p.value, ') - statistics for 2 genes is not significant.') 			
+				# if(odds.ratio >= 0) stop('[ERR] XOR: Odds ratio >= 0 (', odds.ratio, ') - 2 of these genes suggest a co-occurrence trend.')
+
+
+# # 				if(curr.test[2]>=0) {
+					# curr.pvalue = 1;
+				# }
+				# else {
+					# curr.pvalue = curr.test[1];
+				# }
+				# if(curr.pvalue>pvalue) {
+					# stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
+				# }
+				fisher.pvalues = append(fisher.pvalues, p.value)
 			}
 		}
 		#print(fisher.pvalues)
@@ -346,6 +364,12 @@ pairwise.fisher.test = function(data) {
 					curr_result = c(test$p.value,log(test$estimate['odds ratio']))
 					results = append(results, list(curr_result))
 					
+					# print('TESTING')
+					# print(colnames(data)[i])
+					# print(colnames(data)[j])
+					# print(df)
+					# print(table.xor)
+					# print(test)
 				}
 			}
 		}

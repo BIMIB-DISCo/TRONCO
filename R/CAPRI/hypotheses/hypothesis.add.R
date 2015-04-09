@@ -8,8 +8,11 @@
 
 # Add a new hypothesis by creating a new causal event and adding it to the dateset
 "hypothesis.add" <-
-  function( data, label.formula, pvalue = 0.5, lifted.formula,  ... ) {
+  # function( data, label.formula, pvalue = 0.05, lifted.formula,  ... ) {
+  function( data, label.formula, lifted.formula,  ... ) {
 
+	pvalue = 0.05
+	
     label.effect = list(...);
     #print(label.effect)
     

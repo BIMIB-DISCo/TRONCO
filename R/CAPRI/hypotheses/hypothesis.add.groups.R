@@ -1,6 +1,6 @@
 # commenti
 
-hypothesis.add.group = function(x, FUN, group, dim.max = length(group), min.prob = 0, ...) {
+hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(group), min.prob = 0, ...) {
 	op = deparse(substitute(FUN))
 
 	#print(length(unlist(group)))
@@ -9,10 +9,12 @@ hypothesis.add.group = function(x, FUN, group, dim.max = length(group), min.prob
 	effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
 	effect = paste(effect, collapse = ", ")
 
+	
 	cat("*** Adding Group Hypotheses\n")
 	cat('Group:', paste(group, collapse = ", ", sep = ""))
 	cat(' Function:', op)
 	cat(' Effect:', effect)
+	flush.console()
 
 	if(min.prob > 0)
 	{
@@ -48,7 +50,10 @@ hypothesis.add.group = function(x, FUN, group, dim.max = length(group), min.prob
 	}
 
 	max.groupsize = min(dim.max, ngroup)
-	cat(' Maximum pattern size:', max.groupsize, '\n')
+	min.groupsize = max(2, dim.min)
+	if(dim.min > dim.max) stop('ERROR - dim.min > dim.max')
+	if(min.groupsize > max.groupsize) stop('ERROR - min.groupsize > max.groupsize')
+	cat(' Min/Maximum pattern size: min =', max.groupsize,' -  MAX =', max.groupsize, '\n')
 	
 	if (length(hom.group) > 0) 
 		cat("[Functional homologous] Genes with multiple events: ", paste(unlist(hom.group), collapse=', ', sep=''), "\n")
@@ -61,34 +66,38 @@ hypothesis.add.group = function(x, FUN, group, dim.max = length(group), min.prob
 	
 	# create a progress bar
 	cat('Generating ', tot.patterns ,'patterns.\n')		
-	pb <- txtProgressBar(0, tot.patterns, style = 3)
+	# pb <- txtProgressBar(0, tot.patterns, style = 3)
 	flush.console()
 
 	pbPos = 0
-	for (i in 2:max.groupsize) {
+	for (i in min.groupsize:max.groupsize) {
 		gr = combn(unlist(group), i)
+	
+		print(gr)
+		
 		
 		for (j in 1:ncol(gr)) {
 			genes = as.list(gr[, j])
 
 			#start the progress bar
 			pbPos = pbPos + 1
-			setTxtProgressBar(pb, pbPos)
+			# setTxtProgressBar(pb, pbPos)
 
 			hypo.name = paste(unlist(genes), sep = "_", collapse = "_")
 			hypo.genes = paste(lapply(genes, function(g, hom.group) {
 				gene.hom(g, hom.group)
 			}, hom.group), collapse = ", ")
 
-			
 
 				hypo.add = paste0("hypothesis.add(x, label.formula = '", op, "_", hypo.name, "', lifted.formula = ", op, "(", hypo.genes, "), ", effect, ")")
 
-				# cat('*** Evaluating ', hypo.add, '\n')
+
+				cat('*** Evaluating ', hypo.add, '\n')
 				
 				err = tryCatch({
 					x = eval(parse(text = hypo.add))
 				}, error = function(cond) {
+					print(cond)
 					m = paste("Error on", hypo.add, ".\n", cond)
 					code = strsplit(as.character(cond), " ")[[1]]
 					idx.errcode = which(code == "[ERR]", arr.ind = TRUE) + 1
@@ -109,7 +118,7 @@ hypothesis.add.group = function(x, FUN, group, dim.max = length(group), min.prob
 			}
 	}
 	# close progress bar
-	close(pb)
+	# close(pb)
 
 
 	if (nrow(error.summary) > 0) {
