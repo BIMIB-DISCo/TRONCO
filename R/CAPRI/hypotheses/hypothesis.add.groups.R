@@ -100,7 +100,7 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 				err = tryCatch({
 					x = eval(parse(text = hypo.add))
 				}, error = function(cond) {
-					print(cond)
+					# print(cond)
 					m = paste("Error on", hypo.add, ".\n", cond)
 					code = strsplit(as.character(cond), " ")[[1]]
 					idx.errcode = which(code == "[ERR]", arr.ind = TRUE) + 1
@@ -147,12 +147,14 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 	}, x)
 	hom.group = genes[unlist(hom.group)]
 
-	if (length(hom.group) > 0) 
-		cat("[Functional homologous] Genes with multiple events: ", paste(unlist(hom.group), collapse=', ', sep=''), "\n")
+	cat("*** Adding hyoptheses for Homolgous Patterns\n")
+	cat('Genes:', paste(hom.group, collapse = ", ", sep = ""))
+	cat(' Function:', FUN)
+	cat(' Effect:', effect, '\n')
+	flush.console()
 	
 	# create a progress bar
 	pb <- txtProgressBar(0, length(hom.group), style = 3)
-
 
 	error.summary = data.frame()
 
