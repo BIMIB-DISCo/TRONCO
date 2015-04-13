@@ -133,13 +133,13 @@ hypotheses.expansion <- function(input_matrix,
 
         # edge to reconstruct
         h_edge <- input_matrix[, h]
-        initial_node <- names(h_edge)[which(h_edge==1)]
+        initial_node_up <- names(h_edge)[which(h_edge==1)]
 
         # add this graph to main graph
         min_graph = graph.union(min_graph, hypo_graph_pre)
 
         # recreate lost edge
-        for (node in initial_node) {
+        for (node in initial_node_up) {
           min_graph <- min_graph + edge(node, final_node)
         }
 
