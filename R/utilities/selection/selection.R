@@ -39,9 +39,10 @@
     }
     close(pb)
     
-    nev = min(10, nrow(as.events(x)[valid, ]))
-    cat(paste('Selected ', nrow(as.events(x)[valid, ]), ' events: showing ', nev, '.\n', sep=''))
-    print(head(as.events(x)[valid, ], n=nev))
+    # nev = min(10, nrow(as.events(x)[valid, ]))
+    # cat(paste('Selected ', nrow(as.events(x)[valid, ]), ' events: showing ', nev, '.\n', sep=''))
+    # print(head(as.events(x)[valid, ], n=nev))
+    cat(paste('Selected ', nrow(as.events(x)[valid, ]), ' events.\n', sep=''))
   }
   
   if(!any(is.na(filter.in.names)))
@@ -49,7 +50,7 @@
     shown = min(5, length(filter.in.names))
     
     cat(paste('\n[filter.in] Genes hold: ', 
-              sep='', paste(filter.in.names[1:shown], collapse=', '), '(', shown, ' shown)'))
+              sep='', paste(filter.in.names[1:shown], collapse=', '), ' ... '))
     
     colnames = which(x$annotations[,2] %in% filter.in.names, arr.ind=T)
     
@@ -64,10 +65,10 @@
   
   if(!any(is.na(filter.out.names)))
   {
-    shown = min(5, length(filter.out.names))
+    # shown = min(5, length(filter.out.names))
     
     cat(paste('\n[filter.out] Genes dropped: ', 
-              sep='', paste(filter.out.names[1:shown], collapse=', '), '(', shown, ' shown)'))
+              sep='', paste(filter.out.names[1:shown], collapse=', '), ' ... '))
     
     colnames = which(x$annotations[,2] %in% filter.out.names, arr.ind=T)
     cat(paste(' [', length(colnames), '/', length(filter.out.names), ' found].', sep=''))

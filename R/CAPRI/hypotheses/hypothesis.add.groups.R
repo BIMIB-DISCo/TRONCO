@@ -13,8 +13,11 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 	cat("*** Adding Group Hypotheses\n")
 	cat('Group:', paste(group, collapse = ", ", sep = ""))
 	cat(' Function:', op)
-	cat(' Effect:', effect)
+	cat(' Effect:', effect, '\n')
 	flush.console()
+	
+	# group %in% as.events(x)[, 'event']
+
 
 	if(min.prob > 0)
 	{
@@ -53,19 +56,19 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 	min.groupsize = max(2, dim.min)
 	if(dim.min > dim.max) stop('ERROR - dim.min > dim.max')
 	if(min.groupsize > max.groupsize) stop('ERROR - min.groupsize > max.groupsize')
-	cat(' Min/Maximum pattern size: min =', max.groupsize,' -  MAX =', max.groupsize, '\n')
 	
 	if (length(hom.group) > 0) 
-		cat("[Functional homologous] Genes with multiple events: ", paste(unlist(hom.group), collapse=', ', sep=''), "\n")
+		cat("Genes with multiple events: ", paste(unlist(hom.group), collapse=', ', sep=''), "\n")
 	
 	error.summary = data.frame()
 
 	# Get an analytical formula... !
 	tot.patterns = 0
-	for (i in 2:max.groupsize) tot.patterns = tot.patterns + ncol(combn(unlist(group), i))
+	for (i in min.groupsize:max.groupsize) tot.patterns = tot.patterns + ncol(combn(unlist(group), i))
 	
 	# create a progress bar
-	cat('Generating ', tot.patterns ,'patterns.\n')		
+	cat('Generating ', tot.patterns ,'patterns [size: min =', max.groupsize,' -  max =', max.groupsize, '].\n')
+		
 	# pb <- txtProgressBar(0, tot.patterns, style = 3)
 	flush.console()
 
@@ -73,7 +76,7 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 	for (i in min.groupsize:max.groupsize) {
 		gr = combn(unlist(group), i)
 	
-		print(gr)
+		# print(gr)
 		
 		
 		for (j in 1:ncol(gr)) {
@@ -92,7 +95,7 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 				hypo.add = paste0("hypothesis.add(x, label.formula = '", op, "_", hypo.name, "', lifted.formula = ", op, "(", hypo.genes, "), ", effect, ")")
 
 
-				cat('*** Evaluating ', hypo.add, '\n')
+				# cat('*** Evaluating ', hypo.add, '\n')
 				
 				err = tryCatch({
 					x = eval(parse(text = hypo.add))
