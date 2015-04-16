@@ -107,10 +107,10 @@ hypotheses.expansion <- function(input_matrix,
         display.down = TRUE
       }
       
-      print('***')
-      print(h)
-      print(display.up)
-      print(display.down)
+      # print('***')
+      # print(h)
+      # print(display.up)
+      # print(display.down)
 
       # display up hypo and reconnect
       if (display.up) {
@@ -374,7 +374,6 @@ tronco.plot = function(x,
   }
   
   logical_op = list("AND", "OR", "NOT", "XOR", "*", "UPAND", "UPOR", "UPXOR")
-  #logical_op = list("", "", "", "")
  
   sec = FALSE
   if(!is.null(secondary)) {
@@ -595,9 +594,9 @@ tronco.plot = function(x,
     
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
     if (any(w)) {
-      legend_logic['Co-occurence'] = 'lightgreen'
+      legend_logic['Co-occurence'] = 'darkgreen'
     }
-    nAttrs$fillcolor[which(w)] = 'lightgreen'
+    nAttrs$fillcolor[which(w)] = 'darkgreen'
     nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = node.type
     nAttrs$height[which(w)] = height.logic
@@ -618,7 +617,7 @@ tronco.plot = function(x,
       legend_logic['Exclusivity (soft)'] = 'orange'
     }
     nAttrs$fillcolor[which(w)] = 'orange'
-    nAttrs$label[which(w)] = 'X'
+    nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = node.type
     nAttrs$height[which(w)] = height.logic
     nAttrs$width[which(w)] = height.logic
@@ -628,7 +627,7 @@ tronco.plot = function(x,
       legend_logic['Co-occurence'] = 'lightgreen'
     }
     nAttrs$fillcolor[which(w)] = 'lightgreen'
-    nAttrs$label[which(w)] = 'X'
+    nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = node.type
     nAttrs$height[which(w)] = height.logic
     nAttrs$width[which(w)] = height.logic
@@ -638,7 +637,7 @@ tronco.plot = function(x,
       legend_logic['Exclusivity (hard)'] = 'red'
     }
     nAttrs$fillcolor[which(w)] = 'red'
-    nAttrs$label[which(w)] = 'X'
+    nAttrs$label[which(w)] = ''
     nAttrs$shape[which(w)] = node.type
     nAttrs$height[which(w)] = height.logic
     nAttrs$width[which(w)] = height.logic
@@ -648,9 +647,9 @@ tronco.plot = function(x,
   
   w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == '*'
   if (any(w)) {
-      legend_logic['Co-occurence'] = 'lightgreen'
+      legend_logic['Co-occurence'] = 'darkgreen'
     }
-  nAttrs$fillcolor[which(w)] = 'lightgreen'
+  nAttrs$fillcolor[which(w)] = 'darkgreen'
   nAttrs$label[which(w)] = ''
   nAttrs$shape[which(w)] = node.type
   nAttrs$height[which(w)] = height.logic
@@ -806,17 +805,58 @@ tronco.plot = function(x,
     edge = unlist(strsplit(e, '~'))
     from = edge[1]
     to = edge[2]
+    
+    # print(e)
+    # print(is.logic.node.down(to))
+    # print(is.logic.node.up(from))
         
     if (is.logic.node.down(to)) {
       eAttrs$logic[e] = T
       eAttrs$arrowsize[e] = 0
-      eAttrs$color[e] = 'black'
+     
+	# print(from)
+	# print(substr(to, start=1, stop=2))
+	 # eAttrs$color[e] = 'red'
+	 
+	 if(substr(to, start=1, stop=2) == 'OR')
+		 eAttrs$color[e] = 'orange'
+	 if(substr(to, start=1, stop=3) == 'XOR')
+		 eAttrs$color[e] = 'red'
+	 if(substr(to, start=1, stop=3) == 'AND')
+		 eAttrs$color[e] = 'darkgreen'
+           
+     eAttrs$lty[e] = 'dashed'
+
+	nAttrs$shape[to] = 'circle' 
+	# nAttrs$shape[to] = function(w, ...) {
+		# for(i in 1:3) points(w, cex=i, ...)
+	# }
+	
+	# print(nAttrs)
+
     }
 
     if (is.logic.node.up(from)) {
       eAttrs$logic[e] = T
       eAttrs$arrowsize[e] = 0
-      eAttrs$color[e] = 'black'
+      # eAttrs$color[e] = 'black'
+      
+      eAttrs$lty[e] = 'dashed'
+      
+     	# print(substr(to, start=1, stop=2))
+     	# print(substr(from, start=1, stop=2))
+ 	# print(from)
+ 	# print(to)
+ 
+ 
+      if(substr(from, start=1, stop=4) == 'UPOR')
+		 eAttrs$color[e] = 'orange'
+	 if(substr(from, start=1, stop=5) == 'UPXOR')
+		 eAttrs$color[e] = 'red'
+	 if(substr(from, start=1, stop=5) == 'UPAND')
+		 eAttrs$color[e] = 'darkgreen'
+     
+      
     } else if(substr(from, start=1, stop=1) == '*') {
       eAttrs$logic[e] = T
       eAttrs$arrowsize[e] = 0
@@ -1075,7 +1115,7 @@ tronco.consensus.plot = function(models,
     stop("Models missing, usage: ... ...", call.=FALSE);
   }
     
-  logical_op = list("AND", "OR", "NOT", "XOR", "*")
+  logical_op = list("AND", "OR", "NOT", "XOR", "*", "UPAND", "UPOR", "UPXOR")
   
   
 smaller.to.bigger = function(m,cn)
@@ -1151,9 +1191,9 @@ smaller.to.bigger = function(m,cn)
 	cat('Found', length(hstruct), 'hypotheses\n')
 	hstruct = as.environment(hstruct)
 
-	print('originale ordine')	
-	     print(colnames(adjacency))
-     print('**')
+	# print('originale ordine')	
+	     # print(colnames(adjacency))
+     # print('**')
     # print(colnames(consensus))
      # print('**')
 
@@ -1167,26 +1207,26 @@ smaller.to.bigger = function(m,cn)
 	
 	all.events = all.events[colnames(adjacency), ]
 
-	print('nuovo ordine')	
+	# print('nuovo ordine')	
 
-	     print(colnames(adjacency))
-     print('**')
+	     # print(colnames(adjacency))
+     # print('**')
     # print(colnames(consensus))
      # print('**')
 	
 	# Expand hypotheses
     expansion = hypotheses.expansion(adjacency, 
-                                     hstruct, 
-                                     hidden.and, 
-                                     expand)
+                                     map = hstruct, 
+                                     hidden_and = hidden.and, 
+                                     expand = expand)
     hypo_mat = expansion[[1]]
     hypos_new_name = expansion[[2]]
-    print(hypos_new_name)
+    # print(hypos_new_name)
     
-    print('** espansa')
-    print(colnames(hypo_mat))
+    # print('** espansa')
+    # print(colnames(hypo_mat))
 
-	print('\n\n\n\n')
+	# print('\n\n\n\n')
 
     # df = data.frame(rep('NA', ncol(adjacency)), row.names=paste(1:ncol(adjacency)))
     # df$adj = colnames(adjacency)
@@ -1297,6 +1337,36 @@ smaller.to.bigger = function(m,cn)
     
     w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'AND'
     if (any(w)) {
+      legend_logic['Co-occurence'] = 'darkgreen'
+    }
+    nAttrs$fillcolor[which(w)] = 'darkgreen'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = height.logic
+    
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
+    if (any(w)) {
+      legend_logic['Exclusivity (hard)'] = 'red'
+    }
+    nAttrs$fillcolor[which(w)] = 'red'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = height.logic
+
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'UPOR'
+    if (any(w)) {
+      legend_logic['Exclusivity (soft)'] = 'orange'
+    }
+    nAttrs$fillcolor[which(w)] = 'orange'
+    nAttrs$label[which(w)] = ''
+    nAttrs$shape[which(w)] = node.type
+    nAttrs$height[which(w)] = height.logic
+    nAttrs$width[which(w)] = height.logic
+    
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'UPAND'
+    if (any(w)) {
       legend_logic['Co-occurence'] = 'lightgreen'
     }
     nAttrs$fillcolor[which(w)] = 'lightgreen'
@@ -1305,7 +1375,7 @@ smaller.to.bigger = function(m,cn)
     nAttrs$height[which(w)] = height.logic
     nAttrs$width[which(w)] = height.logic
     
-    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'XOR'
+    w = unlist(nAttrs$label[names(nAttrs$fillcolor)]) == 'UPXOR'
     if (any(w)) {
       legend_logic['Exclusivity (hard)'] = 'red'
     }
@@ -1403,10 +1473,10 @@ smaller.to.bigger = function(m,cn)
   eAttrs$logic = rep(F, length(edge_names))
   names(eAttrs$logic) = edge_names
   
-  cat('done')
+  # cat('done')
    
   
-  print('RINOCERONTE') 
+  # print('RINOCERONTE') 
    
     # for each edge..
     for(e in edge_names) {
@@ -1414,8 +1484,8 @@ smaller.to.bigger = function(m,cn)
       from = edge[1]
       to = edge[2]
       # print('*(***)')
-      cat('=====FROM', from, '\n')
-      cat('to', to, '\n')
+      # cat('=====FROM', from, '\n')
+      # cat('to', to, '\n')
       # print(consensus[from, to])
       # print(sort(colnames(consensus)))
       # print(rownames(consensus))
@@ -1424,10 +1494,10 @@ smaller.to.bigger = function(m,cn)
       
       if(from %in% names(hypos_new_name)) 
       {
-      	print('** FROM')
+      	# print('** FROM')
       	old.name = hypos_new_name[from]
       
-      	print(old.name)
+      	# print(old.name)
       	idx.from = which(rownames(consensus) == old.name)
       	# print(rownames(consensus)[idx.from])
       	from = idx.from
@@ -1436,39 +1506,99 @@ smaller.to.bigger = function(m,cn)
 
    if(to %in% names(hypos_new_name)) 
       {
-      print('** TO')
+      # print('** TO')
   	   	old.name = hypos_new_name[to]
       
-      	print(old.name)
+      	# print(old.name)
       	idx.to = which(colnames(consensus) == old.name)
       	# print(rownames(consensus)[idx.from])
       	to = idx.to
       }
-		print(names(hypos_new_name))
+		# print(names(hypos_new_name))
       
       ### BUG HERE
-     # eAttrs$label[e] = paste0('', consensus[from, to])
+     # print('**')
+     # print(e)
+     
+        if(!all(c(from,to) %in% colnames(consensus))) 
+        {	
+         	eAttrs$lwd[e] = MIN.HITS
+         	eAttrs$label[e] = paste0('', MIN.HITS)
+        }
+    		else 
+    		{
+    	         	eAttrs$lwd[e] = consensus[from, to]
+				eAttrs$label[e] = paste0('', consensus[from, to])
+		}
+     # sprint(colnames(consensus))
+     # print('--')
+     # print((hypos_new_name))
      # eAttrs$lwd[e] = consensus[from, to]
+     
     }
 	# print(sort(colnames(consensus)))
 
   # remove arrows from logic node (hidden and)
-  for(e in edge_names) {
+for(e in edge_names) {
     edge = unlist(strsplit(e, '~'))
-    from = substr(edge[1], start=1, stop=1)
+    from = edge[1]
     to = edge[2]
     
-    if (from == '*') {
+    # print(e)
+    # print(is.logic.node.down(to))
+    # print(is.logic.node.up(from))
+        
+    if (is.logic.node.down(to)) {
       eAttrs$logic[e] = T
       eAttrs$arrowsize[e] = 0
-      eAttrs$color[e] = 'black'
-    } 
-    
-    if (is.logic.node(to)) {
+     
+	# print(from)
+	# print(substr(to, start=1, stop=2))
+	 # eAttrs$color[e] = 'red'
+	 
+	 if(substr(to, start=1, stop=2) == 'OR')
+		 eAttrs$color[e] = 'orange'
+	 if(substr(to, start=1, stop=3) == 'XOR')
+		 eAttrs$color[e] = 'red'
+	 if(substr(to, start=1, stop=3) == 'AND')
+		 eAttrs$color[e] = 'darkgreen'
+           
+     eAttrs$lty[e] = 'dashed'
+
+	nAttrs$shape[to] = 'circle' 
+	# nAttrs$shape[to] = function(w, ...) {
+		# for(i in 1:3) points(w, cex=i, ...)
+	# }
+	
+	# print(nAttrs)
+
+    }
+
+    if (is.logic.node.up(from)) {
       eAttrs$logic[e] = T
       eAttrs$arrowsize[e] = 0
-      eAttrs$color[e] = 'black'
+      # eAttrs$color[e] = 'black'
       
+      eAttrs$lty[e] = 'dashed'
+      
+     	# print(substr(to, start=1, stop=2))
+     	# print(substr(from, start=1, stop=2))
+ 	# print(from)
+ 	# print(to)
+ 
+ 
+      if(substr(from, start=1, stop=4) == 'UPOR')
+		 eAttrs$color[e] = 'orange'
+	 if(substr(from, start=1, stop=5) == 'UPXOR')
+		 eAttrs$color[e] = 'red'
+	 if(substr(from, start=1, stop=5) == 'UPAND')
+		 eAttrs$color[e] = 'darkgreen'
+     
+      
+    } else if(substr(from, start=1, stop=1) == '*') {
+      eAttrs$logic[e] = T
+      eAttrs$arrowsize[e] = 0
+      eAttrs$color[e] = 'black'
     }
   }
   

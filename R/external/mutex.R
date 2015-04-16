@@ -52,27 +52,49 @@ import.mutex.groups = function(file, fdr=.2, display = TRUE)
   
   # Create groups
   groups = function(g) {
+  	# print(g)
+  	
+  	# print(g[3:length(g)])
+  	
     g = g[3:length(g)]
     g = g[!is.na(g)]
     names(g) = NULL
     
+    # print(g)
     return(sort(g))
   }
   
+  # print(res)
+  # print(apply(res, 1, groups))
   
-  G = apply(res, 1, groups)
-  if(!is.list(G)) 
+  # G = apply(res, 1, groups)
+  # print(G)
+  
+  # print(res)
+  G = list()
+  for(i in 1:nrow(res))
   {
-  	G = list(as.vector(G))	
-    names(G) = paste('MUTEX_GROUP', 1, sep='')
+  	gr = list(groups(res[i, ]))
+  	names(gr) = paste('MUTEX_GROUP', i, sep='')
+  	G = append(G,gr)	
   }
+  # print(G)
+  
+  # if(!is.list(G)) 
+  # {
+  	# G = list(as.vector(G))	
+    # names(G) = paste('MUTEX_GROUP', 1, sep='')
+  # }
 
-  names(G) = paste('MUTEX_GROUP', 1:length(names(G)), sep='')
+  # names(G) = paste('MUTEX_GROUP', 1:length(names(G)), sep='')
   rownames(res) = names(G)
-  colnames(res)[1:2] = c('fdr', 'q-score')
+  colnames(res)[1:2] = c('fdr', 'score')
   
   # Summary report
-  if(display) print(res)
- 
+  if(display) 
+  {	
+  	print(res)
+ 	# print(G)
+ 	}
   return(G)
 }

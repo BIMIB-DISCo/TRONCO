@@ -48,7 +48,10 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 
 	gene.hom = function(g, h) {
 		if (g %in% h) 
-			return(paste0("OR('", g, "')"))
+		{
+			if( any(rowSums(as.gene(x, genes = g)) > 1) ) return(paste0("OR('", g, "')"))
+			else return(paste0("XOR('", g, "')"))
+		}
 		return(paste0("'", g, "'"))
 	}
 
@@ -91,6 +94,8 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 				gene.hom(g, hom.group)
 			}, hom.group), collapse = ", ")
 
+			# print(hypo.genes)
+			# print(hom.group)
 
 				hypo.add = paste0("hypothesis.add(x, label.formula = '", op, "_", hypo.name, "', lifted.formula = ", op, "(", hypo.genes, "), ", effect, ")")
 
@@ -162,6 +167,14 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 
 		#start the progress bar
 		setTxtProgressBar(pb, i)
+
+		# Check if the joint probability of homologous events is > 0, if
+		# yes the event will be added as 'OR', otherwise 'XOR'
+		if( any(
+				rowSums(as.gene(x, genes = hom.group[[i]])) > 1) 
+			)
+		FUN = 'OR'
+		else FUN = 'XOR'				
 
 		hypo.add = paste0("hypothesis.add(x, label.formula = '", FUN, "_", hom.group[[i]], "', lifted.formula = ", FUN, "('", hom.group[[i]], "'), ", effect, 
 			")")
