@@ -1,5 +1,9 @@
 Package: TRONCO
+<<<<<<< HEAD
 Version: 1.1.0
+=======
+Version: 1.0.2
+>>>>>>> 62c643e0492cc6fcb33927c0848d6c62fd77cb12
 Date: 2014-09-22
 Title: TRONCO, a  package for TRanslational ONCOlogy
 Author: Marco Antoniotti, Giulio Caravagna,
