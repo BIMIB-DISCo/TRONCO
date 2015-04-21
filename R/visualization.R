@@ -46,7 +46,8 @@ oncoprint <- function(x,
                       group.samples = NA,
                       pathways = NA,
                       pathways.color = 'Set1',
-                      ...) 
+                      txt.stats = paste('n = ', nsamples(x),'\nm = ', nevents(x), '\n|G| = ', ngenes(x),  sep=''),
+					  ...) 
 {
   if (!require('pheatmap')) {
     install.packages('pheatmap', dependencies = TRUE)
@@ -255,7 +256,7 @@ oncoprint <- function(x,
   }
   
   # Augment title
-  title = paste(title, '\n n = ', nsamples(x),'    m = ', nevents(x), '    |G| = ', ngenes(x),  sep='')
+  # title = paste(title, '\n n = ', nsamples(x),'    m = ', nevents(x), '    |G| = ', ngenes(x),  sep='')
   
   legend.labels = c('none', unique(x$annotations[,1]))
     
@@ -288,6 +289,7 @@ oncoprint <- function(x,
              drop_levels=T,
              show_colnames = sample.id,
              filename=file,
+             txt.stats = txt.stats,
              ...
     )
   else
@@ -310,6 +312,7 @@ oncoprint <- function(x,
              legend_labels = legend.labels,
              show_colnames = sample.id,
              filename=file,
+             txt.stats = txt.stats,
              ...
     )
     
