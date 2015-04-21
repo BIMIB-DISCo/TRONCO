@@ -1,20 +1,36 @@
 Package: TRONCO
-Version: 0.99.2
+Version: 1.1.0
 Date: 2014-09-22
 Title: TRONCO, a  package for TRanslational ONCOlogy
 Author: Marco Antoniotti, Giulio Caravagna,
+    Luca De Sano,
     Alex Graudenzi, Ilya Korsunsky,
     Mattia Longoni, Loes Olde Loohuis,
     Giancarlo Mauri, Bud Mishra, Daniele Ramazzotti
 Maintainer: Giulio Caravagna <giulio.caravagna@disco.unimib.it>,
     Alex Graudenzi <alex.graudenzi@disco.unimib.it>,
-    Daniele Ramazzotti <daniele.ramazzotti@disco.unimib.it>
+    Daniele Ramazzotti <daniele.ramazzotti@disco.unimib.it>,
+    Luca De Sano <l.desano@campus.unimib.it>
 Depends:
-    R (>= 2.10),
+    R (>= 3.1),
     methods,
     Rgraphviz,
     lattice,
-    graph
+    graph,
+    igraph
+Imports:
+    R.matlab,
+    RColorBrewer,
+    bnlearn,
+    cgdsr,
+    colorspace,
+    gplots,
+    ggplot2,
+    gridExtra,
+    likert,
+    pheatmap,
+    reshape2,
+    xtable
 Description: Genotype-level cancer progression models describe the ordering of
     accumulating mutations, e.g., somatic mutations / copy number variations,
     during cancer development. These graphical models help understand the

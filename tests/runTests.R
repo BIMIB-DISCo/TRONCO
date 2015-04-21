@@ -1,1 +1,1 @@
-BiocGenerics:::testPackage("TRONCO")
+#BiocGenerics:::testPackage("TRONCO")

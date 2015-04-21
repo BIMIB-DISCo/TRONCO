@@ -94,9 +94,9 @@ installed to  use the package, see \texttt{Bioconductor.org}.
 \paragraph{\large 1. Types/Events definition}{\ }\\
 
 First, load \TRONCO{} in your \textsc{r} console. 
-<<>>=
-library(TRONCO)
-@
+%<<>>=
+%library(TRONCO)
+%@
 Every node in the plotted topology can be colored according to the
 color table defined in \textsc{r}. You can use the command
 \texttt{colors} to see the available colors, e.g., \texttt{"red"}, \texttt{"blue"} or RGB 
@@ -109,10 +109,10 @@ As an example, for CGH data we define two types of events, \emph{gain}
 and \emph{loss}, which we color  \emph{red} and \emph{green} to represent
 amplifications or deletion of a  chromosome arm.  For instance, we can
 do this as follows:
-<<>>=
-types.add("gain", "cornflowerblue")
-types.add("loss", "brown1")
-@
+%<<>>=
+%types.add("gain", "cornflowerblue")
+%types.add("loss", "brown1")
+%@
 If many types have to be defined it might be convenient to load all of
 them at once.  This is possible by using a tabular input file
 (in \texttt{csv} format):
@@ -138,9 +138,9 @@ For the ovarian CGH dataset, such a file contains the following rows (we show th
 ......
 \end{verbatim}
 which define, as events, gains in  arm $p$ of chromosomes $8$ and $3$, losses on arm $q$ of chromosomes $5$, etc. Given the file \emph{events.txt} where are defined the events with the above notation, the events can be loaded from a file as follows.
-<<>>=
- events.load("events.txt")
-@
+%<<>>=
+% events.load("events.txt")
+%@
 Events will constitute the nodes in the progression model.  If one is willing to add events in a iterative fashion the command {\tt events.add(event\_name, event\_type, column\_number)} can be used. For instance {\tt events.add("8q+", "gain", 1)}.
 
 
@@ -152,12 +152,12 @@ At this point, \TRONCO{} executes some consistency checks to ensure that all the
 
 Once events are set, you can load the input dataset, which must be
 stored in a text file  as a binary matrix (once loaded, you can use {\tt tronco.data.view(your\_data)} to visualise loaded data as a heatmap).
-<<>>=
-data(ov.cgh)
-data.load(ov.cgh)
-<<>>=
-str(data.values)
-@
+%<<>>=
+%data(ov.cgh)
+%data.load(ov.cgh)
+%<<>>=
+%str(data.values)
+%@
 In this case 87 samples are available and  7 events are considered (in general, the inference problem is well posed if there are more samples than events, which is the case here for ovarian).
 
 Further  consistency checks are performed by \TRONCO{} at data-loading time; these include checking that:
@@ -182,9 +182,9 @@ be executed.
 \label{fig:tree}
 \end{figure}
 
-<<>>=
-topology <- tronco.caprese(data.values, lambda=0.5)
-@
+%<<>>=
+%topology <- tronco.caprese(data.values, lambda=0.5)
+%@
 In the above example, \CAPRESE{} is executed with a \emph{shrinkage
   coefficient} set to $0.5$ (the default value, if not specified), which
 is the optimal value for  data containing \emph{false positives} and
@@ -198,11 +198,11 @@ this is done  via $\ell_2$ distance.
 The returned topology can be printed to screen by using the
 \texttt{topology} object print method, or can be visualized by using
 the \texttt{tronco.plot} function.
-<<fig=TRUE,include=FALSE>>=
-topology
-tronco.plot(topology, title="Ovarian cancer progression with CAPRESE", legend.title="CGH events", 
-	legend.coeff = 1.0, label.coeff = 1.2, legend = TRUE)
-@
+%<<fig=TRUE,include=FALSE>>=
+%topology
+%tronco.plot(topology, title="Ovarian cancer progression with CAPRESE", legend.title="CGH %events", %
+%	legend.coeff = 1.0, label.coeff = 1.2, legend = TRUE)
+%@
 
 In this case we are assigning a title to the plot, we are requiring
 to display a legend (\texttt{ legend = TRUE}), and we are setting custom
@@ -240,15 +240,15 @@ the input data (i.e., the \emph{observed} probabilities).   Notice
 that for the conditional distribution we condition only on the parent
 of a node, as reconstructed in the returned model.  Plots of these distributions are shown in Figure
 \ref{fig:distrib}, and are evaluated as follows.
-<<fig=TRUE,include=FALSE>>=
- confidence.data.single(topology)
-@
-<<fig=TRUE,include=FALSE>>=
- confidence.data.joint(topology)
-@
-<<fig=TRUE,include=FALSE>>=
- confidence.data.conditional(topology)
-@
+%<<fig=TRUE,include=FALSE>>=
+% confidence.data.single(topology)
+%@
+%<<fig=TRUE,include=FALSE>>=
+% confidence.data.joint(topology)
+%@
+%<<fig=TRUE,include=FALSE>>=
+% confidence.data.conditional(topology)
+%@
 
 In a similar way, by using \texttt{ confidence.fit.single(topology)},
 \texttt{ confidence.fit.joint(topology)} or
@@ -258,15 +258,15 @@ shown in this vignette.
 
 The difference between  observed and  fit probabilities can be
 visualised as follows.
-<<fig=TRUE,include=FALSE>>=
-confidence.single(topology)
-@
-<<fig=TRUE,include=FALSE>>=
-confidence.joint(topology)
-@
-<<fig=TRUE,include=FALSE>>=
-confidence.conditional(topology)
-@
+%<<fig=TRUE,include=FALSE>>=
+%confidence.single(topology)
+%@
+%<<fig=TRUE,include=FALSE>>=
+%confidence.joint(topology)
+%@
+%<<fig=TRUE,include=FALSE>>=
+%confidence.conditional(topology)
+%@
 
 
 \paragraph{Bootstrap confidence.}{\ }\\
@@ -280,13 +280,13 @@ estimated tree or edge is inferred out of a number of
 resamples.  The parameters of the bootstrap procedure can be custom
 set.
 
-<<>>=
-set.seed(12345)
-topology <- tronco.bootstrap(topology, type="non-parametric", nboot=1000)
-@
-<<fig=TRUE,include=FALSE>>=
-tronco.bootstrap.show(topology)
-@
+%<<>>=
+%set.seed(12345)
+%topology <- tronco.bootstrap(topology, type="non-parametric", nboot=1000)
+%@
+%<<fig=TRUE,include=FALSE>>=
+%tronco.bootstrap.show(topology)
+%@
 
 
 In this case, for instance, we are performing non-parametric bootstrap
@@ -295,13 +295,13 @@ coefficient is specified, we are still using $0.5$. Here the estimated
 error rates are used to include noise levels estimated from the
 data/model. To perform parametric bootstrap is enough to use the flag
 \texttt{ type="parametric"}.
-<<>>=
-set.seed(12345)
-topology <- tronco.bootstrap(topology, type="parametric", nboot=1000)
-@
-<<fig=TRUE,include=FALSE>>=
-tronco.bootstrap.show(topology)
-@
+%<<>>=
+%set.seed(12345)
+%topology <- tronco.bootstrap(topology, type="parametric", nboot=1000)
+%@
+%<<fig=TRUE,include=FALSE>>=
+%tronco.bootstrap.show(topology)
+%@
 
 
 
@@ -312,10 +312,10 @@ reported, too. In Figure 3 results of bootstrap are
 shown.  If one is willing to visualize this confidence in the plot of
 the inferred tree  an input flag \texttt{confidence}  can be used with
 function \texttt{tronco.plot}. For instance:
-<<fig=TRUE,include=FALSE>>=
-tronco.plot(topology, title="Ovarian cancer progression with CAPRESE", legend.title="CGH events", 
-	legend.coeff = 1.0, label.coeff = 1.2, legend = TRUE, confidence = TRUE)
-@
+%<<fig=TRUE,include=FALSE>>=
+%tronco.plot(topology, title="Ovarian cancer progression with CAPRESE", legend.title="CGH %events", %
+%	legend.coeff = 1.0, label.coeff = 1.2, legend = TRUE, confidence = TRUE)
+%@
 
 In this case, the thicker lines  reflect the most confident edges;
 confidence is also reported as labels of edges, as shown in
