@@ -1225,7 +1225,11 @@ hypotheses.expansion <- function(input_matrix,
     
     
     for (h in ls(map)) {
-          
+      
+
+      if (! h %in% node_list) {
+        next
+      }
       
       # eros! please give me the transposed matrix
       hypo = map[[h]]
