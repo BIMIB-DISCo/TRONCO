@@ -1,4 +1,4 @@
-############################################################ LOAD THE LIBRARY
+############################################################ LOAD TRONCO
 library("TRONCO")
 ############################################################
 
@@ -7,7 +7,6 @@ library("TRONCO")
 # TCGA MAF file - originally Excel file, now exported in csv format (separator ";")
 # download: 12 March 2015
 # URL: https://tcga-data.nci.nih.gov/docs/publications/coadread_2012/
-
 MAF.file = './TCGA_CRC_Suppl_Table2_Mutations_20120719.csv'
 
 # Transform the MAF dataset in a TRONCO (compliant) object
