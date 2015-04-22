@@ -1,6 +1,6 @@
 Package: TRONCO
-Version: 1.1.0
-Date: 2014-09-22
+Version: 2.0.0-1
+Date: 2015-04-22
 Title: TRONCO, a  package for TRanslational ONCOlogy
 Author: Marco Antoniotti, Giulio Caravagna,
     Luca De Sano,
@@ -17,8 +17,7 @@ Depends:
     Rgraphviz,
     lattice,
     graph,
-    igraph
-Imports:
+    igraph,
     R.matlab,
     RColorBrewer,
     bnlearn,

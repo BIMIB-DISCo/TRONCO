@@ -11,7 +11,9 @@ oncoprint(x, excl.sort = TRUE, col.cluster = FALSE, row.cluster = FALSE,
   font.column = 3, font.row = NA, title = paste("Dataset (genotypes)"),
   sample.id = FALSE, hide.zeroes = FALSE, legend = TRUE, legend.cex = 1,
   cellwidth = NA, cellheight = NA, group.by.label = FALSE,
-  group.samples = NA, pathways = NA, pathways.color = "Set1", ...)
+  group.samples = NA, pathways = NA, pathways.color = "Set1",
+  txt.stats = paste("n = ", nsamples(x), "\\nm = ", nevents(x), "\\n|G| = ",
+  ngenes(x), sep = ""), ...)
 }
 \arguments{
 \item{col.cluster}{A number}

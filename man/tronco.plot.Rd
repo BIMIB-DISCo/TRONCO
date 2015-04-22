@@ -8,8 +8,8 @@ tronco.plot(x, secondary = NULL, fontsize = 18, height = 2, width = 3,
   height.logic = 1, pf = FALSE, disconnected = FALSE, scale.nodes = NA,
   name = deparse(substitute(capri)), title = paste("Progression model",
   x$parameters$algorithm), confidence = FALSE, legend = TRUE,
-  legend.cex = 1, edge.cex = 1, label.edge.size = 12, hidden.and = T,
-  expand = T, genes = NULL, edge.color = "black",
+  legend.cex = 1, edge.cex = 1, label.edge.size = 12,
+  hidden.and = FALSE, expand = TRUE, genes = NULL, edge.color = "black",
   pathways.color = "Set1", file = NA, legend.pos = "bottom",
   pathways = NULL, lwd = 3, ...)
 }
