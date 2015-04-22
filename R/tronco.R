@@ -494,8 +494,8 @@ tronco.plot = function(x,
                        legend.cex = 1.0, 
                        edge.cex = 1.0,
                        label.edge.size = 12, 
-                       hidden.and = T,
-                       expand = T,
+                       hidden.and = FALSE,
+                       expand = TRUE,
                        genes = NULL,
                        edge.color = 'black',
                        pathways.color = 'Set1',
@@ -1180,6 +1180,9 @@ tronco.plot = function(x,
       paste0(max.freq, '% ', label.max[, 'event'], ' (max)')
     )
   
+
+
+
     stat.pch = c(21, 21)
     pt.bg = c(
         as.colors(x$data)[label.min[, 'type']], 
@@ -1191,6 +1194,7 @@ tronco.plot = function(x,
     y = x
     if('Hypothesis' %in% as.types(x$data)) 
             y = delete.type(x$data, 'Hypothesis')
+
             
     freq.labels = c(freq.labels, 
       ' ',
@@ -1246,7 +1250,7 @@ tronco.consensus.plot = function(models,
                        edge.cex = 1.0,
                        label.edge.size = 12, 
                        hidden.and = T,
-                       expand = T,
+                       expand = TRUE,
                        edge.color = 'black',
                        pathways.color = 'Set1',
                        file = NA, # print to pdf,

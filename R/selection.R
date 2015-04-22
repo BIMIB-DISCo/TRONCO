@@ -66,7 +66,7 @@
   
   if(!any(is.na(filter.out.names)))
   {
-    # shown = min(5, length(filter.out.names))
+    shown = min(5, length(filter.out.names))
     
     cat(paste('\n[filter.out] Genes dropped: ', 
               sep='', paste(filter.out.names[1:shown], collapse=', '), ' ... '))

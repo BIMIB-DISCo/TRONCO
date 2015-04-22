@@ -50,15 +50,12 @@ delete.type <- function(x, type) {
   is.compliant(x)
   
   if (type %in% as.types(x)) {
-    
-    drops = rownames(x$annotations[ x$annotations[, "type"] == type,])
-    x$genotypes = x$genotypes[, -which( colnames(x$genotypes) %in% drops )]
-    x$annotations = x$annotations[ -which (rownames(x$annotations) %in% drops), ]
-    
-    # TO DO: something better than this t(t(...))
-    x$types = matrix(x$types[ which(rownames(x$types) != type), ])
-    rownames(x$types) = unique(x$annotations[,'type'])
-    colnames(x$types) = c('color')
+
+    events = as.events(x, types=setdiff(as.types(x), type))
+
+    x$genotypes = as.genotypes(x)[,rownames(events), drop=F]
+    x$annotations = events
+    x$types = x$types[which(rownames(x$types) != type), , drop=F]
   } else {
     stop(paste(type, 'not in as.types(x)'))
   }
