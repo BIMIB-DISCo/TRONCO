@@ -149,9 +149,9 @@ oncoprint <- function(x,
   if(hasGroups) samples.annotation$group = group.samples[cn, 1]
 
   ##### Color each annotation 
+  annotation_colors = list()
   if(ann.hits || ann.stage || hasGroups) {
     rownames(samples.annotation) = cn
-    annotation_colors = list()
   }
 
   if(ann.hits){
@@ -877,6 +877,7 @@ require('likert')
   #    lapply(requirents, aux.fun)
   
   if(ncol(cluster.map) == 1) stop('No clustering stability for a unique clustering map!')
+	
 
   if(!reference %in% colnames(cluster.map)) 
     stop(paste0('The reference cluster specified is not any of: ', 
@@ -886,35 +887,37 @@ require('likert')
   colnames(cluster.map)[ref.clust] = paste(colnames(cluster.map)[ref.clust],' [reference]',sep='') 
   
   # Transpose data
-  cluster.map = t(cluster.map)
-  
+  # cluster.map = t(cluster.map)
+
   # Sort data according to reference row
- cluster.map = cluster.map[, sort(cluster.map[ref.clust, ], decreasing=FALSE, index.return=TRUE)$ix];
-  
+ cluster.map = cluster.map[sort(cluster.map[, ref.clust ], decreasing=FALSE, index.return=TRUE)$ix, ];
+
   # Get unique clustering IDs
-  id = apply(cluster.map, 1, unique)
-  id = unique(unlist(id))
+ id = apply(cluster.map, 2, unique)
+ id = unique(unlist(id))
+
+ print(apply(cluster.map, 2, unique))
 
   # Compute the clustering score
-  subdata = cluster.map[-ref.clust,]
-  refcol = cluster.map[ref.clust,]
+  subdata = cluster.map[, -ref.clust]
+  refcol = cluster.map[, ref.clust]
   urefcol = unique(refcol)
   
   cat('Found the following cluster labels:', urefcol, '\n')
 
   cat('Computing clustering scores ... ')
 
-  score = rep(0, ncol(cluster.map))
+  score = rep(0, nrow(cluster.map))
  
   for(i in 1:length(urefcol))
   {
-    tmp = as.matrix(subdata[,which(refcol==i)]);
+    tmp = as.matrix(subdata[which(refcol==i), ]);
     
     curr.score = 0;
-    for (j in 1:nrow(tmp)) 
+    for (j in 1:ncol(tmp)) 
     {
-      curr.cardinality = sort(table(tmp[j,]),decreasing=TRUE)[[1]];
-      curr.score = curr.score + (ncol(tmp) - curr.cardinality)/ncol(tmp);     
+      curr.cardinality = sort(table(tmp[,j]),decreasing=TRUE)[[1]];
+      curr.score = curr.score + (nrow(tmp) - curr.cardinality)/nrow(tmp);     
     }
     
     score[which(refcol==i)] = 1 - (curr.score/nrow(tmp))
@@ -923,7 +926,7 @@ require('likert')
 
    
   # Create annotations
-  cn = colnames(cluster.map)
+  cn = rownames(cluster.map)
 
   annotation = data.frame(sensitivity=score, row.names=cn, stringsAsFactors=FALSE)
 
@@ -938,42 +941,45 @@ require('likert')
   stage.color = append(brewer.pal(n = num.stages, name = 'YlOrRd'), '#FFFFFF')
   names(stage.color) = append(levels(as.factor(different.stages)), NA)
 
-  score.color = brewer.pal(n = 10, name = 'Blues')
+  score.color = brewer.pal(n = 3, name = 'Greys')
 
   # Annotation colors
   annotation_colors = list(stage=stage.color, sensitivity=score.color)
   
   # Settings
-  main = paste0("Sensitivity of clustering assigment\n Reference: ", 
-    reference,', Against:', paste(rownames(subdata), collapse=', '),
-     '(cluster labels are unmatched)') 
+  main = paste0("Clustering Sensitivity\n Reference : ", 
+    reference,'\nAgainst : ', paste(colnames(subdata), collapse=', ')) 
   
-  fontsize_col = 3
   
   cat('Clustering rows in', nrow(cluster.map), 'clusters.\n')
-  order = sort(cluster.map[ref.clust, ], decreasing=FALSE, index.return=TRUE) 
+  order = sort(cluster.map[,ref.clust], decreasing=FALSE, index.return=TRUE) 
+  
+  
   
   pheatmap(cluster.map, 
            scale = "none", 
            cluster_col= F, 
-           cluster_rows = T, 
+           cluster_rows = F, 
            col=col, 
            main=main,
-           fontsize=10,
-           fontsize_col=fontsize_col,
-           annotation = annotation,
+           fontsize=6,
+           fontsize_col=8,
+           fontsize_row = 2,
+           annotation_row = annotation,
            annotation_colors = annotation_colors, 
            border_color='lightgray',
            border=T,
            margins=c(10,10),
-           cellwidth = 6, 
-           cellheight = 25,
-           legend=F,
+           cellwidth = 25, 
+           cellheight = 2.2,
+           # legend=T,
+           legend_breaks = 1:4,
            filename=file,
-           display_numbers = T,
+           gaps_col = 1:3,
+           # display_numbers = T,
            cutree_rows = nrow(cluster.map),   
-           gaps_col = (match(urefcol, order$x) - 1),        
-           number_format = '%d',                 
+           gaps_row = (match(urefcol, order$x) - 1)        
+           # number_format = '%d',                 
   )
   
   return(cluster.map)
