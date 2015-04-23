@@ -34,10 +34,10 @@ is.compliant = function(x, err.fun='[ERR]', stage=has.stages(x))
 	else
 		if(!is.matrix(x$types) && !is.data.frame(x$types))  stop(paste(err.fun, ': attribute types in  \'x\' is not a matrix.'))	
 	
-	if(stage == TRUE && (is.null(x$stage) || is.na(x$stage)))
+	if(stage == TRUE && (is.null(x$stages) || is.na(x$stages)))
 		stop(paste(err.fun, ': input \'x\' has no stage field.'))
 	else
-		if(stage == TRUE && !is.matrix(x$stage) && !is.data.frame(x$stage)) stop(paste(err.fun, ': attribute stage in  \'x\' is not a matrix.'))	
+		if(stage == TRUE && !is.matrix(x$stages) && !is.data.frame(x$stages)) stop(paste(err.fun, ': attribute stage in  \'x\' is not a matrix.'))	
 
 	# Annotations sould be present for all genotypes columns
   	if(nrow(x$annotations) != ncol(x$genotypes) ) 

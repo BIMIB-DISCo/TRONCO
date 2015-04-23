@@ -124,7 +124,7 @@ change.color = function(x, type, new.color)
 #' @export
 delete.samples = function(x, samples) {
   is.compliant(x)
-  
+  stages = has.stages(x)
   del = list()
   actual.samples = as.samples(x)
   samples = unique(samples)
@@ -138,7 +138,7 @@ delete.samples = function(x, samples) {
   
   x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, ]
   
-  if("stages" %in% names(x)) {
+  if(stages) {
     x$stages = x$stages[!rownames(x$stages) %in% del, , drop=FALSE]
   }
   

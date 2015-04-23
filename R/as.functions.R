@@ -106,7 +106,7 @@ as.alterations = function(x, new.type = 'Alteration', new.color = 'khaki') {
 #' @export
 has.stages = function(x)
 {
-  return(!is.null(x$stages))
+  return(! (is.null(x$stages) || is.na(x$stages)))
 }
 
 
