@@ -139,7 +139,8 @@ For the ovarian CGH dataset, such a file contains the following rows (we show th
 \end{verbatim}
 which define, as events, gains in  arm $p$ of chromosomes $8$ and $3$, losses on arm $q$ of chromosomes $5$, etc. Given the file \emph{events.txt} where are defined the events with the above notation, the events can be loaded from a file as follows.
 <<>>=
- events.load("events.txt")
+ data(events)
+ events.load(events)
 @
 Events will constitute the nodes in the progression model.  If one is willing to add events in a iterative fashion the command {\tt events.add(event\_name, event\_type, column\_number)} can be used. For instance {\tt events.add("8q+", "gain", 1)}.
 
