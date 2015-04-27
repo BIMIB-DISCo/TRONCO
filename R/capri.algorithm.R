@@ -22,6 +22,9 @@
 # topology: the reconstructed tree topology
 "capri.fit" <-
 function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE, boot.seed = 12345, do.estimation = FALSE, silent = FALSE ) {
+	
+	# start the clock to measure the execution time
+	ptm <- proc.time();
     
     # structure with the set of valid edges
     # I start from the complete graph, i.e., I have no prior and all the connections are possibly causal
@@ -97,7 +100,7 @@ function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.b
     probabilities = list(probabilities.pf=probabilities.pf,probabilities.fit=probabilities.fit);
     parents.pos = list(parents.pos.pf=parents.pos.pf,parents.pos.fit=parents.pos.fit);
     error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.fit=estimated.error.rates.fit);
-    parameters = list(algorithm="CAPRI",command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation);
+    parameters = list(algorithm="CAPRI",command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation,execution.time=(proc.time()-ptm));
     
     # return the results
     topology = list(dataset=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,confidence=prima.facie.parents$pf.confidence,adj.matrix=best.parents$adj.matrix,parameters=parameters);
