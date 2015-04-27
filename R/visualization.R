@@ -112,6 +112,10 @@ oncoprint <- function(x,
   
   if(hasGroups)
   {
+  	group.samples[,1] = as.character(group.samples[,1])
+  	
+  	# print(str(group.samples))	
+  	
   	grn = rownames(group.samples)
   	
     cat(paste('Grouping samples according to input groups (group.samples).\n', sep=''))
@@ -127,6 +131,31 @@ oncoprint <- function(x,
   	
   	data = data[, rownames(group.samples)]  	  	  	
   	data = data[order(rowSums(data), decreasing = TRUE), ]  	
+  
+  	# Order every group according to the colSums
+	# print((data))
+	
+	groups = unique(group.samples[,1])
+	# print(group.samples)
+	# print(groups)
+	
+  	for(i in 1:length(groups))
+  	{
+  		subdata = data[, group.samples == groups[i], drop = FALSE]
+		# print('**')
+  		# print(colSums(subdata))
+  		subdata = subdata[, order(colSums(subdata), decreasing = TRUE), drop = FALSE]
+  		data[ , group.samples == groups[i]] = subdata
+  		
+  		  		# print(colSums(subdata))
+  		  		# # print(data[ , colnames(subdata)])
+  		  		# print(colSums(data))
+	
+		# data[ , group.samples == groups[i]] = exclusivity.sort(subdata)$M
+  	}
+  	
+  		
+  	
   }	
   
   ##### If group.by.label group events involving the gene symbol
@@ -149,7 +178,7 @@ oncoprint <- function(x,
   if(hasGroups) samples.annotation$group = group.samples[cn, 1]
 
   ##### Color each annotation 
-  annotation_colors = list()
+  annotation_colors = NULL
   if(ann.hits || ann.stage || hasGroups) {
     rownames(samples.annotation) = cn
   }
@@ -169,21 +198,15 @@ oncoprint <- function(x,
   
   if(hasGroups)	{
   	ngroups = length(unique(group.samples[,1]))
+  	cat('Grouping labels:', paste(unique(group.samples[,1]), collapse=', '), '\n')
   	group.color.attr = brewer.pal(n=ngroups, name='Accent')
-	# print(group.color.attr)
 	# print(unique(group.samples[,1]))
+	# print(samples.annotation)
 	# print(samples.annotation)
 	
   	names(group.color.attr) = unique(group.samples[,1])
     annotation_colors = append(annotation_colors, list(group=group.color.attr))
    }
-
-    # Augment gene names with frequencies and prepare labels 	
- 	 genes.freq = rowSums(data)/nsamples(x)
-     gene.names = x$annotations[rownames(data),2]
-     gene.names = paste(round(100 * genes.freq, 0) ,'% ', gene.names, sep='') # row labels
-
-	# print(gene.names)
 
 	# GENES ANNOTATIONS - PATHWAYS
 	genes.annotation = NA
@@ -213,7 +236,7 @@ oncoprint <- function(x,
 				stop('You did not provide enough colors to annotate', length(names), 'pathways. 
 						Either set pathways.color to a valid RColorBrewer palette or provide the explicit correct number of colors.')
 				
-			cat('Annotating pathways with custom colors', paste(pathways.color, collapse=','), '.\n')
+			cat('Annotating pathways with custom colors:', paste(pathways.color, collapse=', '), '\n')
 			pathway.colors = append(pathways.color, "#FFFFFF")
 		}
 		names(pathway.colors) = append(names, NA)
@@ -222,8 +245,16 @@ oncoprint <- function(x,
 		
 		annotation_colors = append(annotation_colors, list(pathway=pathway.colors))
 		# print(annotation_colors)				   	
+		# print(genes.annotation)				   	
    }   
   
+  # Augment gene names with frequencies and prepare labels 	
+  genes.freq = rowSums(data)/nsamples(x)
+  gene.names = x$annotations[rownames(data),2]
+  gene.names = paste(round(100 * genes.freq, 0) ,'% ', gene.names, sep='') # row labels
+# print(rownames(data))
+# print(gene.names)
+
   # Augment data to make type-dependent colored plots
   types = as.types(x)
   map.gradient = null.color
@@ -262,17 +293,24 @@ oncoprint <- function(x,
     
   legend.labels = legend.labels[1:(max(data)+1)]
   
+  # print(data)
+  # print(str(genes.annotation))
+  # print(genes.annotation)
+  # print(annotation_colors)
+  # print(rownames(data) == rownames(genes.annotation))
+  
+  if(is.null(annotation_colors)) annotation_colors = NA
+  
   # Pheatmap
-  if(ann.hits == TRUE || ann.stage == TRUE || hasGroups)  
    ret = pheatmap(data, 
              scale = "none", 
              col = map.gradient, 
              cluster_cols = col.cluster,
              cluster_rows = row.cluster,
-             main= title,
+             main = title,
              fontsize = font.size,
-             fontsize_col= font.column,
-             fontsize_row= font.row,
+             fontsize_col = font.column,
+             fontsize_row = font.row,
              annotation_col = samples.annotation,
              annotation_row = genes.annotation,
              annotation_colors = annotation_colors,	
@@ -287,29 +325,6 @@ oncoprint <- function(x,
              legend.cex = legend.cex,
              labels_row = gene.names,
              drop_levels=T,
-             show_colnames = sample.id,
-             filename=file,
-             txt.stats = txt.stats,
-             ...
-    )
-  else
-    ret = pheatmap(data, 
-             scale = "none", 
-             col = map.gradient, 
-             cluster_cols = col.cluster,
-             cluster_rows = row.cluster,
-             main= title,
-             fontsize= font.size,
-             fontsize_col= font.column,
-             fontsize_row= font.row,
-             border_color= border.color,
-             border=T,
-             margins=c(10,10),
-             cellwidth = cellwidth, 
-             cellheigth = cellheigth,
-             legend=legend,
-             legend_breaks = c(0:max(data)),
-             legend_labels = legend.labels,
              show_colnames = sample.id,
              filename=file,
              txt.stats = txt.stats,
