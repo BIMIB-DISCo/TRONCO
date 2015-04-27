@@ -99,11 +99,15 @@ bootstrap.capri <- function(dataset,
                 bootstrapped.topology = capri.fit(bootstrapped.dataset, 
                                                   bootstrapped.hypotheses,
                                                   command.capri,
+                                                  REGULARIZATION
                                                   do.boot,
                                                   nboot.capri,
                                                   pvalue,
+                                                  3,
+                                                  TRUE,
+                                                  12345,
                                                   FALSE,
-                                                  regularization = REGULARIZATION)
+                                                  TRUE)
                 
                 #set the reconstructed causal edges
                 parents.pos.pf = array(list(), c(ncol(bootstrapped.topology$data), 1))
@@ -203,14 +207,18 @@ bootstrap.capri <- function(dataset,
                 }
                 
                 bootstrapped.hypotheses = curr.hypotheses
-                bootstrapped.topology = capri.fit(bootstrapped.dataset,
+                bootstrapped.topology = capri.fit(bootstrapped.dataset, 
                                                   bootstrapped.hypotheses,
                                                   command.capri,
+                                                  REGULARIZATION
                                                   do.boot,
                                                   nboot.capri,
                                                   pvalue,
+                                                  3,
+                                                  TRUE,
+                                                  12345,
                                                   FALSE,
-                                                  regularization = REGULARIZATION)
+                                                  TRUE)
                 
                 #set the reconstructed causal edges
                 parents.pos.pf = array(list(), c(ncol(bootstrapped.topology$data), 1))
@@ -248,14 +256,18 @@ bootstrap.capri <- function(dataset,
                 }
 
                 bootstrapped.hypotheses = curr.hypotheses
-                bootstrapped.topology = capri.fit(bootstrapped.dataset,
+                bootstrapped.topology = capri.fit(bootstrapped.dataset, 
                                                   bootstrapped.hypotheses,
                                                   command.capri,
+                                                  REGULARIZATION
                                                   do.boot,
                                                   nboot.capri,
                                                   pvalue,
+                                                  3,
+                                                  TRUE,
+                                                  12345,
                                                   FALSE,
-                                                  regularization = REGULARIZATION)
+                                                  TRUE)
 
                 #set the reconstructed causal edges
                 parents.pos.bic = array(list(), c(ncol(bootstrapped.topology$data), 1))
