@@ -9,12 +9,8 @@
 # Returns: a list of dataframes compliant with TRONCO's specifications.
 #' @import RColorBrewer
 #' @export
-import.genotypes = function(geno, stage.annot = NA, event.type = 'variant', color = 'Accent')
+import.genotypes = function(geno, stage.annot = NA, event.type = 'variant', color = 'Darkgreen')
 {
-	if (!require('RColorBrewer')) {
-    	install.packages('RColorBrewer', dependencies = TRUE)
-    	library(RColorBrewer)
-  	}
   	
 	# Avoid malformed datasets
   	if(ncol(geno) == 0 || nrow(geno) == 0) stop('Empty genotypes (number of rows/columns 0), will not import.')
