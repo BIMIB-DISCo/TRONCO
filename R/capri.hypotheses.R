@@ -1,61 +1,3 @@
-#### emap.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-# Return the position of the event of a given label.event
-emap = function( label.event, dataset, annotations ) {
-	col.num = -1;
-	events.name = "";
-	if(!is.null(dataset) && !is.null(annotations)) {
-		if(label.event[2]!="*") {
-			curr.events = which(annotations[,"event"]==label.event[1] & annotations[,"type"]==label.event[2]);
-		}
-		else {
-			curr.events = which(annotations[,"event"]==label.event[1]);
-		}
-		if(length(curr.events)>0) {
-			events.name = names(curr.events);
-			col.num = which(colnames(dataset)%in%events.name);
-		}
-	}
-	else {
-		stop("[ERR] The dataset must be available to define hypotheses!",call.=FALSE);
-	}
-	results = list(col.num=col.num,events.name=events.name);
-	return(results);
-}
-
-#### end of file -- emap.R
-
-#### get.lifted.formula.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-# Return the adjacency matrix of the formula given the list of edges
-"get.lifted.formula" <-
-function( lifted.edges ) {
-	#structure to save the adjacency matrix
-	lifted.adj.matrix = array(0,c(length(unique(c(lifted.edges[,1],lifted.edges[,2]))),length(unique(c(lifted.edges[,1],lifted.edges[,2])))));
-	rownames(lifted.adj.matrix) = unique(c(lifted.edges[,1],lifted.edges[,2]));
-	colnames(lifted.adj.matrix) = rownames(lifted.adj.matrix);
-	#build the matrix given the lifted.edges
-	for(i in 1:nrow(lifted.edges)) {
-		lifted.adj.matrix[lifted.edges[i,1],lifted.edges[i,2]] = 1;
-	}
-	return(lifted.adj.matrix);
-}
-
-#### end of file -- get.lifted.formula.R
-
-
 #### hypothesis.add.R
 ####
 #### TRONCO: a tool for TRanslational ONCOlogy
@@ -64,7 +6,7 @@ function( lifted.edges ) {
 #### information.
 
 
-# Add a new hypothesis by creating a new causal event and adding it to the dateset
+# Add a new hypothesis by creating a new event and adding it to the compliant dataset
 #' @export
 "hypothesis.add" <-
   # function( data, label.formula, pvalue = 0.05, lifted.formula,  ... ) {
@@ -383,8 +325,6 @@ function( lifted.edges ) {
 
 #### end of file -- hypothesis.add.R
 
-# commenti
-
 #' @export
 hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(group), min.prob = 0, ...) {
 	op = deparse(substitute(FUN))
@@ -595,564 +535,6 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 	return(x)
 
 }
-
-
-#### hypothesis.cycles.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-#evaluate cycles involving any hypothesis
-#INPUT:
-#data: input dataset and its hypotheses
-#adj.matrix: adjacency matrix of the topology
-#hypotheses.labels: label of the existing hypotheses
-"hypothesis.evaluate.cycles" <-
-function(data, adj.matrix, hypotheses.labels, weights.matrix) {
-	
-	#create the structures where to save the weights in increasing order of confidence
-    ordered.weights <- vector();
-    ordered.edges <- list();
-    
-	#create a map structure where to save the atomic events of each hypothesis
-	matomic = new.env(hash=TRUE,parent=emptyenv());
-	
-	#create a map structure where to save the hypotheses of each atomic event
-	mhypotheses = new.env(hash=TRUE,parent=emptyenv());
-	
-	#evaluate all the existing hypotheses
-	for (i in 1:length(hypotheses.labels)) {
-		
-		#evaluate the current hypothesis
-		connections = hypothesis.connections(adj.matrix, hypotheses.labels[i]);
-		connections = hypothesis.expand.connections(label=hypotheses.labels[i],events=pattern.events(data,hypotheses.labels[i]),incoming=connections$incoming,outgoing=connections$outgoing,hnames=colnames(adj.matrix),matomic=matomic,weights.matrix=weights.matrix);
-		
-		#save the results for the current hypothesis
-		ordered.weights = c(ordered.weights,connections$ordered.weights);
-		ordered.edges = c(ordered.edges,connections$ordered.edges);
-		matomic = connections$matomic;
-		
-	}
-	
-	#add to the map the link between atomic to pattern
-	for (i in 1:ncol(adj.matrix)) {
-		if(!is.null(data$atoms[[colnames(adj.matrix)[i]]])) {
-			#add to the map the hypotheses of this atomic event
-			mhypotheses[[toString(i)]] = which(colnames(adj.matrix)%in%data$atoms[[colnames(adj.matrix)[i]]]);
-		}
-	}
-	
-	#return the results
-	return(list(ordered.weights=ordered.weights,ordered.edges=ordered.edges,matomic=matomic,mhypotheses=mhypotheses));
-}
-
-#given the adj.matrix, return the incoming and outgoing connections for any hypothesis
-#INPUT:
-#adj.matrix: adjacency matrix of the topology
-#hypotheses.label: label of the hypothesis
-"hypothesis.connections" <-
-function(adj.matrix, hypotheses.label) {
-	# cat('\nhl', hypotheses.label, '\n nomi colonne:\n',
-	 # paste(colnames(adj.matrix)), 'asd')
-	
-	#### EROS FIX
-	# print('*** PRE')
-	# print(hypotheses.label)
-	# print('*** POST')
-	# foo = hypotheses.label
-	hypotheses.label = hypotheses.label[hypotheses.label %in% rownames(adj.matrix)]
-	# print(hypotheses.label)
-	# if(length(hypotheses.label) == 0) {
-		# print(rownames(adj.matrix))
-		# print(foo)
-		# print(foo %in% rownames(adj.matrix))
-		# }
-	
-	
-	incoming = rownames(adj.matrix)[which(adj.matrix[,hypotheses.label]==1)];
-	outgoing = colnames(adj.matrix)[which(adj.matrix[hypotheses.label,]==1)];
-	connections = list(incoming=incoming,outgoing=outgoing);
-	
-	#### EROS FIX
-	# print(connections)
-	return(connections);
-}
-
-#expand and enumerate all the connections incoming or outgoing an hypothesis
-#INPUT:
-#label: name of the hypothesis
-#events: events in the hypothesis
-#incoming: incoming connections
-#outgoing: outgoing connections
-"hypothesis.expand.connections" <-
-function(label, events, incoming, outgoing, hnames, matomic, weights.matrix) {
-	
-	#create the structures where to save the weights in increasing order of confidence
-    ordered.weights <- vector();
-    ordered.edges <- list();
-    
-    #get the position of the hypothesis
-    hypothesis.pos = which(hnames==label);
-
-	#evalutate the incoming and outgoing connections
-    curr.edge.pos = 0;
-    if(length(incoming)>0) {
-		for(i in 1:length(incoming)) {
-			ordered.weights = rbind(ordered.weights,weights.matrix[which(hnames==incoming[i]),hypothesis.pos]);
-			curr.edge.pos = curr.edge.pos + 1;
-			new.edge <- array(0, c(2,1));
-        		new.edge[1,1] = which(hnames==incoming[i]);
-        		new.edge[2,1] = hypothesis.pos;
-        		ordered.edges[curr.edge.pos] = list(new.edge);
-		}
-	}
-    if(length(outgoing)>0) {
-		for(i in 1:length(outgoing)) {
-			ordered.weights = rbind(ordered.weights,weights.matrix[hypothesis.pos,which(hnames==outgoing[i])]);
-			curr.edge.pos = curr.edge.pos + 1;
-        		new.edge <- array(0, c(2,1));
-        		new.edge[1,1] = hypothesis.pos;
-        		new.edge[2,1] = which(hnames==outgoing[i]);
-        		ordered.edges[curr.edge.pos] = list(new.edge);
-		}
-	}
-	
-	#### EROS FIX
-	# print('****')
-	# print(hypothesis.pos)
-	# print('hnames')
-	# print(hnames)
-	# print('events')
-	# print(events)
-	if(length(hypothesis.pos) > 0)
-		matomic[[toString(hypothesis.pos)]] = which(hnames%in%events)	#add to the map the atomic events of this hypothesis
-	else
-		print('hypothesis.pos == 0!')
-	
-	#return the results
-	return(list(ordered.weights=ordered.weights,ordered.edges=ordered.edges,matomic=matomic));
-}
-
-#given the hypotheses and the adj.matrix, return the updated adj.matrix
-"hypothesis.adj.matrix" <-
-function(hypotheses, adj.matrix) {
-	if(!is.na(hypotheses[1])) {
-		# set the invalid entries in the adj.matrix
-		# hypotheses can not be causing other hypotheses
-		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):ncol(adj.matrix),(ncol(adj.matrix)-hypotheses$num.hypotheses+1):ncol(adj.matrix)] = 0;
-		# consider the given hypotheses only toward the specified possible effects
-		hypotheses.matrix = array(0,c(hypotheses$num.hypotheses,ncol(adj.matrix)-hypotheses$num.hypotheses));		
-		for (i in 1:nrow(hypotheses$hlist)) {
-			cause = which(hypotheses$hlist[i,1]==colnames(adj.matrix));
-			effect = which(hypotheses$hlist[i,2]==colnames(adj.matrix));
-			if(length(cause)>0 && length(effect)>0) {
-				hypotheses.matrix[cause-ncol(adj.matrix)+hypotheses$num.hypotheses,effect] = 1;
-			}
-		}
-		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix),1:(ncol(adj.matrix)-hypotheses$num.hypotheses)] = hypotheses.matrix;
-		for(j in (ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix)) {
-			for(k in 1:(ncol(adj.matrix)-hypotheses$num.hypotheses)) {
-				if(adj.matrix[j,k] == 0) {
-					adj.matrix[k,j] = 0;
-				}
-			}
-		}
-	}
-	return(adj.matrix);
-}
-
-
-#### end of file -- hypothesis.cycles.R
-
-
-#### lifting.operators.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-# Utility function to add the hypotheses
-aux.log = function( dataset, annotations, function.name, ... ) {
-  
-	if(!is.null(dataset) && !is.null(annotations) && length(list(...)) > 0) {
-		clauses = list(...)
-		curr_dataset = array(0, c(nrow(dataset), length(clauses)))
-		hypotheses = list()
-		function.inputs = list()
-    
-    ### test
-    #print('aux log clauses')
-    #print(clauses)
-    
-		for (i in 1:length(clauses)) {
-			# if the clause is given by name, get the column from the dataset..
-      
-      ### test
-      #print('typeof cl 1')
-      #print(typeof(clauses[[1]]))
-      
-      
-			if(typeof(clauses[[i]]) == "character") {
-				
-			  col.num = -1
-        # if I have the label, get the column in the dataset for this event
-				if(length(clauses[[i]]) == 1) {
-          ### print
-          #print('arg of emap with l = 1')
-          #print(c(clauses[[i]],"*"))
-          
-          
-					event.map = emap(c(clauses[[i]],"*"), dataset, annotations)
-					col.num = event.map$col.num
-				} else if(length(clauses[[i]]) == 2) {
-          
-				  #print('arg of emap with l = 2')
-				  #print(clauses[[i]])
-          
-          
-					event.map = emap(clauses[[i]], dataset, annotations)
-					col.num = event.map$col.num
-				} 
-        
-				if(col.num[1] == -1) {
-					stop(paste("[ERR] No events for gene ", paste(clauses[[i]], collapse=', ', sep='')))
-				} else {
-					curr_dataset[,i] = dataset[,col.num[1]]
-					if(length(col.num)>1) {
-						curr_dataset = cbind(curr_dataset, dataset[ ,col.num[2:length(col.num)]])
-					}
-          
-					if(length(hypotheses$llist) == 0) {
-						hypotheses$llist = list(event.map$events.name)
-					} else {
-						hypotheses$llist = list(c(unlist(hypotheses$llist), event.map$events.name))
-					}
-					for (j in 1:length(event.map$events.name)) {
-						function.name = paste(function.name,"_",event.map$events.name[j],sep="")
-						function.inputs = c(function.inputs,event.map$events.name[j])
-					}
-				}
-			} else {
-			  # ..otherwise I already have the column as a vector
-				
-			  curr_dataset[,i] = clauses[[i]]$formula
-        # if it is a list
-				if(length(hypotheses$llist) == 0) {
-					hypotheses$llist = clauses[[i]]$hypotheses$llist
-				} else {
-					hypotheses$llist = list(c(unlist(clauses[[i]]$hypotheses$llist), unlist(hypotheses$llist)))
-				}
-				function.name = paste(function.name, "_", clauses[[i]]$function.name, sep="")
-				function.inputs = c(function.inputs, clauses[[i]]$function.name)
-			}
-		}
-    
-    		# print(curr_dataset)
-		result = list(curr_dataset=curr_dataset,
-                  hypotheses=hypotheses,
-                  function.name=function.name,
-                  function.inputs=function.inputs,
-                  tests = pairwise.fisher.test(curr_dataset))
-    
-		#save the new edges
-		for(k in 1:length(result$function.inputs)) {
-			lifting.edges = rbind(lifting.edges, c(result$function.inputs[[k]], result$function.name))
-			assign("lifting.edges", lifting.edges, envir=.GlobalEnv)
-		}
-		
-		return(result)
-	} else {
-		stop("[ERR] Either the dataset or the formula not provided! No hypothesis will be created.")
-	}
-	return(NA)
-}
-
-# AND hypothesis
-#' @export
-"AND" <-
-function( ... ) {
-	# look for the global variables named lifting.dataset and lifting.annotations
-	dataset = lifting.dataset;
-	annotations = lifting.annotations;
-	pvalue = lifting.pvalue;
-  	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
-		# get the vector of the clauses of the formula from the dataset
-		result = aux.log(dataset,annotations, "AND" ,...);
-		curr_dataset = result$curr_dataset;
-		hypotheses = result$hypotheses;
-		function.name = result$function.name;
-		function.inputs = result$function.inputs;
-		
-		#verify the fisher exact tests
-		fisher.pvalues = vector();
-		if(length(result$tests)>0) {
-			for(i in 1:length(result$tests)) {
-				curr.test = result$tests[[i]];
-				odds.ratio = curr.test[2]
-				p.value = curr.test[1]
-	
-				# print(p.value)
-				# if(p.value > pvalue) stop('[ERR] AND: Fisher pvalue >', pvalue, ' (p=', p.value, ') - statistics for 2 genes is not significant.') 			
-				# if(odds.ratio <= 0) stop('[ERR] AND: Odds ratio <= 0 (', odds.ratio, ') - 2 of these genes suggest an exclusivity trend.')
-	
-				# if(curr.test[2]<=0) {
-					# curr.pvalue = 1;
-				# }
-				# else {
-					# curr.pvalue = curr.test[1];
-				# }
-				# if(curr.pvalue>pvalue) {
-					# stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
-				# }
-				fisher.pvalues = append(fisher.pvalues, p.value)
-			}
-		}
-		#print(fisher.pvalues)
-		
-		# evaluate the AND operator
-		formula = rep(0,nrow(dataset));
-		for (i in 1:nrow(dataset)) {
-			formula[i] = sum(curr_dataset[i,]);
-			if(formula[i]<ncol(curr_dataset)) {
-				formula[i] = 0;
-			}
-			else {
-				formula[i] = 1;
-			}
-		}
-		formula = as.integer(formula);
-		result = list(formula=formula,hypotheses=hypotheses, function.name=function.name, function.inputs=function.inputs);
-		return(result);
-	}
-	else {
-		stop("Either the dataset or the formula not provided! No hypothesis will be created.");
-	}
-	return(NA)
-}
-
-# OR hypothesis
-#' @export
-"OR" <-
-function( ... ) {
-	#look for the global variables named lifting.dataset and lifting.annotations
-	dataset = lifting.dataset;
-	annotations = lifting.annotations;
-	pvalue = lifting.pvalue;
-	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
-		#get the vector of the clauses of the formula from the dataset
-		result = aux.log(dataset,annotations,"OR",...);
-		curr_dataset = result$curr_dataset;
-		hypotheses = result$hypotheses;
-		function.name = result$function.name;
-		function.inputs = result$function.inputs;
-		
-		#verify the fisher exact tests
-		fisher.pvalues = vector();
-		if(length(result$tests)>0) {
-			for(i in 1:length(result$tests)) {
-				curr.test = result$tests[[i]];
-				p.value = 1 - curr.test[1];
-	
-				# print(curr.test)
-				# if(p.value > pvalue) stop('[ERR] OR: Fisher pvalue >', pvalue, ' (p=', curr.pvalue, ') - statistics for 2 genes is not significant.') 				
-				# if(curr.pvalue>pvalue) {
-					# stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
-				# }
-				fisher.pvalues = append(fisher.pvalues, p.value)
-			}
-		}
-		#print(fisher.pvalues)
-		
-		# evaluate the OR operator
-		formula = rep(0,nrow(dataset));
-		for (i in 1:nrow(dataset)) {
-			formula[i] = sum(curr_dataset[i,]);
-			if(formula[i]>1) {
-				formula[i] = 1;
-			}
-		}
-		formula = as.integer(formula);
-		result = list(formula=formula,hypotheses=hypotheses,function.name=function.name,function.inputs=function.inputs);
-		return(result);
-	}
-	else {
-		stop("Either the dataset or the formula not provided! No hypothesis will be created.");
-	}
-	return(NA);
-}
-
-# XOR hypothesis
-#' @export
-"XOR" <-
-function( ... ) {
-	#look for the global variables named lifting.dataset and lifting.annotations
-	dataset = lifting.dataset;
-	annotations = lifting.annotations;
-	pvalue = lifting.pvalue;
-	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
-		#get the vector of the clauses of the formula from the dataset
-		result = aux.log(dataset,annotations,"XOR",...);
-		curr_dataset = result$curr_dataset;
-		hypotheses = result$hypotheses;
-		function.name = result$function.name;
-		function.inputs = result$function.inputs;
-		
-		#verify the fisher exact tests
-		fisher.pvalues = vector();
-		if(length(result$tests)>0) {
-			for(i in 1:length(result$tests)) {
-				curr.test = result$tests[[i]];
-				odds.ratio = curr.test[2]
-				p.value = curr.test[1]
-		
-				# if(p.value > pvalue) stop('[ERR] XOR: Fisher pvalue >', pvalue, '(p=', p.value, ') - statistics for 2 genes is not significant.') 			
-				# if(odds.ratio >= 0) stop('[ERR] XOR: Odds ratio >= 0 (', odds.ratio, ') - 2 of these genes suggest a co-occurrence trend.')
-
-
-# # 				if(curr.test[2]>=0) {
-					# curr.pvalue = 1;
-				# }
-				# else {
-					# curr.pvalue = curr.test[1];
-				# }
-				# if(curr.pvalue>pvalue) {
-					# stop(paste("[ERR] Found an invalid pattern with pvalue: ", toString(curr.pvalue), sep=''))
-				# }
-				fisher.pvalues = append(fisher.pvalues, p.value)
-			}
-		}
-		#print(fisher.pvalues)
-		
-		# evaluate the XOR operator
-		formula = rep(0,nrow(dataset));
-		for (i in 1:nrow(dataset)) {
-			formula[i] = sum(curr_dataset[i,]);
-			if(formula[i]>1) {
-				formula[i] = 0;
-			}
-		}
-		formula = as.integer(formula);
-		result = list(formula=formula,hypotheses=hypotheses,function.name=function.name,function.inputs=function.inputs);
-		return(result);
-	}
-	else {
-		stop("Either the dataset or the formula not provided! No hypothesis will be created.");
-	}
-	return(NA);
-}
-
-testing = function(data, g1, g2) {
-
-	# Dataframe di tutto il dataset
-	df = data.frame(row.names=as.samples(data))
-	df$x = rowSums(as.gene(data, genes=g1))
-	df$y = rowSums(as.gene(data, genes=g2))
-	
-	# Lifting xor
-	df$xor = df$x + df$y
-	df$xor[ df$xor > 1] = 0
-	
-	# Lifting or
-	df$or = df$x + df$y
-	df$or[ df$or > 1] = 1
-	
-	# Lifting and
-	df$and = df$x + df$y
-	df$and[ df$and < 2] = 0
-	df$and[ df$and == 2] = 1
-	
-	# Nomi per accedere successivamente 
-	names(df$x) = g1
-	names(df$y) = g2
-	names(df$xor) = 'xor'
-	names(df$or) = 'or'
-	names(df$and) = 'and'
-	
-	cat('DATASET\n')
-	print(df)
-	
-	# Tabella di contingenza 2x2
-	table.xor = rbind(
-		c(nrow(df) - sum(df$or), sum(df$or - df$y)),
-		c(sum(df$or - df$x), sum(df$and))
-	)
-	
-	colnames(table.xor) = c(paste0('-', g1), paste0('+', g1))
-	rownames(table.xor) = c(paste0('-', g2), paste0('+', g2))
-	
-	cat('\nCATEGORICAL\n')
-	print(table.xor)
-	
-	# Fisher 2-sided
-	test = fisher.test(table.xor)
-	
-	# p-value e log dell’odds ratio
-	cat('p-value (2-sided): ', test$p.value, '\n')
-	cat('log(odds ratio): ', log(test$estimate['odds ratio']))
-}
-
-# performs pairwise exact fisher test
-pairwise.fisher.test = function(data) {
-	
-	# structure to save the results
-	results = vector();
-	
-	if(ncol(data)>1) {
-		for(i in 1:ncol(data)) {
-			for(j in i:ncol(data)) {
-				if(i!=j) {
-					
-					df = data[,c(i,j)]
-					df_x = data[,1]
-					df_y = data[,2]
-					
-					# Lifting xor
-					df_xor = df_x + df_y
-					df_xor[ df_xor > 1] = 0
-					
-					# Lifting or
-					df_or = df_x + df_y
-					df_or[ df_or > 1] = 1
-					
-					# Lifting and
-					df_and = df_x + df_y
-					df_and[ df_and < 2] = 0
-					df_and[ df_and == 2] = 1
-					
-					# 2x2 contingency table
-					table.xor = rbind(
-						c(nrow(df) - sum(df_or), sum(df_or - df_y)),
-						c(sum(df_or - df_x), sum(df_and))
-					)
-					
-					# Fisher 2-sided
-					test = fisher.test(table.xor)
-					
-					# save the results
-					curr_result = c(test$p.value,log(test$estimate['odds ratio']))
-					results = append(results, list(curr_result))
-					
-					# print('TESTING')
-					# print(colnames(data)[i])
-					# print(colnames(data)[j])
-					# print(df)
-					# print(table.xor)
-					# print(test)
-				}
-			}
-		}
-	}
-	
-	return(results)
-	
-}
-
-#### end of file -- lifting.operators.R
 
 #' @import igraph
 hypotheses.expansion <- function(input_matrix, 
@@ -1409,5 +791,561 @@ hypotheses.expansion <- function(input_matrix,
     return(list(and_matrix, hypos_new_name, conf_matrix))
   }
   return(list(and_matrix, hypos_new_name))
+}
+
+#### lifting.operators.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
+
+
+# Utility function to add the hypotheses
+aux.log = function( dataset, annotations, function.name, ... ) {
+  
+	if(!is.null(dataset) && !is.null(annotations) && length(list(...)) > 0) {
+		
+		clauses = list(...)
+		curr_dataset = array(0, c(nrow(dataset), length(clauses)))
+		hypotheses = list()
+		function.inputs = list()
+    
+		for (i in 1:length(clauses)) {
+			
+			# if the clause is given by name, get the column from the dataset
+			if(typeof(clauses[[i]]) == "character") {
+				
+			  	col.num = -1
+        		# if I have the label, get the column in the dataset for this event
+				if(length(clauses[[i]]) == 1) {
+					event.map = emap(c(clauses[[i]],"*"), dataset, annotations)
+					col.num = event.map$col.num
+				}
+				else if(length(clauses[[i]]) == 2) {
+					event.map = emap(clauses[[i]], dataset, annotations)
+					col.num = event.map$col.num
+				}
+        
+				if(col.num[1] == -1) {
+					stop(paste("[ERR] No events for gene ", paste(clauses[[i]], collapse=', ', sep='')))
+				}
+				else {
+					curr_dataset[,i] = dataset[,col.num[1]]
+					if(length(col.num)>1) {
+						curr_dataset = cbind(curr_dataset, dataset[ ,col.num[2:length(col.num)]])
+					}
+          
+					if(length(hypotheses$llist) == 0) {
+						hypotheses$llist = list(event.map$events.name)
+					}
+					else {
+						hypotheses$llist = list(c(unlist(hypotheses$llist), event.map$events.name))
+					}
+					for (j in 1:length(event.map$events.name)) {
+						function.name = paste(function.name,"_",event.map$events.name[j],sep="")
+						function.inputs = c(function.inputs,event.map$events.name[j])
+					}
+				}
+				
+			}
+			else {
+				# otherwise I already have the column as a vector
+				curr_dataset[,i] = clauses[[i]]$pattern
+				# if it is a list
+				if(length(hypotheses$llist) == 0) {
+					hypotheses$llist = clauses[[i]]$hypotheses$llist
+				}
+				else {
+					hypotheses$llist = list(c(unlist(clauses[[i]]$hypotheses$llist),unlist(hypotheses$llist)))
+				}
+				function.name = paste(function.name, "_", clauses[[i]]$function.name, sep="")
+				function.inputs = c(function.inputs, clauses[[i]]$function.name)
+			}
+		}
+		
+		result = list(curr_dataset=curr_dataset,
+                  hypotheses=hypotheses,
+                  function.name=function.name,
+                  function.inputs=function.inputs,
+                  tests = pairwise.fisher.test(curr_dataset))
+    
+		# save the new edges
+		for(k in 1:length(result$function.inputs)) {
+			lifting.edges = rbind(lifting.edges, c(result$function.inputs[[k]], result$function.name))
+			assign("lifting.edges", lifting.edges, envir=.GlobalEnv)
+		}
+		
+		return(result)
+		
+	}
+	else {
+		stop("[ERR] Either the dataset or the formula not provided! No hypothesis will be created.")
+	}
+	return(NA)
+}
+
+# AND hypothesis
+#' @export
+"AND" <-
+function( ... ) {
+	# look for the global variables named lifting.dataset and lifting.annotations
+	dataset = lifting.dataset;
+	annotations = lifting.annotations;
+	pvalue = lifting.pvalue;
+  	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
+		# get the vector of the clauses of the formula from the dataset
+		result = aux.log(dataset,annotations, "AND" ,...);
+		curr_dataset = result$curr_dataset;
+		hypotheses = result$hypotheses;
+		function.name = result$function.name;
+		function.inputs = result$function.inputs;
+		
+		#verify the fisher exact tests
+		fisher.pvalues = vector();
+		if(length(result$tests)>0) {
+			for(i in 1:length(result$tests)) {
+				curr.test = result$tests[[i]];
+				odds.ratio = curr.test[2]
+	
+				if(curr.test[2]<=0) {
+					curr.pvalue = 1;
+				}
+				else {
+					curr.pvalue = curr.test[1];
+				}
+				
+				fisher.pvalues = append(fisher.pvalues,pvalue,curr.pvalue)
+			}
+		}
+		
+		# evaluate the AND operator
+		pattern = rep(0,nrow(dataset));
+		for (i in 1:nrow(dataset)) {
+			pattern[i] = sum(curr_dataset[i,]);
+			if(pattern[i]<ncol(curr_dataset)) {
+				pattern[i] = 0;
+			}
+			else {
+				pattern[i] = 1;
+			}
+		}
+		pattern = as.integer(pattern);
+		result = list(pattern=pattern, hypotheses=hypotheses, function.name=function.name, function.inputs=function.inputs, fisher.pvalues=fisher.pvalues);
+		return(result);
+	}
+	else {
+		stop("[ERR] Either the dataset or the formula not provided! No hypothesis will be created.");
+	}
+	return(NA)
+}
+
+# OR hypothesis
+#' @export
+"OR" <-
+function( ... ) {
+	# look for the global variables named lifting.dataset and lifting.annotations
+	dataset = lifting.dataset;
+	annotations = lifting.annotations;
+	pvalue = lifting.pvalue;
+	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
+		# get the vector of the clauses of the formula from the dataset
+		result = aux.log(dataset,annotations,"OR",...);
+		curr_dataset = result$curr_dataset;
+		hypotheses = result$hypotheses;
+		function.name = result$function.name;
+		function.inputs = result$function.inputs;
+		
+		# verify the fisher exact tests
+		fisher.pvalues = vector();
+		if(length(result$tests)>0) {
+			for(i in 1:length(result$tests)) {
+				curr.test = result$tests[[i]];
+				curr.p.value = 1 - curr.test[1];
+	
+				fisher.pvalues = append(fisher.pvalues, p.value, curr.p.value)
+			}
+		}
+		
+		# evaluate the OR operator
+		pattern = rep(0,nrow(dataset));
+		for (i in 1:nrow(dataset)) {
+			pattern[i] = sum(curr_dataset[i,]);
+			if(pattern[i]>1) {
+				pattern[i] = 1;
+			}
+		}
+		pattern = as.integer(pattern);
+		result = list(pattern=pattern, hypotheses=hypotheses, function.name=function.name, function.inputs=function.inputs, fisher.pvalues=fisher.pvalues);
+		return(result);
+	}
+	else {
+		stop("[ERR] Either the dataset or the formula not provided! No hypothesis will be created.");
+	}
+	return(NA);
+}
+
+# XOR hypothesis
+#' @export
+"XOR" <-
+function( ... ) {
+	#look for the global variables named lifting.dataset and lifting.annotations
+	dataset = lifting.dataset;
+	annotations = lifting.annotations;
+	pvalue = lifting.pvalue;
+	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
+		#get the vector of the clauses of the formula from the dataset
+		result = aux.log(dataset,annotations,"XOR",...);
+		curr_dataset = result$curr_dataset;
+		hypotheses = result$hypotheses;
+		function.name = result$function.name;
+		function.inputs = result$function.inputs;
+		
+		#verify the fisher exact tests
+		fisher.pvalues = vector();
+		if(length(result$tests)>0) {
+			for(i in 1:length(result$tests)) {
+				curr.test = result$tests[[i]];
+				odds.ratio = curr.test[2]
+		
+				if(curr.test[2]>=0) {
+					curr.pvalue = 1;
+				}
+				else {
+					curr.pvalue = curr.test[1];
+				}
+				
+				fisher.pvalues = append(fisher.pvalues, p.value, curr.pvalue)
+			}
+		}
+		
+		# evaluate the XOR operator
+		pattern = rep(0,nrow(dataset));
+		for (i in 1:nrow(dataset)) {
+			pattern[i] = sum(curr_dataset[i,]);
+			if(pattern[i]>1) {
+				pattern[i] = 0;
+			}
+		}
+		pattern = as.integer(pattern);
+		result = list(pattern=pattern, hypotheses=hypotheses, function.name=function.name, function.inputs=function.inputs, fisher.pvalues=fisher.pvalues);
+		return(result);
+	}
+	else {
+		stop("[ERR] Either the dataset or the formula not provided! No hypothesis will be created.");
+	}
+	return(NA);
+}
+
+#### end of file -- lifting.operators.R
+
+#### emap.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
+
+
+# Return the position in the dataset of the event referring to the given label.event
+emap = function( label.event, dataset, annotations ) {
+	col.num = -1;
+	events.name = "";
+	if(!is.null(dataset) && !is.null(annotations)) {
+		if(label.event[2]!="*") {
+			curr.events = which(annotations[,"event"]==label.event[1]&annotations[,"type"]==label.event[2]);
+		}
+		else {
+			curr.events = which(annotations[,"event"]==label.event[1]);
+		}
+		if(length(curr.events)>0) {
+			events.name = names(curr.events);
+			col.num = which(colnames(dataset)%in%events.name);
+		}
+	}
+	else {
+		stop("[ERR] A dataset must be available in order to define any hypothesis!",call.=FALSE);
+	}
+	results = list(col.num=col.num,events.name=events.name);
+	return(results);
+}
+
+#### end of file -- emap.R
+
+#### get.lifted.formula.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
+
+
+# Return the adjacency matrix of the pattern given the list of edges involving it
+"get.lifted.pattern" <-
+function( lifted.edges ) {
+	#structure to save the adjacency matrix
+	lifted.adj.matrix = array(0,c(length(unique(c(lifted.edges[,1],lifted.edges[,2]))),length(unique(c(lifted.edges[,1],lifted.edges[,2])))));
+	rownames(lifted.adj.matrix) = unique(c(lifted.edges[,1],lifted.edges[,2]));
+	colnames(lifted.adj.matrix) = rownames(lifted.adj.matrix);
+	#build the matrix given the lifted.edges
+	for(i in 1:nrow(lifted.edges)) {
+		lifted.adj.matrix[lifted.edges[i,1],lifted.edges[i,2]] = 1;
+	}
+	return(lifted.adj.matrix);
+}
+
+#### end of file -- get.lifted.formula.R
+
+#### hypothesis.cycles.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
+
+
+# evaluate cycles involving any hypothesis
+# INPUT:
+# data: input dataset and its hypotheses
+# adj.matrix: adjacency matrix of the reconstructed topology
+# hypotheses.labels: label of all the existing hypotheses
+# weights.matrix: weights of any edge in the topology
+"hypothesis.evaluate.cycles" <-
+function( data, adj.matrix, hypotheses.labels, weights.matrix ) {
+	
+	# create the structures where to save the weights in increasing order of confidence
+    ordered.weights <- vector();
+    ordered.edges <- list();
+    
+	# create a map structure where to save the atomic events of each hypothesis
+	matomic = new.env(hash=TRUE,parent=emptyenv());
+	
+	# create a map structure where to save the hypotheses of each atomic event
+	mhypotheses = new.env(hash=TRUE,parent=emptyenv());
+	
+	# evaluate all the existing hypotheses
+	for (i in 1:length(hypotheses.labels)) {
+		
+		#evaluate the current hypothesis
+		connections = hypothesis.connections(adj.matrix, hypotheses.labels[i]);
+		connections = hypothesis.expand.connections(label=hypotheses.labels[i],events=pattern.events(data,hypotheses.labels[i]),incoming=connections$incoming,outgoing=connections$outgoing,hnames=colnames(adj.matrix),matomic=matomic,weights.matrix=weights.matrix);
+		
+		#save the results for the current hypothesis
+		ordered.weights = c(ordered.weights,connections$ordered.weights);
+		ordered.edges = c(ordered.edges,connections$ordered.edges);
+		matomic = connections$matomic;
+		
+	}
+	
+	#add to the map the link between atomic to pattern
+	for (i in 1:ncol(adj.matrix)) {
+		if(!is.null(data$atoms[[colnames(adj.matrix)[i]]])) {
+			#add to the map the hypotheses of this atomic event
+			mhypotheses[[toString(i)]] = which(colnames(adj.matrix)%in%data$atoms[[colnames(adj.matrix)[i]]]);
+		}
+	}
+	
+	#return the results
+	return(list(ordered.weights=ordered.weights,ordered.edges=ordered.edges,matomic=matomic,mhypotheses=mhypotheses));
+}
+
+# given the adj.matrix, return the incoming and outgoing connections for any hypothesis
+# INPUT:
+# adj.matrix: adjacency matrix of the topology
+# hypotheses.label: label of the hypothesis
+"hypothesis.connections" <-
+function( adj.matrix, hypotheses.label ) {
+	
+	hypotheses.label = hypotheses.label[hypotheses.label %in% rownames(adj.matrix)]
+	
+	incoming = rownames(adj.matrix)[which(adj.matrix[,hypotheses.label]==1)];
+	outgoing = colnames(adj.matrix)[which(adj.matrix[hypotheses.label,]==1)];
+	connections = list(incoming=incoming,outgoing=outgoing);
+	
+	return(connections);
+
+}
+
+# expand and enumerate all the connections incoming or outgoing an hypothesis
+# INPUT:
+# label: name of the hypothesis
+# events: events in the hypothesis
+# incoming: incoming connections
+# outgoing: outgoing connections
+# weights.matrix: weights of any edge in the topology
+"hypothesis.expand.connections" <-
+function(label, events, incoming, outgoing, hnames, matomic, weights.matrix) {
+	
+	# create the structures where to save the weights in increasing order of confidence
+    ordered.weights <- vector();
+    ordered.edges <- list();
+    
+    # get the position of the hypothesis
+    hypothesis.pos = which(hnames==label);
+
+	# evalutate the incoming and outgoing connections
+    curr.edge.pos = 0;
+    if(length(incoming)>0) {
+		for(i in 1:length(incoming)) {
+			ordered.weights = rbind(ordered.weights,weights.matrix[which(hnames==incoming[i]),hypothesis.pos]);
+			curr.edge.pos = curr.edge.pos + 1;
+			new.edge <- array(0, c(2,1));
+        		new.edge[1,1] = which(hnames==incoming[i]);
+        		new.edge[2,1] = hypothesis.pos;
+        		ordered.edges[curr.edge.pos] = list(new.edge);
+		}
+	}
+    if(length(outgoing)>0) {
+		for(i in 1:length(outgoing)) {
+			ordered.weights = rbind(ordered.weights,weights.matrix[hypothesis.pos,which(hnames==outgoing[i])]);
+			curr.edge.pos = curr.edge.pos + 1;
+        		new.edge <- array(0, c(2,1));
+        		new.edge[1,1] = hypothesis.pos;
+        		new.edge[2,1] = which(hnames==outgoing[i]);
+        		ordered.edges[curr.edge.pos] = list(new.edge);
+		}
+	}
+	
+	if(length(hypothesis.pos) > 0)
+		matomic[[toString(hypothesis.pos)]] = which(hnames%in%events)	#add to the map the atomic events of this hypothesis
+	else
+		print('hypothesis.pos == 0!')
+	
+	# return the results
+	return(list(ordered.weights=ordered.weights,ordered.edges=ordered.edges,matomic=matomic));
+	
+}
+
+# given the hypotheses and the adj.matrix, return the updated adj.matrix
+"hypothesis.adj.matrix" <-
+function(hypotheses, adj.matrix) {
+	
+	if(!is.na(hypotheses[1])) {
+		# set the invalid entries in the adj.matrix
+		# hypotheses can not be causing other hypotheses
+		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):ncol(adj.matrix),(ncol(adj.matrix)-hypotheses$num.hypotheses+1):ncol(adj.matrix)] = 0;
+		# consider the given hypotheses only toward the specified possible effects
+		hypotheses.matrix = array(0,c(hypotheses$num.hypotheses,ncol(adj.matrix)-hypotheses$num.hypotheses));		
+		for (i in 1:nrow(hypotheses$hlist)) {
+			cause = which(hypotheses$hlist[i,1]==colnames(adj.matrix));
+			effect = which(hypotheses$hlist[i,2]==colnames(adj.matrix));
+			if(length(cause)>0 && length(effect)>0) {
+				hypotheses.matrix[cause-ncol(adj.matrix)+hypotheses$num.hypotheses,effect] = 1;
+			}
+		}
+		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix),1:(ncol(adj.matrix)-hypotheses$num.hypotheses)] = hypotheses.matrix;
+		for(j in (ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix)) {
+			for(k in 1:(ncol(adj.matrix)-hypotheses$num.hypotheses)) {
+				if(adj.matrix[j,k] == 0) {
+					adj.matrix[k,j] = 0;
+				}
+			}
+		}
+	}
+	return(adj.matrix);
+	
+}
+
+
+#### end of file -- hypothesis.cycles.R
+
+testing = function(data, g1, g2) {
+
+	# Dataframe di tutto il dataset
+	df = data.frame(row.names=as.samples(data))
+	df$x = rowSums(as.gene(data, genes=g1))
+	df$y = rowSums(as.gene(data, genes=g2))
+	
+	# Lifting xor
+	df$xor = df$x + df$y
+	df$xor[ df$xor > 1] = 0
+	
+	# Lifting or
+	df$or = df$x + df$y
+	df$or[ df$or > 1] = 1
+	
+	# Lifting and
+	df$and = df$x + df$y
+	df$and[ df$and < 2] = 0
+	df$and[ df$and == 2] = 1
+	
+	# Nomi per accedere successivamente 
+	names(df$x) = g1
+	names(df$y) = g2
+	names(df$xor) = 'xor'
+	names(df$or) = 'or'
+	names(df$and) = 'and'
+	
+	cat('DATASET\n')
+	print(df)
+	
+	# Tabella di contingenza 2x2
+	table.xor = rbind(
+		c(nrow(df) - sum(df$or), sum(df$or - df$y)),
+		c(sum(df$or - df$x), sum(df$and))
+	)
+	
+	colnames(table.xor) = c(paste0('-', g1), paste0('+', g1))
+	rownames(table.xor) = c(paste0('-', g2), paste0('+', g2))
+	
+	cat('\nCATEGORICAL\n')
+	print(table.xor)
+	
+	# Fisher 2-sided
+	test = fisher.test(table.xor)
+	
+	# p-value e log dell’odds ratio
+	cat('p-value (2-sided): ', test$p.value, '\n')
+	cat('log(odds ratio): ', log(test$estimate['odds ratio']))
+}
+
+# performs pairwise exact fisher test
+pairwise.fisher.test = function(data) {
+	
+	# structure to save the results
+	results = vector();
+	
+	if(ncol(data)>1) {
+		for(i in 1:ncol(data)) {
+			for(j in i:ncol(data)) {
+				if(i!=j) {
+					
+					df = data[,c(i,j)]
+					df_x = data[,1]
+					df_y = data[,2]
+					
+					# Lifting xor
+					df_xor = df_x + df_y
+					df_xor[ df_xor > 1] = 0
+					
+					# Lifting or
+					df_or = df_x + df_y
+					df_or[ df_or > 1] = 1
+					
+					# Lifting and
+					df_and = df_x + df_y
+					df_and[ df_and < 2] = 0
+					df_and[ df_and == 2] = 1
+					
+					# 2x2 contingency table
+					table.xor = rbind(
+						c(nrow(df) - sum(df_or), sum(df_or - df_y)),
+						c(sum(df_or - df_x), sum(df_and))
+					)
+					
+					# Fisher 2-sided
+					test = fisher.test(table.xor)
+					
+					# save the results
+					curr_result = c(test$p.value,log(test$estimate['odds ratio']))
+					results = append(results, list(curr_result))
+					
+				}
+			}
+		}
+	}
+	
+	return(results)
+	
 }
 
