@@ -136,7 +136,7 @@ delete.samples = function(x, samples) {
     }
   }
   
-  x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, ]
+  x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, ,drop=F]
   
   if("stages" %in% names(x)) {
     x$stages = x$stages[!rownames(x$stages) %in% del, , drop=FALSE]
