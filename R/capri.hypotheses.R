@@ -6,18 +6,18 @@
 #### information.
 
 
-# Add a new hypothesis by creating a new event and adding it to the compliant dataset
+# Add a new hypothesis by creating a new event and adding it to the compliant genotypes
 #' @export
 "hypothesis.add" <-
-  function( data, label.pattern, lifted.pattern, effect.pattern ) {
+  function( data, pattern.label, lifted.pattern, pattern.effect = "*", pattern.cause = "*" ) {
 
 	# save the needed data structures
     if(!is.null(data$genotypes) && !is.null(data$annotations)) {
-    		dataset = data$genotypes;
+    		genotypes = data$genotypes;
     		annotations = data$annotations;
     }
     else {
-    		dataset = NULL;
+    		genotypes = NULL;
     		annotations = NULL;
     }
     if(!is.null(data$hypotheses)) {
@@ -28,23 +28,24 @@
     }
     
     # add the hypothesis only if all the inputs are correctly provided
-    if(!is.null(dataset) && !is.null(annotations)) {
+    if(!is.null(genotypes) && !is.null(annotations)) {
     		
-    		# the Boolean functions look for a global variable named lifting.dataset
+    		# the Boolean functions look for a set of global variables
       	# if there are already global variables named as the ones used here, make the backup of them
-      	do.roll.back.lifting.dataset = FALSE;
+      	do.roll.back.lifting.genotypes = FALSE;
       	do.roll.back.lifting.annotations = FALSE;
       	do.roll.back.lifting.edges = FALSE;
+      	do.roll.back.fisher.pvalues = FALSE;
       
-      	# I need a global variable to save the dataset of the lifted formula
-      	# if there is already a global variable named lifting.dataset, make the backup of it
-      	if(exists("lifting.dataset")) {
-      		roll.back.lifting.dataset = lifting.dataset;
-        		do.roll.back.lifting.dataset = TRUE;
+      	# I need a global variable to save the genotypes of the lifted pattern
+      	# if there is already a global variable named lifting.genotypes, make the backup of it
+      	if(exists("lifting.genotypes")) {
+      		roll.back.lifting.genotypes = lifting.genotypes;
+        		do.roll.back.lifting.genotypes = TRUE;
       	}
-      	assign("lifting.dataset",dataset,envir=.GlobalEnv);
+      	assign("lifting.genotypes",genotypes,envir=.GlobalEnv);
       	
-      	# I need a global variable to save the annotations of the lifted formula
+      	# I need a global variable to save the annotations of the lifted pattern
 	    # if there is already a global variable named lifting.annotations, make the backup of it
 	    if(exists("lifting.annotations")) {
 	    		roll.back.lifting.annotations = lifting.annotations;
@@ -59,21 +60,29 @@
       		do.roll.back.lifting.edges = TRUE;
       	}
       	assign("lifting.edges",NULL,envir=.GlobalEnv);
+	    
+	    # I need a global variable to save the pvalues of the lifted pattern
+      	# if there is already a global variable named fisher.pvalues, make the backup of it
+      	if(exists("fisher.pvalues")) {
+      		roll.back.fisher.pvalues = fisher.pvalues;
+      		do.roll.back.fisher.pvalues = TRUE;
+      	}
+      	assign("fisher.pvalues",NULL,envir=.GlobalEnv);
       	
-      	# save the lifted dataset and its hypotheses for the current formula
+      	# save the lifted genotypes and its hypotheses for the current pattern
       	curr_pattern = lifted.pattern$pattern;
       	curr_hypotheses = lifted.pattern$hypotheses;
-      	curr_pvalues = lifted.pattern$pvalues;
+      	curr_pvalues = fisher.pvalues;
       	
       	# save the edges of the lifted pattern
       	hstructure = lifting.edges;
       	
-      	# roll back to the previous value of the global variable lifting.dataset if any or remove it
-      	if(do.roll.back.lifting.dataset) {
-      		assign("lifting.dataset",roll.back.lifting.dataset,envir=.GlobalEnv);
+      	# roll back to the previous value of the global variable lifting.genotypes if any or remove it
+      	if(do.roll.back.lifting.genotypes) {
+      		assign("lifting.genotypes",roll.back.lifting.genotypes,envir=.GlobalEnv);
       	}
       	else {
-      		rm(lifting.dataset,pos=".GlobalEnv");
+      		rm(lifting.genotypes,pos=".GlobalEnv");
       	}
       	
       	# roll back to the previous value of the global variable lifting.annotations if any or remove it
@@ -92,7 +101,14 @@
       		rm(lifting.edges,pos=".GlobalEnv");
       	}
       	
-      	
+      	# roll back to the previous value of the global variable fisher.pvalues if any or remove it
+      	if(do.roll.back.fisher.pvalues) {
+      		assign("fisher.pvalues",roll.back.fisher.pvalues,envir=.GlobalEnv);
+      	}
+      	else {
+      		rm(fisher.pvalues,pos=".GlobalEnv");
+      	}
+		
       	# set the hypotheses number
       	if(!is.na(hypotheses[1])) {
       		num.hypotheses = hypotheses$num.hypotheses;
@@ -101,64 +117,63 @@
       		num.hypotheses = 0;
       	}
       	
-      	# * is a special effect.pattern which indicates to use all the events as effects for this formula
+      	# * is a special pattern.effect which indicates to use all the events as effects for this pattern
       	is.to.all.effects = FALSE;
-      	if(effect.pattern[[1]][1]=="*") {
+      	if(pattern.effect[[1]][1]=="*") {
       		
-      		effect.pattern = colnames(dataset)[1:(length(colnames(dataset))-num.hypotheses)];
+      		pattern.effect = colnames(genotypes)[1:(length(colnames(genotypes))-num.hypotheses)];
       		
-      		# any event can not be both causes and effects for the formula to be well-formed
-      		effect.pattern = list(effect.pattern[-which((effect.pattern%in%unlist(curr_hypotheses$llist)))]);
+      		# any event can not be both causes and effects for the pattern to be well-formed
+      		pattern.effect = list(pattern.effect[-which((pattern.effect%in%unlist(curr_hypotheses$llist)))]);
       		is.to.all.effects = TRUE;
-      		
-      		
-      		if(length(effect.pattern)==0) {
+			
+      		if(length(pattern.effect)==0) {
       			stop(paste("[ERR] Missing list of effects to test or wildcard \'*\'.", sep=''));
       		}
       		
       	}
       	
-      	# check the formula to be well-formed
+      	# check the pattern to be well-formed
       	all.col.nums = vector();
-      	if(length(effect.pattern)==0) {
+      	if(length(pattern.effect)==0) {
       		stop(paste("[ERR] Missing list of effects or wildcard \'*\'.", sep=''));
       	}
       	else {
-      		# check the effects of the formula to be well-formed
-      		for (i in 1:length(effect.pattern)) {
+      		# check the effects of the pattern to be well-formed
+      		for (i in 1:length(pattern.effect)) {
       			
-      			curr.effect.pattern = effect.pattern[[i]];
+      			curr.pattern.effect = pattern.effect[[i]];
       			if(is.to.all.effects==FALSE) {
       				col.num = -1;
-      				if(length(curr.effect.pattern)==1) {
-      					event.map = emap(c(curr.effect.pattern,"*"),dataset,annotations);
+      				if(length(curr.pattern.effect)==1) {
+      					event.map = emap(c(curr.pattern.effect,"*"),genotypes,annotations);
       					col.num = event.map$col.num;
       					events.name = event.map$events.name;
       				}
-      				else if(length(curr.effect.pattern)==2) {
-      					event.map = emap(curr.effect.pattern,dataset,annotations);
+      				else if(length(curr.pattern.effect)==2) {
+      					event.map = emap(curr.pattern.effect,genotypes,annotations);
       					col.num = event.map$col.num;
       					events.name = event.map$events.name;
       				}
       			}
       			else {
-      				col.num = which(colnames(dataset)%in%curr.effect.pattern);
+      				col.num = which(colnames(genotypes)%in%curr.pattern.effect);
       				if(length(col.num)==0) {
       					col.num = -1;
       				}
-      				events.name = curr.effect.pattern;
+      				events.name = curr.pattern.effect;
       			}
       			
       			# check the effect to be a valid event
       			if(col.num[1]==-1) {
-      				stop(paste("[ERR] Unknown gene among effects: \"", curr.effect.pattern, "\".",sep=''));
+      				stop(paste("[ERR] Unknown gene among effects: \"", curr.pattern.effect, "\".",sep=''));
       			}
       			all.col.nums = append(all.col.nums,col.num);
       			
       			# check the pattern to be well-formed
       			# if the effect is in the pattern, the pattern is not well-formed
       			if(length(which(unlist(curr_hypotheses$llist)%in%events.name))>0) {
-      				stop(paste("[ERR] Bad formed pattern, event \"", curr.effect.pattern, "\" yields a loop.",,sep=''));
+      				stop(paste("[ERR] Bad formed pattern, event \"", curr.pattern.effect, "\" yields a loop.",sep=''));
       			}
       			
       		}
@@ -166,44 +181,43 @@
       	
       	# look for duplicated effects in the pattern
       	if(anyDuplicated(all.col.nums)>0) {
-      		stop(paste("[ERR] Bad formed formula, duplicated events ", 
-                   paste(effect.pattern[duplicated(effect.pattern)], collapse=', ', sep=''),
+      		stop(paste("[ERR] Bad formed pattern, duplicated events ", 
+                   paste(pattern.effect[duplicated(pattern.effect)], collapse=', ', sep=''),
                    "within effects.", sep=''));
         }
         
         # check that the we are not duplicating any name by adding the new pattern
-        if(length(which(colnames(dataset)==label.pattern))>0) {
+        if(length(which(colnames(genotypes)==pattern.label))>0) {
         		stop(paste("[ERR] This pattern already exists.", sep=''));
         	}
-        	
-        	
-        	# add the pattern to the dataset
-        	dataset = cbind(dataset,curr_pattern);
+		
+        	# add the pattern to the genotypes
+        	genotypes = cbind(genotypes,curr_pattern);
         	
         	# check that the pattern is valid according to Suppes' theory
         	# compute the observed and observed joint probabilities
-        	pair.count <- array(0, dim=c(ncol(dataset),ncol(dataset)));
-        	# compute the probabilities on the dataset
-        	for(i in 1:ncol(dataset)) {
-        		for(j in 1:ncol(dataset)) {
-        			val1 = dataset[ ,i];
-        			val2 = dataset[ ,j];
+        	pair.count <- array(0, dim=c(ncol(genotypes),ncol(genotypes)));
+        	# compute the probabilities on the genotypes
+        	for(i in 1:ncol(genotypes)) {
+        		for(j in 1:ncol(genotypes)) {
+        			val1 = genotypes[ ,i];
+        			val2 = genotypes[ ,j];
         			pair.count[i,j] = (t(val1)%*%val2);
         		}
         	}
         	# marginal.probs is an array of the observed marginal probabilities
-        	marginal.probs <- array(as.matrix(diag(pair.count)/nrow(dataset)),dim=c(ncol(dataset),1));
+        	marginal.probs <- array(as.matrix(diag(pair.count)/nrow(genotypes)),dim=c(ncol(genotypes),1));
         	# joint.probs is an array of the observed joint probabilities
-        	joint.probs <- as.matrix(pair.count/nrow(dataset));
+        	joint.probs <- as.matrix(pair.count/nrow(genotypes));
         	# check that the probability of the pattern is in (0,1)
-        	if(marginal.probs[ncol(dataset)]==0 || marginal.probs[ncol(dataset)]==1) {
-        		stop(paste("[ERR] The pattern has marginal probability ", marginal.probs[ncol(dataset)], 
+        	if(marginal.probs[ncol(genotypes)]==0 || marginal.probs[ncol(genotypes)]==1) {
+        		stop(paste("[ERR] The pattern has marginal probability ", marginal.probs[ncol(genotypes)], 
                    ", which should be in (0,1).", sep=''));
         }
         
         # check that the pattern does not duplicate any existing column
-        i = ncol(dataset);
-        for(j in 1:ncol(dataset)) {
+        i = ncol(genotypes);
+        for(j in 1:ncol(genotypes)) {
         		# if the edge is valid, i.e., not self cause
         		if(i!=j) {
         			#if the two considered events are not distinguishable
@@ -214,21 +228,85 @@
             }
         }
         
+        # * is a special pattern.cause which indicates to use all the events as causes for this pattern
+      	is.to.all.causes = FALSE;
+      	if(pattern.cause[[1]][1]=="*") {
+      		
+      		pattern.cause = colnames(genotypes)[1:(length(colnames(genotypes))-num.hypotheses-1)];
+      		
+      		# any event can not be both causes and effects for the pattern to be well-formed
+      		pattern.cause = list(pattern.cause[-which((pattern.cause%in%unlist(curr_hypotheses$llist)))]);
+      		is.to.all.causes = TRUE;
+      		
+      	}
+      	
+      	# check the pattern to be well-formed
+      	all.col.nums = vector();
+      	if(length(pattern.cause)>0) {
+      		
+      		# check the causes of the pattern to be well-formed
+      		for (i in 1:length(pattern.cause)) {
+      			
+      			curr.pattern.cause = pattern.cause[[i]];
+      			if(is.to.all.causes==FALSE) {
+      				col.num = -1;
+      				if(length(curr.pattern.cause)==1) {
+      					event.map = emap(c(curr.pattern.cause,"*"),genotypes,annotations);
+      					col.num = event.map$col.num;
+      					events.name = event.map$events.name;
+      				}
+      				else if(length(curr.pattern.cause)==2) {
+      					event.map = emap(curr.pattern.cause,genotypes,annotations);
+      					col.num = event.map$col.num;
+      					events.name = event.map$events.name;
+      				}
+      			}
+      			else {
+      				col.num = which(colnames(genotypes)%in%curr.pattern.cause);
+      				if(length(col.num)==0) {
+      					col.num = -1;
+      				}
+      				events.name = curr.pattern.cause;
+      			}
+      			
+      			# check the cause to be a valid event
+      			if(col.num[1]==-1) {
+      				stop(paste("[ERR] Unknown gene among causes: \"", curr.pattern.cause, "\".",sep=''));
+      			}
+      			all.col.nums = append(all.col.nums,col.num);
+      			
+      			# check the pattern to be well-formed
+      			# if the cause is in the pattern, the pattern is not well-formed
+      			if(length(which(unlist(curr_hypotheses$llist)%in%events.name))>0) {
+      				stop(paste("[ERR] Bad formed pattern, event \"", curr.pattern.cause, "\" yields a loop.",sep=''));
+      			}
+      			
+      		}
+      	}
+      	
+      	# look for duplicated causes in the pattern
+      	if(anyDuplicated(all.col.nums)>0) {
+      		stop(paste("[ERR] Bad formed pattern, duplicated events ", 
+                   paste(pattern.cause[duplicated(pattern.cause)], collapse=', ', sep=''),
+                   "within causes.", sep=''));
+        }
+        
         # now I can finally add the hypothesis
-        colnames(dataset)[ncol(dataset)] = label.pattern;
+        colnames(genotypes)[ncol(genotypes)] = pattern.label;
         if(is.na(hypotheses[1])) {
         		hypotheses = list();
         	}
         	hypotheses$num.hypotheses = num.hypotheses + 1;
-        	
+		
         # add the new hypothesis in the annotations
-        annotations = rbind(data$annotations,c("Hypothesis", label.pattern));
-        rownames(annotations)[nrow(annotations)] = label.pattern;
+        annotations = rbind(data$annotations,c("Hypothesis", pattern.label));
+        rownames(annotations)[nrow(annotations)] = pattern.label;
+        
         # add the color of the type "Hypothesis" is not already defined
         if(any(rownames(data$types)=="Hypothesis")==FALSE) {
-        	types = rbind(data$types, 'slateblue');
-        	rownames(types)[nrow(types)] = "Hypothesis";
-        	data$types = types;
+			types = rbind(data$types, 'slateblue');
+			rownames(types)[nrow(types)] = "Hypothesis";
+			data$types = types;
         }
         	
         	# create the list of added hypotheses
@@ -236,65 +314,101 @@
         		hypotheses$hlist = vector();
         	}
         	# add the new hypothesis to the list
-        	for (i in 1:length(effect.pattern)) {
-        		curr.effect.pattern = effect.pattern[[i]];
+        	for (i in 1:length(pattern.effect)) {
+        		curr.pattern.effect = pattern.effect[[i]];
         		if(is.to.all.effects==FALSE) {
-        			if(length(curr.effect.pattern)==1) {
-        				event.map = emap(c(curr.effect.pattern,"*"),dataset,annotations);
+        			if(length(curr.pattern.effect)==1) {
+        				event.map = emap(c(curr.pattern.effect,"*"),genotypes,annotations);
         				col.num = event.map$col.num;
         			}
-        			else if(length(curr.effect.pattern)==2) {
-        				event.map = emap(curr.effect.pattern,dataset,annotations);
+        			else if(length(curr.pattern.effect)==2) {
+        				event.map = emap(curr.pattern.effect,genotypes,annotations);
         				col.num = event.map$col.num;
         			}
         		}
         		else {
-        			col.num = which(colnames(dataset)%in%curr.effect.pattern);
+        			col.num = which(colnames(genotypes)%in%curr.pattern.effect);
         			if(length(col.num)==0) {
         				col.num = -1;
         			}
         		}
         		for (j in 1:length(col.num)) {
-        			hypotheses$hlist = rbind(hypotheses$hlist,t(c(colnames(dataset)[ncol(dataset)],colnames(dataset)[col.num[j]])));
+        			hypotheses$hlist = rbind(hypotheses$hlist,t(c(colnames(genotypes)[ncol(genotypes)],colnames(genotypes)[col.num[j]])));
         		}
         		if(is.null(colnames(hypotheses$hlist))) {
         			colnames(hypotheses$hlist) = c("cause","effect");
         		}
         	}
         	
+        # add the causes of the new hypothesis to the list
+        if(length(pattern.cause)>0) {
+        		for (i in 1:length(pattern.cause)) {
+        			curr.pattern.cause = pattern.cause[[i]];
+        			if(is.to.all.causes==FALSE) {
+        				if(length(curr.pattern.cause)==1) {
+        					event.map = emap(c(curr.pattern.cause,"*"),genotypes,annotations);
+        					col.num = event.map$col.num;
+        				}
+        				else if(length(curr.pattern.cause)==2) {
+        					event.map = emap(curr.pattern.cause,genotypes,annotations);
+        					col.num = event.map$col.num;
+        				}
+        			}
+        			else {
+        				col.num = which(colnames(genotypes)%in%curr.pattern.cause);
+        				if(length(col.num)==0) {
+        					col.num = -1;
+        				}
+        			}
+        			for (j in 1:length(col.num)) {
+        				hypotheses$hlist = rbind(hypotheses$hlist,t(c(colnames(genotypes)[col.num[j]],colnames(genotypes)[ncol(genotypes)])));
+        			}
+        			if(is.null(colnames(hypotheses$hlist))) {
+        				colnames(hypotheses$hlist) = c("cause","effect");
+        			}
+        		}
+        }
+        	
         	# create the list of hypotheses' structures
         	if(length(hypotheses$hstructure)==0) {
         		hypotheses$hstructure = new.env(hash=TRUE,parent=emptyenv());
         	}
-        	hypotheses$hstructure[[label.pattern]] = get.lifted.pattern(hstructure);
+        	hypotheses$hstructure[[pattern.label]] = get.lifted.pattern(hstructure);
         	
         	# add the atoms of the hypothesis
         if(length(hypotheses$patterns)==0) {
-        	hypotheses$patterns = list();
+			hypotheses$patterns = list();
         }
-        hypotheses$patterns[label.pattern] = lifted.pattern$hypotheses$llist;
+        hypotheses$patterns[pattern.label] = lifted.pattern$hypotheses$llist;
         
         #add the hypotheses of the atoms
         if(length(hypotheses$atoms)==0) {
-        		hypotheses$atoms = vector(mode="list",length=(ncol(dataset)-hypotheses$num.hypotheses));
-        		names(hypotheses$atoms) = colnames(dataset)[1:(ncol(dataset)-hypotheses$num.hypotheses)];
+        		hypotheses$atoms = vector(mode="list",length=(ncol(genotypes)-hypotheses$num.hypotheses));
+        		names(hypotheses$atoms) = colnames(genotypes)[1:(ncol(genotypes)-hypotheses$num.hypotheses)];
         	}
-        	atoms.in.pattern = which(names(hypotheses$atoms)%in%unlist(hypotheses$patterns[label.pattern]));
+        	atoms.in.pattern = which(names(hypotheses$atoms)%in%unlist(hypotheses$patterns[pattern.label]));
         	if(length(atoms.in.pattern)>0) {
         		for (i in 1:length(atoms.in.pattern)) {
-        			hypotheses$atoms[[atoms.in.pattern[i]]] = append(hypotheses$atoms[[atoms.in.pattern[i]]], label.pattern);
+        			hypotheses$atoms[[atoms.in.pattern[i]]] = append(hypotheses$atoms[[atoms.in.pattern[i]]], pattern.label);
         		}
         	}
+        
+        #add the fisher pvalues
+        if(length(hypotheses$pvalues)==0) {
+        		hypotheses$pvalues = vector();
+        }
+        hypotheses$pvalues = append(hypotheses$pvalues,list(curr_pvalues))
+        names(hypotheses$pvalues)[length(hypotheses$pvalues)] = pattern.label;
         	
-        	#return the new (compliant) data as result
-        	data$genotypes = dataset;
+        	#return the new (compliant) data structure as result
+        	data$genotypes = genotypes;
         data$annotations = annotations;
         	data$hypotheses = hypotheses;
         	
         	return(data);
     }
     else {
-    		stop("[ERR] Missing dataset or formula.");
+    		stop("[ERR] Missing genotypes or pattern.");
     		
     	}
     	
@@ -303,6 +417,11 @@
 }
 
 #### end of file -- hypothesis.add.R
+
+# resolve the ellipsis for the effects
+hypothesis.lifted.effects = function( ... ) {
+	return(list(...));
+}
 
 #' @export
 hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(group), min.prob = 0, ...) {
@@ -313,7 +432,6 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 
 	effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
 	effect = paste(effect, collapse = ", ")
-
 	
 	cat("*** Adding Group Hypotheses\n")
 	cat('Group:', paste(group, collapse = ", ", sep = ""))
@@ -322,7 +440,6 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 	flush.console()
 	
 	# group %in% as.events(x)[, 'event']
-
 
 	if(min.prob > 0)
 	{
@@ -370,7 +487,7 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 	
 	error.summary = data.frame()
 
-	# Get an analytical formula... !
+	# Get an analytical pattern... !
 	tot.patterns = 0
 	for (i in min.groupsize:max.groupsize) tot.patterns = tot.patterns + ncol(combn(unlist(group), i))
 	
@@ -402,8 +519,7 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 			# print(hypo.genes)
 			# print(hom.group)
 
-				hypo.add = paste0("hypothesis.add(x, label.pattern = '", op, "_", hypo.name, "', lifted.pattern = ", op, "(", hypo.genes, "), ", effect, ")")
-
+				hypo.add = paste0("hypothesis.add(x, pattern.label = '", op, "_", hypo.name, "', lifted.pattern = ", op, "(", hypo.genes, "), ", effect, ")")
 
 				# cat('*** Evaluating ', hypo.add, '\n')
 				
@@ -432,7 +548,6 @@ hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(gro
 	}
 	# close progress bar
 	# close(pb)
-
 
 	if (nrow(error.summary) > 0) {
 		cat(paste(nrow(error.summary), " genes pattern could not be added -- showing errors\n", sep = ""))
@@ -481,7 +596,7 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 		FUN = 'OR'
 		else FUN = 'XOR'				
 
-		hypo.add = paste0("hypothesis.add(x, label.pattern = '", FUN, "_", hom.group[[i]], "', lifted.pattern = ", FUN, "('", hom.group[[i]], "'), ", effect, 
+		hypo.add = paste0("hypothesis.add(x, pattern.label = '", FUN, "_", hom.group[[i]], "', lifted.pattern = ", FUN, "('", hom.group[[i]], "'), ", effect, 
 			")")
 
 		err = tryCatch({
@@ -563,8 +678,6 @@ hypotheses.expansion <- function(input_matrix,
     print(input_matrix)
   }
   
-  
-
   cat('*** Hypos expansion:')
   # check if there are hypotheses
   if (num_hypos == 0 || !expand) {
@@ -583,10 +696,8 @@ hypotheses.expansion <- function(input_matrix,
     # for (h in ls(map)) {
     # print(h)
     # }
-    
-    
-    for (h in ls(map)) {
       
+    for (h in ls(map)) {
 
       if (! h %in% node_list) {
         next
@@ -597,7 +708,6 @@ hypotheses.expansion <- function(input_matrix,
       
       # create graph from hypo
       hypo_graph = graph.adjacency(hypo)
-      
 
       # name of this node
       h_mat <- rowSums(get.adjacency(hypo_graph, sparse=FALSE))
@@ -658,12 +768,10 @@ hypotheses.expansion <- function(input_matrix,
         }
 
       }
-
       
       # display down hypo
      # if (display.up || display.down) {
      if (display.down) {
-     
 
         # edge to reconstruct
         h_edge <- input_matrix[h,]
@@ -672,7 +780,6 @@ hypotheses.expansion <- function(input_matrix,
         # add this graph to main graph
         min_graph = graph.union(min_graph, hypo_graph)
         
-
       }
 
       # reconnect down hypo
@@ -691,8 +798,6 @@ hypotheses.expansion <- function(input_matrix,
   
   cat(' done')
 
-  
-  
   # now expand the hidden AND
   #print(min_matrix)
   
@@ -781,28 +886,29 @@ hypotheses.expansion <- function(input_matrix,
 
 
 # Utility function to add the hypotheses
-aux.log = function( dataset, annotations, function.name, ... ) {
+aux.log = function( genotypes, annotations, function.name, ... ) {
   
-	if(!is.null(dataset) && !is.null(annotations) && length(list(...)) > 0) {
+	if(!is.null(genotypes) && !is.null(annotations) && length(list(...)) > 0) {
 		
 		clauses = list(...)
-		curr_dataset = array(0, c(nrow(dataset), length(clauses)))
+		curr_genotypes = array(0, c(nrow(genotypes), length(clauses)))
 		hypotheses = list()
 		function.inputs = list()
+		fisher.tests = vector()
     
 		for (i in 1:length(clauses)) {
 			
-			# if the clause is given by name, get the column from the dataset
+			# if the clause is given by name, get the column from the genotypes
 			if(typeof(clauses[[i]]) == "character") {
 				
 			  	col.num = -1
-        		# if I have the label, get the column in the dataset for this event
+			  	# if I have the label, get the column in the genotypes for this event
 				if(length(clauses[[i]]) == 1) {
-					event.map = emap(c(clauses[[i]],"*"), dataset, annotations)
+					event.map = emap(c(clauses[[i]],"*"), genotypes, annotations)
 					col.num = event.map$col.num
 				}
 				else if(length(clauses[[i]]) == 2) {
-					event.map = emap(clauses[[i]], dataset, annotations)
+					event.map = emap(clauses[[i]], genotypes, annotations)
 					col.num = event.map$col.num
 				}
         
@@ -810,9 +916,9 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 					stop(paste("[ERR] No events for gene ", paste(clauses[[i]], collapse=', ', sep='')))
 				}
 				else {
-					curr_dataset[,i] = dataset[,col.num[1]]
+					curr_genotypes[,i] = genotypes[,col.num[1]]
 					if(length(col.num)>1) {
-						curr_dataset = cbind(curr_dataset, dataset[ ,col.num[2:length(col.num)]])
+						curr_genotypes = cbind(curr_genotypes, genotypes[ ,col.num[2:length(col.num)]])
 					}
           
 					if(length(hypotheses$llist) == 0) {
@@ -830,7 +936,7 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 			}
 			else {
 				# otherwise I already have the column as a vector
-				curr_dataset[,i] = clauses[[i]]$pattern
+				curr_genotypes[,i] = clauses[[i]]$pattern
 				# if it is a list
 				if(length(hypotheses$llist) == 0) {
 					hypotheses$llist = clauses[[i]]$hypotheses$llist
@@ -840,14 +946,15 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 				}
 				function.name = paste(function.name, "_", clauses[[i]]$function.name, sep="")
 				function.inputs = c(function.inputs, clauses[[i]]$function.name)
+				
 			}
 		}
 		
-		result = list(curr_dataset=curr_dataset,
+		result = list(curr_genotypes=curr_genotypes,
                   hypotheses=hypotheses,
                   function.name=function.name,
                   function.inputs=function.inputs,
-                  tests = pairwise.fisher.test(curr_dataset))
+                  tests = pairwise.fisher.test(curr_genotypes))
     
 		# save the new edges
 		for(k in 1:length(result$function.inputs)) {
@@ -859,7 +966,7 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 		
 	}
 	else {
-		stop("[ERR] Either the dataset or the formula not provided! No hypothesis will be created.")
+		stop("[ERR] Either the genotypes or the pattern not provided! No hypothesis will be created.")
 	}
 	return(NA)
 }
@@ -868,20 +975,18 @@ aux.log = function( dataset, annotations, function.name, ... ) {
 #' @export
 "AND" <-
 function( ... ) {
-	# look for the global variables named lifting.dataset and lifting.annotations
-	dataset = lifting.dataset;
+	# look for the global variables named lifting.genotypes and lifting.annotations
+	genotypes = lifting.genotypes;
 	annotations = lifting.annotations;
-	pvalue = -1;
-  	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
-		# get the vector of the clauses of the formula from the dataset
-		result = aux.log(dataset,annotations, "AND" ,...);
-		curr_dataset = result$curr_dataset;
+  	if(!is.null(genotypes) && !is.null(annotations) && length(list(...))>0) {
+		# get the vector of the clauses of the pattern from the genotypes
+		result = aux.log(genotypes,annotations, "AND" ,...);
+		curr_genotypes = result$curr_genotypes;
 		hypotheses = result$hypotheses;
 		function.name = result$function.name;
 		function.inputs = result$function.inputs;
 		
-		#verify the fisher exact tests
-		fisher.pvalues = vector();
+		#save the fisher exact tests
 		if(length(result$tests)>0) {
 			for(i in 1:length(result$tests)) {
 				curr.test = result$tests[[i]];
@@ -894,15 +999,16 @@ function( ... ) {
 					curr.pvalue = curr.test[1];
 				}
 				
-				fisher.pvalues = append(fisher.pvalues,pvalue,curr.pvalue)
+				fisher.pvalues = append(fisher.pvalues,curr.pvalue)
 			}
+			assign("fisher.pvalues", fisher.pvalues, envir=.GlobalEnv)
 		}
 		
 		# evaluate the AND operator
-		pattern = rep(0,nrow(dataset));
-		for (i in 1:nrow(dataset)) {
-			pattern[i] = sum(curr_dataset[i,]);
-			if(pattern[i]<ncol(curr_dataset)) {
+		pattern = rep(0,nrow(genotypes));
+		for (i in 1:nrow(genotypes)) {
+			pattern[i] = sum(curr_genotypes[i,]);
+			if(pattern[i]<ncol(curr_genotypes)) {
 				pattern[i] = 0;
 			}
 			else {
@@ -914,7 +1020,7 @@ function( ... ) {
 		return(result);
 	}
 	else {
-		stop("[ERR] Either the dataset or the formula not provided! No hypothesis will be created.");
+		stop("[ERR] Either the genotypes or the pattern not provided! No hypothesis will be created.");
 	}
 	return(NA)
 }
@@ -923,33 +1029,32 @@ function( ... ) {
 #' @export
 "OR" <-
 function( ... ) {
-	# look for the global variables named lifting.dataset and lifting.annotations
-	dataset = lifting.dataset;
+	# look for the global variables named lifting.genotypes and lifting.annotations
+	genotypes = lifting.genotypes;
 	annotations = lifting.annotations;
-	pvalue = -1;
-	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
-		# get the vector of the clauses of the formula from the dataset
-		result = aux.log(dataset,annotations,"OR",...);
-		curr_dataset = result$curr_dataset;
+	if(!is.null(genotypes) && !is.null(annotations) && length(list(...))>0) {
+		# get the vector of the clauses of the pattern from the genotypes
+		result = aux.log(genotypes,annotations,"OR",...);
+		curr_genotypes = result$curr_genotypes;
 		hypotheses = result$hypotheses;
 		function.name = result$function.name;
 		function.inputs = result$function.inputs;
 		
-		# verify the fisher exact tests
-		fisher.pvalues = vector();
+		# save the fisher exact tests
 		if(length(result$tests)>0) {
 			for(i in 1:length(result$tests)) {
 				curr.test = result$tests[[i]];
 				curr.p.value = 1 - curr.test[1];
 	
-				fisher.pvalues = append(fisher.pvalues, pvalue, curr.p.value)
+				fisher.pvalues = append(fisher.pvalues,curr.p.value)
 			}
+			assign("fisher.pvalues", fisher.pvalues, envir=.GlobalEnv)
 		}
 		
 		# evaluate the OR operator
-		pattern = rep(0,nrow(dataset));
-		for (i in 1:nrow(dataset)) {
-			pattern[i] = sum(curr_dataset[i,]);
+		pattern = rep(0,nrow(genotypes));
+		for (i in 1:nrow(genotypes)) {
+			pattern[i] = sum(curr_genotypes[i,]);
 			if(pattern[i]>1) {
 				pattern[i] = 1;
 			}
@@ -959,7 +1064,7 @@ function( ... ) {
 		return(result);
 	}
 	else {
-		stop("[ERR] Either the dataset or the formula not provided! No hypothesis will be created.");
+		stop("[ERR] Either the genotypes or the pattern not provided! No hypothesis will be created.");
 	}
 	return(NA);
 }
@@ -968,20 +1073,18 @@ function( ... ) {
 #' @export
 "XOR" <-
 function( ... ) {
-	#look for the global variables named lifting.dataset and lifting.annotations
-	dataset = lifting.dataset;
+	#look for the global variables named lifting.genotypes and lifting.annotations
+	genotypes = lifting.genotypes;
 	annotations = lifting.annotations;
-	pvalue = -1;
-	if(!is.null(dataset) && !is.null(annotations) && length(list(...))>0) {
-		#get the vector of the clauses of the formula from the dataset
-		result = aux.log(dataset,annotations,"XOR",...);
-		curr_dataset = result$curr_dataset;
+	if(!is.null(genotypes) && !is.null(annotations) && length(list(...))>0) {
+		#get the vector of the clauses of the pattern from the genotypes
+		result = aux.log(genotypes,annotations,"XOR",...);
+		curr_genotypes = result$curr_genotypes;
 		hypotheses = result$hypotheses;
 		function.name = result$function.name;
 		function.inputs = result$function.inputs;
 		
-		#verify the fisher exact tests
-		fisher.pvalues = vector();
+		# save the fisher exact tests
 		if(length(result$tests)>0) {
 			for(i in 1:length(result$tests)) {
 				curr.test = result$tests[[i]];
@@ -994,14 +1097,15 @@ function( ... ) {
 					curr.pvalue = curr.test[1];
 				}
 				
-				fisher.pvalues = append(fisher.pvalues, pvalue, curr.pvalue)
+				fisher.pvalues = append(fisher.pvalues,curr.pvalue)
 			}
+			assign("fisher.pvalues", fisher.pvalues, envir=.GlobalEnv)
 		}
 		
 		# evaluate the XOR operator
-		pattern = rep(0,nrow(dataset));
-		for (i in 1:nrow(dataset)) {
-			pattern[i] = sum(curr_dataset[i,]);
+		pattern = rep(0,nrow(genotypes));
+		for (i in 1:nrow(genotypes)) {
+			pattern[i] = sum(curr_genotypes[i,]);
 			if(pattern[i]>1) {
 				pattern[i] = 0;
 			}
@@ -1011,7 +1115,7 @@ function( ... ) {
 		return(result);
 	}
 	else {
-		stop("[ERR] Either the dataset or the formula not provided! No hypothesis will be created.");
+		stop("[ERR] Either the genotypes or the pattern not provided! No hypothesis will be created.");
 	}
 	return(NA);
 }
@@ -1026,11 +1130,11 @@ function( ... ) {
 #### information.
 
 
-# Return the position in the dataset of the event referring to the given label.event
-emap = function( label.event, dataset, annotations ) {
+# Return the position in the genotypes of the event referring to the given label.event
+emap = function( label.event, genotypes, annotations ) {
 	col.num = -1;
 	events.name = "";
-	if(!is.null(dataset) && !is.null(annotations)) {
+	if(!is.null(genotypes) && !is.null(annotations)) {
 		if(label.event[2]!="*") {
 			curr.events = which(annotations[,"event"]==label.event[1]&annotations[,"type"]==label.event[2]);
 		}
@@ -1039,11 +1143,11 @@ emap = function( label.event, dataset, annotations ) {
 		}
 		if(length(curr.events)>0) {
 			events.name = names(curr.events);
-			col.num = which(colnames(dataset)%in%events.name);
+			col.num = which(colnames(genotypes)%in%events.name);
 		}
 	}
 	else {
-		stop("[ERR] A dataset must be available in order to define any hypothesis!",call.=FALSE);
+		stop("[ERR] A genotypes must be available in order to define any hypothesis!",call.=FALSE);
 	}
 	results = list(col.num=col.num,events.name=events.name);
 	return(results);
@@ -1085,7 +1189,7 @@ function( lifted.edges ) {
 
 # evaluate cycles involving any hypothesis
 # INPUT:
-# data: input dataset and its hypotheses
+# data: input genotypes and its hypotheses
 # adj.matrix: adjacency matrix of the reconstructed topology
 # hypotheses.labels: label of all the existing hypotheses
 # weights.matrix: weights of any edge in the topology
@@ -1230,7 +1334,7 @@ function(hypotheses, adj.matrix) {
 
 testing = function(data, g1, g2) {
 
-	# Dataframe di tutto il dataset
+	# Dataframe di tutto il genotypes
 	df = data.frame(row.names=as.samples(data))
 	df$x = rowSums(as.gene(data, genes=g1))
 	df$y = rowSums(as.gene(data, genes=g2))
@@ -1255,7 +1359,7 @@ testing = function(data, g1, g2) {
 	names(df$or) = 'or'
 	names(df$and) = 'and'
 	
-	cat('DATASET\n')
+	cat('genotypes\n')
 	print(df)
 	
 	# Tabella di contingenza 2x2
