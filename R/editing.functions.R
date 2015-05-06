@@ -350,7 +350,7 @@ sbind = function(...)
 # @ ...: type to merge
 # @ new.type: label for the new type to create
 # @ new.color: color for the new type to create
-#' @export
+#' @export merge.types
 merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
 
   # #   # internal function, merge two types
