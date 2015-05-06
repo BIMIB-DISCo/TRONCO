@@ -199,7 +199,7 @@ oncoprint <- function(x,
   if(hasGroups)	{
     ngroups = length(unique(group.samples[,1]))
     cat('Grouping labels:', paste(unique(group.samples[,1]), collapse=', '), '\n')
-    group.color.attr = brewer.pal(n=ngroups, name='Accent')
+    group.color.attr = colorRampPalette(brewer.pal(n=ngroups, name='Accent'))(ngroups)
     # print(unique(group.samples[,1]))
     # print(samples.annotation)
     # print(samples.annotation)
