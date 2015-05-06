@@ -504,7 +504,12 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
     z = annotate.stages(z, as.stages(x))
 
 
-  return(z)
+  y = delete.type(x, input)
+
+  w = ebind(y, z)
+  is.compliant(w)
+
+  return(w)
 
 }
 
