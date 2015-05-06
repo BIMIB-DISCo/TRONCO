@@ -261,6 +261,8 @@ ebind = function(...)
     
     # Copy types
     z$types = unique(rbind(x$types, y$types)) 
+    
+    # print(z$types)
 
     # print(x)
     # print(y)
@@ -522,11 +524,11 @@ trim = function(x) {
   
   del = names(which(colSums(x$genotypes) == 0))
 
-  x$genotypes = x$genotypes[, !colnames(x$genotypes) %in% del]
-  x$annotations = x$annotations[!rownames(x$annotations) %in% del,]
+  x$genotypes = x$genotypes[, !colnames(x$genotypes) %in% del, drop = FALSE]
+  x$annotations = x$annotations[!rownames(x$annotations) %in% del, , drop = FALSE]
 
-  x$types = matrix(x$types[ unique(x$annotations[,'type']), ncol=1])
-  rownames(x$types) = unique(x$annotations[,'type'])
+  x$types = matrix(x$types[ unique(x$annotations[, 'type', drop = FALSE]), , drop = FALSE ], ncol=1)
+  rownames(x$types) = unique(x$annotations[,'type', drop = FALSE])
   colnames(x$types) = 'color'
   
 
@@ -594,10 +596,15 @@ ssplit <- function(x, clusters, idx=NA)
   partitions = list()
   for (i in 1:num.clusters) 
   {
+  	
+# #   	print(i)
+	# print(clusters)
+	# print(cluster.labels[i,1])
+	  	
     y = list()
     samples.in.cluster = rownames(clusters)[clusters == cluster.labels[i,1]]
     
-    cat(paste('Group \"', idx, '\" has ', length(samples.in.cluster), 
+    cat(paste('Group \"', cluster.labels[i,1], '\" has ', length(samples.in.cluster), 
               ' samples.\n', sep=''))
     
     y$genotypes = data[samples.in.cluster, ];
@@ -610,8 +617,14 @@ ssplit <- function(x, clusters, idx=NA)
       }
     
     is.compliant(y, 'subtypes.split partitionig')
-    partitions = c(partitions, y) 
+    
+    
+    
+    partitions = append(partitions, list(y)) 
+    names(partitions)[i] = cluster.labels[i,1]
   }
+  
+  # names(partitions)
     
   return(partitions)
 }
@@ -623,5 +636,32 @@ ssplit <- function(x, clusters, idx=NA)
 tsplit <- function(x) 
 {
 # Parametro per estrarre un tipo solo di evento?
+}
+
+merge.events = function(x, events, new.event, new.type, event.color)
+{
+	if(ncol(events) != 2) stop('ERR - badformed events')
+	
+	x = enforce.numeric(x)
+	
+	x.ev = NULL 
+	y = x
+	for(i in 1:nrow(events))
+	{
+		x.ev = rbind(x.ev, as.events(x, genes = events[i,2], types = events[i,1]))
+		y = delete.event(y, gene = events[i,2], type = events[i,1])
+	}
+	
+	genos = x$genotypes[, rownames(x.ev)]
+	genos = matrix(rowSums(genos), nrow = nsamples(x))
+	genos[genos > 1] = 1
+	colnames(genos) = new.event
+	rownames(genos) = as.samples(x)
+
+	genos = import.genotypes(genos, event.type = new.type, color = event.color)
+	y = ebind(y, genos)
+
+	# print(as.events(y))
+	return(y)
 }
 

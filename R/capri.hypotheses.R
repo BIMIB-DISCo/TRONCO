@@ -572,14 +572,20 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 	}, x)
 	hom.group = genes[unlist(hom.group)]
 
-	cat("*** Adding hyoptheses for Homolgous Patterns\n")
+	cat("*** Adding hyoptheses for Homologous Patterns\n")
 	cat('Genes:', paste(hom.group, collapse = ", ", sep = ""))
 	cat(' Function:', FUN)
 	cat(' Effect:', effect, '\n')
 	flush.console()
+
+	if(length(hom.group) == 0) return(x)
+
 	
+	# print(length(hom.group))
 	# create a progress bar
 	pb <- txtProgressBar(0, length(hom.group), style = 3)
+
+	
 
 	error.summary = data.frame()
 

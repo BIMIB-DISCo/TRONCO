@@ -58,7 +58,7 @@ oncoprint <- function(x,
     install.packages('RColorBrewer', dependencies = TRUE)
     library(RColorBrewer)
   }
-  
+
   # This function sorts the matrix for better visualization of mutual exclusivity across genes
   exclusivity.sort <- function(M) {
     geneOrder <- sort(rowSums(M), decreasing=TRUE, index.return=TRUE)$ix;
@@ -71,7 +71,7 @@ oncoprint <- function(x,
       }
       return(score);
     }
-    scores <- apply(M[geneOrder, ], 2, scoreCol);
+    scores <- apply(M[geneOrder, , drop = FALSE ], 2, scoreCol);
     sampleOrder <- sort(scores, decreasing=TRUE, index.return=TRUE)$ix;
     
     res = list()
@@ -82,9 +82,11 @@ oncoprint <- function(x,
     return(res);
   }
   
+
   cat(paste('*** Oncoprint with attributes: stage=', ann.stage, ', hits=', ann.hits, '\n', sep=''))
   is.compliant(x, 'oncoprint', stage=ann.stage)
   x = enforce.numeric(x)
+  
   
   # If hide.zeros trim x
   if (hide.zeroes) {
@@ -199,10 +201,12 @@ oncoprint <- function(x,
   if(hasGroups)	{
   	ngroups = length(unique(group.samples[,1]))
   	cat('Grouping labels:', paste(unique(group.samples[,1]), collapse=', '), '\n')
-  	group.color.attr = brewer.pal(n=ngroups, name='Accent')
+  	group.color.attr = colorRampPalette(brewer.pal(n=ngroups, name='Accent'))(ngroups)
 	# print(unique(group.samples[,1]))
 	# print(samples.annotation)
 	# print(samples.annotation)
+	# print(group.color.attr)
+	
 	
   	names(group.color.attr) = unique(group.samples[,1])
     annotation_colors = append(annotation_colors, list(group=group.color.attr))
