@@ -321,9 +321,9 @@ nhypotheses = function(x)
 #' @export
 as.hypotheses = function(x)
 {
-  is.compliant(x$data)
-  if ('hstructure' %in% names(x$data$hypotheses)) {
-    return(ls(x$data$hypotheses$hstructure))
+  is.compliant(x)
+  if ('hstructure' %in% names(x$hypotheses)) {
+    return(ls(x$hypotheses$hstructure))
   }
 }
 
@@ -334,8 +334,8 @@ as.hypotheses = function(x)
 #' @export
 as.events.hypotheses = function(x, hypotheses=NULL)
 {
-  is.compliant(x$data)
-  ann = x$data$annotations[, c('type', 'event'), drop=FALSE]
+  is.compliant(x)
+  ann = x$annotations[, c('type', 'event'), drop=FALSE]
   if (is.null(hypotheses)) {
     hypotheses = as.hypotheses(x)
   }
@@ -345,7 +345,8 @@ as.events.hypotheses = function(x, hypotheses=NULL)
     if(!h %in% as.hypotheses(x)) {
       stop('Hypothesis ', h, ' not in as.hypotheses(x)')
     }
-    g = lapply(colnames(x$data$hypotheses$hstructure[[h]]), function(x){  if(length(i <- grep('^G([0-9]+)$', x))){x[i]}})
+
+    g = lapply(colnames(x$hypotheses$hstructure[[h]]), function(x){  if(!is.logic.node(x))return(x)})
     genes_list = append(genes_list, g)
   }  
   genes_list = unique(unlist(genes_list))
@@ -365,3 +366,4 @@ as.genes.hypotheses = function(x, hypotheses=NULL) {
   genes = unique(events[,'event'])
   return(genes)
 }
+
