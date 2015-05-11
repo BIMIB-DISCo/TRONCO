@@ -424,7 +424,7 @@ hypothesis.lifted.effects = function( ... ) {
 }
 
 #' @export
-hypothesis.add.group = function(x, FUN, group, dim.min = 2, dim.max = length(group), min.prob = 0, ...) {
+hypothesis.add.group = function(x, FUN, group, ..., dim.min = 2, dim.max = length(group), min.prob = 0) {
 	op = deparse(substitute(FUN))
 
 	#print(length(unlist(group)))
@@ -596,11 +596,10 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 
 		# Check if the joint probability of homologous events is > 0, if
 		# yes the event will be added as 'OR', otherwise 'XOR'
-		if( any(
-				rowSums(as.gene(x, genes = hom.group[[i]])) > 1) 
-			)
-		FUN = 'OR'
-		else FUN = 'XOR'				
+		if( any(rowSums(as.gene(x, genes = hom.group[[i]])) > 1))
+		  FUN = 'OR'
+		else
+      FUN = 'XOR'				
 
 		hypo.add = paste0("hypothesis.add(x, pattern.label = '", FUN, "_", hom.group[[i]], "', lifted.pattern = ", FUN, "('", hom.group[[i]], "'), ", effect, 
 			")")
