@@ -452,7 +452,7 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
             if(!silent) cat('*** Loop detection found loops to break.\n')
             weights.temporal.priority = probability.raising$edge.confidence.matrix[[2,1]];
-        weights.matrix = probability.raising$edge.confidence.matrix[[3,1]];
+        weights.matrix = probability.raising$edge.confidence.matrix[[2,1]] + probability.raising$edge.confidence.matrix[[3,1]];
         acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses);
         adj.matrix = acyclic.topology$adj.matrix;
     }
