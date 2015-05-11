@@ -1323,13 +1323,13 @@ function(hypotheses, adj.matrix) {
 			}
 		}
 		adj.matrix[(ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix),1:(ncol(adj.matrix)-hypotheses$num.hypotheses)] = hypotheses.matrix;
-		for(j in (ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix)) {
-			for(k in 1:(ncol(adj.matrix)-hypotheses$num.hypotheses)) {
-				if(adj.matrix[j,k] == 0) {
-					adj.matrix[k,j] = 0;
-				}
-			}
-		}
+		# for(j in (ncol(adj.matrix)-hypotheses$num.hypotheses+1):nrow(adj.matrix)) {
+			# for(k in 1:(ncol(adj.matrix)-hypotheses$num.hypotheses)) {
+				# if(adj.matrix[j,k] == 0) {
+					# adj.matrix[k,j] = 0;
+				# }
+			# }
+		# }
 	}
 	return(adj.matrix);
 	

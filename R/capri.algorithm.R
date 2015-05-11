@@ -42,68 +42,77 @@ function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.b
     # should I perform bootstrap? Yes if TRUE, no otherwise
    
     if(do.boot==TRUE) {
-        if(!silent) cat('*** Bootstraping scores for selective advantage.\n')
+        if(!silent) cat('*** Bootstraping the prima facie scores.\n')
         prima.facie.parents = get.prima.facie.parents.do.boot(dataset,hypotheses,nboot,pvalue,adj.matrix,min.boot,min.stat,boot.seed,silent);
     }
     else {
-            if(!silent) cat('*** Computing scores for selective advantage.\n')
-            prima.facie.parents = get.prima.facie.parents.no.boot(dataset,hypotheses,adj.matrix,silent);
+    		if(!silent) cat('*** Computing the prima facie scores.\n')
+    		prima.facie.parents = get.prima.facie.parents.no.boot(dataset,hypotheses,adj.matrix,silent);
     }
     
-    # perform the likelihood fit by BIC score on the prima facie topology
-    if(!silent) cat('*** Performing likelihood-fit with regularization.\n')
-    best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command,regularization=regularization);
+    # perform the likelihood fit with the required regularization scores
+    adj.matrix.model = list();
+    probabilities.fit.model = list();
+    parents.pos.model = list();
+    error.rates.model = list();
+    for (reg in regularization) {
     
-    # set the structure to save the conditional probabilities of the reconstructed topology
-    parents.pos.pf = array(list(),c(ncol(dataset),1));
-    conditional.probs.pf = array(list(),c(ncol(dataset),1));
-    parents.pos.fit = array(list(),c(ncol(dataset),1));
-    conditional.probs.fit = array(list(),c(ncol(dataset),1));
-    
-    # compute the conditional probabilities
-    for(i in 1:ncol(dataset)) {
-        for(j in 1:ncol(dataset)) {
-            if(i!=j && best.parents$adj.matrix$adj.matrix.pf[i,j]==1) {
-                parents.pos.pf[j,1] = list(c(unlist(parents.pos.pf[j,1]),i));
-                conditional.probs.pf[j,1] = list(c(unlist(conditional.probs.pf[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
-            }
-            if(i!=j && best.parents$adj.matrix$adj.matrix.fit[i,j]==1) {
-                parents.pos.fit[j,1] = list(c(unlist(parents.pos.fit[j,1]),i));
-                conditional.probs.fit[j,1] = list(c(unlist(conditional.probs.fit[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
-            }
-        }
-    }
-    parents.pos.pf[unlist(lapply(parents.pos.pf,is.null))] = list(-1);
-    conditional.probs.pf[unlist(lapply(conditional.probs.pf,is.null))] = list(1);
-    parents.pos.fit[unlist(lapply(parents.pos.fit,is.null))] = list(-1);
-    conditional.probs.fit[unlist(lapply(conditional.probs.fit,is.null))] = list(1);
-    
-    # perform the estimation of the probabilities if requested
-    if(do.estimation) {
-        # estimate the error rates and, given them, the probabilities for the prima facie topology
-        estimated.error.rates.pf = estimate.dag.error.rates(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.pf);
-        estimated.probabilities.pf = estimate.dag.probs(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.pf,estimated.error.rates.pf);
-        # estimate the error rates and, given them, the probabilities for the causal topology
-        estimated.error.rates.fit = estimate.dag.error.rates(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.fit);
-        estimated.probabilities.fit = estimate.dag.probs(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.fit,estimated.error.rates.fit);
-    }
-    else {
-        estimated.error.rates.pf = list(error.fp=NA,error.fn=NA);
-        estimated.probabilities.pf = list(marginal.probs=NA,joint.probs=NA,conditional.probs=NA);
-        estimated.error.rates.fit = list(error.fp=NA,error.fn=NA);
-        estimated.probabilities.fit = list(marginal.probs=NA,joint.probs=NA,conditional.probs=NA);
-    }
+    		# perform the likelihood fit by the chosen regularization score on the prima facie topology
+    		if(!silent) cat(paste0('*** Performing likelihood-fit with regularization ',reg,'.\n'))
+    		best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command,regularization=reg);
+    		adj.matrix.model[reg] = best.parents$adj.matrix;
+    		
+    		# set the structure to save the conditional probabilities of the reconstructed topology
+    		parents.pos.pf = array(list(),c(ncol(dataset),1));
+    		conditional.probs.pf = array(list(),c(ncol(dataset),1));
+    		parents.pos.fit = array(list(),c(ncol(dataset),1));
+    		conditional.probs.fit = array(list(),c(ncol(dataset),1));
+    		
+    		# compute the conditional probabilities
+    		for(i in 1:ncol(dataset)) {
+    			for(j in 1:ncol(dataset)) {
+    				if(i!=j && best.parents$adj.matrix$adj.matrix.pf[i,j]==1) {
+    					parents.pos.pf[j,1] = list(c(unlist(parents.pos.pf[j,1]),i));
+    					conditional.probs.pf[j,1] = list(c(unlist(conditional.probs.pf[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
+    				}
+    				if(i!=j && best.parents$adj.matrix$adj.matrix.fit[i,j]==1) {
+    					parents.pos.fit[j,1] = list(c(unlist(parents.pos.fit[j,1]),i));
+    					conditional.probs.fit[j,1] = list(c(unlist(conditional.probs.fit[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
+    				}
+    			}
+    		}
+    		parents.pos.pf[unlist(lapply(parents.pos.pf,is.null))] = list(-1);
+    		conditional.probs.pf[unlist(lapply(conditional.probs.pf,is.null))] = list(1);
+    		parents.pos.fit[unlist(lapply(parents.pos.fit,is.null))] = list(-1);
+    		conditional.probs.fit[unlist(lapply(conditional.probs.fit,is.null))] = list(1);
+    		
+    		# perform the estimation of the probabilities if requested
+    		if(do.estimation) {
+    			# estimate the error rates and, given them, the probabilities for the causal topology
+    			estimated.error.rates.fit = estimate.dag.error.rates(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.fit);
+    			estimated.probabilities.fit = estimate.dag.probs(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.fit,estimated.error.rates.fit);
+    		}
+    		else {
+    			estimated.error.rates.fit = list(error.fp=NA,error.fn=NA);
+    			estimated.probabilities.fit = list(marginal.probs=NA,joint.probs=NA,conditional.probs=NA);
+    		}
+    		
+    		probabilities.fit = list(estimated.marginal.probs=estimated.probabilities.fit$marginal.probs,estimated.joint.probs=estimated.probabilities.fit$joint.probs,estimated.conditional.probs=estimated.probabilities.fit$conditional.probs);
+    	probabilities.fit.model[reg] = probabilities.fit;
+    	parents.pos = list(parents.pos.pf=parents.pos.pf,parents.pos.fit=parents.pos.fit);
+    	parents.pos.model[reg] = parents.pos;
+    	error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.fit=estimated.error.rates.fit);
+    	error.rates.model[reg] = error.rates;
+    	
+    	}
     
     # set structures where to save the results
-    probabilities.pf = list(marginal.probs=prima.facie.parents$marginal.probs,joint.probs=prima.facie.parents$joint.probs,conditional.probs=conditional.probs.pf,estimated.marginal.probs=estimated.probabilities.pf$marginal.probs,estimated.joint.probs=estimated.probabilities.pf$joint.probs,estimated.conditional.probs=estimated.probabilities.pf$conditional.probs);
-    probabilities.fit = list(marginal.probs=prima.facie.parents$marginal.probs,joint.probs=prima.facie.parents$joint.probs,conditional.probs=conditional.probs.fit,estimated.marginal.probs=estimated.probabilities.fit$marginal.probs,estimated.joint.probs=estimated.probabilities.fit$joint.probs,estimated.conditional.probs=estimated.probabilities.fit$conditional.probs);
-    probabilities = list(probabilities.pf=probabilities.pf,probabilities.fit=probabilities.fit);
-    parents.pos = list(parents.pos.pf=parents.pos.pf,parents.pos.fit=parents.pos.fit);
-    error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.fit=estimated.error.rates.fit);
+    observed.probabilities = list(marginal.probs=prima.facie.parents$marginal.probs,joint.probs=prima.facie.parents$joint.probs,conditional.probs=conditional.probs.pf);
+    probabilities = list(observed.probabilities=observed.probabilities,probabilities.fit=probabilities.fit.model);
     parameters = list(algorithm="CAPRI",command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation,silent=silent,execution.time=(proc.time()-ptm));
     
     # return the results
-    topology = list(dataset=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,confidence=prima.facie.parents$pf.confidence,adj.matrix=best.parents$adj.matrix,parameters=parameters);
+    topology = list(dataset=dataset,probabilities=probabilities,parents.pos=parents.pos.model,error.rates=error.rates.model,confidence=prima.facie.parents$pf.confidence,adj.matrix=adj.matrix.model,parameters=parameters);
     return(topology);
     
 }
