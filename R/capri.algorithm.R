@@ -38,6 +38,11 @@ function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","ai
     # consider any hypothesis
     adj.matrix = hypothesis.adj.matrix(hypotheses,adj.matrix);
     
+    # check if the dataset is valid
+    valid.dataset = check.dataset(dataset,adj.matrix,FALSE);
+    adj.matrix = valid.dataset$adj.matrix;
+    invalid.events = valid.dataset$invalid.events;
+    
     # reconstruct the prima facie topology
     # should I perform bootstrap? Yes if TRUE, no otherwise
     if(do.boot==TRUE) {
@@ -48,6 +53,14 @@ function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","ai
     		if(!silent) cat('*** Computing the prima facie scores.\n')
     		prima.facie.parents = get.prima.facie.parents.no.boot(dataset,hypotheses,adj.matrix,silent);
     }
+    
+    # add back in any connection invalid for the probability raising theory
+    if(length(invalid.events)>0) {
+    		warning("Either always present or indistinguishable events are provided!");
+		for(i in 1:nrow(invalid.events)) {
+    			prima.facie.parents$adj.matrix[invalid.events[i,"cause"],invalid.events[i,"effect"]] = 1;
+		}
+	}
     
     # perform the likelihood fit with the required regularization scores
     model = list();
@@ -106,6 +119,101 @@ function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","ai
 }
 
 #### end of file -- capri.fit.R
+
+#### check.dataset.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
+
+
+# check if the dataset is valid accordingly to the probability raising
+# INPUT:
+# dataset: a dataset describing a progressive phenomenon
+# adj.matrix: adjacency matrix of the topology
+# verbose: should I print the warnings? Yes if TRUE, no otherwise
+# RETURN:
+# valid.dataset: a dataset valid accordingly to the probability raising
+"check.dataset" <-
+function( dataset, adj.matrix, verbose ) {
+	
+    # perform the preprocessing only if I have at least two binary events and two samples
+    if(length(ncol(dataset))>0 && ncol(dataset)>1 && length(nrow(dataset))>0 && nrow(dataset)>1 && length(dataset[dataset==0|dataset==1])==nrow(dataset)*ncol(dataset)) {
+    	
+        # structure to compute the observed and observed joint probabilities
+        pair.count <- array(0, dim=c(ncol(dataset), ncol(dataset)));
+        # compute the probabilities on the dataset
+        for(i in 1:ncol(dataset)) {
+            for(j in 1:ncol(dataset)) {
+                val1 = dataset[ ,i];
+                val2 = dataset[ ,j];
+                pair.count[i,j] = (t(val1) %*% val2);
+            }
+        }
+        # marginal.probs is an array of the observed marginal probabilities
+        marginal.probs <- array(as.matrix(diag(pair.count)/nrow(dataset)),dim=c(ncol(dataset),1));
+        # joint.probs is an array of the observed joint probabilities
+        joint.probs <- as.matrix(pair.count/nrow(dataset));
+        
+        # evaluate the connections
+        invalid.events = vector();
+        for (i in 1:ncol(adj.matrix)) {
+	        	for (j in 1:nrow(adj.matrix)) {
+	        		# if i --> j is valid
+	        		if(i!=j && adj.matrix[i,j]==1) {
+	        			# the potential cause is always present
+	        			if(marginal.probs[i]==1) {
+	        				# the potential child is not always missing
+	        				if(marginal.probs[i]>0) {
+	        					adj.matrix[i,j] = 0;
+	        					invalid.events = rbind(invalid.events,t(c(i,j)));
+	        				}
+	        				# the potential child is always missing
+	        				else if(marginal.probs[i]==0) {
+	        					adj.matrix[i,j] = 0;
+	        				}
+	        			}
+	        			# the potential cause is always missing
+	        			else if(marginal.probs[i]==0) {
+	        				adj.matrix[i,j] = 0;
+	        			}
+	        			# the potential child is always present
+	        			else if(marginal.probs[j]==1) {
+	        				adj.matrix[i,j] = 0;
+	        			}
+	        			# the potential child is always missing
+	        			else if(marginal.probs[j]==0) {
+	        				adj.matrix[i,j] = 0;
+	        			}
+	        			# the two events are equals
+	        			else if((joint.probs[i,j]/marginal.probs[i])==1 && (joint.probs[i,j]/marginal.probs[j])==1) {
+	        				adj.matrix[i,j] = 0;
+	        				invalid.events = rbind(invalid.events,t(c(i,j)));
+	        			}
+	        		}
+	        	}
+        }
+        if(length(invalid.events)>0) {
+        		colnames(invalid.events) = c("cause","effect");
+        }
+        valid.dataset = list(dataset=dataset,adj.matrix=adj.matrix,invalid.events=invalid.events,marginal.probs=marginal.probs,joint.probs=joint.probs);
+        
+    }
+    
+    #if the dataset is not valid, we stop here
+    else {
+        if(verbose==TRUE) {
+            warning("The dataset must contain at least two binary events and two samples.");
+        }
+        valid.dataset = list(dataset=NA,adj.matrix=NA,invalid.events=NA,marginal.probs=NA,joint.probs=NA);
+    }
+    
+    return(valid.dataset);
+    
+}
+
+#### end of file -- check.dataset.R
 
 
 #### get.bootstapped.scores.R
