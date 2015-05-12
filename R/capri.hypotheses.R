@@ -696,17 +696,17 @@ hypotheses.expansion <- function(input_matrix,
   
   # get node list
   node_list <- colnames(input_matrix)
-  print('input matrix')
-  print(input_matrix)
+  #print('input matrix')
+  #print(input_matrix)
 
-  print('map')
-  print(names(map))
+  #print('map')
+  #print(names(map))
   
   # cut input matrix
 
   num_hypos = Reduce(sum, lapply(ls(map), function(x, y){if(x %in% y)return(1)}, y=node_list))
-  print('num_hypos')
-  print(num_hypos)
+  #print('num_hypos')
+  #print(num_hypos)
 
   margin = length(node_list) - num_hypos
   hypos_new_name = list()
@@ -721,13 +721,13 @@ hypotheses.expansion <- function(input_matrix,
   } else {
     # ..else expand them
 
-    print('input matrix')
-    print(input_matrix)
+    #print('input matrix')
+    #print(input_matrix)
 
     min_matrix = input_matrix[-(margin+1):-length(node_list), -(margin+1):-length(node_list)]
 
-    print('min matrix')
-    print(min_matrix)
+    #print('min matrix')
+    #print(min_matrix)
     
     # create graph from matrix
     min_graph = graph.adjacency(min_matrix)
@@ -740,8 +740,8 @@ hypotheses.expansion <- function(input_matrix,
     # }
       
     for (h in ls(map)) {
-      print('hypo to expand')
-      print(h)
+      #print('hypo to expand')
+      #print(h)
       if (! h %in% node_list) {
         next
       }
@@ -758,7 +758,7 @@ hypotheses.expansion <- function(input_matrix,
       initial_node <- names(h_mat)[which(h_mat==0)]
       hypos_new_name[initial_node] = h
 
-      print(paste("new name:", initial_node))
+      #print(paste("new name:", initial_node))
 
       # change names in confidence matrix according to hypotesis
       if(!is.null(conf_matrix)) {
@@ -815,7 +815,7 @@ hypotheses.expansion <- function(input_matrix,
 
         # recreate lost edge
         for (node in initial_node_up) {
-          print(paste('new edge:', node, "->", final_node))
+          #print(paste('new edge:', node, "->", final_node))
           min_graph <- min_graph + edge(node, final_node)
         }
 
@@ -845,7 +845,7 @@ hypotheses.expansion <- function(input_matrix,
         # print(final_node)
         # recreate lost edge
         for (node in final_node) {
-          print(paste('new edge:', initial_node, "->",node))
+          #print(paste('new edge:', initial_node, "->",node))
           min_graph <- min_graph + edge(initial_node, node)
         }
       }
