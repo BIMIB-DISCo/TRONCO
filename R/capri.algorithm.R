@@ -21,7 +21,7 @@
 # RETURN:
 # topology: the reconstructed tree topology
 "capri.fit" <-
-function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE, boot.seed = 12345, do.estimation = FALSE, silent = FALSE ) {
+function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","aic"), do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE, boot.seed = NULL, do.estimation = FALSE, silent = FALSE ) {
 	
 	# start the clock to measure the execution time
 	ptm <- proc.time();
@@ -40,7 +40,6 @@ function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.b
     
     # reconstruct the prima facie topology
     # should I perform bootstrap? Yes if TRUE, no otherwise
-   
     if(do.boot==TRUE) {
         if(!silent) cat('*** Bootstraping the prima facie scores.\n')
         prima.facie.parents = get.prima.facie.parents.do.boot(dataset,hypotheses,nboot,pvalue,adj.matrix,min.boot,min.stat,boot.seed,silent);
@@ -51,38 +50,26 @@ function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.b
     }
     
     # perform the likelihood fit with the required regularization scores
-    adj.matrix.model = list();
-    probabilities.fit.model = list();
-    parents.pos.model = list();
-    error.rates.model = list();
+    model = list();
     for (reg in regularization) {
     
-    		# perform the likelihood fit by the chosen regularization score on the prima facie topology
+    		# perform the likelihood fit with the chosen regularization score on the prima facie topology
     		if(!silent) cat(paste0('*** Performing likelihood-fit with regularization ',reg,'.\n'))
     		best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command,regularization=reg);
-    		adj.matrix.model[reg] = best.parents$adj.matrix;
     		
     		# set the structure to save the conditional probabilities of the reconstructed topology
-    		parents.pos.pf = array(list(),c(ncol(dataset),1));
-    		conditional.probs.pf = array(list(),c(ncol(dataset),1));
     		parents.pos.fit = array(list(),c(ncol(dataset),1));
     		conditional.probs.fit = array(list(),c(ncol(dataset),1));
     		
     		# compute the conditional probabilities
     		for(i in 1:ncol(dataset)) {
     			for(j in 1:ncol(dataset)) {
-    				if(i!=j && best.parents$adj.matrix$adj.matrix.pf[i,j]==1) {
-    					parents.pos.pf[j,1] = list(c(unlist(parents.pos.pf[j,1]),i));
-    					conditional.probs.pf[j,1] = list(c(unlist(conditional.probs.pf[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
-    				}
     				if(i!=j && best.parents$adj.matrix$adj.matrix.fit[i,j]==1) {
     					parents.pos.fit[j,1] = list(c(unlist(parents.pos.fit[j,1]),i));
     					conditional.probs.fit[j,1] = list(c(unlist(conditional.probs.fit[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
     				}
     			}
     		}
-    		parents.pos.pf[unlist(lapply(parents.pos.pf,is.null))] = list(-1);
-    		conditional.probs.pf[unlist(lapply(conditional.probs.pf,is.null))] = list(1);
     		parents.pos.fit[unlist(lapply(parents.pos.fit,is.null))] = list(-1);
     		conditional.probs.fit[unlist(lapply(conditional.probs.fit,is.null))] = list(1);
     		
@@ -97,22 +84,23 @@ function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.b
     			estimated.probabilities.fit = list(marginal.probs=NA,joint.probs=NA,conditional.probs=NA);
     		}
     		
-    		probabilities.fit = list(estimated.marginal.probs=estimated.probabilities.fit$marginal.probs,estimated.joint.probs=estimated.probabilities.fit$joint.probs,estimated.conditional.probs=estimated.probabilities.fit$conditional.probs);
-    	probabilities.fit.model[reg] = probabilities.fit;
-    	parents.pos = list(parents.pos.pf=parents.pos.pf,parents.pos.fit=parents.pos.fit);
-    	parents.pos.model[reg] = parents.pos;
-    	error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.fit=estimated.error.rates.fit);
-    	error.rates.model[reg] = error.rates;
+    		# set results for the current regolarizator
+    	probabilities.observed = list(marginal.probs=prima.facie.parents$marginal.probs,joint.probs=prima.facie.parents$joint.probs,conditional.probs=conditional.probs.fit);
+    	probabilities.fit = list(estimated.marginal.probs=estimated.probabilities.fit$marginal.probs,estimated.joint.probs=estimated.probabilities.fit$joint.probs,estimated.conditional.probs=estimated.probabilities.fit$conditional.probs);
+    	probabilities = list(probabilities.observed=probabilities.observed,probabilities.fit=probabilities.fit);
+    	parents.pos = parents.pos.fit;
+    	error.rates = estimated.error.rates.fit;
+    	
+    	# save the results for the model
+    	model[[reg]] = list(probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,adj.matrix=best.parents$adj.matrix);
     	
     	}
     
-    # set structures where to save the results
-    observed.probabilities = list(marginal.probs=prima.facie.parents$marginal.probs,joint.probs=prima.facie.parents$joint.probs,conditional.probs=conditional.probs.pf);
-    probabilities = list(observed.probabilities=observed.probabilities,probabilities.fit=probabilities.fit.model);
-    parameters = list(algorithm="CAPRI",command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation,silent=silent,execution.time=(proc.time()-ptm));
+    # set the execution parameters
+    parameters = list(algorithm="CAPRI",command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation,silent=silent);
     
     # return the results
-    topology = list(dataset=dataset,probabilities=probabilities,parents.pos=parents.pos.model,error.rates=error.rates.model,confidence=prima.facie.parents$pf.confidence,adj.matrix=adj.matrix.model,parameters=parameters);
+    topology = list(dataset=dataset,hypotheses=hypotheses,confidence=prima.facie.parents$pf.confidence,model=model,parameters=parameters,execution.time=(proc.time()-ptm));
     return(topology);
     
 }
@@ -139,7 +127,7 @@ function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.b
 # RETURN:
 # scores: list structure with the scores and the data generated by bootstrap
 "get.bootstapped.scores" <-
-function( dataset, nboot, adj.matrix, min.boot = 3, min.stat = TRUE, boot.seed = 12345, silent ) {
+function( dataset, nboot, adj.matrix, min.boot = 3, min.stat = TRUE, boot.seed = NULL, silent ) {
     
     # structures to save the distributions generated by the bootstrapped datasets
     marginal.probs.distributions <- array(list(-1), c(ncol(dataset),1));
@@ -392,8 +380,9 @@ function( adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.mode
     
     # remove any cycle
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
-            if(!silent) cat('*** Loop detection found loops to break.\n')
-            weights.temporal.priority = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]];
+    		if(!silent) cat('*** Loop detection found loops to break.\n')
+        
+        weights.temporal.priority = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]];
         weights.matrix = probability.raising$edge.confidence.matrix[[2,1]]+probability.raising$edge.confidence.matrix[[3,1]];
         acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses);
         adj.matrix = acyclic.topology$adj.matrix;
@@ -459,8 +448,9 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
     
     # remove any cycle
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
-            if(!silent) cat('*** Loop detection found loops to break.\n')
-            weights.temporal.priority = probability.raising$edge.confidence.matrix[[2,1]];
+    		if(!silent) cat('*** Loop detection found loops to break.\n')
+    		
+    		weights.temporal.priority = probability.raising$edge.confidence.matrix[[2,1]];
         weights.matrix = probability.raising$edge.confidence.matrix[[2,1]] + probability.raising$edge.confidence.matrix[[3,1]];
         acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses);
         adj.matrix = acyclic.topology$adj.matrix;
