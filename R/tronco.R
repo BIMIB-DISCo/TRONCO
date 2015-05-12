@@ -254,10 +254,10 @@ tronco.capri <- function( data,
     
     # reconstruct the topology with CAPRI
     if(is.null(boot.seed)) {
-		my.seed = "NULL"  	
+        my.seed = "NULL"    
     }
     else {
-    		my.seed = boot.seed;
+            my.seed = boot.seed;
     }
     cat(paste0(
         '*** Inferring a progression model with the following settings.\n',
@@ -276,44 +276,44 @@ tronco.capri <- function( data,
     topology$hypotheses = NULL;
     
     rownames(topology$confidence) = c("temporal priority","probability raising","hypergeometric test");
-	colnames(topology$confidence) = "confidence";
-	rownames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-	colnames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-	rownames(topology$confidence[[2,1]]) = colnames(data$genotypes);
-	colnames(topology$confidence[[2,1]]) = colnames(data$genotypes);
-	rownames(topology$confidence[[3,1]]) = colnames(data$genotypes);
-	colnames(topology$confidence[[3,1]]) = colnames(data$genotypes);
+    colnames(topology$confidence) = "confidence";
+    rownames(topology$confidence[[1,1]]) = colnames(data$genotypes);
+    colnames(topology$confidence[[1,1]]) = colnames(data$genotypes);
+    rownames(topology$confidence[[2,1]]) = colnames(data$genotypes);
+    colnames(topology$confidence[[2,1]]) = colnames(data$genotypes);
+    rownames(topology$confidence[[3,1]]) = colnames(data$genotypes);
+    colnames(topology$confidence[[3,1]]) = colnames(data$genotypes);
     
     for (i in 1:length(topology$model)) {
-    	
-    	#set rownames and colnames to the probabilities
-	    rownames(topology$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
-	    colnames(topology$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
-	    rownames(topology$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-	    colnames(topology$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-	    rownames(topology$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
-	    colnames(topology$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
-	    
-	    #set rownames and colnames to the parents positions
-	    rownames(topology$model[[i]]$parents.pos) = colnames(data$genotypes);
-	    colnames(topology$model[[i]]$parents.pos) = "parents";
-	    
-	    #set rownames and colnames to the adjacency matrices
-	    rownames(topology$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-	    colnames(topology$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-	    rownames(topology$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-	    colnames(topology$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-	   	
-	    if(do.estimation==TRUE) {
-	        rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
-	        colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
-	        rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-	        colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-	        rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
-	        colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
-	    }
-	    
-	}
+        
+        #set rownames and colnames to the probabilities
+        rownames(topology$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
+        colnames(topology$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
+        rownames(topology$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        colnames(topology$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        rownames(topology$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
+        colnames(topology$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
+        
+        #set rownames and colnames to the parents positions
+        rownames(topology$model[[i]]$parents.pos) = colnames(data$genotypes);
+        colnames(topology$model[[i]]$parents.pos) = "parents";
+        
+        #set rownames and colnames to the adjacency matrices
+        rownames(topology$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        colnames(topology$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        rownames(topology$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        colnames(topology$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        
+        if(do.estimation==TRUE) {
+            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+        }
+        
+    }
     
     #the reconstruction has been completed
     cat(paste("The reconstruction has been successfully completed.","\n"));
@@ -476,7 +476,7 @@ is.logic.node <- function(node) {
 #'    tronco.plot(curr.topology, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
 #' }
 tronco.plot = function(x,
-                       secondary=NULL, 
+                       regularization=names(x$model),
                        fontsize=18, 
                        height=2,
                        width=3,
@@ -531,60 +531,80 @@ tronco.plot = function(x,
   
   logical_op = list("AND", "OR", "NOT", "XOR", "*", "UPAND", "UPOR", "UPXOR")
  
-  sec = FALSE
-  if(!is.null(secondary)) {
-    sec = TRUE
-    if(!all( rownames(x$adj.matrix$adj.matrix.bic) %in% rownames(secondary$adj.matrix$adj.matrix.bic))) {
-      stop("x and secondary must have the same adj.matrix! See: the function tronco.bootstrap.", call.=FALSE);
-    }
+
+  if(length(regularization) > 2) {
+    stop("Too many regularizators (max is 2)", call.=FALSE)
   }
+
+  if(!regularization[1] %in% names(x$model)) {
+    stop(paste(regularization[1], "not in model"), call.=FALSE);
+  }
+
+  #print(regularization)
+
+  sec = FALSE
+  if(length(regularization) == 2) {
+    sec = TRUE
+  }
+
+  #print(sec)
+
+  if(sec && !regularization[2] %in% names(x$model)) {
+    stop(paste(regularization[2], "not in model"), call.=FALSE);
+  }
+
+  primary = get(regularization[1], x$model)
+
+  if (sec) {
+    secondary = get(regularization[2], x$model)
+  } 
+
+  if (sec && !all( rownames(primary$adj.matrix$adj.matrix.fit) %in% rownames(secondary$adj.matrix$adj.matrix.fit))) {     
+    stop("primary and secondary must have the same adj.matrix! See: the function tronco.bootstrap.", call.=FALSE)
+  }
+
 
   # get TRONCO object
   data = x$data
-  if(sec) {
-    data = secondary$data
-  }
+
   # print(data)
   
   # get the adjacency matrix
-  adj.matrix = x$adj.matrix
+  adj.matrix = primary$adj.matrix
   if(sec) {
     adj.matrix = secondary$adj.matrix
   }
-  c_matrix = adj.matrix$adj.matrix.bic
+  c_matrix = adj.matrix$adj.matrix.fit
 
-  probabilities = x$probabilities
+
+  # get the probabilities
+  probabilities = primary$probabilities
   if(sec) {
     probabilities = secondary$probabilities
   }
-
-  marginal_p = probabilities$probabilities.bic$marginal.probs
+  marginal_p = probabilities$probabilities.observed$marginal.probs
   
-  
+  # if prima facie change the adj matrix
   if (pf) {
     c_matrix = adj.matrix$adj.matrix.pf
-    marginal_p = probabilities$probabilities.pf$marginal.probs
   }
   
   if (all(c_matrix == F)) {
     stop('No edge in adjacency matrix! Nothing to show here.')
   }
   
-  bootstrap = x$bootstrap
-  if(sec) {
-    bootstrap = secondary$bootstrap
-  }
+  #bootstrap = x$bootstrap
+  #if(sec) {
+  #  bootstrap = secondary$bootstrap
+  #}
 
-  if (confidence) {
-    conf_matrix = if (pf) bootstrap$edge.confidence$edge.confidence.pf else bootstrap$edge.confidence$edge.confidence.bic
-  }
+  #if (confidence) {
+  #  conf_matrix = if (pf) bootstrap$edge.confidence$edge.confidence.pf else bootstrap$edge.confidence$edge.confidence.bic
+  #}
   #print(c_matrix)
   
   # get algorithm parameters
   parameters = x$parameters
-  if(sec) {
-    parameters = secondary$parameters
-  }
   # print(parameters)
   
   # get hypotheses
@@ -1068,7 +1088,7 @@ tronco.plot = function(x,
   if (sec) {
     #print(edge_names)
     
-    pri.adj = x$adj.matrix$adj.matrix.bic
+    pri.adj = primary$adj.matrix$adj.matrix.fit
     #print(rownames(pri.adj))
     #print(hypos_new_name)
     for(from in rownames(pri.adj)) {
