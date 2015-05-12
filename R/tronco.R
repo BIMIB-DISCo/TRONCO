@@ -589,7 +589,7 @@ tronco.plot = function(x,
     c_matrix = adj.matrix$adj.matrix.pf
   }
   
-  if (all(c_matrix == F)) {
+  if (all(c_matrix == F) || (sec && all(primary$adj.matrix$adj.matrix.fit == F))) {
     stop('No edge in adjacency matrix! Nothing to show here.')
   }
   
