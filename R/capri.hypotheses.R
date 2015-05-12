@@ -693,38 +693,25 @@ hypotheses.expansion <- function(input_matrix,
     library(igraph)
   }
   
-  num_hypos = length(map)
   
   # get node list
   node_list <- colnames(input_matrix)
-  #print('input matrix')
-  #print(input_matrix)
+  print('input matrix')
+  print(input_matrix)
+
+  print('map')
+  print(names(map))
   
   # cut input matrix
+
+  num_hypos = Reduce(sum, lapply(ls(map), function(x, y){if(x %in% y)return(1)}, y=node_list))
+  print('num_hypos')
+  print(num_hypos)
+
   margin = length(node_list) - num_hypos
   hypos_new_name = list()
   
-  # da finire!!!
-  if(is.vector(events) && F) {
-    cat('\n remove event is broken!!!\n')
-    print(events)
-    min_graph = graph.adjacency(input_matrix)
-    graph <- igraph.to.graphNEL(min_graph)
-    edge_names = edgeNames(graph)
-    print(edge_names)
-    for(e in edge_names) {
-      edge = unlist(strsplit(e, '~'))
-      print(edge)
-      from = edge[1]
-      to = edge[2]
-      check_from = any(unlist(strsplit(from, '_')) %in% events)
-      check_to = any(unlist(strsplit(to, '_')) %in% events)
-      if (!(check_from && check_to)) {
-        input_matrix[from, to] = 0
-      }
-    }
-    print(input_matrix)
-  }
+
   
   cat('*** Hypos expansion:')
   # check if there are hypotheses
@@ -733,7 +720,14 @@ hypotheses.expansion <- function(input_matrix,
     min_matrix = input_matrix
   } else {
     # ..else expand them
+
+    print('input matrix')
+    print(input_matrix)
+
     min_matrix = input_matrix[-(margin+1):-length(node_list), -(margin+1):-length(node_list)]
+
+    print('min matrix')
+    print(min_matrix)
     
     # create graph from matrix
     min_graph = graph.adjacency(min_matrix)
@@ -746,7 +740,8 @@ hypotheses.expansion <- function(input_matrix,
     # }
       
     for (h in ls(map)) {
-
+      print('hypo to expand')
+      print(h)
       if (! h %in% node_list) {
         next
       }
@@ -762,6 +757,8 @@ hypotheses.expansion <- function(input_matrix,
       
       initial_node <- names(h_mat)[which(h_mat==0)]
       hypos_new_name[initial_node] = h
+
+      print(paste("new name:", initial_node))
 
       # change names in confidence matrix according to hypotesis
       if(!is.null(conf_matrix)) {
@@ -807,11 +804,18 @@ hypotheses.expansion <- function(input_matrix,
         h_edge <- input_matrix[, h]
         initial_node_up <- names(h_edge)[which(h_edge==1)]
 
+        #print("pre merge")
+        #print(get.adjacency(min_graph, sparse=FALSE))
+
         # add this graph to main graph
         min_graph = graph.union(min_graph, hypo_graph_pre)
 
+        #print("post merge")
+        #print(get.adjacency(min_graph, sparse=FALSE))
+
         # recreate lost edge
         for (node in initial_node_up) {
+          print(paste('new edge:', node, "->", final_node))
           min_graph <- min_graph + edge(node, final_node)
         }
 
@@ -825,16 +829,23 @@ hypotheses.expansion <- function(input_matrix,
         h_edge <- input_matrix[h,]
         final_node <- names(h_edge)[which(h_edge==1)]
 
+        #print("pre merge")
+        #print(get.adjacency(min_graph, sparse=FALSE))
+
         # add this graph to main graph
         min_graph = graph.union(min_graph, hypo_graph)
+
+        #print("post merge")
+        #print(get.adjacency(min_graph, sparse=FALSE))
         
-      }
+      #}
 
       # reconnect down hypo
-      if (display.down) {
+      #if (display.down) {
         # print(final_node)
         # recreate lost edge
         for (node in final_node) {
+          print(paste('new edge:', initial_node, "->",node))
           min_graph <- min_graph + edge(initial_node, node)
         }
       }
