@@ -446,9 +446,9 @@ hypothesis.add.group = function(x,
   print(cause)
 	
 	cat("*** Adding Group Hypotheses\n")
-	cat('Group:', paste(group, collapse = ", ", sep = ""))
-	cat(' Function:', op)
-  cat(' Cause:', paste(pattern.cause, collapse=", "))
+	cat(' Group:', paste(group, collapse = ", ", sep = ""), '\n')
+	cat(' Function:', op, '\n')
+  cat(' Cause:', paste(pattern.cause, collapse=", "), '\n')
   cat(' Effect:', paste(pattern.effect, collapse=", "), '\n')
 	flush.console()
 	
@@ -533,8 +533,8 @@ hypothesis.add.group = function(x,
 			# print(hom.group)
 
 				hypo.add = paste0("hypothesis.add(x, ", 
-                          "pattern.label = '", op, "_", hypo.name, "', ",
-                          "lifted.pattern = ", op, "(", hypo.genes, "), ",
+                          "pattern.label= '", op, "_", hypo.name, "', ",
+                          "lifted.pattern= ", op, "(", hypo.genes, "), ",
                           "pattern.effect=", effect, ", ",
                           "pattern.cause=", cause, ")")
 
@@ -575,12 +575,17 @@ hypothesis.add.group = function(x,
 }
 
 #' @export
-hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
+hypothesis.add.homologous = function(x, 
+                                     pattern.cause = '*',
+                                     pattern.effect = '*',
+                                     genes = as.genes(x),
+                                     FUN = "OR") 
+{
 	# in questa funzione, per ogni gene che ha più di un tipo di alterazione
 	# aggiungo l'OR
 
-	effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
-	effect = paste(effect, collapse = ", ")
+	#effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
+	#effect = paste(effect, collapse = ", ")
 
 	hom.group = lapply(genes, function(g, x) {
 		if (nevents(x, genes = g) > 1) 
@@ -590,10 +595,14 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 	hom.group = genes[unlist(hom.group)]
 
 	cat("*** Adding hyoptheses for Homologous Patterns\n")
-	cat('Genes:', paste(hom.group, collapse = ", ", sep = ""))
-	cat(' Function:', FUN)
-	cat(' Effect:', effect, '\n')
+	cat(' Genes:', paste(hom.group, collapse = ", ", sep = ""), '\n')
+	cat(' Function:', FUN, '\n')
+  cat(' Cause:', paste(pattern.cause, collapse=", "), '\n')
+	cat(' Effect:', paste(pattern.effect, collapse=", "), '\n')
 	flush.console()
+
+  effect = paste0("c('", paste(pattern.effect, collapse = "', '"), "')")
+  cause = paste0("c('", paste(pattern.cause, collapse = "', '"), "')")
 
 	if(length(hom.group) == 0) return(x)
 
@@ -618,8 +627,13 @@ hypothesis.add.homologous = function(x, ..., genes = as.genes(x), FUN = "OR") {
 		else
       FUN = 'XOR'				
 
-		hypo.add = paste0("hypothesis.add(x, pattern.label = '", FUN, "_", hom.group[[i]], "', lifted.pattern = ", FUN, "('", hom.group[[i]], "'), ", effect, 
-			")")
+		hypo.add = paste0("hypothesis.add(x, ",
+                      "pattern.label= '", FUN, "_", hom.group[[i]], "', ",
+                      "lifted.pattern= ", FUN, "('", hom.group[[i]], "'), ",
+                      "pattern.cause= ",  cause, ", ",
+                      "pattern.effect=", effect, ")")
+
+    # cat('*** Evaluating ', hypo.add, '\n')
 
 		err = tryCatch({
 			x = eval(parse(text = hypo.add))
