@@ -442,17 +442,21 @@ hypothesis.add.group = function(x,
 	effect = paste0("c('", paste(pattern.effect, collapse = "', '"), "')")
   cause = paste0("c('", paste(pattern.cause, collapse = "', '"), "')")
 
-  print(effect)
-  print(cause)
+  # print(effect)
+  # print(cause)
 	
+	ngroup = length(group)
+	if (ngroup < 2) {
+		warning("No hypothesis will be created for groups with less than 2 elements.")
+		return(x)
+	}
+
 	cat("*** Adding Group Hypotheses\n")
 	cat(' Group:', paste(group, collapse = ", ", sep = ""), '\n')
 	cat(' Function:', op, '\n')
-  cat(' Cause:', paste(pattern.cause, collapse=", "), '\n')
-  cat(' Effect:', paste(pattern.effect, collapse=", "), '\n')
+   cat(' Cause:', paste(pattern.cause, collapse=", "), '; ')
+   cat(' Effect:', paste(pattern.effect, collapse=", "), '.\n')
 	flush.console()
-	
-	# group %in% as.events(x)[, 'event']
 
 	if(min.prob > 0)
 	{
@@ -470,7 +474,7 @@ hypothesis.add.group = function(x,
 	
 	ngroup = length(group)
 	if (ngroup < 2) {
-		warning("No hypothesis can be created for groups with less than 2 elements.")
+		warning("No hypothesis will be created for groups with less than 2 elements.")
 		return(x)
 	}
 	
@@ -594,7 +598,12 @@ hypothesis.add.homologous = function(x,
 	}, x)
 	hom.group = genes[unlist(hom.group)]
 
-	cat("*** Adding hyoptheses for Homologous Patterns\n")
+	if (length(hom.group) == 0) {
+		warning("No genes with multiple events.")
+		return(x)
+	}
+
+	cat("*** Adding hypotheses for Homologous Patterns\n")
 	cat(' Genes:', paste(hom.group, collapse = ", ", sep = ""), '\n')
 	cat(' Function:', FUN, '\n')
   cat(' Cause:', paste(pattern.cause, collapse=", "), '\n')
@@ -604,7 +613,10 @@ hypothesis.add.homologous = function(x,
   effect = paste0("c('", paste(pattern.effect, collapse = "', '"), "')")
   cause = paste0("c('", paste(pattern.cause, collapse = "', '"), "')")
 
-	if(length(hom.group) == 0) return(x)
+	if (length(hom.group) == 0) {
+		warning("No genes with multiple events.")
+		return(x)
+	}
 
 	
 	# print(length(hom.group))
