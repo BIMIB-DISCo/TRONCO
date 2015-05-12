@@ -423,20 +423,33 @@ hypothesis.lifted.effects = function( ... ) {
 	return(list(...));
 }
 
-#' @export
-hypothesis.add.group = function(x, FUN, group, ..., dim.min = 2, dim.max = length(group), min.prob = 0) {
+#' @export hypothesis.add.group
+hypothesis.add.group = function(x, 
+                                FUN, 
+                                group, 
+                                pattern.cause = '*',
+                                pattern.effect = '*',
+                                dim.min = 2,
+                                dim.max = length(group),
+                                min.prob = 0) 
+{
 	op = deparse(substitute(FUN))
 
 	#print(length(unlist(group)))
 	#print(unlist(group))
 
-	effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
-	effect = paste(effect, collapse = ", ")
+	#effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
+	effect = paste0("c('", paste(pattern.effect, collapse = "', '"), "')")
+  cause = paste0("c('", paste(pattern.cause, collapse = "', '"), "')")
+
+  print(effect)
+  print(cause)
 	
 	cat("*** Adding Group Hypotheses\n")
 	cat('Group:', paste(group, collapse = ", ", sep = ""))
 	cat(' Function:', op)
-	cat(' Effect:', effect, '\n')
+  cat(' Cause:', paste(pattern.cause, collapse=", "))
+  cat(' Effect:', paste(pattern.effect, collapse=", "), '\n')
 	flush.console()
 	
 	# group %in% as.events(x)[, 'event']
@@ -501,7 +514,7 @@ hypothesis.add.group = function(x, FUN, group, ..., dim.min = 2, dim.max = lengt
 	for (i in min.groupsize:max.groupsize) {
 		gr = combn(unlist(group), i)
 	
-		# print(gr)
+		#print(gr)
 		
 		
 		for (j in 1:ncol(gr)) {
@@ -519,7 +532,11 @@ hypothesis.add.group = function(x, FUN, group, ..., dim.min = 2, dim.max = lengt
 			# print(hypo.genes)
 			# print(hom.group)
 
-				hypo.add = paste0("hypothesis.add(x, pattern.label = '", op, "_", hypo.name, "', lifted.pattern = ", op, "(", hypo.genes, "), ", effect, ")")
+				hypo.add = paste0("hypothesis.add(x, ", 
+                          "pattern.label = '", op, "_", hypo.name, "', ",
+                          "lifted.pattern = ", op, "(", hypo.genes, "), ",
+                          "pattern.effect=", effect, ", ",
+                          "pattern.cause=", cause, ")")
 
 				# cat('*** Evaluating ', hypo.add, '\n')
 				
