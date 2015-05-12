@@ -55,7 +55,7 @@ function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","ai
     }
     
     # add back in any connection invalid for the probability raising theory
-    if(nrow(invalid.events)>0) {
+    if(length(invalid.events)>0) {
     		warning("Either always present or indistinguishable events are provided!");
 		for(i in 1:nrow(invalid.events)) {
     			prima.facie.parents$adj.matrix[invalid.events[i,"cause"],invalid.events[i,"effect"]] = 1;
@@ -159,43 +159,43 @@ function( dataset, adj.matrix, verbose ) {
         # evaluate the connections
         invalid.events = vector();
         for (i in 1:ncol(adj.matrix)) {
-        	for (j in 1:row(adj.matrix)) {
-        		# if i --> j is valid
-        		if(i!=j && adj.matrix[i,j]==1) {
-        			# the potential cause is always present
-        			if(marginal.probs[i]==1) {
-        				# the potential child is not always missing
-        				if(marginal.probs[i]>0) {
-        					adj.matrix[i,j] = 0;
-        					invalid.events = rbind(invalid.events,t(c(i,j)));
-        				}
-        				# the potential child is always missing
-        				else if(marginal.probs[i]==0) {
-        					adj.matrix[i,j] = 0;
-        				}
-        			}
-        			# the potential cause is always missing
-        			else if(marginal.probs[i]==0) {
-        				adj.matrix[i,j] = 0;
-        			}
-        			# the potential child is always present
-        			else if(marginal.probs[j]==1) {
-        				adj.matrix[i,j] = 0;
-        			}
-        			# the potential child is always missing
-        			else if(marginal.probs[j]==0) {
-        				adj.matrix[i,j] = 0;
-        			}
-        			# the two events are equals
-        			else if((joint.probs[i,j]/marginal.probs[i])==1 && (joint.probs[i,j]/marginal.probs[j])==1) {
-        				adj.matrix[i,j] = 0;
-        				invalid.events = rbind(invalid.events,t(c(i,j)));
-        			}
-        		}
-        	}
+	        	for (j in 1:nrow(adj.matrix)) {
+	        		# if i --> j is valid
+	        		if(i!=j && adj.matrix[i,j]==1) {
+	        			# the potential cause is always present
+	        			if(marginal.probs[i]==1) {
+	        				# the potential child is not always missing
+	        				if(marginal.probs[i]>0) {
+	        					adj.matrix[i,j] = 0;
+	        					invalid.events = rbind(invalid.events,t(c(i,j)));
+	        				}
+	        				# the potential child is always missing
+	        				else if(marginal.probs[i]==0) {
+	        					adj.matrix[i,j] = 0;
+	        				}
+	        			}
+	        			# the potential cause is always missing
+	        			else if(marginal.probs[i]==0) {
+	        				adj.matrix[i,j] = 0;
+	        			}
+	        			# the potential child is always present
+	        			else if(marginal.probs[j]==1) {
+	        				adj.matrix[i,j] = 0;
+	        			}
+	        			# the potential child is always missing
+	        			else if(marginal.probs[j]==0) {
+	        				adj.matrix[i,j] = 0;
+	        			}
+	        			# the two events are equals
+	        			else if((joint.probs[i,j]/marginal.probs[i])==1 && (joint.probs[i,j]/marginal.probs[j])==1) {
+	        				adj.matrix[i,j] = 0;
+	        				invalid.events = rbind(invalid.events,t(c(i,j)));
+	        			}
+	        		}
+	        	}
         }
         if(length(invalid.events)>0) {
-        	colnames(invalid.events) = c("cause","effect");
+        		colnames(invalid.events) = c("cause","effect");
         }
         valid.dataset = list(dataset=dataset,adj.matrix=adj.matrix,invalid.events=invalid.events,marginal.probs=marginal.probs,joint.probs=joint.probs);
         
