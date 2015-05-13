@@ -44,7 +44,7 @@ as.patterns = function(x)
 #' @export
 npatterns = function(x)
 {
-	if(is.null(x$hypotheses)) return(0)
+	if(is.null(x$hypotheses) || is.na(x$hypotheses)) return(0)
 	
 	return(x$hypotheses$num.hypotheses)
 }
