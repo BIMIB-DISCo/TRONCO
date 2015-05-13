@@ -76,5 +76,3 @@ is.compliant = function(x, err.fun='[ERR]', stage=has.stages(x))
     stop('duplicated events found in annotations')
   }
  }
-
- 

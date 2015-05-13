@@ -98,14 +98,14 @@ function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","ai
     		}
     		
     		# set results for the current regolarizator
-    	probabilities.observed = list(marginal.probs=prima.facie.parents$marginal.probs,joint.probs=prima.facie.parents$joint.probs,conditional.probs=conditional.probs.fit);
-    	probabilities.fit = list(estimated.marginal.probs=estimated.probabilities.fit$marginal.probs,estimated.joint.probs=estimated.probabilities.fit$joint.probs,estimated.conditional.probs=estimated.probabilities.fit$conditional.probs);
-    	probabilities = list(probabilities.observed=probabilities.observed,probabilities.fit=probabilities.fit);
-    	parents.pos = parents.pos.fit;
-    	error.rates = estimated.error.rates.fit;
-    	
-    	# save the results for the model
-    	model[[reg]] = list(probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,adj.matrix=best.parents$adj.matrix);
+	    	probabilities.observed = list(marginal.probs=prima.facie.parents$marginal.probs,joint.probs=prima.facie.parents$joint.probs,conditional.probs=conditional.probs.fit);
+	    	probabilities.fit = list(estimated.marginal.probs=estimated.probabilities.fit$marginal.probs,estimated.joint.probs=estimated.probabilities.fit$joint.probs,estimated.conditional.probs=estimated.probabilities.fit$conditional.probs);
+	    	probabilities = list(probabilities.observed=probabilities.observed,probabilities.fit=probabilities.fit);
+	    	parents.pos = parents.pos.fit;
+	    	error.rates = estimated.error.rates.fit;
+	    	
+	    	# save the results for the model
+	    	model[[reg]] = list(probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,adj.matrix=best.parents$adj.matrix);
     	
     	}
     
@@ -667,7 +667,7 @@ function( dataset, hypotheses, adj.matrix, silent ) {
 "perform.likelihood.fit" <-
 function( dataset, adj.matrix, command, regularization ) {
     
-    # load the bnlearn library required for the likelihood fit with bic
+    # load the bnlearn library required for the likelihood fit with regularizator
     if (!require(bnlearn)) {
             install.packages('bnlearn', dependencies = TRUE);
         library(bnlearn);

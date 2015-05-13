@@ -664,4 +664,3 @@ merge.events = function(x, events, new.event, new.type, event.color)
 	# print(as.events(y))
 	return(y)
 }
-

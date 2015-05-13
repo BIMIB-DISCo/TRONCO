@@ -382,4 +382,3 @@ TCGA.map.clinical.data = function(file, sep='\t', column.samples, column.map)
   
   return(map)
 }
-

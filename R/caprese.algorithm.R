@@ -6,42 +6,50 @@
 #### information.
 
 
-#reconstruct the best tree-like topology
-#INPUT:
-#dataset: a dataset describing a progressive phenomenon
-#lambda: shrinkage parameter (value in [0,1])
-#do.estimation: should I perform the estimation of the error rates and probabilities?
-#RETURN:
-#topology: the reconstructed tree-like topology
-#' @import bnlearn
+# reconstruct the best tree-like topology
+# INPUT:
+# dataset: a dataset describing a progressive phenomenon
+# lambda: shrinkage parameter (value in [0,1])
+# do.estimation: should I perform the estimation of the error rates and probabilities?
+# RETURN:
+# topology: the reconstructed tree-like topology
+# ' @import bnlearn
 "caprese.fit" <-
 function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = FALSE ) {
 	
 	# start the clock to measure the execution time
 	ptm <- proc.time();
 	
-	# structure to compute the observed marginal and joint probabilities
-	pair.count <- array(0, dim=c(ncol(dataset), ncol(dataset)));
-	# compute the probabilities on the dataset
- 	for(i in 1:ncol(dataset)) {
-		for(j in 1:ncol(dataset)) {
-			val1 = dataset[ ,i];
-			val2 = dataset[ ,j];
-            pair.count[i,j] = (t(val1) %*% val2);
-        }
-	}
-    # marginal.probs is an array of the observed marginal probabilities
-    marginal.probs <- array(as.matrix(diag(pair.count)/nrow(dataset)),dim=c(ncol(dataset),1));
+	# structure with the set of valid edges
+    # I start from the complete graph, i.e., I have no prior and all the connections are possibly causal
+    adj.matrix = array(1,c(ncol(dataset),ncol(dataset)));
+    colnames(adj.matrix) = colnames(dataset);
+    rownames(adj.matrix) = colnames(dataset);
+    
+    # the diagonal of the adjacency matrix should not be considered, i.e., no self cause is allowed
+    diag(adj.matrix) = 0;
+    
+    # consider any hypothesis
+    adj.matrix = hypothesis.adj.matrix(hypotheses,adj.matrix);
+    
+    # check if the dataset is valid
+    valid.dataset = check.dataset(dataset,adj.matrix,FALSE);
+    adj.matrix = valid.dataset$adj.matrix;
+	
+	# marginal.probs is an array of the observed marginal probabilities
+    marginal.probs <- valid.dataset$marginal.probs;
     # joint.probs is an array of the observed joint probabilities
-    joint.probs <- as.matrix(pair.count/nrow(dataset));
+    joint.probs <- valid.dataset$joint.probs;
     
     # reconstruct the causal topology
-    best.parents = get.tree.parents(marginal.probs,joint.probs,lambda);
+    best.parents = get.tree.parents(adj.matrix,marginal.probs,joint.probs,lambda);
     
     # create the structures where to save the results
     parents.pos <- best.parents$parents;
     conditional.probs <- array(-1, dim=c(length(parents.pos),1));
     adj.matrix <- array(0, dim=c(length(parents.pos),length(parents.pos)));
+    colnames(adj.matrix) = colnames(dataset);
+    rownames(adj.matrix) = colnames(dataset);
     confidence <- array(list(), c(3,1));
     confidence[[1,1]] = array(0, dim=c(length(parents.pos),length(parents.pos)));
     confidence[[2,1]] = best.parents$pr.score;
@@ -64,11 +72,17 @@ function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = FALSE ) {
         # compute the hypergeometric test
         for (j in i:ncol(dataset)) {
         		if(i!=j) {
+        			
+        			# confidence in temporal priority
+        			confidence[[1,1]][i,j] = min(best.parents$marginal.probs[i]/best.parents$marginal.probs[j],1);
+        		confidence[[1,1]][j,i] = min(best.parents$marginal.probs[j]/best.parents$marginal.probs[i],1);
+        			
         			# compute the confidence by hypergeometric test
         			confidence[[3,1]][i,j] = phyper(best.parents$joint.probs[i,j]*nrow(dataset),best.parents$marginal.probs[i]*nrow(dataset),nrow(dataset)-best.parents$marginal.probs[i]*nrow(dataset),best.parents$marginal.probs[j]*nrow(dataset),lower.tail=FALSE);
         			confidence[[3,1]][j,i] = confidence[[3,1]][i,j];
         			# save all the valid pvalues
         			hypergeometric.pvalues = append(hypergeometric.pvalues,confidence[[2,1]][i,j]);
+        			
         		}
         }
     }
@@ -82,52 +96,24 @@ function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = FALSE ) {
 		estimated.error.rates = list(error.fp=NA,error.fn=NA);
 		estimated.probabilities = list(marginal.probs=NA,joint.probs=NA,conditional.probs=NA);
 	}
-	#load the bnlearn library required for the parameters estimation by mle
-    require(bnlearn);
-    #conditional probability tables of the topology
-    cpt = array(list(-1),c(nrow(adj.matrix),1));
-    #create a categorical data frame from the dataset
-    data = array("missing",c(nrow(dataset),ncol(dataset)));
-    for (i in 1:nrow(dataset)) {
-        for (j in 1:ncol(dataset)) {
-            if(dataset[i,j]==1) {
-                data[i,j] = "observed";
-            }
-        }
-    }
-    data = as.data.frame(data);
-    #create the empty network
-    my.colnames = colnames(data);
-    my.net = empty.graph(my.colnames);
-    #create the connections in this network
-    arc.set = NA;
-    for (i in 1:nrow(adj.matrix)) {
-    		for (j in 1:ncol(adj.matrix)) {
-            if(adj.matrix[i,j]==1) {
-                if(is.na(arc.set[1])) {
-                		arc.set = matrix(c(my.colnames[i],my.colnames[j]),ncol=2,byrow=TRUE,dimnames=list(NULL, c("from", "to")));
-                }
-                else {
-                		arc.set = rbind(arc.set,c(my.colnames[i],my.colnames[j]));
-                }
-            }
-        }
-    }
-    #set the arcs to the pf network
-    if(!is.na(arc.set[1])) {
-    		arcs(my.net) = arc.set;
-    }
-    #estimate the CPTs of the network and save them
-    net.cpt = bn.fit(my.net,data);
-    for(i in 1:length(net.cpt)) {
-    		cpt[[i]] = net.cpt[[i]]$prob;
-    }
-    #structures where to save the probabilities
-    probabilities = list(marginal.probs=best.parents$marginal.probs,joint.probs=best.parents$joint.probs,conditional.probs=conditional.probs,estimated.marginal.probs=estimated.probabilities$marginal.probs,estimated.joint.probs=estimated.probabilities$joint.probs,estimated.conditional.probs=estimated.probabilities$conditional.probs);
-    parameters = list(algorithm="CAPRESE",lambda=lambda,do.estimation=do.estimation);
+    error.rates = estimated.error.rates;
+	
+    #structures where to save the results
+    model = list();
+    probabilities.observed = list(marginal.probs=marginal.probs,joint.probs=joint.probs,conditional.probs=conditional.probs);
+    probabilities.fit = list(estimated.marginal.probs=estimated.probabilities.fit$marginal.probs,estimated.joint.probs=estimated.probabilities.fit$joint.probs,estimated.conditional.probs=estimated.probabilities.fit$conditional.probs);
+    probabilities = list(probabilities.observed=probabilities.observed,probabilities.fit=probabilities.fit);
+    	
+    # save the results for the model
+    model[[reg]] = list(probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,adj.matrix=adj.matrix);
+    
+    # set the execution parameters
+    parameters = list(algorithm="CAPRESE",lambda=lambda,do.estimation=do.estimation,silent=silent);
+    
     #return the results
-    topology = list(data=dataset,probabilities=probabilities,parents.pos=parents.pos,cpt=cpt,error.rates=estimated.error.rates,confidence= confidence,adj.matrix=adj.matrix,parameters=parameters);
+    topology = list(dataset=dataset,confidence=confidence,model=model,parameters=parameters,execution.time=(proc.time()-ptm));
     return(topology);
+    
 }
 
 #### end of file -- caprese.fit.R
@@ -143,16 +129,17 @@ function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = FALSE ) {
 
 # select at the most one parent for each node based on the probability raising criteria
 # INPUT:
+# adj.matrix: adjacency matrix of the valid edges
 # marginal.probs: observed marginal probabilities
 # joint.probs: observed joint probabilities
 # lambda: shrinkage parameter (value between 0 and 1)
 # RETURN:
 # best.parents: list of the best parents
 "get.tree.parents" <-
-function( marginal.probs, joint.probs, lambda ) {
+function( adj.matrix, marginal.probs, joint.probs, lambda ) {
 	
     # compute the scores for each edge
-    scores = get.tree.scores(marginal.probs,joint.probs,lambda);
+    scores = get.tree.scores(adj.matrix,marginal.probs,joint.probs,lambda);
     pr.score = scores$pr.score;
     # set to -1 the scores where there is no causation according to Suppes' condition
     # [i,j] means i is causing j
@@ -177,7 +164,7 @@ function( marginal.probs, joint.probs, lambda ) {
                     if(pr.score[i,j]>pr.score[j,i]) {
                         pr.score[j,i] = -1;
                     }
-                    else if(pr.score[i,j]<pr.score[j,i]) { {
+                    else {
                         pr.score[i,j] = -1;
                     }
                 }
@@ -185,25 +172,29 @@ function( marginal.probs, joint.probs, lambda ) {
         }
     }
     
-    #chose at the most one parent per node
-    #here I suppose that each node has a parent
-    #spurious causes are considered (and removed) later
+    # chose at the most one parent per node
+    # here I suppose that each node has a parent
+    # spurious causes are considered (and removed) later
     best.parents = array(-1, dim=c(ncol(pr.score),1));
     for (i in 1:ncol(pr.score)) {
-        #-1 means that the best parent is the Root
+        # -1 means that the best parent is the Root
         curr.best = -1;
-        #find the best parent for the current node
+        # find the best parent for the current node
         best = which.max(pr.score[,i]);
         if(pr.score[best,i]>0) {
             curr.best = best;
         }
-        #set the best parent for the current node
+        # set the best parent for the current node
         best.parents[i,1] = curr.best;
     }
-    #check for spurious causes by the independent progression filter and complete the parents list
+    
+    # check for spurious causes by the independent progression filter and complete the parents list
     parents = verify.parents(best.parents,marginal.probs,joint.probs);
+	
+	# save the results    
     best.parents = list(parents=parents,marginal.probs=marginal.probs,joint.probs=joint.probs,pr.score=scores$pr.score);
     return(best.parents);
+    
 }
 
 #### end of file -- get.tree.parents.R
@@ -219,13 +210,14 @@ function( marginal.probs, joint.probs, lambda ) {
 
 # compute the probability raising based scores
 # INPUT:
+# adj.matrix: adjacency matrix of the valid edges
 # marginal.probs: observed marginal probabilities
 # joint.probs: observed joint probabilities
 # lambda: shrinkage parameter (value between 0 and 1)
 # RETURN:
 # scores: probability raising based scores
 "get.tree.scores" <-
-function( marginal.probs, joint.probs, lambda ) {
+function( adj.matrix, marginal.probs, joint.probs, lambda ) {
 	
     #structure where to save the probability raising scores
     pr.score = array(-1, dim=c(nrow(marginal.probs),nrow(marginal.probs)));
@@ -234,15 +226,20 @@ function( marginal.probs, joint.probs, lambda ) {
     for (i in 1:ncol(pr.score)) {
         for (j in 1:ncol(pr.score)) {
         		
-            # alpha is the probability raising model of causation (raw model estimate)
-            alpha = ((joint.probs[i,j]/marginal.probs[i])-((marginal.probs[j]-joint.probs[i,j])/(1-marginal.probs[i])))/((joint.probs[i,j]/marginal.probs[i])+((marginal.probs[j]-joint.probs[i,j])/(1-marginal.probs[i])));
-            
-            # beta is the correction factor (based on time distance in terms of statistical dependence)
-            beta = (joint.probs[i,j]-marginal.probs[i]*marginal.probs[j])/(joint.probs[i,j]+marginal.probs[i]*marginal.probs[j]);
-            
-            # the overall estimator is a shrinkage-like combination of alpha and beta
-            # the scores are saved in the convention used for an ajacency matrix, i.e. [i,j] means causal edge i-->j
-            pr.score[i,j] = (1-lambda)*alpha + lambda*beta;
+        		# if the edge is valid
+        		if(adj.matrix[i,j]==1) {
+        		
+        			# alpha is the probability raising model of causation (raw model estimate)
+        			alpha = ((joint.probs[i,j]/marginal.probs[i])-((marginal.probs[j]-joint.probs[i,j])/(1-marginal.probs[i])))/((joint.probs[i,j]/marginal.probs[i])+((marginal.probs[j]-joint.probs[i,j])/(1-marginal.probs[i])));
+        			
+        			# beta is the correction factor (based on time distance in terms of statistical dependence)
+        			beta = (joint.probs[i,j]-marginal.probs[i]*marginal.probs[j])/(joint.probs[i,j]+marginal.probs[i]*marginal.probs[j]);
+        			
+        			# the overall estimator is a shrinkage-like combination of alpha and beta
+        			# the scores are saved in the convention used for an ajacency matrix, i.e. [i,j] means causal edge i-->j
+        			pr.score[i,j] = (1-lambda)*alpha + lambda*beta;
+        			
+        		}
             
         }
     }
