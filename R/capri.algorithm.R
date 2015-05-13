@@ -167,7 +167,7 @@ function( dataset, adj.matrix, verbose ) {
 	        				# the potential child is not always missing
 	        				if(marginal.probs[i]>0) {
 	        					adj.matrix[i,j] = 0;
-	        					invalid.events = rbind(invalid.events,t(c(i,j)));
+	        					# invalid.events = rbind(invalid.events,t(c(i,j)));
 	        				}
 	        				# the potential child is always missing
 	        				else if(marginal.probs[i]==0) {
@@ -666,10 +666,21 @@ function( dataset, hypotheses, adj.matrix, silent ) {
 #' @import bnlearn
 "perform.likelihood.fit" <-
 function( dataset, adj.matrix, command, regularization ) {
+	
+	# each variable should at least have 2 values: I'm ignoring connection to invalid events
+	# but, still, need to make the dataset valid for bnlearn
+	for (i in 1:ncol(dataset)) {
+		if(sum(dataset[,i])==0) {
+			dataset[1,i] = 1;
+		}
+		else if(sum(dataset[,i])==nrow(dataset)) {
+			dataset[1,i] = 0;
+		}
+	}
     
     # load the bnlearn library required for the likelihood fit with regularizator
     if (!require(bnlearn)) {
-            install.packages('bnlearn', dependencies = TRUE);
+    		install.packages('bnlearn', dependencies = TRUE);
         library(bnlearn);
     }
     

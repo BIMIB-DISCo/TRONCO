@@ -590,12 +590,6 @@ tronco.plot = function(x,
   if (sec && !all( rownames(primary$adj.matrix$adj.matrix.fit) %in% rownames(secondary$adj.matrix$adj.matrix.fit))) {     
     stop("primary and secondary must have the same adj.matrix! See: the function tronco.bootstrap.", call.=FALSE)
   }
-
-
-  # get TRONCO object
-  data = x$data
-
-  # print(data)
   
   # get the adjacency matrix
   adj.matrix = primary$adj.matrix
@@ -1210,11 +1204,11 @@ tronco.plot = function(x,
 
     # Get label of the (first) event with minimum marginale 
     min.p =   rownames(marginal_p)[which(min(marginal_p) == marginal_p) ]
-    label.min = as.events(x$data)[ min.p[1] , , drop = FALSE]
+    label.min = as.events(x)[ min.p[1] , , drop = FALSE]
 
     # Get label of the (first) event with max marginale 
     max.p = rownames(marginal_p)[which(max(marginal_p) == marginal_p) ]
-    label.max = as.events(x$data)[ max.p[1] , ,  drop = FALSE]
+    label.max = as.events(x)[ max.p[1] , ,  drop = FALSE]
 
     # Frequency labels
     min.freq = round(min(marginal_p) * 100, 0)
@@ -1230,15 +1224,15 @@ tronco.plot = function(x,
 
     stat.pch = c(21, 21)
     pt.bg = c(
-        as.colors(x$data)[label.min[, 'type']], 
-      as.colors(x$data)[label.max[, 'type']]
+        as.colors(x)[label.min[, 'type']], 
+      as.colors(x)[label.max[, 'type']]
       )
     col = c('black', 'black')
         
     # Further stats
     y = x
-    if('Hypothesis' %in% as.types(x$data)) 
-            y = delete.type(x$data, 'Hypothesis')
+    if('Hypothesis' %in% as.types(x)) 
+            y = delete.type(x, 'Hypothesis')
 
             
     freq.labels = c(freq.labels, 
@@ -1882,11 +1876,11 @@ for(e in edge_names) {
 
     # # Get label of the (first) event with minimum marginale 
     # min.p =   rownames(marginal_p)[which(min(marginal_p) == marginal_p) ]
-    # label.min = as.events(x$data)[ min.p[1] , , drop = FALSE]
+    # label.min = as.events(x)[ min.p[1] , , drop = FALSE]
 
     # # Get label of the (first) event with max marginale 
     # max.p = rownames(marginal_p)[which(max(marginal_p) == marginal_p) ]
-    # label.max = as.events(x$data)[ max.p[1] , ,  drop = FALSE]
+    # label.max = as.events(x)[ max.p[1] , ,  drop = FALSE]
 
     # # Frequency labels
     # min.freq = round(min(marginal_p) * 100, 0)
@@ -1899,15 +1893,15 @@ for(e in edge_names) {
   
     # stat.pch = c(21, 21)
     # pt.bg = c(
-        # as.colors(x$data)[label.min[, 'type']], 
-      # as.colors(x$data)[label.max[, 'type']]
+        # as.colors(x)[label.min[, 'type']], 
+      # as.colors(x)[label.max[, 'type']]
       # )
     # col = c('black', 'black')
         
     # # Further stats
     # y = x
-    # if('Hypothesis' %in% as.types(x$data)) 
-            # y = delete.type(x$data, 'Hypothesis')
+    # if('Hypothesis' %in% as.types(x)) 
+            # y = delete.type(x, 'Hypothesis')
             
     # freq.labels = c(freq.labels, 
       # ' ',
