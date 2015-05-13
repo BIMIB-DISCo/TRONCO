@@ -703,8 +703,10 @@ hypotheses.expansion <- function(input_matrix,
   #print(names(map))
   
   # cut input matrix
-
-  num_hypos = Reduce(sum, lapply(ls(map), function(x, y){if(x %in% y)return(1)}, y=node_list))
+  num_hypos = 0
+  if(length(map) > 0) {
+    num_hypos = Reduce(sum, lapply(ls(map), function(x, y){if(x %in% y)return(1)}, y=node_list))
+  }
   #print('num_hypos')
   #print(num_hypos)
 
