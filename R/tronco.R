@@ -630,7 +630,7 @@ tronco.plot = function(x,
   # print(parameters)
   
   # get hypotheses
-  hypotheses = data$hypotheses
+  hypotheses = x$hypotheses
   hstruct = NULL
   if (!is.null(hypotheses) && !is.na(hypotheses) ) {
     hstruct = hypotheses$hstructure
@@ -639,7 +639,7 @@ tronco.plot = function(x,
   # get event from genes list
   events = NULL
   if (is.vector(genes)) {
-    events = unlist(lapply(genes, function(x){names(which(as.events(data)[,'event'] == x))}))
+    events = unlist(lapply(genes, function(x){names(which(as.events(x)[,'event'] == x))}))
   }
   
   # expand hypotheses
@@ -688,9 +688,10 @@ tronco.plot = function(x,
   }
   #print(v_names[26:30])
   new_name = list()
+  
   for(v in v_names) {
-    if(v %in% rownames(data$annotations)) {
-      n = data$annotations[v,"event"]
+    if(v %in% rownames(x$annotations)) {
+      n = x$annotations[v,"event"]
       new_name = append(new_name, n)
     } else {
       new_name = append(new_name, v)
@@ -702,6 +703,7 @@ tronco.plot = function(x,
   #print(new_name)
   #print(V(hypo_graph)$label)
   #print(hypo_graph)
+  
   
   V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
@@ -765,14 +767,15 @@ tronco.plot = function(x,
   }
   
   # use colors defined in tronco$types
+  data = x
   w = unlist(lapply(names(nAttrs$fillcolor), function(x){
-    if (x %in% rownames(data$annotations))
+    if (x %in% rownames(data$annotations)) {
       data$types[data$annotations[x,'type'], 'color']
+     }
     else
       'White'
     }))
   nAttrs$fillcolor[] = w
-  
 
   legend_logic = NULL
   
@@ -1136,7 +1139,7 @@ tronco.plot = function(x,
   # Adds the legend to the plot
   if (legend) {
     valid_events = colnames(hypo_mat)[which(colnames(hypo_mat) %in% colnames(c_matrix))]
-    legend_names = unique(data$annotations[which(rownames(data$annotations) %in% valid_events), 'type'])
+    legend_names = unique(x$annotations[which(rownames(x$annotations) %in% valid_events), 'type'])
     pt_bg = data$types[legend_names, 'color']
     legend_colors = rep('black', length(legend_names))
     pch = rep(21, length(legend_names))
