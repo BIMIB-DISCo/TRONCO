@@ -707,7 +707,7 @@ hypotheses.expansion <- function(input_matrix,
   if(length(map) > 0) {
     num_hypos = Reduce(sum, lapply(ls(map), function(x, y){if(x %in% y)return(1)}, y=node_list))
   }
-  #print('num_hypos')
+ #print('num_hypos')
   #print(num_hypos)
 
   margin = length(node_list) - num_hypos
