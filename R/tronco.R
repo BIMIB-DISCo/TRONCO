@@ -6,7 +6,8 @@
 #### information.
 
 #' @export
-tronco.caprese <- function(data, lambda = 0.5, do.estimation = FALSE) {
+tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = FALSE ) {
+	
     #check for the inputs to be correct
     if(is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
@@ -14,20 +15,16 @@ tronco.caprese <- function(data, lambda = 0.5, do.estimation = FALSE) {
     if(lambda < 0 || lambda > 1) {
         stop("The value of the shrinkage parameter lambda has to be in [0:1]!",call.=FALSE);
     }
+    
     #reconstruct the topology with CAPRESE
-    cat(paste("Running CAPRESE algorithm with shrinkage coefficient:",lambda,"\n"));
-    topology = caprese.fit(data$genotypes,lambda,do.estimation);
-    topology$data = data;
-    #set rownames and colnames to the results
-    rownames(topology$probabilities$marginal.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$marginal.probs) = "marginal probability";
-    rownames(topology$probabilities$joint.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$joint.probs) = colnames(data$genotypes);
-    rownames(topology$probabilities$conditional.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$conditional.probs) = "conditional probability";
-    rownames(topology$parents.pos) = colnames(data$genotypes);
-    colnames(topology$parents.pos) = "parent";
-    rownames(topology$confidence) = c("probabilistic causality","hypergeometric test","adjusted hypergeometric test");
+    cat(paste0(
+        '*** Inferring a progression model with the following settings.\n',
+        '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
+        '\tAlgorithm: CAPRESE with shrinkage coefficient: ', lambda, '\" lamba.\n'
+    ))
+    topology = caprese.fit(data$genotypes,lambda,do.estimation,silent);
+    
+    rownames(topology$confidence) = c("temporal priority","probability raising","hypergeometric test");
     colnames(topology$confidence) = "confidence";
     rownames(topology$confidence[[1,1]]) = colnames(data$genotypes);
     colnames(topology$confidence[[1,1]]) = colnames(data$genotypes);
@@ -35,19 +32,47 @@ tronco.caprese <- function(data, lambda = 0.5, do.estimation = FALSE) {
     colnames(topology$confidence[[2,1]]) = colnames(data$genotypes);
     rownames(topology$confidence[[3,1]]) = colnames(data$genotypes);
     colnames(topology$confidence[[3,1]]) = colnames(data$genotypes);
-    rownames(topology$adj.matrix) = colnames(data$genotypes);
-    colnames(topology$adj.matrix) = colnames(data$genotypes);
-    if(do.estimation==TRUE) {
-        rownames(topology$probabilities$estimated.marginal.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$estimated.marginal.probs) = "marginal probability";
-        rownames(topology$probabilities$estimated.joint.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$estimated.joint.probs) = colnames(data$genotypes);
-        rownames(topology$probabilities$estimated.conditional.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$estimated.conditional.probs) = "conditional probability";
+    
+    for (i in 1:length(topology$model)) {
+        
+        #set rownames and colnames to the probabilities
+        rownames(topology$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
+        colnames(topology$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
+        rownames(topology$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        colnames(topology$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        rownames(topology$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
+        colnames(topology$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
+        
+        #set rownames and colnames to the parents positions
+        rownames(topology$model[[i]]$parents.pos) = colnames(data$genotypes);
+        colnames(topology$model[[i]]$parents.pos) = "parents";
+        
+        #set rownames and colnames to the adjacency matrices
+        rownames(topology$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        colnames(topology$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        
+        if(do.estimation==TRUE) {
+            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+        }
+        
     }
-    #the reconstruction has been completed
+    
+    # structure to save the results
+    results = data;
+    results$confidence = topology$confidence;
+    results$model = topology$model;
+    results$parameters = topology$parameters;
+    results$execution.time = topology$execution.time;
+    
+    # the reconstruction has been completed
     cat(paste("The reconstruction has been successfully completed.","\n"));
-    return(topology);
+    return(results);
+    
 }
 
 #### end of file -- tronco.caprese.R

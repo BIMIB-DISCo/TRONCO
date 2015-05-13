@@ -388,19 +388,3 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 		
 			# if(!is.na(title)) title(title, cex.main = 1.0 * label.cex)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

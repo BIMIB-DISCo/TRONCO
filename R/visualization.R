@@ -1,4 +1,3 @@
-
 # oncoPrint : plot a genotype
 # 
 #' @import pheatmap
@@ -1003,5 +1002,3 @@ require('likert')
   
   return(cluster.map)
 }
-
-

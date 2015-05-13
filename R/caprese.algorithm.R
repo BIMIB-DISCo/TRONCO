@@ -29,9 +29,6 @@ function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = FALSE ) {
     # the diagonal of the adjacency matrix should not be considered, i.e., no self cause is allowed
     diag(adj.matrix) = 0;
     
-    # consider any hypothesis
-    adj.matrix = hypothesis.adj.matrix(hypotheses,adj.matrix);
-    
     # check if the dataset is valid
     valid.dataset = check.dataset(dataset,adj.matrix,FALSE);
     adj.matrix = valid.dataset$adj.matrix;
@@ -97,15 +94,18 @@ function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = FALSE ) {
 		estimated.probabilities = list(marginal.probs=NA,joint.probs=NA,conditional.probs=NA);
 	}
     error.rates = estimated.error.rates;
+    estimated.probabilities.fit = estimated.probabilities;
 	
     #structures where to save the results
     model = list();
+    adj.matrix.fit = list();
+    adj.matrix.fit$adj.matrix.fit = adj.matrix;
     probabilities.observed = list(marginal.probs=marginal.probs,joint.probs=joint.probs,conditional.probs=conditional.probs);
     probabilities.fit = list(estimated.marginal.probs=estimated.probabilities.fit$marginal.probs,estimated.joint.probs=estimated.probabilities.fit$joint.probs,estimated.conditional.probs=estimated.probabilities.fit$conditional.probs);
     probabilities = list(probabilities.observed=probabilities.observed,probabilities.fit=probabilities.fit);
     	
     # save the results for the model
-    model[[reg]] = list(probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,adj.matrix=adj.matrix);
+    model[["caprese"]] = list(probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,adj.matrix=adj.matrix.fit);
     
     # set the execution parameters
     parameters = list(algorithm="CAPRESE",lambda=lambda,do.estimation=do.estimation,silent=silent);
