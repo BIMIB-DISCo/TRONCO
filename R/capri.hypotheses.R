@@ -299,13 +299,13 @@
         	hypotheses$num.hypotheses = num.hypotheses + 1;
 		
         # add the new hypothesis in the annotations
-        annotations = rbind(data$annotations,c("Hypothesis", pattern.label));
+        annotations = rbind(data$annotations,c("Pattern", pattern.label));
         rownames(annotations)[nrow(annotations)] = pattern.label;
         
         # add the color of the type "Hypothesis" is not already defined
-        if(any(rownames(data$types)=="Hypothesis")==FALSE) {
+        if(any(rownames(data$types)=="Pattern")==FALSE) {
 			types = rbind(data$types, 'slateblue');
-			rownames(types)[nrow(types)] = "Hypothesis";
+			rownames(types)[nrow(types)] = "Pattern";
 			data$types = types;
         }
         	
@@ -1489,4 +1489,3 @@ pairwise.fisher.test = function(data) {
 	return(results)
 	
 }
-

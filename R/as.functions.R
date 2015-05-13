@@ -366,4 +366,3 @@ as.genes.hypotheses = function(x, hypotheses=NULL) {
   genes = unique(events[,'event'])
   return(genes)
 }
-

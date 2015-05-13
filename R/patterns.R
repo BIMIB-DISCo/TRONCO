@@ -40,6 +40,16 @@ as.patterns = function(x)
 }
 
 
+#' Return the number of patterns in the dataset
+#' @export
+npatterns = function(x)
+{
+	if(is.null(x$hypotheses)) return(0)
+	
+	return(x$hypotheses$num.hypotheses)
+}
+
+
 
 
 ## SPOSTARE IN UN FILE APPOSITO?
