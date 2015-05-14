@@ -372,6 +372,8 @@ as.genes.hypotheses = function(x, hypotheses=NULL) {
 
 as.confidence = function(x, conf)
 {
+	is.compliant(x)
+
 	keys = c('hg', 'tp', 'pr', 'npb', 'pb')
 	
 	if(!all(conf %in% keys)) 
@@ -429,4 +431,155 @@ as.confidence = function(x, conf)
 	
 	return(result)	
 }
+
+
+as.models = function(x, models=names(x$model))
+{
+	is.compliant(x)
+	return(x$model[models])
+}
+
+as.adj.matrix = function(x, events = as.events(x), models = names(x$model), type = 'fit')
+{
+	is.compliant(x)
+	
+	if(!type %in% c('fit', 'pf')  ) stop('Adjacency matrix should be any of \'fit\' (prima facie and regularization) or \'pf\' (prima facie).')	
+	if(any(is.null(colnames(events)))) stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
+
+	m = as.models(x, models = models)
+	
+	ret = list()
+	for(i in models)
+	{
+		if(type == 'fit') mat = m[[i]]$adj.matrix$adj.matrix.fit
+		if(type == 'pf') mat = m[[i]]$adj.matrix$adj.matrix.pf
+						
+		mat = mat[rownames(events), , drop = FALSE]
+		mat = mat[, rownames(events), drop = FALSE]
+		
+		ret = append(ret, list(mat)) 
+	}
+	
+	names(ret) = models
+	return(ret)	
+}
+
+
+as.marginal.probs = function(x, events = as.events(x), models = names(x$model), type = 'observed')
+{
+	is.compliant(x)
+	
+	if(!type %in% c('observed', 'fit')  ) stop('Marginal probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).')	
+	if(any(is.null(colnames(events)))) stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
+
+	m = as.models(x, models = models)
+	
+	ret = list()
+	for(i in models)
+	{
+		if(type == 'observed') mat = m[[i]]$probabilities$probabilities.observed$marginal.probs
+		if(type == 'fit') mat = m[[i]]$probabilities$probabilities.fit$estimated.marginal.probs
+		
+		if(type == 'fit' && is.na(mat)) stop('Marginal probabilities have not been estimated yet - see TRONCO Manual.')				
+						
+		mat = mat[rownames(events), , drop = FALSE]
+		ret = append(ret, list(mat)) 
+	}
+	
+	names(ret) = models
+	return(ret)	
+}
+
+
+as.joint.probs = function(x, events = as.events(x), models = names(x$model), type = 'observed')
+{
+	is.compliant(x)
+	
+	if(!type %in% c('observed', 'fit')  ) stop('Joint probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).')	
+	if(any(is.null(colnames(events)))) stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
+
+	m = as.models(x, models = models)
+	
+	ret = list()
+	for(i in models)
+	{
+		if(type == 'observed') mat = m[[i]]$probabilities$probabilities.observed$joint.probs
+		if(type == 'fit') mat = m[[i]]$probabilities$probabilities.fit$estimated.joint.probs
+						
+		if(type == 'fit' && is.na(mat)) stop('Joint probabilities have not been estimated yet - see TRONCO Manual.')				
+						
+		mat = mat[rownames(events), , drop = FALSE]
+		mat = mat[, rownames(events), drop = FALSE]
+		ret = append(ret, list(mat)) 
+	}
+	
+	names(ret) = models
+	return(ret)	
+}
+
+as.conditional.probs = function(x, events = as.events(x), models = names(x$model), type = 'observed')
+{
+	is.compliant(x)
+	
+	if(!type %in% c('observed', 'fit')  ) stop('Conditional probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).')	
+	if(any(is.null(colnames(events)))) stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
+
+	m = as.models(x, models = models)
+	
+	ret = list()
+	for(i in models)
+	{
+		if(type == 'observed') mat = m[[i]]$probabilities$probabilities.observed$conditional.probs
+		if(type == 'fit') mat = m[[i]]$probabilities$probabilities.fit$estimated.conditional.probs
+						
+		if(type == 'fit' && is.na(mat)) stop('Conditional probabilities have not been estimated yet - see TRONCO Manual.')				
+						
+		mat = mat[rownames(events), , drop = FALSE]
+		ret = append(ret, list(mat)) 
+	}
+	
+	names(ret) = models
+	return(ret)	
+}
+
+
+as.parents.pos = function(x, events = as.events(x), models = names(x$model))
+{
+	is.compliant(x)
+	
+	if(any(is.null(colnames(events)))) stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
+
+	m = as.models(x, models = models)
+	
+	ret = list()
+	for(i in models)
+	{
+		mat = m[[i]]$parents.pos
+		mat = mat[rownames(events), , drop = FALSE]
+		ret = append(ret, list(mat)) 
+	}
+	
+	names(ret) = models
+	return(ret)	
+}
+
+
+as.error.rates = function(x, models = names(x$model))
+{
+	is.compliant(x)
+	
+	m = as.models(x, models = models)
+	
+	ret = list()
+	for(i in models)
+	{
+		mat = m[[i]]$error.rates
+		ret = append(ret, list(mat)) 
+	}
+	
+	names(ret) = models
+	return(ret)	
+}
+
+
 
