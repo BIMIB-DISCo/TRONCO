@@ -38,30 +38,30 @@ bootstrap.capri <- function(dataset,
                             silent,
                             reconstruction, 
                             command = "non-parametric",
-                            nboot) 
+                            nboot = 100) 
 {
     
     # structure to save the results of the bootstrap
-    curr.bootstrap.results = array(list(-1), c(nboot,nevents(reconstruct)))
-    colnames(curr.bootstrap.results) = as.events(reconstruct)
+    curr.bootstrap.results = array(list(-1), c(nboot,nevents(reconstruction)))
+    colnames(curr.bootstrap.results) = as.events(reconstruction)
     bootstrap.results = list()
     bootstrap.results[names(as.models(reconstruction))] = curr.bootstrap.results
     
-    curr.bootstrap.adj.matrix = array(0, c(nevents(reconstruct)+1,nevents(reconstruct)+1))
-    colnames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruct))
-    rownames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruct))
+    curr.bootstrap.adj.matrix = array(0, c(nevents(reconstruction)+1,nevents(reconstruction)+1))
+    colnames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruction))
+    rownames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruction))
     bootstrap.adj.matrix = list()
     bootstrap.adj.matrix[names(as.models(reconstruction))] = curr.bootstrap.adj.matrix
     
-    curr.bootstrap.adj.matrix = array(0, c(nevents(reconstruct)+1,nevents(reconstruct)+1))
-    colnames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruct))
-    rownames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruct))
+    curr.bootstrap.adj.matrix = array(0, c(nevents(reconstruction)+1,nevents(reconstruction)+1))
+    colnames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruction))
+    rownames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruction))
     bootstrap.adj.matrix.frequency = list()
     bootstrap.adj.matrix.frequency[names(as.models(reconstruction))] = curr.bootstrap.adj.matrix
     
-    curr.edge.confidence = array(0, c(nevents(reconstruct),nevents(reconstruct)))
-    colnames(curr.edge.confidence) = as.events(reconstruct)
-    rownames(curr.edge.confidence) = as.events(reconstruct)
+    curr.edge.confidence = array(0, c(nevents(reconstruction),nevents(reconstruction)))
+    colnames(curr.edge.confidence) = as.events(reconstruction)
+    rownames(curr.edge.confidence) = as.events(reconstruction)
     bootstrap.edge.confidence = list()
     bootstrap.edge.confidence[names(as.models(reconstruction))] = curr.edge.confidence
     
