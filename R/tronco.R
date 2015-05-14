@@ -514,12 +514,12 @@ tronco.plot = function(x,
                        scale.nodes=NA,
                        name=deparse(substitute(capri)),
                        title = paste("Progression model", x$parameters$algorithm),  
-                       confidence = FALSE, 
+                       confidence = NA, 
+				       p.min = x$parameters$pvalue,
                        legend = TRUE, 
                        legend.cex = 1.0, 
                        edge.cex = 1.0,
                        label.edge.size = 12, 
-                       hidden.and = FALSE,
                        expand = TRUE,
                        genes = NULL,
                        edge.color = 'black',
@@ -531,6 +531,8 @@ tronco.plot = function(x,
                        ...
                        ) 
 {
+	hidden.and = F
+	
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -553,9 +555,9 @@ tronco.plot = function(x,
   }
   
   # Want confidence? Boostrap is needed
-  if(confidence && !exists('bootstrap', where=x)) {
-    stop("To show confidence information, bootstrap execution is needed! See: the function tronco.bootstrap.", call.=FALSE);
-  }
+  # if(confidence && !exists('bootstrap', where=x)) {
+    # stop("To show confidence information, bootstrap execution is needed! See: the function tronco.bootstrap.", call.=FALSE);
+  # }
   
   logical_op = list("AND", "OR", "NOT", "XOR", "*", "UPAND", "UPOR", "UPXOR")
  
@@ -624,6 +626,7 @@ tronco.plot = function(x,
   #  conf_matrix = if (pf) bootstrap$edge.confidence$edge.confidence.pf else bootstrap$edge.confidence$edge.confidence.bic
   #}
   #print(c_matrix)
+  conf_matrix = NULL
   
   # get algorithm parameters
   parameters = x$parameters
@@ -643,7 +646,7 @@ tronco.plot = function(x,
   }
   
   # expand hypotheses
-  if (!confidence) {
+  if (is.na(confidence)) {
     expansion = hypotheses.expansion(c_matrix, 
                                      hstruct, 
                                      hidden.and, 
@@ -750,7 +753,8 @@ tronco.plot = function(x,
          increase_coeff = scale.nodes + (marginal_p[node,] - min_p) / (max_p - min_p)
          nAttrs$width[node] = nAttrs$width[node] * increase_coeff
          nAttrs$height[node] = nAttrs$height[node] * increase_coeff
-        
+         nAttrs$label[node] = paste0(nAttrs$label[node], '\\\n', round(marginal_p[node, ]*100, 0), '%')
+
         # increase_coeff = (1- (max_p - marginal_p[node,])) * scale.nodes
         
 # #         print('***')
@@ -948,55 +952,72 @@ tronco.plot = function(x,
   
   cat('done')
   
-  if(confidence) {
-
-    #print(x$confidence[[3]])
-    #print(hypos_new_name)
-
-
-  #print(edge_names)
-  
-    # for each edge..
-    for(e in edge_names) {
+  if(!is.na(confidence)) 
+  {
+  	conf = as.confidence(x, confidence)
+  	# names.conf = names(conf)
+  	
+    for(e in edge_names) 
+    {
       edge = unlist(strsplit(e, '~'))
+    
       from = edge[1]
       to = edge[2]
-      # ..checks if confidence is available
-      if (from %in% rownames(conf_matrix) && to %in% colnames(conf_matrix)) {
-        if(from %in% names(hypos_new_name)){ conf_from = hypos_new_name[[from]] } else { conf_from = from }
-        if(to %in% names(hypos_new_name)){ conf_to = hypos_new_name[[to]] } else { conf_to = to }
-        # if confidence > 0..
-        # print(paste('from', from, 'to', to, ':', conf_matrix[from, to]))
-        if (conf_matrix[from, to] == 1) {
-          # ..set edge thickness and label..
-          eAttrs$label[e] = '100%'
-          eAttrs$lwd[e] = log(150)
-        } else if (conf_matrix[from, to] >= 0.01) {
-          # ..draw it on the graph..
+      
+      pval.names = c('hg', 'pf', 'tp')
+      red.lable = FALSE
+      
+      for(i in confidence)
+      {
+      	
+      eAttrs$label[e] = paste0(
+      		eAttrs$label[e],  
+      	    as.confidence(x, i)[from, to], '\\\n')
+      
+      	if(i %in% pval.names && as.confidence(x, i)[from, to] > p.min) eAttrs$fontcolor[e] = 'red'
+      	      	
+      }
+      
+      
+# #     
+      # # ..checks if confidence is available
+      # if (from %in% rownames(conf_matrix) && to %in% colnames(conf_matrix)) {
+        # if(from %in% names(hypos_new_name)){ conf_from = hypos_new_name[[from]] } else { conf_from = from }
+        # if(to %in% names(hypos_new_name)){ conf_to = hypos_new_name[[to]] } else { conf_to = to }
+        # # if confidence > 0..
+        # # print(paste('from', from, 'to', to, ':', conf_matrix[from, to]))
+        
+        
+        # if (conf_matrix[from, to] == 1) {
+          # # ..set edge thickness and label..
+          # eAttrs$label[e] = '100%'
+          # eAttrs$lwd[e] = log(150)
+        # } else if (conf_matrix[from, to] >= 0.01) {
+          # # ..draw it on the graph..
 
-          eAttrs$label[e] = paste0('', round(conf_matrix[from, to] * 100, 0), '%')
-          eAttrs$lwd[e] = log(conf_matrix[from, to] * 150)
-        } else {
-          # ..else set the style of the edge to dashed
-          eAttrs$label[e] = "< 1%"
-          eAttrs$lwd[e] = log(1.5)
-        }
+          # eAttrs$label[e] = paste0('', round(conf_matrix[from, to] * 100, 0), '%')
+          # eAttrs$lwd[e] = log(conf_matrix[from, to] * 150)
+        # } else {
+          # # ..else set the style of the edge to dashed
+          # eAttrs$label[e] = "< 1%"
+          # eAttrs$lwd[e] = log(1.5)
+        # }
 
 
     #print(conf_from)
     #print(conf_to)
     
     
-        hyper_geom = x$confidence[[3]][conf_from, conf_to]
-        if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
-        eAttrs$label[e] = paste(eAttrs$label[e], '  ', hyper_geom)
+        # hyper_geom = x$confidence[[3]][conf_from, conf_to]
+        # if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
+        # eAttrs$label[e] = paste(eAttrs$label[e], '  ', hyper_geom)
 
 
-      } else {
-        # ..else this edge is located inside to an hypothesis, so no arrow to show
-        eAttrs$logic[e] = T
-        eAttrs$color[e] = 'black'
-      }
+      # } else {
+        # # ..else this edge is located inside to an hypothesis, so no arrow to show
+        # eAttrs$logic[e] = T
+        # eAttrs$color[e] = 'black'
+      # }
     }
   }
 
@@ -1133,56 +1154,51 @@ tronco.plot = function(x,
   }
   
 
-	# print(nAttrs)
 	
-	# nAttrs$label$G9 = paste(nAttrs$label$G9, '6%')
-	# nAttrs$label = lapply(nAttrs$label, paste, '\\\n6%')
+	# tp = x$confidence['temporal priority', ][[1]]
+	# pr = x$confidence['probability raising', ][[1]]	
+	# hg = x$confidence['hypergeometric test', ][[1]]	
+	# # conf = apply(tp, pr, hg)
 	
-	# edge.names = names(eAttrs$label)
+	
+	
+	# # print(eAttrs$label)
+	
+	# p.min = 0.01
+	
+	# for(i in names(eAttrs$label))
+	# {
+		# names = strsplit(i, '~')[[1]]
+		# print(i)
+		# print(names)
 		
-	# edge.labels = apply(x$confidence[['temporal priority']], 2, labeler)
-	
-	tp = x$confidence['temporal priority', ][[1]]
-	pr = x$confidence['probability raising', ][[1]]	
-	hg = x$confidence['hypergeometric test', ][[1]]	
-	# conf = apply(tp, pr, hg)
-	
-	
-	
-	# print(eAttrs$label)
-	
-	p.min = 0.01
-	
-	for(i in names(eAttrs$label))
-	{
-		names = strsplit(i, '~')[[1]]
-		print(i)
-		print(names)
-		
-		if(all(names %in% colnames(tp)))			
-		{
-			val = 1 - round(max(
-				# tp[names[1], names[2]]
-				# ,
-				# pr[names[1], names[2]],
-				hg[names[1], names[2]]
-				)
-				, 3)
+		# if(all(names %in% colnames(tp)))			
+		# {
+			# val = 1 - round(max(
+				# # tp[names[1], names[2]]
+				# # ,
+				# # pr[names[1], names[2]],
+				# hg[names[1], names[2]]
+				# )
+				# , 3)
 				
-				print(val)
+				# print(val)
 			
-			val = ifelse(val >= (1 - p.min), 1, val)	
+			# val = ifelse(val >= (1 - p.min), 1, val)	
 			
-			if(val < 1)		
-			{eAttrs$label[i] = val
-			# eAttrs$lwd[i] = eAttrs$lwd[i] * exp(val) * 1.5
-			# eAttrs$color[i] = 'red'
-			}
-		}
+			# if(val < 1)		
+			# {
+				# eAttrs$label[i] = paste(val, '\\\n', 'sss')
+				# eAttrs$fontcolor[i] = 'red'
+				
+			# # eAttrs$lwd[i] = eAttrs$lwd[i] * exp(val) * 1.5
+			# # eAttrs$color[i] = 'red'
+			# }
+		# }
 		
 		
 		
-	}
+	# }
 			print(eAttrs)
 
 	
@@ -1574,7 +1590,7 @@ smaller.to.bigger = function(m,cn)
         # Scaling ANDRE
          increase_coeff = scale.nodes + (marginal.probabilities[node,] - min_p) / (max_p - min_p)
          nAttrs$width[node] = nAttrs$width[node] * increase_coeff
-         nAttrs$height[node] = nAttrs$height[node] * increase_coeff     
+         nAttrs$height[node] = nAttrs$height[node] * increase_coeff    
       }
     }
   }
