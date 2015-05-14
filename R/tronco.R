@@ -568,6 +568,8 @@ tronco.plot = function(x,
 
   if(!regularization[1] %in% names(x$model)) {
     stop(paste(regularization[1], "not in model"), call.=FALSE);
+  } else {
+    cat('Regularization: ', regularization[1])
   }
 
   #print(regularization)
@@ -575,12 +577,18 @@ tronco.plot = function(x,
   sec = FALSE
   if(length(regularization) == 2) {
     sec = TRUE
+    cat(',', regularization[2])
   }
+  cat('\n')
 
   #print(sec)
 
   if(sec && !regularization[2] %in% names(x$model)) {
     stop(paste(regularization[2], "not in model"), call.=FALSE);
+  }
+
+  if(any(!is.na(confidence))) {
+    cat('Confidence:', unlist(confidence), '\n')
   }
 
   primary = get(regularization[1], x$model)
