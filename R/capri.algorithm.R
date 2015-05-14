@@ -11,6 +11,7 @@
 # dataset: a dataset describing a progressive phenomenon
 # hypotheses: hypotheses to be considered in the reconstruction
 # command: type of search for the likelihood fit, either hill climbing (hc) or tabu (tabu)
+# regularization: regularizators to be used for the likelihood fit
 # do.boot: should I perform bootstrap? Yes if TRUE, no otherwise
 # nboot: integer number (greater than 0) of bootstrap sampling to be performed
 # pvalue: pvalue for the tests (value between 0 and 1)
@@ -18,6 +19,7 @@
 # min.stat: should I keep bootstrapping untill I have nboot valid values?
 # boot.seed: seed to be used for the sampling
 # do.estimation: should I perform the estimation of the error rates and probabilities?
+# silent: should I be verbose?
 # RETURN:
 # topology: the reconstructed tree topology
 "capri.fit" <-
