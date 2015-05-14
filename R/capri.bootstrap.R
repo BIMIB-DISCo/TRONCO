@@ -6,395 +6,285 @@
 #### information.
 
 
-#perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
-#INPUT:
-#dataset: a dataset describing a progressive phenomenon
-#hypotheses: a set of hypotheses referring to the dataset
-#command.capri: type of search, either hill climbing (hc) or tabu (tabu)
-#do.boot: should I perform bootstrap? Yes if TRUE, no otherwise
-#nboot.capri: integer number (greater than 0) of bootstrap sampling to be performed
-#pvalue: pvalue for the tests (value between 0 and 1)
-#reconstructed.topology.pf: previously reconstructed prima facie topology (before any bootstrap)
-#reconstructed.topology.bic: previously reconstructed topology (before any bootstrap)
-#command: should I perform non-parametric or parametric bootstrap?
-#estimated.marginal.probabilities.pf: estimated marginal probabilities of the events given the selected error rates for the prima facie topology
-#estimated.conditional.probabilities.pf: estimated conditional probabilities of the events given the selected error rates for the prima facie topology
-#parents.pos.pf: positions of the parents for prima facie
-#error.rates.pf: selected error rates to be used if the bootstrap is "parametric" for the prima facie topology
-#estimated.marginal.probabilities.bic: estimated marginal probabilities of the events given the selected error rates for the causal topology
-#estimated.conditional.probabilities.bic: estimated conditional probabilities of the events given the selected error rates for the causal topology
-#parents.pos.bic: positions of the parents for bic
-#error.rates.bic: selected error rates to be used if the bootstrap is "parametric" for the causal topology
-#nboot: number of bootstrap resampling to be performed
-#RETURN:
-#bootstrap.statistics: statistics of the bootstrap
+# perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
+# INPUT:
+# dataset: a dataset describing a progressive phenomenon
+# hypotheses: a set of hypotheses referring to the dataset
+# command.capri: type of search, either hill climbing (hc) or tabu (tabu)
+# regularization: regularizators to be used for the likelihood fit
+# do.boot: should I perform bootstrap? Yes if TRUE, no otherwise
+# nboot.capri: integer number (greater than 0) of bootstrap sampling to be performed
+# pvalue: pvalue for the tests (value between 0 and 1)
+# min.boot: minimum number of bootstrapping to be performed
+# min.stat: should I keep bootstrapping untill I have nboot valid values?
+# boot.seed: seed to be used for the sampling
+# do.estimation: should I perform the estimation of the error rates and probabilities?
+# silent: should I be verbose?
+# command: should I perform non-parametric or parametric bootstrap?
+# nboot: number of bootstrap resampling to be performed
+# RETURN:
+# bootstrap.statistics: statistics of the bootstrap
 bootstrap.capri <- function(dataset, 
                             hypotheses, 
                             command.capri, 
-                            do.boot, nboot.capri, 
-                            pvalue, reconstructed.topology.pf, 
-                            reconstructed.topology.bic, 
-                            command = "non-parametric", 
-                            estimated.marginal.probabilities.pf, 
-                            estimated.conditional.probabilities.pf, 
-                            parents.pos.pf, 
-                            error.rates.pf, 
-                            estimated.marginal.probabilities.bic, 
-                            estimated.conditional.probabilities.bic, 
-                            parents.pos.bic, 
-                            error.rates.bic, 
-                            nboot, 
-                            REGULARIZATION) 
+                            regularization, 
+                            do.boot,
+                            nboot.capri, 
+                            pvalue,
+                            min.boot,
+                            min.stat,
+                            boot.seed,
+                            do.estimation,
+                            silent,
+                            reconstruction, 
+                            command = "non-parametric",
+                            nboot) 
 {
-    #structure to save the statistics of the bootstrap
-    bootstrap.adj.matrix.pf = array(0, c(ncol(dataset) + 1, ncol(dataset) + 1))
-    colnames(bootstrap.adj.matrix.pf) = c("None", colnames(dataset))
-    rownames(bootstrap.adj.matrix.pf) = c("None", colnames(dataset))
     
-    bootstrap.adj.matrix.bic = array(0, c(ncol(dataset) + 1, ncol(dataset) + 1))
-    colnames(bootstrap.adj.matrix.bic) = c("None", colnames(dataset))
-    rownames(bootstrap.adj.matrix.bic) = c("None", colnames(dataset))
+    # structure to save the results of the bootstrap
+    curr.bootstrap.results = array(list(-1), c(nboot,nevents(reconstruct)))
+    colnames(curr.bootstrap.results) = as.events(reconstruct)
+    bootstrap.results = list()
+    bootstrap.results[names(as.models(reconstruction))] = curr.bootstrap.results
     
-    #structure to save the results of the bootstrap
-    bootstrap.results.pf = array(list(-1), c(nboot, ncol(dataset)))
-    colnames(bootstrap.results.pf) = colnames(dataset)
-
-    bootstrap.results.bic = array(list(-1), c(nboot, ncol(dataset)))
-    colnames(bootstrap.results.bic) = colnames(dataset)
+    curr.bootstrap.adj.matrix = array(0, c(nevents(reconstruct)+1,nevents(reconstruct)+1))
+    colnames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruct))
+    rownames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruct))
+    bootstrap.adj.matrix = list()
+    bootstrap.adj.matrix[names(as.models(reconstruction))] = curr.bootstrap.adj.matrix
     
-    #perform nboot bootstrap resampling
-  
-  
+    curr.bootstrap.adj.matrix = array(0, c(nevents(reconstruct)+1,nevents(reconstruct)+1))
+    colnames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruct))
+    rownames(curr.bootstrap.adj.matrix) = c("None",as.events(reconstruct))
+    bootstrap.adj.matrix.frequency = list()
+    bootstrap.adj.matrix.frequency[names(as.models(reconstruction))] = curr.bootstrap.adj.matrix
+    
+    curr.edge.confidence = array(0, c(nevents(reconstruct),nevents(reconstruct)))
+    colnames(curr.edge.confidence) = as.events(reconstruct)
+    rownames(curr.edge.confidence) = as.events(reconstruct)
+    bootstrap.edge.confidence = list()
+    bootstrap.edge.confidence[names(as.models(reconstruction))] = curr.edge.confidence
+    
+    overall.confidence = list();
+    overall.confidence[names(as.models(reconstruction))] = 0;
+    overall.frequency = list();
+    overall.frequency[names(as.models(reconstruction))] = 0;
+    
     # create a progress bar
     flush.console()
-
     pb <- txtProgressBar(1, nboot, style = 3)
   
+  	# perform nboot bootstrap resampling
     for (num in 1:nboot) {
         
-        #start the progress bar
+        # update the progress bar
         setTxtProgressBar(pb, num)
         
-        #performed the bootstrapping procedure
+        # performed the bootstrapping procedure
         if(command == "non-parametric") {
             
-            #perform the sampling for the current step of bootstrap
+            # perform the sampling for the current step of bootstrap
             samples = sample(1:nrow(dataset), size = nrow(dataset), replace = TRUE)
+            bootstrapped.dataset = dataset[samples,]
             
-            #perform the reconstruction on the bootstrapped dataset
-            check.data = check.dataset(dataset[samples, ], FALSE)
+            # perform the reconstruction on the bootstrapped dataset
+            bootstrapped.topology = capri.fit(bootstrapped.dataset, 
+                            				  hypotheses,
+                            				  command.capri, 
+                            				  regularization,
+                            				  do.boot,
+                            				  nboot.capri,
+                            				  pvalue,
+                            				  min.boot,
+                            				  min.stat,
+                            				  boot.seed,
+                            				  do.estimation,
+                            				  silent)
             
-            #if the reconstruction was performed without errors
-            if(check.data$is.valid == TRUE) {
-                bootstrapped.dataset = check.data$dataset
-                curr.hypotheses = hypotheses
+            curr.reconstruction = bootstrapped.topology;
 
-                if(!is.na(check.data$invalid.events$removed.events[1]) && !is.na(curr.hypotheses)) {
-                    curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses - 
-                                                        length(which(unique(hypotheses$hlist[,"cause"]) %in% 
-                                                        colnames(dataset)[check.data$invalid.events$removed.events]))
-                }
-
-                bootstrapped.hypotheses = curr.hypotheses
-                bootstrapped.topology = capri.fit(bootstrapped.dataset, 
-                                                  bootstrapped.hypotheses,
-                                                  command.capri,
-                                                  REGULARIZATION,
-                                                  do.boot,
-                                                  nboot.capri,
-                                                  pvalue,
-                                                  3,
-                                                  TRUE,
-                                                  12345,
-                                                  FALSE,
-                                                  TRUE)
-                
-                #set the reconstructed causal edges
-                parents.pos.pf = array(list(), c(ncol(bootstrapped.topology$data), 1))
-                parents.pos.bic = array(list(), c(ncol(bootstrapped.topology$data),1))
-                
-                for(i in 1:ncol(bootstrapped.topology$data)) {
-                    for(j in 1:ncol(bootstrapped.topology$data)) {
-                        if(i != j && bootstrapped.topology$adj.matrix$adj.matrix.pf[i, j] == 1) {
-                            parents.pos.pf[j, 1] = list(c(unlist(parents.pos.pf[j, 1]), i))
-                        }
-                        if(i != j && bootstrapped.topology$adj.matrix$adj.matrix.fit[i, j] == 1) {
-                            parents.pos.bic[j, 1] = list(c(unlist(parents.pos.bic[j, 1]), i))
-                        }
-                    }
-                }
-
-                parents.pos.pf[unlist(lapply(parents.pos.pf, is.null))] = list(-1)
-                parents.pos.bic[unlist(lapply(parents.pos.bic, is.null))] = list(-1)
-                
-                #get the matched edge in the reconstruction
-                matched.idx.pf = match(colnames(bootstrapped.topology$data), colnames(bootstrap.results.pf))
-                matched.idx.bic = match(colnames(bootstrapped.topology$data), colnames(bootstrap.results.bic))
-                
-                #if an event has no match, it means it has been merged and I discard it
-                parents.pos.pf = parents.pos.pf[!is.na(matched.idx.pf)];
-                parents.pos.bic = parents.pos.bic[!is.na(matched.idx.bic)];
-                matched.idx.pf = matched.idx.pf[!is.na(matched.idx.pf)];
-                matched.idx.bic = matched.idx.bic[!is.na(matched.idx.bic)];
-                
-                #save the results
-                bootstrap.results.pf[num, matched.idx.pf] = parents.pos.pf
-                bootstrap.results.bic[num, matched.idx.bic] = parents.pos.bic
-            }
-
-        } else if(command=="parametric") {
-
-            if(num == 1) {
-
-                #define the possible samples given the current number of events
+        }
+        else if(command=="parametric") {
+        		
+        		if(num == 1) {
+        			
+        			# structure to save the samples probabilities
+        			samples.probabilities = list();
+        			
+                # define the possible samples given the current number of events
                 possible.strings = 2 ^ ncol(dataset)
                 err = ""
-                message = "Too many events! Parametric bootstrastap can not be performed."
+                message = "Too many events in the dataset! Parametric bootstrastap can not be performed."
                 err <- tryCatch(curr.dataset = suppressWarnings(array(0, c(possible.strings, ncol(dataset)))),
                                                                 error = function(e) err <- message)
                 
                 if(toString(err) == message) {
-                    stop(err, call. = FALSE)
+                		stop(err, call. = FALSE)
                 }
                 
                 for (i in 1:possible.strings) {
-                    curr.dataset[i, ] = decimal.to.binary.dag(i - 1, ncol(dataset))
+                		curr.dataset[i, ] = decimal.to.binary.dag(i - 1, ncol(dataset))
                 }
 
                 colnames(curr.dataset) = colnames(dataset)
-
-                #define the samples distribution induced by the topology
-                samples.probabilities.pf = estimate.dag.samples(curr.dataset,
-                                                                reconstructed.topology.pf,
-                                                                estimated.marginal.probabilities.pf,
-                                                                estimated.conditional.probabilities.pf,
-                                                                parents.pos.pf,
-                                                                error.rates.pf)
-
-                samples.probabilities.bic = estimate.dag.samples(curr.dataset,
-                                                                 reconstructed.topology.bic,
-                                                                 estimated.marginal.probabilities.bic,
-                                                                 estimated.conditional.probabilities.bic,
-                                                                 parents.pos.bic,
-                                                                 error.rates.bic)
-
-            }
-
-            #perform the sampling for the current step of bootstrap
-            samples.pf <- suppressWarnings(sample(1:nrow(curr.dataset),
-                                                  size=nrow(dataset),
-                                                  replace=TRUE,
-                                                  prob=samples.probabilities.pf))
-
-            samples.bic <- suppressWarnings(sample(1:nrow(curr.dataset),
-                                                   size=nrow(dataset),
-                                                   replace=TRUE,
-                                                   prob=samples.probabilities.bic))
-            
-            #perform the reconstruction on the bootstrapped dataset
-            check.data.pf = check.dataset(curr.dataset[samples.pf, ], FALSE)
-            check.data.bic = check.dataset(curr.dataset[samples.bic, ], FALSE)
-            
-            #if the reconstruction was performed without errors for the prima facie topology
-            if(check.data.pf$is.valid == TRUE) {
-                bootstrapped.dataset = check.data.pf$dataset
-                curr.hypotheses = hypotheses
-
-                if(!is.na(check.data.pf$invalid.events$removed.events[1]) && !is.na(curr.hypotheses)) {
-                    curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses - 
-                                                     length(which(unique(hypotheses$hlist[,"cause"]) %in% 
-                                                     colnames(dataset)[check.data$invalid.events$removed.events]))
-                }
                 
-                bootstrapped.hypotheses = curr.hypotheses
-                bootstrapped.topology = capri.fit(bootstrapped.dataset, 
-                                                  bootstrapped.hypotheses,
-                                                  command.capri,
-                                                  REGULARIZATION,
-                                                  do.boot,
-                                                  nboot.capri,
-                                                  pvalue,
-                                                  3,
-                                                  TRUE,
-                                                  12345,
-                                                  FALSE,
-                                                  TRUE)
-                
-                #set the reconstructed causal edges
-                parents.pos.pf = array(list(), c(ncol(bootstrapped.topology$data), 1))
-
-                for(i in 1:ncol(bootstrapped.topology$data)) {
-                    for(j in 1:ncol(bootstrapped.topology$data)) {
-                        if(i != j && bootstrapped.topology$adj.matrix$adj.matrix.pf[i, j] == 1) {
-                            parents.pos.pf[j, 1] = list(c(unlist(parents.pos.pf[j, 1]), i))
-                        }
-                    }
+                for (m in names(as.models(reconstruction))) {
+                		samples.probabilities[m] = estimate.dag.samples(curr.dataset,
+                                                                as.adj.matrix(reconstruction,model=m),
+                                                                as.marginal.probs(reconstruction,model=m,type="fit"),
+                                                                as.conditional.probs(reconstruction,model=m,type="fit"),
+                                                                as.parents.pos(reconstruction,model=m),
+                                                                as.error.rates(reconstruction,model=m))
                 }
 
-                parents.pos.pf[unlist(lapply(parents.pos.pf, is.null))] = list(-1)
-
-                #get the matched edge in the reconstruction
-                matched.idx.pf = match(colnames(bootstrapped.topology$data), colnames(bootstrap.results.pf))
-
-                #if an event has no match, it means it has been merged and I discard it
-                parents.pos.pf = parents.pos.pf[!is.na(matched.idx.pf)]
-                matched.idx.pf = matched.idx.pf[!is.na(matched.idx.pf)]
-
-                #save the results
-                bootstrap.results.pf[num, matched.idx.pf] = parents.pos.pf;
             }
-
-            #if the reconstruction was performed without errors for the causal topology
-            if(check.data.bic$is.valid == TRUE) {
-                bootstrapped.dataset = check.data.bic$dataset
-                curr.hypotheses = hypotheses
-
-                if(!is.na(check.data.bic$invalid.events$removed.events[1]) && !is.na(curr.hypotheses)) {
-                    curr.hypotheses$num.hypotheses = hypotheses$num.hypotheses - 
-                                                     length(which(unique(hypotheses$hlist[,"cause"]) %in%
-                                                      colnames(dataset)[check.data$invalid.events$removed.events]))
-                }
-
-                bootstrapped.hypotheses = curr.hypotheses
-                bootstrapped.topology = capri.fit(bootstrapped.dataset, 
-                                                  bootstrapped.hypotheses,
-                                                  command.capri,
-                                                  REGULARIZATION,
-                                                  do.boot,
-                                                  nboot.capri,
-                                                  pvalue,
-                                                  3,
-                                                  TRUE,
-                                                  12345,
-                                                  FALSE,
-                                                  TRUE)
-
-                #set the reconstructed causal edges
-                parents.pos.bic = array(list(), c(ncol(bootstrapped.topology$data), 1))
-
-                for(i in 1:ncol(bootstrapped.topology$data)) {
-                    for(j in 1:ncol(bootstrapped.topology$data)) {
-                        if(i != j && bootstrapped.topology$adj.matrix$adj.matrix.fit[i, j] == 1) {
-                            parents.pos.bic[j, 1] = list(c(unlist(parents.pos.bic[j, 1]), i))
-                        }
-                    }
-                }
-
-                parents.pos.bic[unlist(lapply(parents.pos.bic, is.null))] = list(-1)
-
-                #get the matched edge in the reconstruction
-                matched.idx.bic = match(colnames(bootstrapped.topology$data), colnames(bootstrap.results.bic))
-
-                #if an event has no match, it means it has been merged and I discard it
-                parents.pos.bic = parents.pos.bic[!is.na(matched.idx.bic)]
-                matched.idx.bic = matched.idx.bic[!is.na(matched.idx.bic)]
-
-                #save the results
-                bootstrap.results.bic[num, matched.idx.bic] = parents.pos.bic
+            
+            # perform the reconstruction for each model
+            curr.reconstruction = reconstuction;
+            curr.reconstruction$models = list();
+            for (m in names(as.models(reconstruction))) {
+            	
+            	# perform the sampling for the current step of bootstrap and regularizator
+            	samples = sample(1:nrow(curr.dataset), size = nrow(dataset), replace = TRUE, prob = samples.probabilities[[m]])
+            	bootstrapped.dataset = dataset[samples,]
+            
+            	# perform the reconstruction on the bootstrapped dataset
+            	bootstrapped.topology = capri.fit(bootstrapped.dataset, 
+                            				  	  hypotheses,
+                            				  	  command.capri, 
+                            				  	  m,
+                            				  	  do.boot,
+                            				  	  nboot.capri,
+                            				  	  pvalue,
+                            				  	  min.boot,
+                            				  	  min.stat,
+                            				  	  boot.seed,
+                            				  	  do.estimation,
+                            				      silent)
+                            				      
+                # save the results for this model
+                curr.reconstruction$models[m] = as.models(bootstrapped.topology,models=m)
+            	
             }
+            
         }
+        
+        # set the reconstructed selective advantage edges
+        for (m in names(as.models(curr.reconstruction))) {
+        	
+        	# get the parents pos
+        	parents.pos = array(list(), c(nevents(curr.reconstruction), 1))
+        	
+        	curr.adj.matrix = as.adj.matrix(curr.reconstruction,model=m)
+        	for(i in 1:nevents(curr.reconstruction)) {
+        		for(j in 1:nevents(curr.reconstruction)) {
+        			if(i!=j && curr.adj.matrix[i,j]==1) {
+        				parents.pos[j, 1] = list(c(unlist(parents.pos[j,1]),i))
+        			}
+        		}
+        	}
+        	
+        	parents.pos[unlist(lapply(parents.pos,is.null))] = list(-1)
+        	
+        	# get the matched edge in the reconstruction
+        	matched.idx = match(as.events(curr.reconstruction),as.events(curr.reconstruction))
+        	parents.pos = parents.pos[!is.na(matched.idx)]
+        	matched.idx = matched.idx[!is.na(matched.idx)]
+        	
+        	# save the results
+        	bootstrap.results[m][num, matched.idx] = parents.pos;
+        	
+        }
+        
     }
   
     # close progress bar
     close(pb)
-  
-    #set the statistics of the bootstrap
-    for(i in 2:ncol(bootstrap.adj.matrix.pf)) {
-
-        curr.result.pf = bootstrap.results.pf[, i - 1]
-        curr.result.bic = bootstrap.results.bic[, i - 1]
-
-        for(j in 1:length(curr.result.pf)) {
-            curr.pf = curr.result.pf[[j]]
-            
-            for(k in 1:length(curr.pf)) {
-                if(curr.pf[k] == -1) {
-                    bootstrap.adj.matrix.pf[1, i] = bootstrap.adj.matrix.pf[1, i] + 1
-                } else {
-                    bootstrap.adj.matrix.pf[curr.pf[k] + 1, i] = bootstrap.adj.matrix.pf[curr.pf[k] + 1, i] + 1
-                }
-            }
-            curr.bic = curr.result.bic[[j]]
-
-            for(k in 1:length(curr.bic)) {
-                if(curr.bic[k] == -1) {
-                    bootstrap.adj.matrix.bic[1, i] = bootstrap.adj.matrix.bic[1, i] + 1
-                } else {
-                    bootstrap.adj.matrix.bic[curr.bic[k] + 1, i] = bootstrap.adj.matrix.bic[curr.bic[k] + 1, i] + 1
-                }
-            }
-        }
-    }
-
-    #evalutate the overall confidence
-    overall.confidence.pf = 0
-    overall.confidence.bic = 0
-    cont = 0
-
-    for(i in 1:nrow(bootstrap.results.pf)) {
-        curr.adj.matrix.pf = array(0, c(ncol(dataset), ncol(dataset)))
-        curr.adj.matrix.bic = array(0, c(ncol(dataset), ncol(dataset)))
-        
-        for(j in 1:ncol(bootstrap.results.pf)) {
-            curr.result.pf = bootstrap.results.pf[i, j]
-            curr.result.bic = bootstrap.results.bic[i, j]
-
-            for(k in 1:length(curr.result.pf)) {
-                curr.pf = curr.result.pf[[k]]
+    
+    # set the statistics of the bootstrap
+    for (m in names(as.models(curr.reconstruction))) {
+    	
+    	curr.bootstrap.adj.matrix = bootstrap.adj.matrix[m]
+    	
+    	for(i in 2:ncol(curr.bootstrap.adj.matrix)) {
+    		curr.result = bootstrap.results[m][,i-1]
+    		
+    		for(j in 1:length(curr.result)) {
+    			
+    			curr.val = curr.result[[j]]
+    			
+    			for(k in 1:length(curr.val)) {
+    				if(curr.val[k] == -1) {
+    					curr.bootstrap.adj.matrix[1,i] = curr.bootstrap.adj.matrix[1,i] + 1
+    				}
+    				else {
+    					curr.bootstrap.adj.matrix[curr.val[k] + 1, i] = curr.bootstrap.adj.matrix[curr.val[k] + 1, i] + 1
+    				}
+    			}
+    		
+    		}
+    		
+    	}
+    	
+    	}
+    
+    # evalutate the overall confidence
+    for (m in names(as.models(curr.reconstruction))) {
+    	
+    	curr.bootstrap.results = bootstrap.results[m]
+    	
+    	for(i in 1:nrow(curr.bootstrap.results)) {
+    		
+    		curr.adj.matrix = array(0, c(nevents(reconstruction),nevents(reconstruction)))
+    		
+    		for(j in 1:ncol(curr.bootstrap.results)) {
+    			
+    			curr.result = curr.bootstrap.results[i, j]
+    			
+    			for(k in 1:length(curr.result)) {
+    				
+    				curr.val = curr.result[[k]]
                 
-                for(l in 1:length(curr.pf)) {
-                    if(curr.pf[l] != -1) {
-                        curr.adj.matrix.pf[curr.pf[l], j] = 1
-                    }
-                }
-                curr.bic = curr.result.bic[[k]]
-                for(l in 1:length(curr.bic)) {
-                    if(curr.bic[l] != -1) {
-                        curr.adj.matrix.bic[curr.bic[l],j] = 1
-                    }
-                }
-            }
-        }
-        if(sum(reconstructed.topology.pf - curr.adj.matrix.pf) == 0) {
-            overall.confidence.pf = overall.confidence.pf + 1
-        }
-        if(sum(reconstructed.topology.bic - curr.adj.matrix.bic) == 0) {
-            overall.confidence.bic = overall.confidence.bic + 1
-        }
+                	for(l in 1:length(curr.val)) {
+                    	if(curr.val[l] != -1) {
+                        	curr.adj.matrix[curr.val[l], j] = 1
+                    	}
+                	}
+                	
+    			}
+    			
+    		}
+        	
+        	# if I have a perfect match between the reconstructed topologies, increase the count
+        	if(sum(as.adj.matrix(reconstruction,model=m) - curr.adj.matrix) == 0) {
+            	overall.confidence[k] = overall.confidence.pf + 1
+            	overall.frequency[k] = overall.confidence[k] / nboot
+        	}
+    		
+    	}
+    	
     }
-
-    #save the reconstructed topologies
-    reconstructed.topology = list(reconstructed.topology.pf = reconstructed.topology.pf,
-                                  reconstructed.topology.bic = reconstructed.topology.bic)
     
-    #save the edge confidence
-    edge.confidence.pf = (reconstructed.topology.pf * bootstrap.adj.matrix.pf[-1, -1]) / nboot
-    edge.confidence.bic = (reconstructed.topology.bic * bootstrap.adj.matrix.bic[-1, -1])/nboot
-    edge.confidence = list(edge.confidence.pf=edge.confidence.pf, edge.confidence.bic=edge.confidence.bic)
+    # save the edge confidence
+    for (m in names(as.models(curr.reconstruction))) {
+    	
+    	curr.edge.confidence = (as.adj.matrix(curr.reconstruction,model=m) * bootstrap.adj.matrix[m][-1,-1]) / nboot
+    	bootstrap.confidence[m] = curr.edge.confidence;
+    	
+    	curr.bootstrap.adj.matrix = bootstrap.adj.matrix[m][, -1] / nboot
+    	bootstrap.adj.matrix.frequency[m] = curr.bootstrap.adj.matrix
     
-    #save the confidence from the bootstrap
-    confidence.pf = list(overall.value.pf = overall.confidence.pf,
-                         overall.frequency.pf = overall.confidence.pf / nboot,
-                         bootstrap.values.pf = bootstrap.adj.matrix.pf[, -1],
-                         bootstrap.frequencies.pf = bootstrap.adj.matrix.pf[, -1] / nboot)
-
-    confidence.bic = list(overall.value.bic = overall.confidence.bic,
-                          overall.frequency.bic = overall.confidence.bic / nboot,
-                          bootstrap.values.bic = bootstrap.adj.matrix.bic[, -1],
-                          bootstrap.frequencies.bic = bootstrap.adj.matrix.bic[, -1] / nboot)
-    
-    confidence = list(confidence.pf = confidence.pf, confidence.bic = confidence.bic)   
-    
-    #save the settings of the bootstrap
-    bootstrap.settings = list(type = command, nboot = nboot)
-    
-    #structure to save the results
-    bootstrap.statistics = list(reconstructed.topology = reconstructed.topology,
-                                confidence = confidence,
-                                edge.confidence = edge.confidence,
-                                bootstrap.settings = bootstrap.settings)
+    }
+        
+    # save the statistics of the bootstrap
+    bootstrap.statistics = list(bootstrap.results = bootstrap.results,
+    							bootstrap.adj.matrix = list(count = bootstrap.adj.matrix, frequency = bootstrap.adj.matrix.frequency),
+    							bootstrap.edge.confidence = bootstrap.edge.confidence,
+    							overall.confidence = list(count = overall.confidence, frequency = overall.frequency),
+                                bootstrap.settings = list(type = command, nboot = nboot))
 
     return(bootstrap.statistics)
+    
 }
 
 #### end of file -- bootstrap.capri.R
