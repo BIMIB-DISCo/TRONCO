@@ -791,6 +791,8 @@ hypotheses.expansion <- function(input_matrix,
         node_names = rownames(hypo_pre)
         node_names = lapply(node_names, function(x){ if(is.logic.node(x)) { paste0('UP', x) } else { return(x) }  })
 
+
+
         rownames(hypo_pre) = node_names
         colnames(hypo_pre) = node_names
 
@@ -801,6 +803,7 @@ hypotheses.expansion <- function(input_matrix,
         h_mat_pre <- colSums(get.adjacency(hypo_graph_pre, sparse=FALSE))
 
         final_node <- names(h_mat_pre)[which(h_mat==0)]
+        hypos_new_name[final_node] = h
 
         # edge to reconstruct
         h_edge <- input_matrix[, h]

@@ -7,7 +7,7 @@
 
 #' @export
 tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = FALSE ) {
-	
+  
     #check for the inputs to be correct
     if(is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
@@ -515,7 +515,7 @@ tronco.plot = function(x,
                        name=deparse(substitute(capri)),
                        title = paste("Progression model", x$parameters$algorithm),  
                        confidence = NA, 
-				       p.min = x$parameters$pvalue,
+                       p.min = x$parameters$pvalue,
                        legend = TRUE, 
                        legend.cex = 1.0, 
                        edge.cex = 1.0,
@@ -531,8 +531,8 @@ tronco.plot = function(x,
                        ...
                        ) 
 {
-	hidden.and = F
-	
+  hidden.and = F
+  
   if (!require(igraph)) {
     install.packages('igraph', dependencies = TRUE)
     library(igraph)
@@ -626,7 +626,7 @@ tronco.plot = function(x,
   #  conf_matrix = if (pf) bootstrap$edge.confidence$edge.confidence.pf else bootstrap$edge.confidence$edge.confidence.bic
   #}
   #print(c_matrix)
-  conf_matrix = NULL
+  # conf_matrix = NULL
   
   # get algorithm parameters
   parameters = x$parameters
@@ -646,7 +646,7 @@ tronco.plot = function(x,
   }
   
   # expand hypotheses
-  if (is.na(confidence)) {
+  #if (is.na(confidence)) {
     expansion = hypotheses.expansion(c_matrix, 
                                      hstruct, 
                                      hidden.and, 
@@ -654,17 +654,17 @@ tronco.plot = function(x,
                                      events)
     hypo_mat = expansion[[1]]
     hypos_new_name = expansion[[2]]
-  } else {
-    expansion = hypotheses.expansion(c_matrix, 
-                                     hstruct, 
-                                     hidden.and, 
-                                     expand, 
-                                     events, 
-                                     conf_matrix)
-    hypo_mat = expansion[[1]]
-    hypos_new_name = expansion[[2]]
-    conf_matrix = expansion[[3]]
-  }
+  #} else {
+  #  expansion = hypotheses.expansion(c_matrix, 
+  #                                   hstruct, 
+  #                                   hidden.and, 
+  #                                   expand, 
+  #                                   events, 
+  #                                   conf_matrix)
+  #  hypo_mat = expansion[[1]]
+  #  hypos_new_name = expansion[[2]]
+  #  conf_matrix = expansion[[3]]
+  #}
   
   # print(hypo_mat)
   
@@ -950,36 +950,62 @@ tronco.plot = function(x,
   eAttrs$logic = rep(F, length(edge_names))
   names(eAttrs$logic) = edge_names
   
-  cat('done')
+  cat('done\n')
+
+  #print('confidence')
+  #print(confidence)
   
-  if(!is.na(confidence)) 
+  if(any(!is.na(confidence)))
   {
-  	conf = as.confidence(x, confidence)
-  	# names.conf = names(conf)
-  	
+    cat('*** Add confidence information: ')
+    conf = as.confidence(x, confidence)
+    # names.conf = names(conf)
+    
     for(e in edge_names) 
     {
       edge = unlist(strsplit(e, '~'))
     
       from = edge[1]
       to = edge[2]
+
+      #cat("***\n", from, '->', to, '\n')
       
       pval.names = c('hg', 'pf', 'tp')
       red.lable = FALSE
-      
-      for(i in confidence)
-      {
-      	
-      eAttrs$label[e] = paste0(
-      		eAttrs$label[e],  
-      	    as.confidence(x, i)[from, to], '\\\n')
-      
-      	if(i %in% pval.names && as.confidence(x, i)[from, to] > p.min) eAttrs$fontcolor[e] = 'red'
-      	      	
+
+      if(is.logic.node.up(from) || is.logic.node.down(to)) {
+        #cat('cazzofiga\n')
+        next
       }
+
+      if(from %in% names(hypos_new_name)){ conf_from = hypos_new_name[[from]] } else { conf_from = from }
+      if(to %in% names(hypos_new_name)){ conf_to = hypos_new_name[[to]] } else { conf_to = to }
+
+
+
+        #cat(conf_from, '->', conf_to, '\n')
+      
+        for(i in confidence)
+        {
+          
+          conf_p = get(i, as.confidence(x, i))
+          if(! (conf_from %in% rownames(conf_p) && conf_to %in% colnames(conf_p))) {
+            #cat('culocane\n')
+            next
+          }
+          
+          eAttrs$label[e] = paste0(
+            eAttrs$label[e],
+            ifelse(conf_p[conf_from, conf_to] < 0.01, "< 0.01", round(conf_p[conf_from, conf_to], 2)), '\\\n')
+            #conf_p[conf_from, conf_to], '\\\n')
+          #cat(conf_p[conf_from, conf_to], '\n')
+        
+          if(i %in% pval.names && conf_p[conf_from, conf_to] > p.min) eAttrs$fontcolor[e] = 'red'
+                  
+        }
       
       
-# #     
+# #    
       # # ..checks if confidence is available
       # if (from %in% rownames(conf_matrix) && to %in% colnames(conf_matrix)) {
         # if(from %in% names(hypos_new_name)){ conf_from = hypos_new_name[[from]] } else { conf_from = from }
@@ -1019,6 +1045,7 @@ tronco.plot = function(x,
         # eAttrs$color[e] = 'black'
       # }
     }
+    cat('done\n')
   }
 
   # remove arrows from logic node (hidden and)
@@ -1088,7 +1115,7 @@ tronco.plot = function(x,
   #print(eAttrs$lty)
   
   if(pf) {
-    cat('\n*** Add prima facie edges: ')
+    cat('*** Add prima facie edges: ')
     # for each edge..
     bic = adj.matrix$adj.matrix.bic
     #print(bic)
@@ -1154,57 +1181,57 @@ tronco.plot = function(x,
   }
   
 
-	
-	# tp = x$confidence['temporal priority', ][[1]]
-	# pr = x$confidence['probability raising', ][[1]]	
-	# hg = x$confidence['hypergeometric test', ][[1]]	
-	# # conf = apply(tp, pr, hg)
-	
-	
-	
-	# # print(eAttrs$label)
-	
-	# p.min = 0.01
-	
-	# for(i in names(eAttrs$label))
-	# {
-		# names = strsplit(i, '~')[[1]]
-		# print(i)
-		# print(names)
-		
-		# if(all(names %in% colnames(tp)))			
-		# {
-			# val = 1 - round(max(
-				# # tp[names[1], names[2]]
-				# # ,
-				# # pr[names[1], names[2]],
-				# hg[names[1], names[2]]
-				# )
-				# , 3)
-				
-				# print(val)
-			
-			# val = ifelse(val >= (1 - p.min), 1, val)	
-			
-			# if(val < 1)		
-			# {
-				# eAttrs$label[i] = paste(val, '\\\n', 'sss')
-				# eAttrs$fontcolor[i] = 'red'
-				
-			# # eAttrs$lwd[i] = eAttrs$lwd[i] * exp(val) * 1.5
-			# # eAttrs$color[i] = 'red'
-			# }
-		# }
-		
-		
-		
-	# }
-			print(eAttrs)
+  
+  # tp = x$confidence['temporal priority', ][[1]]
+  # pr = x$confidence['probability raising', ][[1]] 
+  # hg = x$confidence['hypergeometric test', ][[1]] 
+  # # conf = apply(tp, pr, hg)
+  
+  
+  
+  # # print(eAttrs$label)
+  
+  # p.min = 0.01
+  
+  # for(i in names(eAttrs$label))
+  # {
+    # names = strsplit(i, '~')[[1]]
+    # print(i)
+    # print(names)
+    
+    # if(all(names %in% colnames(tp)))      
+    # {
+      # val = 1 - round(max(
+        # # tp[names[1], names[2]]
+        # # ,
+        # # pr[names[1], names[2]],
+        # hg[names[1], names[2]]
+        # )
+        # , 3)
+        
+        # print(val)
+      
+      # val = ifelse(val >= (1 - p.min), 1, val)  
+      
+      # if(val < 1)   
+      # {
+        # eAttrs$label[i] = paste(val, '\\\n', 'sss')
+        # eAttrs$fontcolor[i] = 'red'
+        
+      # # eAttrs$lwd[i] = eAttrs$lwd[i] * exp(val) * 1.5
+      # # eAttrs$color[i] = 'red'
+      # }
+    # }
+    
+    
+    
+  # }
+      #print(eAttrs)
 
-	
-	
-	# print(eAttrs)
-	
+  
+  
+  # print(eAttrs)
+  
   plot(graph, nodeAttrs=nAttrs, edgeAttrs=eAttrs, main=title, ... )
   
   # Adds the legend to the plot
@@ -1265,43 +1292,61 @@ tronco.plot = function(x,
 
     valid_names = grep('^[*]_(.+)$', valid_names, value = T, invert=T)
 
-    dim = nAttrs$height[valid_names]
-    prob = marginal_p[valid_names, ]
+    #dim = nAttrs$height[valid_names]
+    #prob = marginal_p[valid_names, ]
     
-    min = min(dim)
-    p_min = round(min(prob) * 100, 0)
-    max = max(dim)
-    p_max = round(max(prob) * 100, 0)
+    #min = min(dim)
+    #p_min = round(min(prob) * 100, 0)
+    #max = max(dim)
+    #p_max = round(max(prob) * 100, 0)
     
     
-    marginal_p = marginal_p[valid_names, , drop = FALSE]
+    #marginal_p = marginal_p[valid_names, , drop = FALSE]
 
     # Get label of the (first) event with minimum marginale 
-    min.p =   rownames(marginal_p)[which(min(marginal_p) == marginal_p) ]
-    label.min = as.events(x)[ min.p[1] , , drop = FALSE]
+    #min.p =   rownames(marginal_p)[which(min(marginal_p) == marginal_p) ]
+    #label.min = as.events(x)[ min.p[1] , , drop = FALSE]
 
     # Get label of the (first) event with max marginale 
-    max.p = rownames(marginal_p)[which(max(marginal_p) == marginal_p) ]
-    label.max = as.events(x)[ max.p[1] , ,  drop = FALSE]
+    #max.p = rownames(marginal_p)[which(max(marginal_p) == marginal_p) ]
+    #label.max = as.events(x)[ max.p[1] , ,  drop = FALSE]
 
     # Frequency labels
-    min.freq = round(min(marginal_p) * 100, 0)
-    max.freq = round(max(marginal_p) * 100, 0)
+    #min.freq = round(min(marginal_p) * 100, 0)
+    #max.freq = round(max(marginal_p) * 100, 0)
       
-    freq.labels = c( 
-      paste0(min.freq, ifelse((min.freq < 10 && max.freq > 9), '%  ', '%'), ' ', label.min[, 'event'], ' (min)'),
-      paste0(max.freq, '% ', label.max[, 'event'], ' (max)')
-    )
+    #freq.labels = c( 
+      #paste0(min.freq, ifelse((min.freq < 10 && max.freq > 9), '%  ', '%'), ' ', label.min[, 'event'], ' (min)'),
+      #paste0(max.freq, '% ', label.max[, 'event'], ' (max)')
+    #)
+
+    freq.labels = ""
+    stat.pch = 0
+    pt.bg = "white"
+    col = "white"
+    if (any(!is.na(confidence))) {
+      freq.labels = c(expression(bold("Edge confidence")), lapply(confidence, function(x){
+        if(x == "hg")
+          return("Hypergeometric test")
+        if(x == "tp")
+          return("Temporal Priority")
+        if(x == "pr")
+          return("Probability Raising")
+        if(x == "pb")
+          return("Parametric Bootstrap")
+        if(x == "npb")
+          return("Non Parametric Bootstrap")
+
+      }))
+      #stat.pch = c(21, 21)
+      stat.pch = rep(0, length(confidence) +1)
+      pt.bg = rep('white', length(confidence) +1)
+      col = rep('white', length(confidence) +1)
+    }
   
 
 
 
-    stat.pch = c(21, 21)
-    pt.bg = c(
-        as.colors(x)[label.min[, 'type']], 
-      as.colors(x)[label.max[, 'type']]
-      )
-    col = c('black', 'black')
         
   if('Pattern' %in% as.types(x)) 
             y = delete.type(x, 'Pattern')
@@ -1330,7 +1375,7 @@ tronco.plot = function(x,
     
     legend(legend.pos.l,
            legend = c(freq.labels, reg.labels),
-           title = expression(bold('Events frequency')),
+           title = "",
            bty = 'n',
            box.lty = 3,
            box.lwd = .3,
