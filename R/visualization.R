@@ -110,7 +110,7 @@ oncoprint <- function(x,
     data = sorted.data$M	
   }
   
-  
+  col.gaps = NA
   if(hasGroups)
   {
   	group.samples[,1] = as.character(group.samples[,1])
@@ -140,6 +140,8 @@ oncoprint <- function(x,
 	# print(group.samples)
 	# print(groups)
 	
+	col.gaps = list()
+	
   	for(i in 1:length(groups))
   	{
   		subdata = data[, group.samples == groups[i], drop = FALSE]
@@ -153,8 +155,12 @@ oncoprint <- function(x,
   		  		# print(colSums(data))
 	
 		# data[ , group.samples == groups[i]] = exclusivity.sort(subdata)$M
+
+		col.gaps = append(col.gaps, ncol(subdata))
   	}
   	
+  	col.gaps = unlist(col.gaps)
+  	print(col.gaps)
   		
   	
   }	
@@ -219,7 +225,7 @@ oncoprint <- function(x,
 		names = names(pathways)  	
 				
 		genes.annotation = data.frame(row.names = rn, stringsAsFactors = FALSE)
-		genes.annotation$pathway = rep(NA, nrow(data))
+		genes.annotation$pathway = rep("NA", nrow(data))
 		
 		for(i in 1:length(names)) 
 		{
@@ -242,13 +248,14 @@ oncoprint <- function(x,
 			cat('Annotating pathways with custom colors:', paste(pathways.color, collapse=', '), '\n')
 			pathway.colors = append(pathways.color, "#FFFFFF")
 		}
-		names(pathway.colors) = append(names, NA)
+		names(pathway.colors) = append(names, "NA")
 
 		pathway.colors = pathway.colors[ unique(genes.annotation$pathway) ]
 		
 		annotation_colors = append(annotation_colors, list(pathway=pathway.colors))
 		# print(annotation_colors)				   	
-		# print(genes.annotation)				   	
+		# print(genes.annotation)				  
+		# print(unique(genes.annotation)) 	
    }   
   
   # Augment gene names with frequencies and prepare labels 	
@@ -331,6 +338,7 @@ oncoprint <- function(x,
              show_colnames = sample.id,
              filename=file,
              txt.stats = txt.stats,
+             #gaps_col = if(is.na(col.gaps), gaps_col, col.gaps)
              ...
     )
     

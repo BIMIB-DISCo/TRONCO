@@ -16,6 +16,8 @@
             !is.na(filter.freq), ', ',
             !any(is.na(filter.in.names)), ', ',
             !any(is.na(filter.out.names)), '}', sep=''))
+            
+   # print(filter.in.names)         
   
   if(is.na(filter.out.names) && is.na(filter.in.names) && is.na(filter.freq))
     return(x);

@@ -46,11 +46,11 @@ function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","ai
     # reconstruct the prima facie topology
     # should I perform bootstrap? Yes if TRUE, no otherwise
     if(do.boot==TRUE) {
-        if(!silent) cat('*** Bootstraping the prima facie scores.\n')
+        if(!silent) cat('*** Bootstraping selective advantage scores (prima facie).\n')
         prima.facie.parents = get.prima.facie.parents.do.boot(dataset,hypotheses,nboot,pvalue,adj.matrix,min.boot,min.stat,boot.seed,silent);
     }
     else {
-    		if(!silent) cat('*** Computing the prima facie scores.\n')
+    		if(!silent) cat('*** Computing selective advantage scores (prima facie).\n')
     		prima.facie.parents = get.prima.facie.parents.no.boot(dataset,hypotheses,adj.matrix,silent);
     }
     

@@ -767,10 +767,9 @@ tronco.plot = function(x,
   }
   
   # use colors defined in tronco$types
-  data = x
-  w = unlist(lapply(names(nAttrs$fillcolor), function(x){
-    if (x %in% rownames(data$annotations)) {
-      data$types[data$annotations[x,'type'], 'color']
+    w = unlist(lapply(names(nAttrs$fillcolor), function(w){
+    if (w %in% rownames(x$annotations)) {
+      x$types[x$annotations[w,'type'], 'color']
      }
     else
       'White'
@@ -1134,13 +1133,69 @@ tronco.plot = function(x,
   }
   
 
+	# print(nAttrs)
+	
+	# nAttrs$label$G9 = paste(nAttrs$label$G9, '6%')
+	# nAttrs$label = lapply(nAttrs$label, paste, '\\\n6%')
+	
+	# edge.names = names(eAttrs$label)
+		
+	# edge.labels = apply(x$confidence[['temporal priority']], 2, labeler)
+	
+	tp = x$confidence['temporal priority', ][[1]]
+	pr = x$confidence['probability raising', ][[1]]	
+	hg = x$confidence['hypergeometric test', ][[1]]	
+	# conf = apply(tp, pr, hg)
+	
+	
+	
+	# print(eAttrs$label)
+	
+	p.min = 0.01
+	
+	for(i in names(eAttrs$label))
+	{
+		names = strsplit(i, '~')[[1]]
+		print(i)
+		print(names)
+		
+		if(all(names %in% colnames(tp)))			
+		{
+			val = 1 - round(max(
+				# tp[names[1], names[2]]
+				# ,
+				# pr[names[1], names[2]],
+				hg[names[1], names[2]]
+				)
+				, 3)
+				
+				print(val)
+			
+			val = ifelse(val >= (1 - p.min), 1, val)	
+			
+			if(val < 1)		
+			{eAttrs$label[i] = val
+			# eAttrs$lwd[i] = eAttrs$lwd[i] * exp(val) * 1.5
+			# eAttrs$color[i] = 'red'
+			}
+		}
+		
+		
+		
+	}
+			print(eAttrs)
+
+	
+	
+	# print(eAttrs)
+	
   plot(graph, nodeAttrs=nAttrs, edgeAttrs=eAttrs, main=title, ... )
   
   # Adds the legend to the plot
   if (legend) {
     valid_events = colnames(hypo_mat)[which(colnames(hypo_mat) %in% colnames(c_matrix))]
     legend_names = unique(x$annotations[which(rownames(x$annotations) %in% valid_events), 'type'])
-    pt_bg = data$types[legend_names, 'color']
+    pt_bg = x$types[legend_names, 'color']
     legend_colors = rep('black', length(legend_names))
     pch = rep(21, length(legend_names))
     
@@ -1232,26 +1287,33 @@ tronco.plot = function(x,
       )
     col = c('black', 'black')
         
-    # Further stats
-    y = x
-    if('Hypothesis' %in% as.types(x)) 
-            y = delete.type(x, 'Hypothesis')
+  if('Pattern' %in% as.types(x)) 
+            y = delete.type(x, 'Pattern')
+    else y = x
 
             
     freq.labels = c(freq.labels, 
       ' ',
       expression(bold('Sample size')),
-      paste0('n = ', nsamples(y)),
-      paste0('m = ', nevents(y)),
-      paste0('|G| = ', ngenes(y))     
+      paste0('n = ', nsamples(x), ', m = ', nevents(x)),
+      paste0('|G| = ', ngenes(y), ', |P| = ', npatterns(x))     
     ) 
+    
+    reg.labels = c( '\n',
+      expression(bold('Regularization')),
+      paste0(names(x$model))
+    )
+
+
      
-    stat.pch = c(stat.pch, 0, 0, 20,  20, 20)
-    pt.bg = c(pt.bg, 'white', 'white', rep('black', 3))
-    col = c(col, 'white', 'white', rep('black', 3)) 
+    stat.pch = c(stat.pch, rep(0, 2), rep(20, 2), rep(0, 2), rep(20, 2))
+    pt.bg = c(pt.bg, rep('white', 2), rep('black', 2), rep('white', 2), 'black', 'darkgrey')
+    col = c(col, rep('white', 2), rep('white', 2), rep('white', 2),'black', 'darkgrey') 
+    
+    # print(data.frame(stat.pch, pt.bg, col))
     
     legend(legend.pos.l,
-           legend = freq.labels,
+           legend = c(freq.labels, reg.labels),
            title = expression(bold('Events frequency')),
            bty = 'n',
            box.lty = 3,
@@ -1264,6 +1326,7 @@ tronco.plot = function(x,
            col = col)
        
   }
+
   
   if(!is.na(file))
   {

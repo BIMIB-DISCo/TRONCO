@@ -49,6 +49,10 @@ delete.type <- function(x, type) {
   # if is compliant x
   is.compliant(x)
   
+  # print('ADMAMMMM')
+  # print(type)
+  # print(type %in% as.types(x))
+  
   if (type %in% as.types(x)) {
 
     events = as.events(x, types=setdiff(as.types(x), type))
@@ -136,7 +140,7 @@ delete.samples = function(x, samples) {
     }
   }
   
-  x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, ]
+  x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, , drop = F ]
   
   if(stages) {
     x$stages = x$stages[!rownames(x$stages) %in% del, , drop=FALSE]
@@ -457,9 +461,16 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
 
 
   types.check = lapply(input, function(type) {
+
+# # 	print('ADAM')  	
+	# print(type)
+	# print(type %in% as.types(x))
+	  	
     type %in% as.types(x)
   })
 
+	# print(!all(unlist(types.check)))
+	
   if (!all(unlist(types.check))) {
     t = (input[!unlist(types.check)])
 
@@ -506,7 +517,12 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
     z = annotate.stages(z, as.stages(x))
 
 
-  y = delete.type(x, input)
+  y = x
+  for(i in input)
+  {y = delete.type(y, i)
+
+	# print(show(y))
+}
 
   w = ebind(y, z)
   is.compliant(w)

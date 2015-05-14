@@ -42,6 +42,8 @@ as.events = function(x, genes=NA, types=NA)
   if(!any(is.na(genes))) ann = ann[ which(ann[, 'event', drop=FALSE] %in% genes) , , drop=FALSE] 
   if(!any(is.na(types))) ann = ann[ which(ann[, 'type', drop=FALSE] %in% types) , , drop=FALSE]   
 
+ # if(nrow(ann) == 0) return(NA)
+
   return(ann)
 }
 
@@ -84,7 +86,7 @@ as.gene = function(x, genes, types=NA)
 {
   keys = as.events(x, genes=genes, types=types)
   
-	data = data.frame(x$genotypes[, rownames(keys)], row.names = as.samples(x))
+  data = data.frame(x$genotypes[, rownames(keys)], row.names = as.samples(x))
   colnames(data) = keys[, 'type']
 	
 	return(data)
@@ -366,3 +368,65 @@ as.genes.hypotheses = function(x, hypotheses=NULL) {
   genes = unique(events[,'event'])
   return(genes)
 }
+
+
+as.confidence = function(x, conf)
+{
+	keys = c('hg', 'tp', 'pr', 'npb', 'pb')
+	
+	if(!all(conf %in% keys)) 
+		stop('Confidence keyword unrecognized, \'conf\' should be any of:\n
+		 INPUT DATASET\n
+		 \t \"hg\" - hypergeometric test (randomness of observations)\n
+		 SELECTIVE ADVANTAGE SCORES\n
+		 \t \"tp\" - temporal priority (temporal ordering of events)\n
+		 \t \"pr\" - probability raising (selectivity among events)\n
+		 MODEL CONFIDENCE - requires post-reconstruction bootstrap\n
+		 \t \"npb\" - non-parametric bootstrap,\n
+		 \t \"pb\" - parametric bootstrap\n')
+	
+	
+	if(is.null(x$confidence) || is.na(x$confidence) || is.null(x$model) || is.na(x$model))
+		stop('Input \'x\' does not contain a TRONCO model. No confidence to show.\n')
+
+	models = names(x$model)
+	
+	has.npb.bootstrap = is.null(x$model$models[1]$bootstrap$npb)
+	has.pb.bootstrap = is.null(x$model$models[1]$bootstrap$pb)
+	
+	# print(models)
+	# print(has.pb.bootstrap)
+	
+	if( 'npb' %in% conf && has.npb.bootstrap)
+		stop('Non-parametric bootstrap was not performed for input model. Remove keyword\n')
+
+	if( 'pb' %in% conf && has.pb.bootstrap)
+		stop('Parametric bootstrap was not performed for input model. Remove keyword\n')
+
+
+	result = NULL
+	
+	if('hg' %in% conf) result$hg = x$confidence['hypergeometric test', ][[1]]
+	if('tp' %in% conf) result$tp = x$confidence['temporal priority', ][[1]]
+	if('pr' %in% conf) result$pr = x$confidence['probability raising', ][[1]]
+	if('npb' %in% conf) 
+	{
+		x$npb[models] = x$model[models]$bootstrap$npb
+
+		# x$npb = list()
+		# for(i in 1:length(models)) x$npb = append(x$npb, list(x$model$models[i]$bootstrap$npb))
+		# names(x$npb) = models		
+	}
+	
+	if('pb' %in% conf) 
+	{
+		x$pb[models] = x$model[models]$bootstrap$pb
+
+		# x$pb = list()
+		# for(i in 1:length(models)) x$pb = append(x$pb, list(x$model$models[i]$bootstrap$pb))
+		# names(x$pb) = models		
+	}
+	
+	return(result)	
+}
+
