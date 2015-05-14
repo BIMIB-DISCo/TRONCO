@@ -874,7 +874,7 @@ tronco.plot = function(x,
   #cat('\n')
   legend_pathways = NULL
   if(!is.null(pathways)) {
-    
+    cat('*** Add pathways information: ')
     
     if(length(pathways.color) == 1 && pathways.color %in% rownames(brewer.pal.info)) 
     {
@@ -914,7 +914,7 @@ tronco.plot = function(x,
         legend_pathways[path] = cols[[path]]
       }
     }
-
+    cat('done\n')
   }
   
   # edges properties
@@ -1325,7 +1325,7 @@ tronco.plot = function(x,
     pt.bg = "white"
     col = "white"
     if (any(!is.na(confidence))) {
-      freq.labels = c(expression(bold("Edge confidence")), lapply(confidence, function(x){
+      freq.labels = c(expression(bold('Edge confidence')), lapply(confidence, function(x){
         if(x == "hg")
           return("Hypergeometric test")
         if(x == "tp")
@@ -1337,11 +1337,11 @@ tronco.plot = function(x,
         if(x == "npb")
           return("Non Parametric Bootstrap")
 
-      }))
+      }), paste("p-min =", p.min))
       #stat.pch = c(21, 21)
-      stat.pch = rep(0, length(confidence) +1)
-      pt.bg = rep('white', length(confidence) +1)
-      col = rep('white', length(confidence) +1)
+      stat.pch = c(0, rep(21, length(confidence)), 0)
+      pt.bg = c('white', rep('white', length(confidence)), 'white')
+      col = c('white', rep('black', length(confidence)), 'white')
     }
   
 
