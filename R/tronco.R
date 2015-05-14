@@ -736,8 +736,11 @@ tronco.plot = function(x,
   # set node width
   nAttrs$width = rep(width, length(node_names))
   names(nAttrs$width) = node_names
-  
 
+
+  
+  short.label = nAttrs$label
+  names(short.label) = names(nAttrs$label)
   if (!is.na(scale.nodes)) {
 
     
@@ -904,7 +907,7 @@ tronco.plot = function(x,
 
     for(path in names(pathways)) {
       #cat('\npath: ', pathways[[path]])
-      n = nAttrs$label[which(nAttrs$label %in% pathways[[path]])]
+      n = short.label[which(short.label %in% pathways[[path]])]
       #cat('\nfound: ', unlist(n), unlist(names(n)))
       #cat('color: ', cols[[path]])
       #cat('\n')
@@ -1337,9 +1340,9 @@ tronco.plot = function(x,
         if(x == "npb")
           return("Non Parametric Bootstrap")
 
-      }), paste("p-min =", p.min))
+      }), paste("p <", p.min))
       #stat.pch = c(21, 21)
-      stat.pch = c(0, rep(21, length(confidence)), 0)
+      stat.pch = c(0, rep(18, length(confidence)), 0)
       pt.bg = c('white', rep('white', length(confidence)), 'white')
       col = c('white', rep('black', length(confidence)), 'white')
     }
