@@ -958,14 +958,12 @@ tronco.plot = function(x,
   #print('confidence')
   #print(confidence)
   
-  if(any(!is.na(confidence)))
-  {
+  if(any(!is.na(confidence))) {
     cat('*** Add confidence information: ')
     conf = as.confidence(x, confidence)
     # names.conf = names(conf)
     
-    for(e in edge_names) 
-    {
+    for(e in edge_names) {
       edge = unlist(strsplit(e, '~'))
     
       from = edge[1]
@@ -988,24 +986,27 @@ tronco.plot = function(x,
 
         #cat(conf_from, '->', conf_to, '\n')
       
-        for(i in confidence)
-        {
+      for(i in confidence) {
           
-          conf_p = get(i, as.confidence(x, i))
-          if(! (conf_from %in% rownames(conf_p) && conf_to %in% colnames(conf_p))) {
-            #cat('culocane\n')
-            next
-          }
-          
-          eAttrs$label[e] = paste0(
-            eAttrs$label[e],
-            ifelse(conf_p[conf_from, conf_to] < 0.01, "< 0.01", round(conf_p[conf_from, conf_to], 2)), '\\\n')
-            #conf_p[conf_from, conf_to], '\\\n')
-          #cat(conf_p[conf_from, conf_to], '\n')
-        
-          if(i %in% pval.names && conf_p[conf_from, conf_to] > p.min) eAttrs$fontcolor[e] = 'red'
-                  
+        conf_p = get(i, as.confidence(x, i))
+        if(! (conf_from %in% rownames(conf_p) && conf_to %in% colnames(conf_p))) {
+          #cat('culocane\n')
+          next
         }
+          
+        eAttrs$label[e] = paste0(
+        eAttrs$label[e],
+        ifelse(conf_p[conf_from, conf_to] < 0.01, "< 0.01", round(conf_p[conf_from, conf_to], 2)))
+        #conf_p[conf_from, conf_to], '\\\n')
+        #cat(conf_p[conf_from, conf_to], '\n')
+        
+        if(i %in% pval.names && conf_p[conf_from, conf_to] > p.min) {
+          eAttrs$fontcolor[e] = 'red'
+          eAttrs$label[e] = paste0(eAttrs$label[e], ' *')
+        }
+        eAttrs$label[e] = paste0(eAttrs$label[e], '\\\n')
+                  
+      }
       
       
 # #    
