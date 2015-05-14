@@ -684,7 +684,7 @@ hypotheses.expansion <- function(input_matrix,
                                  hidden_and = T,
                                  expand = T,
                                  events = NULL,
-                                 conf_matrix = NULL,
+                                 # conf_matrix = NULL,
                                  skip.disconnected = TRUE
                                  ) {
   
@@ -763,10 +763,10 @@ hypotheses.expansion <- function(input_matrix,
       #print(paste("new name:", initial_node))
 
       # change names in confidence matrix according to hypotesis
-      if(!is.null(conf_matrix)) {
-        rownames(conf_matrix)[rownames(conf_matrix) == h] = initial_node
-        colnames(conf_matrix)[rownames(conf_matrix) == h] = initial_node
-      }
+      # if(!is.null(conf_matrix)) {
+      #   rownames(conf_matrix)[rownames(conf_matrix) == h] = initial_node
+      #   colnames(conf_matrix)[rownames(conf_matrix) == h] = initial_node
+      # }
 
       display.up = FALSE
       if (length(which(input_matrix[, h] == 1)) != 0) {
@@ -868,9 +868,9 @@ hypotheses.expansion <- function(input_matrix,
     min_matrix = min_matrix[order(rownames(min_matrix)),]
     
     # print(min_matrix)
-    if(!is.null(conf_matrix)) {
-      return(list(min_matrix, hypos_new_name, conf_matrix))
-    }
+    #if(!is.null(conf_matrix)) {
+    #  return(list(min_matrix, hypos_new_name, conf_matrix))
+    #}
     return(list(min_matrix, hypos_new_name))
   }
   
