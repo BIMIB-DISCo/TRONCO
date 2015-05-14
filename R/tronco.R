@@ -756,7 +756,7 @@ tronco.plot = function(x,
          increase_coeff = scale.nodes + (marginal_p[node,] - min_p) / (max_p - min_p)
          nAttrs$width[node] = nAttrs$width[node] * increase_coeff
          nAttrs$height[node] = nAttrs$height[node] * increase_coeff
-         nAttrs$label[node] = paste0(nAttrs$label[node], '\\\n', round(marginal_p[node, ]*100, 0), '%')
+         nAttrs$label[node] = paste0(nAttrs$label[node], '\\\n', round(marginal_p[node, ]*100, 0), '%', ' (', sum(as.genotypes(x)[, node]) ,')')
 
         # increase_coeff = (1- (max_p - marginal_p[node,])) * scale.nodes
         

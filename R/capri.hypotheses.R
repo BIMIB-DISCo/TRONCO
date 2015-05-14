@@ -583,13 +583,14 @@ hypothesis.add.homologous = function(x,
                                      pattern.cause = '*',
                                      pattern.effect = '*',
                                      genes = as.genes(x),
-                                     FUN = "OR") 
+                                     FUN = OR) 
 {
 	# in questa funzione, per ogni gene che ha più di un tipo di alterazione
 	# aggiungo l'OR
 
 	#effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
 	#effect = paste(effect, collapse = ", ")
+	op = deparse(substitute(FUN))
 
 	hom.group = lapply(genes, function(g, x) {
 		if (nevents(x, genes = g) > 1) 
@@ -605,8 +606,8 @@ hypothesis.add.homologous = function(x,
 
 	cat("*** Adding hypotheses for Homologous Patterns\n")
 	cat(' Genes:', paste(hom.group, collapse = ", ", sep = ""), '\n')
-	cat(' Function:', FUN, '\n')
-  cat(' Cause:', paste(pattern.cause, collapse=", "), '\n')
+	cat(' Function:', op, '\n')
+    cat(' Cause:', paste(pattern.cause, collapse=", "), '\n')
 	cat(' Effect:', paste(pattern.effect, collapse=", "), '\n')
 	flush.console()
 
