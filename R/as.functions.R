@@ -559,6 +559,26 @@ keysToNames = function(x, matrix)
   return(matrix)
 }
 
+nameToKey = function(x, name)
+{
+  is.compliant(x)
+  
+  types = as.types(x)
+  for(i in types)
+  {
+    if( nchar(name) > nchar(i) &&
+      substr(name, 1, nchar(i)) == i )
+      return(
+        rownames(
+          as.events(x, 
+                    genes = substr(name, nchar(i) + 2, nchar(name)),
+                    types = substr(name, 1, nchar(i))))
+        )
+  }
+  
+  stop('"name" is not a key!')
+}
+
 #' Extract the adjacency matrix of a TRONCO model. The matrix is indexed with colnames/rownames which 
 #' represent genotype keys - these can be resolved with function \code{keysToNames}. It is possible to
 #' specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
@@ -794,6 +814,8 @@ as.selective.advantage.relations = function(x, events = as.events(x), models = n
     df = NULL
     df$SELECTS = NULL
     df$SELECTED = NULL
+    df$OBS.SELECTS = NULL
+    df$OBS.SELECTED = NULL
     df$HG = NULL
     df$TP = NULL
     df$PR = NULL
@@ -805,19 +827,32 @@ as.selective.advantage.relations = function(x, events = as.events(x), models = n
             df$SELECTS = c(df$SELECTS, rownames(m)[i])
             df$SELECTED = c(df$SELECTED, colnames(m)[j])
             
+            df$OBS.SELECTS = c(df$OBS.SELECTS, sum(as.genotypes(x)[, nameToKey(x, rownames(m)[i])]))
+            df$OBS.SELECTED = c(df$OBS.SELECTED, sum(as.genotypes(x)[, nameToKey(x, colnames(m)[j])]))
+            
             df$TP = c(df$TP, conf$tp[rownames(m)[i], colnames(m)[j]])
             df$PR = c(df$PR, conf$pr[rownames(m)[i], colnames(m)[j]])
             df$HG = c(df$HG, conf$hg[rownames(m)[i], colnames(m)[j]])            
           }
         
-    df = cbind(df$SELECTS, df$SELECTED, df$TP, df$PR, df$HG)
-    colnames(df) = c('SELECTS', 'SELECTED',  'TEMPORAL PRIORITY', 'PROBABILITY RAISING', 'HYPERGEOMETRIC')
+    df = cbind(df$SELECTS, df$SELECTED, df$OBS.SELECTS, df$OBS.SELECTED, df$TP, df$PR, df$HG)
+    colnames(df) = c('SELECTS', 'SELECTED', 'OBS.SELECTS', 'OBS.SELECTED', 'TEMPORAL.PRIORITY', 'PROBABILITY.RAISING', 'HYPERGEOMETRIC')
     rownames(df) = paste(1:nrow(df))
-        
+    
+    df = data.frame(df, stringsAsFactors = FALSE) 
+    df$OBS.SELECTS = as.numeric(df$OBS.SELECTS)
+    df$OBS.SELECTED = as.numeric(df$OBS.SELECTED)
+    df$HYPERGEOMETRIC = as.numeric(df$HYPERGEOMETRIC)
+    df$TEMPORAL.PRIORITY = as.numeric(df$TEMPORAL.PRIORITY)
+    df$PROBABILITY.RAISING = as.numeric(df$PROBABILITY.RAISING)
+    
     return(df)
   }
+  
+  
 
   return(lapply(matrix, matrix.to.df))
 }
+
 
 

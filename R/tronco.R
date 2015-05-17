@@ -522,6 +522,7 @@ tronco.plot = function(x,
                        label.edge.size = 12, 
                        expand = TRUE,
                        genes = NULL,
+                       relations.filter = NA,
                        edge.color = 'black',
                        pathways.color = 'Set1',
                        file = NA, # print to pdf,
@@ -572,35 +573,65 @@ tronco.plot = function(x,
 
   #print(regularization)
 
-  sec = FALSE
-  if(length(regularization) == 2) {
-    sec = TRUE
-  }
-
-  #print(sec)
+  sec = ifelse(length(regularization) == 2, T, F)
 
   if(sec && !regularization[2] %in% names(x$model)) {
     stop(paste(regularization[2], "not in model"), call.=FALSE);
   }
+  
+  # Models objects
+  primary = as.models(x, models = regularization[1])[[1]]    
+  if(sec) secondary = as.models(x, models = regularization[2])[[1]]
 
-  primary = get(regularization[1], x$model)
-
-  if (sec) {
-    secondary = get(regularization[2], x$model)
-  } 
-
+  # USARE getters adj.matrix
   if (sec && !all( rownames(primary$adj.matrix$adj.matrix.fit) %in% rownames(secondary$adj.matrix$adj.matrix.fit))) {     
     stop("primary and secondary must have the same adj.matrix! See: the function tronco.bootstrap.", call.=FALSE)
   }
   
-  # get the adjacency matrix
+  # Get the adjacency matrix - this could have been donw with getters
   adj.matrix = primary$adj.matrix
-  if(sec) {
-    adj.matrix = secondary$adj.matrix
-  }
+  if(sec) adj.matrix = secondary$adj.matrix
   c_matrix = adj.matrix$adj.matrix.fit
-
-
+    
+  if(is.function(relations.filter))
+  {
+    cat('*** Filtering relations according to function "relations.filter", visualizing:\n')
+    adj.matrix = as.adj.matrix(x, models = regularization)
+    sel.relation = as.selective.advantage.relations(x, models = regularization)
+    #sel.relation = lapply(sel.relation, keysToNames, x=x)
+    
+    # Select only relations which get TRUE by "relations.filter"
+    sel.relation = lapply(sel.relation, 
+                          function(z){
+                            # apply can not be used - implicit cohersion to char is crap
+                            # z[ apply(z, 1, relations.filter), ]
+                            ####
+                            mask = rep(T, nrow(z))
+                            for(i in 1:nrow(z))
+                              mask[i] = relations.filter(z[i, ]) 
+                            return(z[mask, , drop = F])                              
+                            })
+    
+    print(sel.relation)
+    
+    sel.relation = get(regularization[2], sel.relation)
+    
+    
+    c_matrix.names = rownames(c_matrix)
+    c_matrix = matrix(0, nrow = nrow(c_matrix), ncol = ncol(c_matrix))
+    rownames(c_matrix) = c_matrix.names
+    colnames(c_matrix) = c_matrix.names
+    
+    cat(paste0('Selected relations: ', nrow(sel.relation), ' [out of ', nrow(as.selective.advantage.relations(x, models = regularization)[[2]]), ']\n'))
+    
+    if(nrow(sel.relation) > 0)
+    for(i in 1:nrow(sel.relation))
+      c_matrix[ nameToKey(x, sel.relation[i, 'SELECTS']), nameToKey(x, sel.relation[i, 'SELECTED'])] = 1
+      
+    #print(lapply(adj.matrix, keysToNames, x=x))
+    
+  }
+  
   # get the probabilities
   probabilities = primary$probabilities
   if(sec) {
@@ -614,7 +645,8 @@ tronco.plot = function(x,
   }
   
   if (all(c_matrix == F) || (sec && all(primary$adj.matrix$adj.matrix.fit == F))) {
-    stop('No edge in adjacency matrix! Nothing to show here.')
+    warning('No edge in adjacency matrix! Nothing to show here.')
+    return(NULL)
   }
   
   #bootstrap = x$bootstrap
