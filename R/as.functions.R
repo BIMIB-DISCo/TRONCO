@@ -165,6 +165,20 @@ duplicates = function(x) {
 }
 
 
+#' Return the name annotating the dataset, if any.
+#'
+#' @title as.name
+#' @param x A TRONCO compliant dataset.
+#' @return The name annotating the dataset, if any.
+#' @export as.name
+as.name = function(x)
+{
+  #is.compliant(x)
+  if(!is.null(x$name))
+    return(x$name)
+  return("")
+}
+
 #' Print to console a short report of a dataset. 
 #'
 #' @title show
@@ -176,7 +190,11 @@ show = function(x, view = 10)
   is.compliant(x)
   x = enforce.numeric(x)
 	view = min(view, nevents(x))
-    
+  
+  if(as.name(x) != "")
+    cat(paste('Name: ', as.name(x), '.\n', sep=''))
+  
+  
 	cat(paste('Dataset: n=', nsamples(x), ', m=', nevents(x), ', |G|=', ngenes(x), '.\n', sep=''))
 	cat(paste('Events (types): ', paste(as.types(x), collapse=', '), '.\n', sep=''))
 	cat(paste('Colors (plot): ', paste(as.colors(x), collapse=', '), '.\n', sep=''))

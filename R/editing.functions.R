@@ -5,6 +5,16 @@
 #### See the files COPYING and LICENSE for copyright and licensing
 #### information.
 
+
+annotate.name = function(x, label)
+{
+  if(as.name(x) != "")
+    warning(paste('Old name substituted: ', as.name(x), '.'))
+  
+  x$name = label
+  return(x)
+}
+
 #' @export
 rename.type <- function(x, old.name, new.name) {
   is.compliant(x, 'rename.type: input dataset')

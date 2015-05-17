@@ -505,7 +505,7 @@ is.logic.node <- function(node) {
 #' }
 tronco.plot = function(x,
                        regularization=names(x$model),
-                       fontsize=18, 
+                       fontsize = NA, 
                        height=2,
                        width=3,
                        height.logic = 1,
@@ -513,13 +513,13 @@ tronco.plot = function(x,
                        disconnected=FALSE,
                        scale.nodes=NA,
                        name=deparse(substitute(capri)),
-                       title = paste("Progression model", x$parameters$algorithm),  
+                       title = as.name(x),  
                        confidence = NA, 
                        p.min = x$parameters$pvalue,
                        legend = TRUE, 
                        legend.cex = 1.0, 
                        edge.cex = 1.0,
-                       label.edge.size = 12, 
+                       label.edge.size = NA, 
                        expand = TRUE,
                        genes = NULL,
                        relations.filter = NA,
@@ -554,12 +554,7 @@ tronco.plot = function(x,
   if(missing(x)) {
     stop("Topology missing, usage: hypo.plot(topology, ...", call.=FALSE);
   }
-  
-  # Want confidence? Boostrap is needed
-  # if(confidence && !exists('bootstrap', where=x)) {
-    # stop("To show confidence information, bootstrap execution is needed! See: the function tronco.bootstrap.", call.=FALSE);
-  # }
-  
+    
   logical_op = list("AND", "OR", "NOT", "XOR", "*", "UPAND", "UPOR", "UPXOR")
  
 
@@ -708,7 +703,7 @@ tronco.plot = function(x,
     hypo_mat = hypo_mat[,w]
   }
   
-  cat('\n*** Render graphics: ')
+  cat('\n*** Rendering graphics\n.')
   
   attrs = list(node = list())
       
@@ -754,6 +749,11 @@ tronco.plot = function(x,
   names(nAttrs$fillcolor) = node_names
   
   # set fontsize
+  
+  if(is.na(fontsize)) {
+    fontsize = 24 - 4*log(nrow(hypo_mat))
+    cat(paste0('Set automatic fontsize scaling for node labels: ', fontsize, '\n'))
+  }
   nAttrs$fontsize = rep(fontsize, length(node_names))
   names(nAttrs$fontsize) = node_names
 
@@ -970,6 +970,10 @@ tronco.plot = function(x,
   names(eAttrs$label) = edge_names
   
   #set fontsize to label.edge.size (default)
+  if(is.na(label.edge.size)) {
+    label.edge.size = fontsize/2      
+    cat(paste0('Set automatic fontsize for edge labels: ', label.edge.size, '\n'))    
+  }
   eAttrs$fontsize = rep(label.edge.size, length(edge_names))
   names(eAttrs$fontsize) = edge_names
   
