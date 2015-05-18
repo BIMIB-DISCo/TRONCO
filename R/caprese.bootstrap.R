@@ -47,7 +47,7 @@ function(dataset, lambda, reconstructed.topology, command = "non-parametric", es
 	#perform nboot bootstrap resampling
   
 	# create a progress bar
-		flush.console()
+	flush.console()
 
 	pb <- txtProgressBar(1, nboot, style = 3);
   
