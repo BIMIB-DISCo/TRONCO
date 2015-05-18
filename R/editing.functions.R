@@ -464,7 +464,7 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
   if (length(input) <= 1) {
     cat("One input type provided, using renaming functions.\n")
 
-    x = rename.type(x, input, new.type)
+    x = rename.type(x, input[[1]], new.type)
     x = change.color(x, new.type, new.color)
     return(x)
   }

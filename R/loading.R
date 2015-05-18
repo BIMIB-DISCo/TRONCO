@@ -1,16 +1,34 @@
-# Transforms a matrix 'geno' in an input list conformant to TRONCO's specifications. If this casting is not possible
-# errors are thrown. If no geno.annot/stage.annot parameters are defined, column names of geno are used as event names.
-# If these parameters are specified, they should be compliant with TRONCO's input (explain this better)
-#
-# - geno: a dataframe with the genotypes (this is not constrained to be 0/1)
-# - stage.annot: a nrow(geno)x2 dataframe where stage.annot[i,] denotes the stage associated to geno[i,]. 
-# - event.type: type label to be used
-# - color: R Brewer palette from which random colors are sampled
-# Returns: a list of dataframes compliant with TRONCO's specifications.
-#' @import RColorBrewer
-#' @export
-import.genotypes = function(geno, stage.annot = NA, event.type = "variant", color = "Darkgreen") {
-
+#' Import a matrix of 0/1 alterations as a TRONCO compliant dataset. Input "geno" can be either a dataframe or 
+#' a file name. In any case the dataframe or the table stored in the file must have a column for each altered
+#' gene and a rows for each sample. Colnames will be used to determine gene names, if data is loaded from 
+#' file the first column will be assigned as rownames.
+#' 
+#' @title import.genotypes
+#' @param geno Either a dataframe or a filename
+#' @param event.type Any 1 in "geno" will be interpreted as a an observed alteration labeled with type "event.type"
+#' @param color This is the color used for visualization of events labeled as of "event.type"
+#' @return A TRONCO compliant dataset
+#' @export import.genotypes
+import.genotypes = function(geno, event.type = "variant", color = "Darkgreen") {
+  
+  if(!(is.data.frame(geno) || is.matrix(geno)) && is.character(geno))
+  {
+    cat('*** Input "geno" is a character, interpreting it as a filename to load a table.
+Required table format:
+\t- one column for each gene, one row for each gene;
+\t- colnames/rownames properly defined.\n')
+    
+    data = read.table(geno, 
+                      header = TRUE, 
+                      check.names = F,
+                      stringsAsFactors = F)
+    
+    if(any(is.null(colnames(data)))) stop('Input table should have column names.')    
+    rownames(data) = data[, 1]
+    data[, 1] = NULL
+    geno = data
+  }
+  
 	# Avoid malformed datasets
 	if (ncol(geno) == 0 || nrow(geno) == 0) 
 		stop("Empty genotypes (number of rows/columns 0), will not import.")
@@ -52,33 +70,32 @@ import.genotypes = function(geno, stage.annot = NA, event.type = "variant", colo
 	rownames(x$types) = event.type
 	colnames(x$types) = c("color")
 
-	# If the input color is a ColorBrewer scheme	
-	#	my.palette = color	
-#if(color %in% rownames(brewer.pal.info)) 
-#	my.palette = brewer.pal(n=brewer.pal.info[color, 'maxcolors'], name=color); 
-#
-
 	is.compliant(x, "import.genotypes: output")
 
 	return(x)
 }
 
 
-#
-# import.gistic - Convert a GISTIC score file to TRONCO input.
-
-#' Return the name annotating the dataset, if any.
+#' Transform GISTIC scores for CNAs in a TRONCO compliant object. Input can be either a matrix, with columns
+#' for each altered gene and rows for each sample; in this case colnames/rownames mut be provided. If input
+#' is a character an attempt to load a table from file is performed. In this case the input table format 
+#' should be constitent with TCGA data for focal CNA; there should hence be: one column for each sample, 
+#' one row for each gene, a column Hugo_Symbol with every gene name and a column Entrez_Gene_Id with every
+#'  gene\'s Entrez ID. A valid GISTIC score should be any value of: "Homozygous Loss" (-2), "Heterozygous
+#'  Loss" (-1), "Low-level Gain" (+1), "High-level Gain" (+2). 
 #'
-#' @title as.name
-#' @param x A TRONCO compliant dataset.
-#' @return The name annotating the dataset, if any.
-#' @export as.name
-
-
-#' @export
-import.GISTIC <- function(x, stage.annot = NA) {
+#' @example
+#' gistic = import.GISTIC(paste0(my.GIT, 'TRONCO/data/gistic.txt'))
+#' gistic = annotate.name(gistic, 'Example GISTIC')
+#' oncoprint(gistic)
+#' 
+#' @title import.GISTIC
+#' @param x Either a dataframe or a filename
+#' @return A TRONCO compliant representation of the input CNAs.
+#' @export import.GISTIC
+import.GISTIC <- function(x) {
   
-  if(is.character(x))
+  if(!(is.data.frame(x) || is.matrix(x)) && is.character(x))
   {
     cat('*** Input "x" is a character, interpreting it as a filename to load a table.
 Required table format constitent with TCGA data for focal CNAs:
@@ -90,6 +107,8 @@ Required table format constitent with TCGA data for focal CNAs:
                         header = TRUE, 
                         check.names = F,
                         stringsAsFactors = F)
+    
+    cat('Data loaded.\n')
     
     if(any(is.null(colnames(data)))) stop('Input table should have column names.')    
     if(!'Hugo_Symbol' %in% colnames(data)) stop('Missing Hugo_Symbol column!')
@@ -159,11 +178,25 @@ Required table format constitent with TCGA data for focal CNAs:
 }
 
 
-#
-# import.mutations - import from MAF file
-#
-#' @export
-"import.MAF" <- function(file, sep = "\t", is.TCGA = TRUE) {
+
+#' Import mutation profiles from a Manual Annotation Format (MAF) file. All mutations are aggregated as a
+#' unique event type labeled "Mutation" and assigned a color according to the default of function 
+#' \code{import.genotypes}. If this is a TCGA MAF file check for multiple samples per patient is performed 
+#' and a warning is raised if these occurr.  
+#'
+#' @example
+#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' mutations = annotate.name(mutations, 'Example MAF')
+#' mutations = TCGA.shorten.barcodes(mutations)
+#' oncoprint(mutations)
+#' 
+#' @title import.MAF
+#' @param file  MAF filename
+#' @param sep MAF separator, default "\t"
+#' @param is.TCGA TRUE if this MAF is from TCGA; thus its sample codenames can be interpreted
+#' @return A TRONCO compliant representation of the input MAF
+#' @export import.MAF
+import.MAF <- function(file, sep = "\t", is.TCGA = TRUE) {
 	cat("*** Importing from file: ", file, "\n")
 	cat("Loading MAF file ...")
 	maf = read.delim(file, comment.char = "#", sep = sep, header = TRUE, stringsAsFactors = FALSE)
@@ -264,7 +297,14 @@ variants = function(x) {
 	return(tronco.data)
 }
 
-#' @export
+#' Extract a map Hugo_Symbol -> Entrez_Gene_Id from a MAF input file. If some genes map to ID 0
+#' a warning is raised.
+#' 
+#' @title extract.MAF.HuGO.Entrez.map
+#' @param file  MAF filename
+#' @param sep MAF separator, default "\t"
+#' @return A mapHugo_Symbol -> Entrez_Gene_Id.
+#' @export extract.MAF.HuGO.Entrez.map
 extract.MAF.HuGO.Entrez.map = function(file, sep = "\t") {
 	cat("*** Importing from file: ", file, "\n")
 	cat("Loading MAF file ...")
@@ -284,13 +324,25 @@ extract.MAF.HuGO.Entrez.map = function(file, sep = "\t") {
 }
 
 
-
-#' @import cgdsr
-#' @export
-"cbio.query" <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, genes) {
-
-	cat("*** CGDS plugin for cbio query.")
+#' Wrapper for the CGDS package to query the Cbio portal. This can work either automatically, if one
+#' sets \code{cbio.study}, \code{cbio.dataset} or \code{cbio.profile}, or interactively otherwise. A
+#' list of genes to query with less than 900 entries should be provided. This function returns a list
+#' with two dataframe: the gentic profile required and clinical data for the Cbio study. Output is also
+#' saved to disk as Rdata file. See also http://www.cbioportal.org.
+#' 
+#' @title cbio.query
+#' @param cbio.study  Cbio study ID
+#' @param cbio.dataset Cbio dataset ID
+#' @param cbio.profile Cbio genetic profile ID
+#' @param genes A list of < 900 genes to query
+#' @return A list with two dataframe: the gentic profile required and clinical data for the Cbio study.
+#' @export cbio.query
+cbio.query <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, genes) {
+	cat("*** CGDS plugin for Cbio query.\n")
 	require("cgdsr")
+
+   if(is.null(genes) || is.na(genes) || length(genes) == 0) stop('Empty list of genes to query')
+   if(length(genes) > 900) stop('URL with more than 900 genes will not be accepted, please split it.')
 
 	if (is.na(cbio.study)) 
 		cat("\nAutomatic CBIO study assessment: off")
@@ -306,87 +358,111 @@ extract.MAF.HuGO.Entrez.map = function(file, sep = "\t") {
 
 	mycgds = CGDS("http://www.cbioportal.org/public-portal/")
 
+
+	cs = getCancerStudies(mycgds)
 	if (is.na(cbio.study)) {
 		cat("\nAvailable studies at CBIO portal.\n")
-		print(getCancerStudies(mycgds)[c("cancer_study_id", "name")])
+		print(cs[c("cancer_study_id", "name")])
+		
+		repeat{
 		cbio.study <- readline(prompt = "Enter CBIO study id: ")
+		if(cbio.study %in% cs$cancer_study_id) break
+		}
 	}
 
 	# Get available case lists (collection of samples) for a given cancer study
-	mycancerstudy <- getCancerStudies(mycgds)[cbio.study, ]
+	mycancerstudy <- cbio.study
 
-	if (is.na(mycancerstudy[1, 1])) 
-		stop("Error, CBIO study id invalid. Aborting.")
+	if (is.na(mycancerstudy)) stop("CBIO study id invalid. Aborting.")
 
-	study.name <- mycancerstudy[1, 1]
-	study.ref <- mycancerstudy[1, 2]
-	study.syn <- mycancerstudy[1, 3]
+	study <- cs[cs$cancer_study_id == cbio.study, , drop = F]
 
-	cat(paste("\nCancer codename: ", study.name, sep = ""))
-	cat(paste("\nCancer Ref.: ", study.ref, sep = ""))
-	cat(paste("\nCancer Syn.: ", study.syn, sep = ""))
+	cat(paste("\nCancer codename: ", study[, 1], sep = ""))
+	cat(paste("\nCancer Ref.: ", study[, 2], sep = ""))
+	cat(paste("\nCancer Syn.: ", study[, 3], sep = ""))
 
+	cutdescr = function(x, n)
+	{
+		x[, ncol(x)] = ifelse(
+			nchar(x[, ncol(x)]) > n, 
+			paste0(substr(x[, ncol(x)], 1, n), '....'), 
+			x[, ncol(x)])
+		return(x)
+	}
 
 	# Get dataset for the study
+	csl = getCaseLists(mycgds, cbio.study)
 	if (is.na(cbio.dataset)) {
-		cat("\nAvailable datasets for study.\n")
-		print(getCaseLists(mycgds, study.name)[c("case_list_id", "case_list_name")])
+		cat("\nAvailable datasets for study:", cbio.study, "\n")
+		print(cutdescr(csl[c("case_list_id",  "case_list_description")], 90))
+				
+		repeat{
 		cbio.dataset <- readline(prompt = "Enter study dataset id: ")
+		if(cbio.dataset %in% csl$case_list_id) break
+		}
 	}
 
-	mycaselist = getCaseLists(mycgds, study.name)[cbio.dataset, ]
+	caselist = 	csl[csl$case_list_id == cbio.dataset, , drop = F]
 
-	# print(mycaselist)
-	if (is.na(mycaselist[1, 1])) 
-		stop("Error no data for study")
+	if (any(is.na(caselist))) stop("No data for selected study. Aborting.")
 
-	data.name <- mycaselist[1, 1]
-	data.ref <- mycaselist[1, 2]
-	data.syn <- mycaselist[1, 3]
-	data.id <- mycaselist[1, 4]
 
-	cat(paste("\nData codename: ", data.name, sep = ""))
-	cat(paste("\nData Ref.: ", data.ref, sep = ""))
-	cat(paste("\nData Syn.: ", data.syn, sep = ""))
-	cat(paste("\nData Id.: ", data.id, sep = ""))
+	cat(paste("\nData codename: ", caselist[, 1], sep = ""))
+	cat(paste("\nData Ref.: ", caselist[, 2], sep = ""))
+	cat(paste("\nData Syn.: ", caselist[, 3], sep = ""))
 
 	# Get available genetic profiles	
+	gp = getGeneticProfiles(mycgds, cbio.study)
 	if (is.na(cbio.profile)) {
 		cat("\nAvailable genetic profiles for selected datasets.\n")
-		print(getGeneticProfiles(mycgds, study.name)[c("genetic_profile_id", "genetic_profile_name", "genetic_alteration_type")])
+		print(cutdescr(gp[c("genetic_profile_id", "genetic_profile_description")], 90))
+		
+		repeat{
 		cbio.profile <- readline(prompt = "Enter genetic profile id: ")
+		if(cbio.profile %in% gp$genetic_profile_id) break
+		}
 	}
 
-	mygeneticprofile = getGeneticProfiles(mycgds, study.name)[cbio.profile, ]
+	profile = gp[gp$genetic_profile_id == cbio.profile, , drop = F]
 
-	if (is.na(mycaselist[1, 1])) 
-		stop("error no samples for this case")
+	if (any(is.na(cbio.profile)))  stop("No samples for this profile. Aborting")
 
-	samples.name <- mygeneticprofile[1, 1]
-	samples.ref <- mygeneticprofile[1, 2]
-	samples.syn <- mygeneticprofile[1, 3]
-	samples.id <- mygeneticprofile[1, 4]
+	samples.name <- profile[1, 1]
+	samples.ref <- profile[1, 2]
+	samples.syn <- profile[1, 3]
+	samples.id <- profile[1, 4]
 
 	cat(paste("\nSamples codename: ", samples.name, sep = ""))
 	cat(paste("\nData Ref.: ", samples.ref, sep = ""))
 	cat(paste("\nData Syn.: ", samples.syn, sep = ""))
-	cat(paste("\nData Id.: ", samples.id, sep = ""))
 
-	cat("\nQuerying the following list of genes: ")
-	cat(paste(genes, collapse = ","))
+	cat("\n\nQuerying the following list of genes: ")
+	cat(paste(genes, collapse = ", "), '\n')
 
 	# Get data slices for a specified list of genes, genetic profile and case list
-	data <- getProfileData(mycgds, genes, samples.name, data.name)
-
-	# Get clinical data for the case list
-	#myclinicaldata = getClinicalData(mycgds,mycaselist)
-
+	data <- getProfileData(mycgds, genes, samples.name, cbio.dataset)
+	rownames(data) = gsub('\\.', '-', rownames(data))
+	cat('Symbol \".\" was replaced with "-" in sample IDs.\n')
+	
 	# Export
-	cat(paste("\nData retrieved: ", nrow(data), " samples, ", ncol(data), " events.", sep = ""))
+	cat(paste("\nData retrieved: ", nrow(data), " samples, ", ncol(data), " genes.", sep = ""))
+	
+	# Get clinical data for the case list
+	cat("\nRetrieved also clinical data for samples:", cbio.dataset)
 
-	ofile <- paste(study.name, data.name, samples.name, "txt", sep = ".")
-	write.table(data, file = ofile)
+	clinicaldata = getClinicalData(mycgds, cbio.dataset)
+	rownames(clinicaldata) = gsub('\\.', '-', rownames(clinicaldata))
+
+	ofile <- paste(cbio.study, cbio.dataset, samples.name, "Rdata", sep = ".")
+
+	ret = NULL
+	ret$profile = data
+	ret$clinical = clinicaldata
+	
+	save(ret, file=ofile)
+
 	cat(paste("\nData exported to file: ", ofile, sep = ""))
+	write.table(data, file = ofile)
 
-	return(data)
+	return(ret)
 }

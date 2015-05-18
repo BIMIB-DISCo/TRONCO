@@ -1,29 +1,39 @@
 # oncoPrint : plot a genotype
 # 
-#' @import pheatmap
-#' @import RColorBrewer
 #' @title oncoprint
-#' @param excl.soft A number
-#' @param col.cluster A number
-#' @param row.cluster=FALSE
-#' @param device.new=FALSE 
-#' @param file=NA
-#' @param ann.stage=TRUE Show information about stage classification
-#' @param ann.hits=TRUE Show information about the hits in a gene
-#' @param stage.color='YlOrRd' Color Palette to use with stage
-#' @param hits.color = 'Purples' Color Palette to use with score
-#' @param null.color='darkgray' Background color
-#' @param border.color='white' 
-#' @param font.size=7
-#' @param font.column = 3 
-#' @param title= paste('Genotypes')
-#' @param sample.id = F Show sample name at the bottom of the heatmap
-#' @param hide.zeroes = F Hide events without mutations
-#' @export
+#' @param excl.soft Boolean value, if TRUE sorts samples to enhance exclusivity of alterations
+#' @param samples.cluster Boolean value, if TRUE clusters samples (columns). Default FALSE
+#' @param genes.cluster Boolean value, if TRUE clusters genes (rows). Default FALSE
+#' @param file If not NA write to \code{file} the Oncoprint, default is NA (just visualization).
+#' @param ann.stage Boolean value to annotate stage classification, default depends on \code{x}
+#' @param ann.hits Boolean value to annotate the number of events in each sample, default is TRUE
+#' @param stage.color RColorColorbrewer palette to color stage annotations. Default is 'YlOrRd'
+#' @param hits.color RColorColorbrewer palette to color hits annotations. Default is 'Purples'
+#' @param null.color Color for the Oncoprint cells with 0s, default is 'lightgray'
+#' @param border.color Border color for the Oncoprint, default is white' (no border)
+#' @param text.cex Title and annotations cex, multiplied by font size 7
+#' @param font.column If NA, half of font.row is used
+#' @param font.row If NA, max(c(15 * exp(-0.02 * nrow(data)), 2)) is used, where data is the data 
+#' visualized in the Oncoprint
+#' @param title Oncoprint title, default is as.name(x) - see \code{as.name}
+#' @param sample.id If TRUE shows samples name (columns). Default is FALSE
+#' @param hide.zeroes If TRUE trims data - see \code{trim} - before plot. Default is FALSE 
+#' @param legend If TRUE shows a legend for the types of events visualized. Defualt is TRUE
+#' @param legend.cex Default 1.0; determines legend size if \code{legend = TRUE}
+#' @param cellwidth Default NA, sets autoscale cell width 
+#' @param cellheight Default NA, sets autoscale cell height
+#' @param group.by.label Sort samples (rows) by event label - usefull when multiple events per gene are
+#' available 
+#' @param group.samples If this samples -> group map is provided, samples are grouped as of groups
+#' and sorted according to the number of mutations per sample - usefull when \code{data} was clustered
+#' @param gene.annot Genes'groups, e.g. list(RAF=c('KRAS','NRAS'), Wnt=c('APC', 'CTNNB1')). Default is NA.
+#' @param gene.annot.color Either a RColorColorbrewer palette name or a set of custom colors matching names(gene.annot)
+#' @param txt.stats By default, shows a summary statistics for shown data (n,m, |G| and |P|)
+#' @export oncoprint
 oncoprint <- function(x, 
                       excl.sort = TRUE, 
-                      col.cluster = FALSE, 
-                      row.cluster = FALSE, 
+                      samples.cluster = FALSE, 
+                      genes.cluster = FALSE, 
                       file = NA, 
                       ann.stage = has.stages(x), 
                       ann.hits = TRUE, 
@@ -31,8 +41,8 @@ oncoprint <- function(x,
                       hits.color = 'Purples',  
                       null.color = 'lightgray', 
                       border.color = 'white', 
-                      font.size = 7, 
-                      font.column = 3, 
+                      text.cex = 1.0, 
+                      font.column = NA, 
                       font.row = NA, 
                       title = as.name(x),
                       sample.id = FALSE,
@@ -43,11 +53,15 @@ oncoprint <- function(x,
                       cellheight = NA,
                       group.by.label = FALSE,
                       group.samples = NA,
-                      pathways = NA,
-                      pathways.color = 'Set1',
-                      txt.stats = paste('n = ', nsamples(x),'\nm = ', nevents(x), '\n|G| = ', ngenes(x),  sep=''),
+                      gene.annot = NA,
+                      gene.annot.color = 'Set1',
+                      txt.stats = paste(nsamples(x),' samples\n', nevents(x), ' events\n', 
+                                        ngenes(x), ' genes\n', npatterns(x), ' patterns', sep=''),
 					  ...) 
 {
+  
+  font.size = text.cex * 7
+  
   if (!require('pheatmap')) {
     install.packages('pheatmap', dependencies = TRUE)
     library(pheatmap)
@@ -82,7 +96,7 @@ oncoprint <- function(x,
   }
   
 
-  cat(paste('*** Oncoprint with attributes: stage=', ann.stage, ', hits=', ann.hits, '\n', sep=''))
+  cat(paste('*** Oncoprint for "', title, '" with attributes: stage=', ann.stage, ', hits=', ann.hits, '\n', sep=''))
   is.compliant(x, 'oncoprint', stage=ann.stage)
   x = enforce.numeric(x)
   
@@ -163,7 +177,7 @@ oncoprint <- function(x,
   
   ##### If group.by.label group events involving the gene symbol
   if (group.by.label) {
-    cat(paste('Grouping events by gene.\n', sep=''))
+    cat(paste('Grouping events by gene label, samples will not be sorted.\n', sep=''))
     genes = as.genes(x)
     data = data[ order(x$annotations[rownames(data), 'event']), ]
   }
@@ -226,41 +240,50 @@ oncoprint <- function(x,
 	# GENES ANNOTATIONS - PATHWAYS
 	genes.annotation = NA
 
-    if(!all(is.na(pathways)))
+  if(!all(is.na(gene.annot)))
     {
-		names = names(pathways)  	
+		names = names(gene.annot)  	
 				
 		genes.annotation = data.frame(row.names = rn, stringsAsFactors = FALSE)
-		genes.annotation$pathway = rep("NA", nrow(data))
+		genes.annotation$gene.annotation = rep("none", nrow(data))
 		
 		for(i in 1:length(names)) 
 		{
 			pathway = names[i]
-			genes.pathway = rownames(as.events(x, genes=pathways[[names[i]]]))
-			genes.annotation[genes.pathway, 'pathway'] = names[i] 
+			genes.pathway = rownames(as.events(x, genes=gene.annot[[names[i]]]))
+			genes.annotation[genes.pathway, 'gene.annotation'] = names[i] 
 		}
 
 
-		if(length(pathways.color) == 1 && pathways.color %in% rownames(brewer.pal.info))
+		if(length(gene.annot.color) == 1 && gene.annot.color %in% rownames(brewer.pal.info))
 		{
-			cat('Annotating pathways with RColorBrewer color palette', pathways.color, '.\n')
-			pathway.colors = append(brewer.pal(n=length(names), name=pathways.color), "#FFFFFF")
+      cols = min(brewer.pal.info[gene.annot.color, 'maxcolors'], length(names))
+      cols = ifelse(cols < 3, 3, length(names))
+
+      cat('Annotating genes with RColorBrewer color palette', gene.annot.color, '.\n')
+     	gene.annot.color = brewer.pal(n=cols, name=gene.annot.color)
+      if(length(names) < 3) gene.annot.color = gene.annot.color[1:length(names)]
+			else gene.annot.color =  colorRampPalette(gene.annot.color)(length(names))
+
+      
+			gene.annot.color = append(gene.annot.color, "#FFFFFF")
+      
 		}
 		else{
-			if(length(pathways.color) != length(names)) 
-				stop('You did not provide enough colors to annotate', length(names), 'pathways. 
-						Either set pathways.color to a valid RColorBrewer palette or provide the explicit correct number of colors.')
+			if(length(gene.annot.color) != length(names)) 
+				stop('You did not provide enough colors to annotate', length(names), 'genes 
+						Either set gene.annot.color to a valid RColorBrewer palette or provide the explicit correct number of colors.')
 				
-			cat('Annotating pathways with custom colors:', paste(pathways.color, collapse=', '), '\n')
-			pathway.colors = append(pathways.color, "#FFFFFF")
+			cat('Annotating pathways with custom colors:', paste(gene.annot.color, collapse=', '), '\n')
+			gene.annot.color = append(gene.annot.color, "#FFFFFF")
 		}
-		names(pathway.colors) = append(names, "NA")
-
-		pathway.colors = pathway.colors[ unique(genes.annotation$pathway) ]
+		names(gene.annot.color) = append(names, "none")
+	#	print(gene.annot.color)
 		
-		annotation_colors = append(annotation_colors, list(pathway=pathway.colors))
-		# print(annotation_colors)				   	
-		# print(genes.annotation)				  
+		gene.annot.color = gene.annot.color[ unique(genes.annotation$gene.annotation) ]
+		
+		annotation_colors = append(annotation_colors, list(gene.annotation=gene.annot.color))
+	#	print(annotation_colors)				   	
 		# print(unique(genes.annotation)) 	
    }   
   
@@ -299,8 +322,14 @@ oncoprint <- function(x,
   if(is.na(font.row)) 
   {
     font.row = max(c(15 * exp(-0.02 * nrow(data)), 2))    
-    cat(paste('Setting automatic font (exponential scaling): ', round(font.row, 1), '\n', sep=''))
+    cat(paste('Setting automatic row font (exponential scaling): ', round(font.row, 1), '\n', sep=''))
   }
+  if(is.na(font.column) && sample.id)
+  {
+    font.column = font.row/2    
+    cat(paste('Setting automatic samples font half of row font: ', round(font.column, 1), '\n', sep='')) 
+  }
+  
   
   # Augment title
   # title = paste(title, '\n n = ', nsamples(x),'    m = ', nevents(x), '    |G| = ', ngenes(x),  sep='')
@@ -315,14 +344,22 @@ oncoprint <- function(x,
   # print(annotation_colors)
   # print(rownames(data) == rownames(genes.annotation))
   
+  if(samples.cluster) cat('Clustering samples and showing dendogram.\n')
+  if(genes.cluster) cat('Clustering alterations and showing dendogram.\n')
+
   if(is.null(annotation_colors)) annotation_colors = NA
-  
+
+  if(length(list(...)) > 0) {
+    cat('Passing the following parameters to pheatmap:\n')
+    print(list(...))
+  }
+
   # Pheatmap
    ret = pheatmap(data, 
              scale = "none", 
              col = map.gradient, 
-             cluster_cols = col.cluster,
-             cluster_rows = row.cluster,
+             cluster_cols = samples.cluster,
+             cluster_rows = genes.cluster,
              main = title,
              fontsize = font.size,
              fontsize_col = font.column,
@@ -347,7 +384,31 @@ oncoprint <- function(x,
              #gaps_col = if(is.na(col.gaps), gaps_col, col.gaps)
              ...
     )
-    
+
+#  # grid.points(3,3,name = 'ss')
+#   #grid.text('BABNANA' ,0,1)
+# data(mtcars)
+# 
+# p1 <- ggplot(mtcars, aes(mpg, hp)) + 
+#   geom_point() + 
+#   scale_x_continuous(expand = c(0, 0)) + 
+#   scale_y_continuous(expand = c(0, 0)) + 
+#   expand_limits(y = c(min(mtcars$hp) - 0.1 * diff(range(mtcars$hp)), 
+#                       max(mtcars$hp) + 0.1 * diff(range(mtcars$hp)))) + 
+#   expand_limits(x = c(min(mtcars$mpg) - 0.1 * diff(range(mtcars$mpg)), 
+#                       max(mtcars$mpg) + 0.1 * diff(range(mtcars$mpg)))) + 
+#   theme(plot.margin = unit(c(0.2, 0.2, 0.5, 0.5), "lines"))
+# gt1 <- ggplot_gtable(ggplot_build(p1))
+# 
+# gt1$widths[2:3] <- as.list(unit.pmax(gt1$widths[2:3]))
+# 
+# 
+# ret$gtable <- gtable_add_grob(ret$gtable, gt1, nrow(ret$gtable), 1)
+# 
+# #  rbind(ret$gtable, ret$gtable)
+# # pushViewport(viewport(width=.8, height=.8, name="plot"))
+# grid.draw(ret$gtable)
+
     return(ret)
 }
 
