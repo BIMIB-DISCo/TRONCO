@@ -695,15 +695,17 @@ tronco.plot = function(x,
   
   # print(hypo_mat)
   
+  cat('\n*** Rendering graphics\n')
+  
   # remove disconnected nodes
   if(!disconnected) { 
+    cat('Nodes with no incoming/outgoing edges will not be displayed.\n')
     del = which(rowSums(hypo_mat)+colSums(hypo_mat) == 0 )
     w = !(rownames(hypo_mat) %in% names(del))
     hypo_mat = hypo_mat[w,]
     hypo_mat = hypo_mat[,w]
   }
   
-  cat('\n*** Rendering graphics\n.')
   
   attrs = list(node = list())
       
@@ -909,7 +911,7 @@ tronco.plot = function(x,
   #cat('\n')
   legend_pathways = NULL
   if(!is.null(pathways)) {
-    cat('*** Add pathways information: ')
+    cat('Annotating nodes with pathway information. \n')
     
     if(length(pathways.color) == 1 && pathways.color %in% rownames(brewer.pal.info)) 
     {
@@ -949,7 +951,6 @@ tronco.plot = function(x,
         legend_pathways[path] = cols[[path]]
       }
     }
-    cat('done\n')
   }
   
   # edges properties
@@ -989,14 +990,15 @@ tronco.plot = function(x,
   eAttrs$logic = rep(F, length(edge_names))
   names(eAttrs$logic) = edge_names
   
-  cat('done\n')
 
   #print('confidence')
   #print(confidence)
   
   if(any(!is.na(confidence))) {
-    cat('*** Add confidence information: ')
+    cat('Adding confidence information: ')
     conf = as.confidence(x, confidence)
+    
+    cat(paste(paste(confidence, collapse = ', '), '\n'))
     # names.conf = names(conf)
     
     for(e in edge_names) {
@@ -1011,7 +1013,6 @@ tronco.plot = function(x,
       red.lable = FALSE
 
       if(is.logic.node.up(from) || is.logic.node.down(to)) {
-        #cat('cazzofiga\n')
         next
       }
 
@@ -1026,7 +1027,6 @@ tronco.plot = function(x,
           
         conf_p = get(i, as.confidence(x, i))
         if(! (conf_from %in% rownames(conf_p) && conf_to %in% colnames(conf_p))) {
-          #cat('culocane\n')
           next
         }
           
@@ -1085,7 +1085,7 @@ tronco.plot = function(x,
         # eAttrs$color[e] = 'black'
       # }
     }
-    cat('done\n')
+    cat('RGraphviz object prepared.\n')
   }
 
   # remove arrows from logic node (hidden and)
@@ -1272,6 +1272,7 @@ tronco.plot = function(x,
   
   # print(eAttrs)
   
+  cat('Plotting graph and adding legends.\n')
   plot(graph, nodeAttrs=nAttrs, edgeAttrs=eAttrs, main=title, ... )
   
   # Adds the legend to the plot
