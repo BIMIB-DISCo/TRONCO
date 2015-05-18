@@ -66,11 +66,40 @@ import.genotypes = function(geno, stage.annot = NA, event.type = "variant", colo
 
 #
 # import.gistic - Convert a GISTIC score file to TRONCO input.
-#
+
+#' Return the name annotating the dataset, if any.
+#'
+#' @title as.name
+#' @param x A TRONCO compliant dataset.
+#' @return The name annotating the dataset, if any.
+#' @export as.name
+
 
 #' @export
 import.GISTIC <- function(x, stage.annot = NA) {
-
+  
+  if(is.character(x))
+  {
+    cat('*** Input "x" is a character, interpreting it as a filename to load a table.
+Required table format constitent with TCGA data for focal CNAs:
+\t- one column for each sample, one row for each gene;
+\t- a column Hugo_Symbol with every gene name;
+\t- a column Entrez_Gene_Id with every gene\'s Entrez ID.\n')
+    
+    data = read.table(x, 
+                        header = TRUE, 
+                        check.names = F,
+                        stringsAsFactors = F)
+    
+    if(any(is.null(colnames(data)))) stop('Input table should have column names.')    
+    if(!'Hugo_Symbol' %in% colnames(data)) stop('Missing Hugo_Symbol column!')
+    if(!'Entrez_Gene_Id' %in% colnames(data)) stop('Missing Hugo_Symbol column!')
+    data$Entrez_Gene_Id = NULL
+    rownames(data) = data$Hugo_Symbol
+    data$Hugo_Symbol = NULL
+    x = t(data)
+  }
+  
 	cat("*** GISTIC input format conversion started.\n")
 
 	# For next operations it is convenient to have everything as 'char' rather than 'int'
@@ -85,7 +114,7 @@ import.GISTIC <- function(x, stage.annot = NA) {
 		warning("NA entries were replaced with 0s.\n")
 	x[is.na(x)] = 0
 
-	cat("Creating ", 4 * (ncol(x)), " events for ", ncol(x), "genes \n")
+	cat("Creating ", 4 * (ncol(x)), "events for", ncol(x), "genes \n")
 
 	# gene symbols
 	enames <- colnames(x)
@@ -119,8 +148,10 @@ import.GISTIC <- function(x, stage.annot = NA) {
 
 	d.cnv.all = ebind(d.homo, d.het, d.low, d.high)
 
-	cat("*** Data extracted, returning only events observed in at least one sample \n", "n=", nevents(d.cnv.all), "(events)\n", "|G|=", ngenes(d.cnv.all), 
-		"(genes)\n", "m=", nsamples(d.cnv.all), " (samples)\n")
+	cat("*** Data extracted, returning only events observed in at least one sample \n", 
+      "Number of events: n =", nevents(d.cnv.all), "\n", 
+      "Number of genes: |G| =", ngenes(d.cnv.all), "\n",
+      "Number of samples: m =", nsamples(d.cnv.all), "\n")
 
 
 	is.compliant(d.cnv.all, "import.gistic: output")

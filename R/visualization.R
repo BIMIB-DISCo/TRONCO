@@ -21,20 +21,20 @@
 #' @param hide.zeroes = F Hide events without mutations
 #' @export
 oncoprint <- function(x, 
-                      excl.sort=TRUE, 
-                      col.cluster=FALSE, 
-                      row.cluster=FALSE, 
-                      file=NA, 
+                      excl.sort = TRUE, 
+                      col.cluster = FALSE, 
+                      row.cluster = FALSE, 
+                      file = NA, 
                       ann.stage = has.stages(x), 
                       ann.hits = TRUE, 
-                      stage.color='YlOrRd', 
+                      stage.color = 'YlOrRd', 
                       hits.color = 'Purples',  
-                      null.color='lightgray', 
-                      border.color='white', 
-                      font.size=7, 
+                      null.color = 'lightgray', 
+                      border.color = 'white', 
+                      font.size = 7, 
                       font.column = 3, 
                       font.row = NA, 
-                      title= as.name(x),
+                      title = as.name(x),
                       sample.id = FALSE,
                       hide.zeroes = FALSE,
                       legend = TRUE,
@@ -114,14 +114,10 @@ oncoprint <- function(x,
   if(hasGroups)
   {
   	group.samples[,1] = as.character(group.samples[,1])
-  	
-  	# print(str(group.samples))	
-  	
   	grn = rownames(group.samples)
   	
     cat(paste('Grouping samples according to input groups (group.samples).\n', sep=''))
-    
-    if(any(is.null(grn))) stop('Input groups should have sample names.')
+    if(any(is.null(grn))) stop('"group.samples" should be matrix with sample names and group assignment.')
     
   	if(!setequal(grn, as.samples(x)))
   		stop(paste0('Missing group assignment for samples: ', paste(setdiff(as.samples(x), grn), collapse=', '),'.'))
@@ -184,6 +180,12 @@ oncoprint <- function(x,
   if(ann.hits == TRUE && ann.stage == TRUE)  samples.annotation = data.frame(stage=as.stages(x)[cn, 1], hits=nmut)
   if(hasGroups) samples.annotation$group = group.samples[cn, 1]
 
+  
+  if(ann.hits == TRUE && ann.stage == FALSE) samples.annotation = data.frame(hits=nmut, stringsAsFactors= F)
+  if(ann.hits == FALSE && ann.stage == TRUE) samples.annotation = data.frame(stage=as.stages(x)[cn, 1], stringsAsFactors= F)
+  if(ann.hits == TRUE && ann.stage == TRUE)  samples.annotation = data.frame(stage=as.stages(x)[cn, 1], hits=nmut, stringsAsFactors= F)
+  if(hasGroups) samples.annotation$group = group.samples[cn, 1]
+  
   ##### Color each annotation 
   annotation_colors = NULL
   if(ann.hits || ann.stage || hasGroups) {
@@ -199,9 +201,13 @@ oncoprint <- function(x,
     different.stages = sort(unique(samples.annotation$stage))
     num.stages = length(different.stages)
     stage.color.attr = append(brewer.pal(n=num.stages, name=stage.color), "#FFFFFF")
-    names(stage.color.attr) = append(levels(different.stages), NA)
+    samples.annotation[is.na(samples.annotation)] = "none"
+    #names(stage.color.attr) = append(levels(different.stages), NA)
+    names(stage.color.attr) = append((different.stages), "none")
+    
     annotation_colors = append(annotation_colors, list(stage=stage.color.attr))
   }
+  
   
   if(hasGroups)	{
   	ngroups = length(unique(group.samples[,1]))

@@ -938,7 +938,6 @@ tronco.plot = function(x,
     #nAttrs$col = rep("white", length(node_names))
     names(nAttrs$col) = node_names
 
-
     for(path in names(pathways)) {
       #cat('\npath: ', pathways[[path]])
       n = short.label[which(short.label %in% pathways[[path]])]
@@ -947,11 +946,14 @@ tronco.plot = function(x,
       #cat('\n')
       nAttrs$color[unlist(names(n))] = cols[[path]]
       nAttrs$fontcolor[unlist(names(n))] = cols[[path]]
+      
+      
       if(length(n) > 0) {
         legend_pathways[path] = cols[[path]]
       }
     }
   }
+
   
   # edges properties
   
