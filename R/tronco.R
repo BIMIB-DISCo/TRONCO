@@ -7,8 +7,8 @@
 
 #' @export
 tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = FALSE ) {
-  
-    #check for the inputs to be correct
+
+	#check for the inputs to be correct
     if(is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
     }

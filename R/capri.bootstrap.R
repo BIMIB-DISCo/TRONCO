@@ -88,7 +88,7 @@ bootstrap.capri <- function(dataset,
             bootstrapped.dataset = dataset[samples,]
             
             curr.reconstruction = list()
-            curr.reconstruction$genotypes = reconstruction$genotypes;
+            curr.reconstruction$genotypes = bootstrapped.dataset;
             curr.reconstruction$annotations = reconstruction$annotations;
             curr.reconstruction$types = reconstruction$types;
             curr.reconstruction$hypotheses = hypotheses;
@@ -157,7 +157,7 @@ bootstrap.capri <- function(dataset,
 	            	bootstrapped.dataset = dataset[samples,]
             
 	            curr.reconstruction = list()
-	            curr.reconstruction$genotypes = reconstruction$genotypes;
+	            curr.reconstruction$genotypes = bootstrapped.dataset;
 	            curr.reconstruction$annotations = reconstruction$annotations;
 	            curr.reconstruction$types = reconstruction$types;
 	            curr.reconstruction$hypotheses = hypotheses;
