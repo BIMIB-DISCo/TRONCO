@@ -53,16 +53,16 @@
     overall.frequency = list();
     overall.frequency[names(as.models(reconstruction))] = list(0);
     
+    # reset the seed
+    set.seed(NULL)
+    
     # create a progress bar
     flush.console()
     pb <- txtProgressBar(1, nboot, style = 3)
-  
+  	
   	# perform nboot bootstrap resampling
-    for (num in 1:nboot) {
-    	
-    	# reset the seed
-    	set.seed(NULL)
-        
+  	for (num in 1:nboot) {
+  		
         # update the progress bar
         setTxtProgressBar(pb, num)
         
@@ -74,7 +74,7 @@
             bootstrapped.dataset = dataset[samples,]
             
             curr.reconstruction = list()
-            curr.reconstruction$genotypes = reconstruction$genotypes;
+            curr.reconstruction$genotypes = bootstrapped.dataset;
             curr.reconstruction$annotations = reconstruction$annotations;
             curr.reconstruction$types = reconstruction$types;
             curr.reconstruction$hypotheses = reconstruction$hypotheses;
@@ -136,7 +136,7 @@
 	            bootstrapped.dataset = dataset[samples,]
             
 	            curr.reconstruction = list()
-	            curr.reconstruction$genotypes = reconstruction$genotypes;
+	            curr.reconstruction$genotypes = bootstrapped.dataset;
 	            curr.reconstruction$annotations = reconstruction$annotations;
 	            curr.reconstruction$types = reconstruction$types;
 	            curr.reconstruction$hypotheses = reconstruction$hypotheses;
