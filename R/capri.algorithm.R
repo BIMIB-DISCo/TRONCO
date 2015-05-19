@@ -58,7 +58,7 @@ function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","ai
     
     # add back in any connection invalid for the probability raising theory
     if(length(invalid.events)>0) {
-    		warning("Either always present or indistinguishable events are provided!");
+    		if(!silent) warning("Either always present or indistinguishable events are provided!");
 		for(i in 1:nrow(invalid.events)) {
     			prima.facie.parents$adj.matrix[invalid.events[i,"cause"],invalid.events[i,"effect"]] = 1;
 		}
@@ -494,7 +494,7 @@ function( adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.mode
         
         weights.temporal.priority = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]];
         weights.matrix = probability.raising$edge.confidence.matrix[[2,1]]+probability.raising$edge.confidence.matrix[[3,1]];
-        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses);
+        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses,silent);
         adj.matrix = acyclic.topology$adj.matrix;
     }
     else {
@@ -562,7 +562,7 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
     		
     		weights.temporal.priority = probability.raising$edge.confidence.matrix[[2,1]];
         weights.matrix = probability.raising$edge.confidence.matrix[[2,1]] + probability.raising$edge.confidence.matrix[[3,1]];
-        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses);
+        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses,silent);
         adj.matrix = acyclic.topology$adj.matrix;
     }
     else {
@@ -616,7 +616,7 @@ function( dataset, hypotheses, nboot, pvalue, adj.matrix, min.boot, min.stat, bo
     }
     
     # remove all the edges not representing a prima facie cause
-    prima.facie.topology = get.prima.facie.causes.do.boot(adj.matrix,hypotheses,scores$marginal.probs.distributions,scores$prima.facie.model.distributions,scores$prima.facie.null.distributions,pvalue,dataset,marginal.probs,joint.probs);
+    prima.facie.topology = get.prima.facie.causes.do.boot(adj.matrix,hypotheses,scores$marginal.probs.distributions,scores$prima.facie.model.distributions,scores$prima.facie.null.distributions,pvalue,dataset,marginal.probs,joint.probs,silent);
     
     # save the results and return them
     prima.facie.parents <- list(marginal.probs=marginal.probs,joint.probs=joint.probs,adj.matrix=prima.facie.topology$adj.matrix,pf.confidence=prima.facie.topology$edge.confidence.matrix);
@@ -638,7 +638,7 @@ function( dataset, hypotheses, adj.matrix, silent ) {
     scores = get.dag.scores(dataset,adj.matrix);
     
     # remove all the edges not representing a prima facie causes
-    prima.facie.topology = get.prima.facie.causes.no.boot(adj.matrix,hypotheses,scores$marginal.probs,scores$prima.facie.model,scores$prima.facie.null,dataset,scores $joint.probs);
+    prima.facie.topology = get.prima.facie.causes.no.boot(adj.matrix,hypotheses,scores$marginal.probs,scores$prima.facie.model,scores$prima.facie.null,dataset,scores $joint.probs,silent);
     
     # save the results return them
     prima.facie.parents <- list(marginal.probs=scores$marginal.probs,joint.probs=scores$joint.probs,adj.matrix=prima.facie.topology$adj.matrix,pf.confidence=prima.facie.topology$edge.confidence.matrix);
@@ -789,7 +789,7 @@ function( dataset, adj.matrix, command, regularization ) {
 # acyclic.topology: structure representing the best acyclic topology
 #' @import igraph
 "remove.cycles" <-
-function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hypotheses = NA ) {
+function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hypotheses = NA, silent ) {
     
     total.edges = length(which(adj.matrix == 1))
     removed = 0
@@ -908,7 +908,7 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
             
         }
         
-        cat(paste0('\tRemoved ', removed, ' edges out of ', total.edges ,' (', round(100 * removed/total.edges, 0),'%)\n'))
+        if(!silent) cat(paste0('\tRemoved ', removed, ' edges out of ', total.edges ,' (', round(100 * removed/total.edges, 0),'%)\n'))
     }
     
     # save the results and return them
