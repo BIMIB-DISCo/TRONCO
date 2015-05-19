@@ -1,8 +1,10 @@
-#' Return all genotypes for input 'x', which should be a TRONCO compliant dataset - see \code{is.compliant}. 
+#' Return all genotypes for input 'x', which should be a TRONCO compliant dataset
+#' see \code{is.compliant}. 
 #' Function \code{keysToNames} can be used to translate colnames to events. 
 #'
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' keysToNames(mutations, as.genotypes(mutations))
 #'
 #' @title as genotypes
@@ -16,8 +18,9 @@ as.genotypes = function(x)
 
 #' Return all sample IDs for input 'x', which should be a TRONCO compliant dataset - see \code{is.compliant}. 
 #'
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' as.samples(mutations)
 #' 
 #' @title as genotypes
@@ -32,8 +35,9 @@ as.samples = function(x)
 #' Return all gene symbols for which a certain type of event exists in 'x', which should be a
 #' TRONCO compliant dataset - see \code{is.compliant}. 
 #'
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' as.genes(mutations)
 #' 
 #' @title as.genes
@@ -49,8 +53,9 @@ as.genes = function(x, types=NA)
 #' Return all events involving certain genes and of a certain type in 'x', which should be a
 #' TRONCO compliant dataset - see \code{is.compliant}. 
 #'
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' as.events(mutations)
 #' as.events(mutations, types='Mutation')
 #' as.events(mutations, genes = 'ABAT')
@@ -88,8 +93,9 @@ as.stages = function(x)
 #' Return the types of events for a set of genes which are in 'x', which should be a
 #' TRONCO compliant dataset - see \code{is.compliant}.
 #'
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' as.types(mutations)
 #' as.types(mutations, genes = 'ABAT')
 #' 
@@ -106,8 +112,9 @@ as.types = function(x, genes=NA)
 #' Return the colors associated to each type of event in 'x', which should be a
 #' TRONCO compliant dataset - see \code{is.compliant}.
 #' 
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' as.colors(mutations)
 #'
 #' @title as colors
@@ -123,8 +130,9 @@ as.colors = function(x)
 #' TRONCO compliant dataset - see \code{is.compliant}. In this case column names are substituted
 #' with events' types.
 #'
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' as.gene(mutations, genes = c('ABAT', 'ABCA4'))
 #' 
 #' @title as colors
@@ -148,8 +156,9 @@ as.gene = function(x, genes, types=NA)
 #' a total of gene-level alterations diregarding the event type. Input 'x' is checked
 #' to be a TRONCO compliant dataset - see \code{is.compliant}. 
 #'
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' oncoprint(as.alterations(mutations))
 #' 
 #' @title as alterations
@@ -181,8 +190,9 @@ has.stages = function(x)
 #' a TRONCO compliant dataset - see \code{is.compliant}. Events are identified by a gene 
 #' name, e.g., a HuGO_Symbol, and a type label, e.g., c('SNP', 'KRAS')
 #'
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' has.duplicates(mutations)
 #' 
 #' @title has.duplicates
@@ -200,8 +210,9 @@ has.duplicates = function(x) {
 #' Return the events duplicated in \code{x}, if any. Input 'x' should be
 #' a TRONCO compliant dataset - see \code{is.compliant}. 
 #'
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' duplicates(mutations)
 #'
 #' @title duplicates
@@ -230,8 +241,9 @@ as.name = function(x)
 #' Print to console a short report of a dataset 'x', which should be
 #' a TRONCO compliant dataset - see \code{is.compliant}. 
 #'
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' mutations = annotate.name(mutations, 'Example MAF')
 #' show(mutations)
 #' 

@@ -7,11 +7,19 @@
 as.genotypes(x)
 }
 \arguments{
-\item{x:}{the dataset.}
-
-\item{genes:}{a list of genes to query, if NA all genes are used.}
+\item{x}{A TRONCO compliant dataset.}
+}
+\value{
+A TRONCO genotypes matrix.
 }
 \description{
-as genotypes
+Return all genotypes for input 'x', which should be a TRONCO compliant dataset
+see \code{is.compliant}.
+Function \code{keysToNames} can be used to translate colnames to events.
+}
+\examples{
+data(maf)
+mutations = import.MAF(maf, sep=';')
+keysToNames(mutations, as.genotypes(mutations))
 }
 

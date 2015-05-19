@@ -84,8 +84,9 @@ Required table format:
 #'  gene\'s Entrez ID. A valid GISTIC score should be any value of: "Homozygous Loss" (-2), "Heterozygous
 #'  Loss" (-1), "Low-level Gain" (+1), "High-level Gain" (+2). 
 #'
-#' @example
-#' gistic = import.GISTIC(paste0(my.GIT, 'TRONCO/data/gistic.txt'))
+#' @examples
+#' load(gistic)
+#' gistic = import.GISTIC(gistic)
 #' gistic = annotate.name(gistic, 'Example GISTIC')
 #' oncoprint(gistic)
 #' 
@@ -184,8 +185,9 @@ Required table format constitent with TCGA data for focal CNAs:
 #' \code{import.genotypes}. If this is a TCGA MAF file check for multiple samples per patient is performed 
 #' and a warning is raised if these occurr.  
 #'
-#' @example
-#' mutations = import.MAF(file = paste0(my.GIT, 'TRONCO/data/maf.csv'), sep =';')
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf, sep=';')
 #' mutations = annotate.name(mutations, 'Example MAF')
 #' mutations = TCGA.shorten.barcodes(mutations)
 #' oncoprint(mutations)

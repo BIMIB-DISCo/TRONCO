@@ -4,49 +4,70 @@
 \alias{oncoprint}
 \title{oncoprint}
 \usage{
-oncoprint(x, excl.sort = TRUE, col.cluster = FALSE, row.cluster = FALSE,
-  file = NA, ann.stage = has.stages(x), ann.hits = TRUE,
-  stage.color = "YlOrRd", hits.color = "Purples",
-  null.color = "lightgray", border.color = "white", font.size = 7,
-  font.column = 3, font.row = NA, title = paste("Dataset (genotypes)"),
+oncoprint(x, excl.sort = TRUE, samples.cluster = FALSE,
+  genes.cluster = FALSE, file = NA, ann.stage = has.stages(x),
+  ann.hits = TRUE, stage.color = "YlOrRd", hits.color = "Purples",
+  null.color = "lightgray", border.color = "white", text.cex = 1,
+  font.column = NA, font.row = NA, title = as.name(x),
   sample.id = FALSE, hide.zeroes = FALSE, legend = TRUE, legend.cex = 1,
   cellwidth = NA, cellheight = NA, group.by.label = FALSE,
-  group.samples = NA, pathways = NA, pathways.color = "Set1",
-  txt.stats = paste("n = ", nsamples(x), "\\nm = ", nevents(x), "\\n|G| = ",
-  ngenes(x), sep = ""), ...)
+  group.samples = NA, gene.annot = NA, gene.annot.color = "Set1",
+  txt.stats = paste(nsamples(x), " samples\\n", nevents(x), " events\\n",
+  ngenes(x), " genes\\n", npatterns(x), " patterns", sep = ""), ...)
 }
 \arguments{
-\item{col.cluster}{A number}
+\item{samples.cluster}{Boolean value, if TRUE clusters samples (columns). Default FALSE}
 
-\item{hits.color}{= 'Purples' Color Palette to use with score}
+\item{genes.cluster}{Boolean value, if TRUE clusters genes (rows). Default FALSE}
 
-\item{font.column}{= 3}
+\item{file}{If not NA write to \code{file} the Oncoprint, default is NA (just visualization).}
 
-\item{sample.id}{= F Show sample name at the bottom of the heatmap}
+\item{ann.stage}{Boolean value to annotate stage classification, default depends on \code{x}}
 
-\item{hide.zeroes}{= F Hide events without mutations}
+\item{ann.hits}{Boolean value to annotate the number of events in each sample, default is TRUE}
 
-\item{excl.soft}{A number}
+\item{stage.color}{RColorColorbrewer palette to color stage annotations. Default is 'YlOrRd'}
 
-\item{row.cluster=FALSE}{}
+\item{hits.color}{RColorColorbrewer palette to color hits annotations. Default is 'Purples'}
 
-\item{device.new=FALSE}{}
+\item{null.color}{Color for the Oncoprint cells with 0s, default is 'lightgray'}
 
-\item{file=NA}{}
+\item{border.color}{Border color for the Oncoprint, default is white' (no border)}
 
-\item{ann.stage=TRUE}{Show information about stage classification}
+\item{text.cex}{Title and annotations cex, multiplied by font size 7}
 
-\item{ann.hits=TRUE}{Show information about the hits in a gene}
+\item{font.column}{If NA, half of font.row is used}
 
-\item{stage.color='YlOrRd'}{Color Palette to use with stage}
+\item{font.row}{If NA, max(c(15 * exp(-0.02 * nrow(data)), 2)) is used, where data is the data
+visualized in the Oncoprint}
 
-\item{null.color='darkgray'}{Background color}
+\item{title}{Oncoprint title, default is as.name(x) - see \code{as.name}}
 
-\item{border.color='white'}{}
+\item{sample.id}{If TRUE shows samples name (columns). Default is FALSE}
 
-\item{font.size=7}{}
+\item{hide.zeroes}{If TRUE trims data - see \code{trim} - before plot. Default is FALSE}
 
-\item{title=}{paste('Genotypes')}
+\item{legend}{If TRUE shows a legend for the types of events visualized. Defualt is TRUE}
+
+\item{legend.cex}{Default 1.0; determines legend size if \code{legend = TRUE}}
+
+\item{cellwidth}{Default NA, sets autoscale cell width}
+
+\item{cellheight}{Default NA, sets autoscale cell height}
+
+\item{group.by.label}{Sort samples (rows) by event label - usefull when multiple events per gene are
+available}
+
+\item{group.samples}{If this samples -> group map is provided, samples are grouped as of groups
+and sorted according to the number of mutations per sample - usefull when \code{data} was clustered}
+
+\item{gene.annot}{Genes'groups, e.g. list(RAF=c('KRAS','NRAS'), Wnt=c('APC', 'CTNNB1')). Default is NA.}
+
+\item{gene.annot.color}{Either a RColorColorbrewer palette name or a set of custom colors matching names(gene.annot)}
+
+\item{txt.stats}{By default, shows a summary statistics for shown data (n,m, |G| and |P|)}
+
+\item{excl.soft}{Boolean value, if TRUE sorts samples to enhance exclusivity of alterations}
 }
 \description{
 oncoprint

@@ -2,16 +2,27 @@
 % Please edit documentation in R/as.functions.R
 \name{ntypes}
 \alias{ntypes}
-\title{Return the number of types in the dataset involving a certain set of genes}
+\title{ntypes}
 \usage{
+ntypes(x, genes = NA)
+
 ntypes(x, genes = NA)
 }
 \arguments{
-\item{x}{the dataset.}
+\item{x}{A TRONCO compliant dataset.}
 
-\item{genes}{the genes to consider, if NA all available ones are used.}
+\item{genes}{The genes to consider, if NA all available ones are used.}
+
+\item{x}{A TRONCO compliant dataset.}
+}
+\value{
+The number of types in the dataset.
+
+The number of types in the dataset involving a certain set of genes.
 }
 \description{
+Return the number of types in the dataset.
+
 Return the number of types in the dataset involving a certain set of genes
 }
 

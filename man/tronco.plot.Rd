@@ -4,12 +4,12 @@
 \alias{tronco.plot}
 \title{plot a progression model}
 \usage{
-tronco.plot(x, secondary = NULL, fontsize = 18, height = 2, width = 3,
-  height.logic = 1, pf = FALSE, disconnected = FALSE, scale.nodes = NA,
-  name = deparse(substitute(capri)), title = paste("Progression model",
-  x$parameters$algorithm), confidence = FALSE, legend = TRUE,
-  legend.cex = 1, edge.cex = 1, label.edge.size = 12,
-  hidden.and = FALSE, expand = TRUE, genes = NULL, edge.color = "black",
+tronco.plot(x, regularization = names(x$model), fontsize = NA, height = 2,
+  width = 3, height.logic = 1, pf = FALSE, disconnected = FALSE,
+  scale.nodes = NA, name = deparse(substitute(capri)), title = as.name(x),
+  confidence = NA, p.min = x$parameters$pvalue, legend = TRUE,
+  legend.cex = 1, edge.cex = 1, label.edge.size = NA, expand = TRUE,
+  genes = NULL, relations.filter = NA, edge.color = "black",
   pathways.color = "Set1", file = NA, legend.pos = "bottom",
   pathways = NULL, lwd = 3, ...)
 }
@@ -24,7 +24,7 @@ tronco.plot(x, secondary = NULL, fontsize = 18, height = 2, width = 3,
 
 \item{legend.pos}{string; legend positioning, available keywords "topleft", "topright","bottomleft" and "bottomright" (default is "bottomright")}
 
-\item{curr.topology}{A curr.topology returned by a reconstruction algorithm}
+\item{curr.reconstruction}{A curr.reconstruction returned by a reconstruction algorithm}
 
 \item{title.color}{color title (default "black")}
 
@@ -41,15 +41,15 @@ tronco.plot(x, secondary = NULL, fontsize = 18, height = 2, width = 3,
 \item{label.color}{color events label (default "black")}
 }
 \description{
-\code{tronco.plot} plots a progression model from a recostructed \code{curr.topology}.
+\code{tronco.plot} plots a progression model from a recostructed \code{curr.reconstruction}.
 }
 \examples{
 \dontrun{
     types.load("data/types.txt");
     events.load("data/events.txt");
    data.load("data/CGH.txt");
-   topology <- tronco.caprese();
-   tronco.plot(curr.topology, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
+   reconstruction <- tronco.caprese();
+   tronco.plot(curr.reconstruction, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
 }
 }
 

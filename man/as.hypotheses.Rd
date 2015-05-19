@@ -2,14 +2,18 @@
 % Please edit documentation in R/as.functions.R
 \name{as.hypotheses}
 \alias{as.hypotheses}
-\title{Return the name of hypotheses in the dataset}
+\title{as.hypotheses}
 \usage{
 as.hypotheses(x)
 }
 \arguments{
-\item{x}{the dataset.}
+\item{x}{A TRONCO compliant dataset.}
+}
+\value{
+The patterns in the dataset which constitute CAPRI's hypotheses.
 }
 \description{
-Return the name of hypotheses in the dataset
+Return the patterns in the dataset which constitute CAPRI's hypotheses.
+RIDENOMINARLA CON PATTERNS?
 }
 
