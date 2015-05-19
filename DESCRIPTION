@@ -30,6 +30,8 @@ Depends:
     pheatmap,
     reshape2,
     xtable
+Suggests:
+    doParallel
 Description: Genotype-level cancer progression models describe the ordering of
     accumulating mutations, e.g., somatic mutations / copy number variations,
     during cancer development. These graphical models help understand the

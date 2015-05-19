@@ -28,7 +28,21 @@
 #' @name TRONCO
 NULL
 
-#' @export
+#' Reconstruc a progression model using CAPRESE algorithm
+#'
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf)
+#' recon = tronco.caprese(mutations)
+#' tronco.plot(recon)
+#'
+#' @title tronco caprese
+#' @param data A TRONCO compliant dataset.
+#' @param lambda TODO
+#' @param do.estimation TODO
+#' @param silent TODO
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.caprese
 tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = FALSE ) {
 
 	#check for the inputs to be correct
@@ -103,17 +117,23 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
     
 }
 
-#### end of file -- tronco.caprese.R
 
 
-#### tronco.capri.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-#' @export
+#' Reconstruc a progression model using CAPRI algorithm
+#'
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf)
+#' recon = tronco.capri(mutations)
+#' tronco.plot(recon)
+#'
+#' @title tronco capri
+#' @param data A TRONCO compliant dataset.
+#' @param lambda TODO
+#' @param do.estimation TODO
+#' @param silent TODO
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.capri
 tronco.capri <- function( data, 
     command = "hc", 
     regularization = c("bic","aic"), 
@@ -316,17 +336,22 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
 
 }
 
-#### end of file -- tronco.estimation.R
 
-
-#### tronco.bootstrap.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-#' @export
+#' Bootstrap a reconstructed progression model
+#'
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf)
+#' recon = tronco.capri(mutations)
+#' boot = tronco.bootstrap(recon)
+#' tronco.plot(boot)
+#'
+#' @title tronco bootstrap
+#' @param reconstruction The output of tronco.capri or tronco.caprese
+#' @param type TODO
+#' @param nboot
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.bootstrap
 tronco.bootstrap <- function( reconstruction, 
                               type = "non-parametric", 
                               nboot = 100)
@@ -355,17 +380,13 @@ tronco.bootstrap <- function( reconstruction,
         silent = TRUE
         
         if(reconstruction$parameters$algorithm == "CAPRESE") {
-        	
             lambda = reconstruction$parameters$lambda
-            
-        }
-        else if(reconstruction$parameters$algorithm == "CAPRI") {
+        } else if(reconstruction$parameters$algorithm == "CAPRI") {
             
             if(!is.null(reconstruction$hypotheses)) {
                 hypotheses = reconstruction$hypotheses
-            }
-            else {
-            		hypotheses = NA
+            } else {
+            	hypotheses = NA
             }
             
             command.capri = reconstruction$parameters$command
@@ -375,12 +396,10 @@ tronco.bootstrap <- function( reconstruction,
             pvalue = reconstruction$parameters$pvalue
             min.boot = reconstruction$parameters$min.boot
             min.stat = reconstruction$parameters$min.stat
-            boot.seed = reconstruction$parameters$boot.seed
-            
+            boot.seed = reconstruction$parameters$boot.seed 
         }
-    }
-    else {
-    		stop("The types of bootstrap that can be performed are: non-parametric, parametric or statistical.", call. = FALSE)
+    } else {
+    	stop("The types of bootstrap that can be performed are: non-parametric, parametric or statistical.", call. = FALSE)
     }
 
     # perform the selected bootstrap procedure
@@ -390,48 +409,45 @@ tronco.bootstrap <- function( reconstruction,
     if(reconstruction$parameters$algorithm == "CAPRESE") {
         
         curr.boot = bootstrap.caprese(dataset,
-        							      lambda,
-        							      do.estimation,
-                            		      silent,
-                            		      reconstruction, 
-                            		      type,
-                            		      nboot)
+        							  lambda,
+        							  do.estimation,
+                            		  silent,
+                            		  reconstruction, 
+                            		  type,
+                            		  nboot)
                                           
         reconstruction$bootstrap = curr.boot
         
         cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", lambda, " as shrinkage parameter.\n\n", sep =""))
     
-    }
-    else if(reconstruction$parameters$algorithm == "CAPRI") {
+    } else if(reconstruction$parameters$algorithm == "CAPRI") {
     	
-    		curr.boot = bootstrap.capri(dataset, 
-                            		    hypotheses, 
-                            		    command.capri, 
-                            		    regularization, 
-                            		    do.boot,
-                            		    nboot.capri, 
-                            		    pvalue,
-                            		    min.boot,
-                            		    min.stat,
-                            		    boot.seed,
-                            		    do.estimation,
-                            		    silent,
-                            		    reconstruction, 
-                            		    type,
-                            		    nboot)
+    	curr.boot = bootstrap.capri(dataset, 
+                            		hypotheses, 
+                            		command.capri, 
+                            		regularization, 
+                            		do.boot,
+                            		nboot.capri, 
+                            		pvalue,
+                            		min.boot,
+                            		min.stat,
+                            		boot.seed,
+                            		do.estimation,
+                            		silent,
+                            		reconstruction, 
+                            		type,
+                            		nboot)
 
         reconstruction$bootstrap = curr.boot
 
         if(do.boot == TRUE) {
         	cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", pvalue, " as pvalue for the statistical tests.\n\n", sep =""))
-        }
-        else {
+        } else {
         	cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling.\n\n", sep =""))
         }
     }
 
     return(reconstruction)
-    
 }
 
 #### end of file -- tronco.bootstrap.R
