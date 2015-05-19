@@ -199,10 +199,18 @@ Required table format constitent with TCGA data for focal CNAs:
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
 import.MAF <- function(file, sep = "\t", is.TCGA = TRUE) {
-	cat("*** Importing from file: ", file, "\n")
-	cat("Loading MAF file ...")
-	maf = read.delim(file, comment.char = "#", sep = sep, header = TRUE, stringsAsFactors = FALSE)
-	cat("DONE\n")
+
+	if(!(is.data.frame(file) || is.matrix(file)) && is.character(file)) {
+		cat("*** Importing from file: ", file, "\n")
+		cat("Loading MAF file ...")
+		maf = read.delim(file, comment.char = "#", sep = sep, header = TRUE, stringsAsFactors = FALSE)
+		cat("DONE\n")
+	} else {
+		cat("*** Importing from dataframe\n")
+		cat("Loading MAF dataframe ...")
+		maf = file
+		cat("DONE\n")
+	}
 
 	#### Auxiliary functions to extract information from the MAF file
 	# This is the possibly smallest type of information required to prepare a TRONCO file
