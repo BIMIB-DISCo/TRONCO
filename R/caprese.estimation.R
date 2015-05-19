@@ -305,5 +305,3 @@ function(marginal.probs,joint.probs,parents.pos,error.rates) {
 }
 
 #### end of file -- estimate.tree.probs.R
-
-
