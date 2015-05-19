@@ -39,6 +39,9 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
         stop("The value of the shrinkage parameter lambda has to be in [0:1]!",call.=FALSE);
     }
     
+    # check for the input to be compliant
+    is.compliant(data)
+    
     #reconstruct the reconstruction with CAPRESE
     if(silent==FALSE) {
 	    cat(paste0(
@@ -137,6 +140,9 @@ tronco.capri <- function( data,
         stop("The value of the pvalue has to be in [0:1]!",call.=FALSE);
     }
     
+    # check for the input to be compliant
+    is.compliant(data)
+    
     # reconstruct the reconstruction with CAPRI
     if(is.null(boot.seed)) {
         my.seed = "NULL"    
@@ -226,70 +232,88 @@ tronco.capri <- function( data,
 
 #' @export
 tronco.estimation <- function( reconstruction, error.rates = NA ) {
-    #check for the inputs to be correct
+	
+    # check for the inputs to be correct
     if(is.null(reconstruction)) {
         stop("A valid reconstruction has to be provided in order to estimate its confidence.",call.=FALSE);
     }
+    
+    # check for the input to be compliant
+    is.compliant(reconstruction)
+    
     #run the estimations for the required algorithm
     if(reconstruction$parameters$algorithm=="CAPRESE") {
-            #if I also need to estimate the error rates
-            if(is.na(error.rates[1])) {
-                #estimate the error rates
-                error.rates = estimate.tree.error.rates(reconstruction$probabilities$marginal.probs,reconstruction$probabilities$joint.probs,reconstruction$parents.pos);
-            }
-            #estimate the probabilities given the error rates
-        estimated.probabilities = estimate.tree.probs(reconstruction$probabilities$marginal.probs,reconstruction$probabilities$joint.probs,reconstruction$parents.pos,error.rates);
-        #set the estimated error rates and probabilities
-        reconstruction$error.rates = error.rates;
-        reconstruction$probabilities$estimated.marginal.probs = estimated.probabilities$marginal.probs;
-        reconstruction$probabilities$estimated.joint.probs = estimated.probabilities$joint.probs;
-        reconstruction$probabilities$estimated.conditional.probs = estimated.probabilities$conditional.probs;
-        #set colnames and rownames
-        rownames(reconstruction$probabilities$estimated.marginal.probs) = colnames(reconstruction$data$genotypes);
-        colnames(reconstruction$probabilities$estimated.marginal.probs) = "marginal probability";
-        rownames(reconstruction$probabilities$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
-        colnames(reconstruction$probabilities$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
-        rownames(reconstruction$probabilities$estimated.conditional.probs) = colnames(reconstruction$data$genotypes);
-        colnames(reconstruction$probabilities$estimated.conditional.probs) = "conditional probability";
+    	
+    		cat("Executing now the estimation procedure, this may take a long time...\n")
+    	
+    		# if I also need to estimate the error rates
+    		if(is.na(error.rates[1])) {
+    			# estimate the error rates
+    			error.rates = estimate.tree.error.rates(as.marginal.probs(reconstruction,models="caprese")[[1]],as.joint.probs(reconstruction,models="caprese")[[1]],as.parents.pos(reconstruction,models="caprese")[[1]]);
+    		}
+    		
+    		# estimate the probabilities given the error rates
+        estimated.probabilities = estimate.tree.probs(as.marginal.probs(reconstruction,models="caprese")[[1]],as.joint.probs(reconstruction,models="caprese")[[1]],as.parents.pos(reconstruction,models="caprese")[[1]],error.rates);
+        
+        # set the estimated error rates and probabilities
+        probabilities.fit = list(estimated.marginal.probs=estimated.probabilities$marginal.probs,estimated.joint.probs=estimated.probabilities$joint.probs,estimated.conditional.probs=estimated.probabilities$conditional.probs);
+        
+        reconstruction$model[["caprese"]]$error.rates = error.rates
+        reconstruction$model[["caprese"]]$probabilities$probabilities.fit = probabilities.fit
+        
+        # set colnames and rownames
+       	rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+        rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+        rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+                
     }
     else if(reconstruction$parameters$algorithm=="CAPRI") {
-            #if I also need to estimate the error rates
-            if(is.na(error.rates[1])) {
-                #estimate the error rates
-                estimated.error.rates.pf = estimate.dag.error.rates(reconstruction$data$genotypes,reconstruction$probabilities$probabilities.pf$marginal.probs,reconstruction$probabilities$probabilities.pf$joint.probs,reconstruction$parents.pos$parents.pos.pf);
-                estimated.error.rates.bic = estimate.dag.error.rates(reconstruction$data$genotypes,reconstruction$probabilities$probabilities.bic$marginal.probs,reconstruction$probabilities$probabilities.bic$joint.probs,reconstruction$parents.pos$parents.pos.bic);
-                error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.bic=estimated.error.rates.bic);
+    	
+    		cat("Executing now the estimation procedure, this may take a long time...\n")
+    	
+    		# go through the models
+    	do.estimate.error.rates = FALSE;
+    		if(is.na(error.rates[1])) {
+    		do.estimate.error.rates = TRUE;
+    	}
+    		for (m in names(as.models(reconstruction))) {
+    			
+    			# if I also need to estimate the error rates
+            if(do.estimate.error.rates) {
+                # estimate the error rates
+                error.rates = estimate.dag.error.rates(reconstruction$genotypes,as.marginal.probs(reconstruction,models=m)[[1]],as.joint.probs(reconstruction,models=m)[[1]],as.parents.pos(reconstruction,models=m)[[1]]);
             }
-            #estimate the probabilities given the error rates
-        estimated.probabilities.pf = estimate.dag.probs(reconstruction$data$genotypes,reconstruction$probabilities$probabilities.pf$marginal.probs,reconstruction$probabilities$probabilities.pf$joint.probs,reconstruction$parents.pos$parents.pos.pf,error.rates$error.rates.pf);
-        estimated.probabilities.bic = estimate.dag.probs(reconstruction$data$genotypes,reconstruction$probabilities$probabilities.bic$marginal.probs,reconstruction$probabilities$probabilities.bic$joint.probs,reconstruction$parents.pos$parents.pos.bic,error.rates$error.rates.bic);
-        #set the estimated error rates and probabilities
-        reconstruction$error.rates = error.rates;
-        reconstruction$probabilities$probabilities.pf$estimated.marginal.probs = estimated.probabilities.pf$marginal.probs;
-        reconstruction$probabilities$probabilities.pf$estimated.joint.probs = estimated.probabilities.pf$joint.probs;
-        reconstruction$probabilities$probabilities.pf$estimated.conditional.probs = estimated.probabilities.bic$conditional.probs;
-        reconstruction$probabilities$probabilities.bic$estimated.marginal.probs = estimated.probabilities.bic$marginal.probs;
-        reconstruction$probabilities$probabilities.bic$estimated.joint.probs = estimated.probabilities.bic$joint.probs;
-        reconstruction$probabilities$probabilities.bic$estimated.conditional.probs = estimated.probabilities.bic$conditional.probs;
-        #set colnames and rownames
-        rownames(reconstruction$probabilities$probabilities.pf$estimated.marginal.probs) = colnames(reconstruction$data$genotypes);
-        colnames(reconstruction$probabilities$probabilities.pf$estimated.marginal.probs) = "marginal probability";
-        rownames(reconstruction$probabilities$probabilities.pf$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
-        colnames(reconstruction$probabilities$probabilities.pf$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
-        rownames(reconstruction$probabilities$probabilities.pf$estimated.conditional.probs) = colnames(reconstruction$data$genotypes);
-        colnames(reconstruction$probabilities$probabilities.pf$estimated.conditional.probs) = "conditional probability";
-        rownames(reconstruction$probabilities$probabilities.bic$estimated.marginal.probs) = colnames(reconstruction$data$genotypes);
-        colnames(reconstruction$probabilities$probabilities.bic$estimated.marginal.probs) = "marginal probability";
-        rownames(reconstruction$probabilities$probabilities.bic$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
-        colnames(reconstruction$probabilities$probabilities.bic$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
-        rownames(reconstruction$probabilities$probabilities.bic$estimated.conditional.probs) = colnames(reconstruction$data$genotypes);
-        colnames(reconstruction$probabilities$probabilities.bic$estimated.conditional.probs) = "conditional probability";
+            
+            # estimate the probabilities given the error rates
+        		estimated.probabilities = estimate.dag.probs(reconstruction$genotypes,as.marginal.probs(reconstruction,models=m)[[1]],as.joint.probs(reconstruction,models=m)[[1]],as.parents.pos(reconstruction,models=m)[[1]],error.rates);
+        	
+        		# set the estimated error rates and probabilities
+        		probabilities.fit = list(estimated.marginal.probs=estimated.probabilities$marginal.probs,estimated.joint.probs=estimated.probabilities$joint.probs,estimated.conditional.probs=estimated.probabilities$conditional.probs);
+        
+        		reconstruction$model[[m]]$error.rates = error.rates
+        		reconstruction$model[[m]]$probabilities$probabilities.fit = probabilities.fit
+        	
+        		# set colnames and rownames
+        		rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+            rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+
+    			
+    		}
     }
     else {
     		stop("A valid algorithm has to be provided in order to estimate its confidence.",call.=FALSE);
     }
+    
     reconstruction$parameters$do.estimation = TRUE;
     return(reconstruction);
+
 }
 
 #### end of file -- tronco.estimation.R
@@ -319,8 +343,12 @@ tronco.bootstrap <- function( reconstruction,
         stop("To perform parametric bootstrap, the estimation of the error rates and probabilities should be performed.", call. = FALSE)
     }
 
+	if(type == "statistical" && !(reconstruction$parameters$algorithm == "CAPRI" && reconstruction$parameters$do.boot == TRUE)) {
+        stop("To perform statistical bootstrap, the algorithm used for the reconstruction must by CAPRI with bootstrap.", call. = FALSE)
+    }
+
     # set all the needed parameters to perform the bootstrap estimation
-    if(type == "non-parametric" || type == "parametric") {
+    if(type == "non-parametric" || type == "parametric" || type == "statistical") {
     	
         dataset = reconstruction$genotypes
         do.estimation = FALSE
@@ -352,7 +380,7 @@ tronco.bootstrap <- function( reconstruction,
         }
     }
     else {
-    		stop("The types of bootstrap that can be performed are: non-parametric or parametric.", call. = FALSE)
+    		stop("The types of bootstrap that can be performed are: non-parametric, parametric or statistical.", call. = FALSE)
     }
 
     # perform the selected bootstrap procedure
