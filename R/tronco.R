@@ -17,11 +17,13 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
     }
     
     #reconstruct the reconstruction with CAPRESE
-    cat(paste0(
-        '*** Inferring a progression model with the following settings.\n',
-        '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
-        '\tAlgorithm: CAPRESE with shrinkage coefficient: ', lambda, '\" lamba.\n'
-    ))
+    if(silent==FALSE) {
+	    cat(paste0(
+	        '*** Inferring a progression model with the following settings.\n',
+	        '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
+	        '\tAlgorithm: CAPRESE with shrinkage coefficient: ', lambda, '.\n'
+	    ))
+	}
     reconstruction = caprese.fit(data$genotypes,lambda,do.estimation,silent);
     
     rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
@@ -70,7 +72,7 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
     results$execution.time = reconstruction$execution.time;
     
     # the reconstruction has been completed
-    cat(paste("The reconstruction has been successfully completed.","\n"));
+    if(!silent) cat(paste("The reconstruction has been successfully completed.","\n"));
     return(results);
     
 }
@@ -119,15 +121,17 @@ tronco.capri <- function( data,
     else {
             my.seed = boot.seed;
     }
-    cat(paste0(
-        '*** Inferring a progression model with the following settings.\n',
-        '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
-        '\tAlgorithm: CAPRI with \"', paste0(regularization,collapse=", "), '\" regularization and \"', command, '\" likelihood-fit strategy.\n',
-        '\tRandom seed: ', my.seed, '.\n',
-        '\tBootstrap iterations (Wilcoxon): ', ifelse(do.boot, nboot, 'disabled'), '.\n',
-        ifelse(do.boot, 
-            paste0('\t\texhaustive bootstrap: ', min.stat, '.\n\t\tp-value: ', pvalue, '.\n\t\tminimum bootstrapped scores: ', min.boot, '.\n'), '')        
-        ))
+    if(silent==FALSE) {
+	    cat(paste0(
+	        '*** Inferring a progression model with the following settings.\n',
+	        '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
+	        '\tAlgorithm: CAPRI with \"', paste0(regularization,collapse=", "), '\" regularization and \"', command, '\" likelihood-fit strategy.\n',
+	        '\tRandom seed: ', my.seed, '.\n',
+	        '\tBootstrap iterations (Wilcoxon): ', ifelse(do.boot, nboot, 'disabled'), '.\n',
+	        ifelse(do.boot, 
+	            paste0('\t\texhaustive bootstrap: ', min.stat, '.\n\t\tp-value: ', pvalue, '.\n\t\tminimum bootstrapped scores: ', min.boot, '.\n'), '')        
+	        ))
+	}
         
     reconstruction = capri.fit(data$genotypes,data$hypotheses,command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation,silent=silent);
     
@@ -183,7 +187,7 @@ tronco.capri <- function( data,
     results$execution.time = reconstruction$execution.time;
     
     # the reconstruction has been completed
-    cat(paste("The reconstruction has been successfully completed.","\n"));
+    if(!silent) cat(paste("The reconstruction has been successfully completed.","\n"));
     return(results);
 }
 
@@ -259,7 +263,7 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
         colnames(reconstruction$probabilities$probabilities.bic$estimated.conditional.probs) = "conditional probability";
     }
     else {
-            stop("A valid algorithm has to be provided in order to estimate its confidence.",call.=FALSE);
+    		stop("A valid algorithm has to be provided in order to estimate its confidence.",call.=FALSE);
     }
     reconstruction$parameters$do.estimation = TRUE;
     return(reconstruction);
@@ -330,16 +334,17 @@ tronco.bootstrap <- function( reconstruction,
 
     # perform the selected bootstrap procedure
     cat("Executing now the bootstrap procedure, this may take a long time...\n")
+    cat("The overall time of execution is estimated to be around:",round((reconstruction$execution.time[3]*nboot)/60,digits=2),"minutes.\n")
 
     if(reconstruction$parameters$algorithm == "CAPRESE") {
         
         curr.boot = bootstrap.caprese(dataset,
-        							  lambda,
-        							  do.estimation,
-                            		  silent,
-                            		  reconstruction, 
-                            		  command,
-                            		  nboot)
+        							      lambda,
+        							      do.estimation,
+                            		      silent,
+                            		      reconstruction, 
+                            		      type,
+                            		      nboot)
                                           
         reconstruction$bootstrap = curr.boot
         
@@ -349,20 +354,20 @@ tronco.bootstrap <- function( reconstruction,
     else if(reconstruction$parameters$algorithm == "CAPRI") {
     	
     		curr.boot = bootstrap.capri(dataset, 
-                            		hypotheses, 
-                            		command.capri, 
-                            		regularization, 
-                            		do.boot,
-                            		nboot.capri, 
-                            		pvalue,
-                            		min.boot,
-                            		min.stat,
-                            		boot.seed,
-                            		do.estimation,
-                            		silent,
-                            		reconstruction, 
-                            		command,
-                            		nboot)
+                            		    hypotheses, 
+                            		    command.capri, 
+                            		    regularization, 
+                            		    do.boot,
+                            		    nboot.capri, 
+                            		    pvalue,
+                            		    min.boot,
+                            		    min.stat,
+                            		    boot.seed,
+                            		    do.estimation,
+                            		    silent,
+                            		    reconstruction, 
+                            		    type,
+                            		    nboot)
 
         reconstruction$bootstrap = curr.boot
 

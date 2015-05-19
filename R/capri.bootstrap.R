@@ -73,6 +73,9 @@ bootstrap.capri <- function(dataset,
   
   	# perform nboot bootstrap resampling
     for (num in 1:nboot) {
+    	
+    		# reset the seed
+    		set.seed(NULL)
         
         # update the progress bar
         setTxtProgressBar(pb, num)
@@ -235,6 +238,7 @@ bootstrap.capri <- function(dataset,
 	    	}
 	    	
 	    	bootstrap.adj.matrix[[m]] = curr.bootstrap.adj.matrix;
+	    rownames(bootstrap.results[[m]]) =  paste("Iteration ",1:nrow(bootstrap.results[[m]]),sep="")
     	
     	}
     
@@ -270,7 +274,7 @@ bootstrap.capri <- function(dataset,
 	        flag = TRUE;
 	        for (j in 1:nrow(reconstructed.topology)) {
 		        	for (k in 1:ncol(reconstructed.topology)) {
-		        		if(reconstructed.topology[i,j]!=curr.adj.matrix[i,j]) {
+		        		if(reconstructed.topology[j,k]!=curr.adj.matrix[j,k]) {
 		        			flag = FALSE;
 		        			next();
 		        		}
@@ -290,28 +294,28 @@ bootstrap.capri <- function(dataset,
     		
     		curr.adj.matrix = as.adj.matrix(reconstruction,model=m)[[m]];
     	
-    	# save the edge confidence
-    	curr.bootstrap.matrix = bootstrap.adj.matrix[[m]][-1,-1];
-    	curr.edge.confidence = array(0,c(ncol(curr.bootstrap.matrix),nrow(curr.bootstrap.matrix)))
-    	colnames(curr.edge.confidence) = colnames(curr.bootstrap.matrix);
-    	rownames(curr.edge.confidence) = rownames(curr.bootstrap.matrix);
-    	for (i in 1:ncol(curr.bootstrap.matrix)) {
-    			for (j in 1:nrow(curr.bootstrap.matrix)) {
-    				curr.edge.confidence[i,j] = (curr.adj.matrix[i,j]*as.numeric(curr.bootstrap.matrix[i,j]))/nboot
-    			}
-    		}
-    	bootstrap.edge.confidence[[m]] = curr.edge.confidence
-    		
-    		# save the frequency of the bootstrap adj.matrix
-    	curr.bootstrap.matrix = bootstrap.adj.matrix[[m]];
-    	curr.adj.matrix.frequency = array(0,c(ncol(curr.bootstrap.matrix),nrow(curr.bootstrap.matrix)))
-    	colnames(curr.adj.matrix.frequency) = colnames(curr.bootstrap.matrix);
-    	rownames(curr.adj.matrix.frequency) = rownames(curr.bootstrap.matrix);
-   		for (i in 1:ncol(curr.bootstrap.matrix)) {
-   			for (j in 1:nrow(curr.bootstrap.matrix)) {
-    			curr.adj.matrix.frequency[i,j] = as.numeric(as.numeric(curr.bootstrap.matrix[i,j]))/nboot
-    		}
-    	}
+	    	# save the edge confidence
+	    	curr.bootstrap.matrix = bootstrap.adj.matrix[[m]][-1,-1];
+	    	curr.edge.confidence = array(0,c(ncol(curr.bootstrap.matrix),nrow(curr.bootstrap.matrix)))
+	    	colnames(curr.edge.confidence) = colnames(curr.bootstrap.matrix);
+	    	rownames(curr.edge.confidence) = rownames(curr.bootstrap.matrix);
+	    	for (i in 1:ncol(curr.bootstrap.matrix)) {
+	    			for (j in 1:nrow(curr.bootstrap.matrix)) {
+	    				curr.edge.confidence[i,j] = (curr.adj.matrix[i,j]*as.numeric(curr.bootstrap.matrix[i,j]))/nboot
+	    			}
+	    		}
+	    	bootstrap.edge.confidence[[m]] = curr.edge.confidence
+	    		
+	    		# save the frequency of the bootstrap adj.matrix
+	    	curr.bootstrap.matrix = bootstrap.adj.matrix[[m]];
+	    	curr.adj.matrix.frequency = array(0,c(ncol(curr.bootstrap.matrix),nrow(curr.bootstrap.matrix)))
+	    	colnames(curr.adj.matrix.frequency) = colnames(curr.bootstrap.matrix);
+	    	rownames(curr.adj.matrix.frequency) = rownames(curr.bootstrap.matrix);
+	   		for (i in 1:ncol(curr.bootstrap.matrix)) {
+	   			for (j in 1:nrow(curr.bootstrap.matrix)) {
+	    			curr.adj.matrix.frequency[i,j] = as.numeric(as.numeric(curr.bootstrap.matrix[i,j]))/nboot
+	    		}
+	    	}
     		bootstrap.adj.matrix.frequency[[m]] = curr.adj.matrix.frequency
     
     }
