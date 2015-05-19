@@ -18,7 +18,7 @@ a TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
 data(maf)
-mutations = import.MAF(maf, sep=';')
+mutations = import.MAF(maf)
 duplicates(mutations)
 }
 

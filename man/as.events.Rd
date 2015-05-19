@@ -22,7 +22,7 @@ TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
 data(maf)
-mutations = import.MAF(maf, sep=';')
+mutations = import.MAF(maf)
 as.events(mutations)
 as.events(mutations, types='Mutation')
 as.events(mutations, genes = 'ABAT')

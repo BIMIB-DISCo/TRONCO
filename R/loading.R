@@ -187,7 +187,7 @@ Required table format constitent with TCGA data for focal CNAs:
 #'
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' mutations = annotate.name(mutations, 'Example MAF')
 #' mutations = TCGA.shorten.barcodes(mutations)
 #' oncoprint(mutations)

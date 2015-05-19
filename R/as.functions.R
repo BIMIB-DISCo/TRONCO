@@ -4,7 +4,7 @@
 #'
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' keysToNames(mutations, as.genotypes(mutations))
 #'
 #' @title as genotypes
@@ -20,7 +20,7 @@ as.genotypes = function(x)
 #'
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' as.samples(mutations)
 #' 
 #' @title as genotypes
@@ -37,7 +37,7 @@ as.samples = function(x)
 #'
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' as.genes(mutations)
 #' 
 #' @title as.genes
@@ -55,7 +55,7 @@ as.genes = function(x, types=NA)
 #'
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' as.events(mutations)
 #' as.events(mutations, types='Mutation')
 #' as.events(mutations, genes = 'ABAT')
@@ -95,7 +95,7 @@ as.stages = function(x)
 #'
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' as.types(mutations)
 #' as.types(mutations, genes = 'ABAT')
 #' 
@@ -114,7 +114,7 @@ as.types = function(x, genes=NA)
 #' 
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' as.colors(mutations)
 #'
 #' @title as colors
@@ -132,7 +132,7 @@ as.colors = function(x)
 #'
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' as.gene(mutations, genes = c('ABAT', 'ABCA4'))
 #' 
 #' @title as colors
@@ -158,7 +158,7 @@ as.gene = function(x, genes, types=NA)
 #'
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' oncoprint(as.alterations(mutations))
 #' 
 #' @title as alterations
@@ -192,7 +192,7 @@ has.stages = function(x)
 #'
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' has.duplicates(mutations)
 #' 
 #' @title has.duplicates
@@ -212,7 +212,7 @@ has.duplicates = function(x) {
 #'
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' duplicates(mutations)
 #'
 #' @title duplicates
@@ -243,7 +243,7 @@ as.name = function(x)
 #'
 #' @examples
 #' data(maf)
-#' mutations = import.MAF(maf, sep=';')
+#' mutations = import.MAF(maf)
 #' mutations = annotate.name(mutations, 'Example MAF')
 #' show(mutations)
 #' 

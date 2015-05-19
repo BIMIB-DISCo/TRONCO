@@ -17,7 +17,7 @@ Return all sample IDs for input 'x', which should be a TRONCO compliant dataset 
 }
 \examples{
 data(maf)
-mutations = import.MAF(maf, sep=';')
+mutations = import.MAF(maf)
 as.samples(mutations)
 }
 

@@ -17,7 +17,7 @@ a TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
 data(maf)
-mutations = import.MAF(maf, sep=';')
+mutations = import.MAF(maf)
 mutations = annotate.name(mutations, 'Example MAF')
 show(mutations)
 }

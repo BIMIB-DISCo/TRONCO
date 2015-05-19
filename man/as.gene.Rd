@@ -23,7 +23,7 @@ with events' types.
 }
 \examples{
 data(maf)
-mutations = import.MAF(maf, sep=';')
+mutations = import.MAF(maf)
 as.gene(mutations, genes = c('ABAT', 'ABCA4'))
 }
 

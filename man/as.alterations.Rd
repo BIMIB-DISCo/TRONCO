@@ -23,7 +23,7 @@ to be a TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
 data(maf)
-mutations = import.MAF(maf, sep=';')
+mutations = import.MAF(maf)
 oncoprint(as.alterations(mutations))
 }
 
