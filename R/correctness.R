@@ -99,4 +99,3 @@ is.events.list = function(x, y)
    if (!all(rownames(y) %in% colnames(x$genotypes))) 
     stop('Events rownames are not valid keys for genotypes - see "as.events".')
 }
-

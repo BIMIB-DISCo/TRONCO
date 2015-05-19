@@ -919,6 +919,3 @@ as.selective.advantage.relations = function(x, events = as.events(x), models = n
 
   return(lapply(matrix, matrix.to.df))
 }
-
-
-

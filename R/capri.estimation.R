@@ -417,5 +417,3 @@ function( dataset, marginal.probs, joint.probs, parents.pos, error.rates ) {
 }
 
 #### end of file -- estimate.dag.probs.R
-
-

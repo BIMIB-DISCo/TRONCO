@@ -331,5 +331,3 @@ function(num.decimal, num.bits) {
 }
 
 #### end of file -- estimate.tree.samples.R
-
-
