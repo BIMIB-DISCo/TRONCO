@@ -12,26 +12,26 @@ Maintainer: Giulio Caravagna <giulio.caravagna@disco.unimib.it>,
     Daniele Ramazzotti <daniele.ramazzotti@disco.unimib.it>,
     Luca De Sano <l.desano@campus.unimib.it>
 Depends:
-    R (>= 3.1),
-    methods,
-    Rgraphviz,
-    lattice,
-    graph,
-    igraph,
-    R.matlab,
-    RColorBrewer,
+    R (>= 3.1)
+Imports:
     bnlearn,
     cgdsr,
     colorspace,
-    gplots,
+    doParallel,
     ggplot2,
+    gplots,
+    graph,
     gridExtra,
+    igraph,
+    lattice,
     likert,
+    methods,
     pheatmap,
+    R.matlab,
+    RColorBrewer,
     reshape2,
+    Rgraphviz,
     xtable
-Suggests:
-    doParallel
 Description: Genotype-level cancer progression models describe the ordering of
     accumulating mutations, e.g., somatic mutations / copy number variations,
     during cancer development. These graphical models help understand the
