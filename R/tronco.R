@@ -16,58 +16,58 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
         stop("The value of the shrinkage parameter lambda has to be in [0:1]!",call.=FALSE);
     }
     
-    #reconstruct the topology with CAPRESE
+    #reconstruct the reconstruction with CAPRESE
     cat(paste0(
         '*** Inferring a progression model with the following settings.\n',
         '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
         '\tAlgorithm: CAPRESE with shrinkage coefficient: ', lambda, '\" lamba.\n'
     ))
-    topology = caprese.fit(data$genotypes,lambda,do.estimation,silent);
+    reconstruction = caprese.fit(data$genotypes,lambda,do.estimation,silent);
     
-    rownames(topology$confidence) = c("temporal priority","probability raising","hypergeometric test");
-    colnames(topology$confidence) = "confidence";
-    rownames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-    colnames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-    rownames(topology$confidence[[2,1]]) = colnames(data$genotypes);
-    colnames(topology$confidence[[2,1]]) = colnames(data$genotypes);
-    rownames(topology$confidence[[3,1]]) = colnames(data$genotypes);
-    colnames(topology$confidence[[3,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
+    colnames(reconstruction$confidence) = "confidence";
+    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
     
-    for (i in 1:length(topology$model)) {
+    for (i in 1:length(reconstruction$model)) {
         
         #set rownames and colnames to the probabilities
-        rownames(topology$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
-        colnames(topology$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
-        rownames(topology$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        colnames(topology$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        rownames(topology$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
-        colnames(topology$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
         
         #set rownames and colnames to the parents positions
-        rownames(topology$model[[i]]$parents.pos) = colnames(data$genotypes);
-        colnames(topology$model[[i]]$parents.pos) = "parents";
+        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
         
         #set rownames and colnames to the adjacency matrices
-        rownames(topology$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-        colnames(topology$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
         
         if(do.estimation==TRUE) {
-            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
-            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
-            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
-            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
         }
         
     }
     
     # structure to save the results
     results = data;
-    results$confidence = topology$confidence;
-    results$model = topology$model;
-    results$parameters = topology$parameters;
-    results$execution.time = topology$execution.time;
+    results$confidence = reconstruction$confidence;
+    results$model = reconstruction$model;
+    results$parameters = reconstruction$parameters;
+    results$execution.time = reconstruction$execution.time;
     
     # the reconstruction has been completed
     cat(paste("The reconstruction has been successfully completed.","\n"));
@@ -112,7 +112,7 @@ tronco.capri <- function( data,
         stop("The value of the pvalue has to be in [0:1]!",call.=FALSE);
     }
     
-    # reconstruct the topology with CAPRI
+    # reconstruct the reconstruction with CAPRI
     if(is.null(boot.seed)) {
         my.seed = "NULL"    
     }
@@ -129,58 +129,58 @@ tronco.capri <- function( data,
             paste0('\t\texhaustive bootstrap: ', min.stat, '.\n\t\tp-value: ', pvalue, '.\n\t\tminimum bootstrapped scores: ', min.boot, '.\n'), '')        
         ))
         
-    topology = capri.fit(data$genotypes,data$hypotheses,command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation,silent=silent);
+    reconstruction = capri.fit(data$genotypes,data$hypotheses,command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation,silent=silent);
     
-    # topology[[1]] = data;
-    # names(topology)[1] = "data"
-    # topology$hypotheses = NULL;
+    # reconstruction[[1]] = data;
+    # names(reconstruction)[1] = "data"
+    # reconstruction$hypotheses = NULL;
     
-    rownames(topology$confidence) = c("temporal priority","probability raising","hypergeometric test");
-    colnames(topology$confidence) = "confidence";
-    rownames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-    colnames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-    rownames(topology$confidence[[2,1]]) = colnames(data$genotypes);
-    colnames(topology$confidence[[2,1]]) = colnames(data$genotypes);
-    rownames(topology$confidence[[3,1]]) = colnames(data$genotypes);
-    colnames(topology$confidence[[3,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
+    colnames(reconstruction$confidence) = "confidence";
+    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
     
-    for (i in 1:length(topology$model)) {
+    for (i in 1:length(reconstruction$model)) {
         
         #set rownames and colnames to the probabilities
-        rownames(topology$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
-        colnames(topology$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
-        rownames(topology$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        colnames(topology$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        rownames(topology$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
-        colnames(topology$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
         
         #set rownames and colnames to the parents positions
-        rownames(topology$model[[i]]$parents.pos) = colnames(data$genotypes);
-        colnames(topology$model[[i]]$parents.pos) = "parents";
+        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
         
         #set rownames and colnames to the adjacency matrices
-        rownames(topology$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-        colnames(topology$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-        rownames(topology$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-        colnames(topology$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
         
         if(do.estimation==TRUE) {
-            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
-            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
-            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            rownames(topology$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
-            colnames(topology$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
         }
         
     }
     
     # structure to save the results
     results = data;
-    results$confidence = topology$confidence;
-    results$model = topology$model;
-    results$parameters = topology$parameters;
-    results$execution.time = topology$execution.time;
+    results$confidence = reconstruction$confidence;
+    results$model = reconstruction$model;
+    results$parameters = reconstruction$parameters;
+    results$execution.time = reconstruction$execution.time;
     
     # the reconstruction has been completed
     cat(paste("The reconstruction has been successfully completed.","\n"));
@@ -198,71 +198,71 @@ tronco.capri <- function( data,
 #### information.
 
 #' @export
-tronco.estimation <- function( topology, error.rates = NA ) {
+tronco.estimation <- function( reconstruction, error.rates = NA ) {
     #check for the inputs to be correct
-    if(is.null(topology)) {
+    if(is.null(reconstruction)) {
         stop("A valid reconstruction has to be provided in order to estimate its confidence.",call.=FALSE);
     }
     #run the estimations for the required algorithm
-    if(topology$parameters$algorithm=="CAPRESE") {
+    if(reconstruction$parameters$algorithm=="CAPRESE") {
             #if I also need to estimate the error rates
             if(is.na(error.rates[1])) {
                 #estimate the error rates
-                error.rates = estimate.tree.error.rates(topology$probabilities$marginal.probs,topology$probabilities$joint.probs,topology$parents.pos);
+                error.rates = estimate.tree.error.rates(reconstruction$probabilities$marginal.probs,reconstruction$probabilities$joint.probs,reconstruction$parents.pos);
             }
             #estimate the probabilities given the error rates
-        estimated.probabilities = estimate.tree.probs(topology$probabilities$marginal.probs,topology$probabilities$joint.probs,topology$parents.pos,error.rates);
+        estimated.probabilities = estimate.tree.probs(reconstruction$probabilities$marginal.probs,reconstruction$probabilities$joint.probs,reconstruction$parents.pos,error.rates);
         #set the estimated error rates and probabilities
-        topology$error.rates = error.rates;
-        topology$probabilities$estimated.marginal.probs = estimated.probabilities$marginal.probs;
-        topology$probabilities$estimated.joint.probs = estimated.probabilities$joint.probs;
-        topology$probabilities$estimated.conditional.probs = estimated.probabilities$conditional.probs;
+        reconstruction$error.rates = error.rates;
+        reconstruction$probabilities$estimated.marginal.probs = estimated.probabilities$marginal.probs;
+        reconstruction$probabilities$estimated.joint.probs = estimated.probabilities$joint.probs;
+        reconstruction$probabilities$estimated.conditional.probs = estimated.probabilities$conditional.probs;
         #set colnames and rownames
-        rownames(topology$probabilities$estimated.marginal.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$estimated.marginal.probs) = "marginal probability";
-        rownames(topology$probabilities$estimated.joint.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$estimated.joint.probs) = colnames(topology$data$genotypes);
-        rownames(topology$probabilities$estimated.conditional.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$estimated.conditional.probs) = "conditional probability";
+        rownames(reconstruction$probabilities$estimated.marginal.probs) = colnames(reconstruction$data$genotypes);
+        colnames(reconstruction$probabilities$estimated.marginal.probs) = "marginal probability";
+        rownames(reconstruction$probabilities$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
+        colnames(reconstruction$probabilities$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
+        rownames(reconstruction$probabilities$estimated.conditional.probs) = colnames(reconstruction$data$genotypes);
+        colnames(reconstruction$probabilities$estimated.conditional.probs) = "conditional probability";
     }
-    else if(topology$parameters$algorithm=="CAPRI") {
+    else if(reconstruction$parameters$algorithm=="CAPRI") {
             #if I also need to estimate the error rates
             if(is.na(error.rates[1])) {
                 #estimate the error rates
-                estimated.error.rates.pf = estimate.dag.error.rates(topology$data$genotypes,topology$probabilities$probabilities.pf$marginal.probs,topology$probabilities$probabilities.pf$joint.probs,topology$parents.pos$parents.pos.pf);
-                estimated.error.rates.bic = estimate.dag.error.rates(topology$data$genotypes,topology$probabilities$probabilities.bic$marginal.probs,topology$probabilities$probabilities.bic$joint.probs,topology$parents.pos$parents.pos.bic);
+                estimated.error.rates.pf = estimate.dag.error.rates(reconstruction$data$genotypes,reconstruction$probabilities$probabilities.pf$marginal.probs,reconstruction$probabilities$probabilities.pf$joint.probs,reconstruction$parents.pos$parents.pos.pf);
+                estimated.error.rates.bic = estimate.dag.error.rates(reconstruction$data$genotypes,reconstruction$probabilities$probabilities.bic$marginal.probs,reconstruction$probabilities$probabilities.bic$joint.probs,reconstruction$parents.pos$parents.pos.bic);
                 error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.bic=estimated.error.rates.bic);
             }
             #estimate the probabilities given the error rates
-        estimated.probabilities.pf = estimate.dag.probs(topology$data$genotypes,topology$probabilities$probabilities.pf$marginal.probs,topology$probabilities$probabilities.pf$joint.probs,topology$parents.pos$parents.pos.pf,error.rates$error.rates.pf);
-        estimated.probabilities.bic = estimate.dag.probs(topology$data$genotypes,topology$probabilities$probabilities.bic$marginal.probs,topology$probabilities$probabilities.bic$joint.probs,topology$parents.pos$parents.pos.bic,error.rates$error.rates.bic);
+        estimated.probabilities.pf = estimate.dag.probs(reconstruction$data$genotypes,reconstruction$probabilities$probabilities.pf$marginal.probs,reconstruction$probabilities$probabilities.pf$joint.probs,reconstruction$parents.pos$parents.pos.pf,error.rates$error.rates.pf);
+        estimated.probabilities.bic = estimate.dag.probs(reconstruction$data$genotypes,reconstruction$probabilities$probabilities.bic$marginal.probs,reconstruction$probabilities$probabilities.bic$joint.probs,reconstruction$parents.pos$parents.pos.bic,error.rates$error.rates.bic);
         #set the estimated error rates and probabilities
-        topology$error.rates = error.rates;
-        topology$probabilities$probabilities.pf$estimated.marginal.probs = estimated.probabilities.pf$marginal.probs;
-        topology$probabilities$probabilities.pf$estimated.joint.probs = estimated.probabilities.pf$joint.probs;
-        topology$probabilities$probabilities.pf$estimated.conditional.probs = estimated.probabilities.bic$conditional.probs;
-        topology$probabilities$probabilities.bic$estimated.marginal.probs = estimated.probabilities.bic$marginal.probs;
-        topology$probabilities$probabilities.bic$estimated.joint.probs = estimated.probabilities.bic$joint.probs;
-        topology$probabilities$probabilities.bic$estimated.conditional.probs = estimated.probabilities.bic$conditional.probs;
+        reconstruction$error.rates = error.rates;
+        reconstruction$probabilities$probabilities.pf$estimated.marginal.probs = estimated.probabilities.pf$marginal.probs;
+        reconstruction$probabilities$probabilities.pf$estimated.joint.probs = estimated.probabilities.pf$joint.probs;
+        reconstruction$probabilities$probabilities.pf$estimated.conditional.probs = estimated.probabilities.bic$conditional.probs;
+        reconstruction$probabilities$probabilities.bic$estimated.marginal.probs = estimated.probabilities.bic$marginal.probs;
+        reconstruction$probabilities$probabilities.bic$estimated.joint.probs = estimated.probabilities.bic$joint.probs;
+        reconstruction$probabilities$probabilities.bic$estimated.conditional.probs = estimated.probabilities.bic$conditional.probs;
         #set colnames and rownames
-        rownames(topology$probabilities$probabilities.pf$estimated.marginal.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.pf$estimated.marginal.probs) = "marginal probability";
-        rownames(topology$probabilities$probabilities.pf$estimated.joint.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.pf$estimated.joint.probs) = colnames(topology$data$genotypes);
-        rownames(topology$probabilities$probabilities.pf$estimated.conditional.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.pf$estimated.conditional.probs) = "conditional probability";
-        rownames(topology$probabilities$probabilities.bic$estimated.marginal.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.bic$estimated.marginal.probs) = "marginal probability";
-        rownames(topology$probabilities$probabilities.bic$estimated.joint.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.bic$estimated.joint.probs) = colnames(topology$data$genotypes);
-        rownames(topology$probabilities$probabilities.bic$estimated.conditional.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.bic$estimated.conditional.probs) = "conditional probability";
+        rownames(reconstruction$probabilities$probabilities.pf$estimated.marginal.probs) = colnames(reconstruction$data$genotypes);
+        colnames(reconstruction$probabilities$probabilities.pf$estimated.marginal.probs) = "marginal probability";
+        rownames(reconstruction$probabilities$probabilities.pf$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
+        colnames(reconstruction$probabilities$probabilities.pf$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
+        rownames(reconstruction$probabilities$probabilities.pf$estimated.conditional.probs) = colnames(reconstruction$data$genotypes);
+        colnames(reconstruction$probabilities$probabilities.pf$estimated.conditional.probs) = "conditional probability";
+        rownames(reconstruction$probabilities$probabilities.bic$estimated.marginal.probs) = colnames(reconstruction$data$genotypes);
+        colnames(reconstruction$probabilities$probabilities.bic$estimated.marginal.probs) = "marginal probability";
+        rownames(reconstruction$probabilities$probabilities.bic$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
+        colnames(reconstruction$probabilities$probabilities.bic$estimated.joint.probs) = colnames(reconstruction$data$genotypes);
+        rownames(reconstruction$probabilities$probabilities.bic$estimated.conditional.probs) = colnames(reconstruction$data$genotypes);
+        colnames(reconstruction$probabilities$probabilities.bic$estimated.conditional.probs) = "conditional probability";
     }
     else {
             stop("A valid algorithm has to be provided in order to estimate its confidence.",call.=FALSE);
     }
-    topology$parameters$do.estimation = TRUE;
-    return(topology);
+    reconstruction$parameters$do.estimation = TRUE;
+    return(reconstruction);
 }
 
 #### end of file -- tronco.estimation.R
@@ -276,158 +276,106 @@ tronco.estimation <- function( topology, error.rates = NA ) {
 #### information.
 
 #' @export
-tronco.bootstrap <- function( topology, 
-                              type="non-parametric", 
-                              nboot=100)
+tronco.bootstrap <- function( reconstruction, 
+                              type = "non-parametric", 
+                              nboot = 100)
 {
-    #check for the inputs to be correct
-    if(is.null(topology)) {
+    # check for the inputs to be given
+    if(is.null(reconstruction)) {
         stop("A valid reconstruction has to be provided in order to estimate its confidence.", call. = FALSE)
     }
-
-    if(topology$parameters$do.estimation == FALSE && type == "parametric") {
-        stop("To perform parametric bootstrap, the estimation of error rates and probabilities should be computed.", call. = FALSE)
-    }
-
-    #set all the needed parameters to perform the bootstrap
-    if(type == "non-parametric" || type == "parametric") {
-        dataset = topology$data$genotypes
-        
-        if(topology$parameters$algorithm == "CAPRESE") {
-            lambda = topology$parameters$lambda
-            adj.matrix = topology$adj.matrix
-
-            if(type == "parametric") {
-
-                if(topology$parameters$do.estimation == TRUE) {
-                    estimated.marginal.probs = topology$probabilities$estimated.marginal.probs
-                    estimated.conditional.probs = topology$probabilities$estimated.conditional.probs
-                    parents.pos = topology$parents.pos
-                    error.rates = topology$error.rates
-                } else {
-                    stop("To perform parametric bootstrap, the estimation of the error rates should be performed first.", call. = FALSE)
-                }
-            }
-        } else if(topology$parameters$algorithm == "CAPRI") {
-            hypotheses = topology$data$hypotheses
-            
-            if(is.null(hypotheses)) {
-                hypotheses = NA
-            }
-
-            command.capri = do.boot = topology$parameters$command
     
-            do.boot = topology$parameters$do.boot
-            nboot.capri = topology$parameters$nboot
-            pvalue = topology$parameters$pvalue
+    # check for the input to be compliant
+    is.compliant(reconstruction)
 
-            adj.matrix.pf = topology$adj.matrix$adj.matrix.pf
-            adj.matrix.bic = topology$adj.matrix$adj.matrix.bic
-
-            if(type=="parametric") {
-                if(topology$parameters$do.estimation == TRUE) {
-                    
-                    estimated.marginal.probs.pf = topology$probabilities$probabilities.pf$estimated.marginal.probs
-                    estimated.conditional.probs.pf = topology$probabilities$probabilities.pf$estimated.conditional.probs
-                    parents.pos.pf = topology$parents.pos$parents.pos.pf
-                    error.rates.pf = topology$error.rates$error.rates.pf
-                    
-                    estimated.marginal.probs.bic = topology$probabilities$probabilities.bic$estimated.marginal.probs
-                    estimated.conditional.probs.bic = topology$probabilities$probabilities.bic$estimated.conditional.probs
-                    parents.pos.bic = topology$parents.pos$parents.pos.bic
-                    error.rates.bic = topology$error.rates$error.rates.bic
-                
-                } else {
-                    stop("To perform parametric bootstrap, the estimation of the error rates should be performed first.", call. = FALSE)
-                }
-            }
-        }
-    } else {
-        stop("The types of bootstrap that can be performed are: non-parametric or parametric.", call. = FALSE)
+    if(reconstruction$parameters$do.estimation == FALSE && type == "parametric") {
+        stop("To perform parametric bootstrap, the estimation of the error rates and probabilities should be performed.", call. = FALSE)
     }
 
-    #perform the selected bootstrap procedure
+    # set all the needed parameters to perform the bootstrap estimation
+    if(type == "non-parametric" || type == "parametric") {
+    	
+        dataset = reconstruction$genotypes
+        do.estimation = FALSE
+        silent = TRUE
+        
+        if(reconstruction$parameters$algorithm == "CAPRESE") {
+        	
+            lambda = reconstruction$parameters$lambda
+            
+        }
+        else if(reconstruction$parameters$algorithm == "CAPRI") {
+            
+            if(!is.null(reconstruction$hypotheses)) {
+                hypotheses = reconstruction$hypotheses
+            }
+            else {
+            		hypotheses = NA
+            }
+            
+            command.capri = reconstruction$parameters$command
+            regularization = reconstruction$parameters$regularization
+            do.boot = reconstruction$parameters$do.boot
+            nboot.capri = reconstruction$parameters$nboot
+            pvalue = reconstruction$parameters$pvalue
+            min.boot = reconstruction$parameters$min.boot
+            min.stat = reconstruction$parameters$min.stat
+            boot.seed = reconstruction$parameters$boot.seed
+            
+        }
+    }
+    else {
+    		stop("The types of bootstrap that can be performed are: non-parametric or parametric.", call. = FALSE)
+    }
+
+    # perform the selected bootstrap procedure
     cat("Executing now the bootstrap procedure, this may take a long time...\n")
 
-    if(topology$parameters$algorithm == "CAPRESE") {
-        if(type == "non-parametric") {
-            curr.boot = bootstrap.caprese(dataset, lambda, adj.matrix, type, NA, NA, NA, nboot)
-        } else if(type == "parametric") {
-            curr.boot = bootstrap.caprese(dataset,
-                                          lambda,
-                                          adj.matrix,
-                                          type,
-                                          estimated.marginal.probs,
-                                          estimated.conditional.probs,
-                                          error.rates,nboot)
-        }
-
-        topology$bootstrap = curr.boot
-        cat("\nConfidence overall value: ", curr.boot$confidence$overall.value)
-        cat("\nConfidence overall frequency: ", curr.boot$confidence$overall.frequency)
+    if(reconstruction$parameters$algorithm == "CAPRESE") {
+        
+        curr.boot = bootstrap.caprese(dataset,
+        							  lambda,
+        							  do.estimation,
+                            		  silent,
+                            		  reconstruction, 
+                            		  command,
+                            		  nboot)
+                                          
+        reconstruction$bootstrap = curr.boot
+        
         cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", lambda, " as shrinkage parameter.\n\n", sep =""))
     
-    } else if(topology$parameters$algorithm == "CAPRI") {
-        
-        if(type == "non-parametric") {
-            curr.boot = bootstrap.capri(dataset,
-                                        hypotheses,
-                                        command.capri,
-                                        do.boot,
-                                        nboot.capri,
-                                        pvalue,
-                                        adj.matrix.pf,
-                                        adj.matrix.bic,
-                                        type,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        nboot,
-                                        regularization=topology$parameters$regularization)
+    }
+    else if(reconstruction$parameters$algorithm == "CAPRI") {
+    	
+    		curr.boot = bootstrap.capri(dataset, 
+                            		hypotheses, 
+                            		command.capri, 
+                            		regularization, 
+                            		do.boot,
+                            		nboot.capri, 
+                            		pvalue,
+                            		min.boot,
+                            		min.stat,
+                            		boot.seed,
+                            		do.estimation,
+                            		silent,
+                            		reconstruction, 
+                            		command,
+                            		nboot)
 
-        } else if(type=="parametric") {
-            curr.boot = bootstrap.capri(dataset,
-                                        hypotheses,
-                                        command.capri,
-                                        do.boot,
-                                        nboot.capri,
-                                        pvalue,
-                                        adj.matrix.pf,
-                                        adj.matrix.bic,
-                                        type,
-                                        estimated.marginal.probs.pf,
-                                        estimated.conditional.probs.pf,
-                                        parents.pos.pf,
-                                        error.rates.pf,
-                                        estimated.marginal.probs.bic,
-                                        estimated.conditional.probs.bic,
-                                        parents.pos.bic,
-                                        error.rates.bic,
-                                        nboot,
-                                        regularization=topology$parameters$regularization)
-
-        }
-
-        topology$bootstrap = curr.boot
-
-        cat("\nConfidence overall \"prima facie\" value:",curr.boot$confidence$confidence.pf$overall.value.pf)
-        cat("\nConfidence overall \"prima facie\" frequency:",curr.boot$confidence$confidence.pf$overall.frequency.pf)
-        cat("\nConfidence overall \"bic\" value:",curr.boot$confidence$confidence.bic$overall.value.bic)
-        cat("\nConfidence overall \"bic\" frequency:",curr.boot$confidence$confidence.bic$overall.frequency.bic)
+        reconstruction$bootstrap = curr.boot
 
         if(do.boot == TRUE) {
-            cat(paste("\n\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", pvalue, " as pvalue for the statistical tests.\n\n", sep =""))
-        } else {
-            cat(paste("\n\nPerformed ", type, " bootstrap with ", nboot, " resampling.\n\n", sep =""))
+        	cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", pvalue, " as pvalue for the statistical tests.\n\n", sep =""))
+        }
+        else {
+        	cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling.\n\n", sep =""))
         }
     }
 
-    return(topology)
+    return(reconstruction)
+    
 }
 
 #### end of file -- tronco.bootstrap.R
@@ -475,10 +423,10 @@ is.logic.node <- function(node) {
 #' @title plot a progression model
 #'
 #' @description
-#' \code{tronco.plot} plots a progression model from a recostructed \code{curr.topology}. 
+#' \code{tronco.plot} plots a progression model from a recostructed \code{curr.reconstruction}. 
 #' 
 #' 
-#' @param curr.topology A curr.topology returned by a reconstruction algorithm
+#' @param curr.reconstruction A curr.reconstruction returned by a reconstruction algorithm
 #' @param title plot Plot title (default "Progression model x", x reconstruction algorithm)
 #' @param title.color color title (default "black")
 #' 
@@ -500,8 +448,8 @@ is.logic.node <- function(node) {
 #'     types.load("data/types.txt");
 #'     events.load("data/events.txt");
 #'    data.load("data/CGH.txt");
-#'    topology <- tronco.caprese();
-#'    tronco.plot(curr.topology, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
+#'    reconstruction <- tronco.caprese();
+#'    tronco.plot(curr.reconstruction, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
 #' }
 tronco.plot = function(x,
                        regularization=names(x$model),
@@ -550,9 +498,9 @@ tronco.plot = function(x,
     library(RColorBrewer)
   }
   
-  # Checks if topology exists
+  # Checks if reconstruction exists
   if(missing(x)) {
-    stop("Topology missing, usage: hypo.plot(topology, ...", call.=FALSE);
+    stop("reconstruction missing, usage: hypo.plot(reconstruction, ...", call.=FALSE);
   }
     
   logical_op = list("AND", "OR", "NOT", "XOR", "*", "UPAND", "UPOR", "UPXOR")
@@ -1484,7 +1432,7 @@ tronco.consensus.plot = function(models,
     library(RColorBrewer)
   }
   
-  # Checks if topology exists
+  # Checks if reconstruction exists
   if(missing(models) || !is.list(models)) {
     stop("Models missing, usage: ... ...", call.=FALSE);
   }
