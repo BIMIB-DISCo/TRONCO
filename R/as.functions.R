@@ -135,12 +135,12 @@ as.colors = function(x)
 #' mutations = import.MAF(maf)
 #' as.gene(mutations, genes = c('ABAT', 'ABCA4'))
 #' 
-#' @title as colors
+#' @title as gene
 #' @param x A TRONCO compliant dataset.
 #' @param types The types of events to consider, if NA all available types are used.
 #' @param genes The genes to consider, if NA all available genes are used.
 #' @return A matrix, subset of \code{as.genotypes(x)} with colnames substituted  with events' types.
-#' @export as.colors
+#' @export as.gene
 as.gene = function(x, genes, types=NA)
 {
   keys = as.events(x, genes=genes, types=types)

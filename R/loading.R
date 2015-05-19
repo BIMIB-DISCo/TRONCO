@@ -85,7 +85,7 @@ Required table format:
 #'  Loss" (-1), "Low-level Gain" (+1), "High-level Gain" (+2). 
 #'
 #' @examples
-#' load(gistic)
+#' data(gistic)
 #' gistic = import.GISTIC(gistic)
 #' gistic = annotate.name(gistic, 'Example GISTIC')
 #' oncoprint(gistic)

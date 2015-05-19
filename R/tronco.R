@@ -1,9 +1,32 @@
-#### tronco.caprese.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
+#' Genotype-level cancer progression models describe the ordering of
+#' accumulating mutations, e.g., somatic mutations / copy number variations,
+#' during cancer development. These graphical models help understand the
+#' causal structure involving events promoting cancer progression, possibly
+#' predicting complex patterns characterising genomic progression of a cancer.
+#' Reconstructed models can be used to better characterise genotype-phenotype
+#' relation, and suggest novel targets for therapy design. 
+#'
+#' TRONCO (TRanslational ONCOlogy) is a R package aimed at collecting
+#' state-of-the-art algorithms to infer progression models from
+#' cross-sectional data, i.e., data collected from independent patients which
+#' does not necessarily incorporate any evident temporal information. These
+#' algorithms require a binary input matrix where: (i) each row represents a
+#' patient genome, (ii) each column an event relevant to the progression (a
+#' priori selected) and a 0/1 value models the absence/presence of a certain
+#' mutation in a certain patient. The current first version of TRONCO
+#' implements the CAPRESE algorithm (Cancer PRogression Extraction with Single
+#' Edges) to infer possible progression models arranged as trees; cfr.
+#' Inferring tree causal models of cancer progression with probability
+#' raising, L. Olde Loohuis, G. Caravagna, A. Graudenzi, D. Ramazzotti, G.
+#' Mauri, M. Antoniotti and B. Mishra. PLoS One, to appear. This vignette
+#' shows how to use TRONCO to infer a tree model of ovarian cancer progression
+#' from CGH data of copy number alterations (classified as gains or losses
+#' over chromosome's arms). The dataset used is available in the SKY/M-FISH
+#' database.
+#'
+#' @docType package
+#' @name TRONCO
+NULL
 
 #' @export
 tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = FALSE ) {

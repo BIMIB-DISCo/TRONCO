@@ -2,7 +2,7 @@
 % Please edit documentation in R/as.functions.R
 \name{as.gene}
 \alias{as.gene}
-\title{as colors}
+\title{as gene}
 \usage{
 as.gene(x, genes, types = NA)
 }

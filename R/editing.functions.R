@@ -5,7 +5,7 @@
 #### See the files COPYING and LICENSE for copyright and licensing
 #### information.
 
-
+#' @export annotate.name
 annotate.name = function(x, label)
 {
   if(as.name(x) != "")
