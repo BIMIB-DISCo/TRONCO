@@ -56,11 +56,11 @@ consolidate.data = function(x, print = FALSE){
   return(ret)
 }
 
-#' @export annotate.name
-annotate.name = function(x, label)
+#' @export annotate.description
+annotate.description = function(x, label)
 {
-  if(as.name(x) != "")
-    warning(paste('Old name substituted: ', as.name(x), '.'))
+  if(as.description(x) != "")
+    warning(paste('Old description substituted: ', as.description(x), '.'))
   
   x$name = label
   return(x)
