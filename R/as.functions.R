@@ -519,7 +519,8 @@ as.genes.hypotheses = function(x, hypotheses=NULL) {
 
 
 #' Return confidence information for a TRONCO model. Available information are: temporal priority (tp), 
-#' probability raising (pr), hypergeometric test (hg), parametric (pb) and non parametric bootstrap (npb).
+#' probability raising (pr), hypergeometric test (hg), parametric (pb), non parametric (npb) or 
+#' statistical (sb) bootstrap.
 #' Confidence is available only once a model has been reconstructed with any of the algorithms implemented
 #' in TRONCO. If more than one model has been reconstructed - for instance via multiple regularizations - 
 #' confidence information is appropriately nested. The requested confidence is specified via 
@@ -527,7 +528,7 @@ as.genes.hypotheses = function(x, hypotheses=NULL) {
 #'
 #' @title as.confidence
 #' @param x A TRONCO model.
-#' @param conf A vector with any of 'tp', 'pr', 'hg', 'npb' or 'pb'. 
+#' @param conf A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb' or 'sb'. 
 #' @return A list of matrices with the event-to-event confidence. 
 #' @export as.confidence
 as.confidence = function(x, conf)
@@ -536,7 +537,7 @@ as.confidence = function(x, conf)
   is.model(x)
   if(!is.vector(conf)) stop('"conf" should be a vector.')
   
-	keys = c('hg', 'tp', 'pr', 'npb', 'pb')
+	keys = c('hg', 'tp', 'pr', 'npb', 'pb', 'sb')
 	
 	if(!all(conf %in% keys)) 
 		stop('Confidence keyword unrecognized, \'conf\' should be any of:\n
@@ -547,16 +548,18 @@ as.confidence = function(x, conf)
 		 \t \"pr\" - probability raising (selectivity among events)\n
 		 MODEL CONFIDENCE - requires post-reconstruction bootstrap\n
 		 \t \"npb\" - non-parametric bootstrap,\n
-		 \t \"pb\" - parametric bootstrap\n')
-	
-	
+		 \t \"pb\" - parametric bootstrap\n
+		 \t \"sb\" - statistical bootstrap\n'
+         )
+		
 	if(is.null(x$confidence) || is.na(x$confidence) || is.null(x$model) || is.na(x$model))
 		stop('Input \'x\' does not contain a TRONCO model. No confidence to show.\n')
 
 	models = names(x$model)
 	
-	has.npb.bootstrap = is.null(x$model$models[1]$bootstrap$npb)
-	has.pb.bootstrap = is.null(x$model$models[1]$bootstrap$pb)
+	has.npb.bootstrap = is.null(x$bootstrap[[models[1]]]$npb)
+	has.pb.bootstrap = is.null(x$bootstrap[[models[1]]]$pb)
+	has.sb.bootstrap = is.null(x$bootstrap[[models[1]]]$sb)
 	
 	if( 'npb' %in% conf && has.npb.bootstrap)
 		stop('Non-parametric bootstrap was not performed. Remove keyword\n')
@@ -564,32 +567,24 @@ as.confidence = function(x, conf)
 	if( 'pb' %in% conf && has.pb.bootstrap)
 		stop('Parametric bootstrap was not performed. Remove keyword\n')
 
+	if( 'sb' %in% conf && has.sb.bootstrap)
+	  stop('Statistical bootstrap was not performed. Remove keyword\n')
+	  
 	result = NULL
 	
 	if('hg' %in% conf) result$hg = x$confidence['hypergeometric test', ][[1]]
 	if('tp' %in% conf) result$tp = x$confidence['temporal priority', ][[1]]
 	if('pr' %in% conf) result$pr = x$confidence['probability raising', ][[1]]
 	if('npb' %in% conf) 
-	{
-    # QUI VA DEBUGGATO NON CREDO FUNZIONI - ASPETTIAMO DI AVERE IL BOOTSTRAP FUNZIONANTE
-		x$npb[models] = x$model[models]$bootstrap$npb
-
-
-		# x$npb = list()
-		# for(i in 1:length(models)) x$npb = append(x$npb, list(x$model$models[i]$bootstrap$npb))
-		# names(x$npb) = models		
-	}
-	
+    for(i in 1:length(models)) 
+      result$npb[models[i]] = list(x$bootstrap[[models[i]]]$npb$bootstrap.edge.confidence)	
 	if('pb' %in% conf) 
-	{
-	  # QUI VA DEBUGGATO NON CREDO FUNZIONI - ASPETTIAMO DI AVERE IL BOOTSTRAP FUNZIONANTE
-	  x$pb[models] = x$model[models]$bootstrap$pb
-
-		# x$pb = list()
-		# for(i in 1:length(models)) x$pb = append(x$pb, list(x$model$models[i]$bootstrap$pb))
-		# names(x$pb) = models		
-	}
-	
+	  for(i in 1:length(models)) 
+	    result$pb[models[i]] = list(x$bootstrap[[models[i]]]$pb$bootstrap.edge.confidence)  
+	if('sb' %in% conf) 
+	  for(i in 1:length(models)) 
+	    result$sb[models[i]] = list(x$bootstrap[[models[i]]]$sb$bootstrap.edge.confidence)  
+	    
 	return(result)	
 }
 
@@ -927,8 +922,6 @@ as.selective.advantage.relations = function(x, events = as.events(x), models = n
     return(df)
   }
   
-  
-
   return(lapply(matrix, matrix.to.df))
 }
 
