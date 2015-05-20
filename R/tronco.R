@@ -112,8 +112,12 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
     results$execution.time = reconstruction$execution.time;
     
     # the reconstruction has been completed
-    if(!silent) cat(paste("The reconstruction has been successfully completed.","\n"));
-    return(results);
+	if(!silent) cat(paste(
+	  "The reconstruction has been successfully completed in ", 
+	  round(reconstruction$execution.time[3]/60,digits=0), 
+	  "minutes.\n"));
+	
+  return(results);
     
 }
 
@@ -242,8 +246,16 @@ tronco.capri <- function( data,
     results$parameters = reconstruction$parameters;
     results$execution.time = reconstruction$execution.time;
     
+  
+
+	
+  
     # the reconstruction has been completed
-    if(!silent) cat(paste("The reconstruction has been successfully completed.","\n"));
+    if(!silent) cat(paste(
+      "The reconstruction has been successfully completed in ", 
+      round(reconstruction$execution.time[3]/60,digits=0), 
+      "minutes.\n"));
+  
     return(results);
 }
 
@@ -386,6 +398,13 @@ tronco.bootstrap <- function( reconstruction,
         do.estimation = FALSE
         silent = TRUE
         
+        if(!is.null(reconstruction$bootstrap)) {
+        		bootstrap = reconstruction$bootstrap
+        }
+        else {
+        		bootstrap = list()
+        }
+        
         if(reconstruction$parameters$algorithm == "CAPRESE") {
             lambda = reconstruction$parameters$lambda
         } else if(reconstruction$parameters$algorithm == "CAPRI") {
@@ -411,17 +430,27 @@ tronco.bootstrap <- function( reconstruction,
 
     # perform the selected bootstrap procedure
     cat("Executing now the bootstrap procedure, this may take a long time...\n")
-    cat("The overall time of execution is estimated to be around:",round((reconstruction$execution.time[3]*nboot)/60,digits=2),"minutes.\n")
+    cat("Expected completion in approx.",round((reconstruction$execution.time[3]*nboot)/60,digits=0),"minutes.\n")
 
     if(reconstruction$parameters$algorithm == "CAPRESE") {
         
         curr.boot = bootstrap.caprese(dataset,
+<<<<<<< HEAD
         							  lambda,
         							  do.estimation,
                             		  silent,
                             		  reconstruction, 
                             		  type,
                             		  nboot)
+=======
+        							      lambda,
+        							      do.estimation,
+                            		      silent,
+                            		      reconstruction, 
+                            		      type,
+                            		      nboot,
+                            		      bootstrap)
+>>>>>>> a212964d8bfb780b0a3abec02d48a98fcd2ca8e2
                                           
         reconstruction$bootstrap = curr.boot
         
@@ -429,6 +458,7 @@ tronco.bootstrap <- function( reconstruction,
     
     } else if(reconstruction$parameters$algorithm == "CAPRI") {
     	
+<<<<<<< HEAD
     	curr.boot = bootstrap.capri(dataset, 
                             		hypotheses, 
                             		command.capri, 
@@ -444,6 +474,24 @@ tronco.bootstrap <- function( reconstruction,
                             		reconstruction, 
                             		type,
                             		nboot)
+=======
+    		curr.boot = bootstrap.capri(dataset, 
+                            		    hypotheses, 
+                            		    command.capri, 
+                            		    regularization, 
+                            		    do.boot,
+                            		    nboot.capri, 
+                            		    pvalue,
+                            		    min.boot,
+                            		    min.stat,
+                            		    boot.seed,
+                            		    do.estimation,
+                            		    silent,
+                            		    reconstruction, 
+                            		    type,
+                            		    nboot,
+                            			bootstrap)
+>>>>>>> a212964d8bfb780b0a3abec02d48a98fcd2ca8e2
 
         reconstruction$bootstrap = curr.boot
 
@@ -2086,3 +2134,5 @@ for(e in edge_names) {
   }
   # cat('\n')
 }
+
+
