@@ -19,7 +19,7 @@
 #' @param sample.id If TRUE shows samples name (columns). Default is FALSE
 #' @param hide.zeroes If TRUE trims data - see \code{trim} - before plot. Default is FALSE 
 #' @param legend If TRUE shows a legend for the types of events visualized. Defualt is TRUE
-#' @param legend.cex Default 1.0; determines legend size if \code{legend = TRUE}
+#' @param legend.cex Default 0.5; determines legend size if \code{legend = TRUE}
 #' @param cellwidth Default NA, sets autoscale cell width 
 #' @param cellheight Default NA, sets autoscale cell height
 #' @param group.by.label Sort samples (rows) by event label - usefull when multiple events per gene are
@@ -29,6 +29,7 @@
 #' @param gene.annot Genes'groups, e.g. list(RAF=c('KRAS','NRAS'), Wnt=c('APC', 'CTNNB1')). Default is NA.
 #' @param gene.annot.color Either a RColorColorbrewer palette name or a set of custom colors matching names(gene.annot)
 #' @param show.patterns If TRUE shows also a separate oncoprint for each pattern. Default is FALSE
+#' @param annotate.consolidate.events Default is FALSE. If TRUE an annotation for events to consolidate is shown.
 #' @param txt.stats By default, shows a summary statistics for shown data (n,m, |G| and |P|)
 #' @export oncoprint
 oncoprint <- function(x, 
@@ -49,7 +50,7 @@ oncoprint <- function(x,
                       sample.id = FALSE,
                       hide.zeroes = FALSE,
                       legend = TRUE,
-                      legend.cex = 1.0,
+                      legend.cex = 0.5,
                       cellwidth = NA, 
                       cellheight = NA,
                       group.by.label = FALSE,
@@ -57,6 +58,7 @@ oncoprint <- function(x,
                       gene.annot = NA,
                       gene.annot.color = 'Set1',
                       show.patterns = FALSE,
+                      annotate.consolidate.events = FALSE,
                       txt.stats = paste(nsamples(x),' samples\n', nevents(x), ' events\n', 
                                         ngenes(x), ' genes\n', npatterns(x), ' patterns', sep=''),
 					  ...) 
@@ -167,9 +169,7 @@ oncoprint <- function(x,
   	}
   	
   	col.gaps = unlist(col.gaps)
-  	print(col.gaps)
-  		
-  	
+  	print(col.gaps)  	
   }	
   
   ##### If group.by.label group events involving the gene symbol
@@ -183,21 +183,14 @@ oncoprint <- function(x,
   rn = rownames(data)
   
   ##### SAMPLES annotations: hits (total 1s per sample), stage or groups
-  samples.annotation = NA
+  samples.annotation = data.frame(row.names = as.samples(x),  stringsAsFactors= F)
   nmut = colSums(data)
   
-  if(ann.hits == TRUE && ann.stage == FALSE) samples.annotation = data.frame(hits=nmut)
-  if(ann.hits == FALSE && ann.stage == TRUE) samples.annotation = data.frame(stage=as.stages(x)[cn, 1])
-  if(ann.hits == TRUE && ann.stage == TRUE)  samples.annotation = data.frame(stage=as.stages(x)[cn, 1], hits=nmut)
-  if(hasGroups) samples.annotation$group = group.samples[cn, 1]
-
+  if(ann.hits == TRUE) samples.annotation$hits = nmut
+  if(ann.stage == TRUE) samples.annotation$stage = as.stages(x)[cn, 1]
+  if(hasGroups == TRUE) samples.annotation$group = group.samples[cn, 1]
   
-  if(ann.hits == TRUE && ann.stage == FALSE) samples.annotation = data.frame(hits=nmut, stringsAsFactors= F)
-  if(ann.hits == FALSE && ann.stage == TRUE) samples.annotation = data.frame(stage=as.stages(x)[cn, 1], stringsAsFactors= F)
-  if(ann.hits == TRUE && ann.stage == TRUE)  samples.annotation = data.frame(stage=as.stages(x)[cn, 1], hits=nmut, stringsAsFactors= F)
-  if(hasGroups) samples.annotation$group = group.samples[cn, 1]
-  
-  ##### Color each annotation 
+  # Color each annotation 
   annotation_colors = NULL
   if(ann.hits || ann.stage || hasGroups) {
     rownames(samples.annotation) = cn
@@ -209,32 +202,28 @@ oncoprint <- function(x,
   }
   
   if(ann.stage){ 
+    cat('Annotating stages with RColorBrewer color palette', stage.color, '\n')
+
     different.stages = sort(unique(samples.annotation$stage))
-    num.stages = length(different.stages)
-    stage.color.attr = append(brewer.pal(n=num.stages, name=stage.color), "#FFFFFF")
-    samples.annotation[is.na(samples.annotation)] = "none"
-    #names(stage.color.attr) = append(levels(different.stages), NA)
-    names(stage.color.attr) = append((different.stages), "none")
     
+    stage.color.attr = sample.RColorBrewer.colors(stage.color, length(different.stages))    
+    stage.color.attr = append(stage.color.attr, "#FFFFFF")      
+    
+    samples.annotation[is.na(samples.annotation)] = "none"
+    names(stage.color.attr) = append(different.stages, "none")    
     annotation_colors = append(annotation_colors, list(stage=stage.color.attr))
   }
-  
-  
+    
   if(hasGroups)	{
   	ngroups = length(unique(group.samples[,1]))
   	cat('Grouping labels:', paste(unique(group.samples[,1]), collapse=', '), '\n')
+    
   	group.color.attr = colorRampPalette(brewer.pal(n=ngroups, name='Accent'))(ngroups)
-	# print(unique(group.samples[,1]))
-	# print(samples.annotation)
-	# print(samples.annotation)
-	# print(group.color.attr)
-	
-	
   	names(group.color.attr) = unique(group.samples[,1])
     annotation_colors = append(annotation_colors, list(group=group.color.attr))
    }
 
-	# GENES ANNOTATIONS - PATHWAYS
+  ##### GENES/EVENTS annotations: groups or indistinguishable
 	genes.annotation = NA
 
   if(!all(is.na(gene.annot)))
@@ -254,16 +243,9 @@ oncoprint <- function(x,
 
 		if(length(gene.annot.color) == 1 && gene.annot.color %in% rownames(brewer.pal.info))
 		{
-      cols = min(brewer.pal.info[gene.annot.color, 'maxcolors'], length(names))
-      cols = ifelse(cols < 3, 3, length(names))
-
-      cat('Annotating genes with RColorBrewer color palette', gene.annot.color, '.\n')
-     	gene.annot.color = brewer.pal(n=cols, name=gene.annot.color)
-      if(length(names) < 3) gene.annot.color = gene.annot.color[1:length(names)]
-			else gene.annot.color =  colorRampPalette(gene.annot.color)(length(names))
-      
-			gene.annot.color = append(gene.annot.color, "#FFFFFF")
-      
+		  cat('Annotating genes with RColorBrewer color palette', gene.annot.color, '.\n')
+		  gene.annot.color = sample.RColorBrewer.colors(gene.annot.color, length(names))
+			gene.annot.color = append(gene.annot.color, "#FFFFFF")      
 		}
 		else{
 			if(length(gene.annot.color) != length(names)) 
@@ -274,16 +256,40 @@ oncoprint <- function(x,
 			gene.annot.color = append(gene.annot.color, "#FFFFFF")
 		}
 		names(gene.annot.color) = append(names, "none")
-	#	print(gene.annot.color)
-		
-		gene.annot.color = gene.annot.color[ unique(genes.annotation$group) ]
-		
+		gene.annot.color = gene.annot.color[ unique(genes.annotation$group) ]		
 		annotation_colors = append(annotation_colors, list(group=gene.annot.color))
-	#	print(annotation_colors)				   	
-		# print(unique(genes.annotation)) 	
    }   
   
-  # Augment gene names with frequencies and prepare labels 	
+  
+  if(annotate.consolidate.events)
+  {
+    cat('Annotating events to consolidate - see consolidate.data\n')
+    invalid = consolidate.data(x, FALSE)
+    
+    genes.annotation$consolidate = 'none'
+    
+    genes.annotation[
+      unlist(
+        lapply(
+          invalid$indistinguishable, 
+          function(z){return(rownames(unlist(z)))}
+          )),
+      'consolidate'] = 'indistinguishable'
+    
+    genes.annotation[ unlist(invalid$zeroes), 'consolidate'] = 'missing'
+    genes.annotation[ unlist(invalid$ones), 'consolidate'] = 'persistent'
+    
+    consolidate.colors = c('white', 'brown1', 'darkorange4', 'firebrick4', 'deepskyblue3')
+    names(consolidate.colors) = c('none', 'indistinguishable', 'missing', 'persistent')
+    consolidate.colors = consolidate.colors[unique(genes.annotation$consolidate)]
+    
+    annotation_colors = append(
+      annotation_colors, list(consolidate= consolidate.colors)
+      )
+    }
+    
+  
+  ############## Augment gene names with frequencies and prepare labels 	
   genes.freq = rowSums(data)/nsamples(x)
   gene.names = x$annotations[rownames(data),2]
   gene.names = paste(round(100 * genes.freq, 0) ,'% ', gene.names, sep='') # row labels
@@ -1100,6 +1106,7 @@ require('likert')
 
   different.stages = sort(unique(annotation$stage))
   num.stages = length(different.stages)
+
   stage.color = append(brewer.pal(n = num.stages, name = 'YlOrRd'), '#FFFFFF')
   names(stage.color) = append(levels(as.factor(different.stages)), NA)
 
@@ -1390,7 +1397,7 @@ draw_rownames = function(rown, gaps, ...){
 draw_legend = function(color, breaks, txt.stats, legend.cex, legend, ...){
   
   
-  height = min(unit(1 * legend.cex, "npc"), unit(50 * legend.cex, "bigpts")) 
+  height = min(unit(1 * legend.cex, "npc"), unit(150 * legend.cex, "bigpts")) 
   
   # print('*****')
   #print(height)
