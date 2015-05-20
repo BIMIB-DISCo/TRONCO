@@ -9,14 +9,15 @@ as.confidence(x, conf)
 \arguments{
 \item{x}{A TRONCO model.}
 
-\item{conf}{A vector with any of 'tp', 'pr', 'hg', 'npb' or 'pb'.}
+\item{conf}{A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb' or 'sb'.}
 }
 \value{
 A list of matrices with the event-to-event confidence.
 }
 \description{
 Return confidence information for a TRONCO model. Available information are: temporal priority (tp),
-probability raising (pr), hypergeometric test (hg), parametric (pb) and non parametric bootstrap (npb).
+probability raising (pr), hypergeometric test (hg), parametric (pb), non parametric (npb) or
+statistical (sb) bootstrap.
 Confidence is available only once a model has been reconstructed with any of the algorithms implemented
 in TRONCO. If more than one model has been reconstructed - for instance via multiple regularizations -
 confidence information is appropriately nested. The requested confidence is specified via
