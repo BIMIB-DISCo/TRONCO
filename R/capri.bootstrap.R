@@ -68,18 +68,22 @@ bootstrap.capri <- function(dataset,
     overall.frequency = list();
     overall.frequency[names(as.models(reconstruction))] = list(0);
     
-    # create a progress bar
-    flush.console()
-    pb <- txtProgressBar(1, nboot, style = 3)
+
+
+    cores = detectCores() - 1
+    if(cores < 1) {
+        cores = 1
+    }
+    cl = makeCluster(cores)
+    registerDoParallel(cl)
   
     # perform nboot bootstrap resampling
-    for (num in 1:nboot) {
+    #for (num in 1:nboot) {
+    r = foreach(num = 1:nboot) %dopar% {
         
         # reset the seed
         set.seed(NULL)
         
-        # update the progress bar
-        setTxtProgressBar(pb, num)
         
         # performed the bootstrapping procedure
         if(command == "non-parametric") {
@@ -216,6 +220,7 @@ bootstrap.capri <- function(dataset,
         }
         
         # set the reconstructed selective advantage edges
+        bootstrap.results = list()
         for (m in names(as.models(curr.reconstruction))) {
             
             # get the parents pos
@@ -234,14 +239,24 @@ bootstrap.capri <- function(dataset,
             parents.pos[unlist(lapply(parents.pos,is.null))] = list(-1)
             
             # save the results
-            bootstrap.results[[m]][num,] <<- parents.pos;
+            bootstrap.results[[m]] = t(parents.pos);
+            
             
         }
-        
+        bootstrap.results
     }
-  
-    # close progress bar
-    close(pb)
+
+    #print(r)
+    print(names(bootstrap.results))
+    stopCluster(cl)
+
+    for (m in names(bootstrap.results)) {
+        y = Reduce(rbind, lapply(r, function(z, type){get(type, z)}, type=m))
+        bootstrap.results[[m]] = y
+    }
+
+    print(bootstrap.results)
+
     
     # set the statistics of the bootstrap
     for (m in names(as.models(reconstruction))) {

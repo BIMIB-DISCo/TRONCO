@@ -545,22 +545,13 @@ tronco.plot = function(x,
                        ) 
 {
   hidden.and = F
-  
-  if (!require(igraph)) {
-    install.packages('igraph', dependencies = TRUE)
-    library(igraph)
-  }
-  
-  if (!require(Rgraphviz)) {
-    source("http://bioconductor.org/biocLite.R")
-    biocLite("Rgraphviz")
-    library(Rgraphviz)
-  }
 
-  if (!require("RColorBrewer")) {
-    install.packages("RColorBrewer")
+
+    library(doParallel)
+    library(igraph)
+    library(Rgraphviz)
     library(RColorBrewer)
-  }
+
   
   # Checks if reconstruction exists
   if(missing(x)) {
@@ -1026,6 +1017,7 @@ tronco.plot = function(x,
       #cat("***\n", from, '->', to, '\n')
       
       pval.names = c('hg', 'pf', 'tp')
+      boot.names = c('npb', 'pb', 'sb')
       red.lable = FALSE
 
       if(is.logic.node.up(from) || is.logic.node.down(to)) {
@@ -1040,10 +1032,26 @@ tronco.plot = function(x,
         #cat(conf_from, '->', conf_to, '\n')
       
       for(i in confidence) {
+
+        conf_sel = get(i, as.confidence(x, i))
+        
+        if (! i %in% pval.names) {
+            if (sec && primary$adj.matrix$adj.matrix.fit[conf_from, conf_to] == 0) {
+                conf_sel = get(regularization[[2]], conf_sel)
+            } else {
+                conf_sel = get(regularization[[1]], conf_sel)
+            }
+        }
+
+        conf_p = conf_sel
           
-        conf_p = get(i, as.confidence(x, i))
         if(! (conf_from %in% rownames(conf_p) && conf_to %in% colnames(conf_p))) {
           next
+        }
+
+        if (i %in% boot.names) {
+            # eAttrs$lwd[e] = conf_p[conf_from, conf_to]
+            eAttrs$lwd[e] = conf_p[conf_from, conf_to] * 10
         }
           
         eAttrs$label[e] = paste0(
