@@ -5,6 +5,57 @@
 #### See the files COPYING and LICENSE for copyright and licensing
 #### information.
 
+consolidate.data = function(x, print = FALSE){
+  is.compliant(x)
+  ind = list()
+  zeros = list()
+  ones = list()
+  
+  for(i in 1:nevents(x)) {
+    ev = list()
+    
+    for(j in i:nevents(x)) {
+      if(i != j && all(x$genotypes[, i] == x$genotypes[, j]) && !j %in% ind )
+        ev = append(ev, j)
+    }
+    
+    if(length(ev) > 0)
+    {      
+      ind.pool = rbind(as.events(x)[ c(i, unlist(ev)),])
+
+      if(all(x$genotypes[, i] == 1)) ones = append(ones, list(ind.pool))
+      if(all(x$genotypes[, i] == 0)) zeros = append(zeros, list(ind.pool))
+      if(sum(x$genotypes[, i] < nsamples(x))) ind = append(ind, list(ind.pool))
+        
+      if(print){
+        
+        if(all(x$genotypes[, i] == 1)) cat('\nEvents altered across all samples:\n')
+        if(all(x$genotypes[, i] == 0)) cat('\nEvents with no alterations across samples:\n')
+        if(sum(x$genotypes[, i] < nsamples(x))) cat('\nIndistinguishable events:\n')
+        
+        print(ind.pool)
+        cat('Total number of events for these genes: ')
+        cat(paste(nevents(x, as.events(x, genes=c(ind.pool)))), '\n')
+        
+#        cat('All events for these genes are:\n')
+#        print(as.events(x, genes=c(ind.pool)))	
+      }
+    }
+  }
+
+  
+
+  ret = NULL
+  ret$indistinguishable = ind
+  ret$zeroes = zeros
+  ret$ones = ones
+
+  #names(ind) = paste0('INDISTINGUISHABLE', 1:length(ind))
+
+
+  return(ret)
+}
+
 #' @export annotate.name
 annotate.name = function(x, label)
 {

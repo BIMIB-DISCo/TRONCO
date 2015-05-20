@@ -247,13 +247,13 @@ oncoprint <- function(x,
 		names = names(gene.annot)  	
 				
 		genes.annotation = data.frame(row.names = rn, stringsAsFactors = FALSE)
-		genes.annotation$gene.annotation = rep("none", nrow(data))
+		genes.annotation$group = rep("none", nrow(data))
 		
 		for(i in 1:length(names)) 
 		{
 			pathway = names[i]
 			genes.pathway = rownames(as.events(x, genes=gene.annot[[names[i]]]))
-			genes.annotation[genes.pathway, 'gene.annotation'] = names[i] 
+			genes.annotation[genes.pathway, 'group'] = names[i] 
 		}
 
 
@@ -266,7 +266,6 @@ oncoprint <- function(x,
      	gene.annot.color = brewer.pal(n=cols, name=gene.annot.color)
       if(length(names) < 3) gene.annot.color = gene.annot.color[1:length(names)]
 			else gene.annot.color =  colorRampPalette(gene.annot.color)(length(names))
-
       
 			gene.annot.color = append(gene.annot.color, "#FFFFFF")
       
@@ -282,9 +281,9 @@ oncoprint <- function(x,
 		names(gene.annot.color) = append(names, "none")
 	#	print(gene.annot.color)
 		
-		gene.annot.color = gene.annot.color[ unique(genes.annotation$gene.annotation) ]
+		gene.annot.color = gene.annot.color[ unique(genes.annotation$group) ]
 		
-		annotation_colors = append(annotation_colors, list(gene.annotation=gene.annot.color))
+		annotation_colors = append(annotation_colors, list(group=gene.annot.color))
 	#	print(annotation_colors)				   	
 		# print(unique(genes.annotation)) 	
    }   
@@ -364,6 +363,24 @@ oncoprint <- function(x,
     cat('Passing the following parameters to pheatmap:\n')
     print(list(...))
   }
+
+#   if(!is.na(txt.stats))
+#   {
+#     if(npatterns(x) > 0)
+#     {
+#       patterns = as.patterns(x)
+#       
+#       for(i in 1:length(patterns))
+#       {
+#         genes.patt = as.events.hypotheses(x, patterns[i]) 
+#         txt.stats = paste(txt.stats, '\n\n',
+#                           patterns[i], '\n',
+#                           paste(apply(genes.patt, 1, paste, collapse=' '), collapse='\n')                          
+#                           )
+#         
+#       }
+#     }
+#   }
 
   # Pheatmap
    ret = pheatmap(data, 
@@ -1380,7 +1397,7 @@ draw_rownames = function(rown, gaps, ...){
 draw_legend = function(color, breaks, txt.stats, legend.cex, legend, ...){
   
   
-  height = min(unit(1 * legend.cex, "npc"), unit(150 * legend.cex, "bigpts")) 
+  height = min(unit(1 * legend.cex, "npc"), unit(50 * legend.cex, "bigpts")) 
   
   # print('*****')
   #print(height)
@@ -1421,8 +1438,23 @@ draw_legend = function(color, breaks, txt.stats, legend.cex, legend, ...){
   
   if(!is.na(txt.stats))  
   {
-    stats = textGrob(txt.stats, x = unit(2, "bigpts"), y = legend_pos[1] - unit(1, "cm"), hjust = 0, gp = gpar(...))
+    
+#    rect = rectGrob(x = 0, 
+#                    y = breaks[-length(breaks)], 
+#                    width = unit(10, "bigpts"), height = h, hjust = 0, vjust = 0, gp = gpar(fill = color, col = "red"))
+    
+
+    crlf = strsplit(txt.stats, split = "\\n")[[1]]
+    h = length(crlf) / 6
+   
+    stats = textGrob(txt.stats, x = unit(2, "bigpts"), 
+                     y = legend_pos[1] - unit(2, "cm"), 
+                     hjust = 0, gp = gpar(fontface='bold'))
+    
+
     res = grobTree(rect, text, stats)
+    
+    
   }
   else
     res = grobTree(rect, text)
