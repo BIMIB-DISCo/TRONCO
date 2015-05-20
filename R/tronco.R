@@ -28,10 +28,24 @@
 #' @name TRONCO
 NULL
 
-#' @export
+#' Reconstruc a progression model using CAPRESE algorithm
+#'
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf)
+#' recon = tronco.caprese(mutations)
+#' tronco.plot(recon)
+#'
+#' @title tronco caprese
+#' @param data A TRONCO compliant dataset.
+#' @param lambda TODO
+#' @param do.estimation TODO
+#' @param silent TODO
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.caprese
 tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = FALSE ) {
 
-	#check for the inputs to be correct
+    #check for the inputs to be correct
     if(is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
     }
@@ -44,12 +58,12 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
     
     #reconstruct the reconstruction with CAPRESE
     if(silent==FALSE) {
-	    cat(paste0(
-	        '*** Inferring a progression model with the following settings.\n',
-	        '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
-	        '\tAlgorithm: CAPRESE with shrinkage coefficient: ', lambda, '.\n'
-	    ))
-	}
+        cat(paste0(
+            '*** Inferring a progression model with the following settings.\n',
+            '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
+            '\tAlgorithm: CAPRESE with shrinkage coefficient: ', lambda, '.\n'
+        ))
+    }
     reconstruction = caprese.fit(data$genotypes,lambda,do.estimation,silent);
     
     rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
@@ -98,26 +112,39 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
     results$execution.time = reconstruction$execution.time;
     
     # the reconstruction has been completed
-	if(!silent) cat(paste(
-	  "The reconstruction has been successfully completed in ", 
-	  round(reconstruction$execution.time[3]/60,digits=0), 
-	  "minutes.\n"));
-	
+    if(!silent) cat(paste(
+      "The reconstruction has been successfully completed in ", 
+      round(reconstruction$execution.time[3]/60,digits=0), 
+      "minutes.\n"));
+    
   return(results);
     
 }
 
-#### end of file -- tronco.caprese.R
 
 
-#### tronco.capri.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-#' @export
+#' Reconstruc a progression model using CAPRI algorithm
+#'
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf)
+#' recon = tronco.capri(mutations)
+#' tronco.plot(recon)
+#'
+#' @title tronco capri
+#' @param data A TRONCO compliant dataset.
+#' @param command TODO
+#' @param regularization TODO
+#' @param do.boot TODO
+#' @param nboot TODO
+#' @param pvalue TODO
+#' @param min.boot TODO
+#' @param min.stat TODO
+#' @param boot.seed TODO
+#' @param do.estimation TODO
+#' @param silent TODO
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.capri
 tronco.capri <- function( data, 
     command = "hc", 
     regularization = c("bic","aic"), 
@@ -155,16 +182,16 @@ tronco.capri <- function( data,
             my.seed = boot.seed;
     }
     if(silent==FALSE) {
-	    cat(paste0(
-	        '*** Inferring a progression model with the following settings.\n',
-	        '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
-	        '\tAlgorithm: CAPRI with \"', paste0(regularization,collapse=", "), '\" regularization and \"', command, '\" likelihood-fit strategy.\n',
-	        '\tRandom seed: ', my.seed, '.\n',
-	        '\tBootstrap iterations (Wilcoxon): ', ifelse(do.boot, nboot, 'disabled'), '.\n',
-	        ifelse(do.boot, 
-	            paste0('\t\texhaustive bootstrap: ', min.stat, '.\n\t\tp-value: ', pvalue, '.\n\t\tminimum bootstrapped scores: ', min.boot, '.\n'), '')        
-	        ))
-	}
+        cat(paste0(
+            '*** Inferring a progression model with the following settings.\n',
+            '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
+            '\tAlgorithm: CAPRI with \"', paste0(regularization,collapse=", "), '\" regularization and \"', command, '\" likelihood-fit strategy.\n',
+            '\tRandom seed: ', my.seed, '.\n',
+            '\tBootstrap iterations (Wilcoxon): ', ifelse(do.boot, nboot, 'disabled'), '.\n',
+            ifelse(do.boot, 
+                paste0('\t\texhaustive bootstrap: ', min.stat, '.\n\t\tp-value: ', pvalue, '.\n\t\tminimum bootstrapped scores: ', min.boot, '.\n'), '')        
+            ))
+    }
         
     reconstruction = capri.fit(data$genotypes,data$hypotheses,command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation,silent=silent);
     
@@ -221,7 +248,7 @@ tronco.capri <- function( data,
     
   
 
-	
+    
   
     # the reconstruction has been completed
     if(!silent) cat(paste(
@@ -244,7 +271,7 @@ tronco.capri <- function( data,
 
 #' @export
 tronco.estimation <- function( reconstruction, error.rates = NA ) {
-	
+    
     # check for the inputs to be correct
     if(is.null(reconstruction)) {
         stop("A valid reconstruction has to be provided in order to estimate its confidence.",call.=FALSE);
@@ -255,16 +282,16 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
     
     #run the estimations for the required algorithm
     if(reconstruction$parameters$algorithm=="CAPRESE") {
-    	
-    		cat("Executing now the estimation procedure, this may take a long time...\n")
-    	
-    		# if I also need to estimate the error rates
-    		if(is.na(error.rates[1])) {
-    			# estimate the error rates
-    			error.rates = estimate.tree.error.rates(as.marginal.probs(reconstruction,models="caprese")[[1]],as.joint.probs(reconstruction,models="caprese")[[1]],as.parents.pos(reconstruction,models="caprese")[[1]]);
-    		}
-    		
-    		# estimate the probabilities given the error rates
+        
+            cat("Executing now the estimation procedure, this may take a long time...\n")
+        
+            # if I also need to estimate the error rates
+            if(is.na(error.rates[1])) {
+                # estimate the error rates
+                error.rates = estimate.tree.error.rates(as.marginal.probs(reconstruction,models="caprese")[[1]],as.joint.probs(reconstruction,models="caprese")[[1]],as.parents.pos(reconstruction,models="caprese")[[1]]);
+            }
+            
+            # estimate the probabilities given the error rates
         estimated.probabilities = estimate.tree.probs(as.marginal.probs(reconstruction,models="caprese")[[1]],as.joint.probs(reconstruction,models="caprese")[[1]],as.parents.pos(reconstruction,models="caprese")[[1]],error.rates);
         
         # set the estimated error rates and probabilities
@@ -274,7 +301,7 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
         reconstruction$model[["caprese"]]$probabilities$probabilities.fit = probabilities.fit
         
         # set colnames and rownames
-       	rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+        rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
         colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
         rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
         colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
@@ -283,44 +310,44 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
                 
     }
     else if(reconstruction$parameters$algorithm=="CAPRI") {
-    	
-    		cat("Executing now the estimation procedure, this may take a long time...\n")
-    	
-    		# go through the models
-    	do.estimate.error.rates = FALSE;
-    		if(is.na(error.rates[1])) {
-    		do.estimate.error.rates = TRUE;
-    	}
-    		for (m in names(as.models(reconstruction))) {
-    			
-    			# if I also need to estimate the error rates
+        
+            cat("Executing now the estimation procedure, this may take a long time...\n")
+        
+            # go through the models
+        do.estimate.error.rates = FALSE;
+            if(is.na(error.rates[1])) {
+            do.estimate.error.rates = TRUE;
+        }
+            for (m in names(as.models(reconstruction))) {
+                
+                # if I also need to estimate the error rates
             if(do.estimate.error.rates) {
                 # estimate the error rates
                 error.rates = estimate.dag.error.rates(reconstruction$genotypes,as.marginal.probs(reconstruction,models=m)[[1]],as.joint.probs(reconstruction,models=m)[[1]],as.parents.pos(reconstruction,models=m)[[1]]);
             }
             
             # estimate the probabilities given the error rates
-        		estimated.probabilities = estimate.dag.probs(reconstruction$genotypes,as.marginal.probs(reconstruction,models=m)[[1]],as.joint.probs(reconstruction,models=m)[[1]],as.parents.pos(reconstruction,models=m)[[1]],error.rates);
-        	
-        		# set the estimated error rates and probabilities
-        		probabilities.fit = list(estimated.marginal.probs=estimated.probabilities$marginal.probs,estimated.joint.probs=estimated.probabilities$joint.probs,estimated.conditional.probs=estimated.probabilities$conditional.probs);
+                estimated.probabilities = estimate.dag.probs(reconstruction$genotypes,as.marginal.probs(reconstruction,models=m)[[1]],as.joint.probs(reconstruction,models=m)[[1]],as.parents.pos(reconstruction,models=m)[[1]],error.rates);
+            
+                # set the estimated error rates and probabilities
+                probabilities.fit = list(estimated.marginal.probs=estimated.probabilities$marginal.probs,estimated.joint.probs=estimated.probabilities$joint.probs,estimated.conditional.probs=estimated.probabilities$conditional.probs);
         
-        		reconstruction$model[[m]]$error.rates = error.rates
-        		reconstruction$model[[m]]$probabilities$probabilities.fit = probabilities.fit
-        	
-        		# set colnames and rownames
-        		rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+                reconstruction$model[[m]]$error.rates = error.rates
+                reconstruction$model[[m]]$probabilities$probabilities.fit = probabilities.fit
+            
+                # set colnames and rownames
+                rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
             colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
             rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
             colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
             rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
             colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
 
-    			
-    		}
+                
+            }
     }
     else {
-    		stop("A valid algorithm has to be provided in order to estimate its confidence.",call.=FALSE);
+            stop("A valid algorithm has to be provided in order to estimate its confidence.",call.=FALSE);
     }
     
     reconstruction$parameters$do.estimation = TRUE;
@@ -328,17 +355,22 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
 
 }
 
-#### end of file -- tronco.estimation.R
 
-
-#### tronco.bootstrap.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-#' @export
+#' Bootstrap a reconstructed progression model
+#'
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf)
+#' recon = tronco.capri(mutations)
+#' boot = tronco.bootstrap(recon)
+#' tronco.plot(boot)
+#'
+#' @title tronco bootstrap
+#' @param reconstruction The output of tronco.capri or tronco.caprese
+#' @param type TODO
+#' @param nboot TODO
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.bootstrap
 tronco.bootstrap <- function( reconstruction, 
                               type = "non-parametric", 
                               nboot = 100)
@@ -355,29 +387,32 @@ tronco.bootstrap <- function( reconstruction,
         stop("To perform parametric bootstrap, the estimation of the error rates and probabilities should be performed.", call. = FALSE)
     }
 
-	if(type == "statistical" && !(reconstruction$parameters$algorithm == "CAPRI" && reconstruction$parameters$do.boot == TRUE)) {
+    if(type == "statistical" && !(reconstruction$parameters$algorithm == "CAPRI" && reconstruction$parameters$do.boot == TRUE)) {
         stop("To perform statistical bootstrap, the algorithm used for the reconstruction must by CAPRI with bootstrap.", call. = FALSE)
     }
 
     # set all the needed parameters to perform the bootstrap estimation
     if(type == "non-parametric" || type == "parametric" || type == "statistical") {
-    	
+        
         dataset = reconstruction$genotypes
         do.estimation = FALSE
         silent = TRUE
         
-        if(reconstruction$parameters$algorithm == "CAPRESE") {
-        	
-            lambda = reconstruction$parameters$lambda
-            
+        if(!is.null(reconstruction$bootstrap)) {
+                bootstrap = reconstruction$bootstrap
         }
-        else if(reconstruction$parameters$algorithm == "CAPRI") {
+        else {
+                bootstrap = list()
+        }
+        
+        if(reconstruction$parameters$algorithm == "CAPRESE") {
+            lambda = reconstruction$parameters$lambda
+        } else if(reconstruction$parameters$algorithm == "CAPRI") {
             
             if(!is.null(reconstruction$hypotheses)) {
                 hypotheses = reconstruction$hypotheses
-            }
-            else {
-            		hypotheses = NA
+            } else {
+                hypotheses = NA
             }
             
             command.capri = reconstruction$parameters$command
@@ -387,12 +422,10 @@ tronco.bootstrap <- function( reconstruction,
             pvalue = reconstruction$parameters$pvalue
             min.boot = reconstruction$parameters$min.boot
             min.stat = reconstruction$parameters$min.stat
-            boot.seed = reconstruction$parameters$boot.seed
-            
+            boot.seed = reconstruction$parameters$boot.seed 
         }
-    }
-    else {
-    		stop("The types of bootstrap that can be performed are: non-parametric, parametric or statistical.", call. = FALSE)
+    } else {
+        stop("The types of bootstrap that can be performed are: non-parametric, parametric or statistical.", call. = FALSE)
     }
 
     # perform the selected bootstrap procedure
@@ -402,48 +435,48 @@ tronco.bootstrap <- function( reconstruction,
     if(reconstruction$parameters$algorithm == "CAPRESE") {
         
         curr.boot = bootstrap.caprese(dataset,
-        							      lambda,
-        							      do.estimation,
-                            		      silent,
-                            		      reconstruction, 
-                            		      type,
-                            		      nboot)
+                                      lambda,
+                                      do.estimation,
+                                      silent,
+                                      reconstruction, 
+                                      type,
+                                      nboot,
+                                      bootstrap)
+
                                           
         reconstruction$bootstrap = curr.boot
         
         cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", lambda, " as shrinkage parameter.\n\n", sep =""))
     
-    }
-    else if(reconstruction$parameters$algorithm == "CAPRI") {
-    	
-    		curr.boot = bootstrap.capri(dataset, 
-                            		    hypotheses, 
-                            		    command.capri, 
-                            		    regularization, 
-                            		    do.boot,
-                            		    nboot.capri, 
-                            		    pvalue,
-                            		    min.boot,
-                            		    min.stat,
-                            		    boot.seed,
-                            		    do.estimation,
-                            		    silent,
-                            		    reconstruction, 
-                            		    type,
-                            		    nboot)
+    } else if(reconstruction$parameters$algorithm == "CAPRI") {
+                    curr.boot = bootstrap.capri(dataset, 
+                                        hypotheses, 
+                                        command.capri, 
+                                        regularization, 
+                                        do.boot,
+                                        nboot.capri, 
+                                        pvalue,
+                                        min.boot,
+                                        min.stat,
+                                        boot.seed,
+                                        do.estimation,
+                                        silent,
+                                        reconstruction, 
+                                        type,
+                                        nboot,
+                                        bootstrap)
+
 
         reconstruction$bootstrap = curr.boot
 
         if(do.boot == TRUE) {
-        	cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", pvalue, " as pvalue for the statistical tests.\n\n", sep =""))
-        }
-        else {
-        	cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling.\n\n", sep =""))
+            cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", pvalue, " as pvalue for the statistical tests.\n\n", sep =""))
+        } else {
+            cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling.\n\n", sep =""))
         }
     }
 
     return(reconstruction)
-    
 }
 
 #### end of file -- tronco.bootstrap.R
@@ -457,68 +490,19 @@ tronco.bootstrap <- function( reconstruction,
 #### information.
 
 
-is.logic.node.down <- function(node) {
-  if(substr(node, start=1, stop=3) == 'OR_')
-    return(TRUE)
-  if(substr(node, start=1, stop=4) == 'XOR_')
-    return(TRUE)
-  if(substr(node, start=1, stop=4) == 'AND_')
-    return(TRUE)
-  if(substr(node, start=1, stop=4) == 'NOT_')
-    return(TRUE)
-  return(FALSE)
-}
 
-is.logic.node.up <- function(node) {
-  if(substr(node, start=1, stop=2) == 'UP')
-    return(TRUE)
-  return(FALSE)
-}
-
-is.logic.node <- function(node) {
-  return(is.logic.node.up(node) || is.logic.node.down(node))
-}
 
 ###########################
 ####### TRONCO PLOT #######
 ###########################
 
 
-#' @import Rgraphviz
-#' @import igraph
-#' @import RColorBrewer
+
 #' @export tronco.plot
 #' @title plot a progression model
 #'
 #' @description
 #' \code{tronco.plot} plots a progression model from a recostructed \code{curr.reconstruction}. 
-#' 
-#' 
-#' @param curr.reconstruction A curr.reconstruction returned by a reconstruction algorithm
-#' @param title plot Plot title (default "Progression model x", x reconstruction algorithm)
-#' @param title.color color title (default "black")
-#' 
-#' @param legend bool; show/hide the legend (default is t)
-#' @param legend.pos string; legend positioning, available keywords "topleft", "topright","bottomleft" and "bottomright" (default is "bottomright")
-#' @param legend.title string; legend title (default is "Legend")
-#' 
-#' @param legend.columns int; use 1 or 2 columns to plot the legend (default is 1)
-#' @param legend.inline bool; print inline legend (default is f)
-#' @param legend.coeff double; size of the types label in the legend (default is 1)
-#' 
-#' @param label.coeff double; size of the events label (default is 1)
-#' @param label.color color events label (default "black")
-#' @param label.edge.size double; size of the confidence label, when used (default is 12)
-#' 
-#' @param confidence bool; plot edges according to confidence (default is f)
-#' @examples
-#' \dontrun{
-#'     types.load("data/types.txt");
-#'     events.load("data/events.txt");
-#'    data.load("data/CGH.txt");
-#'    reconstruction <- tronco.caprese();
-#'    tronco.plot(curr.reconstruction, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
-#' }
 tronco.plot = function(x,
                        regularization=names(x$model),
                        fontsize = NA, 
@@ -688,6 +672,8 @@ tronco.plot = function(x,
     events = unlist(lapply(genes, function(x){names(which(as.events(x)[,'event'] == x))}))
   }
   
+  cat('*** Expanding hypotheses syntax as graph nodes:')
+
   # expand hypotheses
   #if (is.na(confidence)) {
     expansion = hypotheses.expansion(c_matrix, 
@@ -756,7 +742,7 @@ tronco.plot = function(x,
   V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
   
-  node_names = nodes(graph)
+  node_names = graph::nodes(graph)
   nAttrs = list()
   
   nAttrs$label = V(hypo_graph)$label
@@ -1657,7 +1643,7 @@ smaller.to.bigger = function(m,cn)
   V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
   
-  node_names = nodes(graph)
+  node_names = graph::nodes(graph)
   nAttrs = list()
   
   nAttrs$label = V(hypo_graph)$label

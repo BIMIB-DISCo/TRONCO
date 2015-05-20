@@ -194,11 +194,11 @@ Required table format constitent with TCGA data for focal CNAs:
 #' 
 #' @title import.MAF
 #' @param file  MAF filename
-#' @param sep MAF separator, default "\t"
+#' @param sep MAF separator, default \'\\t\'
 #' @param is.TCGA TRUE if this MAF is from TCGA; thus its sample codenames can be interpreted
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
-import.MAF <- function(file, sep = "\t", is.TCGA = TRUE) {
+import.MAF <- function(file, sep = '\t', is.TCGA = TRUE) {
 
 	if(!(is.data.frame(file) || is.matrix(file)) && is.character(file)) {
 		cat("*** Importing from file: ", file, "\n")
@@ -312,7 +312,7 @@ variants = function(x) {
 #' 
 #' @title extract.MAF.HuGO.Entrez.map
 #' @param file  MAF filename
-#' @param sep MAF separator, default "\t"
+#' @param sep MAF separator, default \'\\t\'
 #' @return A mapHugo_Symbol -> Entrez_Gene_Id.
 #' @export extract.MAF.HuGO.Entrez.map
 extract.MAF.HuGO.Entrez.map = function(file, sep = "\t") {

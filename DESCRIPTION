@@ -11,24 +11,25 @@ Maintainer: Giulio Caravagna <giulio.caravagna@disco.unimib.it>,
     Alex Graudenzi <alex.graudenzi@disco.unimib.it>,
     Daniele Ramazzotti <daniele.ramazzotti@disco.unimib.it>,
     Luca De Sano <l.desano@campus.unimib.it>
-Depends:
+Depends: 
     R (>= 3.1),
-    methods,
-    Rgraphviz,
-    lattice,
-    graph,
-    igraph,
-    R.matlab,
-    RColorBrewer,
-    bnlearn,
+    graph
+Imports: 
     cgdsr,
     colorspace,
-    gplots,
+    doParallel,
     ggplot2,
+    Rgraphviz,
+    gplots,
     gridExtra,
+    lattice,
     likert,
-    pheatmap,
+    methods,
+    R.matlab,
+    RColorBrewer,
     reshape2,
+    bnlearn,
+    igraph,
     xtable
 Description: Genotype-level cancer progression models describe the ordering of
     accumulating mutations, e.g., somatic mutations / copy number variations,
@@ -54,9 +55,10 @@ Description: Genotype-level cancer progression models describe the ordering of
     from CGH data of copy number alterations (classified as gains or losses
     over chromosome's arms). The dataset used is available in the SKY/M-FISH
     database.
-License: EPL (>= 1.0)
+License: GPL (>= 2.0)
 URL: http://bimib.disco.unimib.it
+BugReports: https://github.com/BIMIB-DISCo/TRONCO
 biocViews: Cancer
-Suggests:
+Suggests: 
     RUnit,
     BiocGenerics
