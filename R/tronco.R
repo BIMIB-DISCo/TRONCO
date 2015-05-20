@@ -475,33 +475,12 @@ tronco.bootstrap <- function( reconstruction,
 ###########################
 
 
-#' @import Rgraphviz
-#' @import igraph
-#' @import RColorBrewer
+
 #' @export tronco.plot
 #' @title plot a progression model
 #'
 #' @description
 #' \code{tronco.plot} plots a progression model from a recostructed \code{curr.reconstruction}. 
-#' 
-#' 
-#' @param curr.reconstruction A curr.reconstruction returned by a reconstruction algorithm
-#' @param title plot Plot title (default "Progression model x", x reconstruction algorithm)
-#' @param title.color color title (default "black")
-#' 
-#' @param legend bool; show/hide the legend (default is t)
-#' @param legend.pos string; legend positioning, available keywords "topleft", "topright","bottomleft" and "bottomright" (default is "bottomright")
-#' @param legend.title string; legend title (default is "Legend")
-#' 
-#' @param legend.columns int; use 1 or 2 columns to plot the legend (default is 1)
-#' @param legend.inline bool; print inline legend (default is f)
-#' @param legend.coeff double; size of the types label in the legend (default is 1)
-#' 
-#' @param label.coeff double; size of the events label (default is 1)
-#' @param label.color color events label (default "black")
-#' @param label.edge.size double; size of the confidence label, when used (default is 12)
-#' 
-#' @param confidence bool; plot edges according to confidence (default is f)
 tronco.plot = function(x,
                        regularization=names(x$model),
                        fontsize = NA, 

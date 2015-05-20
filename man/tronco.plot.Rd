@@ -13,33 +13,6 @@ tronco.plot(x, regularization = names(x$model), fontsize = NA, height = 2,
   pathways.color = "Set1", file = NA, legend.pos = "bottom",
   pathways = NULL, lwd = 3, ...)
 }
-\arguments{
-\item{title}{plot Plot title (default "Progression model x", x reconstruction algorithm)}
-
-\item{confidence}{bool; plot edges according to confidence (default is f)}
-
-\item{legend}{bool; show/hide the legend (default is t)}
-
-\item{label.edge.size}{double; size of the confidence label, when used (default is 12)}
-
-\item{legend.pos}{string; legend positioning, available keywords "topleft", "topright","bottomleft" and "bottomright" (default is "bottomright")}
-
-\item{curr.reconstruction}{A curr.reconstruction returned by a reconstruction algorithm}
-
-\item{title.color}{color title (default "black")}
-
-\item{legend.title}{string; legend title (default is "Legend")}
-
-\item{legend.columns}{int; use 1 or 2 columns to plot the legend (default is 1)}
-
-\item{legend.inline}{bool; print inline legend (default is f)}
-
-\item{legend.coeff}{double; size of the types label in the legend (default is 1)}
-
-\item{label.coeff}{double; size of the events label (default is 1)}
-
-\item{label.color}{color events label (default "black")}
-}
 \description{
 \code{tronco.plot} plots a progression model from a recostructed \code{curr.reconstruction}.
 }
