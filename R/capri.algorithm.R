@@ -57,8 +57,7 @@ function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","ai
     }
     
     # add back in any connection invalid for the probability raising theory
-    if(length(invalid.events)>0) {
-    		if(!silent) warning("Either always present or indistinguishable events are provided!");
+    if(length(invalid.events)>0) {        
 		for(i in 1:nrow(invalid.events)) {
     			prima.facie.parents$adj.matrix[invalid.events[i,"cause"],invalid.events[i,"effect"]] = 1;
 		}
