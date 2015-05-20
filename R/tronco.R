@@ -366,6 +366,13 @@ tronco.bootstrap <- function( reconstruction,
         do.estimation = FALSE
         silent = TRUE
         
+        if(!is.null(reconstruction$bootstrap)) {
+        		bootstrap = reconstruction$bootstrap
+        }
+        else {
+        		bootstrap = list()
+        }
+        
         if(reconstruction$parameters$algorithm == "CAPRESE") {
         	
             lambda = reconstruction$parameters$lambda
@@ -407,7 +414,8 @@ tronco.bootstrap <- function( reconstruction,
                             		      silent,
                             		      reconstruction, 
                             		      type,
-                            		      nboot)
+                            		      nboot,
+                            		      bootstrap)
                                           
         reconstruction$bootstrap = curr.boot
         
@@ -430,7 +438,8 @@ tronco.bootstrap <- function( reconstruction,
                             		    silent,
                             		    reconstruction, 
                             		    type,
-                            		    nboot)
+                            		    nboot,
+                            			bootstrap)
 
         reconstruction$bootstrap = curr.boot
 

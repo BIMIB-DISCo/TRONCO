@@ -38,7 +38,8 @@ bootstrap.capri <- function(dataset,
                             silent,
                             reconstruction, 
                             command = "non-parametric",
-                            nboot = 100) 
+                            nboot = 100,
+                            bootstrap.statistics = list()) 
 {
 	
 	# structure to save the results of the bootstrap
@@ -350,11 +351,29 @@ bootstrap.capri <- function(dataset,
     }
     
     # save the statistics of the bootstrap
-    bootstrap.statistics = list(bootstrap.results = bootstrap.results,
-    							bootstrap.adj.matrix = list(count = bootstrap.adj.matrix, frequency = bootstrap.adj.matrix.frequency),
-    							bootstrap.edge.confidence = bootstrap.edge.confidence,
-    							overall.confidence = list(count = overall.confidence, frequency = overall.frequency),
-                            bootstrap.settings = list(type = command, nboot = nboot))
+    for (m in names(as.models(reconstruction))) {
+    	if(command == "non-parametric") {
+    		bootstrap.statistics[[m]]$npb$bootstrap.results = bootstrap.results[[m]]
+    		bootstrap.statistics[[m]]$npb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+    		bootstrap.statistics[[m]]$npb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+    		bootstrap.statistics[[m]]$npb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+    		bootstrap.statistics[[m]]$npb$bootstrap.settings = list(type = command, nboot = nboot)
+    	}
+    	else if(command == "parametric") {
+    		bootstrap.statistics[[m]]$pb$bootstrap.results = bootstrap.results[[m]]
+    		bootstrap.statistics[[m]]$pb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+    		bootstrap.statistics[[m]]$pb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+    		bootstrap.statistics[[m]]$pb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+    		bootstrap.statistics[[m]]$pb$bootstrap.settings = list(type = command, nboot = nboot)
+    	}
+    	else if(command == "statistical") {
+    		bootstrap.statistics[[m]]$sb$bootstrap.results = bootstrap.results[[m]]
+    		bootstrap.statistics[[m]]$sb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+    		bootstrap.statistics[[m]]$sb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+    		bootstrap.statistics[[m]]$sb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+    		bootstrap.statistics[[m]]$sb$bootstrap.settings = list(type = command, nboot = nboot)
+    	}
+    }
 
     return(bootstrap.statistics)
     
