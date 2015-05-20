@@ -392,7 +392,7 @@ sample.RColorBrewer.colors = function(palette, ncolors)
   pmax.cols = brewer.pal.info[palette, 'maxcolors']
   
   cols = min(pmax.cols , ncolors)
-  cols = ifelse(cols < 3, 3, ncolors)
+  cols = ifelse(cols < 3, 3, cols)
   
   colors = brewer.pal(n=cols, name=palette)
   if(ncolors < 3) colors = colors[1:ncolors]

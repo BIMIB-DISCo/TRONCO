@@ -71,7 +71,7 @@ oncoprint <- function(x,
     library(RColorBrewer)
   }
 
-  # This function sorts the matrix for better visualization of mutual exclusivity across genes
+  ##############  This function sorts a matrix to enhance mutual exclusivity
   exclusivity.sort <- function(M) {
     geneOrder <- sort(rowSums(M), decreasing=TRUE, index.return=TRUE)$ix;
     scoreCol <- function(x) {
@@ -94,36 +94,36 @@ oncoprint <- function(x,
     return(res);
   }
   
-
+  ############## Check input data
   cat(paste('*** Oncoprint for "', title, '" with attributes: stage=', ann.stage, ', hits=', ann.hits, '\n', sep=''))
   is.compliant(x, 'oncoprint', stage=ann.stage)
   x = enforce.numeric(x)
   
-  
-  # If hide.zeros trim x
+  ############## If hide.zeros trim x
   if (hide.zeroes) {
     cat(paste('Trimming the input dataset (hide.zeroes).\n', sep=''))
    	x = trim(x)
    	}
  
-  # We reverse the heatmap under the assumption that ncol(data) << nrow(data)
+  ##############  Reverse the heatmap under the assumption that ncol(data) << nrow(data)
   data = t(x$genotypes)
   nc = ncol(data) 
   nr = nrow(data)
     
-  # Sort data, if required. excl.sort and group.samples are not compatible
+  ############## Sort data, if required. excl.sort and group.samples are not compatible
   hasGroups = !any(is.na(group.samples))
 
   if(excl.sort && hasGroups) 
   	stop('Disable sorting for mutual exclusivity (excl.sort=FALSE) or avoid using grouped samples (group.samples=NA).')
 
+  # Exclusivity sort
   if(excl.sort && nevents(x) > 1) {
     cat(paste('Sorting samples ordering to enhance exclusivity patterns.\n', sep=''))
     sorted.data = exclusivity.sort(data)
     data = sorted.data$M	
   }
   
-  col.gaps = NA
+  # Samples grouping via hasGroups
   if(hasGroups)
   {
   	group.samples[,1] = as.character(group.samples[,1])
@@ -135,44 +135,24 @@ oncoprint <- function(x,
   	if(!setequal(grn, as.samples(x)))
   		stop(paste0('Missing group assignment for samples: ', paste(setdiff(as.samples(x), grn), collapse=', '),'.'))
  
- 	# Order groups by label, and then data (by column)
- 	order = order(group.samples)
+ 	  # Order groups by label, and then data (by column)
+  	order = order(group.samples)
   	group.samples = group.samples[order, , drop=FALSE]
   	
   	data = data[, rownames(group.samples)]  	  	  	
-  	data = data[order(rowSums(data), decreasing = TRUE), ]  	
+  	data = data[order(rowSums(data), decreasing = TRUE), , drop = FALSE]  	
   
-  	# Order every group according to the colSums
-	# print((data))
-	
-	groups = unique(group.samples[,1])
-	# print(group.samples)
-	# print(groups)
-	
-	col.gaps = list()
+    groups = unique(group.samples[,1])
 	
   	for(i in 1:length(groups))
   	{
   		subdata = data[, group.samples == groups[i], drop = FALSE]
-		# print('**')
-  		# print(colSums(subdata))
-  		subdata = subdata[, order(colSums(subdata), decreasing = TRUE), drop = FALSE]
+			subdata = subdata[, order(colSums(subdata), decreasing = TRUE), drop = FALSE]
   		data[ , group.samples == groups[i]] = subdata
-  		
-  		  		# print(colSums(subdata))
-  		  		# # print(data[ , colnames(subdata)])
-  		  		# print(colSums(data))
-	
-		# data[ , group.samples == groups[i]] = exclusivity.sort(subdata)$M
-
-		col.gaps = append(col.gaps, ncol(subdata))
   	}
-  	
-  	col.gaps = unlist(col.gaps)
-  	print(col.gaps)  	
   }	
   
-  ##### If group.by.label group events involving the gene symbol
+  ##############  If group.by.label group events involving the gene symbol
   if (group.by.label) {
     cat(paste('Grouping events by gene label, samples will not be sorted.\n', sep=''))
     genes = as.genes(x)
@@ -182,25 +162,24 @@ oncoprint <- function(x,
   cn = colnames(data)
   rn = rownames(data)
   
-  ##### SAMPLES annotations: hits (total 1s per sample), stage or groups
-  samples.annotation = data.frame(row.names = as.samples(x),  stringsAsFactors= F)
+  ############## SAMPLES annotations: hits (total 1s per sample), stage or groups
+  samples.annotation = data.frame(row.names = cn,  stringsAsFactors= F)
   nmut = colSums(data)
   
-  if(ann.hits == TRUE) samples.annotation$hits = nmut
-  if(ann.stage == TRUE) samples.annotation$stage = as.stages(x)[cn, 1]
-  if(hasGroups == TRUE) samples.annotation$group = group.samples[cn, 1]
+  if(ann.hits)  samples.annotation$hits = nmut
+  if(ann.stage) samples.annotation$stage = as.stages(x)[cn, 1]
+  if(hasGroups) samples.annotation$group = group.samples[cn, 1]
   
-  # Color each annotation 
+  ############## Color samples annotation 
   annotation_colors = NULL
-  if(ann.hits || ann.stage || hasGroups) {
-    rownames(samples.annotation) = cn
-  }
 
+  # Color hits
   if(ann.hits){
     hits.gradient = (colorRampPalette(brewer.pal(6, hits.color))) (max(nmut))
     annotation_colors = append(annotation_colors, list(hits=hits.gradient))
   }
   
+  # Color stage 
   if(ann.stage){ 
     cat('Annotating stages with RColorBrewer color palette', stage.color, '\n')
 
@@ -213,12 +192,13 @@ oncoprint <- function(x,
     names(stage.color.attr) = append(different.stages, "none")    
     annotation_colors = append(annotation_colors, list(stage=stage.color.attr))
   }
-    
+
+  # Color groups
   if(hasGroups)	{
   	ngroups = length(unique(group.samples[,1]))
   	cat('Grouping labels:', paste(unique(group.samples[,1]), collapse=', '), '\n')
     
-  	group.color.attr = colorRampPalette(brewer.pal(n=ngroups, name='Accent'))(ngroups)
+  	group.color.attr = sample.RColorBrewer.colors('Accent', length(ngroups)) 
   	names(group.color.attr) = unique(group.samples[,1])
     annotation_colors = append(annotation_colors, list(group=group.color.attr))
    }
@@ -226,6 +206,7 @@ oncoprint <- function(x,
   ##### GENES/EVENTS annotations: groups or indistinguishable
 	genes.annotation = NA
 
+  # Annotate genes groups
   if(!all(is.na(gene.annot)))
     {
 		names = names(gene.annot)  	
@@ -260,7 +241,7 @@ oncoprint <- function(x,
 		annotation_colors = append(annotation_colors, list(group=gene.annot.color))
    }   
   
-  
+  # Annotate events to consolidate
   if(annotate.consolidate.events)
   {
     cat('Annotating events to consolidate - see consolidate.data\n')
@@ -288,15 +269,13 @@ oncoprint <- function(x,
       )
     }
     
-  
-  ############## Augment gene names with frequencies and prepare labels 	
+  ############## Augment gene names with frequencies 	
   genes.freq = rowSums(data)/nsamples(x)
   gene.names = x$annotations[rownames(data),2]
   gene.names = paste(round(100 * genes.freq, 0) ,'% ', gene.names, sep='') # row labels
-# print(rownames(data))
-# print(gene.names)
 
-  # Augment data to make type-dependent colored plots
+  
+  ############## Augment data to make type-dependent colored plots
   data.lifting = function(obj, matrix)
   {
     types = as.types(obj)
@@ -326,7 +305,6 @@ oncoprint <- function(x,
     map.gradient = c(null.color, as.colors(x))
     names(map.gradient)[1] = 'none'
     
-#    print(map.gradient)
     return(list(data=matrix, colors=map.gradient))
   }
 
@@ -334,6 +312,7 @@ oncoprint <- function(x,
   map.gradient = pheat.matrix$colors
   data = pheat.matrix$data
  
+  ############## Set fontisize col/row  
   if(is.na(font.row)) 
   {
     font.row = max(c(15 * exp(-0.02 * nrow(data)), 2))    
@@ -345,15 +324,9 @@ oncoprint <- function(x,
     cat(paste('Setting automatic samples font half of row font: ', round(font.column, 1), '\n', sep='')) 
   }
   
-  
+  ############## Finalizing legends etc.   
   legend.labels = c('none', unique(x$annotations[,1]))    
   legend.labels = legend.labels[1:(max(data)+1)]
-  
-  # print(data)
-  # print(str(genes.annotation))
-  # print(genes.annotation)
-  # print(annotation_colors)
-  # print(rownames(data) == rownames(genes.annotation))
   
   if(samples.cluster) cat('Clustering samples and showing dendogram.\n')
   if(genes.cluster) cat('Clustering alterations and showing dendogram.\n')
@@ -361,7 +334,7 @@ oncoprint <- function(x,
   if(is.null(annotation_colors)) annotation_colors = NA
 
   if(length(list(...)) > 0) {
-    cat('Passing the following parameters to pheatmap:\n')
+    cat('Passing the following parameters to TRONCO pheatmap:\n')
     print(list(...))
   }
 
@@ -383,8 +356,8 @@ oncoprint <- function(x,
 #     }
 #   }
 
-  # Pheatmap
-   ret = pheatmap(data, 
+  ############## Real pheatmap  
+  ret = pheatmap(data, 
              scale = "none", 
              col = map.gradient, 
              cluster_cols = samples.cluster,
@@ -398,7 +371,7 @@ oncoprint <- function(x,
              annotation_colors = annotation_colors,	
              border_color = border.color,
              border=T,
-             # margins=c(10,10),
+             margins=c(10,10),
              cellwidth = cellwidth, 
              cellheight = cellheight,
              legend = legend,             
@@ -410,11 +383,11 @@ oncoprint <- function(x,
              show_colnames = sample.id,
              filename=file,
              txt.stats = txt.stats,
-             #gaps_col = if(is.na(col.gaps), gaps_col, col.gaps)
              ...
     )
 
-  
+    ############## Extra patterns   
+
     patt.table = gtable(widths = unit(c(7, 2), "null"), height = unit(c(2, 7), "null"))
   
     patt.table = list()
