@@ -854,18 +854,16 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
         }
     
         # sort the edges in increasing order of confidence (i.e. the edges with lower pvalue are the most confident)
-            ordered.edges = ordered.edges[sort(unlist(ordered.weights),decreasing=TRUE,index.return=TRUE)$ix];
+        ordered.edges = ordered.edges[sort(unlist(ordered.weights),decreasing=TRUE,index.return=TRUE)$ix];
     
     }
     
     # visit the ordered edges and remove the ones that are causing any cycle
     if(length(ordered.edges)>0) {
             
+        # expanded matrix to be considered in removing the loops
+        expansion = hypotheses.expansion(input_matrix=adj.matrix,map=hypotheses$hstructure,hidden_and=F,expand=T,skip.disconnected=F);
         
-
-            # expanded matrix to be considered in removing the loops
-            expansion = hypotheses.expansion(input_matrix=adj.matrix,map=hypotheses$hstructure,hidden_and=F,expand=T,skip.disconnected=F);
-            
         # load the igraph library required for the loop detection
         if (!require(igraph)) {
             install.packages('igraph', dependencies = TRUE);
@@ -882,27 +880,27 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
             # resolve the mapping from the adj.matrix to the expanded one both for curr.edge.i and curr.edge.j
             if(colnames(adj.matrix)[curr.edge.i]%in%expansion[[2]]) {
                     curr.edge.i.exp = which(colnames(expansion[[1]])%in%names(expansion[[2]])[which(expansion[[2]]%in%colnames(adj.matrix)[curr.edge.i])]);
-            }
-            else {
+            } else {
                     curr.edge.i.exp = which(colnames(expansion[[1]])%in%colnames(adj.matrix)[curr.edge.i]);
             }
             if(colnames(adj.matrix)[curr.edge.j]%in%expansion[[2]]) {
                     curr.edge.j.exp = which(colnames(expansion[[1]])%in%names(expansion[[2]])[which(expansion[[2]]%in%colnames(adj.matrix)[curr.edge.j])]);
-            }
-            else {
+            } else {
                     curr.edge.j.exp = which(colnames(expansion[[1]])%in%colnames(adj.matrix)[curr.edge.j]);
             }
             
             # search for loops between curr.edge.i and curr.edge.j
-            curr.graph = graph.adjacency(expansion[[1]], mode="directed");
-                is.path = length(unlist(get.shortest.paths(curr.graph, curr.edge.j.exp, curr.edge.i.exp)$vpath));
+            curr.graph = graph.adjacency(expansion[[1]], mode="directed")
             
+            is.path = length(unlist(get.shortest.paths(curr.graph, curr.edge.j.exp, curr.edge.i.exp)$vpath));
+            
+
             # if there is a path between the two nodes, remove edge i --> j
             if(is.path>0) {
-                    removed = removed + 1
-                    # cat("Removing edge ",colnames(adj.matrix)[curr.edge.i]," to ",colnames(adj.matrix)[curr.edge.j],"\n");
-                    expansion[[1]][curr.edge.i.exp,curr.edge.j.exp] = 0;
-                    adj.matrix[curr.edge.i,curr.edge.j] = 0;
+                removed = removed + 1
+                # cat("Removing edge ",colnames(adj.matrix)[curr.edge.i]," to ",colnames(adj.matrix)[curr.edge.j],"\n");
+                expansion[[1]][curr.edge.i.exp,curr.edge.j.exp] = 0;
+                adj.matrix[curr.edge.i,curr.edge.j] = 0;
             }
             
         }
