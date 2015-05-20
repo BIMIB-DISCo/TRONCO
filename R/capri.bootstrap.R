@@ -234,7 +234,7 @@ bootstrap.capri <- function(dataset,
             parents.pos[unlist(lapply(parents.pos,is.null))] = list(-1)
             
             # save the results
-            bootstrap.results[[m]][num,] = parents.pos;
+            bootstrap.results[[m]][num,] <<- parents.pos;
             
         }
         
