@@ -58,7 +58,13 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
     
     #reconstruct the reconstruction with CAPRESE
     if(silent==FALSE) {
-        cat(paste0(
+      cat('*** Checking input events.\n')
+      invalid = consolidate.data(data, TRUE)      
+      if(length(invalid) > 0) warning(
+        "Input events should be consolidated - see consolidate.data."
+        );
+      
+      cat(paste0(
             '*** Inferring a progression model with the following settings.\n',
             '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
             '\tAlgorithm: CAPRESE with shrinkage coefficient: ', lambda, '.\n'
@@ -182,7 +188,14 @@ tronco.capri <- function( data,
             my.seed = boot.seed;
     }
     if(silent==FALSE) {
-        cat(paste0(
+      cat('*** Checking input events.\n')
+      invalid = consolidate.data(data, TRUE)
+      if(length(invalid) > 0) warning(
+        "Input events should be consolidated - see consolidate.data."
+      );
+      
+      
+      cat(paste0(
             '*** Inferring a progression model with the following settings.\n',
             '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
             '\tAlgorithm: CAPRI with \"', paste0(regularization,collapse=", "), '\" regularization and \"', command, '\" likelihood-fit strategy.\n',
