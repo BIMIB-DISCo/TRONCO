@@ -12,8 +12,9 @@ oncoprint(x, excl.sort = TRUE, samples.cluster = FALSE,
   sample.id = FALSE, hide.zeroes = FALSE, legend = TRUE, legend.cex = 1,
   cellwidth = NA, cellheight = NA, group.by.label = FALSE,
   group.samples = NA, gene.annot = NA, gene.annot.color = "Set1",
-  txt.stats = paste(nsamples(x), " samples\\n", nevents(x), " events\\n",
-  ngenes(x), " genes\\n", npatterns(x), " patterns", sep = ""), ...)
+  show.patterns = FALSE, txt.stats = paste(nsamples(x), " samples\\n",
+  nevents(x), " events\\n", ngenes(x), " genes\\n", npatterns(x), " patterns",
+  sep = ""), ...)
 }
 \arguments{
 \item{samples.cluster}{Boolean value, if TRUE clusters samples (columns). Default FALSE}
@@ -64,6 +65,8 @@ and sorted according to the number of mutations per sample - usefull when \code{
 \item{gene.annot}{Genes'groups, e.g. list(RAF=c('KRAS','NRAS'), Wnt=c('APC', 'CTNNB1')). Default is NA.}
 
 \item{gene.annot.color}{Either a RColorColorbrewer palette name or a set of custom colors matching names(gene.annot)}
+
+\item{show.patterns}{If TRUE shows also a separate oncoprint for each pattern. Default is FALSE}
 
 \item{txt.stats}{By default, shows a summary statistics for shown data (n,m, |G| and |P|)}
 

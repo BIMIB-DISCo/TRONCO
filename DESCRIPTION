@@ -13,7 +13,7 @@ Maintainer: Giulio Caravagna <giulio.caravagna@disco.unimib.it>,
     Luca De Sano <l.desano@campus.unimib.it>
 Depends: 
     R (>= 3.1),
-    graph,
+    graph
 Imports: 
     cgdsr,
     colorspace,
@@ -25,13 +25,12 @@ Imports:
     lattice,
     likert,
     methods,
-    pheatmap,
     R.matlab,
     RColorBrewer,
     reshape2,
     bnlearn,
     igraph,
-    xtable,
+    xtable
 Description: Genotype-level cancer progression models describe the ordering of
     accumulating mutations, e.g., somatic mutations / copy number variations,
     during cancer development. These graphical models help understand the
