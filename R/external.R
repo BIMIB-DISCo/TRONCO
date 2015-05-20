@@ -384,3 +384,19 @@ TCGA.map.clinical.data = function(file, sep='\t', column.samples, column.map)
   
   return(map)
 }
+
+sample.RColorBrewer.colors = function(palette, ncolors)
+{
+  if(!palette %in% rownames(brewer.pal.info)) stop('Invalid RColorBrewer palette.')
+
+  pmax.cols = brewer.pal.info[palette, 'maxcolors']
+  
+  cols = min(pmax.cols , ncolors)
+  cols = ifelse(cols < 3, 3, ncolors)
+  
+  colors = brewer.pal(n=cols, name=palette)
+  if(ncolors < 3) colors = colors[1:ncolors]
+  else colors =  colorRampPalette(colors)(ncolors)
+  
+  return(colors)
+}
