@@ -224,14 +224,14 @@ duplicates = function(x) {
   return(as.events(x)[duplicated(as.events(x)),])
 }
 
-#' Return the name annotating the dataset, if any. Input 'x' should be
+#' Return the description annotating the dataset, if any. Input 'x' should be
 #' a TRONCO compliant dataset - see \code{is.compliant}. 
 #'
-#' @title as.name
+#' @title as.description
 #' @param x A TRONCO compliant dataset.
-#' @return The name annotating the dataset, if any.
-#' @export as.name
-as.name = function(x)
+#' @return The description annotating the dataset, if any.
+#' @export as.description
+as.description = function(x)
 {
   if(!is.null(x$name))
     return(x$name)
@@ -257,8 +257,8 @@ show = function(x, view = 10)
   x = enforce.numeric(x)
 	view = min(view, nevents(x))
   
-  if(as.name(x) != "")
-    cat(paste('Name: ', as.name(x), '.\n', sep=''))
+  if(as.description(x) != "")
+    cat(paste('Description: ', as.description(x), '.\n', sep=''))
   
   
 	cat(paste('Dataset: n=', nsamples(x), ', m=', nevents(x), ', |G|=', ngenes(x), '.\n', sep=''))
