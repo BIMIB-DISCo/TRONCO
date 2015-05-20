@@ -11,9 +11,15 @@ export.mutex(x, filename = "tronco_to_mutex", filepath = "./",
 \arguments{
 \item{x}{The TRONCO standard object}
 
-\item{filename}{}
+\item{filename}{TODO}
 
-\item{filepath}{}
+\item{filepath}{TODO}
+
+\item{label.mutation}{TODO}
+
+\item{label.amplification}{TODO}
+
+\item{label.deletion}{TODO}
 }
 \description{
 export mutex

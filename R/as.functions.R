@@ -931,3 +931,40 @@ as.selective.advantage.relations = function(x, events = as.events(x), models = n
 
   return(lapply(matrix, matrix.to.df))
 }
+
+#' Check if logic node down
+#'
+#' @title is logical node down
+#' @param node A node identifier
+#' @return boolean
+is.logic.node.down <- function(node) {
+  if(substr(node, start=1, stop=3) == 'OR_')
+    return(TRUE)
+  if(substr(node, start=1, stop=4) == 'XOR_')
+    return(TRUE)
+  if(substr(node, start=1, stop=4) == 'AND_')
+    return(TRUE)
+  if(substr(node, start=1, stop=4) == 'NOT_')
+    return(TRUE)
+  return(FALSE)
+}
+
+#' Check if logic node up
+#'
+#' @title is logical node up
+#' @param node A node identifier
+#' @return boolean
+is.logic.node.up <- function(node) {
+  if(substr(node, start=1, stop=2) == 'UP')
+    return(TRUE)
+  return(FALSE)
+}
+
+#' Check if logic node down or up
+#'
+#' @title is logical node
+#' @param node A node identifier
+#' @return boolean
+is.logic.node <- function(node) {
+  return(is.logic.node.up(node) || is.logic.node.down(node))
+}

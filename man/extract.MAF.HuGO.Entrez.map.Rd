@@ -9,7 +9,7 @@ extract.MAF.HuGO.Entrez.map(file, sep = "\\t")
 \arguments{
 \item{file}{MAF filename}
 
-\item{sep}{MAF separator, default "\t"}
+\item{sep}{MAF separator, default \'\\t\'}
 }
 \value{
 A mapHugo_Symbol -> Entrez_Gene_Id.

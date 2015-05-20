@@ -714,9 +714,6 @@ hypotheses.expansion <- function(input_matrix,
   margin = length(node_list) - num_hypos
   hypos_new_name = list()
   
-
-  
-  cat('*** Expanding hypotheses syntax as graph nodes:')
   # check if there are hypotheses
   if (num_hypos == 0 || !expand) {
     # if no hypos do nothings..

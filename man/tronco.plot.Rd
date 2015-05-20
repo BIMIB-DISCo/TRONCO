@@ -43,13 +43,4 @@ tronco.plot(x, regularization = names(x$model), fontsize = NA, height = 2,
 \description{
 \code{tronco.plot} plots a progression model from a recostructed \code{curr.reconstruction}.
 }
-\examples{
-\dontrun{
-    types.load("data/types.txt");
-    events.load("data/events.txt");
-   data.load("data/CGH.txt");
-   reconstruction <- tronco.caprese();
-   tronco.plot(curr.reconstruction, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
-}
-}
 

@@ -11,9 +11,7 @@ export.nbs.input(x, map_hugo_entrez, file = "tronco_to_nbs.mat")
 
 \item{map_hugo_entrez}{Hugo_Symbol  - Entrez_Gene_Id}
 
-\item{filename}{}
-
-\item{filepath}{}
+\item{file}{TODO}
 }
 \description{
 export nbs input

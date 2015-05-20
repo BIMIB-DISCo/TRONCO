@@ -9,7 +9,7 @@ import.MAF(file, sep = "\\t", is.TCGA = TRUE)
 \arguments{
 \item{file}{MAF filename}
 
-\item{sep}{MAF separator, default "\t"}
+\item{sep}{MAF separator, default \'\\t\'}
 
 \item{is.TCGA}{TRUE if this MAF is from TCGA; thus its sample codenames can be interpreted}
 }

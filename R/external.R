@@ -2,8 +2,11 @@
 # (ref: https://code.google.com/p/mutex/ )
 #' @title export mutex
 #' @param x The TRONCO standard object
-#' @param filename
-#' @param filepath 
+#' @param filename TODO
+#' @param filepath  TODO
+#' @param label.mutation TODO
+#' @param label.amplification TODO
+#' @param label.deletion TODO
 #' @export
 export.mutex = function(x, 
                       filename = 'tronco_to_mutex',
@@ -137,8 +140,7 @@ export.mutex = function(x,
 #' @import R.matlab
 #' @param x The TRONCO standard object
 #' @param map_hugo_entrez   Hugo_Symbol  - Entrez_Gene_Id
-#' @param filename
-#' @param filepath 
+#' @param file TODO
 #' @export
 export.nbs.input = function(x, 
                       map_hugo_entrez,

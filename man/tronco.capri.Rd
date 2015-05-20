@@ -12,11 +12,25 @@ tronco.capri(data, command = "hc", regularization = c("bic", "aic"),
 \arguments{
 \item{data}{A TRONCO compliant dataset.}
 
+\item{command}{TODO}
+
+\item{regularization}{TODO}
+
+\item{do.boot}{TODO}
+
+\item{nboot}{TODO}
+
+\item{pvalue}{TODO}
+
+\item{min.boot}{TODO}
+
+\item{min.stat}{TODO}
+
+\item{boot.seed}{TODO}
+
 \item{do.estimation}{TODO}
 
 \item{silent}{TODO}
-
-\item{lambda}{TODO}
 }
 \value{
 A TRONCO compliant object with reconstructed model

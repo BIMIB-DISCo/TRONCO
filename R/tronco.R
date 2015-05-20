@@ -129,7 +129,14 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
 #'
 #' @title tronco capri
 #' @param data A TRONCO compliant dataset.
-#' @param lambda TODO
+#' @param command TODO
+#' @param regularization TODO
+#' @param do.boot TODO
+#' @param nboot TODO
+#' @param pvalue TODO
+#' @param min.boot TODO
+#' @param min.stat TODO
+#' @param boot.seed TODO
 #' @param do.estimation TODO
 #' @param silent TODO
 #' @return A TRONCO compliant object with reconstructed model
@@ -349,7 +356,7 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
 #' @title tronco bootstrap
 #' @param reconstruction The output of tronco.capri or tronco.caprese
 #' @param type TODO
-#' @param nboot
+#' @param nboot TODO
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.bootstrap
 tronco.bootstrap <- function( reconstruction, 
@@ -461,27 +468,7 @@ tronco.bootstrap <- function( reconstruction,
 #### information.
 
 
-is.logic.node.down <- function(node) {
-  if(substr(node, start=1, stop=3) == 'OR_')
-    return(TRUE)
-  if(substr(node, start=1, stop=4) == 'XOR_')
-    return(TRUE)
-  if(substr(node, start=1, stop=4) == 'AND_')
-    return(TRUE)
-  if(substr(node, start=1, stop=4) == 'NOT_')
-    return(TRUE)
-  return(FALSE)
-}
 
-is.logic.node.up <- function(node) {
-  if(substr(node, start=1, stop=2) == 'UP')
-    return(TRUE)
-  return(FALSE)
-}
-
-is.logic.node <- function(node) {
-  return(is.logic.node.up(node) || is.logic.node.down(node))
-}
 
 ###########################
 ####### TRONCO PLOT #######
@@ -515,14 +502,6 @@ is.logic.node <- function(node) {
 #' @param label.edge.size double; size of the confidence label, when used (default is 12)
 #' 
 #' @param confidence bool; plot edges according to confidence (default is f)
-#' @examples
-#' \dontrun{
-#'     types.load("data/types.txt");
-#'     events.load("data/events.txt");
-#'    data.load("data/CGH.txt");
-#'    reconstruction <- tronco.caprese();
-#'    tronco.plot(curr.reconstruction, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
-#' }
 tronco.plot = function(x,
                        regularization=names(x$model),
                        fontsize = NA, 
@@ -692,6 +671,8 @@ tronco.plot = function(x,
     events = unlist(lapply(genes, function(x){names(which(as.events(x)[,'event'] == x))}))
   }
   
+  cat('*** Expanding hypotheses syntax as graph nodes:')
+
   # expand hypotheses
   #if (is.na(confidence)) {
     expansion = hypotheses.expansion(c_matrix, 
@@ -760,7 +741,7 @@ tronco.plot = function(x,
   V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
   
-  node_names = nodes(graph)
+  node_names = graph::nodes(graph)
   nAttrs = list()
   
   nAttrs$label = V(hypo_graph)$label
@@ -1661,7 +1642,7 @@ smaller.to.bigger = function(m,cn)
   V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
   
-  node_names = nodes(graph)
+  node_names = graph::nodes(graph)
   nAttrs = list()
   
   nAttrs$label = V(hypo_graph)$label

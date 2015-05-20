@@ -11,7 +11,7 @@ tronco.bootstrap(reconstruction, type = "non-parametric", nboot = 100)
 
 \item{type}{TODO}
 
-\item{nboot}{}
+\item{nboot}{TODO}
 }
 \value{
 A TRONCO compliant object with reconstructed model
