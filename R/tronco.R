@@ -435,7 +435,8 @@ tronco.bootstrap <- function( reconstruction,
             pvalue = reconstruction$parameters$pvalue
             min.boot = reconstruction$parameters$min.boot
             min.stat = reconstruction$parameters$min.stat
-            boot.seed = reconstruction$parameters$boot.seed 
+            boot.seed = reconstruction$parameters$boot.seed
+            if(type == 'statistical') boot.seed = NULL
         }
     } else {
         stop("The types of bootstrap that can be performed are: non-parametric, parametric or statistical.", call. = FALSE)
