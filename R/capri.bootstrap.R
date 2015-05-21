@@ -248,12 +248,11 @@ bootstrap.capri <- function(dataset,
             
         }
         
-        cat('WORKER')
         bootstrap.results
     }
 
     #print(r)
-    print(names(bootstrap.results))
+#    print(names(bootstrap.results))
     stopCluster(cl)
 
     for (m in names(bootstrap.results)) {
@@ -261,7 +260,7 @@ bootstrap.capri <- function(dataset,
         bootstrap.results[[m]] = y
     }
 
-    print(bootstrap.results)
+#    print(bootstrap.results)
 
     
     # set the statistics of the bootstrap
