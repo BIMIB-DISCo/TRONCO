@@ -119,9 +119,9 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
     
     # the reconstruction has been completed
     if(!silent) cat(paste(
-      "The reconstruction has been successfully completed in ", 
-      round(reconstruction$execution.time[3]/60,digits=0), 
-      "minutes.\n"));
+      "The reconstruction has been successfully completed in", 
+      format(.POSIXct(round(reconstruction$execution.time[3],digits=0),tz="GMT"),"%Hh:%Mm:%Ss"), 
+      "\n"));
     
   return(results);
     
@@ -265,9 +265,9 @@ tronco.capri <- function( data,
   
     # the reconstruction has been completed
     if(!silent) cat(paste(
-      "The reconstruction has been successfully completed in ", 
-      round(reconstruction$execution.time[3]/60,digits=0), 
-      "minutes.\n"));
+      "The reconstruction has been successfully completed in", 
+      format(.POSIXct(round(reconstruction$execution.time[3],digits=0),tz="GMT"),"%Hh:%Mm:%Ss"), 
+      "\n"));
   
     return(results);
 }
@@ -443,7 +443,9 @@ tronco.bootstrap <- function( reconstruction,
 
     # perform the selected bootstrap procedure
     cat("Executing now the bootstrap procedure, this may take a long time...\n")
-    cat("Expected completion in approx.",round((reconstruction$execution.time[3]*nboot)/60,digits=0),"minutes.\n")
+    
+    expected.execution.time = round(((reconstruction$execution.time[3]*nboot)/(detectCores()-1)),digits=0)
+    cat("Expected completion in approx.",format(.POSIXct(expected.execution.time,tz="GMT"),"%Hh:%Mm:%Ss"),"\n")
 
     if(reconstruction$parameters$algorithm == "CAPRESE") {
         

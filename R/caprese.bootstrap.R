@@ -28,6 +28,9 @@
                             bootstrap.statistics = list()) 
 {
 	
+	# start the clock to measure the execution time
+	ptm <- proc.time();
+	
 	# structure to save the results of the bootstrap
     curr.bootstrap.results = array(list(-1), c(nboot,nevents(reconstruction)))
     colnames(curr.bootstrap.results) = rownames(as.events(reconstruction))
@@ -300,27 +303,38 @@
     
     # save the statistics of the bootstrap
     for (m in names(as.models(reconstruction))) {
-    	if(command == "non-parametric") {
-    		bootstrap.statistics[[m]]$npb$bootstrap.results = bootstrap.results[[m]]
-    		bootstrap.statistics[[m]]$npb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
-    		bootstrap.statistics[[m]]$npb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
-    		bootstrap.statistics[[m]]$npb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
-    		bootstrap.statistics[[m]]$npb$bootstrap.settings = list(type = command, nboot = nboot)
-    	}
-    	else if(command == "parametric") {
-    		bootstrap.statistics[[m]]$pb$bootstrap.results = bootstrap.results[[m]]
-    		bootstrap.statistics[[m]]$pb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
-    		bootstrap.statistics[[m]]$pb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
-    		bootstrap.statistics[[m]]$pb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
-    		bootstrap.statistics[[m]]$pb$bootstrap.settings = list(type = command, nboot = nboot)
-    	}
-    	else if(command == "statistical") {
-    		bootstrap.statistics[[m]]$sb$bootstrap.results = bootstrap.results[[m]]
-    		bootstrap.statistics[[m]]$sb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
-    		bootstrap.statistics[[m]]$sb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
-    		bootstrap.statistics[[m]]$sb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
-    		bootstrap.statistics[[m]]$sb$bootstrap.settings = list(type = command, nboot = nboot)
-    	}
+	    	if(command == "non-parametric") {
+	    		bootstrap.statistics[[m]]$npb$bootstrap.results = bootstrap.results[[m]]
+	    		bootstrap.statistics[[m]]$npb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+	    		bootstrap.statistics[[m]]$npb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+	    		bootstrap.statistics[[m]]$npb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+	    		bootstrap.statistics[[m]]$npb$bootstrap.settings = list(type = command, nboot = nboot)
+	    	}
+	    	else if(command == "parametric") {
+	    		bootstrap.statistics[[m]]$pb$bootstrap.results = bootstrap.results[[m]]
+	    		bootstrap.statistics[[m]]$pb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+	    		bootstrap.statistics[[m]]$pb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+	    		bootstrap.statistics[[m]]$pb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+	    		bootstrap.statistics[[m]]$pb$bootstrap.settings = list(type = command, nboot = nboot)
+	    	}
+	    	else if(command == "statistical") {
+	    		bootstrap.statistics[[m]]$sb$bootstrap.results = bootstrap.results[[m]]
+	    		bootstrap.statistics[[m]]$sb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+	    		bootstrap.statistics[[m]]$sb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+	    		bootstrap.statistics[[m]]$sb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+	    		bootstrap.statistics[[m]]$sb$bootstrap.settings = list(type = command, nboot = nboot)
+	    	}
+    }
+    
+    # save the execution time of the bootstrap
+  	if(command == "non-parametric") {
+  		bootstrap.statistics$npb$execution.time=(proc.time()-ptm)
+  	}
+    else if(command == "parametric") {
+  		bootstrap.statistics$pb$execution.time=(proc.time()-ptm)
+    }
+    else if(command == "statistical") {
+  		bootstrap.statistics$sb$execution.time=(proc.time()-ptm)
     }
 
     return(bootstrap.statistics)
