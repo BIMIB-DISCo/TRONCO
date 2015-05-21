@@ -60,7 +60,7 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
     if(silent==FALSE) {
       cat('*** Checking input events.\n')
       invalid = consolidate.data(data, TRUE)      
-      if(length(invalid) > 0) warning(
+      if(length(unlist(invalid)) > 0) warning(
         "Input events should be consolidated - see consolidate.data."
         );
       
@@ -190,7 +190,7 @@ tronco.capri <- function( data,
     if(silent==FALSE) {
       cat('*** Checking input events.\n')
       invalid = consolidate.data(data, TRUE)
-      if(length(invalid) > 0) warning(
+      if(length(unlist(invalid)) > 0) warning(
         "Input events should be consolidated - see consolidate.data."
       );
       
@@ -1004,7 +1004,6 @@ tronco.plot = function(x,
   if(any(!is.na(confidence))) {
     cat('Adding confidence information: ')
     conf = as.confidence(x, confidence)
-    
     cat(paste(paste(confidence, collapse = ', '), '\n'))
     # names.conf = names(conf)
     
@@ -1016,7 +1015,7 @@ tronco.plot = function(x,
 
       #cat("***\n", from, '->', to, '\n')
       
-      pval.names = c('hg', 'pf', 'tp')
+      pval.names = c('hg', 'pr', 'tp')
       boot.names = c('npb', 'pb', 'sb')
       red.lable = FALSE
 
@@ -1028,14 +1027,15 @@ tronco.plot = function(x,
       if(to %in% names(hypos_new_name)){ conf_to = hypos_new_name[[to]] } else { conf_to = to }
 
 
-
         #cat(conf_from, '->', conf_to, '\n')
       
       for(i in confidence) {
 
         conf_sel = get(i, as.confidence(x, i))
         
-        if (! i %in% pval.names) {
+
+        if (! i %in% pval.names) 
+        {
             if (sec && primary$adj.matrix$adj.matrix.fit[conf_from, conf_to] == 0) {
                 conf_sel = get(regularization[[2]], conf_sel)
             } else {
@@ -1044,7 +1044,7 @@ tronco.plot = function(x,
         }
 
         conf_p = conf_sel
-          
+                  
         if(! (conf_from %in% rownames(conf_p) && conf_to %in% colnames(conf_p))) {
           next
         }

@@ -76,10 +76,14 @@ bootstrap.capri <- function(dataset,
     }
     cl = makeCluster(cores)
     registerDoParallel(cl)
+    cat('*** Using', cores, 'cores via "parallel" \n.')
   
     # perform nboot bootstrap resampling
-    #for (num in 1:nboot) {
-    r = foreach(num = 1:nboot) %dopar% {
+    #for (num in 1:nboot
+    
+    #### LUCACAZZO DICAMMELLO DIOMAREMMA
+    cat('LUCACAZZO DICAMMELLO DIOMAREMMA')
+    r = foreach(num = 1:nboot, .export =ls(env = .GlobalEnv) ) %dopar% {
         
         # reset the seed
         set.seed(NULL)
@@ -243,6 +247,8 @@ bootstrap.capri <- function(dataset,
             
             
         }
+        
+        cat('WORKER')
         bootstrap.results
     }
 
