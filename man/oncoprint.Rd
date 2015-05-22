@@ -9,12 +9,13 @@ oncoprint(x, excl.sort = TRUE, samples.cluster = FALSE,
   ann.hits = TRUE, stage.color = "YlOrRd", hits.color = "Purples",
   null.color = "lightgray", border.color = "white", text.cex = 1,
   font.column = NA, font.row = NA, title = as.description(x),
-  sample.id = FALSE, hide.zeroes = FALSE, legend = TRUE, legend.cex = 1,
-  cellwidth = NA, cellheight = NA, group.by.label = FALSE,
-  group.samples = NA, gene.annot = NA, gene.annot.color = "Set1",
-  show.patterns = FALSE, txt.stats = paste(nsamples(x), " samples\\n",
-  nevents(x), " events\\n", ngenes(x), " genes\\n", npatterns(x), " patterns",
-  sep = ""), ...)
+  sample.id = FALSE, hide.zeroes = FALSE, legend = TRUE,
+  legend.cex = 0.5, cellwidth = NA, cellheight = NA,
+  group.by.label = FALSE, group.samples = NA, gene.annot = NA,
+  gene.annot.color = "Set1", show.patterns = FALSE,
+  annotate.consolidate.events = FALSE, txt.stats = paste(nsamples(x),
+  " samples\\n", nevents(x), " events\\n", ngenes(x), " genes\\n", npatterns(x),
+  " patterns", sep = ""), ...)
 }
 \arguments{
 \item{samples.cluster}{Boolean value, if TRUE clusters samples (columns). Default FALSE}
@@ -50,7 +51,7 @@ visualized in the Oncoprint}
 
 \item{legend}{If TRUE shows a legend for the types of events visualized. Defualt is TRUE}
 
-\item{legend.cex}{Default 1.0; determines legend size if \code{legend = TRUE}}
+\item{legend.cex}{Default 0.5; determines legend size if \code{legend = TRUE}}
 
 \item{cellwidth}{Default NA, sets autoscale cell width}
 
@@ -67,6 +68,8 @@ and sorted according to the number of mutations per sample - usefull when \code{
 \item{gene.annot.color}{Either a RColorColorbrewer palette name or a set of custom colors matching names(gene.annot)}
 
 \item{show.patterns}{If TRUE shows also a separate oncoprint for each pattern. Default is FALSE}
+
+\item{annotate.consolidate.events}{Default is FALSE. If TRUE an annotation for events to consolidate is shown.}
 
 \item{txt.stats}{By default, shows a summary statistics for shown data (n,m, |G| and |P|)}
 

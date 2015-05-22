@@ -43,7 +43,10 @@ bootstrap.capri <- function(dataset,
 {
     
     # start the clock to measure the execution time
-	ptm <- proc.time();
+	
+    library(doParallel)
+
+    ptm <- proc.time();
     
     # structure to save the results of the bootstrap
     curr.bootstrap.results = array(list(-1), c(nboot,nevents(reconstruction)))
@@ -77,19 +80,18 @@ bootstrap.capri <- function(dataset,
     if(cores < 1) {
         cores = 1
     }
-    cl = makeCluster(cores)
+
+    cl = makeCluster(cores, outfile="")
     registerDoParallel(cl)
     cat('*** Using', cores, 'cores via "parallel" \n.')
   
     # perform nboot bootstrap resampling
     #for (num in 1:nboot
     
-    #### LUCACAZZO DICAMMELLO DIOMAREMMA
-    cat('LUCACAZZO DICAMMELLO DIOMAREMMA')
-    r = foreach(num = 1:nboot, .export =ls(env = .GlobalEnv) ) %dopar% {
-        
+    # r = foreach(num = 1:nboot, .export =ls(env = .GlobalEnv) ) %dopar% {
+    r = foreach(num = 1:nboot ) %dopar% {    
         # reset the seed
-        set.seed(NULL)
+        # set.seed(NULL)
         
         
         # performed the bootstrapping procedure
@@ -97,7 +99,9 @@ bootstrap.capri <- function(dataset,
             
             # perform the sampling for the current step of bootstrap
             samples = sample(1:nrow(dataset), size = nrow(dataset), replace = TRUE)
+            print(samples)
             bootstrapped.dataset = dataset[samples,]
+            print(bootstrapped.dataset[, 'gene 31'])
             
             curr.reconstruction = list()
             curr.reconstruction$genotypes = bootstrapped.dataset;
