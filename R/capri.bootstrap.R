@@ -93,6 +93,49 @@ bootstrap.capri <- function(dataset,
   
     # perform nboot bootstrap resampling
     #for (num in 1:nboot
+
+    # if parametric bootstrap selected prepare input
+
+    if(command == 'parametric') {
+                    
+        # structure to save the samples probabilities
+        samples.probabilities = list();
+            
+        # define the possible samples given the current number of events
+        possible.strings = 2 ^ ncol(dataset)
+        
+        err = ""
+        message = "Too many events in the dataset! Parametric bootstrastap can not be performed."
+        err = tryCatch({
+            curr.dataset = suppressWarnings(array(0, c(possible.strings, ncol(dataset))))
+            }, error = function(e) {
+                err <- message
+            })
+                
+                
+        if(toString(err) == message) {
+            stop(err, call. = FALSE)
+        }
+        
+        for (i in 1:possible.strings) {
+            curr.dataset[i, ] = decimal.to.binary.dag(i - 1, ncol(dataset))
+        }
+
+        colnames(curr.dataset) = colnames(dataset)
+                
+        for (m in names(as.models(reconstruction))) {
+                
+            # estimate the samples probabilities for each model
+            samples.probabilities[m] = list(estimate.dag.samples(curr.dataset,
+                                            as.adj.matrix(reconstruction,model=m)[[m]],
+                                            as.marginal.probs(reconstruction,model=m,type="fit")[[m]],
+                                            as.conditional.probs(reconstruction,model=m,type="fit")[[m]],
+                                            as.parents.pos(reconstruction,model=m)[[m]],
+                                            as.error.rates(reconstruction,model=m)[[m]]))
+        
+        }
+
+    }
     
     # r = foreach(num = 1:nboot, .export =ls(env = .GlobalEnv) ) %dopar% {
     r = foreach(num = 1:nboot ) %dopar% {    
@@ -128,52 +171,12 @@ bootstrap.capri <- function(dataset,
 
         } else if(command=="parametric") {
                 
-            if(num == 1) {
-                    
-                # structure to save the samples probabilities
-                samples.probabilities = list();
-                    
-                # define the possible samples given the current number of events
-                possible.strings = 2 ^ ncol(dataset)
-                
-                err = ""
-                message = "Too many events in the dataset! Parametric bootstrastap can not be performed."
-                err = tryCatch({
-                    curr.dataset = suppressWarnings(array(0, c(possible.strings, ncol(dataset))))
-                    }, error = function(e) {
-                        err <- message
-                    })
-                
-                
-                if(toString(err) == message) {
-                    stop(err, call. = FALSE)
-                }
-                
-                for (i in 1:possible.strings) {
-                    curr.dataset[i, ] = decimal.to.binary.dag(i - 1, ncol(dataset))
-                }
-
-                colnames(curr.dataset) = colnames(dataset)
-                
-                for (m in names(as.models(reconstruction))) {
-                        
-                    # estimate the samples probabilities for each model
-                    samples.probabilities[m] = list(estimate.dag.samples(curr.dataset,
-                                                    as.adj.matrix(reconstruction,model=m)[[m]],
-                                                    as.marginal.probs(reconstruction,model=m,type="fit")[[m]],
-                                                    as.conditional.probs(reconstruction,model=m,type="fit")[[m]],
-                                                    as.parents.pos(reconstruction,model=m)[[m]],
-                                                    as.error.rates(reconstruction,model=m)[[m]]))
-                
-                }
-
-            }
+            
             
             # perform the reconstruction for each model
             new.reconstruction = reconstruction;
             new.reconstruction$model = list();
             for (m in names(as.models(reconstruction))) {
-                
                 # perform the sampling for the current step of bootstrap and regularizator
                 samples = sample(1:nrow(curr.dataset), 
                                  size = nrow(dataset), 
