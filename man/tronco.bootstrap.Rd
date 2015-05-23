@@ -4,7 +4,8 @@
 \alias{tronco.bootstrap}
 \title{tronco bootstrap}
 \usage{
-tronco.bootstrap(reconstruction, type = "non-parametric", nboot = 100)
+tronco.bootstrap(reconstruction, type = "non-parametric", nboot = 100,
+  verbose = FALSE)
 }
 \arguments{
 \item{reconstruction}{The output of tronco.capri or tronco.caprese}

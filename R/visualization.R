@@ -66,10 +66,9 @@ oncoprint <- function(x,
   
   font.size = text.cex * 7
   
-  if (!require('RColorBrewer')) {
-    install.packages('RColorBrewer', dependencies = TRUE)
-    library(RColorBrewer)
-  }
+
+  suppressMessages(library(RColorBrewer))
+
 
   ##############  This function sorts a matrix to enhance mutual exclusivity
   exclusivity.sort <- function(M) {
@@ -970,10 +969,10 @@ genes.table.plot = function(x, name, dir=getwd())
 likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample_prefix=''){
 
   #library(ggplot2)
-library(reshape2)
-library(RColorBrewer)
+suppressMessages(library(reshape2))
+suppressMessages(library(RColorBrewer))
 #install_github('likert','jbryer')
-require('likert')
+suppressMessages(library(likert))
 #require(devtools)
 
   # check different value

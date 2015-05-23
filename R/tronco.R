@@ -386,7 +386,8 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
 #' @export tronco.bootstrap
 tronco.bootstrap <- function( reconstruction, 
                               type = "non-parametric", 
-                              nboot = 100)
+                              nboot = 100,
+                              verbose = FALSE)
 {
     # check for the inputs to be given
     if(is.null(reconstruction)) {
@@ -480,7 +481,8 @@ tronco.bootstrap <- function( reconstruction,
                                         reconstruction, 
                                         type,
                                         nboot,
-                                        bootstrap)
+                                        bootstrap,
+                                        verbose)
 
 
         reconstruction$bootstrap = curr.boot
@@ -550,11 +552,10 @@ tronco.plot = function(x,
   hidden.and = F
 
 
-    library(doParallel)
-    library(igraph)
-    library(Rgraphviz)
-    library(RColorBrewer)
-
+    suppressMessages(library(doParallel))
+    suppressMessages(library(igraph))
+    suppressMessages(library(Rgraphviz))
+    suppressMessages(library(RColorBrewer))
   
   # Checks if reconstruction exists
   if(missing(x)) {
@@ -1493,21 +1494,11 @@ tronco.consensus.plot = function(models,
                        ...
                        ) 
 {
-  if (!require(igraph)) {
-    install.packages('igraph', dependencies = TRUE)
-    library(igraph)
-  }
-  
-  if (!require(Rgraphviz)) {
-    source("http://bioconductor.org/biocLite.R")
-    biocLite("Rgraphviz")
-    library(Rgraphviz)
-  }
 
-  if (!require("RColorBrewer")) {
-    install.packages("RColorBrewer")
-    library(RColorBrewer)
-  }
+    suppressMessages(library(igraph))
+    suppressMessages(library(Rgraphviz))
+    suppressMessages(library(RColorBrewer))
+
   
   # Checks if reconstruction exists
   if(missing(models) || !is.list(models)) {

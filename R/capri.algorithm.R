@@ -680,10 +680,9 @@ function( dataset, adj.matrix, command, regularization ) {
 	}
     
     # load the bnlearn library required for the likelihood fit with regularizator
-    if (!require(bnlearn)) {
-    		install.packages('bnlearn', dependencies = TRUE);
-        library(bnlearn);
-    }
+
+    suppressMessages(library(bnlearn))
+
     
     # adjacency matrix of the topology reconstructed by likelihood fit
     adj.matrix.fit = array(0,c(nrow(adj.matrix),ncol(adj.matrix)));
@@ -790,6 +789,8 @@ function( dataset, adj.matrix, command, regularization ) {
 "remove.cycles" <-
 function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hypotheses = NA, silent ) {
     
+    suppressMessages(library(igraph))
+
     total.edges = length(which(adj.matrix == 1))
     removed = 0
     
@@ -864,11 +865,6 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
         # expanded matrix to be considered in removing the loops
         expansion = hypotheses.expansion(input_matrix=adj.matrix,map=hypotheses$hstructure,hidden_and=F,expand=T,skip.disconnected=F);
         
-        # load the igraph library required for the loop detection
-        if (!require(igraph)) {
-            install.packages('igraph', dependencies = TRUE);
-            library(igraph);
-        }
         
         for(i in 1:length(ordered.edges)) {
             

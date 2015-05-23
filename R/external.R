@@ -146,10 +146,8 @@ export.nbs.input = function(x,
                       map_hugo_entrez,
                       file = 'tronco_to_nbs.mat')
 {
-  if (!require(R.matlab)) {
-    install.packages('R.matlab', dependencies = TRUE)
-    library(R.matlab)
-  }
+
+  suppressMessages(library(R.matlab))
   
   is.compliant(x);
   

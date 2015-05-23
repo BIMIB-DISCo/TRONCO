@@ -39,12 +39,13 @@ bootstrap.capri <- function(dataset,
                             reconstruction, 
                             command = "non-parametric",
                             nboot = 100,
-                            bootstrap.statistics = list()) 
+                            bootstrap.statistics = list(),
+                            verbose = FALSE) 
 {
     
     # start the clock to measure the execution time
 	
-    library(doParallel)
+    suppressMessages(library(doParallel))
 
     ptm <- proc.time();
     
@@ -69,10 +70,10 @@ bootstrap.capri <- function(dataset,
     bootstrap.edge.confidence = list()
     bootstrap.edge.confidence[names(as.models(reconstruction))] = list(curr.edge.confidence)
     
-    overall.confidence = list();
-    overall.confidence[names(as.models(reconstruction))] = list(0);
-    overall.frequency = list();
-    overall.frequency[names(as.models(reconstruction))] = list(0);
+    overall.confidence = list()
+    overall.confidence[names(as.models(reconstruction))] = list(0)
+    overall.frequency = list()
+    overall.frequency[names(as.models(reconstruction))] = list(0)
     
 
 
@@ -81,33 +82,34 @@ bootstrap.capri <- function(dataset,
         cores = 1
     }
 
-    cl = makeCluster(cores, outfile="")
+    if(!verbose) {
+        cl = makeCluster(cores)    
+    } else {
+        cl = makeCluster(cores, outfile="")
+    }
+
     registerDoParallel(cl)
-    cat('*** Using', cores, 'cores via "parallel" \n.')
+    cat('*** Using', cores, 'cores via "parallel" \n')
   
     # perform nboot bootstrap resampling
     #for (num in 1:nboot
     
     # r = foreach(num = 1:nboot, .export =ls(env = .GlobalEnv) ) %dopar% {
     r = foreach(num = 1:nboot ) %dopar% {    
-        # reset the seed
-        # set.seed(NULL)
-        
+        curr.iteration = num
         
         # performed the bootstrapping procedure
         if(command == "non-parametric") {
             
             # perform the sampling for the current step of bootstrap
             samples = sample(1:nrow(dataset), size = nrow(dataset), replace = TRUE)
-            print(samples)
             bootstrapped.dataset = dataset[samples,]
-            print(bootstrapped.dataset[, 'gene 31'])
             
             curr.reconstruction = list()
-            curr.reconstruction$genotypes = bootstrapped.dataset;
-            curr.reconstruction$annotations = reconstruction$annotations;
-            curr.reconstruction$types = reconstruction$types;
-            curr.reconstruction$hypotheses = hypotheses;
+            curr.reconstruction$genotypes = bootstrapped.dataset
+            curr.reconstruction$annotations = reconstruction$annotations
+            curr.reconstruction$types = reconstruction$types
+            curr.reconstruction$hypotheses = hypotheses
             
             # perform the reconstruction on the bootstrapped dataset
             bootstrapped.topology = tronco.capri(curr.reconstruction,
@@ -121,7 +123,7 @@ bootstrap.capri <- function(dataset,
                                                  boot.seed,
                                                  do.estimation,
                                                  silent)
-            
+
             curr.reconstruction = bootstrapped.topology;
 
         } else if(command=="parametric") {
@@ -181,10 +183,10 @@ bootstrap.capri <- function(dataset,
                 bootstrapped.dataset = curr.dataset[samples,]
             
                 curr.reconstruction = list()
-                curr.reconstruction$genotypes = bootstrapped.dataset;
-                curr.reconstruction$annotations = reconstruction$annotations;
-                curr.reconstruction$types = reconstruction$types;
-                curr.reconstruction$hypotheses = hypotheses;
+                curr.reconstruction$genotypes = bootstrapped.dataset
+                curr.reconstruction$annotations = reconstruction$annotations
+                curr.reconstruction$types = reconstruction$types
+                curr.reconstruction$hypotheses = hypotheses
                 
                 # perform the reconstruction on the bootstrapped dataset
                 bootstrapped.topology = tronco.capri(curr.reconstruction,
@@ -254,13 +256,14 @@ bootstrap.capri <- function(dataset,
             
             
         }
-        
+        cat("\nBootstrap iteration", curr.iteration, "performed")
         bootstrap.results
     }
 
     #print(r)
 #    print(names(bootstrap.results))
     stopCluster(cl)
+    cat("\n*** Reducing results\n")
 
     for (m in names(bootstrap.results)) {
         y = Reduce(rbind, lapply(r, function(z, type){get(type, z)}, type=m))

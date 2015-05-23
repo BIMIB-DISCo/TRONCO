@@ -689,10 +689,8 @@ hypotheses.expansion <- function(input_matrix,
                                  skip.disconnected = TRUE
                                  ) {
   
-  if (!require(igraph)) {
-    install.packages('igraph', dependencies = TRUE)
-    library(igraph)
-  }
+
+  suppressMessages(library(igraph))
   
   
   # get node list
@@ -857,8 +855,7 @@ hypotheses.expansion <- function(input_matrix,
     min_matrix = get.adjacency(min_graph, sparse = F)
     
   }
-  
-  cat(' done')
+
 
   # now expand the hidden AND
   #print(min_matrix)
@@ -926,7 +923,7 @@ hypotheses.expansion <- function(input_matrix,
     and_matrix[paste0("*_", row),row] = 1
   }
   
-  cat(' done')
+  # cat(' done')
   
   # sort col and row (igraph wants the same order)
   and_matrix = and_matrix[,order(colnames(and_matrix))]
