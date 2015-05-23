@@ -546,6 +546,7 @@ tronco.plot = function(x,
                        legend.pos = 'bottom',
                        pathways = NULL,
                        lwd = 3,
+                       annotate.sample = NA,
                        ...
                        ) 
 {
@@ -572,6 +573,40 @@ tronco.plot = function(x,
   if(!regularization[1] %in% names(x$model)) {
     stop(paste(regularization[1], "not in model"), call.=FALSE);
   }
+  
+  if(!is.na(annotate.sample) && !is.null(pathways))
+    stop('Select either to annotate pathways or a sample.')
+  
+  # Annotate samples
+  if(!is.na(annotate.sample))
+  {  
+    if(!all(annotate.sample %in% as.samples(x)))
+      stop('Sample(s) to annotate are not in the dataset -- see as.samples.')
+    
+    if(npatterns(x) > 0) nopatt.data = delete.type(x, 'Pattern')
+    else nopatt.data = x
+    
+#     sample.events = as.events.in.sample(nopatt.data, annotate.sample)
+# 
+#     pathways = lapply(sample.events, function(z){
+#       list(unique(z[, 'event']))
+#     })
+#    
+#     pathways = unlist(pathways, recursive = F)             
+#     pathways.color = sample.RColorBrewer.colors('Set1', length(pathways))
+    
+    sample.events = Reduce(rbind, as.events.in.sample(nopatt.data, annotate.sample))
+    sample.events = unique(sample.events[, 'event'])
+    
+    cat('Annotating sample', annotate.sample, 'with color red. Annotated genes:', paste(sample.events, collapse = ', '), '\n')
+    
+    pathways = list(sample.events)
+    names(pathways) = paste(annotate.sample, collapse = ', ')
+    if(nchar(names(pathways)) > 15) names(pathways) = paste0(substr(names(pathways), 1, 15), '...')
+    
+    pathways.color = 'red'
+  }
+ 
 
   #print(regularization)
 
@@ -916,6 +951,9 @@ tronco.plot = function(x,
   nAttrs$fontcolor = rep("black", length(node_names))
   names(nAttrs$fontcolor) = node_names
 
+  nAttrs$lwd = rep(1, length(node_names))
+  names(nAttrs$lwd) = node_names
+
   # set node border based on pathways information
   #cat('\n')
   legend_pathways = NULL
@@ -956,13 +994,13 @@ tronco.plot = function(x,
       nAttrs$color[unlist(names(n))] = cols[[path]]
       nAttrs$fontcolor[unlist(names(n))] = cols[[path]]
       
+      nAttrs$lwd[unlist(names(n))] = 4
       
       if(length(n) > 0) {
         legend_pathways[path] = cols[[path]]
       }
     }
   }
-
   
   # edges properties
   
@@ -1403,6 +1441,8 @@ tronco.plot = function(x,
           return("Probability Raising")
         if(x == "pb")
           return("Parametric Bootstrap")
+        if(x == "sb")
+          return("Statistical Bootstrap")
         if(x == "npb")
           return("Non Parametric Bootstrap")
 
@@ -1460,6 +1500,7 @@ tronco.plot = function(x,
   
   if(!is.na(file))
   {
+    cat('Saving visualized device to file:', file)
     dev.copy2pdf(file = file)
   }
   cat('\n')
