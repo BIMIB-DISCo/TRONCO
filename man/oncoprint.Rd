@@ -11,8 +11,8 @@ oncoprint(x, excl.sort = TRUE, samples.cluster = FALSE,
   font.column = NA, font.row = NA, title = as.description(x),
   sample.id = FALSE, hide.zeroes = FALSE, legend = TRUE,
   legend.cex = 0.5, cellwidth = NA, cellheight = NA,
-  group.by.label = FALSE, group.samples = NA, gene.annot = NA,
-  gene.annot.color = "Set1", show.patterns = FALSE,
+  group.by.label = FALSE, group.by.stage = FALSE, group.samples = NA,
+  gene.annot = NA, gene.annot.color = "Set1", show.patterns = FALSE,
   annotate.consolidate.events = FALSE, txt.stats = paste(nsamples(x),
   " samples\\n", nevents(x), " events\\n", ngenes(x), " genes\\n", npatterns(x),
   " patterns", sep = ""), ...)
@@ -59,6 +59,8 @@ visualized in the Oncoprint}
 
 \item{group.by.label}{Sort samples (rows) by event label - usefull when multiple events per gene are
 available}
+
+\item{group.by.stage}{Default FALSE; sort samples by stage.}
 
 \item{group.samples}{If this samples -> group map is provided, samples are grouped as of groups
 and sorted according to the number of mutations per sample - usefull when \code{data} was clustered}

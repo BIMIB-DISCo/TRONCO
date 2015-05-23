@@ -1010,6 +1010,10 @@ tronco.plot = function(x,
   # set temporary edge shape
   eAttrs$lty = rep("solid", length(edge_names))
   names(eAttrs$lty) = edge_names
+
+  # set temporary fontocolor
+  eAttrs$fontcolor = rep("darkblue", length(edge_names))
+  names(eAttrs$fontcolor) = edge_names
   
   #set edge thikness based on prob
   eAttrs$lwd = rep(1, length(edge_names))
@@ -1093,7 +1097,7 @@ tronco.plot = function(x,
 
         if (i %in% boot.names) {
             # eAttrs$lwd[e] = conf_p[conf_from, conf_to]
-            eAttrs$lwd[e] = conf_p[conf_from, conf_to] * 10
+            eAttrs$lwd[e] = (conf_p[conf_from, conf_to] * 5) + 1
         }
           
         eAttrs$label[e] = paste0(

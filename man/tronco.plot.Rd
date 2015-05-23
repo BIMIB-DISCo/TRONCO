@@ -10,7 +10,8 @@ tronco.plot(x, regularization = names(x$model), fontsize = NA, height = 2,
   p.min = x$parameters$pvalue, legend = TRUE, legend.cex = 1,
   edge.cex = 1, label.edge.size = NA, expand = TRUE, genes = NULL,
   relations.filter = NA, edge.color = "black", pathways.color = "Set1",
-  file = NA, legend.pos = "bottom", pathways = NULL, lwd = 3, ...)
+  file = NA, legend.pos = "bottom", pathways = NULL, lwd = 3,
+  annotate.sample = NA, ...)
 }
 \description{
 \code{tronco.plot} plots a progression model from a recostructed \code{curr.reconstruction}.
