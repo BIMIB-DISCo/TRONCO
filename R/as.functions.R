@@ -831,7 +831,6 @@ as.parents.pos = function(x, events = as.events(x), models = names(x$model))
 	return(ret)	
 }
 
-
 #' Extract the estimated rates of false positives an negatives in the data, given the model. 
 #' A subset of models if multiple reconstruction have been performed can be extracted.
 #' 
@@ -892,11 +891,13 @@ as.selective.advantage.relations = function(x, events = as.events(x), models = n
     df$HG = NULL
     df$TP = NULL
     df$PR = NULL
-        
+    
+    if(entries == 0) return(NULL)
+            
     for(i in 1:ncol(m))
       for(j in 1:nrow(m))
         if(m[i,j] == 1) 
-          {
+          { 
             df$SELECTS = c(df$SELECTS, rownames(m)[i])
             df$SELECTED = c(df$SELECTED, colnames(m)[j])
             
@@ -907,8 +908,9 @@ as.selective.advantage.relations = function(x, events = as.events(x), models = n
             df$PR = c(df$PR, conf$pr[rownames(m)[i], colnames(m)[j]])
             df$HG = c(df$HG, conf$hg[rownames(m)[i], colnames(m)[j]])            
           }
-        
+    
     df = cbind(df$SELECTS, df$SELECTED, df$OBS.SELECTS, df$OBS.SELECTED, df$TP, df$PR, df$HG)
+      
     colnames(df) = c('SELECTS', 'SELECTED', 'OBS.SELECTS', 'OBS.SELECTED', 'TEMPORAL.PRIORITY', 'PROBABILITY.RAISING', 'HYPERGEOMETRIC')
     rownames(df) = paste(1:nrow(df))
     
@@ -921,6 +923,7 @@ as.selective.advantage.relations = function(x, events = as.events(x), models = n
     
     return(df)
   }
+  
   
   return(lapply(matrix, matrix.to.df))
 }
@@ -960,4 +963,23 @@ is.logic.node.up <- function(node) {
 #' @return boolean
 is.logic.node <- function(node) {
   return(is.logic.node.up(node) || is.logic.node.down(node))
+}
+
+#' Return a list of events which are observed in the input samples list
+#'
+#' @title as.events.in.sample
+#' @param x A TRONCO compliant dataset
+#' @param sample Vector of sample names
+#' @return A list of events which are observed in the input samples list
+#' @export as.events.in.sample
+as.events.in.sample = function(x, sample)
+{
+  aux = function(s)
+  {
+    sub.geno = as.genotypes(x)[s, , drop = FALSE]  
+    sub.geno = sub.geno[, sub.geno == 1, drop = FALSE]
+    return(as.events(x)[colnames(sub.geno), , drop = FALSE])
+  }
+  
+  return(sapply(sample, FUN = aux))
 }
