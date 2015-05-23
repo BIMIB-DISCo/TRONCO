@@ -26,6 +26,7 @@
 #' available 
 #' @param group.samples If this samples -> group map is provided, samples are grouped as of groups
 #' and sorted according to the number of mutations per sample - usefull when \code{data} was clustered
+#' @param group.by.stage Default FALSE; sort samples by stage.
 #' @param gene.annot Genes'groups, e.g. list(RAF=c('KRAS','NRAS'), Wnt=c('APC', 'CTNNB1')). Default is NA.
 #' @param gene.annot.color Either a RColorColorbrewer palette name or a set of custom colors matching names(gene.annot)
 #' @param show.patterns If TRUE shows also a separate oncoprint for each pattern. Default is FALSE
@@ -54,6 +55,7 @@ oncoprint <- function(x,
                       cellwidth = NA, 
                       cellheight = NA,
                       group.by.label = FALSE,
+                      group.by.stage = FALSE,
                       group.samples = NA,
                       gene.annot = NA,
                       gene.annot.color = 'Set1',
@@ -112,15 +114,39 @@ oncoprint <- function(x,
     
   ############## Sort data, if required. excl.sort and group.samples are not compatible
   hasGroups = !any(is.na(group.samples))
-
-  if(excl.sort && hasGroups) 
-  	stop('Disable sorting for mutual exclusivity (excl.sort=FALSE) or avoid using grouped samples (group.samples=NA).')
+  
+  if(group.by.stage && !ann.stage)
+    stop('Cannot group samples by stage if no stage annotation is provided.')
+  
+  if(group.by.stage && excl.sort)
+  
+  if(excl.sort && (hasGroups || group.by.stage)) 
+  	stop('Disable sorting for mutual exclusivity (excl.sort=FALSE) or avoid using grouped samples.')
 
   # Exclusivity sort
   if(excl.sort && nevents(x) > 1) {
     cat(paste('Sorting samples ordering to enhance exclusivity patterns.\n', sep=''))
     sorted.data = exclusivity.sort(data)
     data = sorted.data$M	
+  }
+  
+  if(group.by.stage)
+  {   
+    ord.stages = as.stages(x)[order(as.stages(x)), , drop = F]
+    cat('Grouping samples by stage annotation.\n')
+    
+    aux.fun = function(samp) {
+      sub.data = data[, samp, drop= F]      
+      sub.data = sub.data[, order(colSums(sub.data), decreasing = FALSE), drop = F]
+      return(sub.data)
+    }  
+    
+    new.data = NULL
+    for(i in sort(unique(as.stages(x))))
+      new.data = cbind(new.data, aux.fun(rownames(ord.stages[ord.stages == i, , drop= F])))
+     
+    data = new.data
+    data = data[order(rowSums(data), decreasing = TRUE), , drop = F ]
   }
   
   # Samples grouping via hasGroups
