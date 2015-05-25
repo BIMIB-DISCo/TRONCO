@@ -135,15 +135,23 @@ oncoprint <- function(x,
     cat('Grouping samples by stage annotation.\n')
     
     aux.fun = function(samp) {
+      print(samp)
       sub.data = data[, samp, drop= F]      
       sub.data = sub.data[, order(colSums(sub.data), decreasing = FALSE), drop = F]
       return(sub.data)
     }  
     
+  
     new.data = NULL
-    for(i in sort(unique(as.stages(x))))
-      new.data = cbind(new.data, aux.fun(rownames(ord.stages[ord.stages == i, , drop= F])))
-     
+    u.stages = sort(unlist(unique(as.stages(x))), na.last = T)
+    
+    #print(str(ord.stages))
+    
+    for(i in u.stages)
+    {
+      print(ord.stages[which(ord.stages == i), , drop=F])
+      new.data = cbind(new.data, aux.fun(rownames(ord.stages[which(ord.stages == i), , drop= F])))
+    }
     data = new.data
     data = data[order(rowSums(data), decreasing = TRUE), , drop = F ]
   }
@@ -193,7 +201,7 @@ oncoprint <- function(x,
   
   if(ann.hits)  samples.annotation$hits = nmut
   if(ann.stage) samples.annotation$stage = as.stages(x)[cn, 1]
-  if(hasGroups) samples.annotation$group = group.samples[cn, 1]
+  if(hasGroups) samples.annotation$cluster = group.samples[cn, 1]
   
   ############## Color samples annotation 
   annotation_colors = NULL
@@ -223,9 +231,9 @@ oncoprint <- function(x,
   	ngroups = length(unique(group.samples[,1]))
   	cat('Grouping labels:', paste(unique(group.samples[,1]), collapse=', '), '\n')
     
-  	group.color.attr = sample.RColorBrewer.colors('Accent', length(ngroups)) 
+  	group.color.attr = sample.RColorBrewer.colors('Accent', ngroups)
   	names(group.color.attr) = unique(group.samples[,1])
-    annotation_colors = append(annotation_colors, list(group=group.color.attr))
+    annotation_colors = append(annotation_colors, list(cluster=group.color.attr))
    }
 
   ##### GENES/EVENTS annotations: groups or indistinguishable
@@ -245,7 +253,6 @@ oncoprint <- function(x,
 			genes.pathway = rownames(as.events(x, genes=gene.annot[[names[i]]]))
 			genes.annotation[genes.pathway, 'group'] = names[i] 
 		}
-
 
 		if(length(gene.annot.color) == 1 && gene.annot.color %in% rownames(brewer.pal.info))
 		{
@@ -293,7 +300,7 @@ oncoprint <- function(x,
       annotation_colors, list(consolidate= consolidate.colors)
       )
     }
-    
+  
   ############## Augment gene names with frequencies 	
   genes.freq = rowSums(data)/nsamples(x)
   gene.names = x$annotations[rownames(data),2]
@@ -396,7 +403,7 @@ oncoprint <- function(x,
              annotation_colors = annotation_colors,	
              border_color = border.color,
              border=T,
-             margins=c(10,10),
+             margins = c(10,10),
              cellwidth = cellwidth, 
              cellheight = cellheight,
              legend = legend,             
