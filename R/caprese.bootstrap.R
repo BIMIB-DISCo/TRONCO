@@ -28,8 +28,18 @@
                             bootstrap.statistics = list()) 
 {
 	
+    suppressMessages(library(doParallel))
+
 	# start the clock to measure the execution time
 	ptm <- proc.time();
+
+    cores = detectCores()
+    if(cores < 1) {
+        cores = 1
+    }
+
+    expected.execution.time = round(((reconstruction$execution.time[3]*nboot)/(cores)),digits=0)
+    cat("Expected completion in approx.",format(.POSIXct(expected.execution.time,tz="GMT"),"%Hh:%Mm:%Ss"),"\n")
 	
 	# structure to save the results of the bootstrap
     curr.bootstrap.results = array(list(-1), c(nboot,nevents(reconstruction)))

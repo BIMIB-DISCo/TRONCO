@@ -244,7 +244,7 @@ as.description = function(x)
 #' @examples
 #' data(maf)
 #' mutations = import.MAF(maf)
-#' mutations = annotate.name(mutations, 'Example MAF')
+#' mutations = annotate.description(mutations, 'Example MAF')
 #' show(mutations)
 #' 
 #' @title show

@@ -24,7 +24,7 @@ one row for each gene, a column Hugo_Symbol with every gene name and a column En
 \examples{
 data(gistic)
 gistic = import.GISTIC(gistic)
-gistic = annotate.name(gistic, 'Example GISTIC')
+gistic = annotate.description(gistic, 'Example GISTIC')
 oncoprint(gistic)
 }
 

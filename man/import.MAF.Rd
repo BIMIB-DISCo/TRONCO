@@ -25,7 +25,7 @@ and a warning is raised if these occurr.
 \examples{
 data(maf)
 mutations = import.MAF(maf)
-mutations = annotate.name(mutations, 'Example MAF')
+mutations = annotate.description(mutations, 'Example MAF')
 mutations = TCGA.shorten.barcodes(mutations)
 oncoprint(mutations)
 }

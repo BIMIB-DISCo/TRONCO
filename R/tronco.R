@@ -445,9 +445,6 @@ tronco.bootstrap <- function( reconstruction,
 
     # perform the selected bootstrap procedure
     cat("Executing now the bootstrap procedure, this may take a long time...\n")
-    
-    expected.execution.time = round(((reconstruction$execution.time[3]*nboot)/(detectCores()-1)),digits=0)
-    cat("Expected completion in approx.",format(.POSIXct(expected.execution.time,tz="GMT"),"%Hh:%Mm:%Ss"),"\n")
 
     if(reconstruction$parameters$algorithm == "CAPRESE") {
         

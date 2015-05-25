@@ -87,7 +87,7 @@ Required table format:
 #' @examples
 #' data(gistic)
 #' gistic = import.GISTIC(gistic)
-#' gistic = annotate.name(gistic, 'Example GISTIC')
+#' gistic = annotate.description(gistic, 'Example GISTIC')
 #' oncoprint(gistic)
 #' 
 #' @title import.GISTIC
@@ -188,7 +188,7 @@ Required table format constitent with TCGA data for focal CNAs:
 #' @examples
 #' data(maf)
 #' mutations = import.MAF(maf)
-#' mutations = annotate.name(mutations, 'Example MAF')
+#' mutations = annotate.description(mutations, 'Example MAF')
 #' mutations = TCGA.shorten.barcodes(mutations)
 #' oncoprint(mutations)
 #' 
