@@ -171,8 +171,6 @@ bootstrap.capri <- function(dataset,
 
         } else if(command=="parametric") {
                 
-            
-            
             # perform the reconstruction for each model
             new.reconstruction = reconstruction;
             new.reconstruction$model = list();
