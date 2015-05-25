@@ -163,6 +163,14 @@ tronco.capri <- function( data,
     do.estimation = FALSE, 
     silent = FALSE ) 
 {
+    ###############
+    # DEV VERSION #
+    ###############
+
+    if(do.estimation) {
+        stop("do.estimation not yet available. Please try again later...")
+    }
+
     #check for the inputs to be correct
     if(is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
@@ -323,6 +331,12 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
                 
     }
     else if(reconstruction$parameters$algorithm=="CAPRI") {
+
+            ###############
+            # DEV VERSION #
+            ###############
+            stop("do.estimation not yet available. Please try again later...")
+
         
             cat("Executing now the estimation procedure, this may take a long time...\n")
         
