@@ -18,5 +18,5 @@
 
 .onAttach <- function(lib, pkg) {
 	packageStartupMessage("A new version of TRONCO is available")
-	packageStartupMessage("Please go to https://github.com/BIMIB-DISCo/TRONCO/releases and download the latest relead\n")
+	packageStartupMessage("Please go to https://github.com/BIMIB-DISCo/TRONCO/releases and download the latest relese.\n")
 }
