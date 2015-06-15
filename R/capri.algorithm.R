@@ -59,9 +59,11 @@ function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","ai
     # add back in any connection invalid for the probability raising theory
     if(length(invalid.events)>0) {        
 		for(i in 1:nrow(invalid.events)) {
-    			prima.facie.parents$adj.matrix[invalid.events[i,"cause"],invalid.events[i,"effect"]] = 1;
+			prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i,"cause"],invalid.events[i,"effect"]] = 1;
+			prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i,"cause"],invalid.events[i,"effect"]] = 1;
 		}
 	}
+	adj.matrix.prima.facie = prima.facie.parents$adj.matrix$adj.matrix.cyclic
     
     # perform the likelihood fit with the required regularization scores
     model = list();
@@ -69,7 +71,7 @@ function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","ai
     
     		# perform the likelihood fit with the chosen regularization score on the prima facie topology
     		if(!silent) cat(paste0('*** Performing likelihood-fit with regularization ',reg,'.\n'))
-    		best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command,regularization=reg);
+    		best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix$adj.matrix.acyclic,command,regularization=reg);
     		
     		# set the structure to save the conditional probabilities of the reconstructed topology
     		parents.pos.fit = array(list(),c(ncol(dataset),1));
@@ -114,7 +116,7 @@ function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","ai
     parameters = list(algorithm="CAPRI",command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation,silent=silent);
     
     # return the results
-    topology = list(dataset=dataset,hypotheses=hypotheses,confidence=prima.facie.parents$pf.confidence,model=model,parameters=parameters,execution.time=(proc.time()-ptm));
+    topology = list(dataset=dataset,hypotheses=hypotheses,adj.matrix.prima.facie=adj.matrix.prima.facie,confidence=prima.facie.parents$pf.confidence,model=model,parameters=parameters,execution.time=(proc.time()-ptm));
     return(topology);
     
 }
@@ -488,17 +490,21 @@ function( adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.mode
     }
     
     # remove any cycle
+    adj.matrix.cyclic = probability.raising$adj.matrix
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
+    	
     		if(!silent) cat('*** Loop detection found loops to break.\n')
         
         weights.temporal.priority = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]];
         weights.matrix = probability.raising$edge.confidence.matrix[[2,1]]+probability.raising$edge.confidence.matrix[[3,1]];
         acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses,silent);
-        adj.matrix = acyclic.topology$adj.matrix;
+        adj.matrix.acyclic = acyclic.topology$adj.matrix;
+        
     }
     else {
-        adj.matrix = probability.raising$adj.matrix;
+        adj.matrix.acyclic = probability.raising$adj.matrix;
     }
+    adj.matrix = list(adj.matrix.cyclic=adj.matrix.cyclic,adj.matrix.acyclic=adj.matrix.acyclic)
     
     # save the results and return them
     prima.facie.topology <- list(adj.matrix=adj.matrix,edge.confidence.matrix=probability.raising$edge.confidence.matrix);
@@ -556,17 +562,21 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
     }
     
     # remove any cycle
+    adj.matrix.cyclic = probability.raising$adj.matrix
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
+    	
     		if(!silent) cat('*** Loop detection found loops to break.\n')
     		
     		weights.temporal.priority = probability.raising$edge.confidence.matrix[[2,1]];
         weights.matrix = probability.raising$edge.confidence.matrix[[2,1]] + probability.raising$edge.confidence.matrix[[3,1]];
         acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses,silent);
-        adj.matrix = acyclic.topology$adj.matrix;
+        adj.matrix.acyclic = acyclic.topology$adj.matrix;
+        
     }
     else {
-        adj.matrix = probability.raising$adj.matrix;
+        adj.matrix.acyclic = probability.raising$adj.matrix;
     }
+    adj.matrix = list(adj.matrix.cyclic=adj.matrix.cyclic,adj.matrix.acyclic=adj.matrix.acyclic)
     
     # save the results and return them
     prima.facie.topology <- list(adj.matrix=adj.matrix,edge.confidence.matrix=probability.raising$edge.confidence.matrix);
