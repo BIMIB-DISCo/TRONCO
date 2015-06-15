@@ -220,6 +220,9 @@ tronco.capri <- function( data,
     # names(reconstruction)[1] = "data"
     # reconstruction$hypotheses = NULL;
     
+    rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
+    colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
+    
     rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
     colnames(reconstruction$confidence) = "confidence";
     rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
@@ -262,6 +265,7 @@ tronco.capri <- function( data,
     
     # structure to save the results
     results = data;
+    results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
     results$confidence = reconstruction$confidence;
     results$model = reconstruction$model;
     results$parameters = reconstruction$parameters;
