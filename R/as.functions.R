@@ -868,13 +868,13 @@ as.error.rates = function(x, models = names(x$model))
 #' @param models A subset of reconstructed models, all by default.
 #' @return All the selective advantage relations in a TRONCO model 
 #' @export as.selective.advantage.relations
-as.selective.advantage.relations = function(x, events = as.events(x), models = names(x$model))
+as.selective.advantage.relations = function(x, events = as.events(x), models = names(x$model), type = 'fit')
 {
   is.compliant(x)
   is.model(x)
   is.events.list(x, events)
   
-  matrix = as.adj.matrix(x, events = events, models = models, type = 'fit')
+  matrix = as.adj.matrix(x, events = events, models = models, type = type)
   matrix = lapply(matrix, keysToNames, x = x)
     
   conf = as.confidence(x, conf = c('tp', 'pr', 'hg'))

@@ -188,7 +188,7 @@ change.color = function(x, type, new.color)
 
 #' @export
 delete.samples = function(x, samples) {
-  is.compliant(x)
+  is.compliant(x, 'delete.samples input')
   stages = has.stages(x)
   del = list()
   actual.samples = as.samples(x)
@@ -207,7 +207,7 @@ delete.samples = function(x, samples) {
     x$stages = x$stages[!rownames(x$stages) %in% del, , drop=FALSE]
   }
   
-  is.compliant(x)
+  is.compliant(x, 'delete.samples output')
   
   return(x)
 }

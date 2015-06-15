@@ -143,7 +143,7 @@ rank.recurrents = function(x, n)
 #' @export
 samples.selection = function(x, samples)
 {
-  is.compliant(x)
+  is.compliant(x, 'Input:')
   
   missing = setdiff(samples, as.samples(x))
   if(length(missing) > 0) warning(paste('Missing samples: ', paste(missing, collapse=', ')))
