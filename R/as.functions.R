@@ -45,9 +45,17 @@ as.samples = function(x)
 #' @param types The types of events to consider, if NA all available types are used.
 #' @return A vector of gene symbols for which a certain type of event exists
 #' @export as.genes
-as.genes = function(x, types=NA)
+as.genes = function(x, types = NA)
 {
-  return(unlist(unique(as.events(x, types=types)[, 'event'])))
+  if('Pattern' %in% types) stop('Pattern is not a valid gene type, it\'s a keyword reserved in TRONCO.')
+  if(nhypotheses(x) > 0) 
+  {
+    ev = as.events(x, types=types)
+    ev = ev[ which(ev[, 'type'] != 'Pattern'), 'event']
+    return(unique(ev))
+  }
+  else
+  return(unique(as.events(x, types=types)[, 'event']))
 }
 
 #' Return all events involving certain genes and of a certain type in 'x', which should be a
@@ -146,8 +154,8 @@ as.gene = function(x, genes, types=NA)
   keys = as.events(x, genes=genes, types=types)
   
   data = data.frame(x$genotypes[, rownames(keys)], row.names = as.samples(x))
-  colnames(data) = keys[, 'type']
-	
+  colnames(data) = apply(keys, 1, FUN = paste, collapse = ' ')
+  
 	return(data)
 }
 
@@ -450,9 +458,10 @@ sort.by.frequency = function(x)
 #' @export
 nhypotheses = function(x)
 {
-  is.compliant(x$data)
-  if ('hstructure' %in% names(x$data$hypotheses)) {
-    return(length(ls(x$data$hypotheses$hstructure)))
+  if(any(is.null(x$hypotheses))) return(0)
+    
+  if ('hstructure' %in% names(x$hypotheses)) {
+    return(length(ls(x$hypotheses$hstructure)))
   }
   return(0)
 }
@@ -874,7 +883,10 @@ as.selective.advantage.relations = function(x, events = as.events(x), models = n
   is.model(x)
   is.events.list(x, events)
   
-  matrix = as.adj.matrix(x, events = events, models = models, type = type)
+  # TEMPORARY HORRIBLE FIX
+  matrix = NULL
+  if(type == 'pf') matrix$pf = x$adj.matrix.prima.facie   
+  else matrix = as.adj.matrix(x, events = events, models = models, type = type)
   matrix = lapply(matrix, keysToNames, x = x)
     
   conf = as.confidence(x, conf = c('tp', 'pr', 'hg'))
