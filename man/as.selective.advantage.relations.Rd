@@ -5,7 +5,7 @@
 \title{as.selective.advantage.relations}
 \usage{
 as.selective.advantage.relations(x, events = as.events(x),
-  models = names(x$model))
+  models = names(x$model), type = "fit")
 }
 \arguments{
 \item{x}{A TRONCO model.}

@@ -24,7 +24,7 @@ Bootstrap a reconstructed progression model
 data(maf)
 mutations = import.MAF(maf)
 recon = tronco.capri(mutations)
-boot = tronco.bootstrap(recon)
+boot = tronco.bootstrap(recon, nboot=10)
 tronco.plot(boot)
 }
 

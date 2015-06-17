@@ -389,6 +389,10 @@ oncoprint <- function(x,
 #   }
 
   ############## Real pheatmap  
+  if (ncol(samples.annotation) == 0) {
+    samples.annotation = NA
+  }
+
   ret = pheatmap(data, 
              scale = "none", 
              col = map.gradient, 
