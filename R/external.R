@@ -2,8 +2,11 @@
 # (ref: https://code.google.com/p/mutex/ )
 #' @title export mutex
 #' @param x The TRONCO standard object
-#' @param filename
-#' @param filepath 
+#' @param filename TODO
+#' @param filepath  TODO
+#' @param label.mutation TODO
+#' @param label.amplification TODO
+#' @param label.deletion TODO
 #' @export
 export.mutex = function(x, 
                       filename = 'tronco_to_mutex',
@@ -137,17 +140,14 @@ export.mutex = function(x,
 #' @import R.matlab
 #' @param x The TRONCO standard object
 #' @param map_hugo_entrez   Hugo_Symbol  - Entrez_Gene_Id
-#' @param filename
-#' @param filepath 
+#' @param file TODO
 #' @export
 export.nbs.input = function(x, 
                       map_hugo_entrez,
                       file = 'tronco_to_nbs.mat')
 {
-  if (!require(R.matlab)) {
-    install.packages('R.matlab', dependencies = TRUE)
-    library(R.matlab)
-  }
+
+  suppressMessages(library(R.matlab))
   
   is.compliant(x);
   
@@ -383,3 +383,18 @@ TCGA.map.clinical.data = function(file, sep='\t', column.samples, column.map)
   return(map)
 }
 
+sample.RColorBrewer.colors = function(palette, ncolors)
+{
+  if(!palette %in% rownames(brewer.pal.info)) stop('Invalid RColorBrewer palette.')
+
+  pmax.cols = brewer.pal.info[palette, 'maxcolors']
+  
+  cols = min(pmax.cols , ncolors)
+  cols = ifelse(cols < 3, 3, cols)
+  
+  colors = brewer.pal(n=cols, name=palette)
+  if(ncolors < 3) colors = colors[1:ncolors]
+  else colors =  colorRampPalette(colors)(ncolors)
+  
+  return(colors)
+}

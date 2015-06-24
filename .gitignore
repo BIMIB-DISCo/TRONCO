@@ -25,3 +25,6 @@
 
 # Configuration file
 cfg.R
+
+# Exclude data folder
+!data/*

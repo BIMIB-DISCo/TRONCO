@@ -4,52 +4,16 @@
 \alias{tronco.plot}
 \title{plot a progression model}
 \usage{
-tronco.plot(x, secondary = NULL, fontsize = 18, height = 2, width = 3,
-  height.logic = 1, pf = FALSE, disconnected = FALSE, scale.nodes = NA,
-  name = deparse(substitute(capri)), title = paste("Progression model",
-  x$parameters$algorithm), confidence = FALSE, legend = TRUE,
-  legend.cex = 1, edge.cex = 1, label.edge.size = 12,
-  hidden.and = FALSE, expand = TRUE, genes = NULL, edge.color = "black",
-  pathways.color = "Set1", file = NA, legend.pos = "bottom",
-  pathways = NULL, lwd = 3, ...)
-}
-\arguments{
-\item{title}{plot Plot title (default "Progression model x", x reconstruction algorithm)}
-
-\item{confidence}{bool; plot edges according to confidence (default is f)}
-
-\item{legend}{bool; show/hide the legend (default is t)}
-
-\item{label.edge.size}{double; size of the confidence label, when used (default is 12)}
-
-\item{legend.pos}{string; legend positioning, available keywords "topleft", "topright","bottomleft" and "bottomright" (default is "bottomright")}
-
-\item{curr.topology}{A curr.topology returned by a reconstruction algorithm}
-
-\item{title.color}{color title (default "black")}
-
-\item{legend.title}{string; legend title (default is "Legend")}
-
-\item{legend.columns}{int; use 1 or 2 columns to plot the legend (default is 1)}
-
-\item{legend.inline}{bool; print inline legend (default is f)}
-
-\item{legend.coeff}{double; size of the types label in the legend (default is 1)}
-
-\item{label.coeff}{double; size of the events label (default is 1)}
-
-\item{label.color}{color events label (default "black")}
+tronco.plot(x, regularization = names(x$model), fontsize = NA, height = 2,
+  width = 3, height.logic = 1, pf = FALSE, disconnected = FALSE,
+  scale.nodes = NA, title = as.description(x), confidence = NA,
+  p.min = x$parameters$pvalue, legend = TRUE, legend.cex = 1,
+  edge.cex = 1, label.edge.size = NA, expand = TRUE, genes = NULL,
+  relations.filter = NA, edge.color = "black", pathways.color = "Set1",
+  file = NA, legend.pos = "bottom", pathways = NULL, lwd = 3,
+  annotate.sample = NA, ...)
 }
 \description{
-\code{tronco.plot} plots a progression model from a recostructed \code{curr.topology}.
-}
-\examples{
-\dontrun{
-    types.load("data/types.txt");
-    events.load("data/events.txt");
-   data.load("data/CGH.txt");
-   topology <- tronco.caprese();
-   tronco.plot(curr.topology, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
-}
+\code{tronco.plot} plots a progression model from a recostructed \code{curr.reconstruction}.
 }
 

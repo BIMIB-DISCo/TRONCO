@@ -1,177 +1,50 @@
-#### tronco.bootstrap.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
+#' Genotype-level cancer progression models describe the ordering of
+#' accumulating mutations, e.g., somatic mutations / copy number variations,
+#' during cancer development. These graphical models help understand the
+#' causal structure involving events promoting cancer progression, possibly
+#' predicting complex patterns characterising genomic progression of a cancer.
+#' Reconstructed models can be used to better characterise genotype-phenotype
+#' relation, and suggest novel targets for therapy design. 
+#'
+#' TRONCO (TRanslational ONCOlogy) is a R package aimed at collecting
+#' state-of-the-art algorithms to infer progression models from
+#' cross-sectional data, i.e., data collected from independent patients which
+#' does not necessarily incorporate any evident temporal information. These
+#' algorithms require a binary input matrix where: (i) each row represents a
+#' patient genome, (ii) each column an event relevant to the progression (a
+#' priori selected) and a 0/1 value models the absence/presence of a certain
+#' mutation in a certain patient. The current first version of TRONCO
+#' implements the CAPRESE algorithm (Cancer PRogression Extraction with Single
+#' Edges) to infer possible progression models arranged as trees; cfr.
+#' Inferring tree causal models of cancer progression with probability
+#' raising, L. Olde Loohuis, G. Caravagna, A. Graudenzi, D. Ramazzotti, G.
+#' Mauri, M. Antoniotti and B. Mishra. PLoS One, to appear. This vignette
+#' shows how to use TRONCO to infer a tree model of ovarian cancer progression
+#' from CGH data of copy number alterations (classified as gains or losses
+#' over chromosome's arms). The dataset used is available in the SKY/M-FISH
+#' database.
+#'
+#' @docType package
+#' @name TRONCO
+NULL
 
-#' @export
-tronco.bootstrap <- function( topology, 
-                              type="non-parametric", 
-                              nboot=100)
-{
-    #check for the inputs to be correct
-    if(is.null(topology)) {
-        stop("A valid reconstruction has to be provided in order to estimate its confidence.", call. = FALSE)
-    }
+#' Reconstruc a progression model using CAPRESE algorithm
+#'
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf)
+#' recon = tronco.caprese(mutations)
+#' tronco.plot(recon)
+#'
+#' @title tronco caprese
+#' @param data A TRONCO compliant dataset.
+#' @param lambda TODO
+#' @param do.estimation TODO
+#' @param silent TODO
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.caprese
+tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = FALSE ) {
 
-    if(topology$parameters$do.estimation == FALSE && type == "parametric") {
-        stop("To perform parametric bootstrap, the estimation of error rates and probabilities should be computed.", call. = FALSE)
-    }
-
-    #set all the needed parameters to perform the bootstrap
-    if(type == "non-parametric" || type == "parametric") {
-        dataset = topology$data$genotypes
-        
-        if(topology$parameters$algorithm == "CAPRESE") {
-            lambda = topology$parameters$lambda
-            adj.matrix = topology$adj.matrix
-
-            if(type == "parametric") {
-
-                if(topology$parameters$do.estimation == TRUE) {
-                    estimated.marginal.probs = topology$probabilities$estimated.marginal.probs
-                    estimated.conditional.probs = topology$probabilities$estimated.conditional.probs
-                    parents.pos = topology$parents.pos
-                    error.rates = topology$error.rates
-                } else {
-                    stop("To perform parametric bootstrap, the estimation of the error rates should be performed first.", call. = FALSE)
-                }
-            }
-        } else if(topology$parameters$algorithm == "CAPRI") {
-            hypotheses = topology$data$hypotheses
-            
-            if(is.null(hypotheses)) {
-                hypotheses = NA
-            }
-
-            command.capri = do.boot = topology$parameters$command
-    
-            do.boot = topology$parameters$do.boot
-            nboot.capri = topology$parameters$nboot
-            pvalue = topology$parameters$pvalue
-
-            adj.matrix.pf = topology$adj.matrix$adj.matrix.pf
-            adj.matrix.bic = topology$adj.matrix$adj.matrix.bic
-
-            if(type=="parametric") {
-                if(topology$parameters$do.estimation == TRUE) {
-                    
-                    estimated.marginal.probs.pf = topology$probabilities$probabilities.pf$estimated.marginal.probs
-                    estimated.conditional.probs.pf = topology$probabilities$probabilities.pf$estimated.conditional.probs
-                    parents.pos.pf = topology$parents.pos$parents.pos.pf
-                    error.rates.pf = topology$error.rates$error.rates.pf
-                    
-                    estimated.marginal.probs.bic = topology$probabilities$probabilities.bic$estimated.marginal.probs
-                    estimated.conditional.probs.bic = topology$probabilities$probabilities.bic$estimated.conditional.probs
-                    parents.pos.bic = topology$parents.pos$parents.pos.bic
-                    error.rates.bic = topology$error.rates$error.rates.bic
-                
-                } else {
-                    stop("To perform parametric bootstrap, the estimation of the error rates should be performed first.", call. = FALSE)
-                }
-            }
-        }
-    } else {
-        stop("The types of bootstrap that can be performed are: non-parametric or parametric.", call. = FALSE)
-    }
-
-    #perform the selected bootstrap procedure
-    cat("Executing now the bootstrap procedure, this may take a long time...\n")
-
-    if(topology$parameters$algorithm == "CAPRESE") {
-        if(type == "non-parametric") {
-            curr.boot = bootstrap.caprese(dataset, lambda, adj.matrix, type, NA, NA, NA, nboot)
-        } else if(type == "parametric") {
-            curr.boot = bootstrap.caprese(dataset,
-                                          lambda,
-                                          adj.matrix,
-                                          type,
-                                          estimated.marginal.probs,
-                                          estimated.conditional.probs,
-                                          error.rates,nboot)
-        }
-
-        topology$bootstrap = curr.boot
-        cat("\nConfidence overall value: ", curr.boot$confidence$overall.value)
-        cat("\nConfidence overall frequency: ", curr.boot$confidence$overall.frequency)
-        cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", lambda, " as shrinkage parameter.\n\n", sep =""))
-    
-    } else if(topology$parameters$algorithm == "CAPRI") {
-        
-        if(type == "non-parametric") {
-            curr.boot = bootstrap.capri(dataset,
-                                        hypotheses,
-                                        command.capri,
-                                        do.boot,
-                                        nboot.capri,
-                                        pvalue,
-                                        adj.matrix.pf,
-                                        adj.matrix.bic,
-                                        type,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        NA,
-                                        nboot,
-                                        REGULARIZATION=topology$parameters$REGULARIZATION)
-
-        } else if(type=="parametric") {
-            curr.boot = bootstrap.capri(dataset,
-                                        hypotheses,
-                                        command.capri,
-                                        do.boot,
-                                        nboot.capri,
-                                        pvalue,
-                                        adj.matrix.pf,
-                                        adj.matrix.bic,
-                                        type,
-                                        estimated.marginal.probs.pf,
-                                        estimated.conditional.probs.pf,
-                                        parents.pos.pf,
-                                        error.rates.pf,
-                                        estimated.marginal.probs.bic,
-                                        estimated.conditional.probs.bic,
-                                        parents.pos.bic,
-                                        error.rates.bic,
-                                        nboot,
-                                        REGULARIZATION=topology$parameters$REGULARIZATION)
-
-        }
-
-        topology$bootstrap = curr.boot
-
-        cat("\nConfidence overall \"prima facie\" value:",curr.boot$confidence$confidence.pf$overall.value.pf)
-        cat("\nConfidence overall \"prima facie\" frequency:",curr.boot$confidence$confidence.pf$overall.frequency.pf)
-        cat("\nConfidence overall \"bic\" value:",curr.boot$confidence$confidence.bic$overall.value.bic)
-        cat("\nConfidence overall \"bic\" frequency:",curr.boot$confidence$confidence.bic$overall.frequency.bic)
-
-        if(do.boot == TRUE) {
-            cat(paste("\n\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", pvalue, " as pvalue for the statistical tests.\n\n", sep =""))
-        } else {
-            cat(paste("\n\nPerformed ", type, " bootstrap with ", nboot, " resampling.\n\n", sep =""))
-        }
-    }
-
-    return(topology)
-}
-
-#### end of file -- tronco.bootstrap.R
-
-
-#### tronco.caprese.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-#' @export
-tronco.caprese <- function(data, lambda = 0.5, do.estimation = FALSE) {
     #check for the inputs to be correct
     if(is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
@@ -179,64 +52,125 @@ tronco.caprese <- function(data, lambda = 0.5, do.estimation = FALSE) {
     if(lambda < 0 || lambda > 1) {
         stop("The value of the shrinkage parameter lambda has to be in [0:1]!",call.=FALSE);
     }
-    #reconstruct the topology with CAPRESE
-    cat(paste("Running CAPRESE algorithm with shrinkage coefficient:",lambda,"\n"));
-    topology = caprese.fit(data$genotypes,lambda,do.estimation);
-    topology$data = data;
-    #set rownames and colnames to the results
-    rownames(topology$probabilities$marginal.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$marginal.probs) = "marginal probability";
-    rownames(topology$probabilities$joint.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$joint.probs) = colnames(data$genotypes);
-    rownames(topology$probabilities$conditional.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$conditional.probs) = "conditional probability";
-    rownames(topology$parents.pos) = colnames(data$genotypes);
-    colnames(topology$parents.pos) = "parent";
-    rownames(topology$confidence) = c("probabilistic causality","hypergeometric test","adjusted hypergeometric test");
-    colnames(topology$confidence) = "confidence";
-    rownames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-    colnames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-    rownames(topology$confidence[[2,1]]) = colnames(data$genotypes);
-    colnames(topology$confidence[[2,1]]) = colnames(data$genotypes);
-    rownames(topology$confidence[[3,1]]) = colnames(data$genotypes);
-    colnames(topology$confidence[[3,1]]) = colnames(data$genotypes);
-    rownames(topology$adj.matrix) = colnames(data$genotypes);
-    colnames(topology$adj.matrix) = colnames(data$genotypes);
-    if(do.estimation==TRUE) {
-        rownames(topology$probabilities$estimated.marginal.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$estimated.marginal.probs) = "marginal probability";
-        rownames(topology$probabilities$estimated.joint.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$estimated.joint.probs) = colnames(data$genotypes);
-        rownames(topology$probabilities$estimated.conditional.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$estimated.conditional.probs) = "conditional probability";
+    
+    # check for the input to be compliant
+    is.compliant(data)
+    
+    #reconstruct the reconstruction with CAPRESE
+    if(silent==FALSE) {
+      cat('*** Checking input events.\n')
+      invalid = consolidate.data(data, TRUE)      
+      if(length(unlist(invalid)) > 0) warning(
+        "Input events should be consolidated - see consolidate.data."
+        );
+      
+      cat(paste0(
+            '*** Inferring a progression model with the following settings.\n',
+            '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
+            '\tAlgorithm: CAPRESE with shrinkage coefficient: ', lambda, '.\n'
+        ))
     }
-    #the reconstruction has been completed
-    cat(paste("The reconstruction has been successfully completed.","\n"));
-    return(topology);
+    reconstruction = caprese.fit(data$genotypes,lambda,do.estimation,silent);
+    
+    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
+    colnames(reconstruction$confidence) = "confidence";
+    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+    
+    for (i in 1:length(reconstruction$model)) {
+        
+        #set rownames and colnames to the probabilities
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
+        
+        #set rownames and colnames to the parents positions
+        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
+        
+        #set rownames and colnames to the adjacency matrices
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        
+        if(do.estimation==TRUE) {
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+        }
+        
+    }
+    
+    # structure to save the results
+    results = data;
+    results$confidence = reconstruction$confidence;
+    results$model = reconstruction$model;
+    results$parameters = reconstruction$parameters;
+    results$execution.time = reconstruction$execution.time;
+    
+    # the reconstruction has been completed
+    if(!silent) cat(paste(
+      "The reconstruction has been successfully completed in", 
+      format(.POSIXct(round(reconstruction$execution.time[3],digits=0),tz="GMT"),"%Hh:%Mm:%Ss"), 
+      "\n"));
+    
+  return(results);
+    
 }
 
-#### end of file -- tronco.caprese.R
 
 
-#### tronco.capri.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-#' @export
+#' Reconstruc a progression model using CAPRI algorithm
+#'
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf)
+#' recon = tronco.capri(mutations)
+#' tronco.plot(recon)
+#'
+#' @title tronco capri
+#' @param data A TRONCO compliant dataset.
+#' @param command TODO
+#' @param regularization TODO
+#' @param do.boot TODO
+#' @param nboot TODO
+#' @param pvalue TODO
+#' @param min.boot TODO
+#' @param min.stat TODO
+#' @param boot.seed TODO
+#' @param do.estimation TODO
+#' @param silent TODO
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.capri
 tronco.capri <- function( data, 
     command = "hc", 
-    REGULARIZATION = "bic", 
+    regularization = c("bic","aic"), 
     do.boot = TRUE, 
     nboot = 100, 
     pvalue = 0.05, 
-    do.estimation = FALSE, 
     min.boot = 3, 
     min.stat = TRUE, 
-    boot.seed = 12345 ) 
+    boot.seed = NULL, 
+    do.estimation = FALSE, 
+    silent = FALSE ) 
 {
+    ###############
+    # DEV VERSION #
+    ###############
+
+    if(do.estimation) {
+        stop("do.estimation not yet available. Please try again later...")
+    }
+
     #check for the inputs to be correct
     if(is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
@@ -251,76 +185,103 @@ tronco.capri <- function( data,
         stop("The value of the pvalue has to be in [0:1]!",call.=FALSE);
     }
     
-    # cat(..)
+    # check for the input to be compliant
+    is.compliant(data)
     
-    #reconstruct the topology with CAPRI
-    cat(paste0(
-        '*** Inferring a progression model with the following settings.\n',
-        '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
-        '\tAlgorithm: CAPRI with \"', REGULARIZATION, '\" regularization and \"', command, '\" likelihood-fit strategy.\n',
-        '\tRandom seed: ', boot.seed, '.\n',
-        '\tBootstrap iterations (Wilcoxon): ', ifelse(do.boot, nboot, 'disabled'), '.\n',
-        ifelse(do.boot, 
-            paste0('\t\texhaustive bootstrap: ', min.stat, '.\n\t\tp-value: ', pvalue, '.\n\t\tminimum bootstrapped scores: ', min.boot, '.\n'), '')        
-        ))
+    # reconstruct the reconstruction with CAPRI
+    if(is.null(boot.seed)) {
+        my.seed = "NULL"    
+    }
+    else {
+            my.seed = boot.seed;
+    }
+    if(silent==FALSE) {
+      cat('*** Checking input events.\n')
+      invalid = consolidate.data(data, TRUE)
+      if(length(unlist(invalid)) > 0) warning(
+        "Input events should be consolidated - see consolidate.data."
+      );
+      
+      
+      cat(paste0(
+            '*** Inferring a progression model with the following settings.\n',
+            '\tDataset size: n = ', nsamples(data), ', m = ', nevents(data), '.\n',
+            '\tAlgorithm: CAPRI with \"', paste0(regularization,collapse=", "), '\" regularization and \"', command, '\" likelihood-fit strategy.\n',
+            '\tRandom seed: ', my.seed, '.\n',
+            '\tBootstrap iterations (Wilcoxon): ', ifelse(do.boot, nboot, 'disabled'), '.\n',
+            ifelse(do.boot, 
+                paste0('\t\texhaustive bootstrap: ', min.stat, '.\n\t\tp-value: ', pvalue, '.\n\t\tminimum bootstrapped scores: ', min.boot, '.\n'), '')        
+            ))
+    }
         
-    topology = capri.fit(data$genotypes,data$hypotheses,command=command,do.boot=do.boot,nboot=nboot,pvalue=pvalue,do.estimation=do.estimation,regularization=REGULARIZATION,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed);
-    topology$data = data;
+    reconstruction = capri.fit(data$genotypes,data$hypotheses,command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation,silent=silent);
     
-    ### TMP ###
-    topology$probabilities$probabilities.bic = topology$probabilities$probabilities.fit;
-    topology$parents.pos$parents.pos.bic = topology$parents.pos$parents.pos.fit;
-    topology$adj.matrix$adj.matrix.bic = topology$adj.matrix$adj.matrix.fit;
-    ###########
+    # reconstruction[[1]] = data;
+    # names(reconstruction)[1] = "data"
+    # reconstruction$hypotheses = NULL;
     
-    #set rownames and colnames to the results
-    rownames(topology$probabilities$probabilities.pf$marginal.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$probabilities.pf$marginal.probs) = "marginal probability";
-    rownames(topology$probabilities$probabilities.pf$joint.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$probabilities.pf$joint.probs) = colnames(data$genotypes);
-    rownames(topology$probabilities$probabilities.pf$conditional.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$probabilities.pf$conditional.probs) = "conditional probability";
-    rownames(topology$probabilities$probabilities.bic$marginal.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$probabilities.bic$marginal.probs) = "marginal probability";
-    rownames(topology$probabilities$probabilities.bic$joint.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$probabilities.bic$joint.probs) = colnames(data$genotypes);
-    rownames(topology$probabilities$probabilities.bic$conditional.probs) = colnames(data$genotypes);
-    colnames(topology$probabilities$probabilities.bic$conditional.probs) = "conditional probability";
-    rownames(topology$parents.pos$parents.pos.pf) = colnames(data$genotypes);
-    colnames(topology$parents.pos$parents.pos.pf) = "parent";
-    rownames(topology$parents.pos$parents.pos.bic) = colnames(data$genotypes);
-    colnames(topology$parents.pos$parents.pos.bic) = "parent";
-    rownames(topology$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-    colnames(topology$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-    rownames(topology$adj.matrix$adj.matrix.bic) = colnames(data$genotypes);
-    colnames(topology$adj.matrix$adj.matrix.bic) = colnames(data$genotypes);
-    rownames(topology$confidence) = c("temporal priority","probability raising","hypergeometric test");
-    colnames(topology$confidence) = "confidence";
-    if(do.boot==TRUE) {
-        rownames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-        colnames(topology$confidence[[1,1]]) = colnames(data$genotypes);
-        rownames(topology$confidence[[2,1]]) = colnames(data$genotypes);
-        colnames(topology$confidence[[2,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
+    colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
+    
+    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
+    colnames(reconstruction$confidence) = "confidence";
+    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+    
+    for (i in 1:length(reconstruction$model)) {
+        
+        #set rownames and colnames to the probabilities
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
+        
+        #set rownames and colnames to the parents positions
+        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
+        
+        #set rownames and colnames to the adjacency matrices
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        
+        if(do.estimation==TRUE) {
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+        }
+        
     }
-    rownames(topology$confidence[[3,1]]) = colnames(data$genotypes);
-    colnames(topology$confidence[[3,1]]) = colnames(data$genotypes);
-    if(do.estimation==TRUE) {
-        rownames(topology$probabilities$probabilities.pf$estimated.marginal.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$probabilities.pf$estimated.marginal.probs) = "marginal probability";
-        rownames(topology$probabilities$probabilities.pf$estimated.joint.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$probabilities.pf$estimated.joint.probs) = colnames(data$genotypes);
-        rownames(topology$probabilities$probabilities.pf$estimated.conditional.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$probabilities.pf$estimated.conditional.probs) = "conditional probability";
-        rownames(topology$probabilities$probabilities.bic$estimated.marginal.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$probabilities.bic$estimated.marginal.probs) = "marginal probability";
-        rownames(topology$probabilities$probabilities.bic$estimated.joint.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$probabilities.bic$estimated.joint.probs) = colnames(data$genotypes);
-        rownames(topology$probabilities$probabilities.bic$estimated.conditional.probs) = colnames(data$genotypes);
-        colnames(topology$probabilities$probabilities.bic$estimated.conditional.probs) = "conditional probability";
-    }
-    #the reconstruction has been completed
-    cat(paste("The reconstruction has been successfully completed.","\n"));
-    return(topology);
+    
+    # structure to save the results
+    results = data;
+    results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
+    results$confidence = reconstruction$confidence;
+    results$model = reconstruction$model;
+    results$parameters = reconstruction$parameters;
+    results$execution.time = reconstruction$execution.time;
+    
+  
+
+    
+  
+    # the reconstruction has been completed
+    if(!silent) cat(paste(
+      "The reconstruction has been successfully completed in", 
+      format(.POSIXct(round(reconstruction$execution.time[3],digits=0),tz="GMT"),"%Hh:%Mm:%Ss"), 
+      "\n"));
+  
+    return(results);
 }
 
 #### end of file -- tronco.capri.R
@@ -334,76 +295,224 @@ tronco.capri <- function( data,
 #### information.
 
 #' @export
-tronco.estimation <- function( topology, error.rates = NA ) {
-    #check for the inputs to be correct
-    if(is.null(topology)) {
+tronco.estimation <- function( reconstruction, error.rates = NA ) {
+    
+    # check for the inputs to be correct
+    if(is.null(reconstruction)) {
         stop("A valid reconstruction has to be provided in order to estimate its confidence.",call.=FALSE);
     }
+    
+    # check for the input to be compliant
+    is.compliant(reconstruction)
+    
     #run the estimations for the required algorithm
-    if(topology$parameters$algorithm=="CAPRESE") {
-            #if I also need to estimate the error rates
+    if(reconstruction$parameters$algorithm=="CAPRESE") {
+        
+            cat("Executing now the estimation procedure, this may take a long time...\n")
+        
+            # if I also need to estimate the error rates
             if(is.na(error.rates[1])) {
-                #estimate the error rates
-                error.rates = estimate.tree.error.rates(topology$probabilities$marginal.probs,topology$probabilities$joint.probs,topology$parents.pos);
+                # estimate the error rates
+                error.rates = estimate.tree.error.rates(as.marginal.probs(reconstruction,models="caprese")[[1]],as.joint.probs(reconstruction,models="caprese")[[1]],as.parents.pos(reconstruction,models="caprese")[[1]]);
             }
-            #estimate the probabilities given the error rates
-        estimated.probabilities = estimate.tree.probs(topology$probabilities$marginal.probs,topology$probabilities$joint.probs,topology$parents.pos,error.rates);
-        #set the estimated error rates and probabilities
-        topology$error.rates = error.rates;
-        topology$probabilities$estimated.marginal.probs = estimated.probabilities$marginal.probs;
-        topology$probabilities$estimated.joint.probs = estimated.probabilities$joint.probs;
-        topology$probabilities$estimated.conditional.probs = estimated.probabilities$conditional.probs;
-        #set colnames and rownames
-        rownames(topology$probabilities$estimated.marginal.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$estimated.marginal.probs) = "marginal probability";
-        rownames(topology$probabilities$estimated.joint.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$estimated.joint.probs) = colnames(topology$data$genotypes);
-        rownames(topology$probabilities$estimated.conditional.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$estimated.conditional.probs) = "conditional probability";
+            
+            # estimate the probabilities given the error rates
+        estimated.probabilities = estimate.tree.probs(as.marginal.probs(reconstruction,models="caprese")[[1]],as.joint.probs(reconstruction,models="caprese")[[1]],as.parents.pos(reconstruction,models="caprese")[[1]],error.rates);
+        
+        # set the estimated error rates and probabilities
+        probabilities.fit = list(estimated.marginal.probs=estimated.probabilities$marginal.probs,estimated.joint.probs=estimated.probabilities$joint.probs,estimated.conditional.probs=estimated.probabilities$conditional.probs);
+        
+        reconstruction$model[["caprese"]]$error.rates = error.rates
+        reconstruction$model[["caprese"]]$probabilities$probabilities.fit = probabilities.fit
+        
+        # set colnames and rownames
+        rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+        rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+        rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+                
     }
-    else if(topology$parameters$algorithm=="CAPRI") {
-            #if I also need to estimate the error rates
+    else if(reconstruction$parameters$algorithm=="CAPRI") {
+
+            ###############
+            # DEV VERSION #
+            ###############
+            stop("do.estimation not yet available. Please try again later...")
+
+        
+            cat("Executing now the estimation procedure, this may take a long time...\n")
+        
+            # go through the models
+        do.estimate.error.rates = FALSE;
             if(is.na(error.rates[1])) {
-                #estimate the error rates
-                estimated.error.rates.pf = estimate.dag.error.rates(topology$data$genotypes,topology$probabilities$probabilities.pf$marginal.probs,topology$probabilities$probabilities.pf$joint.probs,topology$parents.pos$parents.pos.pf);
-                estimated.error.rates.bic = estimate.dag.error.rates(topology$data$genotypes,topology$probabilities$probabilities.bic$marginal.probs,topology$probabilities$probabilities.bic$joint.probs,topology$parents.pos$parents.pos.bic);
-                error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.bic=estimated.error.rates.bic);
+            do.estimate.error.rates = TRUE;
+        }
+            for (m in names(as.models(reconstruction))) {
+                
+                # if I also need to estimate the error rates
+            if(do.estimate.error.rates) {
+                # estimate the error rates
+                error.rates = estimate.dag.error.rates(reconstruction$genotypes,as.marginal.probs(reconstruction,models=m)[[1]],as.joint.probs(reconstruction,models=m)[[1]],as.parents.pos(reconstruction,models=m)[[1]]);
             }
-            #estimate the probabilities given the error rates
-        estimated.probabilities.pf = estimate.dag.probs(topology$data$genotypes,topology$probabilities$probabilities.pf$marginal.probs,topology$probabilities$probabilities.pf$joint.probs,topology$parents.pos$parents.pos.pf,error.rates$error.rates.pf);
-        estimated.probabilities.bic = estimate.dag.probs(topology$data$genotypes,topology$probabilities$probabilities.bic$marginal.probs,topology$probabilities$probabilities.bic$joint.probs,topology$parents.pos$parents.pos.bic,error.rates$error.rates.bic);
-        #set the estimated error rates and probabilities
-        topology$error.rates = error.rates;
-        topology$probabilities$probabilities.pf$estimated.marginal.probs = estimated.probabilities.pf$marginal.probs;
-        topology$probabilities$probabilities.pf$estimated.joint.probs = estimated.probabilities.pf$joint.probs;
-        topology$probabilities$probabilities.pf$estimated.conditional.probs = estimated.probabilities.bic$conditional.probs;
-        topology$probabilities$probabilities.bic$estimated.marginal.probs = estimated.probabilities.bic$marginal.probs;
-        topology$probabilities$probabilities.bic$estimated.joint.probs = estimated.probabilities.bic$joint.probs;
-        topology$probabilities$probabilities.bic$estimated.conditional.probs = estimated.probabilities.bic$conditional.probs;
-        #set colnames and rownames
-        rownames(topology$probabilities$probabilities.pf$estimated.marginal.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.pf$estimated.marginal.probs) = "marginal probability";
-        rownames(topology$probabilities$probabilities.pf$estimated.joint.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.pf$estimated.joint.probs) = colnames(topology$data$genotypes);
-        rownames(topology$probabilities$probabilities.pf$estimated.conditional.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.pf$estimated.conditional.probs) = "conditional probability";
-        rownames(topology$probabilities$probabilities.bic$estimated.marginal.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.bic$estimated.marginal.probs) = "marginal probability";
-        rownames(topology$probabilities$probabilities.bic$estimated.joint.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.bic$estimated.joint.probs) = colnames(topology$data$genotypes);
-        rownames(topology$probabilities$probabilities.bic$estimated.conditional.probs) = colnames(topology$data$genotypes);
-        colnames(topology$probabilities$probabilities.bic$estimated.conditional.probs) = "conditional probability";
+            
+            # estimate the probabilities given the error rates
+                estimated.probabilities = estimate.dag.probs(reconstruction$genotypes,as.marginal.probs(reconstruction,models=m)[[1]],as.joint.probs(reconstruction,models=m)[[1]],as.parents.pos(reconstruction,models=m)[[1]],error.rates);
+            
+                # set the estimated error rates and probabilities
+                probabilities.fit = list(estimated.marginal.probs=estimated.probabilities$marginal.probs,estimated.joint.probs=estimated.probabilities$joint.probs,estimated.conditional.probs=estimated.probabilities$conditional.probs);
+        
+                reconstruction$model[[m]]$error.rates = error.rates
+                reconstruction$model[[m]]$probabilities$probabilities.fit = probabilities.fit
+            
+                # set colnames and rownames
+                rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+            rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+
+                
+            }
     }
     else {
             stop("A valid algorithm has to be provided in order to estimate its confidence.",call.=FALSE);
     }
-    topology$parameters$do.estimation = TRUE;
-    return(topology);
+    
+    reconstruction$parameters$do.estimation = TRUE;
+    return(reconstruction);
+
 }
 
-#### end of file -- tronco.estimation.R
+
+#' Bootstrap a reconstructed progression model
+#'
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf)
+#' recon = tronco.capri(mutations)
+#' boot = tronco.bootstrap(recon, nboot=10)
+#' tronco.plot(boot)
+#'
+#' @title tronco bootstrap
+#' @param reconstruction The output of tronco.capri or tronco.caprese
+#' @param type TODO
+#' @param nboot TODO
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.bootstrap
+tronco.bootstrap <- function( reconstruction, 
+                              type = "non-parametric", 
+                              nboot = 100,
+                              verbose = FALSE)
+{
+    # check for the inputs to be given
+    if(is.null(reconstruction)) {
+        stop("A valid reconstruction has to be provided in order to estimate its confidence.", call. = FALSE)
+    }
+    
+    # check for the input to be compliant
+    is.compliant(reconstruction)
+
+    if(reconstruction$parameters$do.estimation == FALSE && type == "parametric") {
+        stop("To perform parametric bootstrap, the estimation of the error rates and probabilities should be performed.", call. = FALSE)
+    }
+
+    if(type == "statistical" && !(reconstruction$parameters$algorithm == "CAPRI" && reconstruction$parameters$do.boot == TRUE)) {
+        stop("To perform statistical bootstrap, the algorithm used for the reconstruction must by CAPRI with bootstrap.", call. = FALSE)
+    }
+
+    # set all the needed parameters to perform the bootstrap estimation
+    if(type == "non-parametric" || type == "parametric" || type == "statistical") {
+        
+        dataset = reconstruction$genotypes
+        do.estimation = FALSE
+        silent = TRUE
+        
+        if(!is.null(reconstruction$bootstrap)) {
+                bootstrap = reconstruction$bootstrap
+        }
+        else {
+                bootstrap = list()
+        }
+        
+        if(reconstruction$parameters$algorithm == "CAPRESE") {
+            lambda = reconstruction$parameters$lambda
+        } else if(reconstruction$parameters$algorithm == "CAPRI") {
+            
+            if(!is.null(reconstruction$hypotheses)) {
+                hypotheses = reconstruction$hypotheses
+            } else {
+                hypotheses = NA
+            }
+            
+            command.capri = reconstruction$parameters$command
+            regularization = reconstruction$parameters$regularization
+            do.boot = reconstruction$parameters$do.boot
+            nboot.capri = reconstruction$parameters$nboot
+            pvalue = reconstruction$parameters$pvalue
+            min.boot = reconstruction$parameters$min.boot
+            min.stat = reconstruction$parameters$min.stat
+            boot.seed = reconstruction$parameters$boot.seed
+            if(type == 'statistical') boot.seed = NULL
+        }
+    } else {
+        stop("The types of bootstrap that can be performed are: non-parametric, parametric or statistical.", call. = FALSE)
+    }
+
+    # perform the selected bootstrap procedure
+    cat("Executing now the bootstrap procedure, this may take a long time...\n")
+
+    if(reconstruction$parameters$algorithm == "CAPRESE") {
+        
+        curr.boot = bootstrap.caprese(dataset,
+                                      lambda,
+                                      do.estimation,
+                                      silent,
+                                      reconstruction, 
+                                      type,
+                                      nboot,
+                                      bootstrap)
+
+                                          
+        reconstruction$bootstrap = curr.boot
+        
+        cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", lambda, " as shrinkage parameter.\n\n", sep =""))
+    
+    } else if(reconstruction$parameters$algorithm == "CAPRI") {
+                    curr.boot = bootstrap.capri(dataset, 
+                                        hypotheses, 
+                                        command.capri, 
+                                        regularization, 
+                                        do.boot,
+                                        nboot.capri, 
+                                        pvalue,
+                                        min.boot,
+                                        min.stat,
+                                        boot.seed,
+                                        do.estimation,
+                                        silent,
+                                        reconstruction, 
+                                        type,
+                                        nboot,
+                                        bootstrap,
+                                        verbose)
 
 
+        reconstruction$bootstrap = curr.boot
+
+        if(do.boot == TRUE) {
+            cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", pvalue, " as pvalue for the statistical tests.\n\n", sep =""))
+        } else {
+            cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling.\n\n", sep =""))
+        }
+    }
+
+    return(reconstruction)
+}
+
+#### end of file -- tronco.bootstrap.R
 
 
 #### tronco.plot.R
@@ -416,182 +525,199 @@ tronco.estimation <- function( topology, error.rates = NA ) {
 
 
 
-is.logic.node.down <- function(node) {
-  if(substr(node, start=1, stop=3) == 'OR_')
-    return(TRUE)
-  if(substr(node, start=1, stop=4) == 'XOR_')
-    return(TRUE)
-  if(substr(node, start=1, stop=4) == 'AND_')
-    return(TRUE)
-  if(substr(node, start=1, stop=4) == 'NOT_')
-    return(TRUE)
-  return(FALSE)
-}
-
-is.logic.node.up <- function(node) {
-  if(substr(node, start=1, stop=2) == 'UP')
-    return(TRUE)
-  return(FALSE)
-}
-
-is.logic.node <- function(node) {
-  return(is.logic.node.up(node) || is.logic.node.down(node))
-}
-
 ###########################
 ####### TRONCO PLOT #######
 ###########################
 
 
-#' @import Rgraphviz
-#' @import igraph
-#' @import RColorBrewer
+
 #' @export tronco.plot
 #' @title plot a progression model
 #'
 #' @description
-#' \code{tronco.plot} plots a progression model from a recostructed \code{curr.topology}. 
-#' 
-#' 
-#' @param curr.topology A curr.topology returned by a reconstruction algorithm
-#' @param title plot Plot title (default "Progression model x", x reconstruction algorithm)
-#' @param title.color color title (default "black")
-#' 
-#' @param legend bool; show/hide the legend (default is t)
-#' @param legend.pos string; legend positioning, available keywords "topleft", "topright","bottomleft" and "bottomright" (default is "bottomright")
-#' @param legend.title string; legend title (default is "Legend")
-#' 
-#' @param legend.columns int; use 1 or 2 columns to plot the legend (default is 1)
-#' @param legend.inline bool; print inline legend (default is f)
-#' @param legend.coeff double; size of the types label in the legend (default is 1)
-#' 
-#' @param label.coeff double; size of the events label (default is 1)
-#' @param label.color color events label (default "black")
-#' @param label.edge.size double; size of the confidence label, when used (default is 12)
-#' 
-#' @param confidence bool; plot edges according to confidence (default is f)
-#' @examples
-#' \dontrun{
-#'     types.load("data/types.txt");
-#'     events.load("data/events.txt");
-#'    data.load("data/CGH.txt");
-#'    topology <- tronco.caprese();
-#'    tronco.plot(curr.topology, legend.pos = "topleft", legend = TRUE, confidence = TRUE, legend.col = 1, legend.coeff = 0.7, label.edge.size = 10, label.coeff = 0.7);
-#' }
+#' \code{tronco.plot} plots a progression model from a recostructed \code{curr.reconstruction}. 
 tronco.plot = function(x,
-                       secondary=NULL, 
-                       fontsize=18, 
+                       regularization = names(x$model),
+                       fontsize = NA, 
                        height=2,
                        width=3,
                        height.logic = 1,
                        pf = FALSE, 
                        disconnected=FALSE,
                        scale.nodes=NA,
-                       name=deparse(substitute(capri)),
-                       title = paste("Progression model", x$parameters$algorithm),  
-                       confidence = FALSE, 
+                       title = as.description(x),  
+                       confidence = NA, 
+                       p.min = x$parameters$pvalue,
                        legend = TRUE, 
                        legend.cex = 1.0, 
                        edge.cex = 1.0,
-                       label.edge.size = 12, 
-                       hidden.and = FALSE,
+                       label.edge.size = NA, 
                        expand = TRUE,
                        genes = NULL,
+                       relations.filter = NA,
                        edge.color = 'black',
                        pathways.color = 'Set1',
                        file = NA, # print to pdf,
                        legend.pos = 'bottom',
                        pathways = NULL,
                        lwd = 3,
+                       annotate.sample = NA,
                        ...
                        ) 
 {
-  if (!require(igraph)) {
-    install.packages('igraph', dependencies = TRUE)
-    library(igraph)
-  }
-  
-  if (!require(Rgraphviz)) {
-    source("http://bioconductor.org/biocLite.R")
-    biocLite("Rgraphviz")
-    library(Rgraphviz)
-  }
+  hidden.and = F
 
-  if (!require("RColorBrewer")) {
-    install.packages("RColorBrewer")
-    library(RColorBrewer)
-  }
+
+    suppressMessages(library(doParallel))
+    suppressMessages(library(igraph))
+    suppressMessages(library(Rgraphviz))
+    suppressMessages(library(RColorBrewer))
   
-  # Checks if topology exists
+  # Checks if reconstruction exists
   if(missing(x)) {
-    stop("Topology missing, usage: hypo.plot(topology, ...", call.=FALSE);
+    stop("reconstruction missing, usage: hypo.plot(reconstruction, ...", call.=FALSE);
   }
-  
-  # Want confidence? Boostrap is needed
-  if(confidence && !exists('bootstrap', where=x)) {
-    stop("To show confidence information, bootstrap execution is needed! See: the function tronco.bootstrap.", call.=FALSE);
-  }
-  
+    
   logical_op = list("AND", "OR", "NOT", "XOR", "*", "UPAND", "UPOR", "UPXOR")
  
-  sec = FALSE
-  if(!is.null(secondary)) {
-    sec = TRUE
-    if(!all( rownames(x$adj.matrix$adj.matrix.bic) %in% rownames(secondary$adj.matrix$adj.matrix.bic))) {
-      stop("x and secondary must have the same adj.matrix! See: the function tronco.bootstrap.", call.=FALSE);
-    }
+
+  if(length(regularization) > 2) {
+    stop("Too many regularizators (max is 2)", call.=FALSE)
   }
 
-  # get TRONCO object
-  data = x$data
-  if(sec) {
-    data = secondary$data
+  if(!regularization[1] %in% names(x$model)) {
+    stop(paste(regularization[1], "not in model"), call.=FALSE);
   }
-  # print(data)
   
-  # get the adjacency matrix
-  adj.matrix = x$adj.matrix
-  if(sec) {
-    adj.matrix = secondary$adj.matrix
+  if(!is.na(annotate.sample) && !is.null(pathways))
+    stop('Select either to annotate pathways or a sample.')
+  
+  # Annotate samples
+  if(!is.na(annotate.sample))
+  {  
+    if(!all(annotate.sample %in% as.samples(x)))
+      stop('Sample(s) to annotate are not in the dataset -- see as.samples.')
+    
+    if(npatterns(x) > 0) nopatt.data = delete.type(x, 'Pattern')
+    else nopatt.data = x
+    
+#     sample.events = as.events.in.sample(nopatt.data, annotate.sample)
+# 
+#     pathways = lapply(sample.events, function(z){
+#       list(unique(z[, 'event']))
+#     })
+#    
+#     pathways = unlist(pathways, recursive = F)             
+#     pathways.color = sample.RColorBrewer.colors('Set1', length(pathways))
+    
+    sample.events = Reduce(rbind, as.events.in.sample(nopatt.data, annotate.sample))
+    sample.events = unique(sample.events[, 'event'])
+    
+    cat('Annotating sample', annotate.sample, 'with color red. Annotated genes:', paste(sample.events, collapse = ', '), '\n')
+    
+    pathways = list(sample.events)
+    names(pathways) = paste(annotate.sample, collapse = ', ')
+    if(nchar(names(pathways)) > 15) names(pathways) = paste0(substr(names(pathways), 1, 15), '...')
+    
+    pathways.color = 'red'
   }
-  c_matrix = adj.matrix$adj.matrix.bic
+ 
 
-  probabilities = x$probabilities
+  #print(regularization)
+
+  sec = ifelse(length(regularization) == 2, T, F)
+
+  if(sec && !regularization[2] %in% names(x$model)) {
+    stop(paste(regularization[2], "not in model"), call.=FALSE);
+  }
+  
+  # Models objects
+  primary = as.models(x, models = regularization[1])[[1]]    
+  if(sec) secondary = as.models(x, models = regularization[2])[[1]]
+
+  # USARE getters adj.matrix
+  if (sec && !all( rownames(primary$adj.matrix$adj.matrix.fit) %in% rownames(secondary$adj.matrix$adj.matrix.fit))) {     
+    stop("primary and secondary must have the same adj.matrix! See: the function tronco.bootstrap.", call.=FALSE)
+  }
+  
+  # Get the adjacency matrix - this could have been donw with getters
+  adj.matrix = primary$adj.matrix
+  if(sec) adj.matrix = secondary$adj.matrix
+  c_matrix = adj.matrix$adj.matrix.fit
+    
+  if(is.function(relations.filter))
+  {
+    cat('*** Filtering relations according to function "relations.filter", visualizing:\n')
+    adj.matrix = as.adj.matrix(x, models = regularization)
+    sel.relation = as.selective.advantage.relations(x, models = regularization)
+    #sel.relation = lapply(sel.relation, keysToNames, x=x)
+    
+    # Select only relations which get TRUE by "relations.filter"
+    sel.relation = lapply(sel.relation, 
+                          function(z){
+                            # apply can not be used - implicit cohersion to char is crap
+                            # z[ apply(z, 1, relations.filter), ]
+                            ####
+                            mask = rep(T, nrow(z))
+                            for(i in 1:nrow(z))
+                              mask[i] = relations.filter(z[i, ]) 
+                            return(z[mask, , drop = F])                              
+                            })
+    
+    print(sel.relation)
+    
+    sel.relation = get(regularization[2], sel.relation)
+    
+    
+    c_matrix.names = rownames(c_matrix)
+    c_matrix = matrix(0, nrow = nrow(c_matrix), ncol = ncol(c_matrix))
+    rownames(c_matrix) = c_matrix.names
+    colnames(c_matrix) = c_matrix.names
+    
+    cat(paste0('Selected relations: ', nrow(sel.relation), ' [out of ', nrow(as.selective.advantage.relations(x, models = regularization)[[2]]), ']\n'))
+    
+    if(nrow(sel.relation) > 0)
+    for(i in 1:nrow(sel.relation))
+      c_matrix[ nameToKey(x, sel.relation[i, 'SELECTS']), nameToKey(x, sel.relation[i, 'SELECTED'])] = 1
+      
+    #print(lapply(adj.matrix, keysToNames, x=x))
+    
+  }
+  
+  # get the probabilities
+  probabilities = primary$probabilities
   if(sec) {
     probabilities = secondary$probabilities
   }
-
-  marginal_p = probabilities$probabilities.bic$marginal.probs
+  marginal_p = probabilities$probabilities.observed$marginal.probs
   
-  
+  # if prima facie change the adj matrix
   if (pf) {
     c_matrix = adj.matrix$adj.matrix.pf
-    marginal_p = probabilities$probabilities.pf$marginal.probs
   }
   
-  if (all(c_matrix == F)) {
-    stop('No edge in adjacency matrix! Nothing to show here.')
+  if (all(c_matrix == F) || (sec && all(primary$adj.matrix$adj.matrix.fit == F))) {
+    warning('No edge in adjacency matrix! Nothing to show here.')
+    return(NULL)
   }
   
-  bootstrap = x$bootstrap
-  if(sec) {
-    bootstrap = secondary$bootstrap
-  }
+  #bootstrap = x$bootstrap
+  #if(sec) {
+  #  bootstrap = secondary$bootstrap
+  #}
 
-  if (confidence) {
-    conf_matrix = if (pf) bootstrap$edge.confidence$edge.confidence.pf else bootstrap$edge.confidence$edge.confidence.bic
-  }
+  #if (confidence) {
+  #  conf_matrix = if (pf) bootstrap$edge.confidence$edge.confidence.pf else bootstrap$edge.confidence$edge.confidence.bic
+  #}
   #print(c_matrix)
+  # conf_matrix = NULL
   
   # get algorithm parameters
   parameters = x$parameters
-  if(sec) {
-    parameters = secondary$parameters
-  }
   # print(parameters)
   
   # get hypotheses
-  hypotheses = data$hypotheses
+  hypotheses = x$hypotheses
   hstruct = NULL
   if (!is.null(hypotheses) && !is.na(hypotheses) ) {
     hstruct = hypotheses$hstructure
@@ -600,11 +726,13 @@ tronco.plot = function(x,
   # get event from genes list
   events = NULL
   if (is.vector(genes)) {
-    events = unlist(lapply(genes, function(x){names(which(as.events(data)[,'event'] == x))}))
+    events = unlist(lapply(genes, function(x){names(which(as.events(x)[,'event'] == x))}))
   }
   
+  cat('*** Expanding hypotheses syntax as graph nodes:')
+
   # expand hypotheses
-  if (!confidence) {
+  #if (is.na(confidence)) {
     expansion = hypotheses.expansion(c_matrix, 
                                      hstruct, 
                                      hidden.and, 
@@ -612,29 +740,31 @@ tronco.plot = function(x,
                                      events)
     hypo_mat = expansion[[1]]
     hypos_new_name = expansion[[2]]
-  } else {
-    expansion = hypotheses.expansion(c_matrix, 
-                                     hstruct, 
-                                     hidden.and, 
-                                     expand, 
-                                     events, 
-                                     conf_matrix)
-    hypo_mat = expansion[[1]]
-    hypos_new_name = expansion[[2]]
-    conf_matrix = expansion[[3]]
-  }
+  #} else {
+  #  expansion = hypotheses.expansion(c_matrix, 
+  #                                   hstruct, 
+  #                                   hidden.and, 
+  #                                   expand, 
+  #                                   events, 
+  #                                   conf_matrix)
+  #  hypo_mat = expansion[[1]]
+  #  hypos_new_name = expansion[[2]]
+  #  conf_matrix = expansion[[3]]
+  #}
   
   # print(hypo_mat)
   
+  cat('\n*** Rendering graphics\n')
+  
   # remove disconnected nodes
   if(!disconnected) { 
+    cat('Nodes with no incoming/outgoing edges will not be displayed.\n')
     del = which(rowSums(hypo_mat)+colSums(hypo_mat) == 0 )
     w = !(rownames(hypo_mat) %in% names(del))
     hypo_mat = hypo_mat[w,]
     hypo_mat = hypo_mat[,w]
   }
   
-  cat('\n*** Render graphics: ')
   
   attrs = list(node = list())
       
@@ -649,9 +779,10 @@ tronco.plot = function(x,
   }
   #print(v_names[26:30])
   new_name = list()
+  
   for(v in v_names) {
-    if(v %in% rownames(data$annotations)) {
-      n = data$annotations[v,"event"]
+    if(v %in% rownames(x$annotations)) {
+      n = x$annotations[v,"event"]
       new_name = append(new_name, n)
     } else {
       new_name = append(new_name, v)
@@ -664,10 +795,11 @@ tronco.plot = function(x,
   #print(V(hypo_graph)$label)
   #print(hypo_graph)
   
+  
   V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
   
-  node_names = nodes(graph)
+  node_names = graph::nodes(graph)
   nAttrs = list()
   
   nAttrs$label = V(hypo_graph)$label
@@ -678,6 +810,11 @@ tronco.plot = function(x,
   names(nAttrs$fillcolor) = node_names
   
   # set fontsize
+  
+  if(is.na(fontsize)) {
+    fontsize = 24 - 4*log(nrow(hypo_mat))
+    cat(paste0('Set automatic fontsize scaling for node labels: ', fontsize, '\n'))
+  }
   nAttrs$fontsize = rep(fontsize, length(node_names))
   names(nAttrs$fontsize) = node_names
 
@@ -692,8 +829,11 @@ tronco.plot = function(x,
   # set node width
   nAttrs$width = rep(width, length(node_names))
   names(nAttrs$width) = node_names
-  
 
+
+  
+  short.label = nAttrs$label
+  names(short.label) = names(nAttrs$label)
   if (!is.na(scale.nodes)) {
 
     
@@ -709,7 +849,8 @@ tronco.plot = function(x,
          increase_coeff = scale.nodes + (marginal_p[node,] - min_p) / (max_p - min_p)
          nAttrs$width[node] = nAttrs$width[node] * increase_coeff
          nAttrs$height[node] = nAttrs$height[node] * increase_coeff
-        
+         nAttrs$label[node] = paste0(nAttrs$label[node], '\\\n', round(marginal_p[node, ]*100, 0), '%', ' (', sum(as.genotypes(x)[, node]) ,')')
+
         # increase_coeff = (1- (max_p - marginal_p[node,])) * scale.nodes
         
 # #         print('***')
@@ -726,14 +867,14 @@ tronco.plot = function(x,
   }
   
   # use colors defined in tronco$types
-  w = unlist(lapply(names(nAttrs$fillcolor), function(x){
-    if (x %in% rownames(data$annotations))
-      data$types[data$annotations[x,'type'], 'color']
+    w = unlist(lapply(names(nAttrs$fillcolor), function(w){
+    if (w %in% rownames(x$annotations)) {
+      x$types[x$annotations[w,'type'], 'color']
+     }
     else
       'White'
     }))
   nAttrs$fillcolor[] = w
-  
 
   legend_logic = NULL
   
@@ -825,11 +966,14 @@ tronco.plot = function(x,
   nAttrs$fontcolor = rep("black", length(node_names))
   names(nAttrs$fontcolor) = node_names
 
+  nAttrs$lwd = rep(1, length(node_names))
+  names(nAttrs$lwd) = node_names
+
   # set node border based on pathways information
   #cat('\n')
   legend_pathways = NULL
   if(!is.null(pathways)) {
-    
+    cat('Annotating nodes with pathway information. \n')
     
     if(length(pathways.color) == 1 && pathways.color %in% rownames(brewer.pal.info)) 
     {
@@ -856,20 +1000,21 @@ tronco.plot = function(x,
     #nAttrs$col = rep("white", length(node_names))
     names(nAttrs$col) = node_names
 
-
     for(path in names(pathways)) {
       #cat('\npath: ', pathways[[path]])
-      n = nAttrs$label[which(nAttrs$label %in% pathways[[path]])]
+      n = short.label[which(short.label %in% pathways[[path]])]
       #cat('\nfound: ', unlist(n), unlist(names(n)))
       #cat('color: ', cols[[path]])
       #cat('\n')
       nAttrs$color[unlist(names(n))] = cols[[path]]
       nAttrs$fontcolor[unlist(names(n))] = cols[[path]]
+      
+      nAttrs$lwd[unlist(names(n))] = 4
+      
       if(length(n) > 0) {
         legend_pathways[path] = cols[[path]]
       }
     }
-
   }
   
   # edges properties
@@ -880,6 +1025,10 @@ tronco.plot = function(x,
   # set temporary edge shape
   eAttrs$lty = rep("solid", length(edge_names))
   names(eAttrs$lty) = edge_names
+
+  # set temporary fontocolor
+  eAttrs$fontcolor = rep("darkblue", length(edge_names))
+  names(eAttrs$fontcolor) = edge_names
   
   #set edge thikness based on prob
   eAttrs$lwd = rep(1, length(edge_names))
@@ -890,6 +1039,10 @@ tronco.plot = function(x,
   names(eAttrs$label) = edge_names
   
   #set fontsize to label.edge.size (default)
+  if(is.na(label.edge.size)) {
+    label.edge.size = fontsize/2      
+    cat(paste0('Set automatic fontsize for edge labels: ', label.edge.size, '\n'))    
+  }
   eAttrs$fontsize = rep(label.edge.size, length(edge_names))
   names(eAttrs$fontsize) = edge_names
   
@@ -905,58 +1058,119 @@ tronco.plot = function(x,
   eAttrs$logic = rep(F, length(edge_names))
   names(eAttrs$logic) = edge_names
   
-  cat('done')
+
+  #print('confidence')
+  #print(confidence)
   
-  if(confidence) {
-
-    #print(x$confidence[[3]])
-    #print(hypos_new_name)
-
-
-  #print(edge_names)
-  
-    # for each edge..
+  if(any(!is.na(confidence))) {
+    cat('Adding confidence information: ')
+    conf = as.confidence(x, confidence)
+    cat(paste(paste(confidence, collapse = ', '), '\n'))
+    # names.conf = names(conf)
+    
     for(e in edge_names) {
       edge = unlist(strsplit(e, '~'))
+    
       from = edge[1]
       to = edge[2]
-      # ..checks if confidence is available
-      if (from %in% rownames(conf_matrix) && to %in% colnames(conf_matrix)) {
-        if(from %in% names(hypos_new_name)){ conf_from = hypos_new_name[[from]] } else { conf_from = from }
-        if(to %in% names(hypos_new_name)){ conf_to = hypos_new_name[[to]] } else { conf_to = to }
-        # if confidence > 0..
-        # print(paste('from', from, 'to', to, ':', conf_matrix[from, to]))
-        if (conf_matrix[from, to] == 1) {
-          # ..set edge thickness and label..
-          eAttrs$label[e] = '100%'
-          eAttrs$lwd[e] = log(150)
-        } else if (conf_matrix[from, to] >= 0.01) {
-          # ..draw it on the graph..
 
-          eAttrs$label[e] = paste0('', round(conf_matrix[from, to] * 100, 0), '%')
-          eAttrs$lwd[e] = log(conf_matrix[from, to] * 150)
-        } else {
-          # ..else set the style of the edge to dashed
-          eAttrs$label[e] = "< 1%"
-          eAttrs$lwd[e] = log(1.5)
+      #cat("***\n", from, '->', to, '\n')
+      
+      pval.names = c('hg', 'pr', 'tp')
+      boot.names = c('npb', 'pb', 'sb')
+      red.lable = FALSE
+
+      if(is.logic.node.up(from) || is.logic.node.down(to)) {
+        next
+      }
+
+      if(from %in% names(hypos_new_name)){ conf_from = hypos_new_name[[from]] } else { conf_from = from }
+      if(to %in% names(hypos_new_name)){ conf_to = hypos_new_name[[to]] } else { conf_to = to }
+
+
+        #cat(conf_from, '->', conf_to, '\n')
+      
+      for(i in confidence) {
+
+        conf_sel = get(i, as.confidence(x, i))
+        
+
+        if (! i %in% pval.names) 
+        {
+            if (sec && primary$adj.matrix$adj.matrix.fit[conf_from, conf_to] == 0) {
+                conf_sel = get(regularization[[2]], conf_sel)
+            } else {
+                conf_sel = get(regularization[[1]], conf_sel)
+            }
         }
+
+        conf_p = conf_sel
+                  
+        if(! (conf_from %in% rownames(conf_p) && conf_to %in% colnames(conf_p))) {
+          next
+        }
+
+        if (i %in% boot.names) {
+            # eAttrs$lwd[e] = conf_p[conf_from, conf_to]
+            eAttrs$lwd[e] = (conf_p[conf_from, conf_to] * 5) + 1
+        }
+          
+        eAttrs$label[e] = paste0(
+        eAttrs$label[e],
+        ifelse(conf_p[conf_from, conf_to] < 0.01, "< 0.01", round(conf_p[conf_from, conf_to], 2)))
+        #conf_p[conf_from, conf_to], '\\\n')
+        #cat(conf_p[conf_from, conf_to], '\n')
+        
+        if(i %in% pval.names && conf_p[conf_from, conf_to] > p.min) {
+          eAttrs$fontcolor[e] = 'red'
+          eAttrs$label[e] = paste0(eAttrs$label[e], ' *')
+        }
+        eAttrs$label[e] = paste0(eAttrs$label[e], '\\\n')
+                  
+      }
+      
+      
+# #    
+      # # ..checks if confidence is available
+      # if (from %in% rownames(conf_matrix) && to %in% colnames(conf_matrix)) {
+        # if(from %in% names(hypos_new_name)){ conf_from = hypos_new_name[[from]] } else { conf_from = from }
+        # if(to %in% names(hypos_new_name)){ conf_to = hypos_new_name[[to]] } else { conf_to = to }
+        # # if confidence > 0..
+        # # print(paste('from', from, 'to', to, ':', conf_matrix[from, to]))
+        
+        
+        # if (conf_matrix[from, to] == 1) {
+          # # ..set edge thickness and label..
+          # eAttrs$label[e] = '100%'
+          # eAttrs$lwd[e] = log(150)
+        # } else if (conf_matrix[from, to] >= 0.01) {
+          # # ..draw it on the graph..
+
+          # eAttrs$label[e] = paste0('', round(conf_matrix[from, to] * 100, 0), '%')
+          # eAttrs$lwd[e] = log(conf_matrix[from, to] * 150)
+        # } else {
+          # # ..else set the style of the edge to dashed
+          # eAttrs$label[e] = "< 1%"
+          # eAttrs$lwd[e] = log(1.5)
+        # }
 
 
     #print(conf_from)
     #print(conf_to)
     
     
-        hyper_geom = x$confidence[[3]][conf_from, conf_to]
-        if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
-        eAttrs$label[e] = paste(eAttrs$label[e], '  ', hyper_geom)
+        # hyper_geom = x$confidence[[3]][conf_from, conf_to]
+        # if (hyper_geom < 0.01) { hyper_geom = '< .01'} else { hyper_geom = round(hyper_geom, 2)}
+        # eAttrs$label[e] = paste(eAttrs$label[e], '  ', hyper_geom)
 
 
-      } else {
-        # ..else this edge is located inside to an hypothesis, so no arrow to show
-        eAttrs$logic[e] = T
-        eAttrs$color[e] = 'black'
-      }
+      # } else {
+        # # ..else this edge is located inside to an hypothesis, so no arrow to show
+        # eAttrs$logic[e] = T
+        # eAttrs$color[e] = 'black'
+      # }
     }
+    cat('RGraphviz object prepared.\n')
   }
 
   # remove arrows from logic node (hidden and)
@@ -1026,7 +1240,7 @@ tronco.plot = function(x,
   #print(eAttrs$lty)
   
   if(pf) {
-    cat('\n*** Add prima facie edges: ')
+    cat('*** Add prima facie edges: ')
     # for each edge..
     bic = adj.matrix$adj.matrix.bic
     #print(bic)
@@ -1071,7 +1285,7 @@ tronco.plot = function(x,
   if (sec) {
     #print(edge_names)
     
-    pri.adj = x$adj.matrix$adj.matrix.bic
+    pri.adj = primary$adj.matrix$adj.matrix.fit
     #print(rownames(pri.adj))
     #print(hypos_new_name)
     for(from in rownames(pri.adj)) {
@@ -1092,13 +1306,65 @@ tronco.plot = function(x,
   }
   
 
+  
+  # tp = x$confidence['temporal priority', ][[1]]
+  # pr = x$confidence['probability raising', ][[1]] 
+  # hg = x$confidence['hypergeometric test', ][[1]] 
+  # # conf = apply(tp, pr, hg)
+  
+  
+  
+  # # print(eAttrs$label)
+  
+  # p.min = 0.01
+  
+  # for(i in names(eAttrs$label))
+  # {
+    # names = strsplit(i, '~')[[1]]
+    # print(i)
+    # print(names)
+    
+    # if(all(names %in% colnames(tp)))      
+    # {
+      # val = 1 - round(max(
+        # # tp[names[1], names[2]]
+        # # ,
+        # # pr[names[1], names[2]],
+        # hg[names[1], names[2]]
+        # )
+        # , 3)
+        
+        # print(val)
+      
+      # val = ifelse(val >= (1 - p.min), 1, val)  
+      
+      # if(val < 1)   
+      # {
+        # eAttrs$label[i] = paste(val, '\\\n', 'sss')
+        # eAttrs$fontcolor[i] = 'red'
+        
+      # # eAttrs$lwd[i] = eAttrs$lwd[i] * exp(val) * 1.5
+      # # eAttrs$color[i] = 'red'
+      # }
+    # }
+    
+    
+    
+  # }
+      #print(eAttrs)
+
+  
+  
+  # print(eAttrs)
+  
+  cat('Plotting graph and adding legends.\n')
   plot(graph, nodeAttrs=nAttrs, edgeAttrs=eAttrs, main=title, ... )
   
   # Adds the legend to the plot
   if (legend) {
     valid_events = colnames(hypo_mat)[which(colnames(hypo_mat) %in% colnames(c_matrix))]
-    legend_names = unique(data$annotations[which(rownames(data$annotations) %in% valid_events), 'type'])
-    pt_bg = data$types[legend_names, 'color']
+    legend_names = unique(x$annotations[which(rownames(x$annotations) %in% valid_events), 'type'])
+    pt_bg = x$types[legend_names, 'color']
     legend_colors = rep('black', length(legend_names))
     pch = rep(21, length(legend_names))
     
@@ -1152,65 +1418,92 @@ tronco.plot = function(x,
 
     valid_names = grep('^[*]_(.+)$', valid_names, value = T, invert=T)
 
-    dim = nAttrs$height[valid_names]
-    prob = marginal_p[valid_names, ]
+    #dim = nAttrs$height[valid_names]
+    #prob = marginal_p[valid_names, ]
     
-    min = min(dim)
-    p_min = round(min(prob) * 100, 0)
-    max = max(dim)
-    p_max = round(max(prob) * 100, 0)
+    #min = min(dim)
+    #p_min = round(min(prob) * 100, 0)
+    #max = max(dim)
+    #p_max = round(max(prob) * 100, 0)
     
     
-    marginal_p = marginal_p[valid_names, , drop = FALSE]
+    #marginal_p = marginal_p[valid_names, , drop = FALSE]
 
     # Get label of the (first) event with minimum marginale 
-    min.p =   rownames(marginal_p)[which(min(marginal_p) == marginal_p) ]
-    label.min = as.events(x$data)[ min.p[1] , , drop = FALSE]
+    #min.p =   rownames(marginal_p)[which(min(marginal_p) == marginal_p) ]
+    #label.min = as.events(x)[ min.p[1] , , drop = FALSE]
 
     # Get label of the (first) event with max marginale 
-    max.p = rownames(marginal_p)[which(max(marginal_p) == marginal_p) ]
-    label.max = as.events(x$data)[ max.p[1] , ,  drop = FALSE]
+    #max.p = rownames(marginal_p)[which(max(marginal_p) == marginal_p) ]
+    #label.max = as.events(x)[ max.p[1] , ,  drop = FALSE]
 
     # Frequency labels
-    min.freq = round(min(marginal_p) * 100, 0)
-    max.freq = round(max(marginal_p) * 100, 0)
+    #min.freq = round(min(marginal_p) * 100, 0)
+    #max.freq = round(max(marginal_p) * 100, 0)
       
-    freq.labels = c( 
-      paste0(min.freq, ifelse((min.freq < 10 && max.freq > 9), '%  ', '%'), ' ', label.min[, 'event'], ' (min)'),
-      paste0(max.freq, '% ', label.max[, 'event'], ' (max)')
-    )
+    #freq.labels = c( 
+      #paste0(min.freq, ifelse((min.freq < 10 && max.freq > 9), '%  ', '%'), ' ', label.min[, 'event'], ' (min)'),
+      #paste0(max.freq, '% ', label.max[, 'event'], ' (max)')
+    #)
+
+    freq.labels = ""
+    stat.pch = 0
+    pt.bg = "white"
+    col = "white"
+    if (any(!is.na(confidence))) {
+      freq.labels = c(expression(bold('Edge confidence')), lapply(confidence, function(x){
+        if(x == "hg")
+          return("Hypergeometric test")
+        if(x == "tp")
+          return("Temporal Priority")
+        if(x == "pr")
+          return("Probability Raising")
+        if(x == "pb")
+          return("Parametric Bootstrap")
+        if(x == "sb")
+          return("Statistical Bootstrap")
+        if(x == "npb")
+          return("Non Parametric Bootstrap")
+
+      }), paste("p <", p.min))
+      #stat.pch = c(21, 21)
+      stat.pch = c(0, rep(18, length(confidence)), 0)
+      pt.bg = c('white', rep('white', length(confidence)), 'white')
+      col = c('white', rep('black', length(confidence)), 'white')
+    }
   
 
 
 
-    stat.pch = c(21, 21)
-    pt.bg = c(
-        as.colors(x$data)[label.min[, 'type']], 
-      as.colors(x$data)[label.max[, 'type']]
-      )
-    col = c('black', 'black')
         
-    # Further stats
-    y = x
-    if('Hypothesis' %in% as.types(x$data)) 
-            y = delete.type(x$data, 'Hypothesis')
+  if('Pattern' %in% as.types(x)) 
+            y = delete.type(x, 'Pattern')
+    else y = x
 
             
     freq.labels = c(freq.labels, 
       ' ',
       expression(bold('Sample size')),
-      paste0('n = ', nsamples(y)),
-      paste0('m = ', nevents(y)),
-      paste0('|G| = ', ngenes(y))     
+      paste0('n = ', nsamples(x), ', m = ', nevents(x)),
+      paste0('|G| = ', ngenes(y), ', |P| = ', npatterns(x))     
     ) 
+    
+    reg.labels = c( '\n',
+      expression(bold('Regularization')),
+      paste0(names(x$model))
+    )
+
+
      
-    stat.pch = c(stat.pch, 0, 0, 20,  20, 20)
-    pt.bg = c(pt.bg, 'white', 'white', rep('black', 3))
-    col = c(col, 'white', 'white', rep('black', 3)) 
+    stat.pch = c(stat.pch, rep(0, 2), rep(20, 2), rep(0, 2), rep(20, 2))
+    pt.bg = c(pt.bg, rep('white', 2), rep('black', 2), rep('white', 2), 'black', 'darkgrey')
+    col = c(col, rep('white', 2), rep('white', 2), rep('white', 2),'black', 'darkgrey') 
+    
+    # print(data.frame(stat.pch, pt.bg, col))
     
     legend(legend.pos.l,
-           legend = freq.labels,
-           title = expression(bold('Events frequency')),
+           legend = c(freq.labels, reg.labels),
+           title = "",
            bty = 'n',
            box.lty = 3,
            box.lwd = .3,
@@ -1222,9 +1515,11 @@ tronco.plot = function(x,
            col = col)
        
   }
+
   
   if(!is.na(file))
   {
+    cat('Saving visualized device to file:', file)
     dev.copy2pdf(file = file)
   }
   cat('\n')
@@ -1259,23 +1554,13 @@ tronco.consensus.plot = function(models,
                        ...
                        ) 
 {
-  if (!require(igraph)) {
-    install.packages('igraph', dependencies = TRUE)
-    library(igraph)
-  }
-  
-  if (!require(Rgraphviz)) {
-    source("http://bioconductor.org/biocLite.R")
-    biocLite("Rgraphviz")
-    library(Rgraphviz)
-  }
 
-  if (!require("RColorBrewer")) {
-    install.packages("RColorBrewer")
-    library(RColorBrewer)
-  }
+    suppressMessages(library(igraph))
+    suppressMessages(library(Rgraphviz))
+    suppressMessages(library(RColorBrewer))
+
   
-  # Checks if topology exists
+  # Checks if reconstruction exists
   if(missing(models) || !is.list(models)) {
     stop("Models missing, usage: ... ...", call.=FALSE);
   }
@@ -1432,7 +1717,7 @@ smaller.to.bigger = function(m,cn)
   V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
   
-  node_names = nodes(graph)
+  node_names = graph::nodes(graph)
   nAttrs = list()
   
   nAttrs$label = V(hypo_graph)$label
@@ -1469,7 +1754,7 @@ smaller.to.bigger = function(m,cn)
         # Scaling ANDRE
          increase_coeff = scale.nodes + (marginal.probabilities[node,] - min_p) / (max_p - min_p)
          nAttrs$width[node] = nAttrs$width[node] * increase_coeff
-         nAttrs$height[node] = nAttrs$height[node] * increase_coeff     
+         nAttrs$height[node] = nAttrs$height[node] * increase_coeff    
       }
     }
   }
@@ -1837,11 +2122,11 @@ for(e in edge_names) {
 
     # # Get label of the (first) event with minimum marginale 
     # min.p =   rownames(marginal_p)[which(min(marginal_p) == marginal_p) ]
-    # label.min = as.events(x$data)[ min.p[1] , , drop = FALSE]
+    # label.min = as.events(x)[ min.p[1] , , drop = FALSE]
 
     # # Get label of the (first) event with max marginale 
     # max.p = rownames(marginal_p)[which(max(marginal_p) == marginal_p) ]
-    # label.max = as.events(x$data)[ max.p[1] , ,  drop = FALSE]
+    # label.max = as.events(x)[ max.p[1] , ,  drop = FALSE]
 
     # # Frequency labels
     # min.freq = round(min(marginal_p) * 100, 0)
@@ -1854,15 +2139,15 @@ for(e in edge_names) {
   
     # stat.pch = c(21, 21)
     # pt.bg = c(
-        # as.colors(x$data)[label.min[, 'type']], 
-      # as.colors(x$data)[label.max[, 'type']]
+        # as.colors(x)[label.min[, 'type']], 
+      # as.colors(x)[label.max[, 'type']]
       # )
     # col = c('black', 'black')
         
     # # Further stats
     # y = x
-    # if('Hypothesis' %in% as.types(x$data)) 
-            # y = delete.type(x$data, 'Hypothesis')
+    # if('Hypothesis' %in% as.types(x)) 
+            # y = delete.type(x, 'Hypothesis')
             
     # freq.labels = c(freq.labels, 
       # ' ',
@@ -1897,9 +2182,5 @@ for(e in edge_names) {
   }
   # cat('\n')
 }
-
-
-
-
 
 

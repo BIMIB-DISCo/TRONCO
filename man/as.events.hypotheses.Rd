@@ -2,16 +2,19 @@
 % Please edit documentation in R/as.functions.R
 \name{as.events.hypotheses}
 \alias{as.events.hypotheses}
-\title{Return all events involving certain genes and types.}
+\title{as.events.hypotheses}
 \usage{
 as.events.hypotheses(x, hypotheses = NULL)
 }
 \arguments{
-\item{x:}{the dataset.}
+\item{x}{A TRONCO compliant dataset.}
 
-\item{hypotheses:}{}
+\item{hypotheses}{????????}
+}
+\value{
+????????
 }
 \description{
-Return all events involving certain genes and types.
+Return ???????? RIDENOMINARLA CON PATTERNS E DARLE UN NOME PIU INTELLEGIBILE?
 }
 

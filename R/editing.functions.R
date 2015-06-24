@@ -5,6 +5,67 @@
 #### See the files COPYING and LICENSE for copyright and licensing
 #### information.
 
+consolidate.data = function(x, print = FALSE){
+  is.compliant(x)
+  ind = list()
+  zeros = list()
+  ones = list()
+  
+  for(i in 1:nevents(x)) {
+    ev = list()
+    
+    for(j in i:nevents(x)) {
+      if(i != j && all(x$genotypes[, i] == x$genotypes[, j]) && !j %in% ind )
+        ev = append(ev, j)
+    }
+    
+    if(length(ev) > 0)
+    {      
+      ind.pool = rbind(as.events(x)[ c(i, unlist(ev)),])
+
+      if(all(x$genotypes[, i] == 1)) ones = append(ones, list(ind.pool))
+      if(all(x$genotypes[, i] == 0)) zeros = append(zeros, list(ind.pool))
+      if(sum(x$genotypes[, i] < nsamples(x))) ind = append(ind, list(ind.pool))
+        
+      if(print){
+        
+        if(all(x$genotypes[, i] == 1)) cat('\nEvents altered across all samples:\n')
+        if(all(x$genotypes[, i] == 0)) cat('\nEvents with no alterations across samples:\n')
+        if(sum(x$genotypes[, i] < nsamples(x))) cat('\nIndistinguishable events:\n')
+        
+        print(ind.pool)
+        cat('Total number of events for these genes: ')
+        cat(paste(nevents(x, as.events(x, genes=c(ind.pool)))), '\n')
+        
+#        cat('All events for these genes are:\n')
+#        print(as.events(x, genes=c(ind.pool)))	
+      }
+    }
+  }
+
+  
+
+  ret = NULL
+  ret$indistinguishable = ind
+  ret$zeroes = zeros
+  ret$ones = ones
+
+  #names(ind) = paste0('INDISTINGUISHABLE', 1:length(ind))
+
+
+  return(ret)
+}
+
+#' @export annotate.description
+annotate.description = function(x, label)
+{
+  if(as.description(x) != "")
+    warning(paste('Old description substituted: ', as.description(x), '.'))
+  
+  x$name = label
+  return(x)
+}
+
 #' @export
 rename.type <- function(x, old.name, new.name) {
   is.compliant(x, 'rename.type: input dataset')
@@ -123,8 +184,8 @@ change.color = function(x, type, new.color)
 
 #' @export
 delete.samples = function(x, samples) {
-  is.compliant(x)
-  
+  is.compliant(x, 'delete.samples input')
+  stages = has.stages(x)
   del = list()
   actual.samples = as.samples(x)
   samples = unique(samples)
@@ -136,13 +197,13 @@ delete.samples = function(x, samples) {
     }
   }
   
-  x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, ,drop=F]
+  x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, , drop = F ]
   
-  if("stages" %in% names(x)) {
+  if(stages) {
     x$stages = x$stages[!rownames(x$stages) %in% del, , drop=FALSE]
   }
   
-  is.compliant(x)
+  is.compliant(x, 'delete.samples output')
   
   return(x)
 }
@@ -350,7 +411,7 @@ sbind = function(...)
 # @ ...: type to merge
 # @ new.type: label for the new type to create
 # @ new.color: color for the new type to create
-#' @export
+#' @export merge.types
 merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
 
   # #   # internal function, merge two types
@@ -448,7 +509,7 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
   if (length(input) <= 1) {
     cat("One input type provided, using renaming functions.\n")
 
-    x = rename.type(x, input, new.type)
+    x = rename.type(x, input[[1]], new.type)
     x = change.color(x, new.type, new.color)
     return(x)
   }
@@ -504,7 +565,17 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
     z = annotate.stages(z, as.stages(x))
 
 
-  return(z)
+  y = x
+  for(i in input)
+  {y = delete.type(y, i)
+
+	# print(show(y))
+}
+
+  w = ebind(y, z)
+  is.compliant(w)
+
+  return(w)
 
 }
 
@@ -517,11 +588,11 @@ trim = function(x) {
   
   del = names(which(colSums(x$genotypes) == 0))
 
-  x$genotypes = x$genotypes[, !colnames(x$genotypes) %in% del]
-  x$annotations = x$annotations[!rownames(x$annotations) %in% del,]
+  x$genotypes = x$genotypes[, !colnames(x$genotypes) %in% del, drop = FALSE]
+  x$annotations = x$annotations[!rownames(x$annotations) %in% del, , drop = FALSE]
 
-  x$types = matrix(x$types[ unique(x$annotations[,'type']), ncol=1])
-  rownames(x$types) = unique(x$annotations[,'type'])
+  x$types = matrix(x$types[ unique(x$annotations[, 'type', drop = FALSE]), , drop = FALSE ], ncol=1)
+  rownames(x$types) = unique(x$annotations[,'type', drop = FALSE])
   colnames(x$types) = 'color'
   
 
@@ -592,7 +663,7 @@ ssplit <- function(x, clusters, idx=NA)
     y = list()
     samples.in.cluster = rownames(clusters)[clusters == cluster.labels[i,1]]
     
-    cat(paste('Group \"', idx, '\" has ', length(samples.in.cluster), 
+    cat(paste('Group \"', cluster.labels[i,1], '\" has ', length(samples.in.cluster), 
               ' samples.\n', sep=''))
     
     y$genotypes = data[samples.in.cluster, ];
@@ -605,7 +676,11 @@ ssplit <- function(x, clusters, idx=NA)
       }
     
     is.compliant(y, 'subtypes.split partitionig')
-    partitions = c(partitions, y) 
+    
+    
+    
+    partitions = append(partitions, list(y)) 
+    names(partitions)[i] = cluster.labels[i,1]
   }
     
   return(partitions)
@@ -620,3 +695,29 @@ tsplit <- function(x)
 # Parametro per estrarre un tipo solo di evento?
 }
 
+merge.events = function(x, events, new.event, new.type, event.color)
+{
+	if(ncol(events) != 2) stop('ERR - badformed events')
+	
+	x = enforce.numeric(x)
+	
+	x.ev = NULL 
+	y = x
+	for(i in 1:nrow(events))
+	{
+		x.ev = rbind(x.ev, as.events(x, genes = events[i,2], types = events[i,1]))
+		y = delete.event(y, gene = events[i,2], type = events[i,1])
+	}
+	
+	genos = x$genotypes[, rownames(x.ev)]
+	genos = matrix(rowSums(genos), nrow = nsamples(x))
+	genos[genos > 1] = 1
+	colnames(genos) = new.event
+	rownames(genos) = as.samples(x)
+
+	genos = import.genotypes(genos, event.type = new.type, color = event.color)
+	y = ebind(y, genos)
+
+	# print(as.events(y))
+	return(y)
+}

@@ -16,6 +16,8 @@
             !is.na(filter.freq), ', ',
             !any(is.na(filter.in.names)), ', ',
             !any(is.na(filter.out.names)), '}', sep=''))
+            
+   # print(filter.in.names)         
   
   if(is.na(filter.out.names) && is.na(filter.in.names) && is.na(filter.freq))
     return(x);
@@ -141,7 +143,7 @@ rank.recurrents = function(x, n)
 #' @export
 samples.selection = function(x, samples)
 {
-  is.compliant(x)
+  is.compliant(x, 'Input:')
   
   missing = setdiff(samples, as.samples(x))
   if(length(missing) > 0) warning(paste('Missing samples: ', paste(missing, collapse=', ')))

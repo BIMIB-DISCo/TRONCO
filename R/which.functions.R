@@ -1,4 +1,3 @@
-
 #' @export
 which.samples = function(x, gene, type, neg = FALSE)
 {

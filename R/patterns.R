@@ -40,6 +40,16 @@ as.patterns = function(x)
 }
 
 
+#' Return the number of patterns in the dataset
+#' @export
+npatterns = function(x)
+{
+	if(is.null(x$hypotheses) || is.na(x$hypotheses)) return(0)
+	
+	return(x$hypotheses$num.hypotheses)
+}
+
+
 
 
 ## SPOSTARE IN UN FILE APPOSITO?
@@ -62,7 +72,7 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 
 	cat('Group tested against:', to[1], to[2], '\n')
 	
-	library(circlize)
+	suppressMessages(library(circlize))
 	
 	# HARD exclusivity: 1 for each pattern element
 	# CO-OCCURRENCE: 1
@@ -250,7 +260,7 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 		
 		rownames(matrix)[nrow(matrix)] = 'none of the\nevents'
 		
-		library(gridBase)
+		suppressMessages(library(gridBase))
 
 	summary = matrix[ (length(keys) + 1):nrow(matrix), 1, drop = FALSE]
 	summary = rbind( sum(matrix[1:length(keys),]), summary)
@@ -378,19 +388,3 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 		
 			# if(!is.na(title)) title(title, cex.main = 1.0 * label.cex)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

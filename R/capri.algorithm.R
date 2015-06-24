@@ -11,6 +11,7 @@
 # dataset: a dataset describing a progressive phenomenon
 # hypotheses: hypotheses to be considered in the reconstruction
 # command: type of search for the likelihood fit, either hill climbing (hc) or tabu (tabu)
+# regularization: regularizators to be used for the likelihood fit
 # do.boot: should I perform bootstrap? Yes if TRUE, no otherwise
 # nboot: integer number (greater than 0) of bootstrap sampling to be performed
 # pvalue: pvalue for the tests (value between 0 and 1)
@@ -18,10 +19,14 @@
 # min.stat: should I keep bootstrapping untill I have nboot valid values?
 # boot.seed: seed to be used for the sampling
 # do.estimation: should I perform the estimation of the error rates and probabilities?
+# silent: should I be verbose?
 # RETURN:
 # topology: the reconstructed tree topology
 "capri.fit" <-
-function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE, boot.seed = 12345, do.estimation = FALSE, silent = FALSE ) {
+function( dataset, hypotheses = NA, command = "hc", regularization = c("bic","aic"), do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE, boot.seed = NULL, do.estimation = FALSE, silent = FALSE ) {
+	
+	# start the clock to measure the execution time
+	ptm <- proc.time();
     
     # structure with the set of valid edges
     # I start from the complete graph, i.e., I have no prior and all the connections are possibly causal
@@ -35,77 +40,183 @@ function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.b
     # consider any hypothesis
     adj.matrix = hypothesis.adj.matrix(hypotheses,adj.matrix);
     
+    # check if the dataset is valid
+    valid.dataset = check.dataset(dataset,adj.matrix,FALSE);
+    adj.matrix = valid.dataset$adj.matrix;
+    invalid.events = valid.dataset$invalid.events;
+    
     # reconstruct the prima facie topology
     # should I perform bootstrap? Yes if TRUE, no otherwise
-   
     if(do.boot==TRUE) {
-        if(!silent) cat('*** Bootstraping scores for selective advantage.\n')
-        prima.facie.parents = get.prima.facie.parents.do.boot(dataset,hypotheses,nboot,pvalue,adj.matrix,min.boot,min.stat,boot.seed);
+        if(!silent) cat('*** Bootstraping selective advantage scores (prima facie).\n')
+        prima.facie.parents = get.prima.facie.parents.do.boot(dataset,hypotheses,nboot,pvalue,adj.matrix,min.boot,min.stat,boot.seed,silent);
     }
     else {
-            if(!silent) cat('*** Computing scores for selective advantage.\n')
-            prima.facie.parents = get.prima.facie.parents.no.boot(dataset,hypotheses,adj.matrix);
+    		if(!silent) cat('*** Computing selective advantage scores (prima facie).\n')
+    		prima.facie.parents = get.prima.facie.parents.no.boot(dataset,hypotheses,adj.matrix,silent);
     }
     
-    # perform the likelihood fit by BIC score on the prima facie topology
-    if(!silent) cat('*** Performing likelihood-fit with regularization.\n')
-    best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix,command,regularization=regularization);
+    # add back in any connection invalid for the probability raising theory
+    if(length(invalid.events)>0) {        
+		for(i in 1:nrow(invalid.events)) {
+			prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i,"cause"],invalid.events[i,"effect"]] = 1;
+			prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i,"cause"],invalid.events[i,"effect"]] = 1;
+		}
+	}
+	adj.matrix.prima.facie = prima.facie.parents$adj.matrix$adj.matrix.cyclic
     
-    # set the structure to save the conditional probabilities of the reconstructed topology
-    parents.pos.pf = array(list(),c(ncol(dataset),1));
-    conditional.probs.pf = array(list(),c(ncol(dataset),1));
-    parents.pos.fit = array(list(),c(ncol(dataset),1));
-    conditional.probs.fit = array(list(),c(ncol(dataset),1));
+    # perform the likelihood fit with the required regularization scores
+    model = list();
+    for (reg in regularization) {
     
-    # compute the conditional probabilities
-    for(i in 1:ncol(dataset)) {
-        for(j in 1:ncol(dataset)) {
-            if(i!=j && best.parents$adj.matrix$adj.matrix.pf[i,j]==1) {
-                parents.pos.pf[j,1] = list(c(unlist(parents.pos.pf[j,1]),i));
-                conditional.probs.pf[j,1] = list(c(unlist(conditional.probs.pf[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
-            }
-            if(i!=j && best.parents$adj.matrix$adj.matrix.fit[i,j]==1) {
-                parents.pos.fit[j,1] = list(c(unlist(parents.pos.fit[j,1]),i));
-                conditional.probs.fit[j,1] = list(c(unlist(conditional.probs.fit[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
-            }
-        }
-    }
-    parents.pos.pf[unlist(lapply(parents.pos.pf,is.null))] = list(-1);
-    conditional.probs.pf[unlist(lapply(conditional.probs.pf,is.null))] = list(1);
-    parents.pos.fit[unlist(lapply(parents.pos.fit,is.null))] = list(-1);
-    conditional.probs.fit[unlist(lapply(conditional.probs.fit,is.null))] = list(1);
+    		# perform the likelihood fit with the chosen regularization score on the prima facie topology
+    		if(!silent) cat(paste0('*** Performing likelihood-fit with regularization ',reg,'.\n'))
+    		best.parents = perform.likelihood.fit(dataset,prima.facie.parents$adj.matrix$adj.matrix.acyclic,command,regularization=reg);
+    		
+    		# set the structure to save the conditional probabilities of the reconstructed topology
+    		parents.pos.fit = array(list(),c(ncol(dataset),1));
+    		conditional.probs.fit = array(list(),c(ncol(dataset),1));
+    		
+    		# compute the conditional probabilities
+    		for(i in 1:ncol(dataset)) {
+    			for(j in 1:ncol(dataset)) {
+    				if(i!=j && best.parents$adj.matrix$adj.matrix.fit[i,j]==1) {
+    					parents.pos.fit[j,1] = list(c(unlist(parents.pos.fit[j,1]),i));
+    					conditional.probs.fit[j,1] = list(c(unlist(conditional.probs.fit[j,1]),prima.facie.parents$joint.probs[i,j]/prima.facie.parents$marginal.probs[i]));
+    				}
+    			}
+    		}
+    		parents.pos.fit[unlist(lapply(parents.pos.fit,is.null))] = list(-1);
+    		conditional.probs.fit[unlist(lapply(conditional.probs.fit,is.null))] = list(1);
+    		
+    		# perform the estimation of the probabilities if requested
+    		if(do.estimation) {
+    			# estimate the error rates and, given them, the probabilities for the causal topology
+    			estimated.error.rates.fit = estimate.dag.error.rates(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.fit);
+    			estimated.probabilities.fit = estimate.dag.probs(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.fit,estimated.error.rates.fit);
+    		}
+    		else {
+    			estimated.error.rates.fit = list(error.fp=NA,error.fn=NA);
+    			estimated.probabilities.fit = list(marginal.probs=NA,joint.probs=NA,conditional.probs=NA);
+    		}
+    		
+    		# set results for the current regolarizator
+	    	probabilities.observed = list(marginal.probs=prima.facie.parents$marginal.probs,joint.probs=prima.facie.parents$joint.probs,conditional.probs=conditional.probs.fit);
+	    	probabilities.fit = list(estimated.marginal.probs=estimated.probabilities.fit$marginal.probs,estimated.joint.probs=estimated.probabilities.fit$joint.probs,estimated.conditional.probs=estimated.probabilities.fit$conditional.probs);
+	    	probabilities = list(probabilities.observed=probabilities.observed,probabilities.fit=probabilities.fit);
+	    	parents.pos = parents.pos.fit;
+	    	error.rates = estimated.error.rates.fit;
+	    	
+	    	# save the results for the model
+	    	model[[reg]] = list(probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,adj.matrix=best.parents$adj.matrix);
+    	
+    	}
     
-    # perform the estimation of the probabilities if requested
-    if(do.estimation) {
-        # estimate the error rates and, given them, the probabilities for the prima facie topology
-        estimated.error.rates.pf = estimate.dag.error.rates(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.pf);
-        estimated.probabilities.pf = estimate.dag.probs(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.pf,estimated.error.rates.pf);
-        # estimate the error rates and, given them, the probabilities for the causal topology
-        estimated.error.rates.fit = estimate.dag.error.rates(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.fit);
-        estimated.probabilities.fit = estimate.dag.probs(dataset,prima.facie.parents$marginal.probs,prima.facie.parents$joint.probs,parents.pos.fit,estimated.error.rates.fit);
-    }
-    else {
-        estimated.error.rates.pf = list(error.fp=NA,error.fn=NA);
-        estimated.probabilities.pf = list(marginal.probs=NA,joint.probs=NA,conditional.probs=NA);
-        estimated.error.rates.fit = list(error.fp=NA,error.fn=NA);
-        estimated.probabilities.fit = list(marginal.probs=NA,joint.probs=NA,conditional.probs=NA);
-    }
-    
-    # set structures where to save the results
-    probabilities.pf = list(marginal.probs=prima.facie.parents$marginal.probs,joint.probs=prima.facie.parents$joint.probs,conditional.probs=conditional.probs.pf,estimated.marginal.probs=estimated.probabilities.pf$marginal.probs,estimated.joint.probs=estimated.probabilities.pf$joint.probs,estimated.conditional.probs=estimated.probabilities.pf$conditional.probs);
-    probabilities.fit = list(marginal.probs=prima.facie.parents$marginal.probs,joint.probs=prima.facie.parents$joint.probs,conditional.probs=conditional.probs.fit,estimated.marginal.probs=estimated.probabilities.fit$marginal.probs,estimated.joint.probs=estimated.probabilities.fit$joint.probs,estimated.conditional.probs=estimated.probabilities.fit$conditional.probs);
-    probabilities = list(probabilities.pf=probabilities.pf,probabilities.fit=probabilities.fit);
-    parents.pos = list(parents.pos.pf=parents.pos.pf,parents.pos.fit=parents.pos.fit);
-    error.rates = list(error.rates.pf=estimated.error.rates.pf,error.rates.fit=estimated.error.rates.fit);
-    parameters = list(algorithm="CAPRI",command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation);
+    # set the execution parameters
+    parameters = list(algorithm="CAPRI",command=command,regularization=regularization,do.boot=do.boot,nboot=nboot,pvalue=pvalue,min.boot=min.boot,min.stat=min.stat,boot.seed=boot.seed,do.estimation=do.estimation,silent=silent);
     
     # return the results
-    topology = list(dataset=dataset,probabilities=probabilities,parents.pos=parents.pos,error.rates=error.rates,confidence=prima.facie.parents$pf.confidence,adj.matrix=best.parents$adj.matrix,parameters=parameters);
+    topology = list(dataset=dataset,hypotheses=hypotheses,adj.matrix.prima.facie=adj.matrix.prima.facie,confidence=prima.facie.parents$pf.confidence,model=model,parameters=parameters,execution.time=(proc.time()-ptm));
     return(topology);
     
 }
 
 #### end of file -- capri.fit.R
+
+#### check.dataset.R
+####
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### See the files COPYING and LICENSE for copyright and licensing
+#### information.
+
+
+# check if the dataset is valid accordingly to the probability raising
+# INPUT:
+# dataset: a dataset describing a progressive phenomenon
+# adj.matrix: adjacency matrix of the topology
+# verbose: should I print the warnings? Yes if TRUE, no otherwise
+# RETURN:
+# valid.dataset: a dataset valid accordingly to the probability raising
+"check.dataset" <-
+function( dataset, adj.matrix, verbose ) {
+	
+    # perform the preprocessing only if I have at least two binary events and two samples
+    if(length(ncol(dataset))>0 && ncol(dataset)>1 && length(nrow(dataset))>0 && nrow(dataset)>1 && length(dataset[dataset==0|dataset==1])==nrow(dataset)*ncol(dataset)) {
+    	
+        # structure to compute the observed and observed joint probabilities
+        pair.count <- array(0, dim=c(ncol(dataset), ncol(dataset)));
+        # compute the probabilities on the dataset
+        for(i in 1:ncol(dataset)) {
+            for(j in 1:ncol(dataset)) {
+                val1 = dataset[ ,i];
+                val2 = dataset[ ,j];
+                pair.count[i,j] = (t(val1) %*% val2);
+            }
+        }
+        # marginal.probs is an array of the observed marginal probabilities
+        marginal.probs <- array(as.matrix(diag(pair.count)/nrow(dataset)),dim=c(ncol(dataset),1));
+        # joint.probs is an array of the observed joint probabilities
+        joint.probs <- as.matrix(pair.count/nrow(dataset));
+        
+        # evaluate the connections
+        invalid.events = vector();
+        for (i in 1:ncol(adj.matrix)) {
+	        	for (j in 1:nrow(adj.matrix)) {
+	        		# if i --> j is valid
+	        		if(i!=j && adj.matrix[i,j]==1) {
+	        			# the potential cause is always present
+	        			if(marginal.probs[i]==1) {
+	        				# the potential child is not always missing
+	        				if(marginal.probs[i]>0) {
+	        					adj.matrix[i,j] = 0;
+	        					# invalid.events = rbind(invalid.events,t(c(i,j)));
+	        				}
+	        				# the potential child is always missing
+	        				else if(marginal.probs[i]==0) {
+	        					adj.matrix[i,j] = 0;
+	        				}
+	        			}
+	        			# the potential cause is always missing
+	        			else if(marginal.probs[i]==0) {
+	        				adj.matrix[i,j] = 0;
+	        			}
+	        			# the potential child is always present
+	        			else if(marginal.probs[j]==1) {
+	        				adj.matrix[i,j] = 0;
+	        			}
+	        			# the potential child is always missing
+	        			else if(marginal.probs[j]==0) {
+	        				adj.matrix[i,j] = 0;
+	        			}
+	        			# the two events are equals
+	        			else if((joint.probs[i,j]/marginal.probs[i])==1 && (joint.probs[i,j]/marginal.probs[j])==1) {
+	        				adj.matrix[i,j] = 0;
+	        				invalid.events = rbind(invalid.events,t(c(i,j)));
+	        			}
+	        		}
+	        	}
+        }
+        if(length(invalid.events)>0) {
+        		colnames(invalid.events) = c("cause","effect");
+        }
+        valid.dataset = list(dataset=dataset,adj.matrix=adj.matrix,invalid.events=invalid.events,marginal.probs=marginal.probs,joint.probs=joint.probs);
+        
+    }
+    
+    #if the dataset is not valid, we stop here
+    else {
+        if(verbose==TRUE) {
+            warning("The dataset must contain at least two binary events and two samples.");
+        }
+        valid.dataset = list(dataset=NA,adj.matrix=NA,invalid.events=NA,marginal.probs=NA,joint.probs=NA);
+    }
+    
+    return(valid.dataset);
+    
+}
+
+#### end of file -- check.dataset.R
 
 
 #### get.bootstapped.scores.R
@@ -127,7 +238,7 @@ function( dataset, hypotheses = NA, command = "hc", regularization = "bic", do.b
 # RETURN:
 # scores: list structure with the scores and the data generated by bootstrap
 "get.bootstapped.scores" <-
-function( dataset, nboot, adj.matrix, min.boot = 3, min.stat = TRUE, boot.seed = 12345 ) {
+function( dataset, nboot, adj.matrix, min.boot = 3, min.stat = TRUE, boot.seed = NULL, silent ) {
     
     # structures to save the distributions generated by the bootstrapped datasets
     marginal.probs.distributions <- array(list(-1), c(ncol(dataset),1));
@@ -158,9 +269,11 @@ function( dataset, nboot, adj.matrix, min.boot = 3, min.stat = TRUE, boot.seed =
     # set the seed to be used for the sampling
     set.seed(boot.seed);
     
-    # create a progress bar
-    flush.console();
-    pb <- txtProgressBar(curr.iteration, nboot, style = 3);
+    if(silent==FALSE) {
+    		# create a progress bar
+    		flush.console();
+    		pb <- txtProgressBar(curr.iteration, nboot, style = 3);
+    	}
     
     while(curr.iteration<nboot) {
             
@@ -229,18 +342,22 @@ function( dataset, nboot, adj.matrix, min.boot = 3, min.stat = TRUE, boot.seed =
             curr.iteration = nboot;
         }
         
-        #increment the progress bar
-        if(min.stat==FALSE) {
-            setTxtProgressBar(pb, boot.counter);
-        }
-        else {
-            setTxtProgressBar(pb, curr.iteration);
-        }
+        if(silent==FALSE) {
+        		#increment the progress bar
+        		if(min.stat==FALSE) {
+            		setTxtProgressBar(pb, boot.counter);
+        		}
+        		else {
+            		setTxtProgressBar(pb, curr.iteration);
+        		}
+        	}
     
     }
     
-    # close the progress bar
-    close(pb);
+    if(silent==FALSE) {
+	    # close the progress bar
+    		close(pb);
+    	}
     
     # save the results and return them
     scores <- list(marginal.probs.distributions=marginal.probs.distributions,joint.probs.distributions=joint.probs.distributions,prima.facie.model.distributions=prima.facie.model.distributions,prima.facie.null.distributions=prima.facie.null.distributions);
@@ -373,16 +490,21 @@ function( adj.matrix, hypotheses, marginal.probs.distributions, prima.facie.mode
     }
     
     # remove any cycle
+    adj.matrix.cyclic = probability.raising$adj.matrix
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
-            if(!silent) cat('*** Loop detection found loops to break.\n')
-            weights.temporal.priority = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]];
+    	
+    		if(!silent) cat('*** Loop detection found loops to break.\n')
+        
+        weights.temporal.priority = probability.raising$edge.confidence.matrix[[1,1]]+probability.raising$edge.confidence.matrix[[2,1]];
         weights.matrix = probability.raising$edge.confidence.matrix[[2,1]]+probability.raising$edge.confidence.matrix[[3,1]];
-        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses);
-        adj.matrix = acyclic.topology$adj.matrix;
+        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses,silent);
+        adj.matrix.acyclic = acyclic.topology$adj.matrix;
+        
     }
     else {
-        adj.matrix = probability.raising$adj.matrix;
+        adj.matrix.acyclic = probability.raising$adj.matrix;
     }
+    adj.matrix = list(adj.matrix.cyclic=adj.matrix.cyclic,adj.matrix.acyclic=adj.matrix.acyclic)
     
     # save the results and return them
     prima.facie.topology <- list(adj.matrix=adj.matrix,edge.confidence.matrix=probability.raising$edge.confidence.matrix);
@@ -440,16 +562,21 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
     }
     
     # remove any cycle
+    adj.matrix.cyclic = probability.raising$adj.matrix
     if(length(temporal.priority$not.ordered)>0 || !is.na(hypotheses[1])) {
-            if(!silent) cat('*** Loop detection found loops to break.\n')
-            weights.temporal.priority = probability.raising$edge.confidence.matrix[[2,1]];
-        weights.matrix = probability.raising$edge.confidence.matrix[[3,1]];
-        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses);
-        adj.matrix = acyclic.topology$adj.matrix;
+    	
+    		if(!silent) cat('*** Loop detection found loops to break.\n')
+    		
+    		weights.temporal.priority = probability.raising$edge.confidence.matrix[[2,1]];
+        weights.matrix = probability.raising$edge.confidence.matrix[[2,1]] + probability.raising$edge.confidence.matrix[[3,1]];
+        acyclic.topology = remove.cycles(probability.raising$adj.matrix,weights.temporal.priority,weights.matrix,temporal.priority$not.ordered,hypotheses,silent);
+        adj.matrix.acyclic = acyclic.topology$adj.matrix;
+        
     }
     else {
-        adj.matrix = probability.raising$adj.matrix;
+        adj.matrix.acyclic = probability.raising$adj.matrix;
     }
+    adj.matrix = list(adj.matrix.cyclic=adj.matrix.cyclic,adj.matrix.acyclic=adj.matrix.acyclic)
     
     # save the results and return them
     prima.facie.topology <- list(adj.matrix=adj.matrix,edge.confidence.matrix=probability.raising$edge.confidence.matrix);
@@ -479,10 +606,10 @@ function( adj.matrix, hypotheses, marginal.probs, prima.facie.model, prima.facie
 # RETURN:
 # prima.facie.parents: list of the set (if any) of prima facie parents for each node
 "get.prima.facie.parents.do.boot" <-
-function( dataset, hypotheses, nboot, pvalue, adj.matrix, min.boot, min.stat, boot.seed ) {
+function( dataset, hypotheses, nboot, pvalue, adj.matrix, min.boot, min.stat, boot.seed, silent ) {
     
     # perform a robust estimation of the scores using rejection sampling bootstrap
-    scores = get.bootstapped.scores(dataset,nboot,adj.matrix,min.boot,min.stat,boot.seed);
+    scores = get.bootstapped.scores(dataset,nboot,adj.matrix,min.boot,min.stat,boot.seed,silent);
     
     # compute the observed and joint probabilities as the mean of the bootstrapped values
     marginal.probs = array(-1,dim=c(ncol(dataset),1));
@@ -498,7 +625,7 @@ function( dataset, hypotheses, nboot, pvalue, adj.matrix, min.boot, min.stat, bo
     }
     
     # remove all the edges not representing a prima facie cause
-    prima.facie.topology = get.prima.facie.causes.do.boot(adj.matrix,hypotheses,scores$marginal.probs.distributions,scores$prima.facie.model.distributions,scores$prima.facie.null.distributions,pvalue,dataset,marginal.probs,joint.probs);
+    prima.facie.topology = get.prima.facie.causes.do.boot(adj.matrix,hypotheses,scores$marginal.probs.distributions,scores$prima.facie.model.distributions,scores$prima.facie.null.distributions,pvalue,dataset,marginal.probs,joint.probs,silent);
     
     # save the results and return them
     prima.facie.parents <- list(marginal.probs=marginal.probs,joint.probs=joint.probs,adj.matrix=prima.facie.topology$adj.matrix,pf.confidence=prima.facie.topology$edge.confidence.matrix);
@@ -514,13 +641,13 @@ function( dataset, hypotheses, nboot, pvalue, adj.matrix, min.boot, min.stat, bo
 # RETURN:
 # prima.facie.parents: list of the set (if any) of prima facie parents for each node
 "get.prima.facie.parents.no.boot" <-
-function( dataset, hypotheses, adj.matrix ) {
+function( dataset, hypotheses, adj.matrix, silent ) {
     
     # compute the scores from the dataset
     scores = get.dag.scores(dataset,adj.matrix);
     
     # remove all the edges not representing a prima facie causes
-    prima.facie.topology = get.prima.facie.causes.no.boot(adj.matrix,hypotheses,scores$marginal.probs,scores$prima.facie.model,scores$prima.facie.null,dataset,scores $joint.probs);
+    prima.facie.topology = get.prima.facie.causes.no.boot(adj.matrix,hypotheses,scores$marginal.probs,scores$prima.facie.model,scores$prima.facie.null,dataset,scores $joint.probs,silent);
     
     # save the results return them
     prima.facie.parents <- list(marginal.probs=scores$marginal.probs,joint.probs=scores$joint.probs,adj.matrix=prima.facie.topology$adj.matrix,pf.confidence=prima.facie.topology$edge.confidence.matrix);
@@ -550,12 +677,22 @@ function( dataset, hypotheses, adj.matrix ) {
 #' @import bnlearn
 "perform.likelihood.fit" <-
 function( dataset, adj.matrix, command, regularization ) {
+	
+	# each variable should at least have 2 values: I'm ignoring connection to invalid events
+	# but, still, need to make the dataset valid for bnlearn
+	for (i in 1:ncol(dataset)) {
+		if(sum(dataset[,i])==0) {
+			dataset[1,i] = 1;
+		}
+		else if(sum(dataset[,i])==nrow(dataset)) {
+			dataset[1,i] = 0;
+		}
+	}
     
-    # load the bnlearn library required for the likelihood fit with bic
-    if (!require(bnlearn)) {
-            install.packages('bnlearn', dependencies = TRUE);
-        library(bnlearn);
-    }
+    # load the bnlearn library required for the likelihood fit with regularizator
+
+    suppressMessages(library(bnlearn))
+
     
     # adjacency matrix of the topology reconstructed by likelihood fit
     adj.matrix.fit = array(0,c(nrow(adj.matrix),ncol(adj.matrix)));
@@ -660,8 +797,10 @@ function( dataset, adj.matrix, command, regularization ) {
 # acyclic.topology: structure representing the best acyclic topology
 #' @import igraph
 "remove.cycles" <-
-function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hypotheses = NA ) {
+function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hypotheses = NA, silent ) {
     
+    suppressMessages(library(igraph))
+
     total.edges = length(which(adj.matrix == 1))
     removed = 0
     
@@ -726,23 +865,16 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
         }
     
         # sort the edges in increasing order of confidence (i.e. the edges with lower pvalue are the most confident)
-            ordered.edges = ordered.edges[sort(unlist(ordered.weights),decreasing=TRUE,index.return=TRUE)$ix];
+        ordered.edges = ordered.edges[sort(unlist(ordered.weights),decreasing=TRUE,index.return=TRUE)$ix];
     
     }
     
     # visit the ordered edges and remove the ones that are causing any cycle
     if(length(ordered.edges)>0) {
             
+        # expanded matrix to be considered in removing the loops
+        expansion = hypotheses.expansion(input_matrix=adj.matrix,map=hypotheses$hstructure,hidden_and=F,expand=T,skip.disconnected=F);
         
-
-            # expanded matrix to be considered in removing the loops
-            expansion = hypotheses.expansion(input_matrix=adj.matrix,map=hypotheses$hstructure,hidden_and=F,expand=T,skip.disconnected=F);
-            
-        # load the igraph library required for the loop detection
-        if (!require(igraph)) {
-            install.packages('igraph', dependencies = TRUE);
-            library(igraph);
-        }
         
         for(i in 1:length(ordered.edges)) {
             
@@ -754,32 +886,32 @@ function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hy
             # resolve the mapping from the adj.matrix to the expanded one both for curr.edge.i and curr.edge.j
             if(colnames(adj.matrix)[curr.edge.i]%in%expansion[[2]]) {
                     curr.edge.i.exp = which(colnames(expansion[[1]])%in%names(expansion[[2]])[which(expansion[[2]]%in%colnames(adj.matrix)[curr.edge.i])]);
-            }
-            else {
+            } else {
                     curr.edge.i.exp = which(colnames(expansion[[1]])%in%colnames(adj.matrix)[curr.edge.i]);
             }
             if(colnames(adj.matrix)[curr.edge.j]%in%expansion[[2]]) {
                     curr.edge.j.exp = which(colnames(expansion[[1]])%in%names(expansion[[2]])[which(expansion[[2]]%in%colnames(adj.matrix)[curr.edge.j])]);
-            }
-            else {
+            } else {
                     curr.edge.j.exp = which(colnames(expansion[[1]])%in%colnames(adj.matrix)[curr.edge.j]);
             }
             
             # search for loops between curr.edge.i and curr.edge.j
-            curr.graph = graph.adjacency(expansion[[1]], mode="directed");
-                is.path = length(unlist(get.shortest.paths(curr.graph, curr.edge.j.exp, curr.edge.i.exp)$vpath));
+            curr.graph = graph.adjacency(expansion[[1]], mode="directed")
             
+            is.path = length(unlist(get.shortest.paths(curr.graph, curr.edge.j.exp, curr.edge.i.exp)$vpath));
+            
+
             # if there is a path between the two nodes, remove edge i --> j
             if(is.path>0) {
-                    removed = removed + 1
-                    # cat("Removing edge ",colnames(adj.matrix)[curr.edge.i]," to ",colnames(adj.matrix)[curr.edge.j],"\n");
-                    expansion[[1]][curr.edge.i.exp,curr.edge.j.exp] = 0;
-                    adj.matrix[curr.edge.i,curr.edge.j] = 0;
+                removed = removed + 1
+                # cat("Removing edge ",colnames(adj.matrix)[curr.edge.i]," to ",colnames(adj.matrix)[curr.edge.j],"\n");
+                expansion[[1]][curr.edge.i.exp,curr.edge.j.exp] = 0;
+                adj.matrix[curr.edge.i,curr.edge.j] = 0;
             }
             
         }
         
-        cat(paste0('\tRemoved ', removed, ' edges out of ', total.edges ,' (', round(100 * removed/total.edges, 0),'%)\n'))
+        if(!silent) cat(paste0('\tRemoved ', removed, ' edges out of ', total.edges ,' (', round(100 * removed/total.edges, 0),'%)\n'))
     }
     
     # save the results and return them
