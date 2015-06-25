@@ -13,7 +13,6 @@
 # do.estimation: should I perform the estimation of the error rates and probabilities?
 # RETURN:
 # topology: the reconstructed tree-like topology
-# ' @import bnlearn
 "caprese.fit" <-
 function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = FALSE ) {
 	

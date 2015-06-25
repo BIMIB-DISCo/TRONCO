@@ -25,15 +25,15 @@ Depends:
     lattice,
     likert,
     methods,
-    R.matlab,
     RColorBrewer,
     reshape2,
-    igraph,
     xtable 
 Imports:
+    bnlearn
 Suggests: 
     BiocGenerics,
-    testthat
+    testthat,
+    R.matlab
 Description: Genotype-level cancer progression models describe the ordering of
     accumulating mutations, e.g., somatic mutations / copy number variations,
     during cancer development. These graphical models help understand the

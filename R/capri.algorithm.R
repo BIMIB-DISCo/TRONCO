@@ -674,7 +674,6 @@ function( dataset, hypotheses, adj.matrix, silent ) {
 # regularization: regularization term to be used in the likelihood fit
 # RETURN:
 # topology: the adjacency matrix of both the prima facie and causal topologies
-#' @import bnlearn
 "perform.likelihood.fit" <-
 function( dataset, adj.matrix, command, regularization ) {
 	
@@ -690,8 +689,6 @@ function( dataset, adj.matrix, command, regularization ) {
 	}
     
     # load the bnlearn library required for the likelihood fit with regularizator
-
-    suppressMessages(library(bnlearn))
 
     
     # adjacency matrix of the topology reconstructed by likelihood fit
@@ -795,11 +792,9 @@ function( dataset, adj.matrix, command, regularization ) {
 # hypotheses: hypotheses to evaluate potential cycles
 # RETURN:
 # acyclic.topology: structure representing the best acyclic topology
-#' @import igraph
 "remove.cycles" <-
 function( adj.matrix, weights.temporal.priority, weights.matrix, not.ordered, hypotheses = NA, silent ) {
     
-    suppressMessages(library(igraph))
 
     total.edges = length(which(adj.matrix == 1))
     removed = 0

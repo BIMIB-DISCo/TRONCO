@@ -137,7 +137,6 @@ export.mutex = function(x,
 # Create a .mat file which can be used with NBS clustering
 # (ref: http://chianti.ucsd.edu/~mhofree/wordpress/?page_id=26)
 #' @title export nbs input
-#' @import R.matlab
 #' @param x The TRONCO standard object
 #' @param map_hugo_entrez   Hugo_Symbol  - Entrez_Gene_Id
 #' @param file TODO
@@ -147,7 +146,7 @@ export.nbs.input = function(x,
                       file = 'tronco_to_nbs.mat')
 {
 
-  suppressMessages(library(R.matlab))
+  library(R.matlab)
   
   is.compliant(x);
   

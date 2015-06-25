@@ -151,6 +151,7 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
 #' @param silent TODO
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
+#' @importFrom bnlearn hc tabu nodes
 tronco.capri <- function( data, 
     command = "hc", 
     regularization = c("bic","aic"), 
