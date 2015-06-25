@@ -13,13 +13,11 @@ Maintainer: Giulio Caravagna <giulio.caravagna@disco.unimib.it>,
     Luca De Sano <l.desano@campus.unimib.it>
 Depends: 
     R (>= 3.1),
-    graph
-Imports: 
-    bnlearn,
     igraph,
+    graph,
+    doParallel,
     cgdsr,
     colorspace,
-    doParallel,
     ggplot2,
     Rgraphviz,
     gplots,
@@ -32,6 +30,10 @@ Imports:
     reshape2,
     igraph,
     xtable 
+Imports:
+Suggests: 
+    BiocGenerics,
+    testthat
 Description: Genotype-level cancer progression models describe the ordering of
     accumulating mutations, e.g., somatic mutations / copy number variations,
     during cancer development. These graphical models help understand the
@@ -60,7 +62,3 @@ License: GPL (>= 2.0)
 URL: http://bimib.disco.unimib.it
 BugReports: https://github.com/BIMIB-DISCo/TRONCO
 biocViews: Cancer
-Suggests: 
-    RUnit,
-    BiocGenerics,
-    testthat
