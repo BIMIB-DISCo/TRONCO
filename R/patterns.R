@@ -55,7 +55,6 @@ npatterns = function(x)
 ## SPOSTARE IN UN FILE APPOSITO?
 #
 #
-#' @import
 #' @export
 pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex = 1.0, title=paste(to[1], to[2]), mode = 'barplot')
 {

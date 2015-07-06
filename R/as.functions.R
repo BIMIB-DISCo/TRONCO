@@ -467,13 +467,11 @@ nhypotheses = function(x)
 }
 
 #' Return the patterns in the dataset which constitute CAPRI's hypotheses.
-#' RIDENOMINARLA CON PATTERNS?
-#' 
-#' @title as.hypotheses
+#' @title as.patterns
 #' @param x A TRONCO compliant dataset.
 #' @return The patterns in the dataset which constitute CAPRI's hypotheses.
-#' @export as.hypotheses
-as.hypotheses = function(x)
+#' @export as.patterns
+as.patterns = function(x)
 {
   is.compliant(x)
   if ('hstructure' %in% names(x$hypotheses)) {
@@ -481,25 +479,25 @@ as.hypotheses = function(x)
   }
 }
 
-#' Return ???????? RIDENOMINARLA CON PATTERNS E DARLE UN NOME PIU INTELLEGIBILE?
+#' Return the list of events used in patterns
 #'
-#' @title as.events.hypotheses
+#' @title as.events.in.patterns
 #' @param x A TRONCO compliant dataset.
-#' @param hypotheses ????????
-#' @return ????????
-#' @export as.events.hypotheses
-as.events.hypotheses = function(x, hypotheses=NULL)
+#' @param patterns A list of patterns for which the list will be returned
+#' @return A list of events present in patterns which consitute CAPRI's hypotheses
+#' @export as.events.in.patterns
+as.events.in.patterns = function(x, patterns=NULL)
 {
   is.compliant(x)
   ann = x$annotations[, c('type', 'event'), drop=FALSE]
-  if (is.null(hypotheses)) {
-    hypotheses = as.hypotheses(x)
+  if (is.null(patterns)) {
+    patterns = as.patterns(x)
   }
   
   genes_list = NULL
-  for(h in hypotheses) {
-    if(!h %in% as.hypotheses(x)) {
-      stop('Hypothesis ', h, ' not in as.hypotheses(x)')
+  for(h in patterns) {
+    if(!h %in% as.patterns(x)) {
+      stop('Hypothesis ', h, ' not in as.patterns(x)')
     }
 
     g = lapply(colnames(x$hypotheses$hstructure[[h]]), function(x){  if(!is.logic.node(x))return(x)})
@@ -512,15 +510,15 @@ as.events.hypotheses = function(x, hypotheses=NULL)
   return(ann)
 }
 
-#' Return ???????? RIDENOMINARLA CON PATTERNS E DARLE UN NOME PIU INTELLEGIBILE?
+#' Return the list of genes used in patterns
 #'
-#' @title as.genes.hypotheses
+#' @title as.genes.in.patterns
 #' @param x A TRONCO compliant dataset.
-#' @param hypotheses ????????
-#' @return ????????
-#' @export as.genes.hypotheses
-as.genes.hypotheses = function(x, hypotheses=NULL) {
-  events = as.events.hypotheses(x, hypotheses)
+#' @param patterns A list of patterns for which the list will be returned
+#' @return A list of genes present in patterns which consitute CAPRI's hypotheses
+#' @export as.genes.in.patterns
+as.genes.in.patterns = function(x, patterns=NULL) {
+  events = as.events.in.patterns(x, patterns)
   genes = unique(events[,'event'])
   return(genes)
 }

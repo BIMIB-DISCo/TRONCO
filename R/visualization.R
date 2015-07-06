@@ -378,7 +378,7 @@ oncoprint <- function(x,
 #       
 #       for(i in 1:length(patterns))
 #       {
-#         genes.patt = as.events.hypotheses(x, patterns[i]) 
+#         genes.patt = as.events.in.patterns(x, patterns[i]) 
 #         txt.stats = paste(txt.stats, '\n\n',
 #                           patterns[i], '\n',
 #                           paste(apply(genes.patt, 1, paste, collapse=' '), collapse='\n')                          
@@ -437,7 +437,7 @@ oncoprint <- function(x,
             
       for(i in 1:length(patterns))
       {
-        genes.patt = as.events.hypotheses(x, patterns[i]) 
+        genes.patt = as.events.in.patterns(x, patterns[i]) 
         genes.patt.genos = data[rownames(genes.patt), , drop = F]
 
          
