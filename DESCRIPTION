@@ -20,9 +20,9 @@ Depends:
     lattice,
     methods,
     RColorBrewer,
-    reshape2,
 Imports:
     doParallel,
+    reshape2,
     cgdsr,
     likert,
     igraph,

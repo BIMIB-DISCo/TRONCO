@@ -922,13 +922,13 @@ genes.table.report = function(x, name, dir=getwd(), maxrow=33,
 
 
 # stacked histogram
-#' @import reshape2
+#' @importFrom reshape2 melt
 #' @import ggplot2
 #' @export
 genes.table.plot = function(x, name, dir=getwd()) 
 {  
   
-  require(reshape2)
+  # require(reshape2)
   require(ggplot2)
   
   cat('Preparing output table: creating alterations profiles and selecting events with minimum frequency.\n') 
@@ -997,7 +997,6 @@ genes.table.plot = function(x, name, dir=getwd())
 #' Calculate the likert
 #' 
 #' @importFrom likert likert
-#' @import reshape2
 #' @import RColorBrewer
 #' @param cluster_result Clustering result eg: [1, 2, 1, 3 ,3]
 #' @param sample_stage Stage in which the sample is eg: [3, 3, 1, 2 ,2]
@@ -1007,7 +1006,7 @@ genes.table.plot = function(x, name, dir=getwd())
 likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample_prefix=''){
 
   #library(ggplot2)
-suppressMessages(library(reshape2))
+# suppressMessages(library(reshape2))
 suppressMessages(library(RColorBrewer))
 
 
