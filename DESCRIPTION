@@ -15,20 +15,19 @@ Depends:
     R (>= 3.1),
     graph,
     doParallel,
-    cgdsr,
-    colorspace,
     ggplot2,
     Rgraphviz,
     gplots,
-    gridExtra,
     lattice,
-    likert,
     methods,
     RColorBrewer,
     reshape2,
-    xtable 
 Imports:
+    cgdsr,
+    likert,
     igraph,
+    gridExtra,
+    xtable, 
     bnlearn
 Suggests: 
     BiocGenerics,

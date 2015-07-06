@@ -33,6 +33,7 @@
 #' @param annotate.consolidate.events Default is FALSE. If TRUE an annotation for events to consolidate is shown.
 #' @param txt.stats By default, shows a summary statistics for shown data (n,m, |G| and |P|)
 #' @export oncoprint
+#' @importFrom gridExtra grid.arrange
 oncoprint <- function(x, 
                       excl.sort = TRUE, 
                       samples.cluster = FALSE, 
@@ -827,8 +828,8 @@ oncoprint.cbio <- function(x, file='oncoprint-cbio.txt', hom.del = 'Homozygous L
 
 
 # PDF and laex tables
-#' @import gridExtra
-#' @import xtable
+#' @importFrom gridExtra grid.table
+#' @importFrom xtable xtable
 #' @export
 genes.table.report = function(x, name, dir=getwd(), maxrow=33, 
                         font=10, height=11, width=8.5, fill="lightblue") 
@@ -843,8 +844,8 @@ genes.table.report = function(x, name, dir=getwd(), maxrow=33,
     cat('\n')
     
     # output pdf
-    require(gridExtra)  
-    require(xtable)  
+    # require(gridExtra)  
+    # require(xtable)  
     
     cur.dev = dev.cur()
     
@@ -863,7 +864,7 @@ genes.table.report = function(x, name, dir=getwd(), maxrow=33,
       
       if(max(idx) > nrow(table)) idx = idx[idx < nrow(table)]   
       
-      grid.newpage(); 
+      grid.newpage()
       grid.table(table[idx, ],
                  gpar.coretext = gpar(fontsize = font),
                  gpar.corefill = gpar(fill = fill, alpha=0.5, col = NA),
@@ -995,22 +996,20 @@ genes.table.plot = function(x, name, dir=getwd())
 
 #' Calculate the likert
 #' 
-#' @import likert
+#' @importFrom likert likert
 #' @import reshape2
 #' @import RColorBrewer
 #' @param cluster_result Clustering result eg: [1, 2, 1, 3 ,3]
 #' @param sample_stage Stage in which the sample is eg: [3, 3, 1, 2 ,2]
 #' @param cluster_prefix Prefix to prefend to cluster data
 #' @param sample_prefix Prefix to prefend to stage data
-#' @export
+#' @export likertToClus
 likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample_prefix=''){
 
   #library(ggplot2)
 suppressMessages(library(reshape2))
 suppressMessages(library(RColorBrewer))
-#install_github('likert','jbryer')
-suppressMessages(library(likert))
-#require(devtools)
+
 
   # check different value
   cluster <- sort(unique(cluster_result), decreasing = T)
@@ -1035,11 +1034,10 @@ suppressMessages(library(likert))
 }
 
 #' @import gplots
-#' @import colorspace
 #' @import RColorBrewer
 "cluster.sensitivity" <- function(cluster.map, reference, stages=NA, file=NA) {
   require(gplots)
-  require(colorspace)
+  #require(colorspace)
   require(RColorBrewer)
   
   # We should use something like this - which does not work
@@ -1540,7 +1538,7 @@ draw_annotation_names = function(annotations, fontsize, horizontal){
   
   return(res)
 }
-
+ 
 draw_annotation_legend = function(annotation, annotation_colors, border_color, ...){
   y = unit(1, "npc")
   text_height = unit(1, "grobheight", textGrob("FGH", gp = gpar(...)))

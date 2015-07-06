@@ -347,9 +347,10 @@ extract.MAF.HuGO.Entrez.map = function(file, sep = "\t") {
 #' @param genes A list of < 900 genes to query
 #' @return A list with two dataframe: the gentic profile required and clinical data for the Cbio study.
 #' @export cbio.query
+#' @importFrom cgdsr CGDS getCancerStudies getCaseLists getGeneticProfiles getProfileData getClinicalData
 cbio.query <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, genes) {
 	cat("*** CGDS plugin for Cbio query.\n")
-	require("cgdsr")
+	# require("cgdsr")
 
    if(is.null(genes) || is.na(genes) || length(genes) == 0) stop('Empty list of genes to query')
    if(length(genes) > 900) stop('URL with more than 900 genes will not be accepted, please split it.')
