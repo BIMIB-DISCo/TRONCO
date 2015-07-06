@@ -152,6 +152,7 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
 #' @importFrom bnlearn hc tabu nodes
+#' @importFrom igraph get.shortest.paths
 tronco.capri <- function( data, 
     command = "hc", 
     regularization = c("bic","aic"), 
@@ -1527,8 +1528,9 @@ tronco.plot = function(x,
   cat('\n')
 }
 
+# non è esportata e non è funzionante
+# le dipendenze di igraph sono da sistemare
 #' @import Rgraphviz
-#' @import igraph
 #' @import RColorBrewer
 tronco.consensus.plot = function(models,
                        secondary=NULL, 
@@ -1557,7 +1559,6 @@ tronco.consensus.plot = function(models,
                        ) 
 {
 
-    suppressMessages(library(igraph))
     suppressMessages(library(Rgraphviz))
     suppressMessages(library(RColorBrewer))
 

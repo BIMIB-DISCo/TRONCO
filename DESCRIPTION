@@ -13,7 +13,6 @@ Maintainer: Giulio Caravagna <giulio.caravagna@disco.unimib.it>,
     Luca De Sano <l.desano@campus.unimib.it>
 Depends: 
     R (>= 3.1),
-    igraph,
     graph,
     doParallel,
     cgdsr,
@@ -29,6 +28,7 @@ Depends:
     reshape2,
     xtable 
 Imports:
+    igraph,
     bnlearn
 Suggests: 
     BiocGenerics,

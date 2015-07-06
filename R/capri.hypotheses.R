@@ -679,7 +679,7 @@ hypothesis.add.homologous = function(x,
 
 }
 
-#' @import igraph
+#' @importFrom igraph graph.adjacency get.adjacency graph.union edge +.igraph
 hypotheses.expansion <- function(input_matrix, 
                                  map = list(),
                                  hidden_and = T,
@@ -690,8 +690,6 @@ hypotheses.expansion <- function(input_matrix,
                                  ) {
   
 
-  library(igraph)
-  
   
   # get node list
   node_list <- colnames(input_matrix)
