@@ -402,6 +402,7 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
 #' @param type TODO
 #' @param nboot TODO
 #' @return A TRONCO compliant object with reconstructed model
+#' @import doParallel
 #' @export tronco.bootstrap
 tronco.bootstrap <- function( reconstruction, 
                               type = "non-parametric", 

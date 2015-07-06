@@ -690,7 +690,7 @@ hypotheses.expansion <- function(input_matrix,
                                  ) {
   
 
-  suppressMessages(library(igraph))
+  library(igraph)
   
   
   # get node list
