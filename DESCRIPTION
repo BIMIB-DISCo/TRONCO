@@ -14,7 +14,6 @@ Maintainer: Giulio Caravagna <giulio.caravagna@disco.unimib.it>,
 Depends: 
     R (>= 3.1),
     graph,
-    doParallel,
     ggplot2,
     Rgraphviz,
     gplots,
@@ -23,6 +22,7 @@ Depends:
     RColorBrewer,
     reshape2,
 Imports:
+    doParallel,
     cgdsr,
     likert,
     igraph,

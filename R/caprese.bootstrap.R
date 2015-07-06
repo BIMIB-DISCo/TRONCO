@@ -28,7 +28,7 @@
                             bootstrap.statistics = list()) 
 {
 	
-    library(doParallel)
+    # library(doParallel)
 
 	# start the clock to measure the execution time
 	ptm <- proc.time();

@@ -45,7 +45,7 @@ bootstrap.capri <- function(dataset,
     
     # start the clock to measure the execution time
 	
-    library(doParallel)
+    #library(doParallel)
 
     ptm <- proc.time();
     
