@@ -152,7 +152,7 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
 #' @importFrom bnlearn hc tabu nodes
-#' @importFrom igraph get.shortest.paths add_edges
+#' @import igraph
 tronco.capri <- function( data, 
     command = "hc", 
     regularization = c("bic","aic"), 
