@@ -18,9 +18,9 @@ Depends:
     Rgraphviz,
     gplots,
     lattice,
-    methods,
-    RColorBrewer,
+    methods
 Imports:
+    RColorBrewer,
     doParallel,
     reshape2,
     cgdsr,

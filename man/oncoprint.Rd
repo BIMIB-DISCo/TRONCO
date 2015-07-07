@@ -28,9 +28,9 @@ oncoprint(x, excl.sort = TRUE, samples.cluster = FALSE,
 
 \item{ann.hits}{Boolean value to annotate the number of events in each sample, default is TRUE}
 
-\item{stage.color}{RColorColorbrewer palette to color stage annotations. Default is 'YlOrRd'}
+\item{stage.color}{RColorbrewer palette to color stage annotations. Default is 'YlOrRd'}
 
-\item{hits.color}{RColorColorbrewer palette to color hits annotations. Default is 'Purples'}
+\item{hits.color}{RColorbrewer palette to color hits annotations. Default is 'Purples'}
 
 \item{null.color}{Color for the Oncoprint cells with 0s, default is 'lightgray'}
 

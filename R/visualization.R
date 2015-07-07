@@ -7,8 +7,8 @@
 #' @param file If not NA write to \code{file} the Oncoprint, default is NA (just visualization).
 #' @param ann.stage Boolean value to annotate stage classification, default depends on \code{x}
 #' @param ann.hits Boolean value to annotate the number of events in each sample, default is TRUE
-#' @param stage.color RColorColorbrewer palette to color stage annotations. Default is 'YlOrRd'
-#' @param hits.color RColorColorbrewer palette to color hits annotations. Default is 'Purples'
+#' @param stage.color RColorbrewer palette to color stage annotations. Default is 'YlOrRd'
+#' @param hits.color RColorbrewer palette to color hits annotations. Default is 'Purples'
 #' @param null.color Color for the Oncoprint cells with 0s, default is 'lightgray'
 #' @param border.color Border color for the Oncoprint, default is white' (no border)
 #' @param text.cex Title and annotations cex, multiplied by font size 7
@@ -34,6 +34,7 @@
 #' @param txt.stats By default, shows a summary statistics for shown data (n,m, |G| and |P|)
 #' @export oncoprint
 #' @importFrom gridExtra grid.arrange
+#' @importFrom RColorBrewer brewer.pal brewer.pal.info
 oncoprint <- function(x, 
                       excl.sort = TRUE, 
                       samples.cluster = FALSE, 
@@ -70,7 +71,7 @@ oncoprint <- function(x,
   font.size = text.cex * 7
   
 
-  suppressMessages(library(RColorBrewer))
+  #suppressMessages(library(RColorBrewer))
 
 
   ##############  This function sorts a matrix to enhance mutual exclusivity
@@ -997,7 +998,6 @@ genes.table.plot = function(x, name, dir=getwd())
 #' Calculate the likert
 #' 
 #' @importFrom likert likert
-#' @import RColorBrewer
 #' @param cluster_result Clustering result eg: [1, 2, 1, 3 ,3]
 #' @param sample_stage Stage in which the sample is eg: [3, 3, 1, 2 ,2]
 #' @param cluster_prefix Prefix to prefend to cluster data
@@ -1007,7 +1007,7 @@ likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample
 
   #library(ggplot2)
 # suppressMessages(library(reshape2))
-suppressMessages(library(RColorBrewer))
+#suppressMessages(library(RColorBrewer))
 
 
   # check different value
@@ -1033,11 +1033,11 @@ suppressMessages(library(RColorBrewer))
 }
 
 #' @import gplots
-#' @import RColorBrewer
+#' @importFrom RColorBrewer brewer.pal
 "cluster.sensitivity" <- function(cluster.map, reference, stages=NA, file=NA) {
   require(gplots)
   #require(colorspace)
-  require(RColorBrewer)
+  #require(RColorBrewer)
   
   # We should use something like this - which does not work
   #requirements = c('gplots', 'colorspace', 'pheatmap', 'RColorBrewer')
@@ -2029,10 +2029,11 @@ find_gaps = function(tree, cutree_n){
 #' dcols = dist(t(test), method = "minkowski")
 #' pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcols)
 #' @export pheatmap
+#' @importFrom RColorBrewer brewer.pal
 pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete", cutree_rows = NA, cutree_cols = NA,  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation_row = NA, annotation_col = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", number_color = "grey30", fontsize_number = 0.8 * fontsize, gaps_row = NULL, gaps_col = NULL, labels_row = NULL, labels_col = NULL, filename = NA, width = NA, height = NA, silent = FALSE, legend.cex = 1, txt.stats = NA, ...){
   
   require(grid)
-  require(RColorBrewer)
+  #require(RColorBrewer)
   require(scales)
   require(gtable)
   
