@@ -171,6 +171,44 @@ delete.event <- function(x, gene, type) {
   return(x)
 }
 
+#' Delete of a single hypothesis
+#' @export delete.hypothesis
+delete.hypothesis = function(x, event=NULL, cause=NULL, effect=NULL)
+{
+  hypo_map = as.hypotheses(x)
+  to_remove = c()
+  if(!is.null(event)) {
+    if(length(event) == 1 && event %in% as.events(x)[,'event']) {
+    cause_del = which(hypo_map[,'cause event'] == event)
+    effect_del = which(hypo_map[,'cause event'] == event)
+    to_remove = unique(c(to_remove, cause_del, effect_del))
+    } else {
+      stop('Select only one event present in as.events')
+    }
+  }
+
+  if(! is.null(cause)) {
+    if(cause %in% as.events(x)[,'event']) {
+    cause_del = which(hypo_map[,'cause event'] == cause)
+    to_remove = unique(c(to_remove, cause_del))
+    } else {
+      stop('Wrong cause, select only events present in as.events')
+    }
+  }
+
+  if(! is.null(effect)){
+    if( effect %in% as.events(x)[,'event']) {
+    effect_del = which(hypo_map[,'cause event'] == effect)
+    to_remove = unique(c(to_remove, effect_del))
+    } else {
+      stop('Wrong effect, select only events present in as.events')
+    }
+  }
+
+  x$hypotheses$hlist = x$hypotheses$hlist[-to_remove, ,drop=F]
+  return(x)
+}
+
 #' @export
 change.color = function(x, type, new.color)
 {
