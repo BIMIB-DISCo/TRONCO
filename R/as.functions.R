@@ -48,7 +48,7 @@ as.samples = function(x)
 as.genes = function(x, types = NA)
 {
   if('Pattern' %in% types) stop('Pattern is not a valid gene type, it\'s a keyword reserved in TRONCO.')
-  if(nhypotheses(x) > 0) 
+  if(npatterns(x) > 0) 
   {
     ev = as.events(x, types=types)
     ev = ev[ which(ev[, 'type'] != 'Pattern'), 'event']
@@ -452,16 +452,30 @@ sort.by.frequency = function(x)
   return(x)  
 }
 
-#' Return the number of hypotheses in the dataset
+#' Return the number of patterns in the dataset
 #'
 #' @param x the dataset.
-#' @export
-nhypotheses = function(x)
+#' @export npatterns
+npatterns = function(x)
 {
   if(any(is.null(x$hypotheses))) return(0)
     
   if ('hstructure' %in% names(x$hypotheses)) {
     return(length(ls(x$hypotheses$hstructure)))
+  }
+  return(0)
+}
+
+#' Return the number of hypotheses in the dataset
+#'
+#' @param x the dataset.
+#' @export nhypotheses
+nhypotheses = function(x)
+{
+  if(npatterns(x) < 1) return(0)
+    
+  if ('hlist' %in% names(x$hypotheses)) {
+    return(length(x$hypotheses$hlist) / 2)
   }
   return(0)
 }
@@ -477,6 +491,46 @@ as.patterns = function(x)
   if ('hstructure' %in% names(x$hypotheses)) {
     return(ls(x$hypotheses$hstructure))
   }
+}
+
+#' Return the hypotheses in the dataset which constitute CAPRI's hypotheses.
+#' @title as.hypotheses
+#' @param x A TRONCO compliant dataset.
+#' @return The hypotheses in the dataset which constitute CAPRI's hypotheses.
+#' @export as.patterns
+as.hypotheses = function(x, cause=NULL, effect=NULL)
+{
+  if (nhypotheses(x) < 1)
+    return(NULL)
+
+  hlist = x$hypotheses$hlist
+
+  list_c = x$annotations[hlist[,'cause'],c('type', 'event'), drop=F]
+  colnames(list_c) = c('cause type', 'cause event')
+  rownames(list_c) = NULL
+  list_e = x$annotations[hlist[,'effect'],c('type', 'event'), drop=F]
+  colnames(list_e) = c('effect type', 'effect event')
+  rownames(list_e) = NULL
+
+  filtered_list = cbind(list_c, list_e)
+
+  if(length(cause) > 0) {
+    if(all(cause %in% as.events(x)[,'event'])) {
+      filtered_list = filtered_list[which(filtered_list[,'cause event'] == cause), ]
+    } else {
+      stop('some cause not in as.events\n')
+    }
+  }
+
+  if(length(effect) > 0) {
+    if(all(effect %in% as.events(x)[,'event'])) {
+      filtered_list = filtered_list[which(filtered_list[,'effect event'] == effect), ]
+    } else {
+      stop('some effect not in as.events\n')
+    }
+  }
+
+  return(filtered_list)
 }
 
 #' Return the list of events used in patterns
