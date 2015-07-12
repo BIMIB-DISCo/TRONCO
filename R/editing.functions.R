@@ -175,6 +175,10 @@ delete.event <- function(x, gene, type) {
 #' @export delete.hypothesis
 delete.hypothesis = function(x, event=NULL, cause=NULL, effect=NULL)
 {
+  if(length(x$model) > 0) {
+    stop("There's a reconstructed model, hypotheses cannot be deleted now")
+  }
+
   hypo_map = as.hypotheses(x)
   to_remove = c()
   if(!is.null(event)) {
