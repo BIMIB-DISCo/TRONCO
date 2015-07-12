@@ -43,6 +43,7 @@ NULL
 #' @param silent TODO
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.caprese
+#' @import doParallel
 tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = FALSE ) {
 
     #check for the inputs to be correct
@@ -151,8 +152,9 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
 #' @param silent TODO
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
-#' @importFrom bnlearn hc tabu nodes
+#' @importFrom bnlearn hc tabu
 #' @import igraph
+#' @import doParallel
 tronco.capri <- function( data, 
     command = "hc", 
     regularization = c("bic","aic"), 
@@ -405,7 +407,6 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
 #' @return A TRONCO compliant object with reconstructed model
 #' @import doParallel
 #' @export tronco.bootstrap
-#' @import doParallel
 tronco.bootstrap <- function( reconstruction, 
                               type = "non-parametric", 
                               nboot = 100,
@@ -540,6 +541,9 @@ tronco.bootstrap <- function( reconstruction,
 #'
 #' @description
 #' \code{tronco.plot} plots a progression model from a recostructed \code{curr.reconstruction}. 
+#' @importFrom RColorBrewer brewer.pal.info brewer.pal
+#' @import Rgraphviz
+#' @import igraph
 tronco.plot = function(x,
                        regularization = names(x$model),
                        fontsize = NA, 
@@ -571,11 +575,6 @@ tronco.plot = function(x,
 {
   hidden.and = F
 
-
-    suppressMessages(library(doParallel))
-    suppressMessages(library(igraph))
-    suppressMessages(library(Rgraphviz))
-    suppressMessages(library(RColorBrewer))
   
   # Checks if reconstruction exists
   if(missing(x)) {
@@ -801,9 +800,11 @@ tronco.plot = function(x,
   
   
   V(hypo_graph)$label = new_name
+
   graph <- igraph.to.graphNEL(hypo_graph)
   
-  node_names = graph::nodes(graph)
+  node_names = V(hypo_graph)$name
+
   nAttrs = list()
   
   nAttrs$label = V(hypo_graph)$label
@@ -1532,7 +1533,7 @@ tronco.plot = function(x,
 # non è esportata e non è funzionante
 # le dipendenze di igraph sono da sistemare
 #' @import Rgraphviz
-#' @import RColorBrewer
+#' @importFrom RColorBrewer brewer.pal brewer.pal.info
 tronco.consensus.plot = function(models,
                        secondary=NULL, 
                        fontsize=18, 
@@ -1560,8 +1561,6 @@ tronco.consensus.plot = function(models,
                        ) 
 {
 
-    suppressMessages(library(Rgraphviz))
-    suppressMessages(library(RColorBrewer))
 
   
   # Checks if reconstruction exists
@@ -1721,7 +1720,7 @@ smaller.to.bigger = function(m,cn)
   V(hypo_graph)$label = new_name
   graph <- igraph.to.graphNEL(hypo_graph)
   
-  node_names = graph::nodes(graph)
+  node_names = V(hypo_graph)$label
   nAttrs = list()
   
   nAttrs$label = V(hypo_graph)$label

@@ -13,22 +13,19 @@ Maintainer: Giulio Caravagna <giulio.caravagna@disco.unimib.it>,
     Luca De Sano <l.desano@campus.unimib.it>
 Depends: 
     R (>= 3.1),
-    graph,
-    ggplot2,
-    Rgraphviz,
-    gplots,
-    lattice,
-    methods
-Imports:
-    RColorBrewer,
     doParallel,
+    bnlearn,
+Imports:
+    Rgraphviz,
+    ggplot2,
+    RColorBrewer,
     reshape2,
     cgdsr,
     likert,
     igraph,
+    grid,
     gridExtra,
     xtable, 
-    bnlearn
 Suggests: 
     BiocGenerics,
     testthat,

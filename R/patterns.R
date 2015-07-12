@@ -260,7 +260,6 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
 		
 		rownames(matrix)[nrow(matrix)] = 'none of the\nevents'
 		
-		suppressMessages(library(gridBase))
 
 	summary = matrix[ (length(keys) + 1):nrow(matrix), 1, drop = FALSE]
 	summary = rbind( sum(matrix[1:length(keys),]), summary)
@@ -345,42 +344,7 @@ pattern.plot = function(x, group, to, gap.cex = 1.0, legend.cex = 1.0, label.cex
            )
 		
 
-		
-	# text(0, (length(keys) + 1) * basic.unit, 
-			# expression(bold('Observations supporting hard-exclusivity:')), cex = .5)
-	# text(0, 0, expression(bold('Observations supporting hard-exclusivity:')), cex = .5)
 
-
-	# text(0, -0.2, #,(max(matrix) + 1), 
-			# expression(bold('GIULIO Observations supporting hard-exclusivity:')), cex = .5)
-	
-	# grid.text('Observations supporting hard-exclusivity',
-	    # x = unit(0, "native"), y=unit(-.1, "lines"),
-	    # just="right", rot=0, gpar(cex=.8))	
-	 
-	
-	# text(basic.unit * length(keys) / 2, 
-		 # # length(keys) * basic.unit + 3 * (2 * basic.unit) + 2*sum(spaces) + 6, 
-		 # # length(keys) * basic.unit +  (2 * basic.unit) + sum(spaces), 
-		 # max(matrix) + .4,
-		# expression(bold('Observations supporting hard-exclusivity')), 
-		# cex = .5)
-
-	# print(midpts)
-	# vps <- baseViewports()
-	# pushViewport(vps$inner, vps$figure, vps$plot)
-	 # popViewport(3)
-	
-	# Use grid to add the labels    
-	 # vps <- baseViewports()
-	 # pushViewport(vps$inner, vps$figure, vps$plot)
-	
-	# # grid.text(rownames(matrix),
-	    # # x = unit(midpts, "native"), y=unit(-1, "lines"),
-	    # # just="right", rot=50, gpar(cex=.03))	
-	 # popViewport(3)
-	
-			# library(ggplot2)
 
 	}	 
 	

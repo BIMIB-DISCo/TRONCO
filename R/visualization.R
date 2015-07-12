@@ -71,8 +71,6 @@ oncoprint <- function(x,
   font.size = text.cex * 7
   
 
-  #suppressMessages(library(RColorBrewer))
-
 
   ##############  This function sorts a matrix to enhance mutual exclusivity
   exclusivity.sort <- function(M) {
@@ -924,13 +922,12 @@ genes.table.report = function(x, name, dir=getwd(), maxrow=33,
 
 # stacked histogram
 #' @importFrom reshape2 melt
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot geom_bar
 #' @export
 genes.table.plot = function(x, name, dir=getwd()) 
 {  
   
-  # require(reshape2)
-  require(ggplot2)
+
   
   cat('Preparing output table: creating alterations profiles and selecting events with minimum frequency.\n') 
   alterations = sort.by.frequency(as.alterations(x))
@@ -1005,9 +1002,6 @@ genes.table.plot = function(x, name, dir=getwd())
 #' @export likertToClus
 likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample_prefix=''){
 
-  #library(ggplot2)
-# suppressMessages(library(reshape2))
-#suppressMessages(library(RColorBrewer))
 
 
   # check different value
@@ -1032,24 +1026,11 @@ likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample
   result
 }
 
-#' @import gplots
+
 #' @importFrom RColorBrewer brewer.pal
 "cluster.sensitivity" <- function(cluster.map, reference, stages=NA, file=NA) {
-  require(gplots)
-  #require(colorspace)
-  #require(RColorBrewer)
-  
-  # We should use something like this - which does not work
-  #requirements = c('gplots', 'colorspace', 'pheatmap', 'RColorBrewer')
-  #   aux.fun = function(x) {
-  #   if (!require(x)) {
-  #     cat(paste('Installing required ', x, ' library, with dependencies.\n'))
-  #       install.packages(x, dependencies = TRUE)
-  #       library(x)
-  #     }
-  #     }
-  #    lapply(requirents, aux.fun)
-  
+
+   
   if(ncol(cluster.map) == 1) stop('No clustering stability for a unique clustering map!')
 	
 
@@ -2030,10 +2011,9 @@ find_gaps = function(tree, cutree_n){
 #' pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcols)
 #' @export pheatmap
 #' @importFrom RColorBrewer brewer.pal
+#' @importFrom grid grid.draw grid.pretty grid.newpage
 pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete", cutree_rows = NA, cutree_cols = NA,  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation_row = NA, annotation_col = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", number_color = "grey30", fontsize_number = 0.8 * fontsize, gaps_row = NULL, gaps_col = NULL, labels_row = NULL, labels_col = NULL, filename = NA, width = NA, height = NA, silent = FALSE, legend.cex = 1, txt.stats = NA, ...){
   
-  require(grid)
-  #require(RColorBrewer)
   require(scales)
   require(gtable)
   
