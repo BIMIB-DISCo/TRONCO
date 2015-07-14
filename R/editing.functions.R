@@ -176,7 +176,7 @@ delete.event <- function(x, gene, type) {
 delete.hypothesis = function(x, event=NULL, cause=NULL, effect=NULL)
 {
   if(length(x$model) > 0) {
-    stop("There's a reconstructed model, hypotheses cannot be deleted now")
+    stop("There's a reconstructed model, hypotheses cannot be deleted now. \nUse delete.model()")
   }
 
   hypo_map = as.hypotheses(x)
@@ -220,7 +220,7 @@ delete.hypothesis = function(x, event=NULL, cause=NULL, effect=NULL)
 #' @export delete.pattern
 delete.pattern = function(x, pattern) {
   if(length(x$model) > 0) {
-    stop("There's a reconstructed model, a pattern cannot be deleted now")
+    stop("There's a reconstructed model, a pattern cannot be deleted now. \nUse delete.model()")
   }
 
   if(! pattern %in% as.patterns(x)) {
@@ -243,6 +243,22 @@ delete.pattern = function(x, pattern) {
 
   # chiave da togliere model$hypotheses$`gene x` se contenuto = 'XOR_EZH2'
   # remove o rm?
+
+  is.compliant(x)
+
+  return(x)
+}
+
+#' @export delete.model
+delete.model = function(x) {
+  if (length(x$model) == 0) {
+    stop("No model to delete in dataset")
+  }
+  x$model = NULL
+  x$confidence = NULL
+  x$parameters = NULL
+  x$adj.matrix.prima.facie = NULL
+  x$execution.time = NULL
 
   is.compliant(x)
 
