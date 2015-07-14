@@ -125,7 +125,7 @@ delete.type <- function(x, type) {
   return(x)
 }
 
-#' @export
+#' @export delete.gene
 delete.gene <- function(x, gene) {
   # if is compliant x
   is.compliant(x, 'delete:gene: input')
@@ -149,7 +149,7 @@ delete.gene <- function(x, gene) {
   return(x)
 }
 
-#' @export
+#' @export delete.event
 delete.event <- function(x, gene, type) {
   
   is.compliant(x, 'delete.event: input')
@@ -184,7 +184,7 @@ delete.hypothesis = function(x, event=NULL, cause=NULL, effect=NULL)
   if(!is.null(event)) {
     if(length(event) == 1 && event %in% as.events(x)[,'event']) {
     cause_del = which(hypo_map[,'cause event'] == event)
-    effect_del = which(hypo_map[,'cause event'] == event)
+    effect_del = which(hypo_map[,'effect event'] == event)
     to_remove = unique(c(to_remove, cause_del, effect_del))
     } else {
       stop('Select only one event present in as.events')
@@ -202,16 +202,53 @@ delete.hypothesis = function(x, event=NULL, cause=NULL, effect=NULL)
 
   if(! is.null(effect)){
     if( effect %in% as.events(x)[,'event']) {
-    effect_del = which(hypo_map[,'cause event'] == effect)
+    effect_del = which(hypo_map[,'effect event'] == effect)
     to_remove = unique(c(to_remove, effect_del))
     } else {
       stop('Wrong effect, select only events present in as.events')
     }
   }
 
+  x$hypotheses$num.hypotheses = x$hypotheses$num.hypotheses - 1
   x$hypotheses$hlist = x$hypotheses$hlist[-to_remove, ,drop=F]
+
+  is.compliant(x)
+
   return(x)
 }
+
+#' @export delete.pattern
+delete.pattern = function(x, pattern) {
+  if(length(x$model) > 0) {
+    stop("There's a reconstructed model, a pattern cannot be deleted now")
+  }
+
+  if(! pattern %in% as.patterns(x)) {
+    stop(paste(pattern, " not in as.patterns()"))
+  }
+
+  x = delete.hypothesis(x, pattern)
+  x$annotations = x$annotations[-which(rownames(x$annotations) == pattern), , drop=F]
+  x$genotypes = x$genotypes[, -which(colnames(x$genotypes) == pattern), drop=F]
+  x$hypotheses$patterns[pattern] = NULL
+  x$hypotheses$pvalues = NULL
+
+  for(atom in names(x$hypotheses$atoms)) {
+    if(x$hypotheses$atoms[atom] == pattern) {
+      x$hypotheses$atoms[atom] = NULL
+    }
+  }
+
+  rm(list=pattern, envir=x$hypotheses$hstructure)
+
+  # chiave da togliere model$hypotheses$`gene x` se contenuto = 'XOR_EZH2'
+  # remove o rm?
+
+  is.compliant(x)
+
+  return(x)
+}
+
 
 #' @export
 change.color = function(x, type, new.color)
