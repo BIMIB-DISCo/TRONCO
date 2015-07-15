@@ -16,7 +16,7 @@ as.pathway(x, pathway.genes, pathway.name, pathway.color = "yellow",
 
 \item{aggregate.pathway}{If TRUE drop the events for the genes in the pathway.}
 
-\item{pathway.colo:}{Pathway color for visualization.}
+\item{pathway.color:}{Pathway color for visualization.}
 }
 \value{
 Extract the subset of events for genes which are part of a pathway.

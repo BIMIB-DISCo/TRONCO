@@ -56,6 +56,11 @@ consolidate.data = function(x, print = FALSE){
   return(ret)
 }
 
+#' Annotate a descriotion on the selected dataset
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param label A string
+#' @return A TRONCO genotypes matrix.
 #' @export annotate.description
 annotate.description = function(x, label)
 {
@@ -109,6 +114,10 @@ rename.gene <- function(x, old.name, new.name) {
 delete.type <- function(x, type) {
   # if is compliant x
   is.compliant(x)
+
+  if(has.model(x)) {
+    stop("There's a reconstructed model, a type cannot be deleted now. \nUse delete.model()")
+  }
   
   if (type %in% as.types(x)) {
 
@@ -129,9 +138,22 @@ delete.type <- function(x, type) {
 delete.gene <- function(x, gene) {
   # if is compliant x
   is.compliant(x, 'delete:gene: input')
+
+  if(has.model(x)) {
+    stop("There's a reconstructed model, a type cannot be deleted now. \nUse delete.model()")
+  }
   
   if (all(gene %in% as.genes(x))) {
     
+    for(pattern in as.patterns(x)) {
+      for(g in gene) {
+        if(g %in% as.genes.in.patterns(x, patterns=pattern)) {
+          stop('Found gene ', g, ' in pattern \"', pattern, '\" . Delete that pattern first.\n')
+        }
+      }
+    }
+
+
     drops = rownames(as.events(x, genes = gene))
     x$genotypes = x$genotypes[, -which( colnames(x$genotypes) %in% drops )]
     x$annotations = x$annotations[ -which (rownames(x$annotations) %in% drops), ]
@@ -139,9 +161,8 @@ delete.gene <- function(x, gene) {
     # TO DO: something better than this t(t(...))
     x$types = x$types[ which(rownames(x$types) %in% unique(x$annotations[,"type"])), , drop=FALSE]
     colnames(x$types) = 'color'
-  } 
-  else 
-  {
+
+  } else {
     stop(paste(gene[!(gene %in% as.genes(x))], collapse= ','),  'are not in the dataset -- as.genes(x).')
   }
   
@@ -175,7 +196,7 @@ delete.event <- function(x, gene, type) {
 #' @export delete.hypothesis
 delete.hypothesis = function(x, event=NULL, cause=NULL, effect=NULL)
 {
-  if(length(x$model) > 0) {
+  if(has.model(x)) {
     stop("There's a reconstructed model, hypotheses cannot be deleted now. \nUse delete.model()")
   }
 
@@ -219,7 +240,7 @@ delete.hypothesis = function(x, event=NULL, cause=NULL, effect=NULL)
 
 #' @export delete.pattern
 delete.pattern = function(x, pattern) {
-  if(length(x$model) > 0) {
+  if(has.model(x)) {
     stop("There's a reconstructed model, a pattern cannot be deleted now. \nUse delete.model()")
   }
 
@@ -251,7 +272,7 @@ delete.pattern = function(x, pattern) {
 
 #' @export delete.model
 delete.model = function(x) {
-  if (length(x$model) == 0) {
+  if (! has.model(x)) {
     stop("No model to delete in dataset")
   }
   x$model = NULL
@@ -347,7 +368,7 @@ intersect.datasets = function(x,y, intersect.genomes = TRUE)
 }
 
 
-#' @export
+#' @export annotate.stages
 annotate.stages = function(x, stages, match.TCGA.patients = FALSE)
 {
   if(is.null(rownames(stages))) stop('Stages have no rownames - will not add annotation.')

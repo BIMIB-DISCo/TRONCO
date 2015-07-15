@@ -29,17 +29,6 @@ events.pattern = function(x, event)
 	return(hhypothesis)
 }
 
-#' Return the names of the patterns in the dataset
-#' @export
-as.patterns = function(x)
-{
-	# return(names(x$hypotheses$patterns))
-	if(is.null(x$patterns)) return(names(x$hypotheses$patterns))
-
-	return(names(x$patterns))
-}
-
-
 #' Return the number of patterns in the dataset
 #' @export
 npatterns = function(x)

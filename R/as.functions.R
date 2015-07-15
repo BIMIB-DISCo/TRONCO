@@ -215,6 +215,25 @@ has.duplicates = function(x) {
   return(any(dup))
 }
 
+#' Return true if there is a reconstructed model in the TRONCO dataset 'x', which should be
+#' a TRONCO compliant dataset - see \code{is.compliant}.
+#'
+#' @examples
+#' data(maf)
+#' mutations = import.MAF(maf)
+#' has.model(mutations)
+#' 
+#' @title has.model
+#' @param x A TRONCO compliant dataset.
+#' @return TRUE if there is a reconstructed model in \code{x}.
+#' @export has.model
+has.model = function(x) {
+  is.compliant(x)
+  if(length(x$model) > 0)
+    return(TRUE)
+  return(FALSE)
+}
+
 #' Return the events duplicated in \code{x}, if any. Input 'x' should be
 #' a TRONCO compliant dataset - see \code{is.compliant}. 
 #'
@@ -397,7 +416,7 @@ enforce.string = function(x)
 #' @param x A TRONCO compliant dataset.
 #' @param pathway.genes Gene (symbols) involved in the pathway.
 #' @param pathway.name Pathway name for visualization.
-#' @param pathway.colo: Pathway color for visualization.
+#' @param pathway.color: Pathway color for visualization.
 #' @param aggregate.pathway If TRUE drop the events for the genes in the pathway.
 #' @return Extract the subset of events for genes which are part of a pathway.
 #' @export as.pathway
@@ -487,6 +506,10 @@ nhypotheses = function(x)
 #' @export as.patterns
 as.patterns = function(x)
 {
+  if(length(x$hypotheses) == 0 || is.na(x$hypotheses)) {
+    return(NULL)
+  }
+
   is.compliant(x)
   if ('hstructure' %in% names(x$hypotheses)) {
     return(ls(x$hypotheses$hstructure))
