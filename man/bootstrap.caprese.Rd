@@ -12,13 +12,13 @@ bootstrap.caprese(dataset, lambda, do.estimation, silent, reconstruction,
 
 \item{lambda}{shrinkage parameter (value in [0,1])}
 
-\item{do.estimation}{todo}
+\item{do.estimation}{should I perform the estimation of the error rates and probabilities?}
 
-\item{silent}{todo}
+\item{silent}{should I be verbose?}
 
 \item{reconstruction}{todo}
 
-\item{command}{todo}
+\item{command}{type of search for the likelihood fit, either hill climbing (hc) or tabu (tabu)}
 
 \item{nboot}{number of bootstrap resampling to be performed}
 
