@@ -317,7 +317,28 @@ as.types.in.patterns = function(x, patterns=NULL) {
   return(types)
 }
 
-
+#' Return a list of events which are observed in the input samples list
+#'
+#' @examples
+#' data(test_dataset)
+#' as.events.in.sample(test_dataset, c('patient 1', 'patient 7'))
+#'
+#' @title as.events.in.sample
+#' @param x A TRONCO compliant dataset
+#' @param sample Vector of sample names
+#' @return A list of events which are observed in the input samples list
+#' @export as.events.in.sample
+as.events.in.sample = function(x, sample)
+{
+  aux = function(s)
+  {
+    sub.geno = as.genotypes(x)[s, , drop = FALSE]  
+    sub.geno = sub.geno[, sub.geno == 1, drop = FALSE]
+    return(as.events(x)[colnames(sub.geno), , drop = FALSE])
+  }
+  
+  return(sapply(sample, FUN = aux))
+}
 
 #' Return confidence information for a TRONCO model. Available information are: temporal priority (tp), 
 #' probability raising (pr), hypergeometric test (hg), parametric (pb), non parametric (npb) or 
@@ -396,6 +417,10 @@ as.confidence = function(x, conf)
 
 #' Extract the models from a reconstructed object.
 #'
+#' @examples
+#' data(test_model)
+#' as.model(test_model)
+#'
 #' @title as.models
 #' @param x A TRONCO model.
 #' @param models The name of the models to extract, e.g. 'bic', 'aic', 'caprese', all by default. 
@@ -410,20 +435,404 @@ as.models = function(x, models=names(x$model))
   return(x$model[models])
 }
 
+#' Return the description annotating the dataset, if any. Input 'x' should be
+#' a TRONCO compliant dataset - see \code{is.compliant}. 
+#'
+#' @examples
+#' data(test_dataset)
+#' as.description(test_dataset)
+#'
+#' @title as.description
+#' @param x A TRONCO compliant dataset.
+#' @return The description annotating the dataset, if any.
+#' @export as.description
+as.description = function(x)
+{
+  if(!is.null(x$name))
+    return(x$name)
+  return("")
+}
 
+#' Given a cohort and a pathway, return the cohort with events restricted to genes 
+#' involved in the pathway. This might contain a new 'pathway' genotype with an alteration mark if
+#' any of the involved genes are altered. 
+#'
+#' @examples
+#' data(test_dataset)
+#' p = as.pathway(test_dataset, c('ASXL1', 'TET2'), 'test_pathway')
+#' oncoprint(p)
+#' p = as.pathway(test_dataset, c('ASXL1', 'TET2'), 'test_pathway', aggregate.pathway=F)
+#' oncoprint(p)
+#'
+#' @title as.pathway
+#' @param x A TRONCO compliant dataset.
+#' @param pathway.genes Gene (symbols) involved in the pathway.
+#' @param pathway.name Pathway name for visualization.
+#' @param pathway.color: Pathway color for visualization.
+#' @param aggregate.pathway If TRUE drop the events for the genes in the pathway.
+#' @return Extract the subset of events for genes which are part of a pathway.
+#' @export as.pathway
+as.pathway <- function(x, pathway.genes, pathway.name, 
+                       pathway.color='yellow', aggregate.pathway = TRUE) 
+{
+  is.compliant(x, 'as.pathway: input')
+  
+  data = x$genotypes
+  
+  cat(paste('*** Extracting events for pathway: ', pathway.name,'.\n', sep=''))
+  
+  # Select only those events involving a gene in pathway.genes which is also in x
+  y = events.selection(x, NA, filter.in.names=pathway.genes, NA)
+  
+  # Extend genotypes
+  y = enforce.numeric(y)
+  
+  pathway = data.frame(rowSums(as.genotypes(y)), row.names = as.samples(y), stringsAsFactors = FALSE)  
+  pathway[pathway > 1, ] =  1
+  colnames(pathway) = pathway.name 
 
+  pathway = import.genotypes(pathway, event.type = 'Pathway', color = pathway.color)
 
+  cat('Pathway extracted succesfully.\n')
+  
+  if(!aggregate.pathway) pathway = ebind(pathway, y)
+  
+  if(has.stages(y)) pathway = annotate.stages(pathway, as.stages(y))
+  
+  is.compliant(pathway, 'as.pathway: output')
+  
+  return(pathway)
+}
 
+#' Extract the adjacency matrix of a TRONCO model. The matrix is indexed with colnames/rownames which 
+#' represent genotype keys - these can be resolved with function \code{keysToNames}. It is possible to
+#' specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
+#' been performed. Also, either the prima facie matrix or the post-regularization matrix can be extracted.
+#'
+#' @examples
+#' data(test_model)
+#' as.adj.matrix(test_model)
+#' as.adj.matrix(test_model, events=as.events(test_model)[5:15,])
+#' as.adj.matrix(test_model, events=as.events(test_model)[5:15,], type='pf')
+#' 
+#' @title as.adj.matrix
+#' @param x A TRONCO model.
+#' @param events A subset of events as of \code{as.events(x)}, all by default.
+#' @param models A subset of reconstructed models, all by default.
+#' @param type Either the prima facie ('pf') or the post-regularization ('fit') matrix, 'fit' by default.
+#' @return The adjacency matrix of a TRONCO model. 
+#' @export as.adj.matrix
+as.adj.matrix = function(x, events = as.events(x), models = names(x$model), type = 'fit')
+{
+  is.compliant(x)
+  is.model(x)
+  is.events.list(x, events)
 
+  if(!is.vector(models)) stop('"models" should be a vector.') 
+  if(!type %in% c('fit', 'pf')  ) stop('"type" should be any of \'fit\' (post-regularization) or \'pf\' (prima facie).')  
 
+  m = as.models(x, models = models)
+  
+  ret = list()
+  for(i in models)
+  {
+    if(type == 'fit') mat = m[[i]]$adj.matrix$adj.matrix.fit
+    if(type == 'pf') mat = m[[i]]$adj.matrix$adj.matrix.pf
+            
+    mat = mat[rownames(events), , drop = FALSE]
+    mat = mat[, rownames(events), drop = FALSE]
+    
+    ret = append(ret, list(mat)) 
+  }
+  
+  names(ret) = models
+  return(ret) 
+}
 
+#' Extract the marginal probabilities from a TRONCO model. The return matrix is indexed with rownames which 
+#' represent genotype keys - these can be resolved with function \code{keysToNames}. It is possible to
+#' specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
+#' been performed. Also, either the observed or fit probabilities can be extracted.
+#'
+#' @examples
+#' data(test_model)
+#' as.marginal.probs(test_model)
+#' as.marginal.probs(test_model, events=as.events(test_model)[5:15,])
+#' as.marginal.probs(test_model, events=as.events(test_model)[5:15,], type='fit')
+#'
+#' @title as.marginal.probs
+#' @param x A TRONCO model.
+#' @param events A subset of events as of \code{as.events(x)}, all by default.
+#' @param models A subset of reconstructed models, all by default.
+#' @param type Either observed ('observed') or fit ('fit') probabilities, 'observed' by default.
+#' @return The marginal probabilities in a TRONCO model. 
+#' @export as.marginal.probs
+as.marginal.probs = function(x, events = as.events(x), models = names(x$model), type = 'observed')
+{
+  is.compliant(x)
+  is.model(x)
+  is.events.list(x, events)
+  
+  if(!type %in% c('observed', 'fit')  ) stop('Marginal probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).') 
+  if(any(is.null(colnames(events)))) stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
 
+  m = as.models(x, models = models)
+  
+  ret = list()
+  for(i in models)
+  {
+    if(type == 'observed') mat = m[[i]]$probabilities$probabilities.observed$marginal.probs
+    if(type == 'fit') mat = m[[i]]$probabilities$probabilities.fit$estimated.marginal.probs
+    
+    if(type == 'fit' && is.na(mat)) stop('Marginal probabilities have not been estimated yet - see TRONCO Manual.')       
+            
+    mat = mat[rownames(events), , drop = FALSE]
+    ret = append(ret, list(mat)) 
+  }
+  
+  names(ret) = models
+  return(ret) 
+}
 
+#' Extract the joint probabilities from a TRONCO model. The return matrix is indexed with rownames/colnames which 
+#' represent genotype keys - these can be resolved with function \code{keysToNames}. It is possible to
+#' specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
+#' been performed. Also, either the observed or fit probabilities can be extracted.
+#'
+#' @examples
+#' data(test_model)
+#' as.joint.probs(test_model)
+#' as.joint.probs(test_model, events=as.events(test_model)[5:15,])
+#' as.joint.probs(test_model, events=as.events(test_model)[5:15,], type='fit')
+#'
+#' @title as.joint.probs
+#' @param x A TRONCO model.
+#' @param events A subset of events as of \code{as.events(x)}, all by default.
+#' @param models A subset of reconstructed models, all by default.
+#' @param type Either observed ('observed') or fit ('fit') probabilities, 'observed' by default.
+#' @return The joint probabilities in a TRONCO model. 
+#' @export as.joint.probs
+as.joint.probs = function(x, events = as.events(x), models = names(x$model), type = 'observed')
+{
+  is.compliant(x)
+  is.model(x)
+  is.events.list(x, events)
+  
+  if(!type %in% c('observed', 'fit')  ) stop('Joint probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).')  
+  if(any(is.null(colnames(events)))) stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
 
+  m = as.models(x, models = models)
+  
+  ret = list()
+  for(i in models)
+  {
+    if(type == 'observed') mat = m[[i]]$probabilities$probabilities.observed$joint.probs
+    if(type == 'fit') mat = m[[i]]$probabilities$probabilities.fit$estimated.joint.probs
+            
+    if(type == 'fit' && is.na(mat)) stop('Joint probabilities have not been estimated yet - see TRONCO Manual.')        
+            
+    mat = mat[rownames(events), , drop = FALSE]
+    mat = mat[, rownames(events), drop = FALSE]
+    ret = append(ret, list(mat)) 
+  }
+  
+  names(ret) = models
+  return(ret) 
+}
+
+#' Extract the conditional probabilities from a TRONCO model. The return matrix is indexed with rownames which 
+#' represent genotype keys - these can be resolved with function \code{keysToNames}. It is possible to
+#' specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
+#' been performed. Also, either the observed or fit probabilities can be extracted.
+#'
+#' @examples
+#' data(test_model)
+#' as.conditional.probs(test_model)
+#' as.conditional.probs(test_model, events=as.events(test_model)[5:15,])
+#' as.conditional.probs(test_model, events=as.events(test_model)[5:15,], type='fit')
+#'
+#' @title as.conditional.probs
+#' @param x A TRONCO model.
+#' @param events A subset of events as of \code{as.events(x)}, all by default.
+#' @param models A subset of reconstructed models, all by default.
+#' @param type Either observed ('observed') or fit ('fit') probabilities, 'observed' by default.
+#' @return The conditional probabilities in a TRONCO model. 
+#' @export as.conditional.probs
+as.conditional.probs = function(x, events = as.events(x), models = names(x$model), type = 'observed')
+{
+  is.compliant(x)
+  is.model(x)
+  is.events.list(x, events)
+  
+  if(!type %in% c('observed', 'fit')  ) stop('Conditional probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).')  
+  if(any(is.null(colnames(events)))) stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
+
+  m = as.models(x, models = models)
+  
+  ret = list()
+  for(i in models)
+  {
+    if(type == 'observed') mat = m[[i]]$probabilities$probabilities.observed$conditional.probs
+    if(type == 'fit') mat = m[[i]]$probabilities$probabilities.fit$estimated.conditional.probs
+            
+    if(type == 'fit' && is.na(mat)) stop('Conditional probabilities have not been estimated yet - see TRONCO Manual.')        
+            
+    mat = mat[rownames(events), , drop = FALSE]
+    ret = append(ret, list(mat)) 
+  }
+  
+  names(ret) = models
+  return(ret) 
+}
+
+#' Extract the estimated rates of false positives an negatives in the data, given the model. 
+#' A subset of models if multiple reconstruction have been performed can be extracted.
+#' 
+#' @examples
+#' data(test_model)
+#' as.error.rates(test_model)
+#'
+#' @title as.error.rates
+#' @param x A TRONCO model.
+#' @param models A subset of reconstructed models, all by default.
+#' @return The estimated rates of false positives an negatives in the data, given the model. 
+#' @export as.error.rates
+as.error.rates = function(x, models = names(x$model))
+{
+  is.compliant(x)
+  is.model(x)
+  
+  m = as.models(x, models = models)
+  
+  ret = list()
+  for(i in models)
+  {
+    mat = m[[i]]$error.rates
+    ret = append(ret, list(mat)) 
+  }
+  
+  names(ret) = models
+  return(ret) 
+}
+
+#' Returns a dataframe with all the selective advantage relations in a 
+#' TRONCO model. Confidence is also shown - see \code{as.confidence}. It is possible to
+#' specify a subset of events or models if multiple reconstruction have
+#' been performed. 
+#'
+#' @examples
+#' data(test_model)
+#' as.selective.advantage.relations(test_model)
+#' as.selective.advantage.relations(test_model, events=as.events(test_model)[5:15,])
+#' as.selective.advantage.relations(test_model, events=as.events(test_model)[5:15,], type='pf')
+#'
+#' @title as.selective.advantage.relations
+#' @param x A TRONCO model.
+#' @param events A subset of events as of \code{as.events(x)}, all by default.
+#' @param models A subset of reconstructed models, all by default.
+#' @param type Either Prima Facie ('pf') or fit ('fit') probabilities, 'fit' by default.
+#' @return All the selective advantage relations in a TRONCO model 
+#' @export as.selective.advantage.relations
+as.selective.advantage.relations = function(x, events = as.events(x), models = names(x$model), type = 'fit')
+{
+  is.compliant(x)
+  is.model(x)
+  is.events.list(x, events)
+  
+  # TEMPORARY HORRIBLE FIX
+  matrix = NULL
+  if(type == 'pf') matrix$pf = x$adj.matrix.prima.facie   
+  else matrix = as.adj.matrix(x, events = events, models = models, type = type)
+  matrix = lapply(matrix, keysToNames, x = x)
+    
+  conf = as.confidence(x, conf = c('tp', 'pr', 'hg'))
+  conf = lapply(conf, keysToNames, x = x)
+  
+  matrix.to.df = function(m)
+  {    
+    entries = length(which(m == 1))
+    df = NULL
+    df$SELECTS = NULL
+    df$SELECTED = NULL
+    df$OBS.SELECTS = NULL
+    df$OBS.SELECTED = NULL
+    df$HG = NULL
+    df$TP = NULL
+    df$PR = NULL
+    
+    if(entries == 0) return(NULL)
+            
+    for(i in 1:ncol(m))
+      for(j in 1:nrow(m))
+        if(m[i,j] == 1) 
+          { 
+            df$SELECTS = c(df$SELECTS, rownames(m)[i])
+            df$SELECTED = c(df$SELECTED, colnames(m)[j])
+            
+            df$OBS.SELECTS = c(df$OBS.SELECTS, sum(as.genotypes(x)[, nameToKey(x, rownames(m)[i])]))
+            df$OBS.SELECTED = c(df$OBS.SELECTED, sum(as.genotypes(x)[, nameToKey(x, colnames(m)[j])]))
+            
+            df$TP = c(df$TP, conf$tp[rownames(m)[i], colnames(m)[j]])
+            df$PR = c(df$PR, conf$pr[rownames(m)[i], colnames(m)[j]])
+            df$HG = c(df$HG, conf$hg[rownames(m)[i], colnames(m)[j]])            
+          }
+    
+    df = cbind(df$SELECTS, df$SELECTED, df$OBS.SELECTS, df$OBS.SELECTED, df$TP, df$PR, df$HG)
+      
+    colnames(df) = c('SELECTS', 'SELECTED', 'OBS.SELECTS', 'OBS.SELECTED', 'TEMPORAL.PRIORITY', 'PROBABILITY.RAISING', 'HYPERGEOMETRIC')
+    rownames(df) = paste(1:nrow(df))
+    
+    df = data.frame(df, stringsAsFactors = FALSE) 
+    df$OBS.SELECTS = as.numeric(df$OBS.SELECTS)
+    df$OBS.SELECTED = as.numeric(df$OBS.SELECTED)
+    df$HYPERGEOMETRIC = as.numeric(df$HYPERGEOMETRIC)
+    df$TEMPORAL.PRIORITY = as.numeric(df$TEMPORAL.PRIORITY)
+    df$PROBABILITY.RAISING = as.numeric(df$PROBABILITY.RAISING)
+    
+    return(df)
+  }
+  
+  
+  return(lapply(matrix, matrix.to.df))
+}
+
+#' Get parents for each node
+#'
+#' @title as.parents.pos
+#' @param x A TRONCO model.
+#' @param events A subset of events as of \code{as.events(x)}, all by default.
+#' @param models A subset of reconstructed models, all by default.
+#' @return A list of parents for each node
+as.parents.pos = function(x, events = as.events(x), models = names(x$model))
+{
+  is.compliant(x)
+  is.model(x)
+  is.events.list(x, events)
+  
+  m = as.models(x, models = models)
+  
+  ret = list()
+  for(i in models)
+  {
+    mat = m[[i]]$parents.pos
+    mat = mat[rownames(events), , drop = FALSE]
+    ret = append(ret, list(mat)) 
+  }
+  
+  names(ret) = models
+  return(ret) 
+}
 
 #' Return true if the TRONCO dataset 'x', which should be a TRONCO compliant dataset 
 #' - see \code{is.compliant} - has stage annotations for samples. Some sample stages 
 #' might be annotated as NA, but not all.
+#'
+#' @examples
+#' data(test_dataset)
+#' has.stages(test_dataset)
+#' data(stages)
+#' test_dataset = annotate.stages(test_dataset, stage)
+#' has.stages(test_dataset)
 #'
 #' @title has stages
 #' @param x A TRONCO compliant dataset.
@@ -489,23 +898,7 @@ duplicates = function(x) {
   return(as.events(x)[duplicated(as.events(x)),])
 }
 
-#' Return the description annotating the dataset, if any. Input 'x' should be
-#' a TRONCO compliant dataset - see \code{is.compliant}. 
-#'
-#' @examples
-#' data(test_dataset)
-#' as.description(test_dataset)
-#'
-#' @title as.description
-#' @param x A TRONCO compliant dataset.
-#' @return The description annotating the dataset, if any.
-#' @export as.description
-as.description = function(x)
-{
-  if(!is.null(x$name))
-    return(x$name)
-  return("")
-}
+
 
 #' Print to console a short report of a dataset 'x', which should be
 #' a TRONCO compliant dataset - see \code{is.compliant}. 
@@ -697,57 +1090,6 @@ enforce.string = function(x)
   return(x)
 }
 
-#' Given a cohort and a pathway, return the cohort with events restricted to genes 
-#' involved in the pathway. This might contain a new 'pathway' genotype with an alteration mark if
-#' any of the involved genes are altered. 
-#'
-#' @examples
-#' data(test_dataset)
-#' p = as.pathway(test_dataset, c('ASXL1', 'TET2'), 'test_pathway')
-#' oncoprint(p)
-#' p = as.pathway(test_dataset, c('ASXL1', 'TET2'), 'test_pathway', aggregate.pathway=F)
-#' oncoprint(p)
-#'
-#' @title as.pathway
-#' @param x A TRONCO compliant dataset.
-#' @param pathway.genes Gene (symbols) involved in the pathway.
-#' @param pathway.name Pathway name for visualization.
-#' @param pathway.color: Pathway color for visualization.
-#' @param aggregate.pathway If TRUE drop the events for the genes in the pathway.
-#' @return Extract the subset of events for genes which are part of a pathway.
-#' @export as.pathway
-as.pathway <- function(x, pathway.genes, pathway.name, 
-                       pathway.color='yellow', aggregate.pathway = TRUE) 
-{
-  is.compliant(x, 'as.pathway: input')
-  
-  data = x$genotypes
-  
-  cat(paste('*** Extracting events for pathway: ', pathway.name,'.\n', sep=''))
-  
-  # Select only those events involving a gene in pathway.genes which is also in x
-  y = events.selection(x, NA, filter.in.names=pathway.genes, NA)
-  
-  # Extend genotypes
-  y = enforce.numeric(y)
-  
-  pathway = data.frame(rowSums(as.genotypes(y)), row.names = as.samples(y), stringsAsFactors = FALSE)  
-  pathway[pathway > 1, ] =  1
-  colnames(pathway) = pathway.name 
-
-  pathway = import.genotypes(pathway, event.type = 'Pathway', color = pathway.color)
-
-  cat('Pathway extracted succesfully.\n')
-  
-  if(!aggregate.pathway) pathway = ebind(pathway, y)
-  
-  if(has.stages(y)) pathway = annotate.stages(pathway, as.stages(y))
-  
-  is.compliant(pathway, 'as.pathway: output')
-  
-  return(pathway)
-}
-
 #' Sort the internal genotypes according to event frequency.
 #'
 #' @examples
@@ -770,11 +1112,6 @@ sort.by.frequency = function(x)
 
   return(x)  
 }
-
-
-
-
-
 
 #' Convert colnames/rownames of a matrix into intelligible event names, e.g., change a key G23 in 'Mutation KRAS'.
 #' If a name is not found, the original name is left unchanged.
@@ -823,284 +1160,7 @@ nameToKey = function(x, name)
   stop('"name" is not a key!')
 }
 
-#' Extract the adjacency matrix of a TRONCO model. The matrix is indexed with colnames/rownames which 
-#' represent genotype keys - these can be resolved with function \code{keysToNames}. It is possible to
-#' specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
-#' been performed. Also, either the prima facie matrix or the post-regularization matrix can be extracted.
-#'
-#' @title as.adj.matrix
-#' @param x A TRONCO model.
-#' @param events A subset of events as of \code{as.events(x)}, all by default.
-#' @param models A subset of reconstructed models, all by default.
-#' @param type Either the prima facie ('pf') or the post-regularization ('fit') matrix, 'fit' by default.
-#' @return The adjacency matrix of a TRONCO model. 
-#' @export as.adj.matrix
-as.adj.matrix = function(x, events = as.events(x), models = names(x$model), type = 'fit')
-{
-	is.compliant(x)
-	is.model(x)
-	is.events.list(x, events)
 
-  if(!is.vector(models)) stop('"models" should be a vector.')	
-	if(!type %in% c('fit', 'pf')  ) stop('"type" should be any of \'fit\' (post-regularization) or \'pf\' (prima facie).')	
-
-	m = as.models(x, models = models)
-	
-	ret = list()
-	for(i in models)
-	{
-		if(type == 'fit') mat = m[[i]]$adj.matrix$adj.matrix.fit
-		if(type == 'pf') mat = m[[i]]$adj.matrix$adj.matrix.pf
-						
-		mat = mat[rownames(events), , drop = FALSE]
-		mat = mat[, rownames(events), drop = FALSE]
-		
-		ret = append(ret, list(mat)) 
-	}
-	
-	names(ret) = models
-	return(ret)	
-}
-
-#' Extract the marginal probabilities from a TRONCO model. The return matrix is indexed with rownames which 
-#' represent genotype keys - these can be resolved with function \code{keysToNames}. It is possible to
-#' specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
-#' been performed. Also, either the observed or fit probabilities can be extracted.
-#'
-#' @title as.marginal.probs
-#' @param x A TRONCO model.
-#' @param events A subset of events as of \code{as.events(x)}, all by default.
-#' @param models A subset of reconstructed models, all by default.
-#' @param type Either observed ('observed') or fit ('fit') probabilities, 'observed' by default.
-#' @return The marginal probabilities in a TRONCO model. 
-#' @export as.marginal.probs
-as.marginal.probs = function(x, events = as.events(x), models = names(x$model), type = 'observed')
-{
-	is.compliant(x)
-	is.model(x)
-	is.events.list(x, events)
-	
-	if(!type %in% c('observed', 'fit')  ) stop('Marginal probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).')	
-	if(any(is.null(colnames(events)))) stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
-
-	m = as.models(x, models = models)
-	
-	ret = list()
-	for(i in models)
-	{
-		if(type == 'observed') mat = m[[i]]$probabilities$probabilities.observed$marginal.probs
-		if(type == 'fit') mat = m[[i]]$probabilities$probabilities.fit$estimated.marginal.probs
-		
-		if(type == 'fit' && is.na(mat)) stop('Marginal probabilities have not been estimated yet - see TRONCO Manual.')				
-						
-		mat = mat[rownames(events), , drop = FALSE]
-		ret = append(ret, list(mat)) 
-	}
-	
-	names(ret) = models
-	return(ret)	
-}
-
-#' Extract the joint probabilities from a TRONCO model. The return matrix is indexed with rownames/colnames which 
-#' represent genotype keys - these can be resolved with function \code{keysToNames}. It is possible to
-#' specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
-#' been performed. Also, either the observed or fit probabilities can be extracted.
-#'
-#' @title as.joint.probs
-#' @param x A TRONCO model.
-#' @param events A subset of events as of \code{as.events(x)}, all by default.
-#' @param models A subset of reconstructed models, all by default.
-#' @param type Either observed ('observed') or fit ('fit') probabilities, 'observed' by default.
-#' @return The joint probabilities in a TRONCO model. 
-#' @export as.joint.probs
-as.joint.probs = function(x, events = as.events(x), models = names(x$model), type = 'observed')
-{
-	is.compliant(x)
-	is.model(x)
-	is.events.list(x, events)
-	
-	if(!type %in% c('observed', 'fit')  ) stop('Joint probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).')	
-	if(any(is.null(colnames(events)))) stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
-
-	m = as.models(x, models = models)
-	
-	ret = list()
-	for(i in models)
-	{
-		if(type == 'observed') mat = m[[i]]$probabilities$probabilities.observed$joint.probs
-		if(type == 'fit') mat = m[[i]]$probabilities$probabilities.fit$estimated.joint.probs
-						
-		if(type == 'fit' && is.na(mat)) stop('Joint probabilities have not been estimated yet - see TRONCO Manual.')				
-						
-		mat = mat[rownames(events), , drop = FALSE]
-		mat = mat[, rownames(events), drop = FALSE]
-		ret = append(ret, list(mat)) 
-	}
-	
-	names(ret) = models
-	return(ret)	
-}
-
-#' Extract the conditional probabilities from a TRONCO model. The return matrix is indexed with rownames which 
-#' represent genotype keys - these can be resolved with function \code{keysToNames}. It is possible to
-#' specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
-#' been performed. Also, either the observed or fit probabilities can be extracted.
-#'
-#' @title as.conditional.probs
-#' @param x A TRONCO model.
-#' @param events A subset of events as of \code{as.events(x)}, all by default.
-#' @param models A subset of reconstructed models, all by default.
-#' @param type Either observed ('observed') or fit ('fit') probabilities, 'observed' by default.
-#' @return The conditional probabilities in a TRONCO model. 
-#' @export as.conditional.probs
-as.conditional.probs = function(x, events = as.events(x), models = names(x$model), type = 'observed')
-{
-	is.compliant(x)
-	is.model(x)
-	is.events.list(x, events)
-	
-	if(!type %in% c('observed', 'fit')  ) stop('Conditional probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).')	
-	if(any(is.null(colnames(events)))) stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
-
-	m = as.models(x, models = models)
-	
-	ret = list()
-	for(i in models)
-	{
-		if(type == 'observed') mat = m[[i]]$probabilities$probabilities.observed$conditional.probs
-		if(type == 'fit') mat = m[[i]]$probabilities$probabilities.fit$estimated.conditional.probs
-						
-		if(type == 'fit' && is.na(mat)) stop('Conditional probabilities have not been estimated yet - see TRONCO Manual.')				
-						
-		mat = mat[rownames(events), , drop = FALSE]
-		ret = append(ret, list(mat)) 
-	}
-	
-	names(ret) = models
-	return(ret)	
-}
-
-
-# Get parents for each node
-as.parents.pos = function(x, events = as.events(x), models = names(x$model))
-{
-	is.compliant(x)
-	is.model(x)
-	is.events.list(x, events)
-	
-	m = as.models(x, models = models)
-	
-	ret = list()
-	for(i in models)
-	{
-		mat = m[[i]]$parents.pos
-		mat = mat[rownames(events), , drop = FALSE]
-		ret = append(ret, list(mat)) 
-	}
-	
-	names(ret) = models
-	return(ret)	
-}
-
-#' Extract the estimated rates of false positives an negatives in the data, given the model. 
-#' A subset of models if multiple reconstruction have been performed can be extracted.
-#' 
-#' @title as.error.rates
-#' @param x A TRONCO model.
-#' @param models A subset of reconstructed models, all by default.
-#' @return The estimated rates of false positives an negatives in the data, given the model. 
-#' @export as.error.rates
-as.error.rates = function(x, models = names(x$model))
-{
-	is.compliant(x)
-	is.model(x)
-	
-	m = as.models(x, models = models)
-	
-	ret = list()
-	for(i in models)
-	{
-		mat = m[[i]]$error.rates
-		ret = append(ret, list(mat)) 
-	}
-	
-	names(ret) = models
-	return(ret)	
-}
-
-#' Returns a dataframe with all the selective advantage relations in a 
-#' TRONCO model. Confidence is also shown - see \code{as.confidence}. It is possible to
-#' specify a subset of events or models if multiple reconstruction have
-#' been performed. 
-#'
-#' @title as.selective.advantage.relations
-#' @param x A TRONCO model.
-#' @param events A subset of events as of \code{as.events(x)}, all by default.
-#' @param models A subset of reconstructed models, all by default.
-#' @return All the selective advantage relations in a TRONCO model 
-#' @export as.selective.advantage.relations
-as.selective.advantage.relations = function(x, events = as.events(x), models = names(x$model), type = 'fit')
-{
-  is.compliant(x)
-  is.model(x)
-  is.events.list(x, events)
-  
-  # TEMPORARY HORRIBLE FIX
-  matrix = NULL
-  if(type == 'pf') matrix$pf = x$adj.matrix.prima.facie   
-  else matrix = as.adj.matrix(x, events = events, models = models, type = type)
-  matrix = lapply(matrix, keysToNames, x = x)
-    
-  conf = as.confidence(x, conf = c('tp', 'pr', 'hg'))
-  conf = lapply(conf, keysToNames, x = x)
-  
-  matrix.to.df = function(m)
-  {    
-    entries = length(which(m == 1))
-    df = NULL
-    df$SELECTS = NULL
-    df$SELECTED = NULL
-    df$OBS.SELECTS = NULL
-    df$OBS.SELECTED = NULL
-    df$HG = NULL
-    df$TP = NULL
-    df$PR = NULL
-    
-    if(entries == 0) return(NULL)
-            
-    for(i in 1:ncol(m))
-      for(j in 1:nrow(m))
-        if(m[i,j] == 1) 
-          { 
-            df$SELECTS = c(df$SELECTS, rownames(m)[i])
-            df$SELECTED = c(df$SELECTED, colnames(m)[j])
-            
-            df$OBS.SELECTS = c(df$OBS.SELECTS, sum(as.genotypes(x)[, nameToKey(x, rownames(m)[i])]))
-            df$OBS.SELECTED = c(df$OBS.SELECTED, sum(as.genotypes(x)[, nameToKey(x, colnames(m)[j])]))
-            
-            df$TP = c(df$TP, conf$tp[rownames(m)[i], colnames(m)[j]])
-            df$PR = c(df$PR, conf$pr[rownames(m)[i], colnames(m)[j]])
-            df$HG = c(df$HG, conf$hg[rownames(m)[i], colnames(m)[j]])            
-          }
-    
-    df = cbind(df$SELECTS, df$SELECTED, df$OBS.SELECTS, df$OBS.SELECTED, df$TP, df$PR, df$HG)
-      
-    colnames(df) = c('SELECTS', 'SELECTED', 'OBS.SELECTS', 'OBS.SELECTED', 'TEMPORAL.PRIORITY', 'PROBABILITY.RAISING', 'HYPERGEOMETRIC')
-    rownames(df) = paste(1:nrow(df))
-    
-    df = data.frame(df, stringsAsFactors = FALSE) 
-    df$OBS.SELECTS = as.numeric(df$OBS.SELECTS)
-    df$OBS.SELECTED = as.numeric(df$OBS.SELECTED)
-    df$HYPERGEOMETRIC = as.numeric(df$HYPERGEOMETRIC)
-    df$TEMPORAL.PRIORITY = as.numeric(df$TEMPORAL.PRIORITY)
-    df$PROBABILITY.RAISING = as.numeric(df$PROBABILITY.RAISING)
-    
-    return(df)
-  }
-  
-  
-  return(lapply(matrix, matrix.to.df))
-}
 
 #' Check if logic node down
 #'
@@ -1137,23 +1197,4 @@ is.logic.node.up <- function(node) {
 #' @return boolean
 is.logic.node <- function(node) {
   return(is.logic.node.up(node) || is.logic.node.down(node))
-}
-
-#' Return a list of events which are observed in the input samples list
-#'
-#' @title as.events.in.sample
-#' @param x A TRONCO compliant dataset
-#' @param sample Vector of sample names
-#' @return A list of events which are observed in the input samples list
-#' @export as.events.in.sample
-as.events.in.sample = function(x, sample)
-{
-  aux = function(s)
-  {
-    sub.geno = as.genotypes(x)[s, , drop = FALSE]  
-    sub.geno = sub.geno[, sub.geno == 1, drop = FALSE]
-    return(as.events(x)[colnames(sub.geno), , drop = FALSE])
-  }
-  
-  return(sapply(sample, FUN = aux))
 }

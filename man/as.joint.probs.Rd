@@ -25,4 +25,10 @@ represent genotype keys - these can be resolved with function \code{keysToNames}
 specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
 been performed. Also, either the observed or fit probabilities can be extracted.
 }
+\examples{
+data(test_model)
+as.joint.probs(test_model)
+as.joint.probs(test_model, events=as.events(test_model)[5:15,])
+as.joint.probs(test_model, events=as.events(test_model)[5:15,], type='fit')
+}
 

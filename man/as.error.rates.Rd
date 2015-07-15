@@ -18,4 +18,8 @@ The estimated rates of false positives an negatives in the data, given the model
 Extract the estimated rates of false positives an negatives in the data, given the model.
 A subset of models if multiple reconstruction have been performed can be extracted.
 }
+\examples{
+data(test_model)
+as.error.rates(test_model)
+}
 

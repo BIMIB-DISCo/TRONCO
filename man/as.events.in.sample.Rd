@@ -17,4 +17,8 @@ A list of events which are observed in the input samples list
 \description{
 Return a list of events which are observed in the input samples list
 }
+\examples{
+data(test_dataset)
+as.events.in.sample(test_dataset, c('patient 1', 'patient 7'))
+}
 

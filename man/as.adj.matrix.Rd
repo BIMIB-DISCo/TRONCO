@@ -25,4 +25,10 @@ represent genotype keys - these can be resolved with function \code{keysToNames}
 specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
 been performed. Also, either the prima facie matrix or the post-regularization matrix can be extracted.
 }
+\examples{
+data(test_model)
+as.adj.matrix(test_model)
+as.adj.matrix(test_model, events=as.events(test_model)[5:15,])
+as.adj.matrix(test_model, events=as.events(test_model)[5:15,], type='pf')
+}
 

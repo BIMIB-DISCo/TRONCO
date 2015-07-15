@@ -17,4 +17,8 @@ The models in a reconstructed object.
 \description{
 Extract the models from a reconstructed object.
 }
+\examples{
+data(test_model)
+as.model(test_model)
+}
 
