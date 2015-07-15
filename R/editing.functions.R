@@ -177,6 +177,13 @@ delete.gene <- function(x, gene) {
 
 #' @export delete.event
 delete.event <- function(x, gene, type) {
+
+  for(pattern in as.patterns(x)) {
+    events = as.events.in.patterns(x, patterns=pattern)
+    if(length(which(events[,'type'] == type & events[,'event'] == gene)) > 0) {
+      stop('Found event \"(', gene, ', ', type, ')\" in pattern \"', pattern, '\". Delete that pattern first.\n')
+    }
+  }
   
   is.compliant(x, 'delete.event: input')
   
