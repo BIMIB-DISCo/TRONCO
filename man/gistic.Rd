@@ -4,15 +4,15 @@
 \name{gistic}
 \alias{gistic}
 \title{GISTIC example data}
-\format{todo}
+\format{GISTIC score}
 \source{
-da mettere
+fake data
 }
 \usage{
 data(gistic)
 }
 \description{
-This data set list
+This dataset contains a standard GISTIC input for TRONCO
 }
 \author{
 Luca De Sano

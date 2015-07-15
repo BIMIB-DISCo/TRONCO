@@ -9,7 +9,7 @@
 da mettere
 }
 \usage{
-data(gistic)
+data(as.genotypes.test)
 }
 \description{
 This data set list

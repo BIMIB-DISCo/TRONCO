@@ -1,30 +1,30 @@
 #' @name maf
 #' @title MAF example data
-#' @description This data set list 
+#' @description This dataset contains a standard MAF input for TRONCO 
 #' @docType data
 #' @usage data(maf)
-#' @format todo
-#' @source da mettere
+#' @format Manual Annotated Format
+#' @source fake data
 #' @author Luca De Sano
 NULL
 
 #' @name gistic
 #' @title GISTIC example data
-#' @description This data set list 
+#' @description This dataset contains a standard GISTIC input for TRONCO 
 #' @docType data
 #' @usage data(gistic)
-#' @format todo
-#' @source da mettere
+#' @format GISTIC score
+#' @source fake data
 #' @author Luca De Sano
 NULL
 
 #' @name muts
-#' @title MAF imported data
-#' @description This data set list 
+#' @title Simple mutation dataset
+#' @description A simple mutation dataset without hypotheses
 #' @docType data
-#' @usage data(gistic)
-#' @format todo
-#' @source da mettere
+#' @usage data(muts)
+#' @format TRONCO compliant dataset
+#' @source fake data
 #' @author Luca De Sano
 NULL
 
@@ -32,8 +32,18 @@ NULL
 #' @title as genotypes matrix
 #' @description This data set list 
 #' @docType data
-#' @usage data(gistic)
+#' @usage data(as.genotypes.test)
 #' @format todo
 #' @source da mettere
+#' @author Luca De Sano
+NULL
+
+#' @name test_dataset
+#' @title A complete dataset with hypotheses
+#' @description This dataset contains a complete test dataset
+#' @docType data
+#' @usage data(test_dataset)
+#' @format TRONCO compliant dataset
+#' @source fake data
 #' @author Luca De Sano
 NULL

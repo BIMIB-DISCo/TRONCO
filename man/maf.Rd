@@ -4,15 +4,15 @@
 \name{maf}
 \alias{maf}
 \title{MAF example data}
-\format{todo}
+\format{Manual Annotated Format}
 \source{
-da mettere
+fake data
 }
 \usage{
 data(maf)
 }
 \description{
-This data set list
+This dataset contains a standard MAF input for TRONCO
 }
 \author{
 Luca De Sano
