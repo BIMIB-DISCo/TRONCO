@@ -1,10 +1,9 @@
 Package: TRONCO
-Version: 2.0.0-5
-Date: 2015-05-25
+Version: 2.0.0-6
+Date: 2015-07-15
 Title: TRONCO, a  package for TRanslational ONCOlogy
 Author: Marco Antoniotti, Giulio Caravagna,
-    Luca De Sano,
-    Alex Graudenzi, Ilya Korsunsky,
+    Luca De Sano, Alex Graudenzi, Ilya Korsunsky,
     Mattia Longoni, Loes Olde Loohuis,
     Giancarlo Mauri, Bud Mishra, Daniele Ramazzotti
 Maintainer: Giulio Caravagna <giulio.caravagna@disco.unimib.it>,
@@ -54,7 +53,7 @@ Description: Genotype-level cancer progression models describe the ordering of
     from CGH data of copy number alterations (classified as gains or losses
     over chromosome's arms). The dataset used is available in the SKY/M-FISH
     database.
-License: GPL (>= 2.0)
+License: GPL (>= 3.0)
 URL: http://bimib.disco.unimib.it
 BugReports: https://github.com/BIMIB-DISCo/TRONCO
 biocViews: Cancer

@@ -1,20 +1,27 @@
-#### caprese.fit.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
+##################################################################################
+#                                                                                #
+# TRONCO: a tool for TRanslational ONCOlogy                                      #
+#                                                                                #
+##################################################################################
+# Copyright (c) 2015, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
+# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
+# and Daniele Ramazzotti.                                                        #
+#                                                                                #
+# All rights reserved. This program and the accompanying materials               #
+# are made available under the terms of the GNU GPL v3.0                         #
+# which accompanies this distribution                                            #
+#                                                                                #
+##################################################################################
 
 
-# reconstruct the best tree-like topology
-# INPUT:
-# dataset: a dataset describing a progressive phenomenon
-# lambda: shrinkage parameter (value in [0,1])
-# do.estimation: should I perform the estimation of the error rates and probabilities?
-# RETURN:
-# topology: the reconstructed tree-like topology
-"caprese.fit" <-
-function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = FALSE ) {
+#' reconstruct the best tree-like topology
+#' @title caprese.fit
+#' @param dataset a dataset describing a progressive phenomenon
+#' @param lambda shrinkage parameter (value in [0,1])
+#' @param do.estimation should I perform the estimation of the error rates and probabilities?
+#' @param silent execute the algorithm in silent mode
+#' @return topology: the reconstructed tree-like topology
+caprese.fit = function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = FALSE ) {
 	
 	# start the clock to measure the execution time
 	ptm <- proc.time();
@@ -115,27 +122,14 @@ function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = FALSE ) {
     
 }
 
-#### end of file -- caprese.fit.R
-
-
-#### get.tree.parents.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-# select at the most one parent for each node based on the probability raising criteria
-# INPUT:
-# adj.matrix: adjacency matrix of the valid edges
-# marginal.probs: observed marginal probabilities
-# joint.probs: observed joint probabilities
-# lambda: shrinkage parameter (value between 0 and 1)
-# RETURN:
-# best.parents: list of the best parents
-"get.tree.parents" <-
-function( adj.matrix, marginal.probs, joint.probs, lambda ) {
+#' select at the most one parent for each node based on the probability raising criteria
+#' @title get.tree.parents
+#' @param adj.matrix adjacency matrix of the valid edges
+#' @param marginal.probs observed marginal probabilities
+#' @param joint.probs observed joint probabilities
+#' @param lambda shrinkage parameter (value between 0 and 1)
+#' @return best.parents list of the best parents
+get.tree.parents = function( adj.matrix, marginal.probs, joint.probs, lambda ) {
 	
     # compute the scores for each edge
     scores = get.tree.scores(adj.matrix,marginal.probs,joint.probs,lambda);
@@ -196,27 +190,14 @@ function( adj.matrix, marginal.probs, joint.probs, lambda ) {
     
 }
 
-#### end of file -- get.tree.parents.R
-
-
-#### get.tree.scores.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-# compute the probability raising based scores
-# INPUT:
-# adj.matrix: adjacency matrix of the valid edges
-# marginal.probs: observed marginal probabilities
-# joint.probs: observed joint probabilities
-# lambda: shrinkage parameter (value between 0 and 1)
-# RETURN:
-# scores: probability raising based scores
-"get.tree.scores" <-
-function( adj.matrix, marginal.probs, joint.probs, lambda ) {
+#' compute the probability raising based scores
+#' @title get.tree.scores
+#' @param adj.matrix adjacency matrix of the valid edges
+#' @param marginal.probs observed marginal probabilities
+#' @param joint.probs observed joint probabilities
+#' @param lambda shrinkage parameter (value between 0 and 1)
+#' @return scores: probability raising based scores
+get.tree.scores = function( adj.matrix, marginal.probs, joint.probs, lambda ) {
 	
     #structure where to save the probability raising scores
     pr.score = array(-1, dim=c(nrow(marginal.probs),nrow(marginal.probs)));
@@ -247,26 +228,13 @@ function( adj.matrix, marginal.probs, joint.probs, lambda ) {
     
 }
 
-#### end of file -- get.tree.scores.R
-
-
-#### verify.parents.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-# verify the independent progression filter
-# INPUT:
-# best.parents: best edges to be verified
-# marginal.probs: observed marginal probabilities
-# joint.probs: observed joint probabilities
-# RETURN:
-# best.parents: list of the best valid parents
-"verify.parents" <-
-function( best.parents, marginal.probs, joint.probs ) {
+#' verify the independent progression filter
+#' @title verify.parents
+#' @param best.parents best edges to be verified
+#' @param marginal.probs observed marginal probabilities
+#' @param joint.probs observed joint probabilities
+#' @return best.parents: list of the best valid parents
+verify.parents = function( best.parents, marginal.probs, joint.probs ) {
 	
     # verify the condition for the best parent of each node
     for (i in 1:length(best.parents)) {
@@ -298,5 +266,3 @@ function( best.parents, marginal.probs, joint.probs ) {
     return(best.parents);
     
 }
-
-#### end of file -- verify.parents.R
