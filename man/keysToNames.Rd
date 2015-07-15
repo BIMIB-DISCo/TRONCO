@@ -18,4 +18,9 @@ The matrix with intelligible colnames/rownames.
 Convert colnames/rownames of a matrix into intelligible event names, e.g., change a key G23 in 'Mutation KRAS'.
 If a name is not found, the original name is left unchanged.
 }
+\examples{
+data(test_dataset)
+adj_matrix = as.adj.matrix(test_model, events=as.events(test_model)[5:15,])$bic
+keysToNames(test_model, adj_matrix)
+}
 

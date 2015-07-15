@@ -17,4 +17,11 @@ Return true if the TRONCO dataset 'x', which should be a TRONCO compliant datase
 - see \code{is.compliant} - has stage annotations for samples. Some sample stages
 might be annotated as NA, but not all.
 }
+\examples{
+data(test_dataset)
+has.stages(test_dataset)
+data(stages)
+test_dataset = annotate.stages(test_dataset, stage)
+has.stages(test_dataset)
+}
 

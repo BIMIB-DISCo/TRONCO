@@ -13,6 +13,8 @@ as.selective.advantage.relations(x, events = as.events(x),
 \item{events}{A subset of events as of \code{as.events(x)}, all by default.}
 
 \item{models}{A subset of reconstructed models, all by default.}
+
+\item{type}{Either Prima Facie ('pf') or fit ('fit') probabilities, 'fit' by default.}
 }
 \value{
 All the selective advantage relations in a TRONCO model
@@ -22,5 +24,11 @@ Returns a dataframe with all the selective advantage relations in a
 TRONCO model. Confidence is also shown - see \code{as.confidence}. It is possible to
 specify a subset of events or models if multiple reconstruction have
 been performed.
+}
+\examples{
+data(test_model)
+as.selective.advantage.relations(test_model)
+as.selective.advantage.relations(test_model, events=as.events(test_model)[5:15,])
+as.selective.advantage.relations(test_model, events=as.events(test_model)[5:15,], type='pf')
 }
 
