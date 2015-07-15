@@ -21,11 +21,10 @@ Return all events involving certain genes and of a certain type in 'x', which sh
 TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-as.events(mutations)
-as.events(mutations, types='Mutation')
-as.events(mutations, genes = 'ABAT')
-as.events(mutations, types='Missing')
+data(test_dataset)
+as.events(test_dataset)
+as.events(test_dataset, types='ins_del')
+as.events(test_dataset, genes = 'TET2')
+as.events(test_dataset, types='Missing')
 }
 

@@ -17,8 +17,7 @@ Return the events duplicated in \code{x}, if any. Input 'x' should be
 a TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-duplicates(mutations)
+data(test_dataset)
+duplicates(test_dataset)
 }
 

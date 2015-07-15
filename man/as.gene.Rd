@@ -22,8 +22,7 @@ TRONCO compliant dataset - see \code{is.compliant}. In this case column names ar
 with events' types.
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-as.gene(mutations, genes = c('ABAT', 'ABCA4'))
+data(test_dataset)
+as.gene(mutations, genes = c('EZH2', 'ASXL1'))
 }
 

@@ -16,9 +16,7 @@ Print to console a short report of a dataset 'x', which should be
 a TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-mutations = annotate.description(mutations, 'Example MAF')
-show(mutations)
+data(test_dataset)
+show(test_dataset)
 }
 

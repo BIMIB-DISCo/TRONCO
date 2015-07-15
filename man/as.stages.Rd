@@ -16,4 +16,10 @@ A matrix with 1 column annotating stages and rownames as sample IDs.
 Return the association sample -> stage, if any. Input 'x' should be a
 TRONCO compliant dataset - see \code{is.compliant}.
 }
+\examples{
+data(test_dataset)
+data(stage)
+test_dataset = annotate.stages(test_dataset, stage)
+as.stages(test_dataset)
+}
 

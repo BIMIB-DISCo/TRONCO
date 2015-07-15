@@ -3,9 +3,8 @@
 #' Function \code{keysToNames} can be used to translate colnames to events. 
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' keysToNames(mutations, as.genotypes(mutations))
+#' data(test_dataset)
+#' as.genotypes(test_dataset)
 #'
 #' @title as genotypes
 #' @param x A TRONCO compliant dataset.
@@ -19,9 +18,8 @@ as.genotypes = function(x)
 #' Return all sample IDs for input 'x', which should be a TRONCO compliant dataset - see \code{is.compliant}. 
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' as.samples(mutations)
+#' data(test_dataset)
+#' as.samples(test_dataset)
 #' 
 #' @title as genotypes
 #' @param x A TRONCO compliant dataset.
@@ -36,9 +34,8 @@ as.samples = function(x)
 #' TRONCO compliant dataset - see \code{is.compliant}. 
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' as.genes(mutations)
+#' data(test_dataset)
+#' as.genes(test_dataset)
 #' 
 #' @title as.genes
 #' @param x A TRONCO compliant dataset.
@@ -62,12 +59,11 @@ as.genes = function(x, types = NA)
 #' TRONCO compliant dataset - see \code{is.compliant}. 
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' as.events(mutations)
-#' as.events(mutations, types='Mutation')
-#' as.events(mutations, genes = 'ABAT')
-#' as.events(mutations, types='Missing')
+#' data(test_dataset)
+#' as.events(test_dataset)
+#' as.events(test_dataset, types='ins_del')
+#' as.events(test_dataset, genes = 'TET2')
+#' as.events(test_dataset, types='Missing')
 #'
 #' @title as events
 #' @param x A TRONCO compliant dataset.
@@ -88,6 +84,12 @@ as.events = function(x, genes=NA, types=NA)
 #' Return the association sample -> stage, if any. Input 'x' should be a
 #' TRONCO compliant dataset - see \code{is.compliant}.
 #'
+#' @examples
+#' data(test_dataset)
+#' data(stage)
+#' test_dataset = annotate.stages(test_dataset, stage)
+#' as.stages(test_dataset)
+#'
 #' @title as stages
 #' @param x A TRONCO compliant dataset.
 #' @return A matrix with 1 column annotating stages and rownames as sample IDs.
@@ -102,10 +104,9 @@ as.stages = function(x)
 #' TRONCO compliant dataset - see \code{is.compliant}.
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' as.types(mutations)
-#' as.types(mutations, genes = 'ABAT')
+#' data(test_dataset)
+#' as.types(test_dataset)
+#' as.types(test_dataset, genes='TET2')
 #' 
 #' @title as types
 #' @param x A TRONCO compliant dataset.
@@ -121,9 +122,8 @@ as.types = function(x, genes=NA)
 #' TRONCO compliant dataset - see \code{is.compliant}.
 #' 
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' as.colors(mutations)
+#' data(test_dataset)
+#' as.colors(test_dataset)
 #'
 #' @title as colors
 #' @param x A TRONCO compliant dataset.
@@ -139,9 +139,8 @@ as.colors = function(x)
 #' with events' types.
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' as.gene(mutations, genes = c('ABAT', 'ABCA4'))
+#' data(test_dataset)
+#' as.gene(mutations, genes = c('EZH2', 'ASXL1'))
 #' 
 #' @title as gene
 #' @param x A TRONCO compliant dataset.
@@ -165,9 +164,8 @@ as.gene = function(x, genes, types=NA)
 #' to be a TRONCO compliant dataset - see \code{is.compliant}. 
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' oncoprint(as.alterations(mutations))
+#' data(test_dataset)
+#' as.alterations(test_dataset)
 #' 
 #' @title as alterations
 #' @param x A TRONCO compliant dataset.
@@ -199,9 +197,8 @@ has.stages = function(x)
 #' name, e.g., a HuGO_Symbol, and a type label, e.g., c('SNP', 'KRAS')
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' has.duplicates(mutations)
+#' data(test_dataset)
+#' has.duplicates(test_dataset)
 #' 
 #' @title has.duplicates
 #' @param x A TRONCO compliant dataset.
@@ -219,9 +216,8 @@ has.duplicates = function(x) {
 #' a TRONCO compliant dataset - see \code{is.compliant}.
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' has.model(mutations)
+#' data(test_dataset)
+#' has.model(test_dataset)
 #' 
 #' @title has.model
 #' @param x A TRONCO compliant dataset.
@@ -238,9 +234,8 @@ has.model = function(x) {
 #' a TRONCO compliant dataset - see \code{is.compliant}. 
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' duplicates(mutations)
+#' data(test_dataset)
+#' duplicates(test_dataset)
 #'
 #' @title duplicates
 #' @param x A TRONCO compliant dataset.
@@ -253,6 +248,10 @@ duplicates = function(x) {
 
 #' Return the description annotating the dataset, if any. Input 'x' should be
 #' a TRONCO compliant dataset - see \code{is.compliant}. 
+#'
+#' @examples
+#' data(test_dataset)
+#' as.description(test_dataset)
 #'
 #' @title as.description
 #' @param x A TRONCO compliant dataset.
@@ -269,10 +268,8 @@ as.description = function(x)
 #' a TRONCO compliant dataset - see \code{is.compliant}. 
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' mutations = annotate.description(mutations, 'Example MAF')
-#' show(mutations)
+#' data(test_dataset)
+#' show(test_dataset)
 #' 
 #' @title show
 #' @param x A TRONCO compliant dataset.

@@ -16,4 +16,8 @@ The description annotating the dataset, if any.
 Return the description annotating the dataset, if any. Input 'x' should be
 a TRONCO compliant dataset - see \code{is.compliant}.
 }
+\examples{
+data(test_dataset)
+as.description(test_dataset)
+}
 

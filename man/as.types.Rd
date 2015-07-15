@@ -19,9 +19,8 @@ Return the types of events for a set of genes which are in 'x', which should be 
 TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-as.types(mutations)
-as.types(mutations, genes = 'ABAT')
+data(test_dataset)
+as.types(test_dataset)
+as.types(test_dataset, genes='TET2')
 }
 

@@ -19,8 +19,7 @@ Return all gene symbols for which a certain type of event exists in 'x', which s
 TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-as.genes(mutations)
+data(test_dataset)
+as.genes(test_dataset)
 }
 

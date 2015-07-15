@@ -18,8 +18,7 @@ a TRONCO compliant dataset - see \code{is.compliant}. Events are identified by a
 name, e.g., a HuGO_Symbol, and a type label, e.g., c('SNP', 'KRAS')
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-has.duplicates(mutations)
+data(test_dataset)
+has.duplicates(test_dataset)
 }
 

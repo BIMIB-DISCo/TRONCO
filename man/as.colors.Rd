@@ -17,8 +17,7 @@ Return the colors associated to each type of event in 'x', which should be a
 TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-as.colors(mutations)
+data(test_dataset)
+as.colors(test_dataset)
 }
 

@@ -17,8 +17,7 @@ Return true if there is a reconstructed model in the TRONCO dataset 'x', which s
 a TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-has.model(mutations)
+data(test_dataset)
+has.model(test_dataset)
 }
 

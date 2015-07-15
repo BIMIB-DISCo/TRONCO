@@ -18,8 +18,7 @@ see \code{is.compliant}.
 Function \code{keysToNames} can be used to translate colnames to events.
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-keysToNames(mutations, as.genotypes(mutations))
+data(test_dataset)
+as.genotypes(test_dataset)
 }
 

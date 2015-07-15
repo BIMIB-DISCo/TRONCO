@@ -16,8 +16,7 @@ A vector of sample IDs
 Return all sample IDs for input 'x', which should be a TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-as.samples(mutations)
+data(test_dataset)
+as.samples(test_dataset)
 }
 

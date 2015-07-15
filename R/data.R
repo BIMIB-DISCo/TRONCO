@@ -47,3 +47,13 @@ NULL
 #' @source fake data
 #' @author Luca De Sano
 NULL
+
+#' @name stage
+#' @title Stage information for test_dataset
+#' @description This dataset contains stage information for patient in test_dataset
+#' @docType data
+#' @usage data(stage)
+#' @format Vector of stages
+#' @source fake data
+#' @author Luca De Sano
+NULL

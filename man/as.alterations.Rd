@@ -22,8 +22,7 @@ a total of gene-level alterations diregarding the event type. Input 'x' is check
 to be a TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-oncoprint(as.alterations(mutations))
+data(test_dataset)
+as.alterations(test_dataset)
 }
 
