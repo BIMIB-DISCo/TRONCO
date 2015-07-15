@@ -15,4 +15,8 @@ The number of samples in the dataset.
 \description{
 Return the number of samples in the dataset.
 }
+\examples{
+data(test_dataset)
+nsamples(test_dataset)
+}
 

@@ -4,25 +4,19 @@
 \alias{ntypes}
 \title{ntypes}
 \usage{
-ntypes(x, genes = NA)
-
-ntypes(x, genes = NA)
+ntypes(x)
 }
 \arguments{
-\item{x}{A TRONCO compliant dataset.}
-
-\item{genes}{The genes to consider, if NA all available ones are used.}
-
 \item{x}{A TRONCO compliant dataset.}
 }
 \value{
 The number of types in the dataset.
-
-The number of types in the dataset involving a certain set of genes.
 }
 \description{
 Return the number of types in the dataset.
-
-Return the number of types in the dataset involving a certain set of genes
+}
+\examples{
+data(test_dataset)
+ntypes(test_dataset)
 }
 

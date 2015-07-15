@@ -16,4 +16,8 @@ Return the number of patterns in the dataset
 
 Return the number of patterns in the dataset
 }
+\examples{
+data(test_dataset)
+npatterns(test_dataset)
+}
 

@@ -15,6 +15,11 @@ as.genes.in.patterns(x, patterns = NULL)
 A list of genes present in patterns which consitute CAPRI's hypotheses
 }
 \description{
-Return the list of genes used in patterns
+Return the list of genes present in selected patterns
+}
+\examples{
+data(test_dataset)
+as.genes.in.patterns(test_dataset)
+as.genes.in.patterns(test_dataset, patterns='XOR_EZH2')
 }
 

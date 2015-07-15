@@ -15,6 +15,11 @@ as.events.in.patterns(x, patterns = NULL)
 A list of events present in patterns which consitute CAPRI's hypotheses
 }
 \description{
-Return the list of events used in patterns
+Return the list of events present in selected patterns
+}
+\examples{
+data(test_dataset)
+as.events.in.patterns(test_dataset)
+as.events.in.patterns(test_dataset, patterns='XOR_EZH2')
 }
 

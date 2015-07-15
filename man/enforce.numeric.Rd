@@ -15,4 +15,8 @@ Convert the internal reprensentation of genotypes to numeric, if not.
 \description{
 Convert the internal reprensentation of genotypes to numeric, if not.
 }
+\examples{
+data(test_dataset)
+test_dataset = enforce.numeric(test_dataset)
+}
 

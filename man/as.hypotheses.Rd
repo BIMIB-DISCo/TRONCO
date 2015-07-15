@@ -15,4 +15,8 @@ The hypotheses in the dataset which constitute CAPRI's hypotheses.
 \description{
 Return the hypotheses in the dataset which constitute CAPRI's hypotheses.
 }
+\examples{
+data(test_dataset)
+as.hypotheses(test_dataset)
+}
 

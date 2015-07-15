@@ -15,4 +15,8 @@ The patterns in the dataset which constitute CAPRI's hypotheses.
 \description{
 Return the patterns in the dataset which constitute CAPRI's hypotheses.
 }
+\examples{
+data(test_dataset)
+as.patterns(test_dataset)
+}
 

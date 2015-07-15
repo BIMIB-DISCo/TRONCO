@@ -17,4 +17,8 @@ The number of genes in the dataset involving a certain type of event.
 \description{
 Return the number of genes in the dataset involving a certain type of event.
 }
+\examples{
+data(test_dataset)
+ngenes(test_dataset)
+}
 

@@ -10,9 +10,13 @@
 \item{x}{A TRONCO compliant dataset.}
 }
 \value{
-Sort the internal genotypes according to event frequency.
+A TRONCO compliant dataset with the internal genotypes sorted according to event frequency.
 }
 \description{
 Sort the internal genotypes according to event frequency.
+}
+\examples{
+data(test_dataset)
+sort.by.frequency(test_dataset)
 }
 

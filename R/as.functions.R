@@ -178,6 +178,244 @@ as.alterations = function(x, new.type = 'Alteration', new.color = 'khaki') {
   merge.types(x, NULL, new.type = new.type, new.color = new.color)
 }
 
+#' Return the patterns in the dataset which constitute CAPRI's hypotheses.
+#'
+#' @examples
+#' data(test_dataset)
+#' as.patterns(test_dataset)
+#'
+#' @title as.patterns
+#' @param x A TRONCO compliant dataset.
+#' @return The patterns in the dataset which constitute CAPRI's hypotheses.
+#' @export as.patterns
+as.patterns = function(x)
+{
+  if(length(x$hypotheses) == 0 || is.na(x$hypotheses)) {
+    return(NULL)
+  }
+
+  is.compliant(x)
+  if ('hstructure' %in% names(x$hypotheses)) {
+    return(ls(x$hypotheses$hstructure))
+  }
+}
+
+#' Return the hypotheses in the dataset which constitute CAPRI's hypotheses.
+#'
+#' @examples
+#' data(test_dataset)
+#' as.hypotheses(test_dataset)
+#'
+#' @title as.hypotheses
+#' @param x A TRONCO compliant dataset.
+#' @return The hypotheses in the dataset which constitute CAPRI's hypotheses.
+#' @export as.patterns
+as.hypotheses = function(x, cause=NULL, effect=NULL)
+{
+  if (nhypotheses(x) < 1)
+    return(NULL)
+
+  hlist = x$hypotheses$hlist
+
+  list_c = x$annotations[hlist[,'cause'],c('type', 'event'), drop=F]
+  colnames(list_c) = c('cause type', 'cause event')
+  rownames(list_c) = NULL
+  list_e = x$annotations[hlist[,'effect'],c('type', 'event'), drop=F]
+  colnames(list_e) = c('effect type', 'effect event')
+  rownames(list_e) = NULL
+
+  filtered_list = cbind(list_c, list_e)
+
+  if(length(cause) > 0) {
+    if(all(cause %in% as.events(x)[,'event'])) {
+      filtered_list = filtered_list[which(filtered_list[,'cause event'] == cause), ]
+    } else {
+      stop('some cause not in as.events\n')
+    }
+  }
+
+  if(length(effect) > 0) {
+    if(all(effect %in% as.events(x)[,'event'])) {
+      filtered_list = filtered_list[which(filtered_list[,'effect event'] == effect), ]
+    } else {
+      stop('some effect not in as.events\n')
+    }
+  }
+
+  return(filtered_list)
+}
+
+#' Return the list of events present in selected patterns
+#'
+#' @examples
+#' data(test_dataset)
+#' as.events.in.patterns(test_dataset)
+#' as.events.in.patterns(test_dataset, patterns='XOR_EZH2')
+#'
+#' @title as.events.in.patterns
+#' @param x A TRONCO compliant dataset.
+#' @param patterns A list of patterns for which the list will be returned
+#' @return A list of events present in patterns which consitute CAPRI's hypotheses
+#' @export as.events.in.patterns
+as.events.in.patterns = function(x, patterns=NULL)
+{
+  is.compliant(x)
+  ann = x$annotations[, c('type', 'event'), drop=FALSE]
+  if (is.null(patterns)) {
+    patterns = as.patterns(x)
+  }
+  
+  genes_list = NULL
+  for(h in patterns) {
+    if(!h %in% as.patterns(x)) {
+      stop('Hypothesis ', h, ' not in as.patterns(x)')
+    }
+
+    g = lapply(colnames(x$hypotheses$hstructure[[h]]), function(x){  if(!is.logic.node(x))return(x)})
+    genes_list = append(genes_list, g)
+  }  
+  genes_list = unique(unlist(genes_list))
+
+  if(!(is.null(genes_list))) ann = ann[ which(rownames(ann) %in% genes_list) , , drop=FALSE] 
+
+  return(ann)
+}
+
+#' Return the list of genes present in selected patterns
+#'
+#' @examples
+#' data(test_dataset)
+#' as.genes.in.patterns(test_dataset)
+#' as.genes.in.patterns(test_dataset, patterns='XOR_EZH2')
+#'
+#' @title as.genes.in.patterns
+#' @param x A TRONCO compliant dataset.
+#' @param patterns A list of patterns for which the list will be returned
+#' @return A list of genes present in patterns which consitute CAPRI's hypotheses
+#' @export as.genes.in.patterns
+as.genes.in.patterns = function(x, patterns=NULL) {
+  events = as.events.in.patterns(x, patterns)
+  genes = unique(events[,'event'])
+  return(genes)
+}
+
+#' Return the list of types present in selected patterns
+#'
+#' @examples
+#' data(test_dataset)
+#' as.types.in.patterns(test_dataset)
+#' as.types.in.patterns(test_dataset, patterns='XOR_EZH2')
+#'
+#' @title as.types.in.patterns
+#' @param x A TRONCO compliant dataset.
+#' @param patterns A list of patterns for which the list will be returned
+#' @return A list of types present in patterns which consitute CAPRI's hypotheses
+#' @export as.types.in.patterns
+as.types.in.patterns = function(x, patterns=NULL) {
+  events = as.events.in.patterns(x, patterns)
+  types = unique(events[,'type'])
+  return(types)
+}
+
+
+
+#' Return confidence information for a TRONCO model. Available information are: temporal priority (tp), 
+#' probability raising (pr), hypergeometric test (hg), parametric (pb), non parametric (npb) or 
+#' statistical (sb) bootstrap.
+#' Confidence is available only once a model has been reconstructed with any of the algorithms implemented
+#' in TRONCO. If more than one model has been reconstructed - for instance via multiple regularizations - 
+#' confidence information is appropriately nested. The requested confidence is specified via 
+#' vector parameter \code{conf}.
+#'
+#' @title as.confidence
+#' @param x A TRONCO model.
+#' @param conf A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb' or 'sb'. 
+#' @return A list of matrices with the event-to-event confidence. 
+#' @export as.confidence
+as.confidence = function(x, conf)
+{
+  is.compliant(x)
+  is.model(x)
+  if(!is.vector(conf)) stop('"conf" should be a vector.')
+  
+  keys = c('hg', 'tp', 'pr', 'npb', 'pb', 'sb')
+  
+  if(!all(conf %in% keys)) 
+    stop('Confidence keyword unrecognized, \'conf\' should be any of:\n
+     INPUT DATASET\n
+     \t \"hg\" - hypergeometric test (randomness of observations)\n
+     SELECTIVE ADVANTAGE SCORES\n
+     \t \"tp\" - temporal priority (temporal ordering of events)\n
+     \t \"pr\" - probability raising (selectivity among events)\n
+     MODEL CONFIDENCE - requires post-reconstruction bootstrap\n
+     \t \"npb\" - non-parametric bootstrap,\n
+     \t \"pb\" - parametric bootstrap\n
+     \t \"sb\" - statistical bootstrap\n'
+         )
+    
+  if(is.null(x$confidence) || is.na(x$confidence) || is.null(x$model) || is.na(x$model))
+    stop('Input \'x\' does not contain a TRONCO model. No confidence to show.\n')
+
+  models = names(x$model)
+  
+  has.npb.bootstrap = is.null(x$bootstrap[[models[1]]]$npb)
+  has.pb.bootstrap = is.null(x$bootstrap[[models[1]]]$pb)
+  has.sb.bootstrap = is.null(x$bootstrap[[models[1]]]$sb)
+  
+  if( 'npb' %in% conf && has.npb.bootstrap)
+    stop('Non-parametric bootstrap was not performed. Remove keyword\n')
+
+  if( 'pb' %in% conf && has.pb.bootstrap)
+    stop('Parametric bootstrap was not performed. Remove keyword\n')
+
+  if( 'sb' %in% conf && has.sb.bootstrap)
+    stop('Statistical bootstrap was not performed. Remove keyword\n')
+    
+  result = NULL
+  
+  if('hg' %in% conf) result$hg = x$confidence['hypergeometric test', ][[1]]
+  if('tp' %in% conf) result$tp = x$confidence['temporal priority', ][[1]]
+  if('pr' %in% conf) result$pr = x$confidence['probability raising', ][[1]]
+  if('npb' %in% conf) 
+    for(i in 1:length(models)) 
+      result$npb[models[i]] = list(x$bootstrap[[models[i]]]$npb$bootstrap.edge.confidence)  
+  if('pb' %in% conf) 
+    for(i in 1:length(models)) 
+      result$pb[models[i]] = list(x$bootstrap[[models[i]]]$pb$bootstrap.edge.confidence)  
+  if('sb' %in% conf) 
+    for(i in 1:length(models)) 
+      result$sb[models[i]] = list(x$bootstrap[[models[i]]]$sb$bootstrap.edge.confidence)  
+      
+  return(result)  
+}
+
+#' Extract the models from a reconstructed object.
+#'
+#' @title as.models
+#' @param x A TRONCO model.
+#' @param models The name of the models to extract, e.g. 'bic', 'aic', 'caprese', all by default. 
+#' @return The models in a reconstructed object. 
+#' @export as.models
+as.models = function(x, models=names(x$model))
+{
+  is.compliant(x)
+  is.model(x)
+  if(!is.vector(models)) stop('"models" should be a vector.')
+  
+  return(x$model[models])
+}
+
+
+
+
+
+
+
+
+
+
+
+
 #' Return true if the TRONCO dataset 'x', which should be a TRONCO compliant dataset 
 #' - see \code{is.compliant} - has stage annotations for samples. Some sample stages 
 #' might be annotated as NA, but not all.
@@ -310,6 +548,10 @@ show = function(x, view = 10)
 
 #' Return the number of types in the dataset.
 #'
+#' @examples
+#' data(test_dataset)
+#' ntypes(test_dataset)
+#'
 #' @title ntypes
 #' @param x A TRONCO compliant dataset.
 #' @return The number of types in the dataset.
@@ -321,6 +563,10 @@ ntypes = function(x)
 
 #' Return the number of samples in the dataset.
 #'
+#' @examples
+#' data(test_dataset)
+#' nsamples(test_dataset)
+#'
 #' @title nsamples
 #' @param x A TRONCO compliant dataset.
 #' @return The number of samples in the dataset.
@@ -331,6 +577,10 @@ nsamples = function(x)
 }
 
 #' Return the number of events in the dataset involving a certain gene or type of event.
+#'
+#' @examples
+#' data(test_dataset)
+#' nevents(test_dataset)
 #'
 #' @title nevents
 #' @param x A TRONCO compliant dataset.
@@ -345,6 +595,10 @@ nevents = function(x, genes=NA, types=NA)
 
 #' Return the number of genes in the dataset involving a certain type of event.
 #'
+#' @examples
+#' data(test_dataset)
+#' ngenes(test_dataset)
+#'
 #' @title ngenes
 #' @param x A TRONCO compliant dataset.
 #' @param types The types of events to consider, if NA all available types are used.
@@ -355,19 +609,48 @@ ngenes = function(x, types=NA)
   return(length(as.genes(x, types=types)))
 }
 
-#' Return the number of types in the dataset involving a certain set of genes
+#' Return the number of patterns in the dataset
 #'
-#' @title ntypes
-#' @param x A TRONCO compliant dataset.
-#' @param genes The genes to consider, if NA all available ones are used.
-#' @return The number of types in the dataset involving a certain set of genes.
-#' @export ntypes
-ntypes = function(x, genes=NA)
+#' @examples
+#' data(test_dataset)
+#' npatterns(test_dataset)
+#'
+#'
+#' @param x the dataset.
+#' @export npatterns
+npatterns = function(x)
 {
-  return(length(unique(as.events(x, genes=genes)[, 'type'])))
+  if(any(is.null(x$hypotheses))) return(0)
+    
+  if ('hstructure' %in% names(x$hypotheses)) {
+    return(length(ls(x$hypotheses$hstructure)))
+  }
+  return(0)
+}
+
+#' Return the number of hypotheses in the dataset
+#'
+#' @examples
+#' data(test_dataset)
+#' hypotheses(test_dataset)
+#'
+#' @param x the dataset.
+#' @export nhypotheses
+nhypotheses = function(x)
+{
+  if(npatterns(x) < 1) return(0)
+    
+  if ('hlist' %in% names(x$hypotheses)) {
+    return(length(x$hypotheses$hlist) / 2)
+  }
+  return(0)
 }
 
 #' Convert the internal reprensentation of genotypes to numeric, if not. 
+#'
+#' @examples
+#' data(test_dataset)
+#' test_dataset = enforce.numeric(test_dataset)
 #'
 #' @title enforce.numeric
 #' @param x A TRONCO compliant dataset.
@@ -387,6 +670,10 @@ enforce.numeric = function(x)
 }
 
 #' Convert the internal representation of genotypes to character, if not. 
+#'
+#' @examples
+#' data(test_dataset)
+#' test_dataset = enforce.string(test_dataset)
 #'
 #' @title enforce.string
 #' @param x A TRONCO compliant dataset.
@@ -408,6 +695,13 @@ enforce.string = function(x)
 #' Given a cohort and a pathway, return the cohort with events restricted to genes 
 #' involved in the pathway. This might contain a new 'pathway' genotype with an alteration mark if
 #' any of the involved genes are altered. 
+#'
+#' @examples
+#' data(test_dataset)
+#' p = as.pathway(test_dataset, c('ASXL1', 'TET2'), 'test_pathway')
+#' oncoprint(p)
+#' p = as.pathway(test_dataset, c('ASXL1', 'TET2'), 'test_pathway', aggregate.pathway=F)
+#' oncoprint(p)
 #'
 #' @title as.pathway
 #' @param x A TRONCO compliant dataset.
@@ -451,9 +745,13 @@ as.pathway <- function(x, pathway.genes, pathway.name,
 
 #' Sort the internal genotypes according to event frequency.
 #'
+#' @examples
+#' data(test_dataset)
+#' sort.by.frequency(test_dataset)
+#'
 #' @title sort.by.frequency
 #' @param x A TRONCO compliant dataset.
-#' @return Sort the internal genotypes according to event frequency.
+#' @return A TRONCO compliant dataset with the internal genotypes sorted according to event frequency.
 #' @export sort.by.frequency
 sort.by.frequency = function(x)
 {
@@ -468,235 +766,9 @@ sort.by.frequency = function(x)
   return(x)  
 }
 
-#' Return the number of patterns in the dataset
-#'
-#' @param x the dataset.
-#' @export npatterns
-npatterns = function(x)
-{
-  if(any(is.null(x$hypotheses))) return(0)
-    
-  if ('hstructure' %in% names(x$hypotheses)) {
-    return(length(ls(x$hypotheses$hstructure)))
-  }
-  return(0)
-}
-
-#' Return the number of hypotheses in the dataset
-#'
-#' @param x the dataset.
-#' @export nhypotheses
-nhypotheses = function(x)
-{
-  if(npatterns(x) < 1) return(0)
-    
-  if ('hlist' %in% names(x$hypotheses)) {
-    return(length(x$hypotheses$hlist) / 2)
-  }
-  return(0)
-}
-
-#' Return the patterns in the dataset which constitute CAPRI's hypotheses.
-#' @title as.patterns
-#' @param x A TRONCO compliant dataset.
-#' @return The patterns in the dataset which constitute CAPRI's hypotheses.
-#' @export as.patterns
-as.patterns = function(x)
-{
-  if(length(x$hypotheses) == 0 || is.na(x$hypotheses)) {
-    return(NULL)
-  }
-
-  is.compliant(x)
-  if ('hstructure' %in% names(x$hypotheses)) {
-    return(ls(x$hypotheses$hstructure))
-  }
-}
-
-#' Return the hypotheses in the dataset which constitute CAPRI's hypotheses.
-#' @title as.hypotheses
-#' @param x A TRONCO compliant dataset.
-#' @return The hypotheses in the dataset which constitute CAPRI's hypotheses.
-#' @export as.patterns
-as.hypotheses = function(x, cause=NULL, effect=NULL)
-{
-  if (nhypotheses(x) < 1)
-    return(NULL)
-
-  hlist = x$hypotheses$hlist
-
-  list_c = x$annotations[hlist[,'cause'],c('type', 'event'), drop=F]
-  colnames(list_c) = c('cause type', 'cause event')
-  rownames(list_c) = NULL
-  list_e = x$annotations[hlist[,'effect'],c('type', 'event'), drop=F]
-  colnames(list_e) = c('effect type', 'effect event')
-  rownames(list_e) = NULL
-
-  filtered_list = cbind(list_c, list_e)
-
-  if(length(cause) > 0) {
-    if(all(cause %in% as.events(x)[,'event'])) {
-      filtered_list = filtered_list[which(filtered_list[,'cause event'] == cause), ]
-    } else {
-      stop('some cause not in as.events\n')
-    }
-  }
-
-  if(length(effect) > 0) {
-    if(all(effect %in% as.events(x)[,'event'])) {
-      filtered_list = filtered_list[which(filtered_list[,'effect event'] == effect), ]
-    } else {
-      stop('some effect not in as.events\n')
-    }
-  }
-
-  return(filtered_list)
-}
-
-#' Return the list of events used in patterns
-#'
-#' @title as.events.in.patterns
-#' @param x A TRONCO compliant dataset.
-#' @param patterns A list of patterns for which the list will be returned
-#' @return A list of events present in patterns which consitute CAPRI's hypotheses
-#' @export as.events.in.patterns
-as.events.in.patterns = function(x, patterns=NULL)
-{
-  is.compliant(x)
-  ann = x$annotations[, c('type', 'event'), drop=FALSE]
-  if (is.null(patterns)) {
-    patterns = as.patterns(x)
-  }
-  
-  genes_list = NULL
-  for(h in patterns) {
-    if(!h %in% as.patterns(x)) {
-      stop('Hypothesis ', h, ' not in as.patterns(x)')
-    }
-
-    g = lapply(colnames(x$hypotheses$hstructure[[h]]), function(x){  if(!is.logic.node(x))return(x)})
-    genes_list = append(genes_list, g)
-  }  
-  genes_list = unique(unlist(genes_list))
-
-  if(!(is.null(genes_list))) ann = ann[ which(rownames(ann) %in% genes_list) , , drop=FALSE] 
-
-  return(ann)
-}
-
-#' Return the list of genes used in patterns
-#'
-#' @title as.genes.in.patterns
-#' @param x A TRONCO compliant dataset.
-#' @param patterns A list of patterns for which the list will be returned
-#' @return A list of genes present in patterns which consitute CAPRI's hypotheses
-#' @export as.genes.in.patterns
-as.genes.in.patterns = function(x, patterns=NULL) {
-  events = as.events.in.patterns(x, patterns)
-  genes = unique(events[,'event'])
-  return(genes)
-}
-
-#' Return the list of types used in patterns
-#'
-#' @title as.types.in.patterns
-#' @param x A TRONCO compliant dataset.
-#' @param patterns A list of patterns for which the list will be returned
-#' @return A list of types present in patterns which consitute CAPRI's hypotheses
-#' @export as.types.in.patterns
-as.types.in.patterns = function(x, patterns=NULL) {
-  events = as.events.in.patterns(x, patterns)
-  types = unique(events[,'type'])
-  return(types)
-}
 
 
 
-#' Return confidence information for a TRONCO model. Available information are: temporal priority (tp), 
-#' probability raising (pr), hypergeometric test (hg), parametric (pb), non parametric (npb) or 
-#' statistical (sb) bootstrap.
-#' Confidence is available only once a model has been reconstructed with any of the algorithms implemented
-#' in TRONCO. If more than one model has been reconstructed - for instance via multiple regularizations - 
-#' confidence information is appropriately nested. The requested confidence is specified via 
-#' vector parameter \code{conf}.
-#'
-#' @title as.confidence
-#' @param x A TRONCO model.
-#' @param conf A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb' or 'sb'. 
-#' @return A list of matrices with the event-to-event confidence. 
-#' @export as.confidence
-as.confidence = function(x, conf)
-{
-	is.compliant(x)
-  is.model(x)
-  if(!is.vector(conf)) stop('"conf" should be a vector.')
-  
-	keys = c('hg', 'tp', 'pr', 'npb', 'pb', 'sb')
-	
-	if(!all(conf %in% keys)) 
-		stop('Confidence keyword unrecognized, \'conf\' should be any of:\n
-		 INPUT DATASET\n
-		 \t \"hg\" - hypergeometric test (randomness of observations)\n
-		 SELECTIVE ADVANTAGE SCORES\n
-		 \t \"tp\" - temporal priority (temporal ordering of events)\n
-		 \t \"pr\" - probability raising (selectivity among events)\n
-		 MODEL CONFIDENCE - requires post-reconstruction bootstrap\n
-		 \t \"npb\" - non-parametric bootstrap,\n
-		 \t \"pb\" - parametric bootstrap\n
-		 \t \"sb\" - statistical bootstrap\n'
-         )
-		
-	if(is.null(x$confidence) || is.na(x$confidence) || is.null(x$model) || is.na(x$model))
-		stop('Input \'x\' does not contain a TRONCO model. No confidence to show.\n')
-
-	models = names(x$model)
-	
-	has.npb.bootstrap = is.null(x$bootstrap[[models[1]]]$npb)
-	has.pb.bootstrap = is.null(x$bootstrap[[models[1]]]$pb)
-	has.sb.bootstrap = is.null(x$bootstrap[[models[1]]]$sb)
-	
-	if( 'npb' %in% conf && has.npb.bootstrap)
-		stop('Non-parametric bootstrap was not performed. Remove keyword\n')
-
-	if( 'pb' %in% conf && has.pb.bootstrap)
-		stop('Parametric bootstrap was not performed. Remove keyword\n')
-
-	if( 'sb' %in% conf && has.sb.bootstrap)
-	  stop('Statistical bootstrap was not performed. Remove keyword\n')
-	  
-	result = NULL
-	
-	if('hg' %in% conf) result$hg = x$confidence['hypergeometric test', ][[1]]
-	if('tp' %in% conf) result$tp = x$confidence['temporal priority', ][[1]]
-	if('pr' %in% conf) result$pr = x$confidence['probability raising', ][[1]]
-	if('npb' %in% conf) 
-    for(i in 1:length(models)) 
-      result$npb[models[i]] = list(x$bootstrap[[models[i]]]$npb$bootstrap.edge.confidence)	
-	if('pb' %in% conf) 
-	  for(i in 1:length(models)) 
-	    result$pb[models[i]] = list(x$bootstrap[[models[i]]]$pb$bootstrap.edge.confidence)  
-	if('sb' %in% conf) 
-	  for(i in 1:length(models)) 
-	    result$sb[models[i]] = list(x$bootstrap[[models[i]]]$sb$bootstrap.edge.confidence)  
-	    
-	return(result)	
-}
-
-#' Extract the models from a reconstructed object.
-#'
-#' @title as.models
-#' @param x A TRONCO model.
-#' @param models The name of the models to extract, e.g. 'bic', 'aic', 'caprese', all by default. 
-#' @return The models in a reconstructed object. 
-#' @export as.models
-as.models = function(x, models=names(x$model))
-{
-	is.compliant(x)
-	is.model(x)
-	if(!is.vector(models)) stop('"models" should be a vector.')
-	
-	return(x$model[models])
-}
 
 
 #' Convert colnames/rownames of a matrix into intelligible event names, e.g., change a key G23 in 'Mutation KRAS'.

@@ -26,4 +26,11 @@ Given a cohort and a pathway, return the cohort with events restricted to genes
 involved in the pathway. This might contain a new 'pathway' genotype with an alteration mark if
 any of the involved genes are altered.
 }
+\examples{
+data(test_dataset)
+p = as.pathway(test_dataset, c('ASXL1', 'TET2'), 'test_pathway')
+oncoprint(p)
+p = as.pathway(test_dataset, c('ASXL1', 'TET2'), 'test_pathway', aggregate.pathway=F)
+oncoprint(p)
+}
 

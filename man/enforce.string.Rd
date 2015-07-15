@@ -15,4 +15,8 @@ Convert the internal reprensentation of genotypes to character, if not.
 \description{
 Convert the internal representation of genotypes to character, if not.
 }
+\examples{
+data(test_dataset)
+test_dataset = enforce.string(test_dataset)
+}
 

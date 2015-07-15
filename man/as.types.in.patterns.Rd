@@ -15,6 +15,11 @@ as.types.in.patterns(x, patterns = NULL)
 A list of types present in patterns which consitute CAPRI's hypotheses
 }
 \description{
-Return the list of types used in patterns
+Return the list of types present in selected patterns
+}
+\examples{
+data(test_dataset)
+as.types.in.patterns(test_dataset)
+as.types.in.patterns(test_dataset, patterns='XOR_EZH2')
 }
 
