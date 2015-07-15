@@ -57,3 +57,13 @@ NULL
 #' @source fake data
 #' @author Luca De Sano
 NULL
+
+#' @name test_model
+#' @title A complete dataset with a reconstructed model
+#' @description This dataset contains a model reconstructed with CAPRI
+#' @docType data
+#' @usage data(test_dataset)
+#' @format TRONCO compliant dataset
+#' @source fake data
+#' @author Luca De Sano
+NULL

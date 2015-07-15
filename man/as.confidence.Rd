@@ -23,4 +23,9 @@ in TRONCO. If more than one model has been reconstructed - for instance via mult
 confidence information is appropriately nested. The requested confidence is specified via
 vector parameter \code{conf}.
 }
+\examples{
+data(test_model)
+as.confidence(test_model, conf='tp')
+as.confidence(test_model, conf=c('tp', 'hg'))
+}
 

@@ -327,6 +327,11 @@ as.types.in.patterns = function(x, patterns=NULL) {
 #' confidence information is appropriately nested. The requested confidence is specified via 
 #' vector parameter \code{conf}.
 #'
+#' @examples
+#' data(test_model)
+#' as.confidence(test_model, conf='tp')
+#' as.confidence(test_model, conf=c('tp', 'hg'))
+#'
 #' @title as.confidence
 #' @param x A TRONCO model.
 #' @param conf A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb' or 'sb'. 
