@@ -1,24 +1,31 @@
-#### bootstrap.caprese.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
+##################################################################################
+#                                                                                #
+# TRONCO: a tool for TRanslational ONCOlogy                                      #
+#                                                                                #
+##################################################################################
+# Copyright (c) 2015, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
+# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
+# and Daniele Ramazzotti.                                                        #
+#                                                                                #
+# All rights reserved. This program and the accompanying materials               #
+# are made available under the terms of the GNU GPL v3.0                         #
+# which accompanies this distribution                                            #
+#                                                                                #
+##################################################################################
 
 
-#perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
-#INPUT:
-#dataset: a dataset describing a progressive phenomenon
-#lambda: shrinkage parameter (value in [0,1])
-#reconstructed.topology: previously reconstructed topology (before any bootstrap)
-#command: should I perform non-parametric or parametric bootstrap?
-#estimated.marginal.probabilities: estimated marginal probabilities of the events given the selected error rates
-#estimated.conditional.probabilities: estimated conditional probabilities of the events given the selected error rates
-#error.rates: selected error rates to be used if the bootstrap is "parametric"
-#nboot: number of bootstrap resampling to be performed
-#RETURN:
-#bootstrap.statistics: statistics of the bootstrap
-"bootstrap.caprese" <- function(dataset, 
+#' perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
+#' @title bootstrap.caprese
+#' @param dataset a dataset describing a progressive phenomenon
+#' @param lambda shrinkage parameter (value in [0,1])
+#' @param do.estimation todo
+#' @param silent todo
+#' @param reconstruction todo
+#' @param command todo 
+#' @param nboot number of bootstrap resampling to be performed
+#' @param bootstrap.statistics todo
+#' @return bootstrap.statistics: statistics of the bootstrap
+bootstrap.caprese = function(dataset, 
                             lambda,
                             do.estimation,
                             silent,
@@ -27,11 +34,9 @@
                             nboot = 100,
                             bootstrap.statistics = list()) 
 {
-	
-    # library(doParallel)
-
-	# start the clock to measure the execution time
-	ptm <- proc.time();
+    
+    # start the clock to measure the execution time
+    ptm <- proc.time();
 
     cores = detectCores()
     if(cores < 1) {
@@ -40,8 +45,8 @@
 
     expected.execution.time = round(((reconstruction$execution.time[3]*nboot)/(cores)),digits=0)
     cat("Expected completion in approx.",format(.POSIXct(expected.execution.time,tz="GMT"),"%Hh:%Mm:%Ss"),"\n")
-	
-	# structure to save the results of the bootstrap
+    
+    # structure to save the results of the bootstrap
     curr.bootstrap.results = array(list(-1), c(nboot,nevents(reconstruction)))
     colnames(curr.bootstrap.results) = rownames(as.events(reconstruction))
     bootstrap.results = list()
@@ -73,10 +78,10 @@
     # create a progress bar
     flush.console()
     pb <- txtProgressBar(1, nboot, style = 3)
-  	
-  	# perform nboot bootstrap resampling
-  	for (num in 1:nboot) {
-  		
+    
+    # perform nboot bootstrap resampling
+    for (num in 1:nboot) {
+        
         # update the progress bar
         setTxtProgressBar(pb, num)
         
@@ -95,51 +100,50 @@
             
             # perform the reconstruction on the bootstrapped dataset
             bootstrapped.topology = tronco.caprese(curr.reconstruction,
-                            				  lambda, 
-                            				  do.estimation,
-                            				  silent)
+                                                   lambda, 
+                                                   do.estimation,
+                                                   silent)
             
             curr.reconstruction = bootstrapped.topology;
 
-        }
-        else if(command=="parametric") {
-        		
-        		if(num == 1) {
-        			
-        			# structure to save the samples probabilities
-        			samples.probabilities = list();
-        			
+        } else if(command=="parametric") {
+                
+            if(num == 1) {
+                
+                # structure to save the samples probabilities
+                samples.probabilities = list();
+                
                 # define the possible samples given the current number of events
                 possible.strings = 2 ^ ncol(dataset)
                 
                 err = ""
                 message = "Too many events in the dataset! Parametric bootstrastap can not be performed."
                 err = tryCatch({
-                				curr.dataset = suppressWarnings(array(0, c(possible.strings, ncol(dataset))))
-							}, error = function(e) {
-    								err <- message
-							})
-                
-                
+                        curr.dataset = suppressWarnings(array(0, c(possible.strings, ncol(dataset))))
+                    }, error = function(e) {
+                        err <- message
+                    })
+            
+            
                 if(toString(err) == message) {
-                		stop(err, call. = FALSE)
+                    stop(err, call. = FALSE)
                 }
                 
                 for (i in 1:possible.strings) {
-                		curr.dataset[i, ] = decimal.to.binary.dag(i - 1, ncol(dataset))
+                    curr.dataset[i, ] = decimal.to.binary.dag(i - 1, ncol(dataset))
                 }
 
                 colnames(curr.dataset) = colnames(dataset)
                 
                 for (m in names(as.models(reconstruction))) {
-                	
-                		# estimate the samples probabilities for each model
-                		samples.probabilities[m] = list(estimate.dag.samples(curr.dataset,
-                                                                as.adj.matrix(reconstruction,model=m)[[m]],
-                                                                as.marginal.probs(reconstruction,model=m,type="fit")[[m]],
-                                                                as.conditional.probs(reconstruction,model=m,type="fit")[[m]],
-                                                                as.parents.pos(reconstruction,model=m)[[m]],
-                                                                as.error.rates(reconstruction,model=m)[[m]]))
+                    
+                    # estimate the samples probabilities for each model
+                    samples.probabilities[m] = list(estimate.dag.samples(curr.dataset,
+                                                    as.adj.matrix(reconstruction,model=m)[[m]],
+                                                    as.marginal.probs(reconstruction,model=m,type="fit")[[m]],
+                                                    as.conditional.probs(reconstruction,model=m,type="fit")[[m]],
+                                                    as.parents.pos(reconstruction,model=m)[[m]],
+                                                    as.error.rates(reconstruction,model=m)[[m]]))
                 
                 }
 
@@ -149,26 +153,29 @@
             new.reconstruction = reconstruction;
             new.reconstruction$model = list();
             for (m in names(as.models(reconstruction))) {
-            	
-	            # perform the sampling for the current step of bootstrap and regularizator
-	            samples = sample(1:nrow(curr.dataset), size = nrow(dataset), replace = TRUE, prob = samples.probabilities[[m]])
-	            bootstrapped.dataset = curr.dataset[samples,]
+                
+                # perform the sampling for the current step of bootstrap and regularizator
+                samples = sample(1:nrow(curr.dataset),
+                                        size = nrow(dataset),
+                                        replace = TRUE,
+                                        prob = samples.probabilities[[m]])
+                bootstrapped.dataset = curr.dataset[samples,]
             
-	            curr.reconstruction = list()
-	            curr.reconstruction$genotypes = bootstrapped.dataset;
-	            curr.reconstruction$annotations = reconstruction$annotations;
-	            curr.reconstruction$types = reconstruction$types;
-	            curr.reconstruction$hypotheses = reconstruction$hypotheses;
-	            
-            	# perform the reconstruction on the bootstrapped dataset
-            	bootstrapped.topology = tronco.caprese(curr.reconstruction,
-                            				  lambda, 
-                            				  do.estimation,
-                            				  silent)
-                            				      
+                curr.reconstruction = list()
+                curr.reconstruction$genotypes = bootstrapped.dataset;
+                curr.reconstruction$annotations = reconstruction$annotations;
+                curr.reconstruction$types = reconstruction$types;
+                curr.reconstruction$hypotheses = reconstruction$hypotheses;
+                
+                # perform the reconstruction on the bootstrapped dataset
+                bootstrapped.topology = tronco.caprese(curr.reconstruction,
+                                              lambda, 
+                                              do.estimation,
+                                              silent)
+                                                  
                 # save the results for this model
                 new.reconstruction$model[m] = as.models(bootstrapped.topology,models=m)
-            	
+                
             }
             curr.reconstruction = new.reconstruction;
             
@@ -176,25 +183,25 @@
         
         # set the reconstructed selective advantage edges
         for (m in names(as.models(curr.reconstruction))) {
-        	
-	        	# get the parents pos
-	        	parents.pos = array(list(), c(nevents(curr.reconstruction), 1))
-	        	
-	        	
-	        	curr.adj.matrix = as.adj.matrix(curr.reconstruction,model=m)[[m]]
-	        	for(i in 1:nevents(curr.reconstruction)) {
-	        		for(j in 1:nevents(curr.reconstruction)) {
-	        			if(i!=j && curr.adj.matrix[i,j]==1) {
-	        				parents.pos[j, 1] = list(c(unlist(parents.pos[j,1]),i))
-	        			}
-	        		}
-	        	}
-	        	
-	        	parents.pos[unlist(lapply(parents.pos,is.null))] = list(-1)
-	        	
-	        	# save the results
-	        	bootstrap.results[[m]][num,] = parents.pos;
-        	
+            
+            # get the parents pos
+            parents.pos = array(list(), c(nevents(curr.reconstruction), 1))
+            
+            
+            curr.adj.matrix = as.adj.matrix(curr.reconstruction,model=m)[[m]]
+            for(i in 1:nevents(curr.reconstruction)) {
+                for(j in 1:nevents(curr.reconstruction)) {
+                    if(i!=j && curr.adj.matrix[i,j]==1) {
+                        parents.pos[j, 1] = list(c(unlist(parents.pos[j,1]),i))
+                    }
+                }
+            }
+                
+            parents.pos[unlist(lapply(parents.pos,is.null))] = list(-1)
+            
+            # save the results
+            bootstrap.results[[m]][num,] = parents.pos;
+            
         }
         
     }
@@ -203,173 +210,138 @@
     close(pb)
     
     # set the statistics of the bootstrap
-    for (m in names(as.models(reconstruction))) {
-    	
-	    	curr.bootstrap.adj.matrix = bootstrap.adj.matrix[[m]]
-	    	
-	    	for(i in 2:ncol(curr.bootstrap.adj.matrix)) {
-	    		
-	    		curr.result = bootstrap.results[[m]][,i-1]
-	    		
-	    		for(j in 1:length(curr.result)) {
-	    			
-	    			curr.val = curr.result[[j]]
-	    			
-	    			for(k in 1:length(curr.val)) {
-	    				if(length(curr.val[k])==1 && curr.val[k] == -1) {
-	    					curr.bootstrap.adj.matrix[[1,i]] = curr.bootstrap.adj.matrix[[1,i]] + 1
-	    				}
-	    				else {
-	    					curr.bootstrap.adj.matrix[[curr.val[k] + 1, i]] = curr.bootstrap.adj.matrix[[curr.val[k] + 1, i]] + 1
-	    				}
-	    			}
-	    		
-	    		}
-	    		
-	    	}
-	    	
-	    	bootstrap.adj.matrix[[m]] = curr.bootstrap.adj.matrix;
-	    rownames(bootstrap.results[[m]]) =  paste("Iteration ",1:nrow(bootstrap.results[[m]]),sep="")
-    	
-    	}
+    for (m in names(as.models(reconstruction))) {      
+        curr.bootstrap.adj.matrix = bootstrap.adj.matrix[[m]]
+        for(i in 2:ncol(curr.bootstrap.adj.matrix)) {
+            curr.result = bootstrap.results[[m]][,i-1]
+            for(j in 1:length(curr.result)) {
+                curr.val = curr.result[[j]]
+                for(k in 1:length(curr.val)) {
+                    if(length(curr.val[k])==1 && curr.val[k] == -1) {
+                        curr.bootstrap.adj.matrix[[1,i]] = curr.bootstrap.adj.matrix[[1,i]] + 1
+                    } else {
+                        curr.bootstrap.adj.matrix[[curr.val[k] + 1, i]] = curr.bootstrap.adj.matrix[[curr.val[k] + 1, i]] + 1
+                    }
+                }
+            }
+        }
+            
+        bootstrap.adj.matrix[[m]] = curr.bootstrap.adj.matrix;
+        rownames(bootstrap.results[[m]]) =  paste("Iteration ",1:nrow(bootstrap.results[[m]]),sep="")
+        
+    }
     
     # evalutate the overall confidence
-    for (m in names(as.models(reconstruction))) {
-    	
-	    	curr.bootstrap.results = bootstrap.results[[m]]
-	    	
-	    	for(i in 1:nrow(curr.bootstrap.results)) {
-	    		
-	    		curr.adj.matrix = array(0, c(nevents(reconstruction),nevents(reconstruction)))
-	    		
-	    		for(j in 1:ncol(curr.bootstrap.results)) {
-	    			
-	    			curr.result = curr.bootstrap.results[i, j]
-	    			
-	    			for(k in 1:length(curr.result)) {
-	    				
-	    				curr.val = curr.result[[k]]
-	                
-	                	for(l in 1:length(curr.val)) {
-	                    	if(length(curr.val[l])>1 || curr.val[l] != -1) {
-	                        	curr.adj.matrix[curr.val[l], j] = 1
-	                    	}
-	                	}
-	                	
-	    			}
-	    			
-	    		}
-	        	
-	        	# if I have a perfect match between the reconstructed topologies, increase the count
-	        	reconstructed.topology = as.adj.matrix(reconstruction,model=m)[[m]]
-	        flag = TRUE;
-	        for (j in 1:nrow(reconstructed.topology)) {
-		        	for (k in 1:ncol(reconstructed.topology)) {
-		        		if(reconstructed.topology[j,k]!=curr.adj.matrix[j,k]) {
-		        			flag = FALSE;
-		        			next();
-		        		}
-		        	}
-	        }
-	        	if(flag==TRUE) {
-	            	overall.confidence[[m]] = overall.confidence[[m]] + 1
-	            	overall.frequency[[m]] = overall.confidence[[m]] / nboot
-	        	}
-	    		
-	    	}
-    	
+    for (m in names(as.models(reconstruction))) { 
+        curr.bootstrap.results = bootstrap.results[[m]]
+        for(i in 1:nrow(curr.bootstrap.results)) {
+            curr.adj.matrix = array(0, c(nevents(reconstruction),nevents(reconstruction)))
+            for(j in 1:ncol(curr.bootstrap.results)) {
+                curr.result = curr.bootstrap.results[i, j]
+                for(k in 1:length(curr.result)) {
+                    curr.val = curr.result[[k]]
+                    for(l in 1:length(curr.val)) {
+                        if(length(curr.val[l])>1 || curr.val[l] != -1) {
+                            curr.adj.matrix[curr.val[l], j] = 1
+                        }
+                    }
+                }
+            }
+            
+            # if I have a perfect match between the reconstructed topologies, increase the count
+            reconstructed.topology = as.adj.matrix(reconstruction,model=m)[[m]]
+            flag = TRUE;
+            for (j in 1:nrow(reconstructed.topology)) {
+                for (k in 1:ncol(reconstructed.topology)) {
+                    if(reconstructed.topology[j,k]!=curr.adj.matrix[j,k]) {
+                        flag = FALSE;
+                        next();
+                    }
+                }
+            }
+            if(flag==TRUE) {
+                overall.confidence[[m]] = overall.confidence[[m]] + 1
+                overall.frequency[[m]] = overall.confidence[[m]] / nboot
+            }
+        }
     }
     
     # save the edge confidence and the frequency of the bootstrap adj.matrix
     for (m in names(as.models(reconstruction))) {
-    		
-    		curr.adj.matrix = as.adj.matrix(reconstruction,model=m)[[m]];
-    	
-	    	# save the edge confidence
-	    	curr.bootstrap.matrix = bootstrap.adj.matrix[[m]][-1,-1];
-	    	curr.edge.confidence = array(0,c(ncol(curr.bootstrap.matrix),nrow(curr.bootstrap.matrix)))
-	    	colnames(curr.edge.confidence) = colnames(curr.bootstrap.matrix);
-	    	rownames(curr.edge.confidence) = rownames(curr.bootstrap.matrix);
-	    	for (i in 1:ncol(curr.bootstrap.matrix)) {
-	    			for (j in 1:nrow(curr.bootstrap.matrix)) {
-	    				curr.edge.confidence[i,j] = (curr.adj.matrix[i,j]*as.numeric(curr.bootstrap.matrix[i,j]))/nboot
-	    			}
-	    		}
-	    	bootstrap.edge.confidence[[m]] = curr.edge.confidence
-	    		
-	    		# save the frequency of the bootstrap adj.matrix
-	    	curr.bootstrap.matrix = bootstrap.adj.matrix[[m]];
-	    	curr.adj.matrix.frequency = array(0,c(ncol(curr.bootstrap.matrix),nrow(curr.bootstrap.matrix)))
-	    	colnames(curr.adj.matrix.frequency) = colnames(curr.bootstrap.matrix);
-	    	rownames(curr.adj.matrix.frequency) = rownames(curr.bootstrap.matrix);
-	   		for (i in 1:ncol(curr.bootstrap.matrix)) {
-	   			for (j in 1:nrow(curr.bootstrap.matrix)) {
-	    			curr.adj.matrix.frequency[i,j] = as.numeric(as.numeric(curr.bootstrap.matrix[i,j]))/nboot
-	    		}
-	    	}
-    		bootstrap.adj.matrix.frequency[[m]] = curr.adj.matrix.frequency
+            
+        curr.adj.matrix = as.adj.matrix(reconstruction,model=m)[[m]];
+
+        # save the edge confidence
+        curr.bootstrap.matrix = bootstrap.adj.matrix[[m]][-1,-1];
+        curr.edge.confidence = array(0,c(ncol(curr.bootstrap.matrix),nrow(curr.bootstrap.matrix)))
+        colnames(curr.edge.confidence) = colnames(curr.bootstrap.matrix);
+        rownames(curr.edge.confidence) = rownames(curr.bootstrap.matrix);
+        for (i in 1:ncol(curr.bootstrap.matrix)) {
+            for (j in 1:nrow(curr.bootstrap.matrix)) {
+                curr.edge.confidence[i,j] = (curr.adj.matrix[i,j]*as.numeric(curr.bootstrap.matrix[i,j]))/nboot
+            }
+        }
+        bootstrap.edge.confidence[[m]] = curr.edge.confidence
+                
+        # save the frequency of the bootstrap adj.matrix
+        curr.bootstrap.matrix = bootstrap.adj.matrix[[m]];
+        curr.adj.matrix.frequency = array(0,c(ncol(curr.bootstrap.matrix),nrow(curr.bootstrap.matrix)))
+        colnames(curr.adj.matrix.frequency) = colnames(curr.bootstrap.matrix);
+        rownames(curr.adj.matrix.frequency) = rownames(curr.bootstrap.matrix);
+        for (i in 1:ncol(curr.bootstrap.matrix)) {
+            for (j in 1:nrow(curr.bootstrap.matrix)) {
+                curr.adj.matrix.frequency[i,j] = as.numeric(as.numeric(curr.bootstrap.matrix[i,j]))/nboot
+            }
+        }
+        bootstrap.adj.matrix.frequency[[m]] = curr.adj.matrix.frequency
     
     }
     
     # save the statistics of the bootstrap
     for (m in names(as.models(reconstruction))) {
-	    	if(command == "non-parametric") {
-	    		bootstrap.statistics[[m]]$npb$bootstrap.results = bootstrap.results[[m]]
-	    		bootstrap.statistics[[m]]$npb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
-	    		bootstrap.statistics[[m]]$npb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
-	    		bootstrap.statistics[[m]]$npb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
-	    		bootstrap.statistics[[m]]$npb$bootstrap.settings = list(type = command, nboot = nboot)
-	    	}
-	    	else if(command == "parametric") {
-	    		bootstrap.statistics[[m]]$pb$bootstrap.results = bootstrap.results[[m]]
-	    		bootstrap.statistics[[m]]$pb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
-	    		bootstrap.statistics[[m]]$pb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
-	    		bootstrap.statistics[[m]]$pb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
-	    		bootstrap.statistics[[m]]$pb$bootstrap.settings = list(type = command, nboot = nboot)
-	    	}
-	    	else if(command == "statistical") {
-	    		bootstrap.statistics[[m]]$sb$bootstrap.results = bootstrap.results[[m]]
-	    		bootstrap.statistics[[m]]$sb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
-	    		bootstrap.statistics[[m]]$sb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
-	    		bootstrap.statistics[[m]]$sb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
-	    		bootstrap.statistics[[m]]$sb$bootstrap.settings = list(type = command, nboot = nboot)
-	    	}
+        if(command == "non-parametric") {
+            bootstrap.statistics[[m]]$npb$bootstrap.results = bootstrap.results[[m]]
+            bootstrap.statistics[[m]]$npb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+            bootstrap.statistics[[m]]$npb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+            bootstrap.statistics[[m]]$npb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+            bootstrap.statistics[[m]]$npb$bootstrap.settings = list(type = command, nboot = nboot)
+        }
+        else if(command == "parametric") {
+            bootstrap.statistics[[m]]$pb$bootstrap.results = bootstrap.results[[m]]
+            bootstrap.statistics[[m]]$pb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+            bootstrap.statistics[[m]]$pb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+            bootstrap.statistics[[m]]$pb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+            bootstrap.statistics[[m]]$pb$bootstrap.settings = list(type = command, nboot = nboot)
+        }
+        else if(command == "statistical") {
+            bootstrap.statistics[[m]]$sb$bootstrap.results = bootstrap.results[[m]]
+            bootstrap.statistics[[m]]$sb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+            bootstrap.statistics[[m]]$sb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+            bootstrap.statistics[[m]]$sb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+            bootstrap.statistics[[m]]$sb$bootstrap.settings = list(type = command, nboot = nboot)
+        }
     }
     
     # save the execution time of the bootstrap
-  	if(command == "non-parametric") {
-  		bootstrap.statistics$npb$execution.time=(proc.time()-ptm)
-  	}
+    if(command == "non-parametric") {
+        bootstrap.statistics$npb$execution.time=(proc.time()-ptm)
+    }
     else if(command == "parametric") {
-  		bootstrap.statistics$pb$execution.time=(proc.time()-ptm)
+        bootstrap.statistics$pb$execution.time=(proc.time()-ptm)
     }
     else if(command == "statistical") {
-  		bootstrap.statistics$sb$execution.time=(proc.time()-ptm)
+        bootstrap.statistics$sb$execution.time=(proc.time()-ptm)
     }
 
     return(bootstrap.statistics)
-    
 }
 
-#### end of file -- bootstrap.caprese.R
-
-
-#### decimal.to.binary.tree.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-#convert an integer decimal number to binary
-#INPUT:
-#num.decimal: decimal integer to be converted
-#num.bits: number of bits to be used
-#RETURN:
-#num.binary: binary conversion of num.decimal
-"decimal.to.binary.tree" <-
-function(num.decimal, num.bits) {
+#' convert an integer decimal number to binary
+#' @title decimal.to.binary.tree
+#' @param num.decimal decimal integer to be converted
+#' @param num.bits number of bits to be used
+#' @return num.binary: binary conversion of num.decimal
+decimal.to.binary.tree = function(num.decimal, num.bits) {
     #structure where to save the result
     num.binary = rep(0,num.bits);
     #convert the integer decimal number to binary
@@ -383,5 +355,3 @@ function(num.decimal, num.bits) {
     }
     return(num.binary);
 }
-
-#### end of file -- decimal.to.binary.tree.R
