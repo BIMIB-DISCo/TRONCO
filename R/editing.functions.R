@@ -118,9 +118,14 @@ delete.type <- function(x, type) {
   if(has.model(x)) {
     stop("There's a reconstructed model, a type cannot be deleted now. \nUse delete.model()")
   }
+
+  for(pattern in as.patterns(x)) {
+    if(type %in% as.types.in.patterns(x, patterns=pattern)) {
+      stop('Found type \"', type, '\" in pattern \"', pattern, '\". Delete that pattern first.\n')
+    }
+  }
   
   if (type %in% as.types(x)) {
-
     events = as.events(x, types=setdiff(as.types(x), type))
 
     x$genotypes = as.genotypes(x)[,rownames(events), drop=F]
@@ -148,7 +153,7 @@ delete.gene <- function(x, gene) {
     for(pattern in as.patterns(x)) {
       for(g in gene) {
         if(g %in% as.genes.in.patterns(x, patterns=pattern)) {
-          stop('Found gene ', g, ' in pattern \"', pattern, '\" . Delete that pattern first.\n')
+          stop('Found gene \"', g, '\" in pattern \"', pattern, '\". Delete that pattern first.\n')
         }
       }
     }

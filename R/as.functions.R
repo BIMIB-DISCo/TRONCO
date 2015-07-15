@@ -600,6 +600,19 @@ as.genes.in.patterns = function(x, patterns=NULL) {
   return(genes)
 }
 
+#' Return the list of types used in patterns
+#'
+#' @title as.types.in.patterns
+#' @param x A TRONCO compliant dataset.
+#' @param patterns A list of patterns for which the list will be returned
+#' @return A list of types present in patterns which consitute CAPRI's hypotheses
+#' @export as.types.in.patterns
+as.types.in.patterns = function(x, patterns=NULL) {
+  events = as.events.in.patterns(x, patterns)
+  types = unique(events[,'type'])
+  return(types)
+}
+
 
 
 #' Return confidence information for a TRONCO model. Available information are: temporal priority (tp), 
