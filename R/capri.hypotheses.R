@@ -7,7 +7,15 @@
 
 
 # Add a new hypothesis by creating a new event and adding it to the compliant genotypes
-#' @export
+#' @title hypothesis add
+#' @param data A TRONCO compliant dataset.
+#' @param pattern.label Label of the new hypothesis.
+#' @param lifted.pattern Vector to be added to the lifted genotype resolving the pattern related to the new hypothesis 
+#' @param pattern.effect Possibile effects for the pattern. 
+#' @param pattern.cause Possibile causes for the pattern. 
+#' @return A TRONCO compliant object with the added hypothesis
+#' @export hypothesis.add
+
 "hypothesis.add" <-
   function( data, pattern.label, lifted.pattern, pattern.effect = "*", pattern.cause = "*" ) {
 
@@ -423,7 +431,20 @@ hypothesis.lifted.effects = function( ... ) {
 	return(list(...));
 }
 
+
+# Add all the hypotheses related to a group of events
+#' @title hypothesis add group
+#' @param x A TRONCO compliant dataset.
+#' @param FUN Type of pattern to be added, e.g., co-occurance, soft or hard exclusivity.
+#' @param group Group of events to be considered. 
+#' @param pattern.cause Possibile causes for the pattern. 
+#' @param pattern.effect Possibile effects for the pattern. 
+#' @param dim.min Minimum cardinality of the subgroups to be considered.
+#' @param dim.max Maximum cardinality of the subgroups to be considered.
+#' @param min.prob Minimum probability associated to each valid group.
+#' @return A TRONCO compliant object with the added hypotheses
 #' @export hypothesis.add.group
+
 hypothesis.add.group = function(x, 
                                 FUN, 
                                 group, 
@@ -578,16 +599,22 @@ hypothesis.add.group = function(x,
 	return(x)
 }
 
-#' @export
+# Add all the hypotheses related to homologou events
+#' @title hypothesis add homologous
+#' @param x A TRONCO compliant dataset.
+#' @param pattern.cause Possibile causes for the pattern. 
+#' @param pattern.effect Possibile effects for the pattern. 
+#' @param genes List of genes to be considered as possible homologous. For these genes, all the types of mutations will be considered functionally equivalent.
+#' @param FUN Type of pattern to be added, e.g., co-occurance, soft or hard exclusivity.
+#' @return A TRONCO compliant object with the added hypotheses
+
 hypothesis.add.homologous = function(x, 
                                      pattern.cause = '*',
                                      pattern.effect = '*',
                                      genes = as.genes(x),
                                      FUN = OR) 
 {
-	# in questa funzione, per ogni gene che ha più di un tipo di alterazione
-	# aggiungo l'OR
-
+	
 	#effect = sapply(as.list(substitute(list(...)))[-1L], deparse)
 	#effect = paste(effect, collapse = ", ")
 	op = deparse(substitute(FUN))
@@ -1029,7 +1056,11 @@ aux.log = function( genotypes, annotations, function.name, ... ) {
 }
 
 # AND hypothesis
-#' @export
+#' @title AND
+#' @param ... Atoms of the co-occurance pattern given either as labels or as partielly lifted vectors.
+#' @return Vector to be added to the lifted genotype resolving the co-occurance pattern
+#' @export AND
+
 "AND" <-
 function( ... ) {
 	# look for the global variables named lifting.genotypes and lifting.annotations
@@ -1083,7 +1114,11 @@ function( ... ) {
 }
 
 # OR hypothesis
-#' @export
+#' @title OR
+#' @param ... Atoms of the soft exclusive pattern given either as labels or as partielly lifted vectors.
+#' @return Vector to be added to the lifted genotype resolving the soft exclusive pattern
+#' @export OR
+
 "OR" <-
 function( ... ) {
 	# look for the global variables named lifting.genotypes and lifting.annotations
@@ -1127,7 +1162,11 @@ function( ... ) {
 }
 
 # XOR hypothesis
-#' @export
+#' @title XOR
+#' @param ... Atoms of the hard exclusive pattern given either as labels or as partielly lifted vectors.
+#' @return Vector to be added to the lifted genotype resolving the hard exclusive pattern
+#' @export XOR
+
 "XOR" <-
 function( ... ) {
 	#look for the global variables named lifting.genotypes and lifting.annotations

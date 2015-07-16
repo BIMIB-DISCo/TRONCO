@@ -50,8 +50,8 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
     # DEV VERSION #
     ###############
     if(do.estimation) {
-    	if(silent==FALSE) {
-        	cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
+    		if(silent==FALSE) {
+    			cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
         }
         do.estimation = FALSE
     }
@@ -182,8 +182,8 @@ tronco.capri <- function( data,
     # DEV VERSION #
     ###############
     if(do.estimation) {
-    	if(silent==FALSE) {
-        	cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
+    		if(silent==FALSE) {
+    			cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
         }
         do.estimation = FALSE
     }
@@ -313,8 +313,9 @@ tronco.capri <- function( data,
 
 ###############
 # DEV VERSION #
-# Not exporting this function for now.
 ###############
+# Not exporting this function for now.
+
 tronco.estimation <- function( reconstruction, error.rates = NA ) {
     
     # check for the inputs to be correct
@@ -359,7 +360,7 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
             ###############
             # DEV VERSION #
             ###############
-            stop("do.estimation not yet available. Please try again later...")
+            stop("The estimation of the error rates is not available in the current version.")
 
         
             cat("Executing now the estimation procedure, this may take a long time...\n")
@@ -440,7 +441,7 @@ tronco.bootstrap <- function( reconstruction,
     # DEV VERSION #
     ###############
     if(type == "parametric") {
-    	stop("The parametric bootstrap is not available in the current version. Please choose an othe option...")
+    		stop("The parametric bootstrap is not available in the current version. Please choose an other option...")
     }
 
     if(reconstruction$parameters$do.estimation == FALSE && type == "parametric") {
