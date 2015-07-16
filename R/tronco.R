@@ -28,7 +28,7 @@
 #' @name TRONCO
 NULL
 
-#' Reconstruc a progression model using CAPRESE algorithm
+#' Reconstruct a progression model using CAPRESE algorithm
 #'
 #' @examples
 #' data(maf)
@@ -38,13 +38,23 @@ NULL
 #'
 #' @title tronco caprese
 #' @param data A TRONCO compliant dataset.
-#' @param lambda TODO
-#' @param do.estimation TODO
-#' @param silent TODO
+#' @param lambda Coefficient to combine the raw estimate with a correction factor into a shrinkage estimator. 
+#' @param do.estimation A parameter to disable/enable the estimation of the error rates give the reconstructed model.
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.caprese
 #' @import doParallel
 tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = FALSE ) {
+	
+    ###############
+    # DEV VERSION #
+    ###############
+    if(do.estimation) {
+    	if(silent==FALSE) {
+        	cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
+        }
+        do.estimation = FALSE
+    }
 
     #check for the inputs to be correct
     if(is.null(data) || is.null(data$genotypes)) {
@@ -130,7 +140,7 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
 
 
 
-#' Reconstruc a progression model using CAPRI algorithm
+#' Reconstruct a progression model using CAPRI algorithm
 #'
 #' @examples
 #' data(maf)
@@ -140,16 +150,16 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
 #'
 #' @title tronco capri
 #' @param data A TRONCO compliant dataset.
-#' @param command TODO
-#' @param regularization TODO
-#' @param do.boot TODO
-#' @param nboot TODO
-#' @param pvalue TODO
-#' @param min.boot TODO
-#' @param min.stat TODO
-#' @param boot.seed TODO
-#' @param do.estimation TODO
-#' @param silent TODO
+#' @param command Parameter to define to heuristic search to be performed. Hill Climbing and Tabù search are currently available.
+#' @param regularization Select the regularization for the likelihood estimation, e.g., BIC, AIC. 
+#' @param do.boot A parameter to disable/enable the estimation of the error rates give the reconstructed model.
+#' @param nboot Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores. 
+#' @param pvalue Pvalue to accept/reject the valid selective advantage relations. 
+#' @param min.boot Minimum number of bootstrap sampling to be performed. 
+#' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
+#' @param boot.seed Initial seed for the bootstrap random sampling.
+#' @param do.estimation A parameter to disable/enable the estimation of the error rates give the reconstructed model.
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
 #' @importFrom bnlearn hc tabu
@@ -167,12 +177,15 @@ tronco.capri <- function( data,
     do.estimation = FALSE, 
     silent = FALSE ) 
 {
+	
     ###############
     # DEV VERSION #
     ###############
-
     if(do.estimation) {
-        stop("do.estimation not yet available. Please try again later...")
+    	if(silent==FALSE) {
+        	cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
+        }
+        do.estimation = FALSE
     }
 
     #check for the inputs to be correct
@@ -298,7 +311,10 @@ tronco.capri <- function( data,
 #### See the files COPYING and LICENSE for copyright and licensing
 #### information.
 
-#' @export
+###############
+# DEV VERSION #
+# Not exporting this function for now.
+###############
 tronco.estimation <- function( reconstruction, error.rates = NA ) {
     
     # check for the inputs to be correct
@@ -402,8 +418,8 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
 #'
 #' @title tronco bootstrap
 #' @param reconstruction The output of tronco.capri or tronco.caprese
-#' @param type TODO
-#' @param nboot TODO
+#' @param type Parameter to define the type of sampling to be performed, e.g., non-parametric for uniform sampling.
+#' @param nboot Number of bootstrap sampling to be performed when estimating the model confidence.
 #' @return A TRONCO compliant object with reconstructed model
 #' @import doParallel
 #' @export tronco.bootstrap
@@ -419,6 +435,13 @@ tronco.bootstrap <- function( reconstruction,
     
     # check for the input to be compliant
     is.compliant(reconstruction)
+	
+    ###############
+    # DEV VERSION #
+    ###############
+    if(type == "parametric") {
+    	stop("The parametric bootstrap is not available in the current version. Please choose an othe option...")
+    }
 
     if(reconstruction$parameters$do.estimation == FALSE && type == "parametric") {
         stop("To perform parametric bootstrap, the estimation of the error rates and probabilities should be performed.", call. = FALSE)
