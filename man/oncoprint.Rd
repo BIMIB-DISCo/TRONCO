@@ -18,6 +18,8 @@ oncoprint(x, excl.sort = TRUE, samples.cluster = FALSE,
   " patterns", sep = ""), ...)
 }
 \arguments{
+\item{x}{}
+
 \item{samples.cluster}{Boolean value, if TRUE clusters samples (columns). Default FALSE}
 
 \item{genes.cluster}{Boolean value, if TRUE clusters genes (rows). Default FALSE}
