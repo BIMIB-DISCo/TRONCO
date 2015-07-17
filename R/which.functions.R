@@ -13,14 +13,30 @@
 #                                                                                #
 ##################################################################################
 
-#' @export
+#' Return a list of samples with specified alteration
+#' @title which.samples 
+#'
+#' @examples
+#' data(test_dataset)
+#' which.samples(test_dataset, 'TET2', 'ins_del')
+#' which.samples(test_dataset, 'TET2', 'ins_del', neg=TRUE)
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param gene A list of gene names
+#' @param type A list of types
+#' @param neg If FALSE return the list, if TRUE return as.samples() - list
+#' @return A list of sample
+#' @export which.samples
 which.samples = function(x, gene, type, neg = FALSE)
 {
-	data = as.gene(x, genes = gene, types = type)
-	data = data[data == 1, , drop = FALSE] 
-	
-	samples = as.samples(x)
-	
-	if(neg)	return(setdiff(samples, rownames(data)))
-	else return(rownames(data))	
+    data = as.gene(x, genes = gene, types = type)
+    data = data[data == 1, , drop = FALSE] 
+    
+    samples = as.samples(x)
+    
+    if(neg) {
+        return(setdiff(samples, rownames(data)))
+    } else {
+        return(rownames(data))  
+    }
 }
