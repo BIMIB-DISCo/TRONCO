@@ -582,9 +582,12 @@ intersect.datasets = function(x,y, intersect.genomes = TRUE)
 }
 
 
-# Binds events from one or more datasets, which must be defined over the same set of samples.
-# @... the input datasets
-#' @export
+#' Binds events from one or more datasets, which must be defined over the same set of samples.
+#' @title ebind
+#'
+#' @param ... the input datasets
+#' @return A TRONCO complian dataset. 
+#' @export ebind
 ebind = function(...)
 {
 # merge two  datasets at a time.
@@ -602,24 +605,18 @@ ebind = function(...)
         y$genotypes = y$genotypes[rownames(x$genotypes), , drop = FALSE]
         y$stages = y$stages[rownames(y$genotypes), , drop=FALSE]
 
-# Copy genotype matrix, and sets its rownames (samples)
+        # Copy genotype matrix, and sets its rownames (samples)
         z$genotypes = cbind(x$genotypes, y$genotypes)
         colnames(z$genotypes) = paste('G', 1:ncol(z$genotypes), sep='')
 
-# Copy annotations for gene symbols etc.
+        # Copy annotations for gene symbols etc.
         z$annotations = rbind(x$annotations, y$annotations)
         rownames(z$annotations) = colnames(z$genotypes)
 
-# Copy types
+        # Copy types
         z$types = unique(rbind(x$types, y$types)) 
 
-# print(x)
-# print(y)
-# print(has.stages(x))
-# print(has.stages(y))
-# print(as.stages(x) == as.stages(y))
-
-# Copy stages, if present 
+        # Copy stages, if present 
         if(has.stages(x) && has.stages(y)) {
             stages.x = as.stages(x)
             stages.y = as.stages(y)
@@ -648,30 +645,30 @@ ebind = function(...)
     return(Reduce(events.pairwise.bind, input))
 }
 
-# Binds samples from one or more datasets, which must be defined over the same set of events
-# @... the input datasets
-#' @export
+#' Binds samples from one or more datasets, which must be defined over the same set of events
+#' @title sbind
+#'
+#' @param ... the input datasets
+#' @return A TRONCO complian dataset. 
+#' @export sbind
 sbind = function(...)
 {
 # merge two datasets at a time.
-    samples.pairwise.bind = function(x, y)
-    {  
+    samples.pairwise.bind = function(x, y) {  
         is.compliant(x, 'sbind: input x')
         is.compliant(y, 'sbind: input y')
 
-        if(!all(as.events(x) == as.events(y)))
-        {
-# cat(as.events(x)[as.events(x) == as.events(y),])
+        if(!all(as.events(x) == as.events(y))) {
             stop('Datasets have different events, can not bind!')
         }
         z = list()
 
-# Copy genotypes and annotations
+        # Copy genotypes and annotations
         z$genotypes = rbind(x$genotypes, y$genotypes)
         z$annotations = x$annotations
         z$types = x$types
 
-# Copy stages, if present
+        # Copy stages, if present
         if(has.stages(x) || has.stages(y)) 
         {
             if(has.stages(x)) xstages = as.stages(x)
@@ -684,8 +681,6 @@ sbind = function(...)
 
             colnames(z$stages) = 'stage'
         }
-
-
         is.compliant(z, 'sbind: output')
 
         return(z)
@@ -695,22 +690,30 @@ sbind = function(...)
     return(Reduce(samples.pairwise.bind, input))
 }
 
-# For an input dataset merge all the events of two or more distincit types (e.g., say that missense and indel
-# mutations are events of a unique "mutation" type)
-#
-# @ x : the input dataset
-# @ ...: type to merge
-# @ new.type: label for the new type to create
-# @ new.color: color for the new type to create
+#' For an input dataset merge all the events of two or more distincit types
+#' (e.g., say that missense and indel mutations are events 
+#' of a unique "mutation" type)
+#' @title merge.types
+#' 
+#' @examples
+#' data(test_dataset)
+#' dataset = merge.types(test_dataset, 'ins_del', 'missense_point_mutations')
+#' dataset = merge.types(test_dataset, 'ins_del', 'missense_point_mutations', 'mut', 'green')
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param ... type to merge
+#' @param new.type label for the new type to create
+#' @param new.color color for the new type to create
+#' @return A TRONCO compliant dataset.
 #' @export merge.types
 merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
 
-# check if x is compliant
+    # check if x is compliant
     is.compliant(x)
 
     input = list(...)
 
-# TODO Change this in a better way (deafult ellipsis?)  
+    # TODO Change this in a better way (deafult ellipsis?)  
     if (length(input) == 1 && is.null(input[[1]])) {
         input = as.list(as.types(x))
     }
