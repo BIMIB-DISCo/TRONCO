@@ -2,18 +2,19 @@
 % Please edit documentation in R/external.R
 \name{export.nbs.input}
 \alias{export.nbs.input}
-\title{export nbs input}
+\title{export.nbs.input}
 \usage{
 export.nbs.input(x, map_hugo_entrez, file = "tronco_to_nbs.mat")
 }
 \arguments{
-\item{x}{The TRONCO standard object}
+\item{x}{A TRONCO compliant dataset.}
 
-\item{map_hugo_entrez}{Hugo_Symbol  - Entrez_Gene_Id}
+\item{map_hugo_entrez}{Hugo_Symbol-Entrez_Gene_Id map}
 
-\item{file}{TODO}
+\item{file}{output file name}
 }
 \description{
-export nbs input
+Create a .mat file which can be used with NBS clustering
+(ref: http://chianti.ucsd.edu/~mhofree/wordpress/?page_id=26)
 }
 

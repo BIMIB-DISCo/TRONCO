@@ -2,26 +2,35 @@
 % Please edit documentation in R/external.R
 \name{export.mutex}
 \alias{export.mutex}
-\title{export mutex}
+\title{export,mutex}
 \usage{
 export.mutex(x, filename = "tronco_to_mutex", filepath = "./",
   label.mutation = "SNV", label.amplification = list("High-level Gain"),
   label.deletion = list("Homozygous Loss"))
 }
 \arguments{
-\item{x}{The TRONCO standard object}
+\item{x}{A TRONCO compliant dataset.}
 
-\item{filename}{TODO}
+\item{filename}{The name of the file}
 
-\item{filepath}{TODO}
+\item{filepath}{The path where to save the file}
 
-\item{label.mutation}{TODO}
+\item{label.mutation}{The event type to use as mutation}
 
-\item{label.amplification}{TODO}
+\item{label.amplification}{The event type to use as amplification (can be a list)}
 
-\item{label.deletion}{TODO}
+\item{label.deletion}{The event type to use as amplification (can be a list)}
+}
+\value{
+A MUTEX example matrix
 }
 \description{
-export mutex
+Create an input file for MUTEX
+(ref: https://code.google.com/p/mutex/ )
+}
+\examples{
+data(gistic)
+dataset = import.GISTIC(gistic)
+export.mutex(dataset)
 }
 

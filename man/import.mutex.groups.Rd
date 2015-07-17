@@ -2,7 +2,7 @@
 % Please edit documentation in R/external.R
 \name{import.mutex.groups}
 \alias{import.mutex.groups}
-\title{import mutex group}
+\title{import.mutex.groups}
 \usage{
 import.mutex.groups(file, fdr = 0.2, display = TRUE)
 }
@@ -14,6 +14,8 @@ import.mutex.groups(file, fdr = 0.2, display = TRUE)
 \item{display}{print summary table of extracted groups}
 }
 \description{
-import mutex group
+Create a list of unique Mutex groups for a given fdr cutoff
+current Mutex version is Jan 8, 2015
+(ref: https://code.google.com/p/mutex/ )
 }
 
