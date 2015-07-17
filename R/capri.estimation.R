@@ -1,20 +1,26 @@
-#### enumerate.all.paths.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
+##################################################################################
+#                                                                                #
+# TRONCO: a tool for TRanslational ONCOlogy                                      #
+#                                                                                #
+##################################################################################
+# Copyright (c) 2015, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
+# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
+# and Daniele Ramazzotti.                                                        #
+#                                                                                #
+# All rights reserved. This program and the accompanying materials               #
+# are made available under the terms of the GNU GPL v3.0                         #
+# which accompanies this distribution                                            #
+#                                                                                #
+##################################################################################
 
 
-# enumerate all the paths between two nodes of a DAG
-# INPUT:
-# ancestor.node: first node of the path
-# child.node: last node of the path
-# parents.pos: topological connections
-# RETURN:
-# all.paths: vector of all the paths
-"enumerate.all.paths" <-
-function( ancestor.node, child.node, parents.pos ) {
+#' enumerate all the paths between two nodes of a DAG
+#' @title enumerate.all.paths
+#' @param ancestor.node first node of the path
+#' @param child.node last node of the path
+#' @param parents.pos topological connections
+#' @return all.paths: vector of all the paths
+enumerate.all.paths = function( ancestor.node, child.node, parents.pos ) {
 	
 	# set the initial parents set
 	all.paths = parents.pos[[child.node]];
@@ -60,27 +66,14 @@ function( ancestor.node, child.node, parents.pos ) {
     
 }
 
-#### end of file -- enumerate.all.paths.R
-
-
-#### estimate.dag.error.rates.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-# estimate the error rates by "L-BFGS-B" optimization in terms of L2-error
-# INPUT:
-# dataset: a valid dataset
-# marginal.probs: marginal probabilities
-# joint.probs: joint probabilities
-# parents.pos: which event is the parent? 0 if none, a number otherwise
-# RETURN:
-# estimated.error.rates: estimated probabilities, false positive and false negative error rates
-"estimate.dag.error.rates" <-
-function( dataset, marginal.probs, joint.probs, parents.pos ) {
+#' estimate the error rates by "L-BFGS-B" optimization in terms of L2-error
+#' @title estimate.dag.error.rates
+#' @param dataset a valid dataset
+#' @param marginal.probs marginal probabilities
+#' @param joint.probs joint probabilities
+#' @param parents.pos which event is the parent? 0 if none, a number otherwise
+#' @return estimated.error.rates: estimated probabilities, false positive and false negative error rates
+estimate.dag.error.rates = function( dataset, marginal.probs, joint.probs, parents.pos ) {
 	
     # function to be optimized by "L-BFGS-B" optimization in terms of L2-error
 	f.estimation <- function(errors) {
@@ -103,28 +96,21 @@ function( dataset, marginal.probs, joint.probs, parents.pos ) {
     
 }
 
-#### end of file -- estimate.dag.error.rates.R
+#' estimate the theoretical joint probability of two given nodes given the reconstructed topology
+#' @title
+#' @param first.node first node
+#' @param second.node second node
+#' @param parents.pos which event is the parent? -1 if none, a list otherwise
+#' @param marginal.probs marginal probabilities
+#' @param conditional.probs conditional probabilities
+#' @return estimated.dag.joint.probs: estimated theoretical joint probability
+estimate.dag.joint.probs = function(first.node, 
+                                    second.node, 
+                                    parents.pos, 
+                                    marginal.probs, 
+                                    conditional.probs ) 
 
-
-#### estimate.dag.joint.probs.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-# estimate the theoretical joint probability of two given nodes given the reconstructed topology
-# INPUT:
-# first.node: first node
-# second.node: second node
-# parents.pos: which event is the parent? -1 if none, a list otherwise
-# marginal.probs: marginal probabilities
-# conditional.probs: conditional probabilities
-# RETURN:
-# estimated.dag.joint.probs: estimated theoretical joint probability
-"estimate.dag.joint.probs" <-
-function( first.node, second.node, parents.pos, marginal.probs, conditional.probs ) {
+{
 	
     # if the two nodes are roots
     if((length(parents.pos[[first.node]])==1 && parents.pos[[first.node]]==-1) && (length(parents.pos[[second.node]])==1 && parents.pos[[second.node]]==-1)) {
@@ -252,28 +238,15 @@ function( first.node, second.node, parents.pos, marginal.probs, conditional.prob
     
 }
 
-#### end of file -- estimate.dag.joint.probs.R
-
-
-#### estimate.dag.probs.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-# estimate the marginal, joint and conditional probabilities given the reconstructed topology and the error rates
-# INPUT:
-# dataset: a valid dataset
-# marginal.probs: observed marginal probabilities
-# joint.probs: observed joint probabilities
-# parents.pos: position of the parents in the list of nodes
-# error.rates: rates for the false positive and the false negative errors
-# RETURN:
-# estimated.probs: estimated marginal, joint and conditional probabilities
-"estimate.dag.probs" <-
-function( dataset, marginal.probs, joint.probs, parents.pos, error.rates ) {
+#' estimate the marginal, joint and conditional probabilities given the reconstructed topology and the error rates
+#' @title estimate.dag.probs
+#' @param dataset a valid dataset
+#' @param marginal.probs observed marginal probabilities
+#' @param joint.probs observed joint probabilities
+#' @param parents.pos position of the parents in the list of nodes
+#' @param error.rates rates for the false positive and the false negative errors
+#' @return estimated.probs: estimated marginal, joint and conditional probabilities
+estimate.dag.probs = function( dataset, marginal.probs, joint.probs, parents.pos, error.rates ) {
 	
     # structure where to save the probabilities to be estimated
     estimated.marginal.probs = array(-1, dim=c(nrow(marginal.probs),1));
@@ -437,26 +410,15 @@ function( dataset, marginal.probs, joint.probs, parents.pos, error.rates ) {
     
 }
 
-#### end of file -- estimate.dag.probs.R
-
-#### estimate.dag.samples.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-# estimate the probability of observing each sample in the dataset given the reconstructed topology
-# INPUT:
-# dataset: a valid dataset
-# reconstructed.topology: the reconstructed topology
-# estimated.marginal.probabilities: estimated marginal probabilities of the events
-# estimated.conditional.probabilities: estimated conditional probabilities of the events
-# parents.pos: position of the parents of each node
-# error.rates: error rates for false positives and false negatives
-# RETURN:
-# probabilities: probability of each sample
+#' estimate the probability of observing each sample in the dataset given the reconstructed topology
+#' @title estimate.dag.samples
+#' @param dataset a valid dataset
+#' @param reconstructed.topology the reconstructed topology
+#' @param estimated.marginal.probabilities estimated marginal probabilities of the events
+#' @param estimated.conditional.probabilities estimated conditional probabilities of the events
+#' @param parents.pos position of the parents of each node
+#' @param error.rates error rates for false positives and false negatives
+#' @return probabilities: probability of each sample
 estimate.dag.samples = function(dataset, 
                                 reconstructed.topology, 
                                 estimated.marginal.probabilities, 
@@ -646,5 +608,3 @@ estimate.dag.samples = function(dataset,
     return(probabilities)
     
 }
-
-#### end of file -- estimate.dag.samples.R
