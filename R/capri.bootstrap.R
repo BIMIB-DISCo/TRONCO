@@ -1,50 +1,60 @@
-#### bootstrap.capri.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
+##################################################################################
+#                                                                                #
+# TRONCO: a tool for TRanslational ONCOlogy                                      #
+#                                                                                #
+##################################################################################
+# Copyright (c) 2015, Marco Antoniotti, Giulio Caravagna, Alex Graudenzi,        #
+# Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis, Giancarlo Mauri, Bud Mishra #
+# and Daniele Ramazzotti.                                                        #
+#                                                                                #
+# All rights reserved. This program and the accompanying materials               #
+# are made available under the terms of the GNU GPL v3.0                         #
+# which accompanies this distribution                                            #
+#                                                                                #
+##################################################################################
 
 
-# perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
-# INPUT:
-# dataset: a dataset describing a progressive phenomenon
-# hypotheses: a set of hypotheses referring to the dataset
-# command.capri: type of search, either hill climbing (hc) or tabu (tabu)
-# regularization: regularizators to be used for the likelihood fit
-# do.boot: should I perform bootstrap? Yes if TRUE, no otherwise
-# nboot.capri: integer number (greater than 0) of bootstrap sampling to be performed
-# pvalue: pvalue for the tests (value between 0 and 1)
-# min.boot: minimum number of bootstrapping to be performed
-# min.stat: should I keep bootstrapping untill I have nboot valid values?
-# boot.seed: seed to be used for the sampling
-# do.estimation: should I perform the estimation of the error rates and probabilities?
-# silent: should I be verbose?
-# command: should I perform non-parametric or parametric bootstrap?
-# nboot: number of bootstrap resampling to be performed
-# RETURN:
-# bootstrap.statistics: statistics of the bootstrap
-bootstrap.capri <- function(dataset, 
-                            hypotheses, 
-                            command.capri, 
-                            regularization, 
-                            do.boot,
-                            nboot.capri, 
-                            pvalue,
-                            min.boot,
-                            min.stat,
-                            boot.seed,
-                            do.estimation,
-                            silent,
-                            reconstruction, 
-                            command = "non-parametric",
-                            nboot = 100,
-                            bootstrap.statistics = list(),
-                            verbose = FALSE) 
+#' perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
+#' @title bootstrap.capri
+#' @param dataset a dataset describing a progressive phenomenon
+#' @param hypotheses a set of hypotheses referring to the dataset
+#' @param command.capri type of search, either hill climbing (hc) or tabu (tabu)
+#' @param regularization regularizators to be used for the likelihood fit
+#' @param do.boot should I perform bootstrap? Yes if TRUE, no otherwise
+#' @param nboot.capri integer number (greater than 0) of bootstrap sampling to be performed
+#' @param pvalue pvalue for the tests (value between 0 and 1)
+#' @param min.boot minimum number of bootstrapping to be performed
+#' @param min.stat should I keep bootstrapping untill I have nboot valid values?
+#' @param boot.seed seed to be used for the sampling
+#' @param do.estimation should I perform the estimation of the error rates and probabilities?
+#' @param silent should I be verbose?
+#' @param reconstruction todo
+#' @param command: should I perform non-parametric or parametric bootstrap?
+#' @param nboot: number of bootstrap resampling to be performed
+#' @param bootstrap.statistics todo
+#' @param verbose todo
+#' @return bootstrap.statistics: statistics of the bootstrap
+bootstrap.capri = function(dataset, 
+                           hypotheses, 
+                           command.capri, 
+                           regularization, 
+                           do.boot,
+                           nboot.capri, 
+                           pvalue,
+                           min.boot,
+                           min.stat,
+                           boot.seed,
+                           do.estimation,
+                           silent,
+                           reconstruction, 
+                           command = "non-parametric",
+                           nboot = 100,
+                           bootstrap.statistics = list(),
+                           verbose = FALSE) 
 {
     
     # start the clock to measure the execution time
-	
+    
     #library(doParallel)
 
     ptm <- proc.time();
@@ -264,8 +274,6 @@ bootstrap.capri <- function(dataset,
         bootstrap.results
     }
 
-    #print(r)
-#    print(names(bootstrap.results))
     stopCluster(cl)
     cat("\n*** Reducing results\n")
 
@@ -274,9 +282,7 @@ bootstrap.capri <- function(dataset,
         bootstrap.results[[m]] = y
     }
 
-#    print(bootstrap.results)
-
-    
+   
     # set the statistics of the bootstrap
     for (m in names(as.models(reconstruction))) {
         
@@ -389,62 +395,50 @@ bootstrap.capri <- function(dataset,
     
     # save the statistics of the bootstrap
     for (m in names(as.models(reconstruction))) {
-	    	if(command == "non-parametric") {
-	    		bootstrap.statistics[[m]]$npb$bootstrap.results = bootstrap.results[[m]]
-	    		bootstrap.statistics[[m]]$npb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
-	    		bootstrap.statistics[[m]]$npb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
-	    		bootstrap.statistics[[m]]$npb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
-	    		bootstrap.statistics[[m]]$npb$bootstrap.settings = list(type = command, nboot = nboot)
-	    	}
-	    	else if(command == "parametric") {
-	    		bootstrap.statistics[[m]]$pb$bootstrap.results = bootstrap.results[[m]]
-	    		bootstrap.statistics[[m]]$pb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
-	    		bootstrap.statistics[[m]]$pb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
-	    		bootstrap.statistics[[m]]$pb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
-	    		bootstrap.statistics[[m]]$pb$bootstrap.settings = list(type = command, nboot = nboot)
-	    	}
-	    	else if(command == "statistical") {
-	    		bootstrap.statistics[[m]]$sb$bootstrap.results = bootstrap.results[[m]]
-	    		bootstrap.statistics[[m]]$sb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
-	    		bootstrap.statistics[[m]]$sb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
-	    		bootstrap.statistics[[m]]$sb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
-	    		bootstrap.statistics[[m]]$sb$bootstrap.settings = list(type = command, nboot = nboot)
-	    	}
+            if(command == "non-parametric") {
+                bootstrap.statistics[[m]]$npb$bootstrap.results = bootstrap.results[[m]]
+                bootstrap.statistics[[m]]$npb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+                bootstrap.statistics[[m]]$npb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+                bootstrap.statistics[[m]]$npb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+                bootstrap.statistics[[m]]$npb$bootstrap.settings = list(type = command, nboot = nboot)
+            }
+            else if(command == "parametric") {
+                bootstrap.statistics[[m]]$pb$bootstrap.results = bootstrap.results[[m]]
+                bootstrap.statistics[[m]]$pb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+                bootstrap.statistics[[m]]$pb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+                bootstrap.statistics[[m]]$pb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+                bootstrap.statistics[[m]]$pb$bootstrap.settings = list(type = command, nboot = nboot)
+            }
+            else if(command == "statistical") {
+                bootstrap.statistics[[m]]$sb$bootstrap.results = bootstrap.results[[m]]
+                bootstrap.statistics[[m]]$sb$bootstrap.adj.matrix = list(count = bootstrap.adj.matrix[[m]], frequency = bootstrap.adj.matrix.frequency[[m]])
+                bootstrap.statistics[[m]]$sb$bootstrap.edge.confidence = bootstrap.edge.confidence[[m]]
+                bootstrap.statistics[[m]]$sb$overall.confidence = list(count = overall.confidence[[m]], frequency = overall.frequency[[m]])
+                bootstrap.statistics[[m]]$sb$bootstrap.settings = list(type = command, nboot = nboot)
+            }
     }
     
     # save the execution time of the bootstrap
-  	if(command == "non-parametric") {
-  		bootstrap.statistics$npb$execution.time=(proc.time()-ptm)
-  	}
+    if(command == "non-parametric") {
+        bootstrap.statistics$npb$execution.time=(proc.time()-ptm)
+    }
     else if(command == "parametric") {
-  		bootstrap.statistics$pb$execution.time=(proc.time()-ptm)
+        bootstrap.statistics$pb$execution.time=(proc.time()-ptm)
     }
     else if(command == "statistical") {
-  		bootstrap.statistics$sb$execution.time=(proc.time()-ptm)
+        bootstrap.statistics$sb$execution.time=(proc.time()-ptm)
     }
     
     return(bootstrap.statistics)
     
 }
 
-#### end of file -- bootstrap.capri.R
-
-
-#### decimal.to.binary.dag.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-#convert an integer decimal number to binary
-#INPUT:
-#num.decimal: decimal integer to be converted
-#num.bits: number of bits to be used
-#RETURN:
-#num.binary: binary conversion of num.decimal
-decimal.to.binary.dag <- function(num.decimal, num.bits) {
+#' convert an integer decimal number to binary
+#' @title decimal.to.binary.dag
+#' @param num.decimal decimal integer to be converted
+#' @param num.bits number of bits to be used
+#' @return num.binary: binary conversion of num.decimal
+decimal.to.binary.dag = function(num.decimal, num.bits) {
     
     #structure where to save the result
     num.binary = rep(0, num.bits)
@@ -462,5 +456,3 @@ decimal.to.binary.dag <- function(num.decimal, num.bits) {
     }
     return(num.binary)
 }
-
-#### end of file -- decimal.to.binary.dag.R
