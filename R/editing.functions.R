@@ -793,8 +793,16 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
 
 }
 
-# Deletes all events which have frequency 0 in the dataset.
-#' @export
+#' Deletes all events which have frequency 0 in the dataset.
+#' @title trim
+#' 
+#' @examples
+#' data(test_dataset)
+#' data = trim(test_dataset)
+#'
+#' @param x A TRONCO compliant dataset.
+#' @return A TRONCO compliant dataset.
+#' @export trim
 trim = function(x) {
     is.compliant(x, 'trim: input')
 
@@ -815,11 +823,14 @@ trim = function(x) {
 }
 
 # TODO: check
-# Split cohort (samples) into groups, return either all groups or a specific group.
-#
-# x: cohort
-# clusters: groups, a map  for each sample in 'x' to a group.  
-#' @export
+#' Split cohort (samples) into groups, return either all groups or a specific group.
+#' @title ssplit 
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param stages A list of clusters. Rownames must match samples list of x
+#' @param idx ID of a specific group present in stages. If NA all groups will be extracted  
+#' @return A TRONCO compliant dataset.
+#' @export ssplit
 ssplit <- function(x, clusters, idx=NA) 
 {
     is.compliant(x)
@@ -828,26 +839,24 @@ ssplit <- function(x, clusters, idx=NA)
 
     cat('*** Splitting cohort into groups.\n')
 
-# TODO: check that clusters has at least 2 columns
-# if(!is.matrix(data) != nrow(clusters)) 
-# stop("Error: no concordance among number of samples and clustering assignement.");
+    # TODO: check that clusters has at least 2 columns
 
-# Check that map has correct size
+    # Check that map has correct size
     if(nsamples(x) != nrow(clusters)) 
         stop(paste("Error: cannot split, number of samples (", nsamples(x) , 
             ") and groups (", nrow(clusters),") do not match.", sep=''));
 
-# Check it is an actual map
+    # Check it is an actual map
     if(!all(rownames(clusters) %in% rownames(data)))
         stop(paste('Error: samples', paste(
             rownames(clusters)[!rownames(clusters) %in% as.samples(x)],
             collapse=', ', sep='')  ,'are not assigned to a group', sep=''));
 
-# Groups info
+    # Groups info
     cluster.labels = unique(clusters)
     num.clusters = nrow(cluster.labels)
 
-# Extract a specific group
+    # Extract a specific group
     if(!is.na(idx))
     {
         y = list()
@@ -870,7 +879,7 @@ ssplit <- function(x, clusters, idx=NA)
         return(y)   
     }
 
-# Extract all groups
+    # Extract all groups
     partitions = list()
     for (i in 1:num.clusters) 
     {
@@ -890,9 +899,6 @@ ssplit <- function(x, clusters, idx=NA)
         }
 
         is.compliant(y, 'subtypes.split partitionig')
-
-
-
         partitions = append(partitions, list(y)) 
         names(partitions)[i] = cluster.labels[i,1]
     }
@@ -909,12 +915,33 @@ tsplit <- function(x)
 # Parametro per estrarre un tipo solo di evento?
 }
 
+#' Merge a list of events in an unique event
+#' @title merge.events
+#'
+#' @examples
+#' data(muts)
+#' dataset = merge.events(test_dataset, c('G1', 'G2'))
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param events A list of events to merge 
+#' @param new.event The name of the resultant event
+#' @param new.type The type of the new event
+#' @param event.color The color of the new event
+#' @return A TRONCO compliant dataset.
 #' @export merge.events
 merge.events = function(x, events, new.event, new.type, event.color)
 {
-    if(ncol(events) != 2) stop('ERR - badformed events')
+    if(ncol(events) != 2) {
+        stop('ERR - badformed events')
+    }
 
-        x = enforce.numeric(x)
+    for(pattern in as.patterns(x)) {
+        if(any(events %in% as.events.in.patterns(x, patterns=pattern))) {
+            stop('Found event in pattern \"', pattern, '\". Delete that pattern first.\n')
+        }
+    }
+
+    x = enforce.numeric(x)
 
     x.ev = NULL 
     y = x
