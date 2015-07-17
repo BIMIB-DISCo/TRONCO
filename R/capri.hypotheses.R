@@ -1,9 +1,17 @@
-#### hypothesis.add.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
+##################################################################################
+#                                                                                #
+# TRONCO: a tool for TRanslational ONCOlogy                                      #
+#                                                                                #
+##################################################################################
+# Copyright (c) 2015, Marco Antoniotti, Giulio Caravagna, Luca De Sano,          #
+# Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,             #
+# Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.                            #
+#                                                                                #
+# All rights reserved. This program and the accompanying materials               #
+# are made available under the terms of the GNU GPL v3.0                         #
+# which accompanies this distribution                                            #
+#                                                                                #
+##################################################################################
 
 
 # Add a new hypothesis by creating a new event and adding it to the compliant genotypes

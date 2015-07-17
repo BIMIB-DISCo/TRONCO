@@ -1,3 +1,19 @@
+##################################################################################
+#                                                                                #
+# TRONCO: a tool for TRanslational ONCOlogy                                      #
+#                                                                                #
+##################################################################################
+# Copyright (c) 2015, Marco Antoniotti, Giulio Caravagna, Luca De Sano,          #
+# Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,             #
+# Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.                            #
+#                                                                                #
+# All rights reserved. This program and the accompanying materials               #
+# are made available under the terms of the GNU GPL v3.0                         #
+# which accompanies this distribution                                            #
+#                                                                                #
+##################################################################################
+
+
 # Check if 'x' is compliant with TRONCO's input: that is if it has dataframes x$genotypes, x$annotations, x$types and x$stage (optional)
 # - x: list of dataframe to check
 # - err.fun: string which identifies the function which called is.compliant

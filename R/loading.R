@@ -1,3 +1,19 @@
+##################################################################################
+#                                                                                #
+# TRONCO: a tool for TRanslational ONCOlogy                                      #
+#                                                                                #
+##################################################################################
+# Copyright (c) 2015, Marco Antoniotti, Giulio Caravagna, Luca De Sano,          #
+# Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,             #
+# Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.                            #
+#                                                                                #
+# All rights reserved. This program and the accompanying materials               #
+# are made available under the terms of the GNU GPL v3.0                         #
+# which accompanies this distribution                                            #
+#                                                                                #
+##################################################################################
+
+
 #' Import a matrix of 0/1 alterations as a TRONCO compliant dataset. Input "geno" can be either a dataframe or 
 #' a file name. In any case the dataframe or the table stored in the file must have a column for each altered
 #' gene and a rows for each sample. Colnames will be used to determine gene names, if data is loaded from 
