@@ -9,20 +9,23 @@ delete.hypothesis(x, event = NA, cause = NA, effect = NA)
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
 
-\item{event}{The name of the gene to delete.}
+\item{event}{Can be an event or pattern name}
 
-\item{cause}{The name of the type to delete.}
+\item{cause}{Can be an event or pattern name}
 
-\item{effect}{todo}
+\item{effect}{Can be an event or pattern name}
 }
 \value{
 A TRONCO complian dataset.
 }
 \description{
-Delete an hypothesis from the dataset
+Delete an hypothesis from the dataset based on a selected event.
+Check if the selected event exist in the dataset and delete his associated hypothesis
 }
 \examples{
 data(test_dataset)
-test_dataset = delete.hypothesis(test_dataset, 'TET2', 'ins_del')
+delete.hypothesis(test_dataset, event='TET2')
+delete.hypothesis(test_dataset, cause='EZH2')
+delete.hypothesis(test_dataset, event='XOR_EZH2')
 }
 

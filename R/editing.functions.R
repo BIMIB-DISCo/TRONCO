@@ -94,6 +94,31 @@ annotate.description = function(x, label)
     return(x)
 }
 
+#' Change the color of an event type
+#' @title change.color
+#'
+#' @examples
+#' data(test_dataset)
+#' dataset = change.color(test_dataset, 'ins_del', 'red')
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param type An event type 
+#' @param new.color The new color (either HEX or R Color)
+#' @return A TRONCO complian dataset.
+#' @export change.color
+change.color = function(x, type, new.color)
+{
+    is.compliant(x)
+    if(type %in% as.types(x)) {
+        x$types[type, ] = new.color
+    } else {
+        stop('type: \"', type, '\" not in dataset')
+    }
+
+    is.compliant(x)
+    return(x)
+}
+
 #' Rename an event type
 #' @title rename.type
 #'
@@ -282,17 +307,20 @@ delete.event <- function(x, gene, type) {
     return(x)
 }
 
-#' Delete an hypothesis from the dataset
+#' Delete an hypothesis from the dataset based on a selected event. 
+#' Check if the selected event exist in the dataset and delete his associated hypothesis
 #' @title delete.hypothesis
 #'
 #' @examples
 #' data(test_dataset)
-#' test_dataset = delete.hypothesis(test_dataset, 'TET2', 'ins_del')
+#' delete.hypothesis(test_dataset, event='TET2')
+#' delete.hypothesis(test_dataset, cause='EZH2')
+#' delete.hypothesis(test_dataset, event='XOR_EZH2')
 #'
 #' @param x A TRONCO compliant dataset.
-#' @param event The name of the gene to delete.
-#' @param cause The name of the type to delete.
-#' @param effect todo
+#' @param event Can be an event or pattern name
+#' @param cause Can be an event or pattern name
+#' @param effect Can be an event or pattern name
 #' @return A TRONCO complian dataset.
 #' @export delete.hypothesis
 delete.hypothesis = function(x, event=NA, cause=NA, effect=NA)
@@ -339,6 +367,16 @@ delete.hypothesis = function(x, event=NA, cause=NA, effect=NA)
     return(x)
 }
 
+#' Delete a pattern and every associated hypotheses from the dataset
+#' @title delete.pattern
+#'
+#' @examples
+#' data(test_dataset)
+#' delete.pattern(test_dataset, pattern='XOR_TET2')
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param pattern A pattern name
+#' @return A TRONCO complian dataset.
 #' @export delete.pattern
 delete.pattern = function(x, pattern) {
     if(has.model(x)) {
@@ -371,7 +409,17 @@ delete.pattern = function(x, pattern) {
     return(x)
 }
 
-#' @export delete.model
+#' Delete a reconstructed model from the dataset
+#' @title delete.model
+#'
+#' @examples
+#' data(test_model)
+#' model = delete.model(test_model)
+#' has.model(model)
+#'
+#' @param x A TRONCO compliant dataset.
+#' @return A TRONCO complian dataset.
+#' @export delete.pattern
 delete.model = function(x) {
     if (! has.model(x)) {
         stop("No model to delete in dataset")
@@ -387,19 +435,17 @@ delete.model = function(x) {
     return(x)
 }
 
-
-#' @export
-change.color = function(x, type, new.color)
-{
-    is.compliant(x)
-
-    x$types[type, ] = new.color
-
-    is.compliant(x)
-    return(x)
-}
-
-#' @export
+#' Delete samples from selected dataset
+#' @title delete.samples
+#'
+#' @examples
+#' data(test_dataset)
+#' dataset = delete.samples(test_dataset, c('patient 1', 'patient 4'))
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param sampels An array of samples name
+#' @return A TRONCO complian dataset.
+#' @export delete.samples
 delete.samples = function(x, samples) {
     is.compliant(x, 'delete.samples input')
     stages = has.stages(x)
@@ -426,14 +472,23 @@ delete.samples = function(x, samples) {
 }
 
 
-# intersect.genomes = F -> just samples 
-#' @export
+#' Intersect samples and events of two dataset
+#' @title intersect.datasets
+#'
+#' @examples
+#' data(test_dataset)
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param y A TRONCO compliant dataset.
+#' @param intersect.genomes If False -> just samples
+#' @return A TRONCO complian dataset. 
+#' @export intersect.datasets
 intersect.datasets = function(x,y, intersect.genomes = TRUE)
 {
     is.compliant(x)
     is.compliant(y)
 
-# Common samples and genes (according to intersect.genomes)
+    # Common samples and genes (according to intersect.genomes)
     samples = intersect(as.samples(x), as.samples(y))
     genes = ifelse(intersect.genomes, 
         intersect(as.genes(x), as.genes(y)), #  intersect.genomes -> INTERSECTION
@@ -443,21 +498,20 @@ intersect.datasets = function(x,y, intersect.genomes = TRUE)
     report$x = c(nsamples(x), ngenes(x))
     report$y = c(nsamples(y), ngenes(y))
 
-# Restrict genes - only if intersect.genomes = T
-    if(intersect.genomes)
-    {
+    # Restrict genes - only if intersect.genomes = T
+    if(intersect.genomes) {
         x = events.selection(x, filter.in.names=genes)
         y = events.selection(y, filter.in.names=genes)
     }
 
-# TODO: check they have no events in common!
-# if(as.events(x) )
+    # TODO: check they have no events in common!
+    # if(as.events(x) )
 
-# Restric stamples
+    # Restric stamples
     x = samples.selection(x, samples)
     y = samples.selection(y, samples)
 
-# Result
+    # Result
     z = ebind(x,y)
 
 
