@@ -9,22 +9,21 @@ tronco.caprese(data, lambda = 0.5, do.estimation = FALSE, silent = FALSE)
 \arguments{
 \item{data}{A TRONCO compliant dataset.}
 
-\item{lambda}{TODO}
+\item{lambda}{Coefficient to combine the raw estimate with a correction factor into a shrinkage estimator.}
 
-\item{do.estimation}{TODO}
+\item{do.estimation}{A parameter to disable/enable the estimation of the error rates give the reconstructed model.}
 
-\item{silent}{TODO}
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
 A TRONCO compliant object with reconstructed model
 }
 \description{
-Reconstruc a progression model using CAPRESE algorithm
+Reconstruct a progression model using CAPRESE algorithm
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-recon = tronco.caprese(mutations)
+data(test_dataset)
+recon = tronco.caprese(test_dataset)
 tronco.plot(recon)
 }
 

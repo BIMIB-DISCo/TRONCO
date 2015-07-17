@@ -1,3 +1,18 @@
+##################################################################################
+#                                                                                #
+# TRONCO: a tool for TRanslational ONCOlogy                                      #
+#                                                                                #
+##################################################################################
+# Copyright (c) 2015, Marco Antoniotti, Giulio Caravagna, Luca De Sano,          #
+# Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,             #
+# Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.                            #
+#                                                                                #
+# All rights reserved. This program and the accompanying materials               #
+# are made available under the terms of the GNU GPL v3.0                         #
+# which accompanies this distribution                                            #
+#                                                                                #
+##################################################################################
+
 #' Genotype-level cancer progression models describe the ordering of
 #' accumulating mutations, e.g., somatic mutations / copy number variations,
 #' during cancer development. These graphical models help understand the
@@ -31,9 +46,8 @@ NULL
 #' Reconstruct a progression model using CAPRESE algorithm
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' recon = tronco.caprese(mutations)
+#' data(test_dataset)
+#' recon = tronco.caprese(test_dataset)
 #' tronco.plot(recon)
 #'
 #' @title tronco caprese
@@ -44,14 +58,18 @@ NULL
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.caprese
 #' @import doParallel
-tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = FALSE ) {
-	
+tronco.caprese <- function(data,
+                           lambda = 0.5, 
+                           do.estimation = FALSE, 
+                           silent = FALSE ) 
+{
+    
     ###############
     # DEV VERSION #
     ###############
     if(do.estimation) {
-    		if(silent==FALSE) {
-    			cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
+            if(silent==FALSE) {
+                cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
         }
         do.estimation = FALSE
     }
@@ -143,9 +161,8 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
 #' Reconstruct a progression model using CAPRI algorithm
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' recon = tronco.capri(mutations)
+#' data(test_dataset)
+#' recon = tronco.capri(test_dataset)
 #' tronco.plot(recon)
 #'
 #' @title tronco capri
@@ -165,25 +182,25 @@ tronco.caprese <- function( data, lambda = 0.5, do.estimation = FALSE, silent = 
 #' @importFrom bnlearn hc tabu
 #' @import igraph
 #' @import doParallel
-tronco.capri <- function( data, 
-    command = "hc", 
-    regularization = c("bic","aic"), 
-    do.boot = TRUE, 
-    nboot = 100, 
-    pvalue = 0.05, 
-    min.boot = 3, 
-    min.stat = TRUE, 
-    boot.seed = NULL, 
-    do.estimation = FALSE, 
-    silent = FALSE ) 
+tronco.capri <- function(data, 
+                         command = "hc", 
+                         regularization = c("bic","aic"), 
+                         do.boot = TRUE, 
+                         nboot = 100, 
+                         pvalue = 0.05, 
+                         min.boot = 3, 
+                         min.stat = TRUE, 
+                         boot.seed = NULL, 
+                         do.estimation = FALSE, 
+                         silent = FALSE ) 
 {
-	
+    
     ###############
     # DEV VERSION #
     ###############
     if(do.estimation) {
-    		if(silent==FALSE) {
-    			cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
+            if(silent==FALSE) {
+                cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
         }
         do.estimation = FALSE
     }
@@ -301,16 +318,6 @@ tronco.capri <- function( data,
     return(results);
 }
 
-#### end of file -- tronco.capri.R
-
-
-#### tronco.estimation.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
 ###############
 # DEV VERSION #
 ###############
@@ -411,10 +418,9 @@ tronco.estimation <- function( reconstruction, error.rates = NA ) {
 #' Bootstrap a reconstructed progression model
 #'
 #' @examples
-#' data(maf)
-#' mutations = import.MAF(maf)
-#' recon = tronco.capri(mutations)
-#' boot = tronco.bootstrap(recon, nboot=10)
+#' data(test_dataset)
+#' recon = tronco.capri(test_dataset)
+#' boot = tronco.bootstrap(recon, nboot=5)
 #' tronco.plot(boot)
 #'
 #' @title tronco bootstrap
@@ -436,12 +442,12 @@ tronco.bootstrap <- function( reconstruction,
     
     # check for the input to be compliant
     is.compliant(reconstruction)
-	
+    
     ###############
     # DEV VERSION #
     ###############
     if(type == "parametric") {
-    		stop("The parametric bootstrap is not available in the current version. Please choose an other option...")
+            stop("The parametric bootstrap is not available in the current version. Please choose an other option...")
     }
 
     if(reconstruction$parameters$do.estimation == FALSE && type == "parametric") {
@@ -540,24 +546,6 @@ tronco.bootstrap <- function( reconstruction,
 
     return(reconstruction)
 }
-
-#### end of file -- tronco.bootstrap.R
-
-
-#### tronco.plot.R
-####
-#### TRONCO: a tool for TRanslational ONCOlogy
-####
-#### See the files COPYING and LICENSE for copyright and licensing
-#### information.
-
-
-
-
-###########################
-####### TRONCO PLOT #######
-###########################
-
 
 
 #' @export tronco.plot

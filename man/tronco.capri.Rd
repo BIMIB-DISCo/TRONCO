@@ -12,36 +12,35 @@ tronco.capri(data, command = "hc", regularization = c("bic", "aic"),
 \arguments{
 \item{data}{A TRONCO compliant dataset.}
 
-\item{command}{TODO}
+\item{command}{Parameter to define to heuristic search to be performed. Hill Climbing and Tabù search are currently available.}
 
-\item{regularization}{TODO}
+\item{regularization}{Select the regularization for the likelihood estimation, e.g., BIC, AIC.}
 
-\item{do.boot}{TODO}
+\item{do.boot}{A parameter to disable/enable the estimation of the error rates give the reconstructed model.}
 
-\item{nboot}{TODO}
+\item{nboot}{Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores.}
 
-\item{pvalue}{TODO}
+\item{pvalue}{Pvalue to accept/reject the valid selective advantage relations.}
 
-\item{min.boot}{TODO}
+\item{min.boot}{Minimum number of bootstrap sampling to be performed.}
 
-\item{min.stat}{TODO}
+\item{min.stat}{A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected.}
 
-\item{boot.seed}{TODO}
+\item{boot.seed}{Initial seed for the bootstrap random sampling.}
 
-\item{do.estimation}{TODO}
+\item{do.estimation}{A parameter to disable/enable the estimation of the error rates give the reconstructed model.}
 
-\item{silent}{TODO}
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
 A TRONCO compliant object with reconstructed model
 }
 \description{
-Reconstruc a progression model using CAPRI algorithm
+Reconstruct a progression model using CAPRI algorithm
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-recon = tronco.capri(mutations)
+data(test_dataset)
+recon = tronco.capri(test_dataset)
 tronco.plot(recon)
 }
 

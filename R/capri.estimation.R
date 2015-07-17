@@ -97,7 +97,7 @@ estimate.dag.error.rates = function( dataset, marginal.probs, joint.probs, paren
 }
 
 #' estimate the theoretical joint probability of two given nodes given the reconstructed topology
-#' @title
+#' @title estimate.dag.joint.probs
 #' @param first.node first node
 #' @param second.node second node
 #' @param parents.pos which event is the parent? -1 if none, a list otherwise

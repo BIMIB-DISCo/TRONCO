@@ -2,7 +2,7 @@
 % Please edit documentation in R/editing.functions.R
 \name{annotate.description}
 \alias{annotate.description}
-\title{Annotate a descriotion on the selected dataset}
+\title{annotate.description}
 \usage{
 annotate.description(x, label)
 }
@@ -16,5 +16,9 @@ A TRONCO genotypes matrix.
 }
 \description{
 Annotate a descriotion on the selected dataset
+}
+\examples{
+data(test_dataset)
+annotate.description(test_dataset, 'new description')
 }
 

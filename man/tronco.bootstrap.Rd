@@ -10,9 +10,9 @@ tronco.bootstrap(reconstruction, type = "non-parametric", nboot = 100,
 \arguments{
 \item{reconstruction}{The output of tronco.capri or tronco.caprese}
 
-\item{type}{TODO}
+\item{type}{Parameter to define the type of sampling to be performed, e.g., non-parametric for uniform sampling.}
 
-\item{nboot}{TODO}
+\item{nboot}{Number of bootstrap sampling to be performed when estimating the model confidence.}
 }
 \value{
 A TRONCO compliant object with reconstructed model
@@ -21,10 +21,9 @@ A TRONCO compliant object with reconstructed model
 Bootstrap a reconstructed progression model
 }
 \examples{
-data(maf)
-mutations = import.MAF(maf)
-recon = tronco.capri(mutations)
-boot = tronco.bootstrap(recon, nboot=10)
+data(test_dataset)
+recon = tronco.capri(test_dataset)
+boot = tronco.bootstrap(recon, nboot=5)
 tronco.plot(boot)
 }
 

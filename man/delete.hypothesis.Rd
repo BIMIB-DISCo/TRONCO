@@ -2,11 +2,27 @@
 % Please edit documentation in R/editing.functions.R
 \name{delete.hypothesis}
 \alias{delete.hypothesis}
-\title{Delete of a single hypothesis}
+\title{delete.hypothesis}
 \usage{
-delete.hypothesis(x, event = NULL, cause = NULL, effect = NULL)
+delete.hypothesis(x, event = NA, cause = NA, effect = NA)
+}
+\arguments{
+\item{x}{A TRONCO compliant dataset.}
+
+\item{event}{The name of the gene to delete.}
+
+\item{cause}{The name of the type to delete.}
+
+\item{effect}{todo}
+}
+\value{
+A TRONCO complian dataset.
 }
 \description{
-Delete of a single hypothesis
+Delete an hypothesis from the dataset
+}
+\examples{
+data(test_dataset)
+test_dataset = delete.hypothesis(test_dataset, 'TET2', 'ins_del')
 }
 
