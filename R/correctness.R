@@ -14,13 +14,14 @@
 ##################################################################################
 
 
-# Check if 'x' is compliant with TRONCO's input: that is if it has dataframes x$genotypes, x$annotations, x$types and x$stage (optional)
-# - x: list of dataframe to check
-# - err.fun: string which identifies the function which called is.compliant
-# - stage: boolean flag to check x$stage datagframe
-#
-# Returns: on error stops the computation
-#' @export
+#' Check if 'x' is compliant with TRONCO's input: that is if it has dataframes 
+#' x$genotypes, x$annotations, x$types and x$stage (optional)
+#' @title is.compliant
+#' @param x A TRONCO compliant dataset.
+#' @param err.fun string which identifies the function which called is.compliant
+#' @param stage boolean flag to check x$stage datagframe
+#' @return on error stops the computation
+#' @export is.compliant
 is.compliant = function(x, err.fun='[ERR]', stage = !(all(is.null(x$stages)) || all(is.na(x$stages))))
 {
 	# Check if x is defined
@@ -96,7 +97,9 @@ is.compliant = function(x, err.fun='[ERR]', stage = !(all(is.null(x$stages)) || 
  }
 
 
-# Check if x is a valid TRONCO model
+#' Check if x is a valid TRONCO model
+#' @title is.model
+#' @param x A TRONCO compliant dataset.
 is.model = function(x)
 {
   if(!'model' %in% names(x))
@@ -104,7 +107,10 @@ is.model = function(x)
 }
 
 
-# Check if y is a valid event list for x
+#' Check if y is a valid event list for x
+#' @title is.events.list
+#' @param x A TRONCO compliant dataset.
+#' @param y A TRONCO event list
 is.events.list = function(x, y)
 {
   if(!is.matrix(y)) stop('Events should be given as matrix - see "as.events".')
