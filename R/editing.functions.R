@@ -74,7 +74,7 @@ consolidate.data = function(x, print = FALSE){
     return(ret)
 }
 
-#' Annotate a descriotion on the selected dataset
+#' Annotate a description on the selected dataset
 #' @title annotate.description
 #'
 #' @examples
@@ -83,7 +83,7 @@ consolidate.data = function(x, print = FALSE){
 #'
 #' @param x A TRONCO compliant dataset.
 #' @param label A string
-#' @return A TRONCO genotypes matrix.
+#' @return A TRONCO compliant dataset.
 #' @export annotate.description
 annotate.description = function(x, label)
 {
@@ -91,6 +91,65 @@ annotate.description = function(x, label)
         warning(paste('Old description substituted: ', as.description(x), '.'))
 
     x$name = label
+    return(x)
+}
+
+#' Annotate stage information on the selected dataset
+#' @title annotate.stages
+#'
+#' @examples
+#' data(test_dataset)
+#' data(stage)
+#' test_dataset = annotate.stages(test_dataset, stage)
+#' as.stages(test_dataset)
+#' 
+#' @param x A TRONCO compliant dataset.
+#' @param stages A list of stages. Rownames must match samples list of x
+#' @param match.TCGA.patients Match using TCGA notations (only first 12 characters)
+#' @return A TRONCO compliant dataset.
+#' @export annotate.stages
+annotate.stages = function(x, stages, match.TCGA.patients = FALSE)
+{
+    if(is.null(rownames(stages))) {
+        stop('Stages have no rownames - will not add annotation.')
+    }
+
+    samples = as.samples(x)
+
+    # Just for temporary - will be shortened to make a simple check...
+    samples.temporary = samples
+    if(match.TCGA.patients) {
+        samples.temporary = substring(samples.temporary, 0, 12)
+    }
+
+    if(!any(samples.temporary %in% rownames(stages))) 
+        stop('There are no stages for samples in input dataset - will not add annotation.')  
+
+    # Notify if something gets lost
+    if(has.stages(x)) {
+        warning('Stages in input dataset overwritten.')
+    }
+
+    # Actual stages
+    x$stages = data.frame(row.names = samples, stringsAsFactors=FALSE)
+    x$stages[, 'stage'] = as.character(NA)
+
+    for(i in 1:nsamples(x))
+    {
+        if(!match.TCGA.patients) {
+            x$stages[i, ] = as.character(stages[as.samples(x)[i], ])
+        } else {    
+            # Potential match if x's samples are long TCGA barcodes and stages are TCGA patients barcdodes (short)
+            short.name = substring(as.samples(x)[i], 0 , 12)
+            x$stages[i, 'stage'] = as.character(stages[short.name, ])
+        }
+    }
+
+    count.na = is.na(x$stages)
+    if(any(count.na)) {
+        warning(paste(length(which(count.na)), ' missing stages were added as NA.'))
+    }
+
     return(x)
 }
 
@@ -520,52 +579,6 @@ intersect.datasets = function(x,y, intersect.genomes = TRUE)
     print(report)
 
     return(z)    
-}
-
-
-#' @export annotate.stages
-annotate.stages = function(x, stages, match.TCGA.patients = FALSE)
-{
-    if(is.null(rownames(stages))) {
-        stop('Stages have no rownames - will not add annotation.')
-    }
-
-    samples = as.samples(x)
-
-# Just for temporary - will be shortened to make a simple check...
-    samples.temporary = samples
-    if(match.TCGA.patients) {
-        samples.temporary = substring(samples.temporary, 0, 12)
-    }
-
-    if(!any(samples.temporary %in% rownames(stages))) 
-        stop('There are no stages for samples in input dataset - will not add annotation.')  
-
-# Notify if something gets lost
-    if(has.stages(x)) warning('Stages in input dataset overwritten.')
-
-# Actual stages
-        x$stages = data.frame(row.names = samples, stringsAsFactors=FALSE)
-    x$stages[, 'stage'] = as.character(NA)
-
-    for(i in 1:nsamples(x))
-    {
-        if(!match.TCGA.patients)
-            x$stages[i, ] = as.character(stages[as.samples(x)[i], ])
-        else 
-        {    
-# Potential match if x's samples are long TCGA barcodes and stages are TCGA patients barcdodes (short)
-            short.name = substring(as.samples(x)[i], 0 , 12)
-            x$stages[i, 'stage'] = as.character(stages[short.name, ])
-        }
-    }
-
-    count.na = is.na(x$stages)
-    if(any(count.na)) {
-        warning(paste(length(which(count.na)), ' missing stages were added as NA.'))
-    }
-
-    return(x)
 }
 
 

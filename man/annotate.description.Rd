@@ -12,10 +12,10 @@ annotate.description(x, label)
 \item{label}{A string}
 }
 \value{
-A TRONCO genotypes matrix.
+A TRONCO compliant dataset.
 }
 \description{
-Annotate a descriotion on the selected dataset
+Annotate a description on the selected dataset
 }
 \examples{
 data(test_dataset)
