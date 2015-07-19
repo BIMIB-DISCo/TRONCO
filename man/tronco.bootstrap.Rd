@@ -13,6 +13,8 @@ tronco.bootstrap(reconstruction, type = "non-parametric", nboot = 100,
 \item{type}{Parameter to define the type of sampling to be performed, e.g., non-parametric for uniform sampling.}
 
 \item{nboot}{Number of bootstrap sampling to be performed when estimating the model confidence.}
+
+\item{verbose}{Should I be verbose?}
 }
 \value{
 A TRONCO compliant object with reconstructed model

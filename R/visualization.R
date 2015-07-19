@@ -2204,7 +2204,6 @@ likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample
 
 #' @importFrom circlize circos.clear circos.par chordDiagram 
 #' @importFrom circlize circos.trackPlotRegion circos.text
-#' @export pattern.plot
     pattern.plot = function(x, 
         group, 
         to, 

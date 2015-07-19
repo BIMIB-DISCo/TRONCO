@@ -2,7 +2,7 @@
 % Please edit documentation in R/tronco.R
 \name{tronco.plot}
 \alias{tronco.plot}
-\title{plot a progression model}
+\title{tronco.plot}
 \usage{
 tronco.plot(x, regularization = names(x$model), fontsize = NA, height = 2,
   width = 3, height.logic = 1, pf = FALSE, disconnected = FALSE,
@@ -13,7 +13,69 @@ tronco.plot(x, regularization = names(x$model), fontsize = NA, height = 2,
   file = NA, legend.pos = "bottom", pathways = NULL, lwd = 3,
   annotate.sample = NA, ...)
 }
+\arguments{
+\item{x}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
+
+\item{regularization}{A vector containing the names of regularizators used (BIC or AIC)}
+
+\item{fontsize}{For node names. Default NA for automatic rescaling}
+
+\item{height}{Proportion node height - node width. Default height 2}
+
+\item{width}{Proportion node height - node width. Default width 2}
+
+\item{height.logic}{Height of logical nodes. Defaul 1}
+
+\item{pf}{Should I print Prima Facie? Default False}
+
+\item{disconnected}{Should I print disconnected nodes? Default False}
+
+\item{scale.nodes}{Node scaling coefficient (based on node frequency). Default NA (autoscale)}
+
+\item{title}{Title of the plot. Default as.description(x)}
+
+\item{confidence}{Should I add confidence informations? No if NA}
+
+\item{p.min}{p-value cutoff. Default automatic}
+
+\item{legend}{Should I visualise the legend?}
+
+\item{legend.cex}{CEX value for legend. Default 1.0}
+
+\item{edge.cex}{CEX value for edge labels. Default 1.0}
+
+\item{label.edge.size}{Size of edge labels. Default NA for automatic rescaling}
+
+\item{expand}{Should I expand hypotheses? Default TRUE}
+
+\item{genes}{Visualise only genes in this list. Default NULL, visualise all.}
+
+\item{relations.filter}{Filter relations to dispaly according to this functions. Default NA}
+
+\item{edge.color}{Edge color. Default 'black'}
+
+\item{pathways.color}{RColorBrewer colorser for patways. Default 'Set1'.}
+
+\item{file}{String containing filename for PDF output. If NA no PDF output will be provided}
+
+\item{legend.pos}{Legend position. Default 'bottom',}
+
+\item{pathways}{A vector containing pathways information as described in as.patterns()}
+
+\item{lwd}{Edge base lwd. Default 3}
+
+\item{annotate.sample}{= List of samples to search for events in model}
+
+\item{...}{Additional arguments for RGraphviz plot function}
+}
+\value{
+Information about the reconstructed model
+}
 \description{
-\code{tronco.plot} plots a progression model from a recostructed \code{curr.reconstruction}.
+Plots a progression model from a recostructed dataset
+}
+\examples{
+data(test_model)
+tronco.plot(test_model)
 }
 
