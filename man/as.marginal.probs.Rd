@@ -29,6 +29,5 @@ been performed. Also, either the observed or fit probabilities can be extracted.
 data(test_model)
 as.marginal.probs(test_model)
 as.marginal.probs(test_model, events=as.events(test_model)[5:15,])
-as.marginal.probs(test_model, events=as.events(test_model)[5:15,], type='fit')
 }
 

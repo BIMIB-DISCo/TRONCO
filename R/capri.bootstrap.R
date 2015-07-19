@@ -29,8 +29,8 @@
 #' @param do.estimation should I perform the estimation of the error rates and probabilities?
 #' @param silent should I be verbose?
 #' @param reconstruction todo
-#' @param command: should I perform non-parametric or parametric bootstrap?
-#' @param nboot: number of bootstrap resampling to be performed
+#' @param command should I perform non-parametric or parametric bootstrap?
+#' @param nboot number of bootstrap resampling to be performed
 #' @param bootstrap.statistics todo
 #' @param verbose todo
 #' @return bootstrap.statistics: statistics of the bootstrap

@@ -167,7 +167,7 @@ tronco.caprese <- function(data,
 #'
 #' @title tronco capri
 #' @param data A TRONCO compliant dataset.
-#' @param command Parameter to define to heuristic search to be performed. Hill Climbing and Tabù search are currently available.
+#' @param command Parameter to define to heuristic search to be performed. Hill Climbing and Tabu search are currently available.
 #' @param regularization Select the regularization for the likelihood estimation, e.g., BIC, AIC. 
 #' @param do.boot A parameter to disable/enable the estimation of the error rates give the reconstructed model.
 #' @param nboot Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores. 

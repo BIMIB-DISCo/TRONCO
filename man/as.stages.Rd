@@ -2,7 +2,7 @@
 % Please edit documentation in R/as.functions.R
 \name{as.stages}
 \alias{as.stages}
-\title{as stages}
+\title{as.stages}
 \usage{
 as.stages(x)
 }

@@ -16,6 +16,10 @@ hypothesis.expand.connections(label, events, incoming, outgoing, hnames,
 
 \item{outgoing}{outgoing connections}
 
+\item{hnames}{todo}
+
+\item{matomic}{todo}
+
 \item{weights.matrix}{weights of any edge in the topology}
 }
 \description{

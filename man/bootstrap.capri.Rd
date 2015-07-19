@@ -36,13 +36,13 @@ bootstrap.capri(dataset, hypotheses, command.capri, regularization, do.boot,
 
 \item{reconstruction}{todo}
 
+\item{command}{should I perform non-parametric or parametric bootstrap?}
+
+\item{nboot}{number of bootstrap resampling to be performed}
+
 \item{bootstrap.statistics}{todo}
 
 \item{verbose}{todo}
-
-\item{command:}{should I perform non-parametric or parametric bootstrap?}
-
-\item{nboot:}{number of bootstrap resampling to be performed}
 }
 \value{
 bootstrap.statistics: statistics of the bootstrap

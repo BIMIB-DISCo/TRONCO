@@ -2,7 +2,7 @@
 % Please edit documentation in R/as.functions.R
 \name{as.samples}
 \alias{as.samples}
-\title{as genotypes}
+\title{as.samples}
 \usage{
 as.samples(x)
 }

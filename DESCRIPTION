@@ -20,11 +20,12 @@ Imports:
     RColorBrewer,
     reshape2,
     cgdsr,
-    likert,
     igraph,
     grid,
     gridExtra,
-    xtable, 
+    xtable,
+    gtable,
+    scales
 Suggests: 
     BiocGenerics,
     testthat,

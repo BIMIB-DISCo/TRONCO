@@ -2,7 +2,7 @@
 % Please edit documentation in R/as.functions.R
 \name{as.genotypes}
 \alias{as.genotypes}
-\title{as genotypes}
+\title{as.genotypes}
 \usage{
 as.genotypes(x)
 }

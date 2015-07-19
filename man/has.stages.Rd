@@ -20,7 +20,7 @@ might be annotated as NA, but not all.
 \examples{
 data(test_dataset)
 has.stages(test_dataset)
-data(stages)
+data(stage)
 test_dataset = annotate.stages(test_dataset, stage)
 has.stages(test_dataset)
 }

@@ -19,6 +19,6 @@ Delete an event type
 }
 \examples{
 data(test_dataset)
-test_dataset = delete.type(test_dataset, 'ins_del')
+test_dataset = delete.type(test_dataset, 'Pattern')
 }
 

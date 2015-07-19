@@ -19,6 +19,6 @@ Extract the models from a reconstructed object.
 }
 \examples{
 data(test_model)
-as.model(test_model)
+as.models(test_model)
 }
 

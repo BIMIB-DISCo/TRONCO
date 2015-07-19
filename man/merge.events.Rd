@@ -4,12 +4,12 @@
 \alias{merge.events}
 \title{merge.events}
 \usage{
-\method{merge}{events}(x, events, new.event, new.type, event.color)
+\method{merge}{events}(x, ..., new.event, new.type, event.color)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
 
-\item{events}{A list of events to merge}
+\item{...}{A list of events to merge}
 
 \item{new.event}{The name of the resultant event}
 
@@ -25,6 +25,6 @@ Merge a list of events in an unique event
 }
 \examples{
 data(muts)
-dataset = merge.events(test_dataset, c('G1', 'G2'))
+dataset = merge.events(muts, 'G1', 'G2', new.event='test', new.type='banana', event.color='yellow')
 }
 

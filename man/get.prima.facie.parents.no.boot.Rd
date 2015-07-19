@@ -9,7 +9,11 @@ get.prima.facie.parents.no.boot(dataset, hypotheses, adj.matrix, silent)
 \arguments{
 \item{dataset}{a valid dataset}
 
+\item{hypotheses}{hypotheses object associated to dataset}
+
 \item{adj.matrix}{adjacency matrix of the initially valid edges}
+
+\item{silent}{Should I be verbose?}
 }
 \value{
 prima.facie.parents: list of the set (if any) of prima facie parents for each node

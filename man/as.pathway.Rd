@@ -14,9 +14,9 @@ as.pathway(x, pathway.genes, pathway.name, pathway.color = "yellow",
 
 \item{pathway.name}{Pathway name for visualization.}
 
-\item{aggregate.pathway}{If TRUE drop the events for the genes in the pathway.}
+\item{pathway.color}{Pathway color for visualization.}
 
-\item{pathway.color:}{Pathway color for visualization.}
+\item{aggregate.pathway}{If TRUE drop the events for the genes in the pathway.}
 }
 \value{
 Extract the subset of events for genes which are part of a pathway.
@@ -29,8 +29,5 @@ any of the involved genes are altered.
 \examples{
 data(test_dataset)
 p = as.pathway(test_dataset, c('ASXL1', 'TET2'), 'test_pathway')
-oncoprint(p)
-p = as.pathway(test_dataset, c('ASXL1', 'TET2'), 'test_pathway', aggregate.pathway=F)
-oncoprint(p)
 }
 

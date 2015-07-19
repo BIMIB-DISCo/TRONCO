@@ -4,10 +4,14 @@
 \alias{sort.by.frequency}
 \title{sort.by.frequency}
 \usage{
-\method{sort}{by.frequency}(x)
+\method{sort}{by.frequency}(x, decreasing = TRUE, ...)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
+
+\item{decreasing}{Inverse order. Default TRUE}
+
+\item{...}{just for compatibility}
 }
 \value{
 A TRONCO compliant dataset with the internal genotypes sorted according to event frequency.

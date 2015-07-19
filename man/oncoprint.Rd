@@ -18,7 +18,9 @@ oncoprint(x, excl.sort = TRUE, samples.cluster = FALSE,
   " patterns", sep = ""), ...)
 }
 \arguments{
-\item{x}{}
+\item{x}{A TRONCO compliant dataset}
+
+\item{excl.sort}{Boolean value, if TRUE sorts samples to enhance exclusivity of alterations}
 
 \item{samples.cluster}{Boolean value, if TRUE clusters samples (columns). Default FALSE}
 
@@ -77,7 +79,7 @@ and sorted according to the number of mutations per sample - usefull when \code{
 
 \item{txt.stats}{By default, shows a summary statistics for shown data (n,m, |G| and |P|)}
 
-\item{excl.soft}{Boolean value, if TRUE sorts samples to enhance exclusivity of alterations}
+\item{...}{other arguments to pass to pheatmap}
 }
 \description{
 oncoprint

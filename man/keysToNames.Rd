@@ -19,7 +19,7 @@ Convert colnames/rownames of a matrix into intelligible event names, e.g., chang
 If a name is not found, the original name is left unchanged.
 }
 \examples{
-data(test_dataset)
+data(test_model)
 adj_matrix = as.adj.matrix(test_model, events=as.events(test_model)[5:15,])$bic
 keysToNames(test_model, adj_matrix)
 }

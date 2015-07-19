@@ -17,8 +17,8 @@
 # oncoPrint : plot a genotype
 # 
 #' @title oncoprint
-#' @param x 
-#' @param excl.soft Boolean value, if TRUE sorts samples to enhance exclusivity of alterations
+#' @param x A TRONCO compliant dataset
+#' @param excl.sort Boolean value, if TRUE sorts samples to enhance exclusivity of alterations
 #' @param samples.cluster Boolean value, if TRUE clusters samples (columns). Default FALSE
 #' @param genes.cluster Boolean value, if TRUE clusters genes (rows). Default FALSE
 #' @param file If not NA write to \code{file} the Oncoprint, default is NA (just visualization).
@@ -49,9 +49,11 @@
 #' @param show.patterns If TRUE shows also a separate oncoprint for each pattern. Default is FALSE
 #' @param annotate.consolidate.events Default is FALSE. If TRUE an annotation for events to consolidate is shown.
 #' @param txt.stats By default, shows a summary statistics for shown data (n,m, |G| and |P|)
+#' @param ... other arguments to pass to pheatmap
 #' @export oncoprint
 #' @importFrom gridExtra grid.arrange
 #' @importFrom RColorBrewer brewer.pal brewer.pal.info
+#' @importFrom gtable gtable gtable_add_grob gtable_height gtable_width
 oncoprint <- function(x, 
     excl.sort = TRUE, 
     samples.cluster = FALSE, 
@@ -1009,14 +1011,14 @@ genes.table.plot = function(x, name, dir=getwd())
 # print.table(pathway.genes.df, 'genes-list')
 
 
-#' Calculate the likert
-#' 
-#' @importFrom likert likert
-#' @param cluster_result Clustering result eg: [1, 2, 1, 3 ,3]
-#' @param sample_stage Stage in which the sample is eg: [3, 3, 1, 2 ,2]
-#' @param cluster_prefix Prefix to prefend to cluster data
-#' @param sample_prefix Prefix to prefend to stage data
-#' @export likertToClus
+# Calculate the likert
+# 
+# @importFrom likert likert
+# @param cluster_result Clustering result eg: [1, 2, 1, 3 ,3]
+# @param sample_stage Stage in which the sample is eg: [3, 3, 1, 2 ,2]
+# @param cluster_prefix Prefix to prefend to cluster data
+# @param sample_prefix Prefix to prefend to stage data
+# @export likertToClus
 likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample_prefix=''){
 
 
@@ -1917,6 +1919,7 @@ likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample
 #' @param show_colnames boolean specifying if column names are be shown.
 #' @param main the title of the plot
 #' @param fontsize base fontsize for the plot 
+#' @param legend.cex Default 0.5; determines legend size if \code{legend = TRUE}
 #' @param fontsize_row fontsize for rownames (Default: fontsize) 
 #' @param fontsize_col fontsize for colnames (Default: fontsize) 
 #' @param display_numbers logical determining if the numeric values are also printed to 
@@ -1940,6 +1943,7 @@ likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample
 #' @param width manual option for determining the output file width in inches.
 #' @param height manual option for determining the output file height in inches.
 #' @param silent do not draw the plot (useful when using the gtable output)
+#' @param txt.stats By default, shows a summary statistics for shown data (n,m, |G| and |P|)
 #' @param \dots graphical parameters for the text used in plot. Parameters passed to 
 #' \code{\link{grid.text}}, see \code{\link{gpar}}. 
 #' 
@@ -2027,12 +2031,12 @@ likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample
 #' dcols = dist(t(test), method = "minkowski")
 #' pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcols)
 #' @export pheatmap
-#' @importFrom RColorBrewer brewer.pal
+#' @importFrom grid unit textGrob gpar unit.c viewport convertWidth
+#' @importFrom grid convertHeight gList gTree rectGrob grobTree
 #' @importFrom grid grid.draw grid.pretty grid.newpage
+#' @importFrom scales dscale hue_pal
+#' @importFrom RColorBrewer brewer.pal
     pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete", cutree_rows = NA, cutree_cols = NA,  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation_row = NA, annotation_col = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", number_color = "grey30", fontsize_number = 0.8 * fontsize, gaps_row = NULL, gaps_col = NULL, labels_row = NULL, labels_col = NULL, filename = NA, width = NA, height = NA, silent = FALSE, legend.cex = 1, txt.stats = NA, ...){
-
-        require(scales)
-        require(gtable)
 
 # Set labels
         if(is.null(labels_row)){
@@ -2202,8 +2206,8 @@ likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample
     }
 
 
-#' @importFrom circlize circos.clear circos.par chordDiagram 
-#' @importFrom circlize circos.trackPlotRegion circos.text
+#  @importFrom circlize circos.clear circos.par chordDiagram 
+#  @importFrom circlize circos.trackPlotRegion circos.text
     pattern.plot = function(x, 
         group, 
         to, 
@@ -2226,8 +2230,6 @@ likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample
 
 
         cat('Group tested against:', to[1], to[2], '\n')
-
-        suppressMessages(library(circlize))
 
 # HARD exclusivity: 1 for each pattern element
 # CO-OCCURRENCE: 1

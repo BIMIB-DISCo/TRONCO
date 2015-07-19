@@ -19,6 +19,6 @@ Delete a pattern and every associated hypotheses from the dataset
 }
 \examples{
 data(test_dataset)
-delete.pattern(test_dataset, pattern='XOR_TET2')
+delete.pattern(test_dataset, pattern='XOR_EZH2')
 }
 

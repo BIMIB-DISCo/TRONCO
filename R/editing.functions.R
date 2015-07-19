@@ -246,7 +246,7 @@ rename.gene <- function(x, old.name, new.name) {
 #'
 #' @examples
 #' data(test_dataset)
-#' test_dataset = delete.type(test_dataset, 'ins_del')
+#' test_dataset = delete.type(test_dataset, 'Pattern')
 #'
 #' @param x A TRONCO compliant dataset.
 #' @param type The name of the type to delete.
@@ -431,7 +431,7 @@ delete.hypothesis = function(x, event=NA, cause=NA, effect=NA)
 #'
 #' @examples
 #' data(test_dataset)
-#' delete.pattern(test_dataset, pattern='XOR_TET2')
+#' delete.pattern(test_dataset, pattern='XOR_EZH2')
 #'
 #' @param x A TRONCO compliant dataset.
 #' @param pattern A pattern name
@@ -478,7 +478,7 @@ delete.pattern = function(x, pattern) {
 #'
 #' @param x A TRONCO compliant dataset.
 #' @return A TRONCO complian dataset.
-#' @export delete.pattern
+#' @export delete.model
 delete.model = function(x) {
     if (! has.model(x)) {
         stop("No model to delete in dataset")
@@ -502,7 +502,7 @@ delete.model = function(x) {
 #' dataset = delete.samples(test_dataset, c('patient 1', 'patient 4'))
 #'
 #' @param x A TRONCO compliant dataset.
-#' @param sampels An array of samples name
+#' @param samples An array of samples name
 #' @return A TRONCO complian dataset.
 #' @export delete.samples
 delete.samples = function(x, samples) {
@@ -697,8 +697,9 @@ sbind = function(...)
 #' 
 #' @examples
 #' data(test_dataset)
-#' dataset = merge.types(test_dataset, 'ins_del', 'missense_point_mutations')
-#' dataset = merge.types(test_dataset, 'ins_del', 'missense_point_mutations', 'mut', 'green')
+#' dataset = delete.pattern(test_dataset)
+#' dataset = merge.types(dataset, 'ins_del', 'missense_point_mutations')
+#' dataset = merge.types(dataset, 'ins_del', 'missense_point_mutations', 'mut', 'green')
 #'
 #' @param x A TRONCO compliant dataset.
 #' @param ... type to merge
@@ -827,7 +828,7 @@ trim = function(x) {
 #' @title ssplit 
 #'
 #' @param x A TRONCO compliant dataset.
-#' @param stages A list of clusters. Rownames must match samples list of x
+#' @param clusters A list of clusters. Rownames must match samples list of x
 #' @param idx ID of a specific group present in stages. If NA all groups will be extracted  
 #' @return A TRONCO compliant dataset.
 #' @export ssplit
@@ -920,38 +921,40 @@ tsplit <- function(x)
 #'
 #' @examples
 #' data(muts)
-#' dataset = merge.events(test_dataset, c('G1', 'G2'))
+#' dataset = merge.events(muts, 'G1', 'G2', new.event='test', new.type='banana', event.color='yellow')
 #'
 #' @param x A TRONCO compliant dataset.
-#' @param events A list of events to merge 
+#' @param ... A list of events to merge 
 #' @param new.event The name of the resultant event
 #' @param new.type The type of the new event
 #' @param event.color The color of the new event
 #' @return A TRONCO compliant dataset.
 #' @export merge.events
-merge.events = function(x, events, new.event, new.type, event.color)
+merge.events = function(x, ..., new.event, new.type, event.color)
 {
-    if(ncol(events) != 2) {
+
+    events = list(...)
+
+    if(length(events) < 2) {
         stop('ERR - badformed events')
     }
 
     for(pattern in as.patterns(x)) {
-        if(any(events %in% as.events.in.patterns(x, patterns=pattern))) {
+        if(any(events %in% rownames(as.events.in.patterns(x, patterns=pattern)))) {
             stop('Found event in pattern \"', pattern, '\". Delete that pattern first.\n')
         }
     }
 
     x = enforce.numeric(x)
 
-    x.ev = NULL 
     y = x
-    for(i in 1:nrow(events))
-    {
-        x.ev = rbind(x.ev, as.events(x, genes = events[i,2], types = events[i,1]))
-        y = delete.event(y, gene = events[i,2], type = events[i,1])
+    as_ev = as.events(x)
+    print(events)
+    for(event in events) {
+        y = delete.event(y, gene = as_ev[event, 'event'], type = as_ev[event, 'type'])
     }
 
-    genos = x$genotypes[, rownames(x.ev)]
+    genos = x$genotypes[, unlist(events)]
     genos = matrix(rowSums(genos), nrow = nsamples(x))
     genos[genos > 1] = 1
     colnames(genos) = new.event

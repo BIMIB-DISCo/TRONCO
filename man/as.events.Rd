@@ -2,7 +2,7 @@
 % Please edit documentation in R/as.functions.R
 \name{as.events}
 \alias{as.events}
-\title{as events}
+\title{as.events}
 \usage{
 as.events(x, genes = NA, types = NA)
 }

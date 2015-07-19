@@ -4,10 +4,14 @@
 \alias{as.hypotheses}
 \title{as.hypotheses}
 \usage{
-as.hypotheses(x, cause = NULL, effect = NULL)
+as.hypotheses(x, cause = NA, effect = NA)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
+
+\item{cause}{A list of genes to use as causes}
+
+\item{effect}{A list of genes to use as effects}
 }
 \value{
 The hypotheses in the dataset which constitute CAPRI's hypotheses.

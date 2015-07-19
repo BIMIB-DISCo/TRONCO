@@ -9,7 +9,7 @@ delete.samples(x, samples)
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
 
-\item{sampels}{An array of samples name}
+\item{samples}{An array of samples name}
 }
 \value{
 A TRONCO complian dataset.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/as.functions.R
 \name{as.types}
 \alias{as.types}
-\title{as types}
+\title{as.types}
 \usage{
 as.types(x, genes = NA)
 }

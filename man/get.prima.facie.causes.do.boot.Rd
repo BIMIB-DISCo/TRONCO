@@ -27,6 +27,8 @@ get.prima.facie.causes.do.boot(adj.matrix, hypotheses,
 \item{marginal.probs}{observed marginal probabilities}
 
 \item{joint.probs}{observed joint probabilities}
+
+\item{silent}{Should I be verbose?}
 }
 \value{
 prima.facie.topology: list describing the topology of the prima facie causes

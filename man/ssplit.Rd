@@ -9,9 +9,9 @@ ssplit(x, clusters, idx = NA)
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
 
-\item{idx}{ID of a specific group present in stages. If NA all groups will be extracted}
+\item{clusters}{A list of clusters. Rownames must match samples list of x}
 
-\item{stages}{A list of clusters. Rownames must match samples list of x}
+\item{idx}{ID of a specific group present in stages. If NA all groups will be extracted}
 }
 \value{
 A TRONCO compliant dataset.

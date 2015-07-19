@@ -45,11 +45,31 @@ NULL
 
 #' @name as.genotypes.test
 #' @title as genotypes matrix
-#' @description This data set list 
+#' @description This data set list ...
 #' @docType data
 #' @usage data(as.genotypes.test)
-#' @format todo
+#' @format matrix
 #' @source da mettere
+#' @author Luca De Sano
+NULL
+
+#' @name as.events.test
+#' @title as events matrix
+#' @description This data set list ...
+#' @docType data
+#' @usage data(as.events.test)
+#' @format matrix
+#' @source fake data
+#' @author Luca De Sano
+NULL
+
+#' @name as.stages.test
+#' @title as stages matrix
+#' @description This data set list ...
+#' @docType data
+#' @usage data(as.stages.test)
+#' @format matrix
+#' @source fake data
 #' @author Luca De Sano
 NULL
 

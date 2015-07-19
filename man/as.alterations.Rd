@@ -2,7 +2,7 @@
 % Please edit documentation in R/as.functions.R
 \name{as.alterations}
 \alias{as.alterations}
-\title{as alterations}
+\title{as.alterations}
 \usage{
 as.alterations(x, new.type = "Alteration", new.color = "khaki")
 }
@@ -22,7 +22,7 @@ a total of gene-level alterations diregarding the event type. Input 'x' is check
 to be a TRONCO compliant dataset - see \code{is.compliant}.
 }
 \examples{
-data(test_dataset)
-as.alterations(test_dataset)
+data(muts)
+as.alterations(muts)
 }
 

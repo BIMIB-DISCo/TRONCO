@@ -2,7 +2,7 @@
 % Please edit documentation in R/as.functions.R
 \name{as.gene}
 \alias{as.gene}
-\title{as gene}
+\title{as.gene}
 \usage{
 as.gene(x, genes, types = NA)
 }
@@ -23,6 +23,6 @@ with events' types.
 }
 \examples{
 data(test_dataset)
-as.gene(mutations, genes = c('EZH2', 'ASXL1'))
+as.gene(test_dataset, genes = c('EZH2', 'ASXL1'))
 }
 

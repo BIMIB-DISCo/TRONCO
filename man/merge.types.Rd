@@ -25,7 +25,8 @@ of a unique "mutation" type)
 }
 \examples{
 data(test_dataset)
-dataset = merge.types(test_dataset, 'ins_del', 'missense_point_mutations')
-dataset = merge.types(test_dataset, 'ins_del', 'missense_point_mutations', 'mut', 'green')
+dataset = delete.pattern(test_dataset)
+dataset = merge.types(dataset, 'ins_del', 'missense_point_mutations')
+dataset = merge.types(dataset, 'ins_del', 'missense_point_mutations', 'mut', 'green')
 }
 

@@ -10,6 +10,8 @@ get.prima.facie.parents.do.boot(dataset, hypotheses, nboot, pvalue, adj.matrix,
 \arguments{
 \item{dataset}{a valid dataset}
 
+\item{hypotheses}{hypotheses object related to dataset}
+
 \item{nboot}{integer number (greater than 0) of bootstrap sampling to be performed}
 
 \item{pvalue}{pvalue for the tests (value between 0 and 1)}
@@ -21,6 +23,8 @@ get.prima.facie.parents.do.boot(dataset, hypotheses, nboot, pvalue, adj.matrix,
 \item{min.stat}{should I keep bootstrapping untill I have nboot valid values?}
 
 \item{boot.seed}{seed to be used for the sampling}
+
+\item{silent}{Should I be verbose?}
 }
 \value{
 prima.facie.parents list of the set (if any) of prima facie parents for each node

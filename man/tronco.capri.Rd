@@ -12,7 +12,7 @@ tronco.capri(data, command = "hc", regularization = c("bic", "aic"),
 \arguments{
 \item{data}{A TRONCO compliant dataset.}
 
-\item{command}{Parameter to define to heuristic search to be performed. Hill Climbing and Tabù search are currently available.}
+\item{command}{Parameter to define to heuristic search to be performed. Hill Climbing and Tabu search are currently available.}
 
 \item{regularization}{Select the regularization for the likelihood estimation, e.g., BIC, AIC.}
 

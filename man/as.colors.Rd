@@ -2,7 +2,7 @@
 % Please edit documentation in R/as.functions.R
 \name{as.colors}
 \alias{as.colors}
-\title{as colors}
+\title{as.colors}
 \usage{
 as.colors(x)
 }

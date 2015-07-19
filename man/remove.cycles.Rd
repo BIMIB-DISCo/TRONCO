@@ -17,6 +17,8 @@ remove.cycles(adj.matrix, weights.temporal.priority, weights.matrix,
 \item{not.ordered}{list of the nodes to be orderd}
 
 \item{hypotheses}{hypotheses to evaluate potential cycles}
+
+\item{silent}{Should I be verbose?}
 }
 \value{
 acyclic.topology: structure representing the best acyclic topology

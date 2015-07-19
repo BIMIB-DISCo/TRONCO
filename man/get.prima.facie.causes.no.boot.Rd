@@ -10,7 +10,9 @@ get.prima.facie.causes.no.boot(adj.matrix, hypotheses, marginal.probs,
 \arguments{
 \item{adj.matrix}{adjacency matrix of the initially valid edges}
 
-\item{marginal.probs}{marginal probabilities}
+\item{hypotheses}{hypotheses object related to adjacency matrix}
+
+\item{marginal.probs}{observed marginal probabilities}
 
 \item{prima.facie.model}{prima facie model}
 
@@ -20,7 +22,7 @@ get.prima.facie.causes.no.boot(adj.matrix, hypotheses, marginal.probs,
 
 \item{joint.probs}{observed joint probabilities}
 
-\item{marginal.probs}{observed marginal probabilities}
+\item{silent}{Should I be verbose?}
 }
 \value{
 prima.facie.topology: adjacency matrix of the prima facie causes
