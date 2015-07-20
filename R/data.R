@@ -113,7 +113,7 @@ NULL
 #' @author Luca De Sano
 NULL
 
-#' @name leukemia
+#' @name aCML
 #' @title Atypical chronic myeloid leukemia dataset
 #' @description This file contains a TRONCO compliant dataset 
 #' @docType data

@@ -94,10 +94,10 @@ installed to  use the package, see \texttt{Bioconductor.org}.
 
 \paragraph{\large 1. Types/Events definition}{\ }\\
 
-First, load \TRONCO{} in your \textsc{r} console. 
-%<<>>=
-%library(TRONCO)
-%@
+First, load \TRONCO{} in your \textsc{R} console. 
+<<>>=
+library(TRONCO)
+@
 Every node in the plotted topology can be colored according to the
 color table defined in \textsc{r}. You can use the command
 \texttt{colors} to see the available colors, e.g., \texttt{"red"}, \texttt{"blue"} or RGB 
