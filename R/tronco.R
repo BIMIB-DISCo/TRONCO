@@ -457,11 +457,11 @@ tronco.bootstrap <- function( reconstruction,
     }
 
     if(reconstruction$parameters$do.estimation == FALSE && type == "parametric") {
-        stop("To perform parametric bootstrap, the estimation of the error rates and probabilities should be performed.", call. = FALSE)
+        stop("To perform parametric bootstrap, the estimation of the error rates and probabilities\nshould be performed.", call. = FALSE)
     }
 
     if(type == "statistical" && !(reconstruction$parameters$algorithm == "CAPRI" && reconstruction$parameters$do.boot == TRUE)) {
-        stop("To perform statistical bootstrap, the algorithm used for the reconstruction must by CAPRI with bootstrap.", call. = FALSE)
+        stop("To perform statistical bootstrap, the algorithm used for the reconstruction\nmust by CAPRI with bootstrap.", call. = FALSE)
     }
 
     # set all the needed parameters to perform the bootstrap estimation
@@ -499,7 +499,7 @@ tronco.bootstrap <- function( reconstruction,
             if(type == 'statistical') boot.seed = NULL
         }
     } else {
-        stop("The types of bootstrap that can be performed are: non-parametric, parametric or statistical.", call. = FALSE)
+        stop("The types of bootstrap that can be performed are: non-parametric,\nparametric or statistical.", call. = FALSE)
     }
 
     # perform the selected bootstrap procedure
@@ -519,7 +519,7 @@ tronco.bootstrap <- function( reconstruction,
 
         reconstruction$bootstrap = curr.boot
 
-        cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", lambda, " as shrinkage parameter.\n\n", sep =""))
+        cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", lambda, "\nas shrinkage parameter.\n\n", sep =""))
 
     } else if(reconstruction$parameters$algorithm == "CAPRI") {
         curr.boot = bootstrap.capri(dataset, 
@@ -544,7 +544,7 @@ tronco.bootstrap <- function( reconstruction,
         reconstruction$bootstrap = curr.boot
 
         if(do.boot == TRUE) {
-            cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", pvalue, " as pvalue for the statistical tests.\n\n", sep =""))
+            cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling and ", pvalue, " as pvalue \nfor the statistical tests.\n\n", sep =""))
         } else {
             cat(paste("\nPerformed ", type, " bootstrap with ", nboot, " resampling.\n\n", sep =""))
         }

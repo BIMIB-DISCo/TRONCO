@@ -1,4 +1,9 @@
 \documentclass[a4paper, 9pt]{article}
+
+<<style-Sweave, eval=TRUE, echo=FALSE, results=tex>>=
+BiocStyle::latex()
+@
+
 \usepackage{hyperref}
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage{xfrac}
@@ -16,6 +21,8 @@
 
 \usepackage{url}
 
+\usepackage{placeins}
+
 
 \usepackage{xspace}
 
@@ -23,11 +30,6 @@
 \newcommand{\TRONCO}{\textsc{tronco}}
 
 \usepackage{fullpage}
-% \VignetteIndexEntry{TRONCO}
-%\VignetteIndexEntry{TRONCO}
-%\VignetteDepends{TRONCO}
-%\VignetteKeywords{TRONCO}
-%\VignettePackage{TRONCO}
 
 \begin{document}
 
@@ -39,6 +41,7 @@
 Marco Antoniotti\footnote{Dipartimento di Informatica Sistemistica e Comunicazione, Universit\'a degli Studi Milano-Bicocca
 Milano, Italy.} \and
 Giulio Caravagna$^\ast$ \and
+Luca De Sano$^\ast$ \and
 Alex Graudenzi$^\ast$ \and
 Ilya Korsunsky\footnote{Courant Institute of Mathematical Sciences, New York University, New York, USA.} \and
 Mattia Longoni$^\ast$ \and
@@ -74,11 +77,7 @@ This vignette shows how to  use  \TRONCO{} to infer a tree model of
 ovarian cancer progression from CGH data of copy number alterations (classified as gains or losses over chromosome's arms). The dataset used is
 available in the  SKY/M-FISH database.
 The reference manual for \TRONCO{} is available in the package.
-\begin{center}
-\includegraphics[width=0.9\textwidth]{workflow.png}
-\end{center}
-\flushright
-\scriptsize \em The \TRONCO{} workflow.
+
 \end{minipage}
 \end{center}
 
@@ -91,251 +90,185 @@ The reference manual for \TRONCO{} is available in the package.
 installed to  use the package, see \texttt{Bioconductor.org}.
 
 
-\paragraph{\large 1. Types/Events definition}{\ }\\
+\paragraph{\large Event selection}{\ }\\
 
-First, load \TRONCO{} in your \textsc{r} console. 
+First, load \TRONCO{} in your \textsc{R} console and the example \textit{"dataset"}. 
 <<>>=
 library(TRONCO)
+data(aCML)
+hide.progress.bar <<- TRUE
 @
-Every node in the plotted topology can be colored according to the
-color table defined in \textsc{r}. You can use the command
-\texttt{colors} to see the available colors, e.g., \texttt{"red"}, \texttt{"blue"} or RGB 
-\texttt{"\#FF9900FF"}.
 
-You can start defining the \emph{event types} that you are
-considering, and assign them  a color.
-
-As an example, for CGH data we define two types of events, \emph{gain}
-and \emph{loss}, which we color  \emph{red} and \emph{green} to represent
-amplifications or deletion of a  chromosome arm.  For instance, we can
-do this as follows:
+\paragraph{ We use \texttt{show} function to get a short summary of the aCML dataset }
 <<>>=
-types.add("gain", "cornflowerblue")
-types.add("loss", "brown1")
+show(data)
 @
-If many types have to be defined it might be convenient to load all of
-them at once.  This is possible by using a tabular input file
-(in \texttt{csv} format):
-\[
-\texttt{type\_name, type\_color}  \qquad\qquad  \text e.g., \quad \texttt{red, gain} 
-\]
-and issuing the command \texttt{types.load("types.txt")} -- if types
-are defined in file \texttt{types.txt}.  The output produced by
-\TRONCO{} might show warnings due to, e.g., different types assigned
-the same color.
 
-Once  types are defined, you can define the set of \emph{events} in
-the dataset (which will constitute the progression), give them a \emph{label}, a type and bind them to a
-dataset column.  Since in general there are much more events than types, it might be convenient to prepare an external file to load via command {\tt events.load("events.txt")}. The format expected for events is similar to the one expected for types, namely as a tabular input file in \texttt{csv} format:
-\[
-\texttt{event\_name, event\_type, column\_number} \qquad\qquad \text e.g., \quad \texttt{8p+, gain, 1}\, .
-\]
-For the ovarian CGH dataset, such a file contains the following rows (we show the first 3 lines)
-\begin{verbatim}
-8p+, gain, 1
-3p+, gain, 2
-5q-, loss, 3
-......
-\end{verbatim}
-which define, as events, gains in  arm $p$ of chromosomes $8$ and $3$, losses on arm $q$ of chromosomes $5$, etc. Given the file \emph{events.txt} where are defined the events with the above notation, the events can be loaded from a file as follows.
+\paragraph{ These are all the events it contains }
 <<>>=
- events.load("events.txt")
+as.events(data)
 @
-Events will constitute the nodes in the progression model.  If one is willing to add events in a iterative fashion the command {\tt events.add(event\_name, event\_type, column\_number)} can be used. For instance {\tt events.add("8q+", "gain", 1)}.
 
-
-At this point, \TRONCO{} executes some consistency checks to ensure that all the  added events are of a declared type, and report the user potential inconsistencies.
-
-
-
-\paragraph{\large 2. Data loading \& Progression inference}{\ }\\
-
-Once events are set, you can load the input dataset, which must be
-stored in a text file  as a binary matrix (once loaded, you can use {\tt tronco.data.view(your\_data)} to visualise loaded data as a heatmap).
+\paragraph{ Which account for alterations in the following genes }
 <<>>=
-data(ov.cgh)
-data.load(ov.cgh)
+as.genes(data)
+@
+
+\paragraph{ These are \texttt{SETBP1} alterations across input samples }
 <<>>=
-str(data.values)
+as.gene(data, genes='SETBP1')
 @
-In this case 87 samples are available and  7 events are considered (in general, the inference problem is well posed if there are more samples than events, which is the case here for ovarian).
 
-Further  consistency checks are performed by \TRONCO{} at data-loading time; these include checking that:
-\begin{itemize}
-\item All the columns of the dataset are assigned a unique event;
-\item There are no identical columns in the dataset. If this is the
-  case, the columns get merged and the events associated get merged
-  too (a default type is assigned in this case);
-\item There are no columns in the dataset solely constituted by 0s
-  or 1s. If this is the case, the columns and the events associated
-  are deleted.
-\end{itemize}
-\TRONCO{} signals the user that the data presents some inconsistency, if that is the case. Once the input is loaded, \CAPRESE{} can
-be executed.
-
-\begin{figure}[t]\center
-{\includegraphics[width=0.5\textwidth]{vignette-007}}
-\caption{\textbf{Ovarian cancer CGH tree reconstructed with CAPRESE.}
-  We show the result of reconstruction with \CAPRESE{}.
-  These trees are plot as explained in \S $2$ and {$3$}. The
-  tree is the reconstructed model without confidence information.}
-\label{fig:tree}
-\end{figure}
-
+\paragraph{ These are the genes for which we found a literature supporting the patterns
+that we include below. References are in the main \textit{CAPRI} paper. }
 <<>>=
-topology <- tronco.caprese(data.values, lambda=0.5)
-@
-In the above example, \CAPRESE{} is executed with a \emph{shrinkage
-  coefficient} set to $0.5$ (the default value, if not specified), which
-is the optimal value for  data containing \emph{false positives} and
-\emph{false negatives}.  If these were absent, the optimal coefficient
-should be set to an arbitrary small value, e.g. $10^{-3}$; in any
-case the coefficient  must be  in $[0,1]$.  Notice that \TRONCO{}
-provides an \emph{empirical estimation} of the  the rate of false
-positives and negatives in the data, given the reconstructed model;
-this is done  via $\ell_2$ distance.
-
-The returned topology can be printed to screen by using the
-\texttt{topology} object print method, or can be visualized by using
-the \texttt{tronco.plot} function.
-<<fig=TRUE,include=FALSE>>=
-topology
-tronco.plot(topology, title="Ovarian cancer progression with CAPRESE", legend.title="CGH events", 
-	legend.coeff = 1.0, label.coeff = 1.2, legend = TRUE)
+gene.hypotheses = c('KRAS', 'NRAS', 'IDH1', 'IDH2', 'TET2', 'SF3B1', 'ASXL1')
 @
 
-In this case we are assigning a title to the plot, we are requiring
-to display a legend (\texttt{ legend = TRUE}), and we are setting custom
-size for the text in the legend (\texttt{legend.coeff = 0.7}, $70\%$
-of the default size) and in the model (\texttt{ label.coeff = 1.2});
-see Figure \ref{fig:tree}.
-
-\paragraph{\large 3. Confidence estimation}{\ }\\
-
-\begin{figure}[t]\centerline{
-\fbox{\includegraphics[width=0.33\textwidth]{vignette-008}}
-\fbox{\includegraphics[width=0.33\textwidth]{vignette-009}}
-\fbox{\includegraphics[width=0.33\textwidth]{vignette-010}} \\
-}
-
-\centerline{
-\fbox{\includegraphics[width=0.33\textwidth]{vignette-011}}
-\fbox{\includegraphics[width=0.33\textwidth]{vignette-012}}
-\fbox{\includegraphics[width=0.33\textwidth]{vignette-013}}
-}
-\caption{\textbf{Probabilities (input data): visualisation and comparison with  model's predictions.} Top: observed
-  \emph{frequencies} of \emph{observed},  \emph{joint} and
-  \emph{conditional} distributions of events (conditionals are
-  restricted according to the reconstructed progression
-  model) as emerge from the data. Bottom: difference between observed and fitted
-  probabilities, according to the reconstructed progression.}
-\label{fig:distrib}
-\end{figure}
-
-\paragraph{Data and model probabilities.} Before estimating the
-confidence of a reconstruction, one might print and visualise the
-\emph{frequency of occurrence} for each event, the \emph{ joint
-  distribution} and the  \emph{conditional distribution} according to
-the input data (i.e., the \emph{observed} probabilities).   Notice
-that for the conditional distribution we condition only on the parent
-of a node, as reconstructed in the returned model.  Plots of these distributions are shown in Figure
-\ref{fig:distrib}, and are evaluated as follows.
-<<fig=TRUE,include=FALSE>>=
- confidence.data.single(topology)
-@
-<<fig=TRUE,include=FALSE>>=
- confidence.data.joint(topology)
-@
-<<fig=TRUE,include=FALSE>>=
- confidence.data.conditional(topology)
+\paragraph{ Regardless the distinct types of mutations that we included, we want to
+select only genes altered in $5\%$ of the cases. Thus we first transform
+data in \textit{"Alteration"} (collapsing all event types for the same gene), and
+then we use select only those events }
+<<>>=
+alterations = events.selection(as.alterations(data), filter.freq = .05)
 @
 
-In a similar way, by using \texttt{ confidence.fit.single(topology)},
-\texttt{ confidence.fit.joint(topology)} or
-\texttt{confidence.fit.conditional(topology)}, the analogous
-probabilities can be assessed according to the model. This are not
-shown in this vignette.
-
-The difference between  observed and  fit probabilities can be
-visualised as follows.
-<<fig=TRUE,include=FALSE>>=
-confidence.single(topology)
+\paragraph{ We visualize the selected genes. This plot has no title since name annotation
+is not copied by \texttt{events.selection} }
+<<onco1, fig=TRUE,include=TRUE>>=
+dummy = oncoprint(alterations)
 @
-<<fig=TRUE,include=FALSE>>=
-confidence.joint(topology)
+\incfig[ht]{vignette-onco1}{0.9\textwidth}{Oncoprint output}{}
+
+\FloatBarrier
+
+\paragraph{\large Adding Hypotheses}{\ }\\
+
+\paragraph{ Then to reconstruct the aCML model we select from \texttt{data} which have been
+selected in \texttt{alteration} - via \texttt{as.genes(alterations)} or that are
+part of the prior in \texttt{gene.hypotheses}. We use \texttt{filter.in.names} to
+force selection of all the events involving those genes from \texttt{data} }
+<<>>=
+hypo = events.selection(data, filter.in.names=c(as.genes(alterations), gene.hypotheses))
+hypo = annotate.description(hypo, 'CAPRI - Bionformatics aCML data (selected events)')
 @
-<<fig=TRUE,include=FALSE>>=
-confidence.conditional(topology)
+
+\paragraph{ We show selected data and we annotate genes in \texttt{gene.hypotheses} to identify
+them. Samples names are also shown }
+<<onco2, fig=TRUE,include=FALSE>>=
+dummy = oncoprint(hypo,  gene.annot = list(priors= gene.hypotheses), sample.id = T)
+@
+\incfig[ht]{vignette-onco2}{0.9\textwidth}{Oncoprint output}{}
+
+\FloatBarrier
+
+\paragraph{ We now add the hypotheses that are described in CAPRI's manuscript }
+
+\paragraph{ Add hypotheses of hard exclusivity (XOR) for NRAS/KRAS events (Mutation). The hypothesis is tested
+against all other dataset events }
+<<>>=
+hypo = hypothesis.add(hypo, 'NRAS xor KRAS', XOR('NRAS', 'KRAS'))
 @
 
+\paragraph{ Here we try to include also a soft exclusivity (OR) pattern but, since its \textit{"signature"}
+is the same of the hard one, it will not be included. The code below is commented because it gives errors. }
+<<>>=
+### do not run
+# hypo = hypothesis.add(hypo, 'NRAS or KRAS',  OR('NRAS', 'KRAS'))
+###
+@
 
-\paragraph{Bootstrap confidence.}{\ }\\
+\paragraph{ For the sake to better highlight the perfect (hard) exclusivity between NRAS/KRAS 
+mutations one can visualize their alterations }
+<<onco3, fig=TRUE,include=FALSE>>=
+dummy = oncoprint(events.selection(hypo, filter.in.names = c('KRAS', 'NRAS')))
+@
+\incfig[ht]{vignette-onco3}{0.9\textwidth}{Oncoprint output}{}
 
-Confidence in a model can be estimated via \emph{parametric} and
-\emph{non-parametric bootstrap}.  In the former case, the model is
-assumed to be correct and data is sampled by the model, in the latter
-case resamples are taken from the input data, with repetitions.  In any
-case, the reconstruction confidence is the number of times that the
-estimated tree or edge is inferred out of a number of
-resamples.  The parameters of the bootstrap procedure can be custom
-set.
+\FloatBarrier
+
+\paragraph{ This is as above, but includes other events. Again, we can include only the hard exclusivity pattern }
+<<>>=
+hypo = hypothesis.add(hypo, 'SF3B1 xor ASXL1', XOR('SF3B1', OR('ASXL1')), '*')
+### do not run
+# hypo = hypothesis.add(hypo, 'SF3B1 or ASXL1', OR('SF3B1', OR('ASXL1')), '*')
+###
+@
+
+\paragraph{ We now do the same for TET2 and IDH2. In this case 3 events for TET2 are present, which are
+\textit{"Ins/Del"}, \textit{"Missense point"} and \textit{"Nonsense point"}. For this reason, since we are not specifying
+a subset of such events all TET2 alterations are used. Since these show a perfect hard exclusivity
+trend these will be included in XOR. }
+<<>>=
+as.events(hypo, genes = 'TET2') 
+hypo = hypothesis.add(hypo, 'TET2 xor IDH2', XOR('TET2', 'IDH2'), '*')
+### do not run
+# hypo = hypothesis.add(hypo,  'TET2 or IDH2', OR('TET2', 'IDH2'), '*'))
+###
+@
+
+<<onco4, fig=TRUE,include=FALSE>>=
+dummy = oncoprint(events.selection(hypo, filter.in.names = c('TET2', 'IDH2')))
+@
+\incfig[ht]{vignette-onco4}{0.9\textwidth}{Oncoprint output}{}
+
+\FloatBarrier
+
+\paragraph{ For every gene that has more than one event associated we also add a soft exclusivity pattern
+for its events }
+<<>>=
+hypo = hypothesis.add.homologous(hypo)
+@
+
+\paragraph{ The dataset input to CAPRI is shown }
+<<onco5, fig=TRUE,include=FALSE>>=
+dummy = oncoprint(hypo,  gene.annot = list(priors= gene.hypotheses), sample.id = T)
+@
+\incfig[ht]{vignette-onco5}{0.9\textwidth}{Oncoprint output}{}
+
+\FloatBarrier
+
+\paragraph{\large Model reconstruction}{\ }\\
+
+\paragraph{ We execute CAPRI with its default parameter: we use both AIC/BIC regularizators, Hill-climbing
+exhaustive bootstrap (100 replicates for Wilcoxon testing), p-value 0.05 and we set seed }
+<<>>=
+model = tronco.capri(hypo, boot.seed = 12345, regularization='bic')
+@
+
+\paragraph{ We can plot the reconstructed model. We set some parameters to get a fancy plot; confidence
+is shown as temporal priority and probability raising (selective advantage scores) and 
+hypergeometric testing (goodness of input data). }
+<<figplot, fig=TRUE,include=FALSE>>=
+tronco.plot(model,  
+  fontsize = 13,  
+  scale.nodes = .6,   
+  confidence = c('tp', 'pr', 'hg'),   
+  height.logic = 0.25,  
+  legend.cex = .5, 
+  pathways =  list(priors= gene.hypotheses))
+@
+\incfig[ht]{vignette-figplot}{0.9\textwidth}{aCML Reconstructed model}
+{Pre bootstrap.}
+
+\FloatBarrier
+
+\paragraph{\large Bootstrapping data}{\ }\\
 
 <<>>=
-set.seed(12345)
-topology <- tronco.bootstrap(topology, type="non-parametric", nboot=1000)
-@
-<<fig=TRUE,include=FALSE>>=
-tronco.bootstrap.show(topology)
+model.boot = tronco.bootstrap(model, nboot=6)
 @
 
-
-In this case, for instance, we are performing non-parametric bootstrap
-(the default one) with $1000$ repetitions and, since no shrinkage
-coefficient is specified, we are still using $0.5$. Here the estimated
-error rates are used to include noise levels estimated from the
-data/model. To perform parametric bootstrap is enough to use the flag
-\texttt{ type="parametric"}.
-<<>>=
-set.seed(12345)
-topology <- tronco.bootstrap(topology, type="parametric", nboot=1000)
+<<figplotboot, fig=TRUE,include=FALSE>>=
+tronco.plot(model.boot,
+            fontsize = 13,  
+            scale.nodes = .6,
+            confidence=c('npb'),
+            height.logic = 0.25,  
+            legend.cex = .5)
 @
-<<fig=TRUE,include=FALSE>>=
-tronco.bootstrap.show(topology)
-@
-
-
-
-Results of bootstrapping are visualized as a table (useful for edge
-confidence), and as a heatmap by using command
-\texttt{tronco.bootstrap.show}. The overall model confidence is
-reported, too. In Figure 3 results of bootstrap are
-shown.  If one is willing to visualize this confidence in the plot of
-the inferred tree  an input flag \texttt{confidence}  can be used with
-function \texttt{tronco.plot}. For instance:
-<<fig=TRUE,include=FALSE>>=
-tronco.plot(topology, title="Ovarian cancer progression with CAPRESE", legend.title="CGH events", 
-	legend.coeff = 1.0, label.coeff = 1.2, legend = TRUE, confidence = TRUE)
-@
-
-In this case, the thicker lines  reflect the most confident edges;
-confidence is also reported as labels of edges, as shown in
-Figure 4
-%
-%
-% These are visualized in  Figure \ref{fig:bootstrap}.
-
-\begin{figure}[t]\center
-\fbox{\includegraphics[width=0.45\textwidth]{vignette-015}}
-\fbox{\includegraphics[width=0.45\textwidth]{vignette-017}}
-\caption{\textbf{Bootstrap for edge confidence.} Non-parametric and parametric confidence in each reconstructed edge as assessed via bootstrapping.}  
-\label{fig:bootstrap}
-\end{figure}
-
-\begin{figure}[t]\center
-\fbox{\includegraphics[width=0.45\textwidth]{vignette-018}}
-\caption{\textbf{Bootstrap information included in the model.} You can include the result of edge confidence estimation via bootstrap by using flag {\tt confidence}. In this case the thickness of each edge is proportional to its estimated confidence.}  
-\label{fig:bootstrap}
-\end{figure}
+\incfig[ht]{vignette-figplotboot}{0.9\textwidth}{aCML Reconstructed model}
+{After bootstrap.}
 
 
 \end{document}

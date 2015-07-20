@@ -718,7 +718,7 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
         input = as.list(as.types(x))
     }
 
-    cat(paste("*** Aggregating events of type(s) {", paste(unlist(input), collapse = ", ", sep = ""), "} in a unique event with label \"", new.type, "\".\n", sep = ""))
+    cat(paste("*** Aggregating events of type(s) {", paste(unlist(input), collapse = ", ", sep = ""), "}\nin a unique event with label \"", new.type, "\".\n", sep = ""))
 
 
     if (length(input) <= 1) {
@@ -756,12 +756,16 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
     cat("Dropping event types", paste(input, collapse = ", ", sep = ""), "for", length(genes), "genes.\n")
     geno.matrix = matrix(, nrow = nsamples(x), ncol = length(genes))
 
-    pb = txtProgressBar(1, length(genes), style = 3)
-    flush.console()
+    if(!hide.progress.bar) {
+        pb = txtProgressBar(1, length(genes), style = 3)
+        flush.console()
+    }
 
 
     for (i in 1:length(genes)) {
-        setTxtProgressBar(pb, i)
+        if(!hide.progress.bar) {
+            setTxtProgressBar(pb, i)
+        }
 
         geno = as.matrix(rowSums(as.gene(x, genes[i], types = input)))
         geno[geno > 1] = 1
@@ -772,7 +776,9 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
 
     rownames(geno.matrix) = as.samples(x)
     colnames(geno.matrix) = genes
-    close(pb)
+    if(!hide.progress.bar) {
+        close(pb)
+    }
 
 
     z = import.genotypes(geno.matrix, event.type = new.type, color = new.color)

@@ -271,7 +271,7 @@ get.bootstapped.scores = function(dataset,
     # set the seed to be used for the sampling
     set.seed(boot.seed);
     
-    if(silent==FALSE) {
+    if(silent==FALSE && !hide.progress.bar) {
             # create a progress bar
             flush.console();
             pb <- txtProgressBar(curr.iteration, nboot, style = 3);
@@ -344,7 +344,7 @@ get.bootstapped.scores = function(dataset,
             curr.iteration = nboot;
         }
         
-        if(silent==FALSE) {
+        if(silent==FALSE && !hide.progress.bar) {
                 #increment the progress bar
                 if(min.stat==FALSE) {
                     setTxtProgressBar(pb, boot.counter);
@@ -356,7 +356,7 @@ get.bootstapped.scores = function(dataset,
     
     }
     
-    if(silent==FALSE) {
+    if(silent==FALSE && !hide.progress.bar) {
         # close the progress bar
             close(pb);
         }

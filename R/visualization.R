@@ -115,7 +115,7 @@ oncoprint <- function(x,
     }
 
 ############## Check input data
-    cat(paste('*** Oncoprint for "', title, '" with attributes: stage=', ann.stage, ', hits=', ann.hits, '\n', sep=''))
+    cat(paste('*** Oncoprint for "', title, '"\nwith attributes: stage=', ann.stage, ', hits=', ann.hits, '\n', sep=''))
     is.compliant(x, 'oncoprint', stage=ann.stage)
     x = enforce.numeric(x)
 
