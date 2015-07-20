@@ -315,16 +315,16 @@ tronco.capri <- function(data,
 }
 
 # Not exporting this function for now.
-#' todo
-#'
-#' @examples
-#' data(test_model)
-#' recon = tronco.estimation(test_model)
-#'
-#' @title tronco.estimation
-#' @param reconstruction A TRONCO compliant dataset with a reconstructed model associated.
-#' @param error.rates todo
-#' @return A TRONCO compliant object with reconstructed model and estimations
+# todo
+#
+# @examples
+# data(test_model)
+# recon = tronco.estimation(test_model)
+#
+# @title tronco.estimation
+# @param reconstruction A TRONCO compliant dataset with a reconstructed model associated.
+# @param error.rates todo
+# @return A TRONCO compliant object with reconstructed model and estimations
 tronco.estimation <- function( reconstruction, error.rates = NA ) {
 ###############
 # DEV VERSION #
@@ -1290,9 +1290,11 @@ tronco.plot = function(x,
 
 
 
-        if('Pattern' %in% as.types(x)) 
-            y = delete.type(x, 'Pattern')
-        else y = x
+        if('Pattern' %in% as.types(x)) {
+            y = delete.model(x)
+            y = delete.type(y, 'Pattern')
+        } else 
+            y = x
 
 
         freq.labels = c(freq.labels, 

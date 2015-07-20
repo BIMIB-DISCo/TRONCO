@@ -1084,7 +1084,7 @@ npatterns = function(x)
 #'
 #' @examples
 #' data(test_dataset)
-#' hypotheses(test_dataset)
+#' nhypotheses(test_dataset)
 #'
 #' @param x the dataset.
 #' @export nhypotheses
@@ -1167,8 +1167,8 @@ sort.by.frequency = function(x, decreasing=TRUE, ...)
     x = enforce.numeric(x)
     sums = colSums(x$genotypes)
 
-    x$genotypes = x$genotypes[, order(sums, decreasing = decreasing), DROP = F]
-    x$annotations = x$annotations[colnames(x$genotypes), , DROP = F]
+    x$genotypes = x$genotypes[, order(sums, decreasing = decreasing), drop=F]
+    x$annotations = x$annotations[colnames(x$genotypes), , drop=F]
 
     return(x)  
 }

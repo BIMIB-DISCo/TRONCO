@@ -14,6 +14,6 @@ Return the number of hypotheses in the dataset
 }
 \examples{
 data(test_dataset)
-hypotheses(test_dataset)
+nhypotheses(test_dataset)
 }
 

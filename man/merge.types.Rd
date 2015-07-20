@@ -24,9 +24,8 @@ For an input dataset merge all the events of two or more distincit types
 of a unique "mutation" type)
 }
 \examples{
-data(test_dataset)
-dataset = delete.pattern(test_dataset)
-dataset = merge.types(dataset, 'ins_del', 'missense_point_mutations')
-dataset = merge.types(dataset, 'ins_del', 'missense_point_mutations', 'mut', 'green')
+data(test_dataset_no_hypos)
+merge.types(test_dataset_no_hypos, 'ins_del', 'missense_point_mutations')
+merge.types(test_dataset_no_hypos, 'ins_del', 'missense_point_mutations', new.type='mut', new.color='green')
 }
 

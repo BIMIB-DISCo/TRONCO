@@ -519,7 +519,18 @@ return(ret)
 
 
 ##### Pathway print
-#' @export
+#' Visualise pathways informations
+#' @title pathway.visualization
+#'
+#' @param x A TRONCO complian dataset
+#' @param title Plot title
+#' @param file To generate a PDF a filename have to be given
+#' @param pathways.color A RColorBrewer color palette
+#' @param aggregate.pathways todo
+#' @param pathways todo
+#' @param ... todo
+#' @return plot information
+#' @export pathway.visualization
 pathway.visualization = function(x, 
     title = paste('Pathways:', paste(names(pathways), collapse=', ', sep='')), 
     file, 
@@ -807,11 +818,29 @@ pathway.visualization = function(x,
 # )
 # } 
 
-#
-# oncoprint.cbio : export input for cbio visualization at http://www.cbioportal.org/public-portal/oncoprinter.jsp
-#
+#' export input for cbio visualization at http://www.cbioportal.org/public-portal/oncoprinter.jsp
+#' @title oncoprint.cbio
+#'
+#' @examples
+#' data(gistic)
+#' gistic = import.GISTIC(gistic)
+#' oncoprint.cbio(gistic)
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param file name of the file where to save the output
+#' @param hom.del type of Homozygous Deletion
+#' @param het.loss type of Heterozygous Loss
+#' @param gain type of Gain
+#' @param amp type of Amplification
+#' @return A file containing instruction for the CBio visualization Tool
 #' @export
-oncoprint.cbio <- function(x, file='oncoprint-cbio.txt', hom.del = 'Homozygous Loss',het.loss = 'Heterozygous Loss', gain = 'Low-level Gain', amp = 'High-level Gain')
+oncoprint.cbio <- function(x, 
+    file='oncoprint-cbio.txt', 
+    hom.del = 'Homozygous Loss',
+    het.loss = 'Heterozygous Loss', 
+    gain = 'Low-level Gain', 
+    amp = 'High-level Gain')
+
 {
     is.compliant(x)
 
@@ -845,10 +874,21 @@ oncoprint.cbio <- function(x, file='oncoprint-cbio.txt', hom.del = 'Homozygous L
 }
 
 
-# PDF and laex tables
+#' Generate PDF and laex tables
+#' @title genes.table.report
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param name filename
+#' @param dir working directory
+#' @param maxrow maximum number of row per page
+#' @param font document fontsize
+#' @param height table height
+#' @param width table width
+#' @param fill fill color
+#' @return LaTEX code
 #' @importFrom gridExtra grid.table
 #' @importFrom xtable xtable
-#' @export
+#' @export genes.table.report
 genes.table.report = function(x, name, dir=getwd(), maxrow=33, 
     font=10, height=11, width=8.5, fill="lightblue") 
 {
@@ -939,10 +979,15 @@ genes.table.report = function(x, name, dir=getwd(), maxrow=33,
 
 
 
-# stacked histogram
+#' Generates stacked histogram
+#' @title genes.table.plot
+#'
+#' @param x A TRONCO compliant dataset
+#' @param name filename
+#' @param dir where to save the file
 #' @importFrom reshape2 melt
 #' @importFrom ggplot2 ggplot geom_bar
-#' @export
+#' @export genes.table.plot
 genes.table.plot = function(x, name, dir=getwd()) 
 {  
 
@@ -2032,11 +2077,11 @@ likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample
 #' pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcols)
 #' @export pheatmap
 #' @importFrom grid unit textGrob gpar unit.c viewport convertWidth
-#' @importFrom grid convertHeight gList gTree rectGrob grobTree
+#' @importFrom grid convertHeight gList gTree rectGrob grobTree polylineGrob
 #' @importFrom grid grid.draw grid.pretty grid.newpage
-#' @importFrom scales dscale hue_pal
+#' @importFrom scales dscale hue_pal brewer_pal
 #' @importFrom RColorBrewer brewer.pal
-    pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete", cutree_rows = NA, cutree_cols = NA,  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation_row = NA, annotation_col = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", number_color = "grey30", fontsize_number = 0.8 * fontsize, gaps_row = NULL, gaps_col = NULL, labels_row = NULL, labels_col = NULL, filename = NA, width = NA, height = NA, silent = FALSE, legend.cex = 1, txt.stats = NA, ...){
+pheatmap = function(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60", cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE, cluster_cols = TRUE, clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean", clustering_method = "complete", cutree_rows = NA, cutree_cols = NA,  treeheight_row = ifelse(cluster_rows, 50, 0), treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE, legend_breaks = NA, legend_labels = NA, annotation_row = NA, annotation_col = NA, annotation = NA, annotation_colors = NA, annotation_legend = TRUE, drop_levels = TRUE, show_rownames = T, show_colnames = T, main = NA, fontsize = 10, fontsize_row = fontsize, fontsize_col = fontsize, display_numbers = F, number_format = "%.2f", number_color = "grey30", fontsize_number = 0.8 * fontsize, gaps_row = NULL, gaps_col = NULL, labels_row = NULL, labels_col = NULL, filename = NA, width = NA, height = NA, silent = FALSE, legend.cex = 1, txt.stats = NA, ...){
 
 # Set labels
         if(is.null(labels_row)){

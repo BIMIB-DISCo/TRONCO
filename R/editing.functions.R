@@ -696,10 +696,9 @@ sbind = function(...)
 #' @title merge.types
 #' 
 #' @examples
-#' data(test_dataset)
-#' dataset = delete.pattern(test_dataset)
-#' dataset = merge.types(dataset, 'ins_del', 'missense_point_mutations')
-#' dataset = merge.types(dataset, 'ins_del', 'missense_point_mutations', 'mut', 'green')
+#' data(test_dataset_no_hypos)
+#' merge.types(test_dataset_no_hypos, 'ins_del', 'missense_point_mutations')
+#' merge.types(test_dataset_no_hypos, 'ins_del', 'missense_point_mutations', new.type='mut', new.color='green')
 #'
 #' @param x A TRONCO compliant dataset.
 #' @param ... type to merge

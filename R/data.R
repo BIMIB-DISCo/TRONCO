@@ -73,6 +73,16 @@ NULL
 #' @author Luca De Sano
 NULL
 
+#' @name test_dataset_no_hypos
+#' @title A complete dataset
+#' @description This dataset contains a complete test dataset
+#' @docType data
+#' @usage data(test_dataset)
+#' @format TRONCO compliant dataset
+#' @source fake data
+#' @author Luca De Sano
+NULL
+
 #' @name test_dataset
 #' @title A complete dataset with hypotheses
 #' @description This dataset contains a complete test dataset
