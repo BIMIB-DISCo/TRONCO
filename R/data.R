@@ -112,3 +112,13 @@ NULL
 #' @source fake data
 #' @author Luca De Sano
 NULL
+
+#' @name leukemia
+#' @title Atypical chronic myeloid leukemia dataset
+#' @description This file contains a TRONCO compliant dataset 
+#' @docType data
+#' @usage data(leukemia)
+#' @format TRONCO compliant dataset
+#' @source data from http://www.nature.com/ng/journal/v45/n1/full/ng.2495.html
+#' @author Luca De Sano
+NULL

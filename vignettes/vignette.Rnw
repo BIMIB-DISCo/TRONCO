@@ -39,6 +39,7 @@
 Marco Antoniotti\footnote{Dipartimento di Informatica Sistemistica e Comunicazione, Universit\'a degli Studi Milano-Bicocca
 Milano, Italy.} \and
 Giulio Caravagna$^\ast$ \and
+Luca De Sano$^\ast$ \and
 Alex Graudenzi$^\ast$ \and
 Ilya Korsunsky\footnote{Courant Institute of Mathematical Sciences, New York University, New York, USA.} \and
 Mattia Longoni$^\ast$ \and
