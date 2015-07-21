@@ -16,7 +16,7 @@
 #'  TRONCO (TRanslational ONCOlogy) is a R package which collects 
 #'  algorithms to infer progression models from Bernoulli 0/1 profiles of genomic
 #'  alterations across a tumor sample. Such profiles are usually visualised as a 
-#'  binary input matrix where each row represents a patient’s sample (e.g., the 
+#'  binary input matrix where each row represents a patient's sample (e.g., the 
 #'  result of a sequenced tumor biopsy), and each column an event relevant to the 
 #'  progression (a certain type of somatic mutation, a focal or higher-level 
 #'  chromosomal copy number alteration etc.); a 0/1 value models the absence/presence

@@ -104,22 +104,22 @@ hide.progress.bar <<- TRUE
 
 \paragraph{ We use \texttt{show} function to get a short summary of the aCML dataset }
 <<>>=
-show(data)
+show(aCML)
 @
 
 \paragraph{ These are all the events it contains }
 <<>>=
-as.events(data)
+as.events(aCML)
 @
 
 \paragraph{ Which account for alterations in the following genes }
 <<>>=
-as.genes(data)
+as.genes(aCML)
 @
 
 \paragraph{ These are \texttt{SETBP1} alterations across input samples }
 <<>>=
-as.gene(data, genes='SETBP1')
+as.gene(aCML, genes='SETBP1')
 @
 
 \paragraph{ These are the genes for which we found a literature supporting the patterns
@@ -133,7 +133,7 @@ select only genes altered in $5\%$ of the cases. Thus we first transform
 data in \textit{"Alteration"} (collapsing all event types for the same gene), and
 then we use select only those events }
 <<>>=
-alterations = events.selection(as.alterations(data), filter.freq = .05)
+alterations = events.selection(as.alterations(aCML), filter.freq = .05)
 @
 
 \paragraph{ We visualize the selected genes. This plot has no title since name annotation
@@ -155,7 +155,7 @@ selected in \texttt{alteration} - via \texttt{as.genes(alterations)} or that are
 part of the prior in \texttt{gene.hypotheses}. We use \texttt{filter.in.names} to
 force selection of all the events involving those genes from \texttt{data} }
 <<>>=
-hypo = events.selection(data, filter.in.names=c(as.genes(alterations), gene.hypotheses))
+hypo = events.selection(aCML, filter.in.names=c(as.genes(alterations), gene.hypotheses))
 hypo = annotate.description(hypo, 'CAPRI - Bionformatics aCML data (selected events)')
 @
 

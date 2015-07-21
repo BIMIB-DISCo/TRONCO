@@ -17,25 +17,25 @@ hide.progress.bar <<- TRUE
 ###################################################
 ### code chunk number 3: vignette.Rnw:106-107
 ###################################################
-show(data)
+show(aCML)
 
 
 ###################################################
 ### code chunk number 4: vignette.Rnw:111-112
 ###################################################
-as.events(data)
+as.events(aCML)
 
 
 ###################################################
 ### code chunk number 5: vignette.Rnw:116-117
 ###################################################
-as.genes(data)
+as.genes(aCML)
 
 
 ###################################################
 ### code chunk number 6: vignette.Rnw:121-122
 ###################################################
-as.gene(data, genes='SETBP1')
+as.gene(aCML, genes='SETBP1')
 
 
 ###################################################
@@ -47,7 +47,7 @@ gene.hypotheses = c('KRAS', 'NRAS', 'IDH1', 'IDH2', 'TET2', 'SF3B1', 'ASXL1')
 ###################################################
 ### code chunk number 8: vignette.Rnw:135-136
 ###################################################
-alterations = events.selection(as.alterations(data), filter.freq = .05)
+alterations = events.selection(as.alterations(aCML), filter.freq = .05)
 
 
 ###################################################
@@ -65,7 +65,7 @@ capture.output(oncoprint(alterations, file='onco-1.pdf'), file='NUL')
 ###################################################
 ### code chunk number 11: vignette.Rnw:157-159
 ###################################################
-hypo = events.selection(data, filter.in.names=c(as.genes(alterations), gene.hypotheses))
+hypo = events.selection(aCML, filter.in.names=c(as.genes(alterations), gene.hypotheses))
 hypo = annotate.description(hypo, 'CAPRI - Bionformatics aCML data (selected events)')
 
 

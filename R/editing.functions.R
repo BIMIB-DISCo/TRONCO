@@ -804,7 +804,7 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
 #' 
 #' @examples
 #' data(test_dataset)
-#' data = trim(test_dataset)
+#' test_dataset = trim(test_dataset)
 #'
 #' @param x A TRONCO compliant dataset.
 #' @return A TRONCO compliant dataset.

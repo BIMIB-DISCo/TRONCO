@@ -17,6 +17,6 @@ Deletes all events which have frequency 0 in the dataset.
 }
 \examples{
 data(test_dataset)
-data = trim(test_dataset)
+test_dataset = trim(test_dataset)
 }
 
