@@ -9,7 +9,7 @@
 data from http://www.nature.com/ng/journal/v45/n1/full/ng.2495.html
 }
 \usage{
-data(leukemia)
+data(aCML)
 }
 \description{
 This file contains a TRONCO compliant dataset

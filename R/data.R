@@ -77,7 +77,7 @@ NULL
 #' @title A complete dataset
 #' @description This dataset contains a complete test dataset
 #' @docType data
-#' @usage data(test_dataset)
+#' @usage data(test_dataset_no_hypos)
 #' @format TRONCO compliant dataset
 #' @source fake data
 #' @author Luca De Sano
@@ -107,7 +107,7 @@ NULL
 #' @title A complete dataset with a reconstructed model
 #' @description This dataset contains a model reconstructed with CAPRI
 #' @docType data
-#' @usage data(test_dataset)
+#' @usage data(test_model)
 #' @format TRONCO compliant dataset
 #' @source fake data
 #' @author Luca De Sano
@@ -117,7 +117,7 @@ NULL
 #' @title Atypical chronic myeloid leukemia dataset
 #' @description This file contains a TRONCO compliant dataset 
 #' @docType data
-#' @usage data(leukemia)
+#' @usage data(aCML)
 #' @format TRONCO compliant dataset
 #' @source data from http://www.nature.com/ng/journal/v45/n1/full/ng.2495.html
 #' @author Luca De Sano

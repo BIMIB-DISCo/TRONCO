@@ -34,30 +34,25 @@ Suggests:
     BiocStyle,
     testthat,
     R.matlab
-Description: Genotype-level cancer progression models describe the ordering of
-    accumulating mutations, e.g., somatic mutations / copy number variations,
-    during cancer development. These graphical models help understand the
-    causal structure involving events promoting cancer progression, possibly
-    predicting complex patterns characterising genomic progression of a cancer.
-    Reconstructed models can be used to better characterise genotype-phenotype
-    relation, and suggest novel targets for therapy design. TRONCO
-    (TRanslational ONCOlogy) is a R package aimed at collecting
-    state-of-the-art algorithms to infer progression models from
-    cross-sectional data, i.e., data collected from independent patients which
-    does not necessarily incorporate any evident temporal information. These
-    algorithms require a binary input matrix where: (i) each row represents a
-    patient genome, (ii) each column an event relevant to the progression (a
-    priori selected) and a 0/1 value models the absence/presence of a certain
-    mutation in a certain patient. The current first version of TRONCO
-    implements the CAPRESE algorithm (Cancer PRogression Extraction with Single
-    Edges) to infer possible progression models arranged as trees; cfr.
-    Inferring tree causal models of cancer progression with probability
-    raising, L. Olde Loohuis, G. Caravagna, A. Graudenzi, D. Ramazzotti, G.
-    Mauri, M. Antoniotti and B. Mishra. PLoS One, to appear. This vignette
-    shows how to use TRONCO to infer a tree model of ovarian cancer progression
-    from CGH data of copy number alterations (classified as gains or losses
-    over chromosome's arms). The dataset used is available in the SKY/M-FISH
-    database.
+Description: 
+    TRONCO (TRanslational ONCOlogy) is a R package which collects 
+    algorithms to infer progression models from Bernoulli 0/1 profiles of genomic
+    alterations across a tumor sample. Such profiles are usually visualised as a 
+    binary input matrix where each row represents a patient’s sample (e.g., the 
+    result of a sequenced tumor biopsy), and each column an event relevant to the 
+    progression (a certain type of somatic mutation, a focal or higher-level 
+    chromosomal copy number alteration etc.); a 0/1 value models the absence/presence
+    of that alteration in the sample. In this version of TRONCO such profiles can 
+    be readily imported by boolean matrices and MAF/GISTIC files. The package provides
+    various functions to editing, visualise and subset such data, as well as functions 
+    to query the Cbio portal for cancer genomics. This version of TRONCO comes with
+    the parallel implementations the CAPRESE  [PLoS ONE 9(12): e115570] and CAPRI 
+    [Bioinformatics, doi:10.1093/bioinformatics/btv296] algorithms to infer possible
+    progression models arranged as trees, or general direct acyclic graphs. 
+    Bootstrap functions to assess the parametric, non-prametric and statistical 
+    confidence of every inferred model are also provided. The package comes with 
+    some data available as well, which include the dataset of Atypical Chronic Myeloid 
+    Leukemia samples provided by Piazza et al., Nat. Genet., 45 (2013), and examples.
 LazyData: TRUE
 License: GPL (>= 3.0)
 URL: http://bimib.disco.unimib.it

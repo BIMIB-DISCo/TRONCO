@@ -4,6 +4,8 @@
 BiocStyle::latex()
 @
 
+% \VignetteIndexEntry{An R Package for TRanslational ONCOlogy}
+
 \usepackage{hyperref}
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage{xfrac}
@@ -57,26 +59,27 @@ Daniele Ramazzotti$^\ast$
 
 \begin{center}
 \begin{minipage}[h]{0.75\textwidth}
-\textbf{Abstract.} Genotype-level {\em cancer progression models} describe the ordering of accumulating mutations, e.g.,  somatic mutations / copy number variations, during  cancer development. These graphical models help understand the ``causal structure'' involving events promoting cancer progression, possibly predicting complex patterns characterising  genomic  progression of a cancer. Reconstructed models can be used to better characterise genotype-phenotype relation, and suggest novel targets for therapy design.
+\textbf{Abstract.} Genotype-level {\em cancer progression models} describe the temporal ordering in which genomic alterations such as somatic mutations and copy number alterations tend to fixate and accumulate during cancer formation and progression. These graphical models can describe trends of \textit{natural selection} across a population of independent tumour samples (cross-sectional data), or reconstruct the clonal evolution in a single patient's tumour (multi-region or single-cell data). In terms of application, such models can be used to better elucidate genotype-phenotype relation, predict cancer hallmarks and outcome of personalised treatment as well as suggest novel targets for therapy design.
+\\
 
-\TRONCO{} ({\sc tr}{\em anslational} {\sc onco}{\em logy}) is a \textsc{r} package  aimed at collecting  state-of-the-art algorithms to infer
-\emph{progression models}  from \emph{cross-sectional} data, i.e., data collected from independent patients which does not necessarily incorporate any evident temporal information. These algorithms require a binary input matrix where: $(i)$ each row represents a patient genome, $(ii)$ each column an event relevant to the progression (a priori selected) and a $0/1$ value models the absence/presence of a certain mutation in a certain patient.
-
- 
-
-The current first version of \TRONCO{}
-implements the \CAPRESE{} algorithm ({\sc ca}{\em ncer} {\sc pr}{\em ogression} {\sc e}{\em xtraction} {\em with} {\sc s}{\em ingle} {\sc e}{\em dges}) to infer possible progression models arranged as \emph{trees};
-cfr.
-\begin{itemize}
-\item \emph{Inferring tree causal models of cancer progression with
-    probability raising},  L. Olde Loohuis, G. Caravagna,
-  A. Graudenzi, D. Ramazzotti, G. Mauri,  M. Antoniotti and
-  B. Mishra. {PLoS One}, \emph{to appear}.
-\end{itemize}
-This vignette shows how to  use  \TRONCO{} to infer a tree model of
-ovarian cancer progression from CGH data of copy number alterations (classified as gains or losses over chromosome's arms). The dataset used is
-available in the  SKY/M-FISH database.
-The reference manual for \TRONCO{} is available in the package.
+\TRONCO{} ({\sc tr}{\em anslational} {\sc onco}{\em logy}) is a \textsc{R} package which collects 
+algorithms to infer progression models from Bernoulli 0/1 profiles of genomic
+alterations across a tumor sample. Such profiles are usually visualised as a 
+binary input matrix where each row represents a patient's sample (e.g., the 
+result of a sequenced tumor biopsy), and each column an event relevant to the 
+progression (a certain type of somatic mutation, a focal or higher-level 
+chromosomal copy number alteration etc.); a 0/1 value models the absence/presence
+of that alteration in the sample. In this version of TRONCO such profiles can 
+be readily imported by boolean matrices and MAF/GISTIC files. The package provides
+various functions to editing, visualise and subset such data, as well as functions 
+to query the Cbio portal for cancer genomics. This version of TRONCO comes with
+the parallel implementations the CAPRESE  [PLoS ONE 9(12): e115570] and CAPRI 
+[Bioinformatics, doi:10.1093/bioinformatics/btv296] algorithms to infer possible
+progression models arranged as trees, or general direct acyclic graphs. 
+Bootstrap functions to assess the parametric, non-prametric and statistical 
+confidence of every inferred model are also provided. The package comes with 
+some data available as well, which include the dataset of Atypical Chronic Myeloid 
+Leukemia samples provided by Piazza et al., Nat. Genet., 45 (2013), and examples.
 
 \end{minipage}
 \end{center}
@@ -135,10 +138,13 @@ alterations = events.selection(as.alterations(data), filter.freq = .05)
 
 \paragraph{ We visualize the selected genes. This plot has no title since name annotation
 is not copied by \texttt{events.selection} }
-<<onco1, fig=TRUE,include=TRUE>>=
+<<>>=
 dummy = oncoprint(alterations)
 @
-\incfig[ht]{vignette-onco1}{0.9\textwidth}{Oncoprint output}{}
+<<include=FALSE,echo=FALSE>>=
+capture.output(oncoprint(alterations, file='onco-1.pdf'), file='NUL')
+@
+\incfig[ht]{onco-1}{0.9\textwidth}{Oncoprint output}{}
 
 \FloatBarrier
 
@@ -155,10 +161,13 @@ hypo = annotate.description(hypo, 'CAPRI - Bionformatics aCML data (selected eve
 
 \paragraph{ We show selected data and we annotate genes in \texttt{gene.hypotheses} to identify
 them. Samples names are also shown }
-<<onco2, fig=TRUE,include=FALSE>>=
+<<>>=
 dummy = oncoprint(hypo,  gene.annot = list(priors= gene.hypotheses), sample.id = T)
 @
-\incfig[ht]{vignette-onco2}{0.9\textwidth}{Oncoprint output}{}
+<<include=FALSE,echo=FALSE>>=
+capture.output(oncoprint(hypo,  gene.annot = list(priors= gene.hypotheses), sample.id = T, file='onco-2.pdf'), file='NUL')
+@
+\incfig[ht]{onco-2}{0.9\textwidth}{Oncoprint output}{}
 
 \FloatBarrier
 
@@ -172,27 +181,28 @@ hypo = hypothesis.add(hypo, 'NRAS xor KRAS', XOR('NRAS', 'KRAS'))
 
 \paragraph{ Here we try to include also a soft exclusivity (OR) pattern but, since its \textit{"signature"}
 is the same of the hard one, it will not be included. The code below is commented because it gives errors. }
-<<>>=
-### do not run
-# hypo = hypothesis.add(hypo, 'NRAS or KRAS',  OR('NRAS', 'KRAS'))
-###
+<<eval=FALSE>>=
+hypo = hypothesis.add(hypo, 'NRAS or KRAS',  OR('NRAS', 'KRAS'))
 @
 
 \paragraph{ For the sake to better highlight the perfect (hard) exclusivity between NRAS/KRAS 
 mutations one can visualize their alterations }
-<<onco3, fig=TRUE,include=FALSE>>=
+<<>>=
 dummy = oncoprint(events.selection(hypo, filter.in.names = c('KRAS', 'NRAS')))
 @
-\incfig[ht]{vignette-onco3}{0.9\textwidth}{Oncoprint output}{}
+<<include=FALSE,echo=FALSE>>=
+capture.output(oncoprint(events.selection(hypo, filter.in.names = c('KRAS', 'NRAS')), file='onco-3.pdf'), file='NUL')
+@
+\incfig[ht]{onco-3}{0.9\textwidth}{Oncoprint output}{}
 
 \FloatBarrier
 
 \paragraph{ This is as above, but includes other events. Again, we can include only the hard exclusivity pattern }
 <<>>=
 hypo = hypothesis.add(hypo, 'SF3B1 xor ASXL1', XOR('SF3B1', OR('ASXL1')), '*')
-### do not run
-# hypo = hypothesis.add(hypo, 'SF3B1 or ASXL1', OR('SF3B1', OR('ASXL1')), '*')
-###
+@
+<<eval=FALSE>>=
+hypo = hypothesis.add(hypo, 'SF3B1 or ASXL1', OR('SF3B1', OR('ASXL1')), '*')
 @
 
 \paragraph{ We now do the same for TET2 and IDH2. In this case 3 events for TET2 are present, which are
@@ -202,15 +212,18 @@ trend these will be included in XOR. }
 <<>>=
 as.events(hypo, genes = 'TET2') 
 hypo = hypothesis.add(hypo, 'TET2 xor IDH2', XOR('TET2', 'IDH2'), '*')
-### do not run
-# hypo = hypothesis.add(hypo,  'TET2 or IDH2', OR('TET2', 'IDH2'), '*'))
-###
+@
+<<eval=FALSE>>=
+hypo = hypothesis.add(hypo,  'TET2 or IDH2', OR('TET2', 'IDH2'), '*')
 @
 
-<<onco4, fig=TRUE,include=FALSE>>=
+<<>>=
 dummy = oncoprint(events.selection(hypo, filter.in.names = c('TET2', 'IDH2')))
 @
-\incfig[ht]{vignette-onco4}{0.9\textwidth}{Oncoprint output}{}
+<<include=FALSE,echo=FALSE>>=
+capture.output(oncoprint(events.selection(hypo, filter.in.names = c('TET2', 'IDH2')), file='onco-4.pdf'), file='NUL')
+@
+\incfig[ht]{onco-4}{0.9\textwidth}{Oncoprint output}{}
 
 \FloatBarrier
 
@@ -221,10 +234,13 @@ hypo = hypothesis.add.homologous(hypo)
 @
 
 \paragraph{ The dataset input to CAPRI is shown }
-<<onco5, fig=TRUE,include=FALSE>>=
+<<>>=
 dummy = oncoprint(hypo,  gene.annot = list(priors= gene.hypotheses), sample.id = T)
 @
-\incfig[ht]{vignette-onco5}{0.9\textwidth}{Oncoprint output}{}
+<<include=FALSE,echo=FALSE>>=
+capture.output(oncoprint(hypo,  gene.annot = list(priors= gene.hypotheses), sample.id = T, file='onco-5.pdf'), file='NUL')
+@
+\incfig[ht]{onco-5}{0.9\textwidth}{Oncoprint output}{}
 
 \FloatBarrier
 
@@ -233,7 +249,7 @@ dummy = oncoprint(hypo,  gene.annot = list(priors= gene.hypotheses), sample.id =
 \paragraph{ We execute CAPRI with its default parameter: we use both AIC/BIC regularizators, Hill-climbing
 exhaustive bootstrap (100 replicates for Wilcoxon testing), p-value 0.05 and we set seed }
 <<>>=
-model = tronco.capri(hypo, boot.seed = 12345, regularization='bic')
+model = tronco.capri(hypo, boot.seed = 12345, regularization='bic', nboot=6)
 @
 
 \paragraph{ We can plot the reconstructed model. We set some parameters to get a fancy plot; confidence
@@ -272,3 +288,8 @@ tronco.plot(model.boot,
 
 
 \end{document}
+
+
+
+% buggone -> fix http://stackoverflow.com/questions/12481267/in-r-how-to-prevent-blank-page-in-pdf-when-using-gridbase-to-embed-subplot-insi ??
+

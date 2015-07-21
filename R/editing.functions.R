@@ -756,14 +756,14 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
     cat("Dropping event types", paste(input, collapse = ", ", sep = ""), "for", length(genes), "genes.\n")
     geno.matrix = matrix(, nrow = nsamples(x), ncol = length(genes))
 
-    if(!hide.progress.bar) {
+    if(!exists('hide.progress.bar') || !hide.progress.bar) {
         pb = txtProgressBar(1, length(genes), style = 3)
         flush.console()
     }
 
 
     for (i in 1:length(genes)) {
-        if(!hide.progress.bar) {
+        if(!exists('hide.progress.bar') || !hide.progress.bar) {
             setTxtProgressBar(pb, i)
         }
 
@@ -776,7 +776,7 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
 
     rownames(geno.matrix) = as.samples(x)
     colnames(geno.matrix) = genes
-    if(!hide.progress.bar) {
+    if(!exists('hide.progress.bar') || !hide.progress.bar) {
         close(pb)
     }
 

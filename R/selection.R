@@ -53,21 +53,19 @@ events.selection = function(x, filter.freq=NA, filter.in.names=NA, filter.out.na
             round(nsamples(x) * filter.freq, 0),' alterations out of ', nsamples(x),' samples).\n', sep=''))
         x = enforce.numeric(x)    
 
-
-        print(hide.progress.bar)
-        if (!hide.progress.bar) {
+        if(!exists('hide.progress.bar') || !hide.progress.bar) {
             flush.console()
             pb = txtProgressBar(1, nevents(x), style = 3)   
         }   
         for(i in 1:nevents(x)) {   
-            if (!hide.progress.bar) {
+            if(!exists('hide.progress.bar') || !hide.progress.bar) {
                 setTxtProgressBar(pb, i)
             }
 
             mut.freq <- sum(x$genotypes[,i])/nsamples(x)
             valid[i] <- mut.freq > filter.freq
         }
-        if (!hide.progress.bar) {
+        if(!exists('hide.progress.bar') || !hide.progress.bar) {
             close(pb)
         }
 

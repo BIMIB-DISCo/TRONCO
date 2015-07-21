@@ -9,7 +9,7 @@
 fake data
 }
 \usage{
-data(test_dataset)
+data(test_dataset_no_hypos)
 }
 \description{
 This dataset contains a complete test dataset

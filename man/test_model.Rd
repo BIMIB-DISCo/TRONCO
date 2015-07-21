@@ -9,7 +9,7 @@
 fake data
 }
 \usage{
-data(test_dataset)
+data(test_model)
 }
 \description{
 This dataset contains a model reconstructed with CAPRI

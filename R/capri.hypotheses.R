@@ -536,7 +536,7 @@ hypothesis.add.group = function(x,
     cat('Generating ', tot.patterns ,'patterns [size: min =', max.groupsize,' -  max =', max.groupsize, '].\n')
 
     # pb <- txtProgressBar(0, tot.patterns, style = 3)
-    if(!hide.progress.bar) {
+    if(!exists('hide.progress.bar') || !hide.progress.bar) {
         flush.console()
     }
 
@@ -595,14 +595,14 @@ hypothesis.add.group = function(x,
 }
 
 #' Add all the hypotheses related to homologou events
-#' @title hypothesis add homologous
+#' @title hypothesis.add.homologous
 #' @param x A TRONCO compliant dataset.
 #' @param pattern.cause Possibile causes for the pattern. 
 #' @param pattern.effect Possibile effects for the pattern. 
 #' @param genes List of genes to be considered as possible homologous. For these genes, all the types of mutations will be considered functionally equivalent.
 #' @param FUN Type of pattern to be added, e.g., co-occurance, soft or hard exclusivity.
 #' @return A TRONCO compliant object with the added hypotheses
-
+#' @export hypothesis.add.homologous
 hypothesis.add.homologous = function(x, 
                                      pattern.cause = '*',
                                      pattern.effect = '*',
@@ -641,7 +641,7 @@ hypothesis.add.homologous = function(x,
     }
 
     # create a progress bar
-    if(!hide.progress.bar) {
+    if(!exists('hide.progress.bar') || !hide.progress.bar) {
         pb <- txtProgressBar(0, length(hom.group), style = 3)
     }
 
@@ -651,7 +651,7 @@ hypothesis.add.homologous = function(x,
     for (i in 1:length(hom.group)) {
 
         #start the progress bar
-        if(!hide.progress.bar) {
+        if(!exists('hide.progress.bar') || !hide.progress.bar) {
             setTxtProgressBar(pb, i)
         }
         # Check if the joint probability of homologous events is > 0, if
@@ -687,7 +687,7 @@ hypothesis.add.homologous = function(x,
     }
 
     # close progress bar
-    if(!hide.progress.bar) {
+    if(!exists('hide.progress.bar') || !hide.progress.bar) {
         close(pb)
     }
     

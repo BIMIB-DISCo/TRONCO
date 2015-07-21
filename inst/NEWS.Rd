@@ -2,8 +2,8 @@
 \title{Rgraphviz News}
 \encoding{UTF-8}
 
-\section{Version 2.0.0-4}{
+\section{Version 2.0.0-7}{
   \itemize{
-    \item Alpha release  
+    \item Beta release  
   }
 }

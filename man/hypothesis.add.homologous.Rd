@@ -2,7 +2,7 @@
 % Please edit documentation in R/capri.hypotheses.R
 \name{hypothesis.add.homologous}
 \alias{hypothesis.add.homologous}
-\title{hypothesis add homologous}
+\title{hypothesis.add.homologous}
 \usage{
 hypothesis.add.homologous(x, pattern.cause = "*", pattern.effect = "*",
   genes = as.genes(x), FUN = OR)
