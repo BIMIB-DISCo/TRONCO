@@ -1,6 +1,3 @@
-[![Github Issues](https://img.shields.io/github/issues/badges/shields.svg?style=flat)](https://github.com/BIMIB-DISCo/TRONCO/issues)
-[![Pending Pull-Requests](http://githubbadges.herokuapp.com/zachmayer/caretEnsemble/pulls.svg?style=flat)](https://github.com/BIMIB-DISCo/TRONCO/issues/pulls)
-
 TRONCO (TRanslational ONCOlogy)
 ===============================
 
