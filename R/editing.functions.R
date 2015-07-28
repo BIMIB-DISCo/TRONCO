@@ -14,6 +14,15 @@
 ##################################################################################
 
 # internal function
+
+#' Verify if the input data are consolidate, i.e., if there are events with 0 or 1 probability or indistinguishable in terms of observations
+#' @title consolidate.data
+#'
+#' @param x A TRONCO compliant dataset.
+#' @param print A boolean value stating whether to print of not the summary
+#' @return The list of any 0 probability, 1 probability and indistinguishable.
+#' @export consolidate.data
+
 consolidate.data = function(x, print = FALSE) {
 	
     is.compliant(x)
