@@ -16,13 +16,13 @@ bootstrap.caprese(dataset, lambda, do.estimation, silent, reconstruction,
 
 \item{silent}{should I be verbose?}
 
-\item{reconstruction}{todo}
+\item{reconstruction}{Result of a previous reconstruction}
 
 \item{command}{type of search for the likelihood fit, either hill climbing (hc) or tabu (tabu)}
 
 \item{nboot}{number of bootstrap resampling to be performed}
 
-\item{bootstrap.statistics}{todo}
+\item{bootstrap.statistics}{Result of a previous bootstrap analysis}
 }
 \value{
 bootstrap.statistics: statistics of the bootstrap

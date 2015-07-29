@@ -1,4 +1,5 @@
 ### R code from vignette source 'vignette.Rnw'
+### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: style-Sweave
@@ -7,7 +8,7 @@ BiocStyle::latex()
 
 
 ###################################################
-### code chunk number 2: vignette.Rnw:99-102
+### code chunk number 2: vignette.Rnw:87-90
 ###################################################
 library(TRONCO)
 data(aCML)
@@ -15,159 +16,154 @@ hide.progress.bar <<- TRUE
 
 
 ###################################################
-### code chunk number 3: vignette.Rnw:106-107
+### code chunk number 3: vignette.Rnw:94-95
 ###################################################
 show(aCML)
 
 
 ###################################################
-### code chunk number 4: vignette.Rnw:111-112
+### code chunk number 4: vignette.Rnw:99-100
 ###################################################
 as.events(aCML)
 
 
 ###################################################
-### code chunk number 5: vignette.Rnw:116-117
+### code chunk number 5: vignette.Rnw:104-105
 ###################################################
 as.genes(aCML)
 
 
 ###################################################
-### code chunk number 6: vignette.Rnw:121-122
+### code chunk number 6: vignette.Rnw:109-110
 ###################################################
 as.gene(aCML, genes='SETBP1')
 
 
 ###################################################
-### code chunk number 7: vignette.Rnw:127-128
+### code chunk number 7: vignette.Rnw:114-115
 ###################################################
 gene.hypotheses = c('KRAS', 'NRAS', 'IDH1', 'IDH2', 'TET2', 'SF3B1', 'ASXL1')
 
 
 ###################################################
-### code chunk number 8: vignette.Rnw:135-136
+### code chunk number 8: vignette.Rnw:119-120
 ###################################################
 alterations = events.selection(as.alterations(aCML), filter.freq = .05)
 
 
 ###################################################
-### code chunk number 9: vignette.Rnw:141-142
+### code chunk number 9: vignette.Rnw:124-125
 ###################################################
 dummy = oncoprint(alterations)
 
 
 ###################################################
-### code chunk number 10: vignette.Rnw:144-145
+### code chunk number 10: vignette.Rnw:127-128
 ###################################################
 capture.output(oncoprint(alterations, file='onco-1.pdf'), file='NUL')
 
 
 ###################################################
-### code chunk number 11: vignette.Rnw:157-159
+### code chunk number 11: vignette.Rnw:138-140
 ###################################################
 hypo = events.selection(aCML, filter.in.names=c(as.genes(alterations), gene.hypotheses))
 hypo = annotate.description(hypo, 'CAPRI - Bionformatics aCML data (selected events)')
 
 
 ###################################################
-### code chunk number 12: vignette.Rnw:164-165
+### code chunk number 12: vignette.Rnw:145-146
 ###################################################
 dummy = oncoprint(hypo,  gene.annot = list(priors= gene.hypotheses), sample.id = T)
 
 
 ###################################################
-### code chunk number 13: vignette.Rnw:167-168
+### code chunk number 13: vignette.Rnw:148-149
 ###################################################
 capture.output(oncoprint(hypo,  gene.annot = list(priors= gene.hypotheses), sample.id = T, file='onco-2.pdf'), file='NUL')
 
 
 ###################################################
-### code chunk number 14: vignette.Rnw:178-179
+### code chunk number 14: vignette.Rnw:158-159
 ###################################################
 hypo = hypothesis.add(hypo, 'NRAS xor KRAS', XOR('NRAS', 'KRAS'))
 
 
 ###################################################
-### code chunk number 15: vignette.Rnw:184-185 (eval = FALSE)
+### code chunk number 15: vignette.Rnw:163-164 (eval = FALSE)
 ###################################################
 ## hypo = hypothesis.add(hypo, 'NRAS or KRAS',  OR('NRAS', 'KRAS'))
 
 
 ###################################################
-### code chunk number 16: vignette.Rnw:190-191
+### code chunk number 16: vignette.Rnw:168-169
 ###################################################
 dummy = oncoprint(events.selection(hypo, filter.in.names = c('KRAS', 'NRAS')))
 
 
 ###################################################
-### code chunk number 17: vignette.Rnw:193-194
+### code chunk number 17: vignette.Rnw:171-172
 ###################################################
 capture.output(oncoprint(events.selection(hypo, filter.in.names = c('KRAS', 'NRAS')), file='onco-3.pdf'), file='NUL')
 
 
 ###################################################
-### code chunk number 18: vignette.Rnw:201-202
+### code chunk number 18: vignette.Rnw:179-180
 ###################################################
 hypo = hypothesis.add(hypo, 'SF3B1 xor ASXL1', XOR('SF3B1', OR('ASXL1')), '*')
 
 
 ###################################################
-### code chunk number 19: vignette.Rnw:204-205 (eval = FALSE)
+### code chunk number 19: vignette.Rnw:182-183 (eval = FALSE)
 ###################################################
 ## hypo = hypothesis.add(hypo, 'SF3B1 or ASXL1', OR('SF3B1', OR('ASXL1')), '*')
 
 
 ###################################################
-### code chunk number 20: vignette.Rnw:212-214
+### code chunk number 20: vignette.Rnw:187-190
 ###################################################
 as.events(hypo, genes = 'TET2') 
 hypo = hypothesis.add(hypo, 'TET2 xor IDH2', XOR('TET2', 'IDH2'), '*')
+hypo = hypothesis.add(hypo,  'TET2 or IDH2', OR('TET2', 'IDH2'), '*')
 
 
 ###################################################
-### code chunk number 21: vignette.Rnw:216-217 (eval = FALSE)
-###################################################
-## hypo = hypothesis.add(hypo,  'TET2 or IDH2', OR('TET2', 'IDH2'), '*')
-
-
-###################################################
-### code chunk number 22: vignette.Rnw:220-221
+### code chunk number 21: vignette.Rnw:193-194
 ###################################################
 dummy = oncoprint(events.selection(hypo, filter.in.names = c('TET2', 'IDH2')))
 
 
 ###################################################
-### code chunk number 23: vignette.Rnw:223-224
+### code chunk number 22: vignette.Rnw:196-197
 ###################################################
 capture.output(oncoprint(events.selection(hypo, filter.in.names = c('TET2', 'IDH2')), file='onco-4.pdf'), file='NUL')
 
 
 ###################################################
-### code chunk number 24: vignette.Rnw:232-233
+### code chunk number 23: vignette.Rnw:206-207
 ###################################################
 hypo = hypothesis.add.homologous(hypo)
 
 
 ###################################################
-### code chunk number 25: vignette.Rnw:237-238
+### code chunk number 24: vignette.Rnw:211-212
 ###################################################
 dummy = oncoprint(hypo,  gene.annot = list(priors= gene.hypotheses), sample.id = T)
 
 
 ###################################################
-### code chunk number 26: vignette.Rnw:240-241
+### code chunk number 25: vignette.Rnw:214-215
 ###################################################
 capture.output(oncoprint(hypo,  gene.annot = list(priors= gene.hypotheses), sample.id = T, file='onco-5.pdf'), file='NUL')
 
 
 ###################################################
-### code chunk number 27: vignette.Rnw:251-252
+### code chunk number 26: vignette.Rnw:224-225
 ###################################################
 model = tronco.capri(hypo, boot.seed = 12345, regularization='bic', nboot=6)
 
 
 ###################################################
-### code chunk number 28: figplot
+### code chunk number 27: figplot
 ###################################################
 tronco.plot(model,  
   fontsize = 13,  
@@ -179,13 +175,13 @@ tronco.plot(model,
 
 
 ###################################################
-### code chunk number 29: vignette.Rnw:274-275
+### code chunk number 28: vignette.Rnw:248-249
 ###################################################
 model.boot = tronco.bootstrap(model, nboot=6)
 
 
 ###################################################
-### code chunk number 30: figplotboot
+### code chunk number 29: figplotboot
 ###################################################
 tronco.plot(model.boot,
             fontsize = 13,  

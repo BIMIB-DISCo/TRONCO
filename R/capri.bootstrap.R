@@ -28,11 +28,11 @@
 #' @param boot.seed seed to be used for the sampling
 #' @param do.estimation should I perform the estimation of the error rates and probabilities?
 #' @param silent should I be verbose?
-#' @param reconstruction todo
+#' @param reconstruction Result of a previous reconstruction
 #' @param command should I perform non-parametric or parametric bootstrap?
 #' @param nboot number of bootstrap resampling to be performed
-#' @param bootstrap.statistics todo
-#' @param verbose todo
+#' @param bootstrap.statistics Result of a previous bootstrap analysis
+#' @param verbose Should I print messages?
 #' @return bootstrap.statistics: statistics of the bootstrap
 bootstrap.capri = function(dataset, 
                            hypotheses, 

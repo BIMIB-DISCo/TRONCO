@@ -16,9 +16,9 @@ hypothesis.expand.connections(label, events, incoming, outgoing, hnames,
 
 \item{outgoing}{outgoing connections}
 
-\item{hnames}{todo}
+\item{hnames}{Hypothesis names}
 
-\item{matomic}{todo}
+\item{matomic}{Map to atomic events}
 
 \item{weights.matrix}{weights of any edge in the topology}
 }
