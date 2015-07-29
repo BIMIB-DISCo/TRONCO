@@ -1242,8 +1242,8 @@ hypothesis.connections = function( adj.matrix, hypotheses.label ) {
 #' @param events events in the hypothesis
 #' @param incoming incoming connections
 #' @param outgoing outgoing connections
-#' @param hnames todo
-#' @param matomic todo
+#' @param hnames Hypothesis names
+#' @param matomic Map to atomic events
 #' @param weights.matrix weights of any edge in the topology
 hypothesis.expand.connections = function(label, 
                                          events, 

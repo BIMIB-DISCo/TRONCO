@@ -20,10 +20,10 @@
 #' @param lambda shrinkage parameter (value in [0,1])
 #' @param do.estimation should I perform the estimation of the error rates and probabilities?
 #' @param silent should I be verbose?
-#' @param reconstruction todo
+#' @param reconstruction Result of a previous reconstruction
 #' @param command type of search for the likelihood fit, either hill climbing (hc) or tabu (tabu)
 #' @param nboot number of bootstrap resampling to be performed
-#' @param bootstrap.statistics todo
+#' @param bootstrap.statistics Result of a previous bootstrap analysis
 #' @return bootstrap.statistics: statistics of the bootstrap
 bootstrap.caprese = function(dataset, 
                             lambda,

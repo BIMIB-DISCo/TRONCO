@@ -13,6 +13,7 @@ Authors@R:
     person("Giancarlo", "Mauri", role=c("cph")), 
     person("Bud", "Mishra", role=c("cph")), 
     person("Daniele", "Ramazzotti", role=c("aut"), email="daniele.ramazzotti@disco.unimib.it"))
+Maintainer: BIMIB Group <tronco@bimib.disco.unimib.it>
 Depends: 
     R (>= 3.1),
     doParallel,
@@ -52,6 +53,7 @@ Description:
     of the inferred models are also provided. The package comes with example data 
     available, which include the dataset of Atypical Chronic Myeloid Leukemia samples by 
     Piazza et al., Nat. Genet., 45 (2013). 
+Encoding: UTF-8
 LazyData: TRUE
 License: GPL (>= 3.0)
 URL: http://bimib.disco.unimib.it
