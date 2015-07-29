@@ -1177,12 +1177,27 @@ tronco.plot = function(x,
         for(from in rownames(pri.adj)) {
             for(to in colnames(pri.adj)) {
                 from.alt.name = from
+                to.alt.name = to
                 if (from %in% hypos_new_name) {
-                    from.alt.name = names(which(hypos_new_name == from))
+                    matching_nodes = names(which(hypos_new_name == from))
+                    for(node in matching_nodes) {
+                        if(is.logic.node.down(node)) {
+                            from.alt.name = node
+                        }
+                    }
+                }
+
+                if (to %in% hypos_new_name) {
+                    matching_nodes = names(which(hypos_new_name == to))
+                    for(node in matching_nodes) {
+                        if(is.logic.node.up(node)) {
+                            to.alt.name = node
+                        }
+                    }
                 }
 
                 if(pri.adj[from, to] == 1) {
-                    eAttrs$color[paste(from.alt.name, to, sep='~')] = edge.color
+                    eAttrs$color[paste(from.alt.name, to.alt.name, sep='~')] = edge.color
                 }
 
             }
