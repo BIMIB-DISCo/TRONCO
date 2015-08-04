@@ -733,18 +733,17 @@ as.conditional.probs = function(x, events = as.events(x), models = names(x$model
     return(ret) 
 }
 
-#' Extract the estimated rates of false positives an negatives in the data, given the model. 
-#' A subset of models if multiple reconstruction have been performed can be extracted.
-#' 
-#' @examples
-#' data(test_model)
-#' as.error.rates(test_model)
-#'
-#' @title as.error.rates
-#' @param x A TRONCO model.
-#' @param models A subset of reconstructed models, all by default.
-#' @return The estimated rates of false positives an negatives in the data, given the model. 
-#' @export as.error.rates
+# Extract the estimated rates of false positives an negatives in the data, given the model. 
+# A subset of models if multiple reconstruction have been performed can be extracted.
+# 
+# @examples
+# data(test_model)
+# as.error.rates(test_model)
+#
+# @title as.error.rates
+# @param x A TRONCO model.
+# @param models A subset of reconstructed models, all by default.
+# @return The estimated rates of false positives an negatives in the data, given the model. 
 as.error.rates = function(x, models = names(x$model))
 {
     is.compliant(x)
@@ -848,13 +847,13 @@ as.selective.advantage.relations = function(x, events = as.events(x), models = n
     return(lapply(matrix, matrix.to.df))
 }
 
-#' Get parents for each node
-#'
-#' @title as.parents.pos
-#' @param x A TRONCO model.
-#' @param events A subset of events as of \code{as.events(x)}, all by default.
-#' @param models A subset of reconstructed models, all by default.
-#' @return A list of parents for each node
+# Get parents for each node
+#
+# @title as.parents.pos
+# @param x A TRONCO model.
+# @param events A subset of events as of \code{as.events(x)}, all by default.
+# @param models A subset of reconstructed models, all by default.
+# @return A list of parents for each node
 as.parents.pos = function(x, events = as.events(x), models = names(x$model))
 {
     is.compliant(x)
@@ -949,8 +948,6 @@ duplicates = function(x) {
     is.compliant(x)
     return(as.events(x)[duplicated(as.events(x)),])
 }
-
-
 
 #' Print to console a short report of a dataset 'x', which should be
 #' a TRONCO compliant dataset - see \code{is.compliant}. 
@@ -1228,11 +1225,11 @@ nameToKey = function(x, name)
 
 
 
-#' Check if logic node down
-#'
-#' @title is logical node down
-#' @param node A node identifier
-#' @return boolean
+# Check if logic node down
+#
+# @title is logical node down
+# @param node A node identifier
+# @return boolean
 is.logic.node.down <- function(node) {
     if(substr(node, start=1, stop=3) == 'OR_')
         return(TRUE)
@@ -1245,22 +1242,22 @@ is.logic.node.down <- function(node) {
     return(FALSE)
 }
 
-#' Check if logic node up
-#'
-#' @title is logical node up
-#' @param node A node identifier
-#' @return boolean
+# Check if logic node up
+#
+# @title is logical node up
+# @param node A node identifier
+# @return boolean
 is.logic.node.up <- function(node) {
     if(substr(node, start=1, stop=2) == 'UP')
         return(TRUE)
     return(FALSE)
 }
 
-#' Check if logic node down or up
-#'
-#' @title is logical node
-#' @param node A node identifier
-#' @return boolean
+# Check if logic node down or up
+#
+# @title is logical node
+# @param node A node identifier
+# @return boolean
 is.logic.node <- function(node) {
     return(is.logic.node.up(node) || is.logic.node.down(node))
 }

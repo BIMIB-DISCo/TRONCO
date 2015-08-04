@@ -14,12 +14,12 @@
 ##################################################################################
 
 
-#' enumerate all the paths between two nodes of a DAG
-#' @title enumerate.all.paths
-#' @param ancestor.node first node of the path
-#' @param child.node last node of the path
-#' @param parents.pos topological connections
-#' @return all.paths: vector of all the paths
+# enumerate all the paths between two nodes of a DAG
+# @title enumerate.all.paths
+# @param ancestor.node first node of the path
+# @param child.node last node of the path
+# @param parents.pos topological connections
+# @return all.paths: vector of all the paths
 enumerate.all.paths = function( ancestor.node, child.node, parents.pos ) {
 	
 	# set the initial parents set
@@ -66,13 +66,13 @@ enumerate.all.paths = function( ancestor.node, child.node, parents.pos ) {
     
 }
 
-#' estimate the error rates by "L-BFGS-B" optimization in terms of L2-error
-#' @title estimate.dag.error.rates
-#' @param dataset a valid dataset
-#' @param marginal.probs marginal probabilities
-#' @param joint.probs joint probabilities
-#' @param parents.pos which event is the parent? 0 if none, a number otherwise
-#' @return estimated.error.rates: estimated probabilities, false positive and false negative error rates
+# estimate the error rates by "L-BFGS-B" optimization in terms of L2-error
+# @title estimate.dag.error.rates
+# @param dataset a valid dataset
+# @param marginal.probs marginal probabilities
+# @param joint.probs joint probabilities
+# @param parents.pos which event is the parent? 0 if none, a number otherwise
+# @return estimated.error.rates: estimated probabilities, false positive and false negative error rates
 estimate.dag.error.rates = function( dataset, marginal.probs, joint.probs, parents.pos ) {
 	
     # function to be optimized by "L-BFGS-B" optimization in terms of L2-error
@@ -96,14 +96,14 @@ estimate.dag.error.rates = function( dataset, marginal.probs, joint.probs, paren
     
 }
 
-#' estimate the theoretical joint probability of two given nodes given the reconstructed topology
-#' @title estimate.dag.joint.probs
-#' @param first.node first node
-#' @param second.node second node
-#' @param parents.pos which event is the parent? -1 if none, a list otherwise
-#' @param marginal.probs marginal probabilities
-#' @param conditional.probs conditional probabilities
-#' @return estimated.dag.joint.probs: estimated theoretical joint probability
+# estimate the theoretical joint probability of two given nodes given the reconstructed topology
+# @title estimate.dag.joint.probs
+# @param first.node first node
+# @param second.node second node
+# @param parents.pos which event is the parent? -1 if none, a list otherwise
+# @param marginal.probs marginal probabilities
+# @param conditional.probs conditional probabilities
+# @return estimated.dag.joint.probs: estimated theoretical joint probability
 estimate.dag.joint.probs = function(first.node, 
                                     second.node, 
                                     parents.pos, 
@@ -238,14 +238,14 @@ estimate.dag.joint.probs = function(first.node,
     
 }
 
-#' estimate the marginal, joint and conditional probabilities given the reconstructed topology and the error rates
-#' @title estimate.dag.probs
-#' @param dataset a valid dataset
-#' @param marginal.probs observed marginal probabilities
-#' @param joint.probs observed joint probabilities
-#' @param parents.pos position of the parents in the list of nodes
-#' @param error.rates rates for the false positive and the false negative errors
-#' @return estimated.probs: estimated marginal, joint and conditional probabilities
+# estimate the marginal, joint and conditional probabilities given the reconstructed topology and the error rates
+# @title estimate.dag.probs
+# @param dataset a valid dataset
+# @param marginal.probs observed marginal probabilities
+# @param joint.probs observed joint probabilities
+# @param parents.pos position of the parents in the list of nodes
+# @param error.rates rates for the false positive and the false negative errors
+# @return estimated.probs: estimated marginal, joint and conditional probabilities
 estimate.dag.probs = function( dataset, marginal.probs, joint.probs, parents.pos, error.rates ) {
 	
     # structure where to save the probabilities to be estimated
@@ -410,15 +410,15 @@ estimate.dag.probs = function( dataset, marginal.probs, joint.probs, parents.pos
     
 }
 
-#' estimate the probability of observing each sample in the dataset given the reconstructed topology
-#' @title estimate.dag.samples
-#' @param dataset a valid dataset
-#' @param reconstructed.topology the reconstructed topology
-#' @param estimated.marginal.probabilities estimated marginal probabilities of the events
-#' @param estimated.conditional.probabilities estimated conditional probabilities of the events
-#' @param parents.pos position of the parents of each node
-#' @param error.rates error rates for false positives and false negatives
-#' @return probabilities: probability of each sample
+# estimate the probability of observing each sample in the dataset given the reconstructed topology
+# @title estimate.dag.samples
+# @param dataset a valid dataset
+# @param reconstructed.topology the reconstructed topology
+# @param estimated.marginal.probabilities estimated marginal probabilities of the events
+# @param estimated.conditional.probabilities estimated conditional probabilities of the events
+# @param parents.pos position of the parents of each node
+# @param error.rates error rates for false positives and false negatives
+# @return probabilities: probability of each sample
 estimate.dag.samples = function(dataset, 
                                 reconstructed.topology, 
                                 estimated.marginal.probabilities, 

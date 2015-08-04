@@ -22,7 +22,6 @@
 #' @param print A boolean value stating whether to print of not the summary
 #' @return The list of any 0 probability, 1 probability and indistinguishable.
 #' @export consolidate.data
-
 consolidate.data = function(x, print = FALSE) {
 	
     is.compliant(x)

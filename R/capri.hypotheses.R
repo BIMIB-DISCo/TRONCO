@@ -23,7 +23,6 @@
 #' @param pattern.cause Possibile causes for the pattern. 
 #' @return A TRONCO compliant object with the added hypothesis
 #' @export hypothesis.add
-
 hypothesis.add = function(data,
     pattern.label, 
     lifted.pattern, 
@@ -446,7 +445,6 @@ hypothesis.lifted.effects = function( ... ) {
 #' @param min.prob Minimum probability associated to each valid group.
 #' @return A TRONCO compliant object with the added hypotheses
 #' @export hypothesis.add.group
-
 hypothesis.add.group = function(x, 
     FUN, 
     group, 
@@ -699,14 +697,14 @@ hypothesis.add.homologous = function(x,
     return(x)
 }
 
-#' Internal function for hypotheses expansion
-#' @title hypotheses.expansion
-#' @param input_matrix A TRONCO adjacency matrix
-#' @param map hypothesis name - hypothesis adjacency matrix map
-#' @param hidden_and Should I visualize hidden and?
-#' @param expand Should I expand the hypotheses?
-#' @param skip.disconnected Hide disconnected node
-#' @import igraph
+# Internal function for hypotheses expansion
+# @title hypotheses.expansion
+# @param input_matrix A TRONCO adjacency matrix
+# @param map hypothesis name - hypothesis adjacency matrix map
+# @param hidden_and Should I visualize hidden and?
+# @param expand Should I expand the hypotheses?
+# @param skip.disconnected Hide disconnected node
+# @import igraph
 hypotheses.expansion <- function(input_matrix, 
     map = list(),
     hidden_and = T,
@@ -1171,12 +1169,12 @@ get.lifted.pattern = function( lifted.edges ) {
     return(lifted.adj.matrix);
 }
 
-#' evaluate cycles involving any hypothesis
-#' @title hypothesis.evaluate.cycles
-#' @param data input genotypes and its hypotheses
-#' @param adj.matrix adjacency matrix of the reconstructed topology
-#' @param hypotheses.labels label of all the existing hypotheses
-#' @param weights.matrix weights of any edge in the topology
+# evaluate cycles involving any hypothesis
+# @title hypothesis.evaluate.cycles
+# @param data input genotypes and its hypotheses
+# @param adj.matrix adjacency matrix of the reconstructed topology
+# @param hypotheses.labels label of all the existing hypotheses
+# @param weights.matrix weights of any edge in the topology
 hypothesis.evaluate.cycles = function(data,
                                       adj.matrix, 
                                       hypotheses.labels, 
@@ -1220,10 +1218,10 @@ hypothesis.evaluate.cycles = function(data,
     return(list(ordered.weights=ordered.weights,ordered.edges=ordered.edges,matomic=matomic,mhypotheses=mhypotheses));
 }
 
-#' given the adj.matrix, return the incoming and outgoing connections for any hypothesis
-#' @title hypothesis.connections
-#' @param adj.matrix adjacency matrix of the topology
-#' @param hypotheses.label label of the hypothesis
+# given the adj.matrix, return the incoming and outgoing connections for any hypothesis
+# @title hypothesis.connections
+# @param adj.matrix adjacency matrix of the topology
+# @param hypotheses.label label of the hypothesis
 hypothesis.connections = function( adj.matrix, hypotheses.label ) {
 
     hypotheses.label = hypotheses.label[hypotheses.label %in% rownames(adj.matrix)]
@@ -1236,15 +1234,15 @@ hypothesis.connections = function( adj.matrix, hypotheses.label ) {
 
 }
 
-#' expand and enumerate all the connections incoming or outgoing an hypothesis
-#' @title hypothesis.expand.connections
-#' @param label name of the hypothesis
-#' @param events events in the hypothesis
-#' @param incoming incoming connections
-#' @param outgoing outgoing connections
-#' @param hnames Hypothesis names
-#' @param matomic Map to atomic events
-#' @param weights.matrix weights of any edge in the topology
+# expand and enumerate all the connections incoming or outgoing an hypothesis
+# @title hypothesis.expand.connections
+# @param label name of the hypothesis
+# @param events events in the hypothesis
+# @param incoming incoming connections
+# @param outgoing outgoing connections
+# @param hnames Hypothesis names
+# @param matomic Map to atomic events
+# @param weights.matrix weights of any edge in the topology
 hypothesis.expand.connections = function(label, 
                                          events, 
                                          incoming, 

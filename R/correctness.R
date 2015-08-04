@@ -97,9 +97,9 @@ is.compliant = function(x, err.fun='[ERR]', stage = !(all(is.null(x$stages)) || 
  }
 
 
-#' Check if x is a valid TRONCO model
-#' @title is.model
-#' @param x A TRONCO compliant dataset.
+# Check if x is a valid TRONCO model
+# @title is.model
+# @param x A TRONCO compliant dataset.
 is.model = function(x)
 {
   if(!'model' %in% names(x))
@@ -107,10 +107,10 @@ is.model = function(x)
 }
 
 
-#' Check if y is a valid event list for x
-#' @title is.events.list
-#' @param x A TRONCO compliant dataset.
-#' @param y A TRONCO event list
+# Check if y is a valid event list for x
+# @title is.events.list
+# @param x A TRONCO compliant dataset.
+# @param y A TRONCO event list
 is.events.list = function(x, y)
 {
   if(!is.matrix(y)) stop('Events should be given as matrix - see "as.events".')
