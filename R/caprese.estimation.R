@@ -14,12 +14,12 @@
 ##################################################################################
 
 
-#' estimate the error rates by "L-BFGS-B" optimization in terms of L2-error
-#' @title estimate.tree.error.rates
-#' @param marginal.probs marginal probabilities
-#' @param joint.probs joint probabilities
-#' @param parents.pos which event is the parent? 0 if none, a number otherwise
-#' @return estimated.error.rates: estimated probabilities, false positive and false negative error rates
+# estimate the error rates by "L-BFGS-B" optimization in terms of L2-error
+# @title estimate.tree.error.rates
+# @param marginal.probs marginal probabilities
+# @param joint.probs joint probabilities
+# @param parents.pos which event is the parent? 0 if none, a number otherwise
+# @return estimated.error.rates: estimated probabilities, false positive and false negative error rates
 estimate.tree.error.rates = function(marginal.probs,
                                      joint.probs,
                                      parents.pos) 
@@ -50,14 +50,14 @@ estimate.tree.error.rates = function(marginal.probs,
     
 }
 
-#' estimate the theoretical joint probability of two given nodes given the reconstructed topology
-#' @title estimate.tree.joint.probs
-#' @param first.node first node
-#' @param second.node second node
-#' @param parents.pos which event is the parent? -1 if none, a number otherwise
-#' @param marginal.probs marginal probabilities
-#' @param conditional.probs conditional probabilities
-#' @return estimated.tree.joint.probs: estimated theoretical joint probability
+# estimate the theoretical joint probability of two given nodes given the reconstructed topology
+# @title estimate.tree.joint.probs
+# @param first.node first node
+# @param second.node second node
+# @param parents.pos which event is the parent? -1 if none, a number otherwise
+# @param marginal.probs marginal probabilities
+# @param conditional.probs conditional probabilities
+# @return estimated.tree.joint.probs: estimated theoretical joint probability
 estimate.tree.joint.probs = function(first.node,
                                      second.node,
                                      parents.pos,
@@ -158,13 +158,13 @@ estimate.tree.joint.probs = function(first.node,
     
 }
 
-#' estimate the marginal, joint and conditional probabilities given the reconstructed topology and the error rates
-#' @title estimate.tree.probs
-#' @param marginal.probs observed marginal probabilities
-#' @param joint.probs observed joint probabilities
-#' @param parents.pos position of the parents in the list of nodes
-#' @param error.rates rates for the false positive and the false negative errors
-#' @return estimated.probs estimated marginal, joint and conditional probabilities
+# estimate the marginal, joint and conditional probabilities given the reconstructed topology and the error rates
+# @title estimate.tree.probs
+# @param marginal.probs observed marginal probabilities
+# @param joint.probs observed joint probabilities
+# @param parents.pos position of the parents in the list of nodes
+# @param error.rates rates for the false positive and the false negative errors
+# @return estimated.probs estimated marginal, joint and conditional probabilities
 estimate.tree.probs = function(marginal.probs,
                                joint.probs,
                                parents.pos,
@@ -306,14 +306,14 @@ estimate.tree.probs = function(marginal.probs,
     
 }
 
-#' estimate the probability of observing each sample in the dataset given the reconstructed topology
-#' @title estimate.tree.samples
-#' @param dataset a valid dataset
-#' @param reconstructed.topology the reconstructed topology
-#' @param estimated.marginal.probabilities estimated marginal probabilities of the events
-#' @param estimated.conditional.probabilities estimated conditional probabilities of the events
-#' @param error.rates error rates for false positives and false negatives
-#' @return probabilities: probability of each sample
+# estimate the probability of observing each sample in the dataset given the reconstructed topology
+# @title estimate.tree.samples
+# @param dataset a valid dataset
+# @param reconstructed.topology the reconstructed topology
+# @param estimated.marginal.probabilities estimated marginal probabilities of the events
+# @param estimated.conditional.probabilities estimated conditional probabilities of the events
+# @param error.rates error rates for false positives and false negatives
+# @return probabilities: probability of each sample
 estimate.tree.samples = function(dataset,
                                  reconstructed.topology, 
                                  estimated.marginal.probabilities, 

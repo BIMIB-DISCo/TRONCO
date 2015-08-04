@@ -833,7 +833,7 @@ pathway.visualization = function(x,
 #' @param gain type of Gain
 #' @param amp type of Amplification
 #' @return A file containing instruction for the CBio visualization Tool
-#' @export
+#' @export oncoprint.cbio
 oncoprint.cbio <- function(x, 
     file='oncoprint-cbio.txt', 
     hom.del = 'Homozygous Loss',

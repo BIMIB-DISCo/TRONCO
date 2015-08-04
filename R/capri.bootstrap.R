@@ -14,26 +14,26 @@
 ##################################################################################
 
 
-#' perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
-#' @title bootstrap.capri
-#' @param dataset a dataset describing a progressive phenomenon
-#' @param hypotheses a set of hypotheses referring to the dataset
-#' @param command.capri type of search, either hill climbing (hc) or tabu (tabu)
-#' @param regularization regularizators to be used for the likelihood fit
-#' @param do.boot should I perform bootstrap? Yes if TRUE, no otherwise
-#' @param nboot.capri integer number (greater than 0) of bootstrap sampling to be performed
-#' @param pvalue pvalue for the tests (value between 0 and 1)
-#' @param min.boot minimum number of bootstrapping to be performed
-#' @param min.stat should I keep bootstrapping untill I have nboot valid values?
-#' @param boot.seed seed to be used for the sampling
-#' @param do.estimation should I perform the estimation of the error rates and probabilities?
-#' @param silent should I be verbose?
-#' @param reconstruction Result of a previous reconstruction
-#' @param command should I perform non-parametric or parametric bootstrap?
-#' @param nboot number of bootstrap resampling to be performed
-#' @param bootstrap.statistics Result of a previous bootstrap analysis
-#' @param verbose Should I print messages?
-#' @return bootstrap.statistics: statistics of the bootstrap
+# perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
+# @title bootstrap.capri
+# @param dataset a dataset describing a progressive phenomenon
+# @param hypotheses a set of hypotheses referring to the dataset
+# @param command.capri type of search, either hill climbing (hc) or tabu (tabu)
+# @param regularization regularizators to be used for the likelihood fit
+# @param do.boot should I perform bootstrap? Yes if TRUE, no otherwise
+# @param nboot.capri integer number (greater than 0) of bootstrap sampling to be performed
+# @param pvalue pvalue for the tests (value between 0 and 1)
+# @param min.boot minimum number of bootstrapping to be performed
+# @param min.stat should I keep bootstrapping untill I have nboot valid values?
+# @param boot.seed seed to be used for the sampling
+# @param do.estimation should I perform the estimation of the error rates and probabilities?
+# @param silent should I be verbose?
+# @param reconstruction Result of a previous reconstruction
+# @param command should I perform non-parametric or parametric bootstrap?
+# @param nboot number of bootstrap resampling to be performed
+# @param bootstrap.statistics Result of a previous bootstrap analysis
+# @param verbose Should I print messages?
+# @return bootstrap.statistics: statistics of the bootstrap
 bootstrap.capri = function(dataset, 
                            hypotheses, 
                            command.capri, 
@@ -433,11 +433,11 @@ bootstrap.capri = function(dataset,
     
 }
 
-#' convert an integer decimal number to binary
-#' @title decimal.to.binary.dag
-#' @param num.decimal decimal integer to be converted
-#' @param num.bits number of bits to be used
-#' @return num.binary: binary conversion of num.decimal
+# convert an integer decimal number to binary
+# @title decimal.to.binary.dag
+# @param num.decimal decimal integer to be converted
+# @param num.bits number of bits to be used
+# @return num.binary: binary conversion of num.decimal
 decimal.to.binary.dag = function(num.decimal, num.bits) {
     
     #structure where to save the result

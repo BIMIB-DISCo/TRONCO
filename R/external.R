@@ -206,7 +206,7 @@ export.nbs.input = function(x,
 #' @param file Mutex results ("ranked-groups.txt" file)
 #' @param fdr cutoff for fdr
 #' @param display print summary table of extracted groups
-#' @export
+#' @export import.mutex.groups
 import.mutex.groups = function(file, fdr=.2, display = TRUE)
 {
     # Found somewhere on the web - makes sense

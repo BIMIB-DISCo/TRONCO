@@ -14,17 +14,17 @@
 ##################################################################################
 
 
-#' perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
-#' @title bootstrap.caprese
-#' @param dataset a dataset describing a progressive phenomenon
-#' @param lambda shrinkage parameter (value in [0,1])
-#' @param do.estimation should I perform the estimation of the error rates and probabilities?
-#' @param silent should I be verbose?
-#' @param reconstruction Result of a previous reconstruction
-#' @param command type of search for the likelihood fit, either hill climbing (hc) or tabu (tabu)
-#' @param nboot number of bootstrap resampling to be performed
-#' @param bootstrap.statistics Result of a previous bootstrap analysis
-#' @return bootstrap.statistics: statistics of the bootstrap
+# perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
+# @title bootstrap.caprese
+# @param dataset a dataset describing a progressive phenomenon
+# @param lambda shrinkage parameter (value in [0,1])
+# @param do.estimation should I perform the estimation of the error rates and probabilities?
+# @param silent should I be verbose?
+# @param reconstruction Result of a previous reconstruction
+# @param command type of search for the likelihood fit, either hill climbing (hc) or tabu (tabu)
+# @param nboot number of bootstrap resampling to be performed
+# @param bootstrap.statistics Result of a previous bootstrap analysis
+# @return bootstrap.statistics: statistics of the bootstrap
 bootstrap.caprese = function(dataset, 
                             lambda,
                             do.estimation,
@@ -336,11 +336,11 @@ bootstrap.caprese = function(dataset,
     return(bootstrap.statistics)
 }
 
-#' convert an integer decimal number to binary
-#' @title decimal.to.binary.tree
-#' @param num.decimal decimal integer to be converted
-#' @param num.bits number of bits to be used
-#' @return num.binary: binary conversion of num.decimal
+# convert an integer decimal number to binary
+# @title decimal.to.binary.tree
+# @param num.decimal decimal integer to be converted
+# @param num.bits number of bits to be used
+# @return num.binary: binary conversion of num.decimal
 decimal.to.binary.tree = function(num.decimal, num.bits) {
     #structure where to save the result
     num.binary = rep(0,num.bits);

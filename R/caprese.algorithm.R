@@ -14,13 +14,13 @@
 ##################################################################################
 
 
-#' reconstruct the best tree-like topology
-#' @title caprese.fit
-#' @param dataset a dataset describing a progressive phenomenon
-#' @param lambda shrinkage parameter (value in [0,1])
-#' @param do.estimation should I perform the estimation of the error rates and probabilities?
-#' @param silent execute the algorithm in silent mode
-#' @return topology: the reconstructed tree-like topology
+# reconstruct the best tree-like topology
+# @title caprese.fit
+# @param dataset a dataset describing a progressive phenomenon
+# @param lambda shrinkage parameter (value in [0,1])
+# @param do.estimation should I perform the estimation of the error rates and probabilities?
+# @param silent execute the algorithm in silent mode
+# @return topology: the reconstructed tree-like topology
 caprese.fit = function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = FALSE ) {
 	
 	# start the clock to measure the execution time
@@ -122,13 +122,13 @@ caprese.fit = function( dataset, lambda = 0.5 , do.estimation = FALSE, silent = 
     
 }
 
-#' select at the most one parent for each node based on the probability raising criteria
-#' @title get.tree.parents
-#' @param adj.matrix adjacency matrix of the valid edges
-#' @param marginal.probs observed marginal probabilities
-#' @param joint.probs observed joint probabilities
-#' @param lambda shrinkage parameter (value between 0 and 1)
-#' @return best.parents list of the best parents
+# select at the most one parent for each node based on the probability raising criteria
+# @title get.tree.parents
+# @param adj.matrix adjacency matrix of the valid edges
+# @param marginal.probs observed marginal probabilities
+# @param joint.probs observed joint probabilities
+# @param lambda shrinkage parameter (value between 0 and 1)
+# @return best.parents list of the best parents
 get.tree.parents = function( adj.matrix, marginal.probs, joint.probs, lambda ) {
 	
     # compute the scores for each edge
@@ -190,13 +190,13 @@ get.tree.parents = function( adj.matrix, marginal.probs, joint.probs, lambda ) {
     
 }
 
-#' compute the probability raising based scores
-#' @title get.tree.scores
-#' @param adj.matrix adjacency matrix of the valid edges
-#' @param marginal.probs observed marginal probabilities
-#' @param joint.probs observed joint probabilities
-#' @param lambda shrinkage parameter (value between 0 and 1)
-#' @return scores: probability raising based scores
+# compute the probability raising based scores
+# @title get.tree.scores
+# @param adj.matrix adjacency matrix of the valid edges
+# @param marginal.probs observed marginal probabilities
+# @param joint.probs observed joint probabilities
+# @param lambda shrinkage parameter (value between 0 and 1)
+# @return scores: probability raising based scores
 get.tree.scores = function( adj.matrix, marginal.probs, joint.probs, lambda ) {
 	
     #structure where to save the probability raising scores
@@ -228,12 +228,12 @@ get.tree.scores = function( adj.matrix, marginal.probs, joint.probs, lambda ) {
     
 }
 
-#' verify the independent progression filter
-#' @title verify.parents
-#' @param best.parents best edges to be verified
-#' @param marginal.probs observed marginal probabilities
-#' @param joint.probs observed joint probabilities
-#' @return best.parents: list of the best valid parents
+# verify the independent progression filter
+# @title verify.parents
+# @param best.parents best edges to be verified
+# @param marginal.probs observed marginal probabilities
+# @param joint.probs observed joint probabilities
+# @return best.parents: list of the best valid parents
 verify.parents = function( best.parents, marginal.probs, joint.probs ) {
 	
     # verify the condition for the best parent of each node
