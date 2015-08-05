@@ -359,13 +359,13 @@ TCGA.shorten.barcodes = function(x)
     return(x)    
 }
 
-#' TODO
+#' Map clinical data from the TCGA format
 #' @title  TCGA.map.clinical.data
 #'
-#' @param file TODO
+#' @param file A file with the clinical data
 #' @param sep file delimiter
-#' @param column.samples TODO
-#' @param column.map TODO
+# @param column.samples TODO
+# @param column.map TODO
 #' @return a map
 #' @export TCGA.map.clinical.data
 TCGA.map.clinical.data = function(file, sep='\t', column.samples, column.map)

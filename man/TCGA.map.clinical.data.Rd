@@ -7,18 +7,14 @@
 TCGA.map.clinical.data(file, sep = "\\t", column.samples, column.map)
 }
 \arguments{
-\item{file}{TODO}
+\item{file}{A file with the clinical data}
 
 \item{sep}{file delimiter}
-
-\item{column.samples}{TODO}
-
-\item{column.map}{TODO}
 }
 \value{
 a map
 }
 \description{
-TODO
+Map clinical data from the TCGA format
 }
 

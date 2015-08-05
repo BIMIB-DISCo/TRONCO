@@ -1,6 +1,6 @@
 Package: TRONCO
-Version: 2.0.0-10
-Date: 2015-08-04
+Version: 2.0.0-11
+Date: 2015-08-05
 Title: TRONCO, a package for TRanslational ONCOlogy
 Authors@R: 
     c(person("Marco", "Antoniotti", role=c("cph")), 
@@ -13,7 +13,7 @@ Authors@R:
     person("Giancarlo", "Mauri", role=c("cph")), 
     person("Bud", "Mishra", role=c("cph")), 
     person("Daniele", "Ramazzotti", role=c("aut"), email="daniele.ramazzotti@disco.unimib.it"))
-Maintainer: BIMIB Group <tronco@mailing.disco.unimib.it>
+Maintainer: BIMIB Group <tronco@disco.unimib.it>
 Depends: 
     R (>= 3.1),
     doParallel,
