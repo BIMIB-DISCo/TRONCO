@@ -16,6 +16,12 @@ pathway.visualization(x, title = paste("Pathways:", paste(names(pathways),
 \item{file}{To generate a PDF a filename have to be given}
 
 \item{pathways.color}{A RColorBrewer color palette}
+
+\item{aggregate.pathways}{Boolean parameter}
+
+\item{pathways}{Pathways}
+
+\item{...}{Additional parameters}
 }
 \value{
 plot information

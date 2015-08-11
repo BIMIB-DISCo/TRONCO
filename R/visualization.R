@@ -526,9 +526,9 @@ return(ret)
 #' @param title Plot title
 #' @param file To generate a PDF a filename have to be given
 #' @param pathways.color A RColorBrewer color palette
-# @param aggregate.pathways todo
-# @param pathways todo
-# @param ... todo
+#' @param aggregate.pathways Boolean parameter
+#' @param pathways Pathways
+#' @param ... Additional parameters
 #' @return plot information
 #' @export pathway.visualization
 pathway.visualization = function(x, 

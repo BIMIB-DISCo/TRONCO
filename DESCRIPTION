@@ -1,6 +1,6 @@
 Package: TRONCO
 Version: 2.0.0-11
-Date: 2015-08-05
+Date: 2015-08-11
 Title: TRONCO, a package for TRanslational ONCOlogy
 Authors@R: 
     c(person("Marco", "Antoniotti", role=c("cph")), 
@@ -36,7 +36,7 @@ Suggests:
     testthat,
     R.matlab
 Description: 
-    TRONCO is a R package which collects algorithms to infer progression models from 
+    TRONCO is an R package which collects algorithms to infer progression models from 
     Bernoulli 0/1 profiles of genomic alterations across a tumor sample. 
     Such profiles are usually visualized as a binary input matrix where each row 
     represents a patient's sample (e.g., the result of a sequenced tumor biopsy), and 

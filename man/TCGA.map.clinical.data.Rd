@@ -10,6 +10,10 @@ TCGA.map.clinical.data(file, sep = "\\t", column.samples, column.map)
 \item{file}{A file with the clinical data}
 
 \item{sep}{file delimiter}
+
+\item{column.samples}{Required columns}
+
+\item{column.map}{Map to the required columns}
 }
 \value{
 a map
