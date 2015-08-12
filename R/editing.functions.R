@@ -25,6 +25,7 @@
 consolidate.data = function(x, print = FALSE) {
 	
     is.compliant(x)
+    
     ind = list()
     zeros = list()
     ones = list()
@@ -35,6 +36,7 @@ consolidate.data = function(x, print = FALSE) {
 	# get the unique set of indistinguishible events
 	duplicated.events = unique(duplicated.names[which(unlist(lapply(duplicated.names,function(x) if(length(unlist(strsplit(x, "-")))>1) TRUE else FALSE)))])
 	
+	# evaluate the indistinguishible events
 	if(length(duplicated.events)>0) {
 		
     		for(i in duplicated.events) {
@@ -43,27 +45,13 @@ consolidate.data = function(x, print = FALSE) {
         
             ind.pool = as.events(x)[ev,]
 
-            if(all(x$genotypes[, ev[1]] == 1)) {
-                ones = append(ones, list(ind.pool))
-            }
-            else if(all(x$genotypes[, ev[1]] == 0)) {
-                zeros = append(zeros, list(ind.pool))
-            }
-            else {
+            if(any(x$genotypes[, ev[1]] != 0) && any(x$genotypes[, ev[1]] != 1)) {
                 ind = append(ind, list(ind.pool))
             }
 
             if(print) {
 
-                if(all(x$genotypes[, ev[1]] == 1)) {
-                    cat('\nEvents altered across all samples:\n')
-                }
-                else if(all(x$genotypes[, ev[1]] == 0)) {
-                    cat('\nEvents with no alterations across samples:\n')
-                }
-                else {
-                    cat('\nIndistinguishable events:\n')
-                }
+                cat('\nIndistinguishable events:\n')
 
                 print(ind.pool)
                 cat('Total number of events for these genes: ')
@@ -74,6 +62,38 @@ consolidate.data = function(x, print = FALSE) {
     		}
     	
     	}
+    	
+    	# evaluate any event at 0 or 1 probability
+    for (i in 1:ncol(x$genotypes)) {
+	    	
+	    	ev.pool = as.events(x)[i,]
+	    	
+	    	if(sum(x$genotypes[, i])==0) {
+	    		zeros = append(zeros, list(ev.pool))
+	    		if(print) {
+	
+	                cat('\nIndistinguishable events:\n')
+	
+	                print(ev.pool)
+	                cat('Total number of events for these genes: ')
+	                cat(paste(nevents(x, as.events(x, genes=c(ev.pool)))), '\n')
+	                
+	            }
+	    	}
+	    	if(sum(x$genotypes[, i])==nrow(x$genotypes)) {
+	    		ones = append(ones, list(ev.pool))
+	    		if(print) {
+	
+	                cat('\nEvents with no alterations across samples:\n')
+	
+	                print(ev.pool)
+	                cat('Total number of events for these genes: ')
+	                cat(paste(nevents(x, as.events(x, genes=c(ev.pool)))), '\n')
+	                
+	            }
+	    	}
+	    	
+    }
 
     ret = NULL
     ret$indistinguishable = ind
