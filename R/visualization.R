@@ -1908,6 +1908,10 @@ likertToClus <- function(cluster_result, sample_stage, cluster_prefix='', sample
 #' separately one can cluster the rows in advance and show only the cluster centers. 
 #' The number of clusters can be tuned with parameter kmeans_k.
 #'
+#' This is a modified version of the real pheatmap 
+#' (https://cran.r-project.org/web/packages/pheatmap/index.html)
+#' edited in accordance with GPL-2.
+#'
 #' @param mat numeric matrix of the values to be plotted.
 #' @param color vector of colors used in heatmap.
 #' @param kmeans_k the number of kmeans clusters to make, if we want to agggregate the 

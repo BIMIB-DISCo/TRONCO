@@ -172,6 +172,10 @@ advisable if number of rows is so big that R cannot handle their hierarchical
 clustering anymore, roughly more than 1000. Instead of showing all the rows
 separately one can cluster the rows in advance and show only the cluster centers.
 The number of clusters can be tuned with parameter kmeans_k.
+
+This is a modified version of the real pheatmap
+(https://cran.r-project.org/web/packages/pheatmap/index.html)
+edited in accordance with GPL-2.
 }
 \examples{
 # Create test matrix
