@@ -43,6 +43,3 @@ License: GPL (>= 3.0)
 URL: http://bimib.disco.unimib.it
 BugReports: https://github.com/BIMIB-DISCo/TRONCO
 biocViews: Cancer
-
-
-TRONCO is an R package for the inference of cancer models from heterogeneous cancer data

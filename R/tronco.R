@@ -1274,12 +1274,12 @@ tronco.plot = function(x,
         valid_names = grep('^[*]_(.+)$', valid_names, value = T, invert=T)
 
 
-        freq.labels = ""
+        text = ""
         stat.pch = 0
         pt.bg = "white"
         col = "white"
-        if (any(!is.na(confidence))) {
-            freq.labels = c(expression(bold('Edge confidence')), lapply(confidence, function(x){
+        if (regularization != 'caprese' && any(!is.na(confidence))) {
+            text = c(expression(bold('Edge confidence')), lapply(confidence, function(x){
                 if(x == "hg")
                     return("Hypergeometric test")
                 if(x == "tp")
@@ -1310,26 +1310,31 @@ tronco.plot = function(x,
             y = x
 
 
-        freq.labels = c(freq.labels, 
+        text = c(text, 
             ' ',
             expression(bold('Sample size')),
             paste0('n = ', nsamples(x), ', m = ', nevents(x)),
             paste0('|G| = ', ngenes(y), ', |P| = ', npatterns(x))     
-            ) 
-
-        reg.labels = c( '\n',
-            expression(bold('Regularization')),
-            paste0(names(x$model))
             )
 
+        stat.pch = c(stat.pch, rep(0, 2), rep(20, 2), rep(0, 2))
+        pt.bg = c(pt.bg, rep('white', 2), rep('black', 2), rep('white', 2))
+        col = c(col, rep('white', 2), rep('white', 2), rep('white', 2)) 
 
+        if(regularization != 'caprese') {
+            text = c(text, '\n',
+                expression(bold('Regularization')),
+                paste0(names(x$model))
+                )
 
-        stat.pch = c(stat.pch, rep(0, 2), rep(20, 2), rep(0, 2), rep(20, 2))
-        pt.bg = c(pt.bg, rep('white', 2), rep('black', 2), rep('white', 2), 'black', 'darkgrey')
-        col = c(col, rep('white', 2), rep('white', 2), rep('white', 2),'black', 'darkgrey') 
+            stat.pch = c(stat.pch, rep(20, 2))
+            pt.bg = c(pt.bg, 'black', 'darkgrey')
+            col = c(col,'black', 'darkgrey') 
+
+        }
 
         legend(legend.pos.l,
-            legend = c(freq.labels, reg.labels),
+            legend = text,
             title = "",
             bty = 'n',
             box.lty = 3,
