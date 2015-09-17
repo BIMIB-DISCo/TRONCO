@@ -56,6 +56,9 @@ tronco.caprese <- function(data,
     silent = FALSE ) 
 {
 
+    # encorce data to be numeric
+    data = enforce.numeric(data)
+
     ###############
     # DEV VERSION #
     ###############
@@ -186,6 +189,9 @@ tronco.capri <- function(data,
     do.estimation = FALSE, 
     silent = FALSE ) 
 {
+
+    # encorce data to be numeric
+    data = enforce.numeric(data)
 
     ###############
     # DEV VERSION #
