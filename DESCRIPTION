@@ -1,6 +1,6 @@
 Package: TRONCO
-Version: 2.0.0-15
-Date: 2015-09-17
+Version: 2.0.0-16
+Date: 2015-09-21
 Title: TRONCO, an R package for TRanslational ONCOlogy
 Authors@R: 
     c(person("Marco", "Antoniotti", role=c("cph")), 
@@ -36,10 +36,10 @@ Suggests:
     testthat,
     R.matlab
 Description: 
-    TRONCO is an R package for the inference of cancer models from heterogeneous cancer data
+    TRONCO is an R package for the inference of cancer progression models from heterogeneous genomic data. 
 Encoding: UTF-8
 LazyData: TRUE
 License: GPL (>= 3.0)
-URL: http://bimib.disco.unimib.it
+URL: https://sites.google.com/site/troncopackage/
 BugReports: https://github.com/BIMIB-DISCo/TRONCO
 biocViews: Cancer
