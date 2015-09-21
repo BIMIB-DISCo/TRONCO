@@ -1,7 +1,0 @@
-8q+ , gain , 1
-3q+ , gain , 2
-5q- , loss , 3
-4q- , loss , 4
-8p- , loss , 5
-1q+ , gain , 6
-Xp- , loss , 7
