@@ -1,13 +1,27 @@
-# History #
-###########
-.history
+/cfg.R
+# History files
+.Rhistory
+.Rapp
+*.history
 
-# OS generated files #
-######################
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Example code in package build process
+*-Ex.R
+
+# RStudio files
+*.RData
+.Rproj.user/
+.Rproj
+.Rproj.user
+*.Rdata
+*.Rproj
+
+# TRONCO Output
+*.pdf
+*.tar.gz
+*.tex
+*.mat
+*.zip
+*.png
+
+# Configuration file
+cfg.R
