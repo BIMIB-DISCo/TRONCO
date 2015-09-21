@@ -194,6 +194,14 @@ as.gene = function(x, genes, types=NA)
 #' @export as.alterations
 as.alterations = function(x, new.type = 'Alteration', new.color = 'khaki') {
     is.compliant(x)
+    if(has.model(x)) {
+        stop("There's a reconstructed model, types cannot be merged now. \nUse delete.model()")
+    }
+
+    if(length(as.patterns(x)) > 0) {
+        stop('Patterns found. Delete patterns first.\n')
+    }
+
     merge.types(x, NULL, new.type = new.type, new.color = new.color)
 }
 
