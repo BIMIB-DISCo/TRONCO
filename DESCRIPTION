@@ -1,0 +1,45 @@
+Package: TRONCO
+Version: 2.0.0-16
+Date: 2015-09-21
+Title: TRONCO, an R package for TRanslational ONCOlogy
+Authors@R: 
+    c(person("Marco", "Antoniotti", role=c("cph")), 
+    person("Giulio", "Caravagna", role=c("aut", "cre"), email="giulio.caravagna@disco.unimib.it"),
+    person("Luca", "De Sano", role=c("aut"), email="l.desano@campus.unimib.it"), 
+    person("Alex", "Graudenzi", role=c("aut"), email="alex.graudenzi@disco.unimib.it"), 
+    person("Ilya", "Korsunsky", role=c("cph")),
+    person("Mattia", "Longoni", role=c("ctb")), 
+    person("Loes", "Olde Loohuis", role=c("cph")),
+    person("Giancarlo", "Mauri", role=c("cph")), 
+    person("Bud", "Mishra", role=c("cph")), 
+    person("Daniele", "Ramazzotti", role=c("aut"), email="daniele.ramazzotti@disco.unimib.it"))
+Maintainer: BIMIB Group <tronco@disco.unimib.it>
+Depends: 
+    R (>= 3.1),
+    doParallel,
+    bnlearn,
+Imports:
+    Rgraphviz,
+    ggplot2,
+    RColorBrewer,
+    reshape2,
+    cgdsr,
+    igraph,
+    grid,
+    gridExtra,
+    xtable,
+    gtable,
+    scales
+Suggests: 
+    BiocGenerics,
+    BiocStyle,
+    testthat,
+    R.matlab
+Description: 
+    TRONCO is an R package for the inference of cancer progression models from heterogeneous genomic data. 
+Encoding: UTF-8
+LazyData: TRUE
+License: GPL (>= 3.0)
+URL: https://sites.google.com/site/troncopackage/
+BugReports: https://github.com/BIMIB-DISCo/TRONCO
+biocViews: Cancer
