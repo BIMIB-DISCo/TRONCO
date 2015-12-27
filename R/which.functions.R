@@ -1,17 +1,12 @@
-##################################################################################
-#                                                                                #
-# TRONCO: a tool for TRanslational ONCOlogy                                      #
-#                                                                                #
-##################################################################################
-# Copyright (c) 2015, Marco Antoniotti, Giulio Caravagna, Luca De Sano,          #
-# Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,             #
-# Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.                            #
-#                                                                                #
-# All rights reserved. This program and the accompanying materials               #
-# are made available under the terms of the GNU GPL v3.0                         #
-# which accompanies this distribution                                            #
-#                                                                                #
-##################################################################################
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
+#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+####
+#### All rights reserved. This program and the accompanying materials
+#### are made available under the terms of the GNU GPL v3.0
+#### which accompanies this distribution.
 
 #' Return a list of samples with specified alteration
 #' @title which.samples 
@@ -27,16 +22,18 @@
 #' @param neg If FALSE return the list, if TRUE return as.samples() - list
 #' @return A list of sample
 #' @export which.samples
-which.samples = function(x, gene, type, neg = FALSE)
-{
+#' 
+which.samples <- function(x, gene, type, neg = FALSE) {
     data = as.gene(x, genes = gene, types = type)
     data = data[data == 1, , drop = FALSE] 
     
     samples = as.samples(x)
     
-    if(neg) {
+    if (neg) {
         return(setdiff(samples, rownames(data)))
     } else {
         return(rownames(data))  
     }
 }
+
+#### end of file -- which.functions.R
