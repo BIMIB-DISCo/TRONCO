@@ -494,7 +494,7 @@ tronco.estimation <- function(reconstruction, error.rates = NA) {
 #' @examples
 #' data(test_dataset)
 #' recon = tronco.capri(test_dataset)
-#' boot = tronco.bootstrap(recon, nboot=5)
+#' boot = tronco.bootstrap(recon, nboot = 5)
 #' tronco.plot(boot)
 #'
 #' @title tronco bootstrap
