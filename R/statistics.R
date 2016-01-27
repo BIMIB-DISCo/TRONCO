@@ -78,9 +78,9 @@ as.bnlearn.network <- function(obj, regularization = "bic") {
         }
     }
     
-    if(regularization == 'bic') bayes.net$score = BIC(bn.bic$net, data = bn.bic$data)
-    if(regularization == 'aic') bayes.net$score = AIC(bn.bic$net, data = bn.bic$data)
-    bayes.net$logLik = logLik(bn.bic$net, data = bn.bic$data)
+    if(regularization == 'bic') bayes.net$score = BIC(bayes.net$net, data = bayes.net$data)
+    if(regularization == 'aic') bayes.net$score = AIC(bayes.net$net, data = bayes.net$data)
+    bayes.net$logLik = logLik(bayes.net$net, data = bayes.net$data)
         
     return(bayes.net) 
 }
@@ -104,7 +104,7 @@ stat.eloss = function(data, regularization = "bic", runs = 10, k = 10) {
     
     ## Check if there is a reconstructed model.
 
-    if (!has.model(data)) {
+    if(!has.model(data)) {
         stop('This dataset doesn\'t have.')
     }
 
@@ -122,19 +122,8 @@ stat.eloss = function(data, regularization = "bic", runs = 10, k = 10) {
 
     ## Calculating the eloss with bn.cv
 
-    eloss = NULL
     cat('Entropy loss ...')
-    bn.kcv.list = bn.cv(bndata, bnnet, loss = 'logl', runs = runs, k = k)
-    eloss$bn.kcv.list = bn.kcv.list
-
-    losses = NULL
-    for(i in 1:length(bn.kcv.list)) {
-        losses = c(losses, attr(bn.kcv.list[[i]], "mean"))
-    }
-    if (any(is.na(losses))) {
-        warning("Some run returned NA")
-    }
-    eloss$value = losses[!is.na(losses)]
+    eloss = bn.cv(bndata, bnnet, loss = 'logl', runs = runs, k = k)
     message(' DONE')
     return(eloss)
 }
