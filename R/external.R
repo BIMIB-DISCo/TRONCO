@@ -1,17 +1,12 @@
-##################################################################################
-#                                                                                #
-# TRONCO: a tool for TRanslational ONCOlogy                                      #
-#                                                                                #
-##################################################################################
-# Copyright (c) 2015, Marco Antoniotti, Giulio Caravagna, Luca De Sano,          #
-# Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,             #
-# Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.                            #
-#                                                                                #
-# All rights reserved. This program and the accompanying materials               #
-# are made available under the terms of the GNU GPL v3.0                         #
-# which accompanies this distribution                                            #
-#                                                                                #
-##################################################################################
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
+#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+####
+#### All rights reserved. This program and the accompanying materials
+#### are made available under the terms of the GNU GPL v3.0
+#### which accompanies this distribution.
 
 #' Create an input file for MUTEX
 #' (ref: https://code.google.com/p/mutex/ )
@@ -30,19 +25,23 @@
 #' @param label.deletion The event type to use as amplification (can be a list)
 #' @return A MUTEX example matrix
 #' @export export.mutex
-export.mutex = function(x, 
-    filename = 'tronco_to_mutex',
-    filepath = './',
-    label.mutation = 'SNV',
-    label.amplification = list('High-level Gain'),
-    label.deletion = list('Homozygous Loss'))
-{
+#' 
+export.mutex <- function(x, 
+                         filename = 'tronco_to_mutex',
+                         filepath = './',
+                         label.mutation = 'SNV',
+                         label.amplification = list('High-level Gain'),
+                         label.deletion = list('Homozygous Loss')) {
 
     is.compliant(x)
     data = x
-    alteration = list(unlist(label.mutation), unlist(label.amplification), unlist(label.deletion))
+    alteration =
+        list(unlist(label.mutation),
+             unlist(label.amplification),
+             unlist(label.deletion))
 
-    # merge amplification
+    ## Merge amplification.
+    
     if (length(label.amplification) >= 0) {
         amplification = label.amplification[[1]]
     }
@@ -56,7 +55,8 @@ export.mutex = function(x,
         }
     }
 
-    # merge deletion
+    ## Merge deletion.
+    
     if (length(label.deletion) >= 0) {
         deletion = label.deletion[[1]]
     }
@@ -70,7 +70,8 @@ export.mutex = function(x,
         }
     }
 
-    # merge mutation
+    ## Merge mutation.
+    
     if (length(label.mutation) >= 0) {
         mutation = label.mutation[[1]]
     }
@@ -91,23 +92,23 @@ export.mutex = function(x,
     colnames(mutex.matrix) = samples
     rownames(mutex.matrix) = genes
 
-    # legend:
-    # 0: no alteration
-    # 1: mutation
-    # 2: amplification
-    # 4: deletion
-    # 3: 1+2 a+m
-    # 5: 1+4 d+m
+    ## Legend:
+    ## 0: no alteration
+    ## 1: mutation
+    ## 2: amplification
+    ## 4: deletion
+    ## 3: 1+2 a+m
+    ## 5: 1+4 d+m
 
     legend = list(1, 2, 4)
     names(legend) = list(mutation, amplification, deletion)
     tronco.matrix = data$genotypes
 
-    for(sample in rownames(tronco.matrix)) {
-        for(gene in colnames(tronco.matrix)) {
+    for (sample in rownames(tronco.matrix)) {
+        for (gene in colnames(tronco.matrix)) {
             type = data$annotations[[gene, 'type']]
 
-            if(type %in% alteration && tronco.matrix[sample, gene] == 1) {
+            if (type %in% alteration && tronco.matrix[sample, gene] == 1) {
                 to.add = legend[[data$annotations[[gene, 'type']]]]
                 actual.value = mutex.matrix[data$annotations[[gene, 'event']], sample]
                 mutex.matrix[data$annotations[[gene, 'event']], sample] = actual.value + to.add
@@ -115,34 +116,38 @@ export.mutex = function(x,
         }
     }
 
-    # reassign value according to mutex notation
+    ## Reassign value according to mutex notation
 
-    # legend:
-    # 0: no alteration
-    # 1: mutation
-    # 2: amplification
-    # 3: deletion
-    # 4: 1+2 a+m
-    # 5: 1+4 d+m
+    ## Legend:
+    ## 0: no alteration
+    ## 1: mutation
+    ## 2: amplification
+    ## 3: deletion
+    ## 4: 1+2 a+m
+    ## 5: 1+4 d+m
 
-    # move a+m to 10
+    ## Move a+m to 10
+    
     mutex.matrix[which(mutex.matrix == 3)] = 10
 
-    # move deletion to 3
+    ## move deletion to 3
+    
     mutex.matrix[which(mutex.matrix == 4)] = 3
 
-    # move a+m to 4
+    ## move a+m to 4
+    
     mutex.matrix[which(mutex.matrix == 10)] = 4
 
     mutex.header = append("Symbol", samples)
 
-    filepath = if(grepl("\\/$", filepath)) filepath else paste0(filepath, "/")
+    filepath = if (grepl("\\/$", filepath)) filepath else paste0(filepath, "/")
     con = paste0(filepath, filename)
-    write(mutex.header, file=con, sep = "\t", ncolumns = length(mutex.header))
-    write.table(mutex.matrix, con, sep="\t", append=T, col.names = F, quote = F)
+    write(mutex.header, file = con, sep = "\t", ncolumns = length(mutex.header))
+    write.table(mutex.matrix, con, sep="\t", append = T, col.names = F, quote = F)
 
     return(mutex.matrix)
 }
+
 
 #' Create a .mat file which can be used with NBS clustering
 #' (ref: http://chianti.ucsd.edu/~mhofree/wordpress/?page_id=26)
@@ -152,51 +157,60 @@ export.mutex = function(x,
 #' @param map_hugo_entrez Hugo_Symbol-Entrez_Gene_Id map
 #' @param file output file name
 #' @export export.nbs.input
-export.nbs.input = function(x, 
-    map_hugo_entrez,
-    file = 'tronco_to_nbs.mat')
-{
+#' 
+export.nbs.input <-function(x, 
+                            map_hugo_entrez,
+                            file = 'tronco_to_nbs.mat') {
 
     is.compliant(x);
 
     cat('*** Exporting for NBS v. 0.2\n')
     cat('Preparing binary input matrix\n')
 
-    # gene_indiv_mat <- the matrix
+    ## gene_indiv_mat <- the matrix
     gene_indiv_mat = as.matrix(x$genotypes)
 
-    # remove colnames and rownames from gene_indiv_mat
+    ## Remove colnames and rownames from gene_indiv_mat.
+    
     rownames(gene_indiv_mat) = NULL
     colnames(gene_indiv_mat) = NULL
 
     cat('Preparing samples IDs \n')
 
-    # sample_id <- patient id
+    ## sample_id <- patient id
     sample_id = as.samples(x)
 
     cat('Preparing genes list (should be Hugo_Symbol) \n')
     
-    # gene_id_symbol <- sorted name of events
+    ## gene_id_symbol <- sorted name of events
     gene_id_symbol = as.genes(x)
 
     cat('Preparing genes map (should be Hugo_Symbol -> Entrez_Gene_Id) \n')
     
-    if(!('Hugo_Symbol' %in% colnames(map_hugo_entrez))) {
+    if (!('Hugo_Symbol' %in% colnames(map_hugo_entrez))) {
         stop('No Hugo_Symbol column in the input map: ', colnames(map_hugo_entrez))
     }
-    if(!('Entrez_Gene_Id' %in% colnames(map_hugo_entrez))) {
+    if (!('Entrez_Gene_Id' %in% colnames(map_hugo_entrez))) {
         stop('No Entrez_Gene_Id column in the input map: ', colnames(map_hugo_entrez))
     }
 
-    gene_id_all = mapply(function(x) as.numeric(map_hugo_entrez[[which(map_hugo_entrez[,'Hugo_Symbol'] == x), 'Entrez_Gene_Id']]), gene_id_symbol)
+    gene_id_all =
+        mapply(function(x) as.numeric(map_hugo_entrez[[which(map_hugo_entrez[ ,'Hugo_Symbol'] == x),
+                                                       'Entrez_Gene_Id']]),
+               gene_id_symbol)
 
-    file = if(grepl("\\.mat$", file)) file else paste0(file, ".mat")
+    file = if (grepl("\\.mat$", file)) file else paste0(file, ".mat")
     con = paste0(file)
 
     cat('Writing Matlab file to disk:', file,  ' ..... ' )
-    writeMat(con, gene_indiv_mat = gene_indiv_mat, gene_id_all = gene_id_all, sample_id = sample_id, gene_id_symbol = gene_id_symbol)
+    writeMat(con,
+             gene_indiv_mat = gene_indiv_mat,
+             gene_id_all = gene_id_all,
+             sample_id = sample_id,
+             gene_id_symbol = gene_id_symbol)
     cat('DONE')
 }
+
 
 #' Create a list of unique Mutex groups for a given fdr cutoff
 #' current Mutex version is Jan 8, 2015
@@ -207,49 +221,60 @@ export.nbs.input = function(x,
 #' @param fdr cutoff for fdr
 #' @param display print summary table of extracted groups
 #' @export import.mutex.groups
-import.mutex.groups = function(file, fdr=.2, display = TRUE)
-{
-    # Found somewhere on the web - makes sense
-    read.irregular <- function(filenm) 
-    {
+#' 
+import.mutex.groups <- function(file, fdr=.2, display = TRUE) {
+    ## Found somewhere on the web - makes sense.
+    
+    read.irregular <- function(filenm) {
         fileID <- file(filenm,open="rt")
         nFields <- count.fields(fileID)
         mat <- matrix(nrow=length(nFields),ncol=max(nFields))
         invisible(seek(fileID,where=0,origin="start",rw="read"))
-        for(i in 1:nrow(mat) ) {
-            mat[i,1:nFields[i]] <-scan(fileID,what="",nlines=1,quiet=TRUE)
+        for (i in 1:nrow(mat) ) {
+            mat[i, 1:nFields[i]] = scan(fileID, what = "", nlines = 1, quiet = TRUE)
         }
         close(fileID)
-        df <- data.frame(mat, stringsAsFactors=FALSE)
+        df = data.frame(mat, stringsAsFactors = FALSE)
         return(df)
     }
 
     x = read.irregular(file)
 
-    # Check header
-    if(any(x[1,1:3] != c('Score', 'q-val', 'Members')))
-        warning('File header does not seem to contain \'Score\', \'q-val\' and \'Members field\' - are you
-            sure this is a Mutex result file?' )
+    ## Check header.
+    
+    if (any(x[1,1:3] != c('Score', 'q-val', 'Members')))
+        warning('File header does not seem to contain \'Score\', \'q-val\' and \'Members field\'.\n',
+                'Are you sure this is a Mutex result file?')
 
-    # Remove header
+    ## Remove header.
+    
     cat(paste('*** Groups extracted - ', (nrow(x) -1), ' total groups.\n', sep=''))
-    x = x[-1, , drop = F] # this is c('Score', 'q-val', 'Members')
-    x[, 1] = as.numeric(x[,1]) # fdr
-    x[, 2] = as.numeric(x[,2]) # q-value
+    x = x[-1, , drop = F]     # this is c('Score', 'q-val', 'Members')
+    x[, 1] = as.numeric(x[,1])          # fdr
+    x[, 2] = as.numeric(x[,2])          # q-value
 
-    # remove groups  with low fdr
+    ## Remove groups  with low fdr.
+    
     res = x[which(x[,1] < fdr), , drop = F] 
 
-    # remove duplicated groups (permutations)
+    ## Remove duplicated groups (permutations).
+    
     res.g = res[, 3:ncol(res)]
 
-    for(i in 1:nrow(res.g)) res[i,3:ncol(res)] = sort(res.g[i,], na.last = T)   
-        res = res[!duplicated((res[,3:ncol(res), drop=FALSE])), ] 
+    for (i in 1:nrow(res.g))
+        res[i,3:ncol(res)] = sort(res.g[i,], na.last = T)   
+    res = res[!duplicated((res[ , 3:ncol(res), drop = FALSE])), ] 
 
-    cat(paste('Selected ', nrow(res), ' unique groups with fdr < ', fdr, '\n', sep=''))
+    cat(paste('Selected ',
+              nrow(res),
+              ' unique groups with fdr < ',
+              fdr,
+              '\n',
+              sep = ''))
 
-    # Create groups
-    groups = function(g) {
+    ## Create groups.
+    
+    groups <- function(g) {
         g = g[3:length(g)]
         g = g[!is.na(g)]
         names(g) = NULL
@@ -257,8 +282,7 @@ import.mutex.groups = function(file, fdr=.2, display = TRUE)
     }
 
     G = list()
-    for(i in 1:nrow(res))
-    {
+    for (i in 1:nrow(res)) {
         gr = list(groups(res[i, ]))
         names(gr) = paste('MUTEX_GROUP', i, sep='')
         G = append(G,gr)  
@@ -267,14 +291,15 @@ import.mutex.groups = function(file, fdr=.2, display = TRUE)
     rownames(res) = names(G)
     colnames(res)[1:2] = c('fdr', 'score')
 
-    # Summary report
-    if(display) 
-    { 
-        print(res)
-
-    }
+    ## Summary report.
+    
+    if (display) 
+        { 
+            print(res)
+        }
     return(G)
 }
+
 
 #' Check if there are multiple sample in x, according to TCGA barcodes naming
 #' @title TCGA.multiple.samples
@@ -282,8 +307,8 @@ import.mutex.groups = function(file, fdr=.2, display = TRUE)
 #' @param x A TRONCO compliant dataset.
 #' @return A list of barcodes. NA if no duplicated barcode is found
 #' @export TCGA.multiple.samples
-TCGA.multiple.samples = function(x)
-{
+#' 
+TCGA.multiple.samples <- function(x) {
     is.compliant(x)
 
     samples = as.samples(x)
@@ -291,15 +316,15 @@ TCGA.multiple.samples = function(x)
 
     patients = unique(samples.truncated)
 
-    if(length(patients) != nsamples(x))
-    {
+    if (length(patients) != nsamples(x)) {
         dup.samples.start = which(duplicated(samples.truncated)) 
         dup.samples.last = which(duplicated(samples.truncated, fromLast = T))
 
         return(sort(samples[c(dup.samples.start, dup.samples.last)])) 
-    }
-    else return(NA)
+    } else
+        return(NA)
 }
+
 
 #' If there are multiple sample in x, according to TCGA barcodes naming, remove them
 #' @title TCGA.remove.multiple.samples
@@ -307,16 +332,15 @@ TCGA.multiple.samples = function(x)
 #' @param x A TRONCO compliant dataset.
 #' @return A TRONCO compliant dataset
 #' @export TCGA.remove.multiple.samples
-TCGA.remove.multiple.samples = function(x)
-{
-    is.compliant(x, err.fun='Removing TCGA multiple samples (input)')
+#' 
+TCGA.remove.multiple.samples <- function(x) {
+    is.compliant(x, err.fun = 'Removing TCGA multiple samples (input)')
 
     dup = TCGA.multiple.samples(x)
     dup.truncated = substring(dup, 0, 12)
     patients = unique(dup.truncated)
 
-    for(i in 1:length(patients))
-    {
+    for (i in 1:length(patients)) {
         patients.samples = which(dup.truncated == patients[i])
         multiple.samples = dup[patients.samples]
 
@@ -330,9 +354,10 @@ TCGA.remove.multiple.samples = function(x)
         x = delete.samples(x, discard)
     }
 
-    is.compliant(x, err.fun='Removing TCGA multiple samples (output)')
+    is.compliant(x, err.fun = 'Removing TCGA multiple samples (output)')
     return(x)
 }
+
 
 #' Keep only the first 12 character of samples barcode if there are no duplicates
 #' @title TCGA.shorten.barcodes
@@ -340,24 +365,28 @@ TCGA.remove.multiple.samples = function(x)
 #' @param x A TRONCO compliant dataset.
 #' @return A TRONCO compliant dataset
 #' @export TCGA.shorten.barcodes
-TCGA.shorten.barcodes = function(x)
-{
+#' 
+TCGA.shorten.barcodes <- function(x) {
     is.compliant(x, err.fun='Shartening TCGA barcodes (input)')
 
-    # Check if it has duplicated barcodes
-    if(!all(is.na(TCGA.multiple.samples(x))))
-        stop(
-            paste('This dataset contains multiple samples for some patients - cannot consolidate.',
-                '\n Samples with barcodes indicating multiple patients: \n', paste(TCGA.multiple.samples(x), collapse = '\n'), '.'
-                , sep =''))
+    ## Check if it has duplicated barcodes.
+    
+    if (!all(is.na(TCGA.multiple.samples(x))))
+        stop(paste('This dataset contains multiple samples for some patients - cannot consolidate.',
+                   '\n Samples with barcodes indicating multiple patients: \n',
+                   paste(TCGA.multiple.samples(x), collapse = '\n'),
+                   '.',
+                   sep = ''))
 
-    # Shorten sample barcodes
+    ## Shorten sample barcodes.
+    
     rownames(x$genotypes) = substring(rownames(x$genotypes), 0, 12)
-    if(has.stages(x)) rownames(x$stages) = rownames(x$genotypes)
+    if (has.stages(x)) rownames(x$stages) = rownames(x$genotypes)
 
-        is.compliant(x, err.fun='Shartening TCGA barcodes (output)')
+    is.compliant(x, err.fun='Shartening TCGA barcodes (output)')
     return(x)    
 }
+
 
 #' Map clinical data from the TCGA format
 #' @title  TCGA.map.clinical.data
@@ -368,42 +397,53 @@ TCGA.shorten.barcodes = function(x)
 #' @param column.map Map to the required columns
 #' @return a map
 #' @export TCGA.map.clinical.data
-TCGA.map.clinical.data = function(file, sep='\t', column.samples, column.map)
-{
+#' 
+TCGA.map.clinical.data <- function(file, sep='\t', column.samples, column.map) {
 
-    data = read.delim(
-        file = file,
-        sep = sep,
-        header = TRUE,
-        stringsAsFactors=F)
+    data =
+        read.delim(file = file,
+                   sep = sep,
+                   header = TRUE,
+                   stringsAsFactors = F)
 
-    if(!(column.samples %in% colnames(data))) 
-        stop(paste('Cannot find samples column \"', column.samples, '\". Available columns: \n\t',
-            paste(colnames(data), collapse='\n\t'), sep = ''))
+    if (!(column.samples %in% colnames(data))) 
+        stop(paste('Cannot find samples column \"',
+                   column.samples,
+                   '\". Available columns: \n\t',
+                   paste(colnames(data), collapse = '\n\t'),
+                   sep = ''))
 
-    if(!(column.map %in% colnames(data))) 
-        stop(paste('Cannot find required map column \"', column.map, '\". Available columns: \n\t',
-            paste(colnames(data), collapse='\n\t'), sep = ''))
+    if (!(column.map %in% colnames(data))) 
+        stop(paste('Cannot find required map column \"',
+                   column.map,
+                   '\". Available columns: \n\t',
+                   paste(colnames(data), collapse = '\n\t'),
+                   sep = ''))
 
-    map = data.frame(data[, column.map], row.names = data[, column.samples])
+    map = data.frame(data[ , column.map], row.names = data[ , column.samples])
     colnames(map) = column.map
 
     return(map)
 }
 
-# internal function
-sample.RColorBrewer.colors = function(palette, ncolors)
-{
-    if(!palette %in% rownames(brewer.pal.info)) stop('Invalid RColorBrewer palette.')
 
-        pmax.cols = brewer.pal.info[palette, 'maxcolors']
+## Internal function
+
+sample.RColorBrewer.colors <- function(palette, ncolors) {
+    if (!palette %in% rownames(brewer.pal.info))
+        stop('Invalid RColorBrewer palette.')
+
+    pmax.cols = brewer.pal.info[palette, 'maxcolors']
 
     cols = min(pmax.cols , ncolors)
     cols = ifelse(cols < 3, 3, cols)
 
     colors = brewer.pal(n=cols, name=palette)
-    if(ncolors < 3) colors = colors[1:ncolors]
+    if (ncolors < 3) colors = colors[1:ncolors]
     else colors =  colorRampPalette(colors)(ncolors)
 
     return(colors)
 }
+
+
+#### end of file -- external.R
