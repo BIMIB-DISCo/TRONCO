@@ -125,7 +125,7 @@ stat.eloss = function(data, regularization = "bic", runs = 10, k = 10) {
 
 
 #' Perform a k-fold cross-validation (with k = 10) using the function bn.cv
-#' and scan every nodes to estimate their prediction error. 
+#' and scan every node to estimate its prediction error. 
 #' @title stat.prederr
 #'
 #' @examples
@@ -134,8 +134,8 @@ stat.eloss = function(data, regularization = "bic", runs = 10, k = 10) {
 #'
 #' @param data A reconstructed model (the output of tronco.capri or tronco.caprese)
 #' @param regularization The name of the selected regularization (default: "bic")
-#' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param nodes a list of event 
+#' @param runs a positive integer number, the number of times cross-validation will be run
 #' @importFrom bnlearn bn.cv
 #' @export stat.prederr
 #'
