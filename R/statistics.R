@@ -20,28 +20,28 @@
 #' @param regularization The name of the selected regularization (default: "bic")
 #' @export as.bnlearn.network
 #'
-as.bnlearn.network <- function(data, regularization = "bic") {
+as.bnlearn.network <- function(obj, regularization = "bic") {
 
     ## Check if there is a reconstructed model.
 
-    if(!has.model(data)) {
-        stop('This dataset doesn\'t have.')
+    if(!has.model(obj)) {
+        stop('Input obj doesn\'t have a TRONCO object inside.')
     }
 
     ## Check if the selected regularization is used in the model.
 
-    if (!regularization %in% names(data$model)) {
-        stop(paste(regularization, "not in model"))
+    if (!regularization %in% names(obj$model)) {
+        stop(paste(regularization, " was not used to build the input TRONCO model!"))
     }
 
     ## Get genotypes and data.
 
-    genotypes = as.genotypes(data)
-    genotypes = keysToNames(data, genotypes)
+    genotypes = as.genotypes(obj)
+    genotypes = keysToNames(obj, genotypes)
     names(colnames(genotypes)) = NULL
 
-    adj.matrix = get(regularization, as.adj.matrix(data))
-    adj.matrix = keysToNames(data, adj.matrix)
+    adj.matrix = get(regularization, as.adj.matrix(obj))
+    adj.matrix = keysToNames(obj, adj.matrix)
     names(colnames(adj.matrix)) = NULL
     names(rownames(adj.matrix)) = NULL
     
@@ -77,6 +77,11 @@ as.bnlearn.network <- function(data, regularization = "bic") {
             }
         }
     }
+    
+    if(regularization == 'bic') bayes.net$score = BIC(bn.bic$net, data = bn.bic$data)
+    if(regularization == 'aic') bayes.net$score = AIC(bn.bic$net, data = bn.bic$data)
+    bayes.net$logLik = logLik(bn.bic$net, data = bn.bic$data)
+        
     return(bayes.net) 
 }
 
