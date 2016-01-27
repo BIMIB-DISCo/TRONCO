@@ -122,3 +122,80 @@ stat.eloss = function(data, regularization = "bic", runs = 10, k = 10) {
     message(' DONE')
     return(eloss)
 }
+
+
+#' Perform a k-fold cross-validation (with k = 10) using the function bn.cv
+#' and scan every nodes to estimate their prediction error. 
+#' @title stat.prederr
+#'
+#' @examples
+#' data(test_model)
+#' stat.prederr(test_model)
+#'
+#' @param data A reconstructed model (the output of tronco.capri or tronco.caprese)
+#' @param regularization The name of the selected regularization (default: "bic")
+#' @param runs a positive integer number, the number of times cross-validation will be run
+#' @param nodes a list of event 
+#' @importFrom bnlearn bn.cv
+#' @export stat.prederr
+#'
+stat.prederr <- function(data,
+                         regularization = "bic", 
+                         nodes = as.events(data, keysToNames = TRUE),
+                         runs = 10) {
+
+    ## Check if there is a reconstructed model.
+
+    if(!has.model(data)) {
+        stop('This dataset doesn\'t have.')
+    }
+
+    ## Check if the selected regularization is used in the model.
+
+    if (!regularization %in% names(data$model)) {
+        stop(paste(regularization, "not in model"))
+    }
+
+    ## Get bnlearn network and the adj matrix.
+
+    bn = as.bnlearn.network(data, regularization)
+    bndata = bn$data
+    bnnet = bn$net
+
+    adj.matrix = get(regularization, as.adj.matrix(data))
+    adj.matrix = keysToNames(data, adj.matrix)
+    names(colnames(adj.matrix)) = NULL
+    names(rownames(adj.matrix)) = NULL
+
+    ## Integrity check over nodes.
+    for(node in nodes) {
+        if(!node %in% rownames(adj.matrix)) {
+            stop(paste("Invalid node found: ", node))
+        }
+    }
+
+    pred = list()
+
+    ## Perform the estimation of the prediction error. 
+    
+    cat('Scanning', length(nodes), 'nodes for their prediction error.\n')
+    for (i in 1:length(nodes)) {
+        cat(i, 'Prediction error (parents):', nodes[i], '...')
+
+        comp = bn.cv(bndata,
+                     bnnet, 
+                     loss = 'pred', 
+                     loss.args = list(target = nodes[i]),
+                     runs = runs)
+        
+        res = NULL
+        for(i in 1:runs) {
+            res = c(res, attributes(comp[[i]])$mean)
+        }
+
+        pred = append(pred, list(res))
+        message(' DONE')    
+    }
+    names(pred) = nodes
+    return(pred)
+}

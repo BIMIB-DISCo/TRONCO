@@ -84,10 +84,11 @@ as.genes <- function(x, types = NA) {
 #' @param x A TRONCO compliant dataset.
 #' @param types The types of events to consider, if NA all available types are used.
 #' @param genes The genes to consider, if NA all available genes are used.
+#' @param keysToNames If TRUE return a list of mnemonic name composed by type + gene
 #' @return A matrix with 2 columns (event type, gene name) for the events found.
 #' @export as.events
 #' 
-as.events <- function(x, genes = NA, types = NA) {
+as.events <- function(x, genes = NA, types = NA, keysToNames = FALSE) {
     ann = x$annotations[ , c('type', 'event'), drop = FALSE]
 
     if (!any(is.na(genes)))
@@ -96,7 +97,14 @@ as.events <- function(x, genes = NA, types = NA) {
     
     if (!any(is.na(types)))
         ann =
-            ann[which(ann[, 'type', drop = FALSE] %in% types), , drop = FALSE]   
+            ann[which(ann[, 'type', drop = FALSE] %in% types), , drop = FALSE] 
+
+    if (keysToNames) {
+        ann = keysToNames(x, ann)
+        names(colnames(ann)) = NULL
+        names(rownames(ann)) = NULL
+        return(rownames(ann))
+    }  
 
     return(ann)
 }

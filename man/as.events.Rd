@@ -4,7 +4,7 @@
 \alias{as.events}
 \title{as.events}
 \usage{
-as.events(x, genes = NA, types = NA)
+as.events(x, genes = NA, types = NA, keysToNames = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
@@ -12,6 +12,8 @@ as.events(x, genes = NA, types = NA)
 \item{genes}{The genes to consider, if NA all available genes are used.}
 
 \item{types}{The types of events to consider, if NA all available types are used.}
+
+\item{keysToNames}{If TRUE return a list of mnemonic name composed by type + gene}
 }
 \value{
 A matrix with 2 columns (event type, gene name) for the events found.
