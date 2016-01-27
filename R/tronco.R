@@ -196,6 +196,9 @@ tronco.capri <- function(data,
                          do.estimation = FALSE, 
                          silent = FALSE ) {
 
+    ## Enforce data to be numeric
+    data = enforce.numeric(data)
+
     ##
     ## DEV VERSION
     ##
@@ -1438,12 +1441,12 @@ tronco.plot <- function(x,
         valid_names = grep('^[*]_(.+)$', valid_names, value = T, invert=T)
 
 
-        freq.labels = ""
+        text = ""
         stat.pch = 0
         pt.bg = "white"
         col = "white"
-        if (any(!is.na(confidence))) {
-            freq.labels =
+        if (regularization != 'caprese' && any(!is.na(confidence))) {
+            text =
                 c(expression(bold('Edge confidence')),
                   lapply(confidence,
                          function(x) {
@@ -1474,7 +1477,7 @@ tronco.plot <- function(x,
         } else 
             y = x
 
-        freq.labels =
+        text =
             c(freq.labels, 
               ' ',
               expression(bold('Sample size')),
@@ -1493,7 +1496,7 @@ tronco.plot <- function(x,
         col = c(col, rep('white', 2), rep('white', 2), rep('white', 2),'black', 'darkgrey') 
 
         legend(legend.pos.l,
-               legend = c(freq.labels, reg.labels),
+               legend = text,
                title = "",
                bty = 'n',
                box.lty = 3,
@@ -1663,7 +1666,7 @@ tronco.consensus.plot <- function(models,
     hypo_mat = expansion[[1]]
     hypos_new_name = expansion[[2]]
 
-                                        # Remove disconnected nodes
+    # Remove disconnected nodes
     if (!disconnected) { 
         del = which(rowSums(hypo_mat) + colSums(hypo_mat) == 0)
         w = !(rownames(hypo_mat) %in% names(del))

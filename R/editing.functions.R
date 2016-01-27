@@ -803,6 +803,14 @@ merge.types <- function(x, ..., new.type = "new.type", new.color = "khaki") {
     
     is.compliant(x)
 
+    if(has.model(x)) {
+        stop("There's a reconstructed model, types cannot be merged now. \nUse delete.model()")
+    }
+
+    if(length(as.patterns(x)) > 0) {
+        stop('Patterns found. Delete patterns first.\n')
+    }
+
     input = list(...)
 
     ## TODO Change this in a better way (deafult ellipsis?)

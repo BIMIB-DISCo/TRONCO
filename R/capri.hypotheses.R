@@ -24,9 +24,15 @@ hypothesis.add <- function(data,
                            pattern.effect = "*", 
                            pattern.cause = "*" ) {
 
-    ## Save the needed data structures.
-    
-    if (!is.null(data$genotypes) && !is.null(data$annotations)) {
+{
+
+    # check if there is a reconstructed model
+    if(has.model(data)) {
+        stop('This dataset has a reconstructed model and no more hypothesis can be added.')
+    }
+
+    # save the needed data structures
+    if(!is.null(data$genotypes) && !is.null(data$annotations)) {
         genotypes = data$genotypes;
         annotations = data$annotations;
     } else {
@@ -605,6 +611,12 @@ hypothesis.add.group <- function(x,
                                  dim.min = 2,
                                  dim.max = length(group),
                                  min.prob = 0) {
+
+    # check if there is a reconstructed model
+    if(has.model(x)) {
+        stop('This dataset has a reconstructed model and no more hypothesis can be added.')
+    }
+
     op = deparse(substitute(FUN))
 
     effect = paste0("c('", paste(pattern.effect, collapse = "', '"), "')")
@@ -783,6 +795,11 @@ hypothesis.add.homologous <- function(x,
                                       pattern.effect = '*',
                                       genes = as.genes(x),
                                       FUN = OR) {
+
+    # check if there is a reconstructed model
+    if(has.model(x)) {
+        stop('This dataset has a reconstructed model and no more hypothesis can be added.')
+    }
 
     op = deparse(substitute(FUN))
 
