@@ -228,7 +228,7 @@ import.GISTIC <- function(x) {
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
 #' 
-import.MAF <- function(file, sep = '\t', is.TCGA = TRUE) {
+import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL) {
 
     if (!(is.data.frame(file) || is.matrix(file)) && is.character(file)) {
         cat("*** Importing from file: ", file, "\n")
@@ -241,6 +241,17 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE) {
         maf = file
         cat("DONE\n")
     }
+
+    if(is.null(filter.fun)) cat('*** Using full MAF: #entries ', nrow(maf), '\n')
+    else{
+    	if(!is.function(filter.fun))
+    		stop('filter.fun - should be a function')
+
+		cat('*** Filtering full MAF: #entries ', nrow(maf), '\n' ) 
+		maf = maf[apply(maf, 1, filter.fun, ), , drop = FALSE]
+		cat('*** Using reduced MAF: #entries ', nrow(maf), '\n' ) 
+    }
+
 
     ## Auxiliary functions to extract information from the MAF file
     ## This is the possibly smallest type of information required to prepare a TRONCO file
