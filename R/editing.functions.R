@@ -15,7 +15,8 @@
 
 # internal function
 
-#' Verify if the input data are consolidate, i.e., if there are events with 0 or 1 probability or indistinguishable in terms of observations
+#' Verify if the input data are consolidate, i.e., if there are events with 0 or 1
+#' probability or indistinguishable in terms of observations
 #' @title consolidate.data
 #'
 #' @param x A TRONCO compliant dataset.
@@ -739,6 +740,14 @@ merge.types = function(x, ..., new.type = "new.type", new.color = "khaki") {
 
     # check if x is compliant
     is.compliant(x)
+
+    if(has.model(x)) {
+        stop("There's a reconstructed model, types cannot be merged now. \nUse delete.model()")
+    }
+
+    if(length(as.patterns(x)) > 0) {
+        stop('Patterns found. Delete patterns first.\n')
+    }
 
     input = list(...)
 
