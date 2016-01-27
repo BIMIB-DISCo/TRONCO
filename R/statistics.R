@@ -99,7 +99,7 @@ stat.eloss = function(data, regularization = "bic", runs = 10, k = 10) {
     
     ## Check if there is a reconstructed model.
 
-    if(!has.model(data)) {
+    if (!has.model(data)) {
         stop('This dataset doesn\'t have.')
     }
 
@@ -117,8 +117,19 @@ stat.eloss = function(data, regularization = "bic", runs = 10, k = 10) {
 
     ## Calculating the eloss with bn.cv
 
+    eloss = NULL
     cat('Entropy loss ...')
-    eloss = bn.cv(bndata, bnnet, loss = 'logl', runs = runs, k = k)
+    bn.kcv.list = bn.cv(bndata, bnnet, loss = 'logl', runs = runs, k = k)
+    eloss$bn.kcv.list = bn.kcv.list
+
+    losses = NULL
+    for(i in 1:length(bn.kcv.list)) {
+        losses = c(losses, attr(bn.kcv.list[[i]], "mean"))
+    }
+    if (any(is.na(losses))) {
+        warning("Some run returned NA")
+    }
+    eloss$value = losses[!is.na(losses)]
     message(' DONE')
     return(eloss)
 }
