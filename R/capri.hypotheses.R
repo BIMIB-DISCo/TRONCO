@@ -8,7 +8,7 @@
 #### are made available under the terms of the GNU GPL v3.0
 #### which accompanies this distribution.
 
-# Add a new hypothesis by creating a new event and adding it to the compliant genotypes
+#' Add a new hypothesis by creating a new event and adding it to the compliant genotypes
 #' @title hypothesis add
 #' @param data A TRONCO compliant dataset.
 #' @param pattern.label Label of the new hypothesis.
@@ -23,8 +23,6 @@ hypothesis.add <- function(data,
                            lifted.pattern, 
                            pattern.effect = "*", 
                            pattern.cause = "*" ) {
-
-{
 
     # check if there is a reconstructed model
     if(has.model(data)) {

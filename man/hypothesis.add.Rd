@@ -21,4 +21,7 @@ hypothesis.add(data, pattern.label, lifted.pattern, pattern.effect = "*",
 \value{
 A TRONCO compliant object with the added hypothesis
 }
+\description{
+Add a new hypothesis by creating a new event and adding it to the compliant genotypes
+}
 

@@ -1478,22 +1478,28 @@ tronco.plot <- function(x,
             y = x
 
         text =
-            c(freq.labels, 
+            c(text, 
               ' ',
               expression(bold('Sample size')),
               paste0('n = ', nsamples(x), ', m = ', nevents(x)),
               paste0('|G| = ', ngenes(y), ', |P| = ', npatterns(x))     
               ) 
 
-        reg.labels =
-            c( '\n',
-              expression(bold('Regularization')),
-              paste0(names(x$model))
-              )
+        stat.pch = c(stat.pch, rep(0, 2), rep(20, 2), rep(0, 2))
+        pt.bg = c(pt.bg, rep('white', 2), rep('black', 2), rep('white', 2))
+        col = c(col, rep('white', 2), rep('white', 2), rep('white', 2)) 
 
-        stat.pch = c(stat.pch, rep(0, 2), rep(20, 2), rep(0, 2), rep(20, 2))
-        pt.bg = c(pt.bg, rep('white', 2), rep('black', 2), rep('white', 2), 'black', 'darkgrey')
-        col = c(col, rep('white', 2), rep('white', 2), rep('white', 2),'black', 'darkgrey') 
+        if (regularization != 'caprese') {
+            text = 
+                c(text, '\n',
+                  expression(bold('Regularization')),
+                  paste0(names(x$model))
+                  )
+
+            stat.pch = c(stat.pch, rep(20, 2))
+            pt.bg = c(pt.bg, 'black', 'darkgrey')
+            col = c(col,'black', 'darkgrey') 
+        }
 
         legend(legend.pos.l,
                legend = text,
