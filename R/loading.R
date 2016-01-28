@@ -248,7 +248,7 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL) {
     		stop('filter.fun - should be a function')
 
 		cat('*** Filtering full MAF: #entries ', nrow(maf), '\n' ) 
-		maf = maf[apply(maf, 1, filter.fun, ), , drop = FALSE]
+		maf = maf[apply(maf, 1, filter.fun, ), ]
 		cat('*** Using reduced MAF: #entries ', nrow(maf), '\n' ) 
     }
 
