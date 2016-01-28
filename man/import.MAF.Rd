@@ -4,7 +4,7 @@
 \alias{import.MAF}
 \title{import.MAF}
 \usage{
-import.MAF(file, sep = "\\t", is.TCGA = TRUE)
+import.MAF(file, sep = "\\t", is.TCGA = TRUE, filter.fun = NULL)
 }
 \arguments{
 \item{file}{MAF filename}

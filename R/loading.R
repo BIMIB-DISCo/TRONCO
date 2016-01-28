@@ -115,7 +115,7 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 #' @return A TRONCO compliant representation of the input CNAs.
 #' @export import.GISTIC
 #' 
-import.GISTIC <- function(x) {
+import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 
     if (!(is.data.frame(x) || is.matrix(x)) && is.character(x)) {
         cat('*** Input "x" is a character, interpreting it as a filename to load a table.
@@ -146,6 +146,29 @@ import.GISTIC <- function(x) {
         data$Hugo_Symbol = NULL
         x = t(data)
     }
+
+    if(is.null(filter.genes) && is.null(filter.samples)) cat('*** Using full GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
+    else cat('*** Filtering full GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
+
+    if(!is.null(filter.genes))
+    {
+        if(!is.vector(filter.genes))
+            stop('filter.genes - should be vector')
+
+        x = x[, which(colnames(x) %in% filter.genes), drop = F ]
+        cat('*** Using reduced GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
+  }
+
+    if(!is.null(filter.samples))
+    {
+       if(!is.vector(filter.samples))
+            stop('filter.samples - should be vectors')
+
+         x = x[which(rownames(x) %in% filter.samples), ]
+        cat('*** Using reduced GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
+    }
+
+        
 
     cat("*** GISTIC input format conversion started.\n")
 
@@ -248,7 +271,7 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL) {
     		stop('filter.fun - should be a function')
 
 		cat('*** Filtering full MAF: #entries ', nrow(maf), '\n' ) 
-		maf = maf[apply(maf, 1, filter.fun, ), ]
+		maf = maf[apply(maf, 1, filter.fun), ]
 		cat('*** Using reduced MAF: #entries ', nrow(maf), '\n' ) 
     }
 

@@ -4,7 +4,7 @@
 \alias{import.GISTIC}
 \title{import.GISTIC}
 \usage{
-import.GISTIC(x)
+import.GISTIC(x, filter.genes = NULL, filter.samples = NULL)
 }
 \arguments{
 \item{x}{Either a dataframe or a filename}

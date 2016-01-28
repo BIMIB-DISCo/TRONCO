@@ -4,12 +4,12 @@
 \alias{as.bnlearn.network}
 \title{as.bnlearn.network}
 \usage{
-as.bnlearn.network(data, regularization = "bic")
+as.bnlearn.network(obj, regularization = "bic")
 }
 \arguments{
-\item{data}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
-
 \item{regularization}{The name of the selected regularization (default: "bic")}
+
+\item{data}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
 }
 \description{
 Convert a TRONCO object in a Bnlean network
