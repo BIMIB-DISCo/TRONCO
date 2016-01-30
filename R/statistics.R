@@ -78,9 +78,6 @@ as.bnlearn.network <- function(obj, regularization = "bic") {
         }
     }
     
-    if(regularization == 'bic') bayes.net$score = BIC(bayes.net$net, data = bayes.net$data)
-    if(regularization == 'aic') bayes.net$score = AIC(bayes.net$net, data = bayes.net$data)
-    bayes.net$logLik = logLik(bayes.net$net, data = bayes.net$data)
         
     return(bayes.net) 
 }
