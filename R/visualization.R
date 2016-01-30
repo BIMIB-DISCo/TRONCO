@@ -645,18 +645,18 @@ pathway.visualization <- function(x,
             pathway = change.color(pathway, 'Pathway', pathway.colors[i])
             pathway = rename.type(pathway, 'Pathway', names[i])
 
-            ## show(pathway)
+            ## view(pathway)
             ## print(has.stages(pathway))
             ## print('bindo..')
             ## print(has.stages(data.pathways))
 
             data.pathways = ebind(data.pathways, pathway)
-            ## show(data.pathways)
+            ## view(data.pathways)
         }
     }
 
     ## data.pathways = enforce.numeric(data.pathways)
-    ## show(data.pathways)
+    ## view(data.pathways)
     ret = oncoprint(trim(data.pathways), title=title, file=file, ...)
 
     return(ret)
@@ -1083,7 +1083,7 @@ genes.table.plot <- function(x, name, dir = getwd()) {
 
     y = events.selection(x, filter.in.names = as.genes(alterations))
     y = enforce.numeric(y)
-    ##  show(y)
+    ##  view(y)
 
     ## print(ntypes(y))
     ##  print(ngenes(y))

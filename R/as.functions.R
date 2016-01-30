@@ -1089,14 +1089,14 @@ duplicates <- function(x) {
 #'
 #' @examples
 #' data(test_dataset)
-#' show(test_dataset)
+#' view(test_dataset)
 #' 
-#' @title show
+#' @title view
 #' @param x A TRONCO compliant dataset.
 #' @param view The firse \code{view} events are shown via \code{head}.
-#' @export show
+#' @export view
 #' 
-show <- function(x, view = 10) {
+view <- function(x, view = 10) {
     is.compliant(x)
     x = enforce.numeric(x)
     view = min(view, nevents(x))

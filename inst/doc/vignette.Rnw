@@ -88,7 +88,7 @@ hide.progress.bar <<- TRUE
 We then use the function \texttt{show} to get a short summary of the aCML dataset that has just been loaded. 
 
 <<>>=
-show(aCML)
+view(aCML)
 @
 
 Using the function \texttt{as.events}, we can have a look at the events in the dataset. 
