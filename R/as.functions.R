@@ -1111,6 +1111,8 @@ view <- function(x, view = 10) {
               nevents(x),
               ', |G|=',
               ngenes(x),
+              ', patterns=',
+              npatterns(x),
               '.\n',
               sep = '')) 
     cat(paste('Events (types): ',
@@ -1141,6 +1143,30 @@ view <- function(x, view = 10) {
 
     cat(paste('\nGenotypes (', view, ' shown):\n', sep = ''))
     print(head(x$genotypes[,1:view, drop = FALSE]))
+
+    if (has.model(x)) {
+        cat('Progression model found.\n')
+        cat(paste('algorithm: ', x$parameters$algorithm, '.\n', sep = ''))
+        cat(paste('command: ', x$parameters$command, '.\n', sep = ''))
+        cat(paste('regularizators: ', 
+                  paste(x$parameters$regularization, sep = ', ', collapse = ', '),
+                  '.\n', sep = ''))
+    }
+
+    if ('bic' %in% x$parameters$regularization) {
+        cat('BIC\n')
+        cat('score: ',x$model$bic$score ,'.\n', sep='')
+        cat('logLik: ',x$model$bic$logLik ,'.\n', sep='')
+        cat('Selective advantage relations: ', nrow(as.selective.advantage.relations(x)$bic), '.\n', sep='')
+    }
+
+    if ('aic' %in% x$parameters$regularization) {
+        cat('AIC\n')
+        cat('score: ',x$model$aic$score ,'.\n', sep='')
+        cat('logLik: ',x$model$aic$logLik ,'.\n', sep='')
+        cat('Selective advantage relations: ', nrow(as.selective.advantage.relations(x)$aic), '.\n', sep='')
+    }
+
 }
 
 
