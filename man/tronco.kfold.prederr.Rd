@@ -4,11 +4,11 @@
 \alias{tronco.kfold.prederr}
 \title{tronco.kfold.prederr}
 \usage{
-tronco.kfold.prederr(data, regularization = "bic", events = as.events(data,
-  keysToNames = TRUE), runs = 10, k = 10)
+tronco.kfold.prederr(x, regularization = as.parameters(x)$regularization,
+  events = as.events(x, keysToNames = TRUE), runs = 10, k = 10)
 }
 \arguments{
-\item{data}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
+\item{x}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
 
 \item{regularization}{The name of the selected regularization (default: "bic")}
 

@@ -115,8 +115,9 @@ tronco.kfold.eloss = function(x,
 
     ## Check if the selected regularization is used in the model.
 
-    x$kfold = NULL
-    kfold = NULL
+    if (!"kfold" %in% names(x)) {
+        x$kfold = NULL
+    }
 
     for (reg in regularization) {
         if (!reg %in% as.parameters(x)$regularization) {
@@ -150,11 +151,10 @@ tronco.kfold.eloss = function(x,
         cat('  Model logLik =', ll, '\n')
         cat('  Mean   eloss =', meanll,' | ', ratio,'% \n')
         cat('  Stdev  eloss = ', sd(eloss) ,'\n')
-
-        kfold[[reg]]$bn.kcv.list = bn.kcv.list
-        kfold[[reg]]$eloss = eloss
+    
+        x$kfold[[reg]]$bn.kcv.list = bn.kcv.list
+        x$kfold[[reg]]$eloss = eloss
     }
-    x$kfold = kfold
     return(x)
 }
 
@@ -167,7 +167,7 @@ tronco.kfold.eloss = function(x,
 #' data(test_model)
 #' tronco.kfold.prederr(test_model)
 #'
-#' @param data A reconstructed model (the output of tronco.capri or tronco.caprese)
+#' @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
 #' @param regularization The name of the selected regularization (default: "bic")
 #' @param events a list of event 
 #' @param runs a positive integer number, the number of times cross-validation will be run
@@ -175,15 +175,15 @@ tronco.kfold.eloss = function(x,
 #' @importFrom bnlearn bn.cv
 #' @export tronco.kfold.prederr
 #'
-tronco.kfold.prederr <- function(data,
-                         regularization = "bic", 
-                         events = as.events(data, keysToNames = TRUE),
+tronco.kfold.prederr <- function(x,
+                         regularization = as.parameters(x)$regularization,
+                         events = as.events(x, keysToNames = TRUE),
                          runs = 10,
                          k = 10) {
 
     ## Check if there is a reconstructed model.
 
-    if(!has.model(data)) {
+    if(!has.model(x)) {
         stop('This dataset doesn\'t have.')
     }
 
@@ -193,23 +193,6 @@ tronco.kfold.prederr <- function(data,
         stop('The model contained in the input TRONCO object has not been reconstructed with CAPRI,  -- won\'t perform cross-validation!')
     }
 
-    ## Check if the selected regularization is used in the model.
-
-    if (!regularization %in% names(data$model)) {
-        stop(paste(regularization, "not in model"))
-    }
-
-    ## Get bnlearn network and the adj matrix.
-
-    bn = as.bnlearn.network(data, regularization)
-    bndata = bn$data
-    bnnet = bn$net
-
-    adj.matrix = get(regularization, as.adj.matrix(data))
-    adj.matrix = keysToNames(data, adj.matrix)
-    names(colnames(adj.matrix)) = NULL
-    names(rownames(adj.matrix)) = NULL
-
     ## Integrity check over nodes.
     for(event in events) {
         if(!event %in% rownames(adj.matrix)) {
@@ -217,29 +200,53 @@ tronco.kfold.prederr <- function(data,
         }
     }
 
-    pred = list()
+    if (!"kfold" %in% names(x)) {
+        x$kfold = NULL
+    }
 
-    ## Perform the estimation of the prediction error. 
-    
-    cat('Scanning', length(events), 'nodes for their prediction error.\n')
-    for (i in 1:length(events)) {
-        cat(i, 'Prediction error (parents):', events[i], '...')
+    ## Check if the selected regularization is used in the model.
 
-        comp = bn.cv(bndata,
-                     bnnet, 
-                     loss = 'pred', 
-                     loss.args = list(target = events[i]),
-                     runs = runs,
-                     k = k)
-        
-        res = NULL
-        for(i in 1:runs) {
-            res = c(res, attributes(comp[[i]])$mean)
+    for (reg in regularization) {
+        if (!reg %in% as.parameters(x)$regularization) {
+            stop(paste(reg, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
         }
 
-        pred = append(pred, list(res))
-        message(' DONE')    
+        ## Get bnlearn network and the adj matrix.
+
+        bn = as.bnlearn.network(x, reg)
+        bndata = bn$data
+        bnnet = bn$net
+
+        adj.matrix = get(reg, as.adj.matrix(x))
+        adj.matrix = keysToNames(x, adj.matrix)
+        names(colnames(adj.matrix)) = NULL
+        names(rownames(adj.matrix)) = NULL
+  
+        pred = list()
+
+        ## Perform the estimation of the prediction error. 
+        
+        cat('Scanning', length(events), 'nodes for their prediction error. Regularizer: ', reg, '\n')
+        for (i in 1:length(events)) {
+            cat(i, 'Prediction error (parents):', events[i], '...')
+
+            comp = bn.cv(bndata,
+                         bnnet, 
+                         loss = 'pred', 
+                         loss.args = list(target = events[i]),
+                         runs = runs,
+                         k = k)
+            
+            res = NULL
+            for(i in 1:runs) {
+                res = c(res, attributes(comp[[i]])$mean)
+            }
+
+            pred = append(pred, list(res))
+            message(' DONE')    
+        }
+        names(pred) = events
+        x$kfold[[reg]]$prederr = pred
     }
-    names(pred) = events
-    return(pred)
+    return(x)
 }
