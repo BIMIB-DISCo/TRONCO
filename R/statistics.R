@@ -84,7 +84,7 @@ as.bnlearn.network <- function(obj, regularization = "bic") {
 
 
 #' Perform a k-fold cross-validation using the function bn.cv.
-#' @title stat.eloss
+#' @title tronco.kfold.eloss
 #'
 #' @examples
 #' data(test_model)
@@ -95,32 +95,30 @@ as.bnlearn.network <- function(obj, regularization = "bic") {
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
 #' @importFrom bnlearn bn.cv
-#' @export stat.eloss
+#' @export tronco.kfold.eloss
 #'
-stat.eloss = function(data, regularization = "bic", runs = 10, k = 10) {   
+tronco.kfold.eloss = function(x, regularization = "bic", runs = 10, k = 10) {   
     
     ## Check if there is a reconstructed model.
-
-    if (!has.model(data)) {
-        stop('This dataset doesn\'t have.')
+    if (!has.model(x)) {
+        stop('The input TRONCO object does not contain a model, you should first do that -- won\'t perform cross-validation!')
     }
 
     ## Check if the selected regularization is used in the model.
 
-    if (!regularization %in% names(data$model)) {
-        stop(paste(regularization, "not in model"))
+    if (!regularization %in% names(x$model)) {
+        stop(paste(regularization, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
     }
 
     ## Get bnlearn network.
-
-    bn = as.bnlearn.network(data, regularization)
+    bn = as.bnlearn.network(x, regularization)
     bndata = bn$data
     bnnet = bn$net
 
     ## Calculating the eloss with bn.cv
 
     eloss = NULL
-    cat('Entropy loss ...')
+    cat('Calculating entropy loss with k-fold cross-validation [ k =', k, '| runs =', runs, '| regularizer =', regularization, '] ... ')
     bn.kcv.list = bn.cv(bndata, bnnet, loss = 'logl', runs = runs, k = k)
     eloss$bn.kcv.list = bn.kcv.list
 
@@ -129,10 +127,20 @@ stat.eloss = function(data, regularization = "bic", runs = 10, k = 10) {
         losses = c(losses, attr(bn.kcv.list[[i]], "mean"))
     }
     if (any(is.na(losses))) {
-        warning("Some run returned NA")
+        warning("Some folds returned NA")
     }
     eloss$value = losses[!is.na(losses)]
-    message(' DONE')
+    
+    meanll = mean(eloss$value)
+    ll = x$model[[regularization]]$logLik
+    ratio = meanll / abs(ll) * 100
+    
+      
+    cat(' DONE\n')
+    cat('  Model logLik =', ll, '\n')
+    cat('  Mean   eloss =', meanll,' | ', ratio,'% \n')
+    cat('  Stdev  eloss = ', sd(eloss$value) ,'\n')
+    
     return(eloss)
 }
 

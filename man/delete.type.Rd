@@ -4,7 +4,7 @@
 \alias{delete.type}
 \title{delete.type}
 \usage{
-delete.type(x, type)
+\method{delete}{type}(x, type)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

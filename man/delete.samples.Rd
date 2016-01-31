@@ -4,7 +4,7 @@
 \alias{delete.samples}
 \title{delete.samples}
 \usage{
-delete.samples(x, samples)
+\method{delete}{samples}(x, samples)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

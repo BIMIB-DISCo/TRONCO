@@ -1035,24 +1035,19 @@ as.bootstrap.scores <- function(x,
             df$BOOT.NPB = 
               c(df$BOOT.NPB,
                 npb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100)
-          else df$BOOT.NPB = c(df$BOOT.NPB, 'NA')
+          else df$BOOT.NPB = c(df$BOOT.NPB, NA)
           
           if(has.pb.bootstrap)
             df$BOOT.PB = 
               c(df$BOOT.PB,
                 pb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100)
-          else df$BOOT.PB = c(df$BOOT.PB, 'NA')
+          else df$BOOT.PB = c(df$BOOT.PB, NA)
           
           if(has.sb.bootstrap)
             df$BOOT.SB = 
               c(df$BOOT.SB,
                 sb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100)
-          else df$BOOT.SB = c(df$BOOT.SB, 'NA')
-          
-
-          #df$TP = c(df$TP, conf$tp[rownames(m)[i], colnames(m)[j]])
-          #df$PR = c(df$PR, conf$pr[rownames(m)[i], colnames(m)[j]])
-          #df$HG = c(df$HG, conf$hg[rownames(m)[i], colnames(m)[j]])   
+          else df$BOOT.SB = c(df$BOOT.SB, NA)
         }
       }
     }
@@ -1077,12 +1072,19 @@ as.bootstrap.scores <- function(x,
     
     rownames(df) = paste(1:nrow(df))
     
+      
     df = data.frame(df, stringsAsFactors = FALSE) 
     df$OBS.SELECTS = as.numeric(df$OBS.SELECTS)
     df$OBS.SELECTED = as.numeric(df$OBS.SELECTED)
-    #df$BOOT.NPB = as.numeric(df$BOOT.NPB)
-    #df$BOOT.PB = as.numeric(df$BOOT.PB)
-    #df$BOOT.SB = as.numeric(df$BOOT.SB)
+  
+    if(!has.npb.bootstrap) df$NONPAR.BOOT = NULL
+    else df$NONPAR.BOOT = as.numeric(df$NONPAR.BOOT)
+    
+    if(!has.pb.bootstrap) df$PAR.BOOT = NULL
+    else df$PAR.BOOT = as.numeric(df$PAR.BOOT)
+    
+    if(!has.sb.bootstrap) df$STAT.BOOT = NULL
+    else df$STAT.BOOT = as.numeric(df$STAT.BOOT)
     
     return(df)
   }
@@ -1324,15 +1326,15 @@ view <- function(x, view = 5) {
         
           if ('bic' %in% x$parameters$regularization) {
             cat('BIC: ')
-            cat('score ', x$model$bic$score ,'|',
-                'logLik ', x$model$bic$logLik ,'&', 
+            cat('score', x$model$bic$score ,'|',
+                'logLik', x$model$bic$logLik ,'|', 
                 nrow(as.selective.advantage.relations(x)$bic), 'selective advantage relations.\n')
           }
           
           if ('aic' %in% x$parameters$regularization) {
             cat('AIC: ')
-            cat('score ', x$model$aic$score ,'|',
-                'logLik ', x$model$aic$logLik ,'&', 
+            cat('score', x$model$aic$score ,'|',
+                'logLik', x$model$aic$logLik ,'|', 
                 nrow(as.selective.advantage.relations(x)$aic), 'selective advantage relations.\n')
           }
         }
