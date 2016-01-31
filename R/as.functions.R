@@ -922,7 +922,7 @@ as.selective.advantage.relations <- function(x,
 
         for (i in 1:ncol(m)) {
             for (j in 1:nrow(m)) {
-                if (m[i, j] == 1) { 
+                if (m[i, j] == 1) {
                     df$SELECTS = c(df$SELECTS, rownames(m)[i])
                     df$SELECTED = c(df$SELECTED, colnames(m)[j])
 
@@ -973,175 +973,233 @@ as.selective.advantage.relations <- function(x,
     return(lapply(matrix, matrix.to.df))
 }
 
+
+#' Returns a dataframe with all the bootstrap score in a 
+#' TRONCO model. It is possible to specify a subset of events
+#' or models if multiple reconstruction have been performed. 
+#'
+#' @examples
+#' data(test_model)
+#' as.bootstrap.scores(test_model)
+#' as.bootstrap.scores(test_model, events=as.events(test_model)[5:15,])
+#'
+#' @title as.bootstrap.scores
+#' @param x A TRONCO model.
+#' @param events A subset of events as of \code{as.events(x)}, all by default.
+#' @param models A subset of reconstructed models, all by default.
+#' @return All the bootstrap scores in a TRONCO model 
+#' @export as.bootstrap.scores
+#' 
 as.bootstrap.scores <- function(x,
-                                  events = as.events(x),
-                                  models = names(x$model)
-                                  ) {
-  is.compliant(x)
-  is.model(x)
-  is.events.list(x, events)
-  
-  matrix = 
+                                events = as.events(x),
+                                models = names(x$model)) {
+    is.compliant(x)
+    is.model(x)
+    is.events.list(x, events)
+
+    matrix = 
     as.adj.matrix(x,
-                  events = events,
-                  models = models,
-                  type = 'fit')
-  
-  
-  matrix = lapply(matrix, keysToNames, x = x)
-  
-  if (!(is.null(x$confidence) && is.na(x$confidence)))
-    models = names(x$model)
-  
-  has.npb.bootstrap = !is.null(x$bootstrap[[models[1]]]$npb)
-  has.pb.bootstrap = !is.null(x$bootstrap[[models[1]]]$pb)
-  has.sb.bootstrap = !is.null(x$bootstrap[[models[1]]]$sb)
-  
-  if(has.npb.bootstrap) npb.boot.conf = lapply(as.confidence(x, conf = c('npb'))$npb, keysToNames, x = x)
-  if(has.pb.bootstrap) pb.boot.conf = lapply(as.confidence(x, conf = c('pb'))$pb, keysToNames, x = x)
-  if(has.sb.bootstrap) sb.boot.conf = lapply(as.confidence(x, conf = c('sb'))$sb, keysToNames, x = x)
-  
-  matrix.to.df <- function(z) {   
-    m = matrix[[z]]
-    
-    entries = length(which(m == 1))
-    df = NULL
-    df$SELECTS = NULL
-    df$SELECTED = NULL
-    df$OBS.SELECTS = NULL
-    df$OBS.SELECTED = NULL
-    df$BOOT.NPB = NULL
-    df$BOOT.PB = NULL
-    df$BOOT.SB = NULL
-    
-    if (entries == 0) {
-      return(NULL)
+        events = events,
+        models = models,
+        type = 'fit')
+
+
+    matrix = lapply(matrix, keysToNames, x = x)
+
+    if (!(is.null(x$confidence) && is.na(x$confidence))) {
+        models = names(x$model)
     }
-    
-    for (i in 1:ncol(m)) {
-      for (j in 1:nrow(m)) {
-        if (m[i, j] == 1) { 
-          df$SELECTS = c(df$SELECTS, rownames(m)[i])
-          df$SELECTED = c(df$SELECTED, colnames(m)[j])
-          
-          df$OBS.SELECTS =
-            c(df$OBS.SELECTS,
-              sum(as.genotypes(x)[, nameToKey(x, rownames(m)[i])]))
-          df$OBS.SELECTED =
-            c(df$OBS.SELECTED,
-              sum(as.genotypes(x)[, nameToKey(x, colnames(m)[j])]))
-          
-          if(has.npb.bootstrap)
-            df$BOOT.NPB = 
-              c(df$BOOT.NPB,
-                npb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100)
-          else df$BOOT.NPB = c(df$BOOT.NPB, NA)
-          
-          if(has.pb.bootstrap)
-            df$BOOT.PB = 
-              c(df$BOOT.PB,
-                pb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100)
-          else df$BOOT.PB = c(df$BOOT.PB, NA)
-          
-          if(has.sb.bootstrap)
-            df$BOOT.SB = 
-              c(df$BOOT.SB,
-                sb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100)
-          else df$BOOT.SB = c(df$BOOT.SB, NA)
+
+    has.npb.bootstrap = !is.null(x$bootstrap[[models[1]]]$npb)
+    has.pb.bootstrap = !is.null(x$bootstrap[[models[1]]]$pb)
+    has.sb.bootstrap = !is.null(x$bootstrap[[models[1]]]$sb)
+
+    if(has.npb.bootstrap) {
+        npb.boot.conf = lapply(as.confidence(x, conf = c('npb'))$npb, keysToNames, x = x)
+    }
+    if(has.pb.bootstrap) {
+        pb.boot.conf = lapply(as.confidence(x, conf = c('pb'))$pb, keysToNames, x = x)
+    }
+    if(has.sb.bootstrap) {
+        sb.boot.conf = lapply(as.confidence(x, conf = c('sb'))$sb, keysToNames, x = x)
+    }
+
+    matrix.to.df <- function(z) {   
+        m = matrix[[z]]
+
+        entries = length(which(m == 1))
+        df = NULL
+        df$SELECTS = NULL
+        df$SELECTED = NULL
+        df$OBS.SELECTS = NULL
+        df$OBS.SELECTED = NULL
+        df$BOOT.NPB = NULL
+        df$BOOT.PB = NULL
+        df$BOOT.SB = NULL
+
+        if (entries == 0) {
+            return(NULL)
         }
-      }
+
+        for (i in 1:ncol(m)) {
+            for (j in 1:nrow(m)) {
+
+                if (m[i, j] == 1) {
+                    df$SELECTS = c(df$SELECTS, rownames(m)[i])
+                    df$SELECTED = c(df$SELECTED, colnames(m)[j])
+
+                    df$OBS.SELECTS = 
+                        c(df$OBS.SELECTS,
+                          sum(as.genotypes(x)[, nameToKey(x, rownames(m)[i])])
+                          )
+                    
+                    df$OBS.SELECTED =
+                        c(df$OBS.SELECTED,
+                          sum(as.genotypes(x)[, nameToKey(x, colnames(m)[j])])
+                          )
+
+                    if(has.npb.bootstrap) {
+                        df$BOOT.NPB = 
+                            c(df$BOOT.NPB,
+                              npb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100
+                              )
+                    } else {
+                        df$BOOT.NPB = c(df$BOOT.NPB, NA)
+                    }
+
+                    if(has.pb.bootstrap) {
+                        df$BOOT.PB = 
+                            c(df$BOOT.PB,
+                              pb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100
+                              )
+                    } else {
+                        df$BOOT.PB = c(df$BOOT.PB, NA)
+                    }
+
+                    if(has.sb.bootstrap) {
+                        df$BOOT.SB = 
+                            c(df$BOOT.SB,
+                              sb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100
+                              )
+                    } else {
+                        df$BOOT.SB = c(df$BOOT.SB, NA)
+                    }
+                }
+            }
+        }
+
+        df = cbind(df$SELECTS,
+                   df$SELECTED,
+                   df$OBS.SELECTS,
+                   df$OBS.SELECTED,
+                   df$BOOT.NPB,
+                   df$BOOT.PB,
+                   df$BOOT.SB)
+
+        colnames(df) = 
+            c('SELECTS',
+              'SELECTED',
+              'OBS.SELECTS',
+              'OBS.SELECTED',
+              'NONPAR.BOOT',
+              'PAR.BOOT',
+              'STAT.BOOT')
+
+        rownames(df) = paste(1:nrow(df))
+
+        df = data.frame(df, stringsAsFactors = FALSE) 
+        df$OBS.SELECTS = as.numeric(df$OBS.SELECTS)
+        df$OBS.SELECTED = as.numeric(df$OBS.SELECTED)
+
+        if (!has.npb.bootstrap) {
+            df$NONPAR.BOOT = NULL
+        } else {
+            df$NONPAR.BOOT = as.numeric(df$NONPAR.BOOT)
+        }
+
+        if (!has.pb.bootstrap) {
+            df$PAR.BOOT = NULL
+        } else {
+            df$PAR.BOOT = as.numeric(df$PAR.BOOT)
+        }
+
+        if (!has.sb.bootstrap) {
+            df$STAT.BOOT = NULL
+        } else {
+            df$STAT.BOOT = as.numeric(df$STAT.BOOT)
+        }
+        return(df)
     }
-    
-    df =
-      cbind(df$SELECTS,
-            df$SELECTED,
-            df$OBS.SELECTS,
-            df$OBS.SELECTED,
-            df$BOOT.NPB,
-            df$BOOT.PB,
-            df$BOOT.SB)
-    
-    colnames(df) =
-      c('SELECTS',
-        'SELECTED',
-        'OBS.SELECTS',
-        'OBS.SELECTED',
-        'NONPAR.BOOT',
-        'PAR.BOOT',
-        'STAT.BOOT')
-    
-    rownames(df) = paste(1:nrow(df))
-    
-      
-    df = data.frame(df, stringsAsFactors = FALSE) 
-    df$OBS.SELECTS = as.numeric(df$OBS.SELECTS)
-    df$OBS.SELECTED = as.numeric(df$OBS.SELECTED)
-  
-    if(!has.npb.bootstrap) df$NONPAR.BOOT = NULL
-    else df$NONPAR.BOOT = as.numeric(df$NONPAR.BOOT)
-    
-    if(!has.pb.bootstrap) df$PAR.BOOT = NULL
-    else df$PAR.BOOT = as.numeric(df$PAR.BOOT)
-    
-    if(!has.sb.bootstrap) df$STAT.BOOT = NULL
-    else df$STAT.BOOT = as.numeric(df$STAT.BOOT)
-    
-    return(df)
-  }
-  
-  res = lapply(seq_along(matrix), matrix.to.df)
-  names(res) = names(matrix)
-  
-  #     if(type == 'fit' && (has.npb.bootstrap || has.pb.bootstrap || has.sb.bootstrap))
-  #     {
-  #       regs = names(res)
-  #      
-  #        if(type == 'fit' && has.npb.bootstrap) {
-  #         npb.boot.conf = lapply(as.confidence(x, conf = c('npb')), keysToNames, x = x)
-  #       }
-  #       
-  #       if(type == 'fit' && has.sb.bootstrap) sb.boot.conf = lapply(as.confidence(x, conf = c('sb')), keysToNames, x = x)
-  #       if(type == 'fit' && has.pb.bootstrap) pb.boot.conf = lapply(as.confidence(x, conf = c('pb')), keysToNames, x = x)
-  #       
-  #       for(i in 1:length(regs))
-  #       {
-  #       }
-  #       }
-  
-  #     if(type == 'fit' && has.npb.bootstrap) df$BOOT.NPB = NULL
-  #     if(type == 'fit' && has.sb.bootstrap) df$BOOT.SB = NULL
-  #     if(type == 'fit' && has.pb.bootstrap) df$BOOT.PB = NULL
-  #     
-  #     if(type == 'fit' && has.npb.bootstrap) df$BOOT.NPB = c(df$BOOT.NPB, boot.conf$npb[rownames(m)[i], colnames(m)[j]])
-  #     if(type == 'fit' && has.sb.bootstrap) df$BOOT.SB = c()
-  #     if(type == 'fit' && has.pb.bootstrap) df$BOOT.PB = c()
-  #     
-  #     
-  #     aux.fun = function(x, key, reg)
-  #     {
-  #       if(key == 'npb')
-  #       {
-  #         x$BOOT.NPB = NULL
-  #         
-  #         for(i in 1:nrow(x))
-  #       }
-  #       
-  #       return(x)
-  #     }
-  
-  return(res)
+
+    res = lapply(seq_along(matrix), matrix.to.df)
+    names(res) = names(matrix)
+
+#     if(type == 'fit' && (has.npb.bootstrap || has.pb.bootstrap || has.sb.bootstrap))
+#     {
+#       regs = names(res)
+#      
+#        if(type == 'fit' && has.npb.bootstrap) {
+#         npb.boot.conf = lapply(as.confidence(x, conf = c('npb')), keysToNames, x = x)
+#       }
+#       
+#       if(type == 'fit' && has.sb.bootstrap) sb.boot.conf = lapply(as.confidence(x, conf = c('sb')), keysToNames, x = x)
+#       if(type == 'fit' && has.pb.bootstrap) pb.boot.conf = lapply(as.confidence(x, conf = c('pb')), keysToNames, x = x)
+#       
+#       for(i in 1:length(regs))
+#       {
+#       }
+#       }
+
+#     if(type == 'fit' && has.npb.bootstrap) df$BOOT.NPB = NULL
+#     if(type == 'fit' && has.sb.bootstrap) df$BOOT.SB = NULL
+#     if(type == 'fit' && has.pb.bootstrap) df$BOOT.PB = NULL
+#     
+#     if(type == 'fit' && has.npb.bootstrap) df$BOOT.NPB = c(df$BOOT.NPB, boot.conf$npb[rownames(m)[i], colnames(m)[j]])
+#     if(type == 'fit' && has.sb.bootstrap) df$BOOT.SB = c()
+#     if(type == 'fit' && has.pb.bootstrap) df$BOOT.PB = c()
+#     
+#     
+#     aux.fun = function(x, key, reg)
+#     {
+#       if(key == 'npb')
+#       {
+#         x$BOOT.NPB = NULL
+#         
+#         for(i in 1:nrow(x))
+#       }
+#       
+#       return(x)
+#     }
+
+    return(res)
 }
 
-as.summary.statistics = function(x, events = as.events(x), models = names(x$model))
-{
-  rels = as.selective.advantage.relations(x, events = events, models = models)
-  sco = as.bootstrap.scores(x, events = events, models = models)
 
-  
-  res = (lapply(seq_along(rels), function(w){ merge(rels[[w]], sco[[w]])} ))
-  names(res) = names(rels)
-  
-  return(res)
+#' Returns a dataframe with all the statistics for a 
+#' TRONCO model. It is possible to specify a subset of events or 
+#' models if multiple reconstruction have been performed. 
+#'
+#' @examples
+#' data(test_model)
+#' as.summary.statistics(test_model)
+#' as.summary.statistics(test_model, events=as.events(test_model)[5:15,])
+#'
+#' @title as.summary.statistics
+#' @param x A TRONCO model.
+#' @param events A subset of events as of \code{as.events(x)}, all by default.
+#' @param models A subset of reconstructed models, all by default.
+#' @return All the statistics for a TRONCO model 
+#' @export as.summary.statistics
+#' 
+as.summary.statistics <- function(x,
+                                  events = as.events(x),
+                                  models = names(x$model)) {
+
+    rels = as.selective.advantage.relations(x, events = events, models = models)
+    sco = as.bootstrap.scores(x, events = events, models = models)
+    res = (lapply(seq_along(rels), function(w){ merge(rels[[w]], sco[[w]])} ))
+    names(res) = names(rels)
+    return(res)
 }
 
 
@@ -1171,6 +1229,21 @@ as.parents.pos <- function(x,
 
     names(ret) = models
     return(ret) 
+}
+
+
+#' Get parameters of a model
+#'
+#' @title as.parameters
+#' @param x A TRONCO model.
+#' @return A list of parameters
+#' @export as.parameters
+#
+as.parameters <- function(x) {
+    is.compliant(x)
+    is.model(x)
+
+    return(x$parameters) 
 }
 
 

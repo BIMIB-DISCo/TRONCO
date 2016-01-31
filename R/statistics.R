@@ -88,7 +88,7 @@ as.bnlearn.network <- function(obj, regularization = "bic") {
 #'
 #' @examples
 #' data(test_model)
-#' stat.eloss(test_model)
+#' tronco.kfold.eloss(test_model)
 #'
 #' @param data A reconstructed model (the output of tronco.capri or tronco.caprese)
 #' @param regularization The name of the selected regularization (default: "bic")
@@ -98,10 +98,18 @@ as.bnlearn.network <- function(obj, regularization = "bic") {
 #' @export tronco.kfold.eloss
 #'
 tronco.kfold.eloss = function(x, regularization = "bic", runs = 10, k = 10) {   
-    
+
+
     ## Check if there is a reconstructed model.
+
     if (!has.model(x)) {
         stop('The input TRONCO object does not contain a model, you should first do that -- won\'t perform cross-validation!')
+    }
+
+    ## Check if the reconstruction has been made with CAPRI
+
+    if (x$parameters$algorithm != 'CAPRI') {
+        stop('The model contained in the input TRONCO object has not been reconstructed with CAPRI,  -- won\'t perform cross-validation!')
     }
 
     ## Check if the selected regularization is used in the model.
@@ -147,23 +155,25 @@ tronco.kfold.eloss = function(x, regularization = "bic", runs = 10, k = 10) {
 
 #' Perform a k-fold cross-validation (with k = 10) using the function bn.cv
 #' and scan every node to estimate its prediction error. 
-#' @title stat.prederr
+#' @title tronco.kfold.prederr
 #'
 #' @examples
 #' data(test_model)
-#' stat.prederr(test_model)
+#' tronco.kfold.prederr(test_model)
 #'
 #' @param data A reconstructed model (the output of tronco.capri or tronco.caprese)
 #' @param regularization The name of the selected regularization (default: "bic")
-#' @param nodes a list of event 
+#' @param events a list of event 
 #' @param runs a positive integer number, the number of times cross-validation will be run
+#' @param k a positive integer number, the number of groups into which the data will be split
 #' @importFrom bnlearn bn.cv
-#' @export stat.prederr
+#' @export tronco.kfold.prederr
 #'
-stat.prederr <- function(data,
+tronco.kfold.prederr <- function(data,
                          regularization = "bic", 
-                         nodes = as.events(data, keysToNames = TRUE),
-                         runs = 10) {
+                         events = as.events(data, keysToNames = TRUE),
+                         runs = 10,
+                         k = 10) {
 
     ## Check if there is a reconstructed model.
 
@@ -189,9 +199,9 @@ stat.prederr <- function(data,
     names(rownames(adj.matrix)) = NULL
 
     ## Integrity check over nodes.
-    for(node in nodes) {
-        if(!node %in% rownames(adj.matrix)) {
-            stop(paste("Invalid node found: ", node))
+    for(event in events) {
+        if(!event %in% rownames(adj.matrix)) {
+            stop(paste("Invalid node found: ", event))
         }
     }
 
@@ -199,15 +209,16 @@ stat.prederr <- function(data,
 
     ## Perform the estimation of the prediction error. 
     
-    cat('Scanning', length(nodes), 'nodes for their prediction error.\n')
-    for (i in 1:length(nodes)) {
-        cat(i, 'Prediction error (parents):', nodes[i], '...')
+    cat('Scanning', length(events), 'nodes for their prediction error.\n')
+    for (i in 1:length(events)) {
+        cat(i, 'Prediction error (parents):', events[i], '...')
 
         comp = bn.cv(bndata,
                      bnnet, 
                      loss = 'pred', 
-                     loss.args = list(target = nodes[i]),
-                     runs = runs)
+                     loss.args = list(target = events[i]),
+                     runs = runs,
+                     k = k)
         
         res = NULL
         for(i in 1:runs) {
@@ -217,6 +228,6 @@ stat.prederr <- function(data,
         pred = append(pred, list(res))
         message(' DONE')    
     }
-    names(pred) = nodes
+    names(pred) = events
     return(pred)
 }
