@@ -4,7 +4,7 @@
 \alias{delete.gene}
 \title{delete.gene}
 \usage{
-\method{delete}{gene}(x, gene)
+delete.gene(x, gene)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

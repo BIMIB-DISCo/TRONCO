@@ -20,7 +20,7 @@ Perform a k-fold cross-validation using the function bn.cv.
 }
 \examples{
 data(test_model)
-stat.eloss(test_model)
+tronco.kfold.eloss(test_model)
 
 }
 
