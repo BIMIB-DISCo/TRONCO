@@ -97,7 +97,7 @@ as.bnlearn.network <- function(obj, regularization = "bic") {
 #' @export tronco.kfold.eloss
 #'
 tronco.kfold.eloss = function(x, 
-                              regularization = "bic",
+                              regularization = as.parameters(x)$regularization,
                               runs = 10,
                               k = 10) {   
 
@@ -115,41 +115,47 @@ tronco.kfold.eloss = function(x,
 
     ## Check if the selected regularization is used in the model.
 
-    if (!regularization %in% names(x$model)) {
-        stop(paste(regularization, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
-    }
+    x$kfold = NULL
+    kfold = NULL
 
-    ## Get bnlearn network.
-    bn = as.bnlearn.network(x, regularization)
-    bndata = bn$data
-    bnnet = bn$net
+    for (reg in regularization) {
+        if (!reg %in% as.parameters(x)$regularization) {
+            stop(paste(reg, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
+        }
 
-    ## Calculating the eloss with bn.cv
+        ## Get bnlearn network.
+        bn = as.bnlearn.network(x, reg)
+        bndata = bn$data
+        bnnet = bn$net
 
-    eloss = NULL
-    cat('Calculating entropy loss with k-fold cross-validation [ k =', k, '| runs =', runs, '| regularizer =', regularization, '] ... ')
-    bn.kcv.list = bn.cv(bndata, bnnet, loss = 'logl', runs = runs, k = k)
-    eloss$bn.kcv.list = bn.kcv.list
+        ## Calculating the eloss with bn.cv
+        cat('Calculating entropy loss with k-fold cross-validation [ k =', k,
+            '| runs =', runs, '| regularizer =', reg, '] ... ')
+        bn.kcv.list = bn.cv(bndata, bnnet, loss = 'logl', runs = runs, k = k)
 
-    losses = NULL
-    for(i in 1:length(bn.kcv.list)) {
-        losses = c(losses, attr(bn.kcv.list[[i]], "mean"))
-    }
-    if (any(is.na(losses))) {
-        warning("Some folds returned NA")
-    }
-    eloss$value = losses[!is.na(losses)]
+        losses = NULL
+        for(i in 1:length(bn.kcv.list)) {
+            losses = c(losses, attr(bn.kcv.list[[i]], "mean"))
+        }
+        if (any(is.na(losses))) {
+            warning("Some folds returned NA")
+        }
+        eloss = losses[!is.na(losses)]
     
-    meanll = mean(eloss$value)
-    ll = get(regularization, x$model)$logLik
-    ratio = meanll / abs(ll) * 100
+        meanll = mean(eloss)
+        ll = get(reg, x$model)$logLik
+        ratio = meanll / abs(ll) * 100
     
-    cat(' DONE\n')
-    cat('  Model logLik =', ll, '\n')
-    cat('  Mean   eloss =', meanll,' | ', ratio,'% \n')
-    cat('  Stdev  eloss = ', sd(eloss$value) ,'\n')
-    
-    return(eloss)
+        cat(' DONE\n')
+        cat('  Model logLik =', ll, '\n')
+        cat('  Mean   eloss =', meanll,' | ', ratio,'% \n')
+        cat('  Stdev  eloss = ', sd(eloss) ,'\n')
+
+        kfold[[reg]]$bn.kcv.list = bn.kcv.list
+        kfold[[reg]]$eloss = eloss
+    }
+    x$kfold = kfold
+    return(x)
 }
 
 
@@ -179,6 +185,12 @@ tronco.kfold.prederr <- function(data,
 
     if(!has.model(data)) {
         stop('This dataset doesn\'t have.')
+    }
+
+    ## Check if the reconstruction has been made with CAPRI
+
+    if (x$parameters$algorithm != 'CAPRI') {
+        stop('The model contained in the input TRONCO object has not been reconstructed with CAPRI,  -- won\'t perform cross-validation!')
     }
 
     ## Check if the selected regularization is used in the model.
