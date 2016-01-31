@@ -4,7 +4,8 @@
 \alias{tronco.kfold.eloss}
 \title{tronco.kfold.eloss}
 \usage{
-tronco.kfold.eloss(x, regularization = "bic", runs = 10, k = 10)
+tronco.kfold.eloss(x, regularization = as.parameters(x)$regularization,
+  runs = 10, k = 10)
 }
 \arguments{
 \item{regularization}{The name of the selected regularization (default: "bic")}
