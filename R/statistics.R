@@ -78,7 +78,6 @@ as.bnlearn.network <- function(obj, regularization = "bic") {
         }
     }
     
-        
     return(bayes.net) 
 }
 
@@ -97,8 +96,10 @@ as.bnlearn.network <- function(obj, regularization = "bic") {
 #' @importFrom bnlearn bn.cv
 #' @export tronco.kfold.eloss
 #'
-tronco.kfold.eloss = function(x, regularization = "bic", runs = 10, k = 10) {   
-
+tronco.kfold.eloss = function(x, 
+                              regularization = "bic",
+                              runs = 10,
+                              k = 10) {   
 
     ## Check if there is a reconstructed model.
 
@@ -140,10 +141,9 @@ tronco.kfold.eloss = function(x, regularization = "bic", runs = 10, k = 10) {
     eloss$value = losses[!is.na(losses)]
     
     meanll = mean(eloss$value)
-    ll = x$model[[regularization]]$logLik
+    ll = get(regularization, x$model)$logLik
     ratio = meanll / abs(ll) * 100
     
-      
     cat(' DONE\n')
     cat('  Model logLik =', ll, '\n')
     cat('  Mean   eloss =', meanll,' | ', ratio,'% \n')
