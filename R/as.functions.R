@@ -915,7 +915,7 @@ as.selective.advantage.relations <- function(x,
         df$HG = NULL
         df$TP = NULL
         df$PR = NULL
-
+        
         if (entries == 0) {
             return(NULL)
         }
@@ -935,7 +935,7 @@ as.selective.advantage.relations <- function(x,
 
                     df$TP = c(df$TP, conf$tp[rownames(m)[i], colnames(m)[j]])
                     df$PR = c(df$PR, conf$pr[rownames(m)[i], colnames(m)[j]])
-                    df$HG = c(df$HG, conf$hg[rownames(m)[i], colnames(m)[j]])            
+                    df$HG = c(df$HG, conf$hg[rownames(m)[i], colnames(m)[j]])   
                 }
             }
         }
@@ -969,8 +969,177 @@ as.selective.advantage.relations <- function(x,
 
         return(df)
     }
-
+    
     return(lapply(matrix, matrix.to.df))
+}
+
+as.bootstrap.scores <- function(x,
+                                  events = as.events(x),
+                                  models = names(x$model)
+                                  ) {
+  is.compliant(x)
+  is.model(x)
+  is.events.list(x, events)
+  
+  matrix = 
+    as.adj.matrix(x,
+                  events = events,
+                  models = models,
+                  type = 'fit')
+  
+  
+  matrix = lapply(matrix, keysToNames, x = x)
+  
+  if (!(is.null(x$confidence) && is.na(x$confidence)))
+    models = names(x$model)
+  
+  has.npb.bootstrap = !is.null(x$bootstrap[[models[1]]]$npb)
+  has.pb.bootstrap = !is.null(x$bootstrap[[models[1]]]$pb)
+  has.sb.bootstrap = !is.null(x$bootstrap[[models[1]]]$sb)
+  
+  if(has.npb.bootstrap) npb.boot.conf = lapply(as.confidence(x, conf = c('npb'))$npb, keysToNames, x = x)
+  if(has.pb.bootstrap) pb.boot.conf = lapply(as.confidence(x, conf = c('pb'))$pb, keysToNames, x = x)
+  if(has.sb.bootstrap) sb.boot.conf = lapply(as.confidence(x, conf = c('sb'))$sb, keysToNames, x = x)
+  
+  matrix.to.df <- function(z) {   
+    m = matrix[[z]]
+    
+    entries = length(which(m == 1))
+    df = NULL
+    df$SELECTS = NULL
+    df$SELECTED = NULL
+    df$OBS.SELECTS = NULL
+    df$OBS.SELECTED = NULL
+    df$BOOT.NPB = NULL
+    df$BOOT.PB = NULL
+    df$BOOT.SB = NULL
+    
+    if (entries == 0) {
+      return(NULL)
+    }
+    
+    for (i in 1:ncol(m)) {
+      for (j in 1:nrow(m)) {
+        if (m[i, j] == 1) { 
+          df$SELECTS = c(df$SELECTS, rownames(m)[i])
+          df$SELECTED = c(df$SELECTED, colnames(m)[j])
+          
+          df$OBS.SELECTS =
+            c(df$OBS.SELECTS,
+              sum(as.genotypes(x)[, nameToKey(x, rownames(m)[i])]))
+          df$OBS.SELECTED =
+            c(df$OBS.SELECTED,
+              sum(as.genotypes(x)[, nameToKey(x, colnames(m)[j])]))
+          
+          if(has.npb.bootstrap)
+            df$BOOT.NPB = 
+              c(df$BOOT.NPB,
+                npb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100)
+          else df$BOOT.NPB = c(df$BOOT.NPB, 'NA')
+          
+          if(has.pb.bootstrap)
+            df$BOOT.PB = 
+              c(df$BOOT.PB,
+                pb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100)
+          else df$BOOT.PB = c(df$BOOT.PB, 'NA')
+          
+          if(has.sb.bootstrap)
+            df$BOOT.SB = 
+              c(df$BOOT.SB,
+                sb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100)
+          else df$BOOT.SB = c(df$BOOT.SB, 'NA')
+          
+
+          #df$TP = c(df$TP, conf$tp[rownames(m)[i], colnames(m)[j]])
+          #df$PR = c(df$PR, conf$pr[rownames(m)[i], colnames(m)[j]])
+          #df$HG = c(df$HG, conf$hg[rownames(m)[i], colnames(m)[j]])   
+        }
+      }
+    }
+    
+    df =
+      cbind(df$SELECTS,
+            df$SELECTED,
+            df$OBS.SELECTS,
+            df$OBS.SELECTED,
+            df$BOOT.NPB,
+            df$BOOT.PB,
+            df$BOOT.SB)
+    
+    colnames(df) =
+      c('SELECTS',
+        'SELECTED',
+        'OBS.SELECTS',
+        'OBS.SELECTED',
+        'NONPAR.BOOT',
+        'PAR.BOOT',
+        'STAT.BOOT')
+    
+    rownames(df) = paste(1:nrow(df))
+    
+    df = data.frame(df, stringsAsFactors = FALSE) 
+    df$OBS.SELECTS = as.numeric(df$OBS.SELECTS)
+    df$OBS.SELECTED = as.numeric(df$OBS.SELECTED)
+    #df$BOOT.NPB = as.numeric(df$BOOT.NPB)
+    #df$BOOT.PB = as.numeric(df$BOOT.PB)
+    #df$BOOT.SB = as.numeric(df$BOOT.SB)
+    
+    return(df)
+  }
+  
+  res = lapply(seq_along(matrix), matrix.to.df)
+  names(res) = names(matrix)
+  
+  #     if(type == 'fit' && (has.npb.bootstrap || has.pb.bootstrap || has.sb.bootstrap))
+  #     {
+  #       regs = names(res)
+  #      
+  #        if(type == 'fit' && has.npb.bootstrap) {
+  #         npb.boot.conf = lapply(as.confidence(x, conf = c('npb')), keysToNames, x = x)
+  #       }
+  #       
+  #       if(type == 'fit' && has.sb.bootstrap) sb.boot.conf = lapply(as.confidence(x, conf = c('sb')), keysToNames, x = x)
+  #       if(type == 'fit' && has.pb.bootstrap) pb.boot.conf = lapply(as.confidence(x, conf = c('pb')), keysToNames, x = x)
+  #       
+  #       for(i in 1:length(regs))
+  #       {
+  #       }
+  #       }
+  
+  #     if(type == 'fit' && has.npb.bootstrap) df$BOOT.NPB = NULL
+  #     if(type == 'fit' && has.sb.bootstrap) df$BOOT.SB = NULL
+  #     if(type == 'fit' && has.pb.bootstrap) df$BOOT.PB = NULL
+  #     
+  #     if(type == 'fit' && has.npb.bootstrap) df$BOOT.NPB = c(df$BOOT.NPB, boot.conf$npb[rownames(m)[i], colnames(m)[j]])
+  #     if(type == 'fit' && has.sb.bootstrap) df$BOOT.SB = c()
+  #     if(type == 'fit' && has.pb.bootstrap) df$BOOT.PB = c()
+  #     
+  #     
+  #     aux.fun = function(x, key, reg)
+  #     {
+  #       if(key == 'npb')
+  #       {
+  #         x$BOOT.NPB = NULL
+  #         
+  #         for(i in 1:nrow(x))
+  #       }
+  #       
+  #       return(x)
+  #     }
+  
+  return(res)
+}
+
+as.summary.statistics = function(x, events = as.events(x), models = names(x$model))
+{
+  rels = as.selective.advantage.relations(x, events = events, models = models)
+  sco = as.bootstrap.scores(x, events = events, models = models)
+
+  
+  res = (lapply(seq_along(rels), function(w){ merge(rels[[w]], sco[[w]])} ))
+  names(res) = names(rels)
+  
+  return(res)
 }
 
 
@@ -1096,7 +1265,7 @@ duplicates <- function(x) {
 #' @param view The firse \code{view} events are shown via \code{head}.
 #' @export view
 #' 
-view <- function(x, view = 10) {
+view <- function(x, view = 5) {
     is.compliant(x)
     x = enforce.numeric(x)
     view = min(view, nevents(x))
@@ -1104,8 +1273,7 @@ view <- function(x, view = 10) {
     if (as.description(x) != "")
         cat(paste('Description: ', as.description(x), '.\n', sep = ''))
 
-
-    cat(paste('Dataset: n=',
+    cat(paste('-- TRONCO Dataset: n=',
               nsamples(x),
               ', m=',
               nevents(x),
@@ -1145,29 +1313,50 @@ view <- function(x, view = 10) {
     print(head(x$genotypes[,1:view, drop = FALSE]))
 
     if (has.model(x)) {
-        cat('Progression model found.\n')
-        cat(paste('algorithm: ', x$parameters$algorithm, '.\n', sep = ''))
-        cat(paste('command: ', x$parameters$command, '.\n', sep = ''))
-        cat(paste('regularizators: ', 
-                  paste(x$parameters$regularization, sep = ', ', collapse = ', '),
-                  '.\n', sep = ''))
-    }
+        cat('\n-- TRONCO Model(s): ', x$parameters$algorithm, '\n')
 
-    if ('bic' %in% x$parameters$regularization) {
-        cat('BIC\n')
-        cat('score: ',x$model$bic$score ,'.\n', sep='')
-        cat('logLik: ',x$model$bic$logLik ,'.\n', sep='')
-        cat('Selective advantage relations: ', nrow(as.selective.advantage.relations(x)$bic), '.\n', sep='')
-    }
+        if(x$parameters$algorithm == 'CAPRI')
+        {
+          cat('Score optimization via ')
+          if(x$parameters$command == 'hc') cat('Hill-Climbing with ')
+          if(x$parameters$command == 'tabu') cat('Tabu Search with ')
+          cat(paste(toupper(x$parameters$regularization), sep = ', ', collapse = ', '),' regularizers.\n', sep = '')
+        
+          if ('bic' %in% x$parameters$regularization) {
+            cat('BIC: ')
+            cat('score ', x$model$bic$score ,'|',
+                'logLik ', x$model$bic$logLik ,'&', 
+                nrow(as.selective.advantage.relations(x)$bic), 'selective advantage relations.\n')
+          }
+          
+          if ('aic' %in% x$parameters$regularization) {
+            cat('AIC: ')
+            cat('score ', x$model$aic$score ,'|',
+                'logLik ', x$model$aic$logLik ,'&', 
+                nrow(as.selective.advantage.relations(x)$aic), 'selective advantage relations.\n')
+          }
+        }
+      
+      cat('Available confidence measures:\n')
+      cat('\tp-values: Temporal priority | Probability raising | Hypergeometric\n')
 
-    if ('aic' %in% x$parameters$regularization) {
-        cat('AIC\n')
-        cat('score: ',x$model$aic$score ,'.\n', sep='')
-        cat('logLik: ',x$model$aic$logLik ,'.\n', sep='')
-        cat('Selective advantage relations: ', nrow(as.selective.advantage.relations(x)$aic), '.\n', sep='')
+      if (!(is.null(x$confidence) && is.na(x$confidence)))
+        models = names(x$model)
+      
+      has.npb.bootstrap = is.null(x$bootstrap[[models[1]]]$npb)
+      has.pb.bootstrap = is.null(x$bootstrap[[models[1]]]$pb)
+      has.sb.bootstrap = is.null(x$bootstrap[[models[1]]]$sb)
+      
+      if(!is.null(x$bootstrap))
+      {
+        cat('\tBootstrap scores: ')
+        if(!is.null(x$bootstrap[[models[1]]]$npb)) cat('Non-parametric | ')
+        if(!is.null(x$bootstrap[[models[1]]]$pb)) cat('Parametric | ')
+        if(!is.null(x$bootstrap[[models[1]]]$sb)) cat('Statistical')
+      }
     }
+} 
 
-}
 
 
 #' Return the number of types in the dataset.
