@@ -82,7 +82,8 @@ as.bnlearn.network <- function(obj, regularization = "bic") {
 }
 
 
-#' Perform a k-fold cross-validation using the function bn.cv.
+#' Perform a k-fold cross-validation using the function bn.cv
+#' to estimate the entropy loss.
 #' @title tronco.kfold.eloss
 #'
 #' @examples
@@ -159,7 +160,7 @@ tronco.kfold.eloss = function(x,
 }
 
 
-#' Perform a k-fold cross-validation (with k = 10) using the function bn.cv
+#' Perform a k-fold cross-validation using the function bn.cv
 #' and scan every node to estimate its prediction error. 
 #' @title tronco.kfold.prederr
 #'
@@ -255,7 +256,7 @@ tronco.kfold.prederr <- function(x,
 }
 
 
-#' Perform a k-fold cross-validation (with k = 10) using the function bn.cv
+#' Perform a k-fold cross-validation using the function bn.cv
 #' and scan every node to estimate its posterior classification error. 
 #' @title tronco.kfold.postderr
 #'
