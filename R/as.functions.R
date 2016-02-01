@@ -416,7 +416,7 @@ as.events.in.sample <- function(x, sample) {
 #'
 #' @title as.confidence
 #' @param x A TRONCO model.
-#' @param conf A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb', 'sb', 'eloss' or 'prederr'. 
+#' @param conf A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb', 'sb', 'eloss', 'prederr' or 'posterr'. 
 #' @return A list of matrices with the event-to-event confidence. 
 #' @export as.confidence
 #' 
@@ -425,7 +425,7 @@ as.confidence <- function(x, conf) {
     is.model(x)
     if (!is.vector(conf)) stop('"conf" should be a vector.')
 
-    keys = c('hg', 'tp', 'pr', 'npb', 'pb', 'sb', 'eloss', 'prederr')
+    keys = c('hg', 'tp', 'pr', 'npb', 'pb', 'sb', 'eloss', 'prederr', 'posterr')
 
     if (!all(conf %in% keys)) 
         stop('Confidence keyword unrecognized, \'conf\' should be any of:\n
@@ -439,7 +439,8 @@ as.confidence <- function(x, conf) {
             \t \"pb\"      - parametric bootstrap\n
             \t \"sb\"      - statistical bootstrap\n
             \t \"eloss\"   - entropy loss\n
-            \t \"prederr\" - prediction error'
+            \t \"prederr\" - prediction error\n
+            \t \"postderr\"- posterior classification error'
              )
 
     if (is.null(x$confidence)
@@ -474,13 +475,18 @@ as.confidence <- function(x, conf) {
 #     
     has.eloss.kfold = is.null(x$kfold[[models[1]]]$eloss)
     has.prederr.kfold = is.null(x$kfold[[models[1]]]$prederr)
+    has.postderr.kfold = is.null(x$kfold[[models[1]]]$postderr)
 
     if ('eloss' %in% conf && has.eloss.kfold) {
       stop('Entropy loss was not computed Remove keyword\n')
     }
     
     if ('prederr' %in% conf && has.prederr.kfold) {
-      stop('Prediction erorr was not computed Remove keyword\n')
+      stop('Prediction error was not computed Remove keyword\n')
+    }
+
+    if ('postderr' %in% conf && has.postderr.kfold) {
+      stop('Posterior classification error was not computed Remove keyword\n')
     }
     
     result = NULL
@@ -1160,82 +1166,262 @@ as.bootstrap.scores <- function(x,
     return(res)
 }
 
+
+#' Returns a dataframe with all the entropy loss score in a 
+#' TRONCO model. It is possible to specify models if multiple
+#' reconstruction have been performed. 
+#'
+#' @examples
+#' data(test_model)
+#' as.kfold.eloss(test_model)
+#' as.kfold.eloss(test_model, models='aic')
+#'
+#' @title as.kfold.eloss
+#' @param x A TRONCO model.
+#' @param models A subset of reconstructed models, all by default.
+#' @return All the bootstrap scores in a TRONCO model 
+#' @export as.kfold.eloss
+#' 
 as.kfold.eloss <- function(x,
-                           models = names(x$model))
-{
-  is.compliant(x)
-  is.model(x)
-  
-  if(is.null(x$kfold))
-    stop('Cross-validation was never performed on this model!')
-  
-  ret = NULL
-  ret$C1 = NULL
-  ret$C2 = NULL
-  ret$C3 = NULL
-  ret$C4 = NULL
-  
-  for(i in 1:length(models))
-  {
-    if(!is.null(get(models[i], x$kfold)$eloss)) 
-    {
-      meanll = mean(get(models[i], x$kfold)$eloss)
-      ll = get(models[i], x$model)$logLik
-      ratio = meanll / abs(ll) * 100
-      
-      ret$C1 = c(ret$C1, meanll)
-      ret$C2 = c(ret$C2, ratio)
-      ret$C3 = c(ret$C3, sd(get(models[i], x$kfold)$eloss))
-      ret$C4 = c(ret$C4, paste(round(get(models[i], x$kfold)$eloss, 2), sep = ', ', collapse = ', '))
+                           models = names(x$model)) {
+    is.compliant(x)
+    is.model(x)
+
+    if(is.null(x$kfold)) {
+        stop('Cross-validation was never performed on this model!')
     }
-  }
-  
-  ret = data.frame(ret)
-  rownames(ret) = models
-  colnames(ret) = c('Mean', '%-of-logLik', 'Stdev', 'Values (rounded, 2 digits)')
-  
-  return(ret)
+
+    ret = NULL
+    ret$C1 = NULL
+    ret$C2 = NULL
+    ret$C3 = NULL
+    ret$C4 = NULL
+
+    for (i in 1:length(models)) {
+        if (!is.null(get(models[i], x$kfold)$eloss)) {
+            meanll = mean(get(models[i], x$kfold)$eloss)
+            ll = get(models[i], x$model)$logLik
+            ratio = meanll / abs(ll) * 100
+
+            ret$C1 = c(ret$C1, meanll)
+            ret$C2 = c(ret$C2, ratio)
+            ret$C3 = c(ret$C3, sd(get(models[i], x$kfold)$eloss))
+            ret$C4 = c(ret$C4, paste(round(get(models[i], x$kfold)$eloss, 2), sep = ', ', collapse = ', '))
+        }
+    }
+
+    ret = data.frame(ret)
+    rownames(ret) = models
+    colnames(ret) = c('Mean', '%-of-logLik', 'Stdev', 'Values (rounded, 2 digits)')
+
+    return(ret)
 }
 
-as.kfold.prederr <- function(x,
-                                events = as.events(x),
-                                models = names(x$model)) {
-  is.compliant(x)
-  is.model(x)
-  is.events.list(x, events)
-  
-  if (is.null(x$kfold) ) 
-    stop('Crossvalidation was not executed for this object!')
 
-  matrix.to.df <- function(z) {   
-    if ( any(is.null(x$kfold[[z]]$prederr)) ) 
-      stop('Crossvalidation was not executed for the required model: ', models[z] )
-   
-    # Already prepared data - just wrap it in a dataframe
-    df = NULL
-    df$prederr = t(as.data.frame(x$kfold[[z]]$prederr)) # values
-    
-    df$MEAN.PREDERR = apply(df$prederr, 1, mean) # means
-    df$SD.PREDERR = apply(df$prederr, 1, sd) # standard deviation
-    df$VALUES.PREDERR = apply(df$prederr, 1, function(z){paste(round(z, 3), collapse = ', ')}) # collapse values
-      
-    df$SELECTED = gsub("\\.", " ", rownames(df$prederr)) # for later merge we use this
-    
-    df = data.frame(df, stringsAsFactors = FALSE) 
-    rownames(df) = paste(1:nrow(df))
-    df = df[, c('SELECTED', 'MEAN.PREDERR', 'SD.PREDERR', 'Values (rounded, 3 digits)')]
-    
-    # filter out events if ewquired
-    sel.events = apply(events, 1, function(z){paste(z, collapse = ' ')})
-    df = df[which(df$SELECTED %in% sel.events), , drop = F]
-    
-    return(df)
-  }
-  
-  res = lapply(seq_along(models), matrix.to.df)
-  names(res) = models
-  
-  return(res)
+#' Returns a dataframe with all the prediction error score in a 
+#' TRONCO model. It is possible to specify a subset of events
+#' or models if multiple reconstruction have been performed. 
+#'
+#' @examples
+#' data(test_model)
+#' as.kfold.prederr(test_model)
+#' as.kfold.prederr(test_model, models='aic')
+#'
+#' @title as.kfold.prederr
+#' @param x A TRONCO model.
+#' @param events A subset of events as of \code{as.events(x)}, all by default.
+#' @param models A subset of reconstructed models, all by default.
+#' @return All the bootstrap scores in a TRONCO model 
+#' @export as.kfold.prederr
+#' 
+as.kfold.prederr <- function(x,
+                             events = as.events(x),
+                             models = names(x$model)) {
+    is.compliant(x)
+    is.model(x)
+    is.events.list(x, events)
+
+    if (is.null(x$kfold) ) {
+        stop('Crossvalidation was not executed for this object!')
+    }
+
+    matrix.to.df <- function(z) {   
+        if ( any(is.null(x$kfold[[z]]$prederr)) ) {
+            stop('Crossvalidation was not executed for the required model: ', models[z] )
+        }
+
+        # Already prepared data - just wrap it in a dataframe
+        df = NULL
+        df$prederr = t(as.data.frame(x$kfold[[z]]$prederr)) # values
+
+        df$MEAN.PREDERR = apply(df$prederr, 1, mean) # means
+        df$SD.PREDERR = apply(df$prederr, 1, sd) # standard deviation
+        df$VALUES.PREDERR = apply(df$prederr, 1, function(z){paste(round(z, 3), collapse = ', ')}) # collapse values
+
+        df$SELECTED = gsub("\\.", " ", rownames(df$prederr)) # for later merge we use this
+
+        df = data.frame(df, stringsAsFactors = FALSE) 
+        rownames(df) = paste(1:nrow(df))
+        df = df[, c('SELECTED', 'MEAN.PREDERR', 'SD.PREDERR', 'Values (rounded, 3 digits)')]
+
+        ## Filter out events if required.
+
+        sel.events = apply(events, 1, function(z){paste(z, collapse = ' ')})
+        df = df[which(df$SELECTED %in% sel.events), , drop = F]
+
+        return(df)
+    }
+
+    res = lapply(seq_along(models), matrix.to.df)
+    names(res) = models
+
+    return(res)
+}
+
+
+#' Returns a dataframe with all the posterior classification error
+#' score in a TRONCO model. It is possible to specify a subset of events
+#' or models if multiple reconstruction have been performed. 
+#'
+#' @examples
+#' data(test_model)
+#' as.kfold.posterr(test_model)
+#' as.kfold.posterr(test_model, events=as.events(test_model)[5:15,])
+#'
+#' @title as.kfold.posterr
+#' @param x A TRONCO model.
+#' @param events A subset of events as of \code{as.events(x)}, all by default.
+#' @param models A subset of reconstructed models, all by default.
+#' @return All the posterior classification error scores in a TRONCO model 
+#' @export as.kfold.posterr
+#' 
+as.kfold.posterr <- function(x,
+                             events = as.events(x),
+                             models = names(x$model)) {
+    is.compliant(x)
+    is.model(x)
+    is.events.list(x, events)
+
+    matrix = 
+    as.adj.matrix(x,
+        events = events,
+        models = models,
+        type = 'fit')
+
+
+    matrix = lapply(matrix, keysToNames, x = x)
+
+    if (!(is.null(x$kfold) && is.na(x$kfold))) {
+        models = names(x$model)
+    }
+
+    has.npb.bootstrap = !is.null(x$bootstrap[[models[1]]]$npb)
+    has.pb.bootstrap = !is.null(x$bootstrap[[models[1]]]$pb)
+    has.sb.bootstrap = !is.null(x$bootstrap[[models[1]]]$sb)
+
+    if(has.npb.bootstrap) {
+        npb.boot.conf = lapply(as.confidence(x, conf = c('npb'))$npb, keysToNames, x = x)
+    }
+    if(has.pb.bootstrap) {
+        pb.boot.conf = lapply(as.confidence(x, conf = c('pb'))$pb, keysToNames, x = x)
+    }
+    if(has.sb.bootstrap) {
+        sb.boot.conf = lapply(as.confidence(x, conf = c('sb'))$sb, keysToNames, x = x)
+    }
+
+    matrix.to.df <- function(z) {   
+        m = matrix[[z]]
+
+        entries = length(which(m == 1))
+        df = NULL
+        df$SELECTS = NULL
+        df$SELECTED = NULL
+        df$MEAN.POSTERR = NULL
+        df$SD.POSTERR = NULL
+        df$POSTERR = NULL
+
+        if (entries == 0) {
+            return(NULL)
+        }
+
+        ##### DA FINIRE #######
+
+        for (i in 1:ncol(m)) {
+            for (j in 1:nrow(m)) {
+
+                if (m[i, j] == 1) {
+                    df$SELECTS = c(df$SELECTS, rownames(m)[i])
+                    df$SELECTED = c(df$SELECTED, colnames(m)[j])
+
+                    df$OBS.SELECTS = 
+                        c(df$OBS.SELECTS,
+                          sum(as.genotypes(x)[, nameToKey(x, rownames(m)[i])])
+                          )
+                    
+                    df$OBS.SELECTED =
+                        c(df$OBS.SELECTED,
+                          sum(as.genotypes(x)[, nameToKey(x, colnames(m)[j])])
+                          )
+
+                    if(has.npb.bootstrap) {
+                        df$BOOT.NPB = 
+                            c(df$BOOT.NPB,
+                              npb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100
+                              )
+                    } else {
+                        df$BOOT.NPB = c(df$BOOT.NPB, NA)
+                    }
+                }
+            }
+        }
+
+        df = cbind(df$SELECTS,
+                   df$SELECTED,
+                   df$OBS.SELECTS,
+                   df$OBS.SELECTED,
+                   df$BOOT.NPB,
+                   df$BOOT.PB,
+                   df$BOOT.SB)
+
+        colnames(df) = 
+            c('SELECTS',
+              'SELECTED',
+              'OBS.SELECTS',
+              'OBS.SELECTED',
+              'NONPAR.BOOT',
+              'PAR.BOOT',
+              'STAT.BOOT')
+
+        rownames(df) = paste(1:nrow(df))
+
+        df = data.frame(df, stringsAsFactors = FALSE) 
+        df$OBS.SELECTS = as.numeric(df$OBS.SELECTS)
+        df$OBS.SELECTED = as.numeric(df$OBS.SELECTED)
+
+        if (!has.npb.bootstrap) {
+            df$NONPAR.BOOT = NULL
+        } else {
+            df$NONPAR.BOOT = as.numeric(df$NONPAR.BOOT)
+        }
+
+        if (!has.pb.bootstrap) {
+            df$PAR.BOOT = NULL
+        } else {
+            df$PAR.BOOT = as.numeric(df$PAR.BOOT)
+        }
+
+        if (!has.sb.bootstrap) {
+            df$STAT.BOOT = NULL
+        } else {
+            df$STAT.BOOT = as.numeric(df$STAT.BOOT)
+        }
+        return(df)
+    }
+
+    res = lapply(seq_along(matrix), matrix.to.df)
+    names(res) = names(matrix)
+
+    return(res)
 }
 
 
