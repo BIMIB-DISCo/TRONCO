@@ -4,7 +4,7 @@
 \alias{delete.model}
 \title{delete.model}
 \usage{
-\method{delete}{model}(x)
+delete.model(x)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

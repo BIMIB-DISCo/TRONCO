@@ -1461,45 +1461,57 @@ view <- function(x, view = 5) {
     if (has.model(x)) {
         cat('\n-- TRONCO Model(s): ', x$parameters$algorithm, '\n')
 
-        if(x$parameters$algorithm == 'CAPRI')
-        {
-          cat('Score optimization via ')
-          if(x$parameters$command == 'hc') cat('Hill-Climbing with ')
-          if(x$parameters$command == 'tabu') cat('Tabu Search with ')
-          cat(paste(toupper(x$parameters$regularization), sep = ', ', collapse = ', '),' regularizers.\n', sep = '')
+        if (x$parameters$algorithm == 'CAPRI') {
+            cat('Score optimization via ')
+            if (x$parameters$command == 'hc') {
+                cat('Hill-Climbing with ')
+            }
+
+            if (x$parameters$command == 'tabu') {
+                cat('Tabu Search with ')
+            }
+            
+            cat(paste(toupper(x$parameters$regularization), sep = ', ', collapse = ', '),' regularizers.\n', sep = '')
         
-          if ('bic' %in% x$parameters$regularization) {
-            cat('BIC: ')
-            cat('score', x$model$bic$score ,'|',
-                'logLik', x$model$bic$logLik ,'|', 
-                nrow(as.selective.advantage.relations(x)$bic), 'selective advantage relations.\n')
-          }
+            if ('bic' %in% x$parameters$regularization) {
+                cat('BIC: ')
+                cat('score', x$model$bic$score ,'|',
+                    'logLik', x$model$bic$logLik ,'|', 
+                    nrow(as.selective.advantage.relations(x)$bic), 'selective advantage relations.\n')
+            }
           
-          if ('aic' %in% x$parameters$regularization) {
-            cat('AIC: ')
-            cat('score', x$model$aic$score ,'|',
-                'logLik', x$model$aic$logLik ,'|', 
-                nrow(as.selective.advantage.relations(x)$aic), 'selective advantage relations.\n')
-          }
+            if ('aic' %in% x$parameters$regularization) {
+                cat('AIC: ')
+                cat('score', x$model$aic$score ,'|',
+                    'logLik', x$model$aic$logLik ,'|', 
+                    nrow(as.selective.advantage.relations(x)$aic), 'selective advantage relations.\n')
+            }
         }
       
-      cat('Available confidence measures:\n')
-      cat('\tp-values: Temporal priority | Probability raising | Hypergeometric\n')
+        cat('Available confidence measures:\n')
+        cat('\tp-values: Temporal priority | Probability raising | Hypergeometric\n')
 
-      if (!(is.null(x$confidence) && is.na(x$confidence)))
-        models = names(x$model)
+        if (!(is.null(x$confidence) && is.na(x$confidence))) {
+            models = names(x$model)
+        }
       
-      has.npb.bootstrap = is.null(x$bootstrap[[models[1]]]$npb)
-      has.pb.bootstrap = is.null(x$bootstrap[[models[1]]]$pb)
-      has.sb.bootstrap = is.null(x$bootstrap[[models[1]]]$sb)
+        has.npb.bootstrap = is.null(x$bootstrap[[models[1]]]$npb)
+        has.pb.bootstrap = is.null(x$bootstrap[[models[1]]]$pb)
+        has.sb.bootstrap = is.null(x$bootstrap[[models[1]]]$sb)
       
-      if(!is.null(x$bootstrap))
-      {
-        cat('\tBootstrap scores: ')
-        if(!is.null(x$bootstrap[[models[1]]]$npb)) cat('Non-parametric | ')
-        if(!is.null(x$bootstrap[[models[1]]]$pb)) cat('Parametric | ')
-        if(!is.null(x$bootstrap[[models[1]]]$sb)) cat('Statistical')
-      }
+        if(!is.null(x$bootstrap)) {
+            cat('\tBootstrap scores: ')
+            if (!is.null(x$bootstrap[[models[1]]]$npb)) {
+                cat('Non-parametric | ')
+            }
+            if (!is.null(x$bootstrap[[models[1]]]$pb)) {
+                cat('Parametric | ')
+            }
+            if (!is.null(x$bootstrap[[models[1]]]$sb)) {
+                cat('Statistical')
+            }
+        }
+        cat('\n')
     }
 } 
 
