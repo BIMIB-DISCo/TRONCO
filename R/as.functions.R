@@ -1204,37 +1204,36 @@ as.kfold.prederr <- function(x,
   is.model(x)
   is.events.list(x, events)
   
-  matrix = 
-    as.adj.matrix(x,
-                  events = events,
-                  models = models,
-                  type = 'fit')
-  
-  
-  matrix = lapply(matrix, keysToNames, x = x)
-  
-  if (!(is.null(x$confidence) && is.na(x$confidence))) {
-    models = names(x$model)
-  }
-  
-  
+  if (is.null(x$kfold) ) 
+    stop('Crossvalidation was not executed for this object!')
+
   matrix.to.df <- function(z) {   
-    m = matrix[[z]]
-    
-    entries = length(which(m == 1))
+    if ( any(is.null(x$kfold[[z]]$prederr)) ) 
+      stop('Crossvalidation was not executed for the required model: ', models[z] )
+   
+    # Already prepared data - just wrap it in a dataframe
     df = NULL
-    df$prederr = t(as.data.frame(x$kfold[[z]]$prederr))[, 1, drop = FALSE]
-    df$SELECTED = gsub("\\.", " ", rownames(df$prederr))
+    df$prederr = t(as.data.frame(x$kfold[[z]]$prederr)) # values
     
-    print(df)
+    df$MEAN.PREDERR = apply(df$prederr, 1, mean) # means
+    df$SD.PREDERR = apply(df$prederr, 1, sd) # standard deviation
+    df$VALUES.PREDERR = apply(df$prederr, 1, function(z){paste(round(z, 3), collapse = ', ')}) # collapse values
+      
+    df$SELECTED = gsub("\\.", " ", rownames(df$prederr)) # for later merge we use this
+    
     df = data.frame(df, stringsAsFactors = FALSE) 
     rownames(df) = paste(1:nrow(df))
-    df = df[, c('SELECTED', 'prederr')]
+    df = df[, c('SELECTED', 'MEAN.PREDERR', 'SD.PREDERR', 'Values (rounded, 3 digits)')]
+    
+    # filter out events if ewquired
+    sel.events = apply(events, 1, function(z){paste(z, collapse = ' ')})
+    df = df[which(df$SELECTED %in% sel.events), , drop = F]
+    
     return(df)
   }
   
-  res = lapply(seq_along(matrix), matrix.to.df)
-  names(res) = names(matrix)
+  res = lapply(seq_along(models), matrix.to.df)
+  names(res) = models
   
   return(res)
 }
@@ -1263,8 +1262,14 @@ as.summary.statistics <- function(x,
 
     rels = as.selective.advantage.relations(x, events = events, models = models)
     sco = as.bootstrap.scores(x, events = events, models = models)
-    res = (lapply(seq_along(rels), function(w){ merge(rels[[w]], sco[[w]])} ))
+    prederr = as.kfold.prederr(x, events = events, models = models)
+      
+    res = lapply(seq_along(rels), function(w)
+      { 
+        merge(rels[[w]], sco[[w]])
+      } )
     names(res) = names(rels)
+
     return(res)
 }
 
