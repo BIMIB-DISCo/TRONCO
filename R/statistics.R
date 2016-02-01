@@ -9,7 +9,7 @@
 #### which accompanies this distribution.
 
 
-#' Convert a TRONCO object in a Bnlean network
+#' Convert a TRONCO object in a Bnlearn network
 #' @title as.bnlearn.network
 #'
 #' @examples
@@ -177,14 +177,14 @@ tronco.kfold.eloss = function(x,
 #'
 tronco.kfold.prederr <- function(x,
                          regularization = as.parameters(x)$regularization,
-                         events = as.events(x, keysToNames = TRUE),
+                         events = as.events(x),
                          runs = 10,
                          k = 10) {
 
     ## Check if there is a reconstructed model.
 
     if(!has.model(x)) {
-        stop('This dataset doesn\'t have.')
+        stop('This object does not have a model.')
     }
 
     ## Check if the reconstruction has been made with CAPRI
@@ -194,11 +194,18 @@ tronco.kfold.prederr <- function(x,
     }
 
     ## Integrity check over nodes.
-    for(event in events) {
-        if(!event %in% rownames(adj.matrix)) {
-            stop(paste("Invalid node found: ", event))
-        }
-    }
+    adj.matrix = as.adj.matrix(x,
+                             events = events,
+                             models = regularization,
+                             type = 'fit')
+  
+    # Andava fatto come sopra -- is.events.list() la chiama dentro as.adj.matrix
+#     for(event in events) {
+#         if(!event %in% rownames(adj.matrix)) {
+#             stop(paste("Invalid node found: ", event))
+#         }
+#     }
+    events = apply(events, 1, function(z){paste(z, collapse = ' ')})
 
     if (!"kfold" %in% names(x)) {
         x$kfold = NULL
@@ -226,9 +233,9 @@ tronco.kfold.prederr <- function(x,
 
         ## Perform the estimation of the prediction error. 
         
-        cat('Scanning', length(events), 'nodes for their prediction error. Regularizer: ', reg, '\n')
+        cat('Scanning', length(events), 'nodes for their prediction error (all parents). Regularizer: ', reg, '\n')
         for (i in 1:length(events)) {
-            cat(i, 'Prediction error (parents):', events[i], '...')
+            cat(i, '. ', events[i], ': ')
 
             comp = bn.cv(bndata,
                          bnnet, 
@@ -243,7 +250,7 @@ tronco.kfold.prederr <- function(x,
             }
 
             pred = append(pred, list(res))
-            message(' DONE')    
+            cat(mean(res), ' (', sd(res), ')\n')    
         }
         names(pred) = events
         x$kfold[[reg]]$prederr = pred

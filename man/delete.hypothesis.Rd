@@ -4,7 +4,7 @@
 \alias{delete.hypothesis}
 \title{delete.hypothesis}
 \usage{
-delete.hypothesis(x, event = NA, cause = NA, effect = NA)
+\method{delete}{hypothesis}(x, event = NA, cause = NA, effect = NA)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
