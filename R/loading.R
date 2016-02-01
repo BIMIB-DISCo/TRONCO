@@ -248,10 +248,12 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 #' @param file  MAF filename
 #' @param sep MAF separator, default \'\\t\'
 #' @param is.TCGA TRUE if this MAF is from TCGA; thus its sample codenames can be interpreted
+#' @param filter.fun A filter function applied to each row. This is expected to return TRUE/FALSE.
+#' @param to.TRONCO If FALSE returns a dataframe with MAF data, not a TRONCO object
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
 #' 
-import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL) {
+import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.TRONCO = TRUE) {
 
     if (!(is.data.frame(file) || is.matrix(file)) && is.character(file)) {
         cat("*** Importing from file: ", file, "\n")
@@ -351,6 +353,9 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL) {
         cat("Mutations annotated with \"Valid\" flag (%): missing flag\n")
     }
     cat("Number of genes (Hugo_Symbol):", length(MAF.genes), "\n")
+    
+    if(!to.TRONCO) return(maf);
+    
     cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
     cat(length(MAF.samples), "x", length(MAF.genes), "\n")
 

@@ -4,7 +4,8 @@
 \alias{import.MAF}
 \title{import.MAF}
 \usage{
-import.MAF(file, sep = "\\t", is.TCGA = TRUE, filter.fun = NULL)
+import.MAF(file, sep = "\\t", is.TCGA = TRUE, filter.fun = NULL,
+  to.TRONCO = TRUE)
 }
 \arguments{
 \item{file}{MAF filename}
@@ -12,6 +13,10 @@ import.MAF(file, sep = "\\t", is.TCGA = TRUE, filter.fun = NULL)
 \item{sep}{MAF separator, default \'\\t\'}
 
 \item{is.TCGA}{TRUE if this MAF is from TCGA; thus its sample codenames can be interpreted}
+
+\item{filter.fun}{A filter function applied to each row. This is expected to return TRUE/FALSE.}
+
+\item{to.TRONCO}{If FALSE returns a dataframe with MAF data, not a TRONCO object}
 }
 \value{
 A TRONCO compliant representation of the input MAF
