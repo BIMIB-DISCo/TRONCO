@@ -5,7 +5,7 @@
 \title{tronco.kfold.prederr}
 \usage{
 tronco.kfold.prederr(x, regularization = as.parameters(x)$regularization,
-  events = as.events(x, keysToNames = TRUE), runs = 10, k = 10)
+  events = as.events(x), runs = 10, k = 10)
 }
 \arguments{
 \item{x}{A reconstructed model (the output of tronco.capri or tronco.caprese)}

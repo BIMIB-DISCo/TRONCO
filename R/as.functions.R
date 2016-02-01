@@ -225,7 +225,6 @@ as.alterations <- function(x, new.type = 'Alteration', new.color = 'khaki') {
     merge.types(x, NULL, new.type = new.type, new.color = new.color)
 }
 
-
 #' Return the patterns in the dataset which constitute CAPRI's hypotheses.
 #' @title as.patterns
 #'
@@ -404,7 +403,7 @@ as.events.in.sample <- function(x, sample) {
 
 #' Return confidence information for a TRONCO model. Available information are: temporal priority (tp), 
 #' probability raising (pr), hypergeometric test (hg), parametric (pb), non parametric (npb) or 
-#' statistical (sb) bootstrap.
+#' statistical (sb) bootstrap, entropy loss (eloss), prediction error (prederr).
 #' Confidence is available only once a model has been reconstructed with any of the algorithms implemented
 #' in TRONCO. If more than one model has been reconstructed - for instance via multiple regularizations - 
 #' confidence information is appropriately nested. The requested confidence is specified via 
@@ -417,7 +416,7 @@ as.events.in.sample <- function(x, sample) {
 #'
 #' @title as.confidence
 #' @param x A TRONCO model.
-#' @param conf A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb' or 'sb'. 
+#' @param conf A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb', 'sb', 'eloss' or 'prederr'. 
 #' @return A list of matrices with the event-to-event confidence. 
 #' @export as.confidence
 #' 
@@ -426,7 +425,7 @@ as.confidence <- function(x, conf) {
     is.model(x)
     if (!is.vector(conf)) stop('"conf" should be a vector.')
 
-    keys = c('hg', 'tp', 'pr', 'npb', 'pb', 'sb')
+    keys = c('hg', 'tp', 'pr', 'npb', 'pb', 'sb', 'eloss', 'prederr')
 
     if (!all(conf %in% keys)) 
         stop('Confidence keyword unrecognized, \'conf\' should be any of:\n
@@ -435,10 +434,12 @@ as.confidence <- function(x, conf) {
             SELECTIVE ADVANTAGE SCORES\n
             \t \"tp\" - temporal priority (temporal ordering of events)\n
             \t \"pr\" - probability raising (selectivity among events)\n
-            MODEL CONFIDENCE - requires post-reconstruction bootstrap\n
-            \t \"npb\" - non-parametric bootstrap,\n
-            \t \"pb\" - parametric bootstrap\n
-            \t \"sb\" - statistical bootstrap\n'
+            MODEL CONFIDENCE - requires post-reconstruction bootstrap or cross-validation\n
+            \t \"npb\"     - non-parametric bootstrap,\n
+            \t \"pb\"      - parametric bootstrap\n
+            \t \"sb\"      - statistical bootstrap\n
+            \t \"eloss\"   - entropy loss\n
+            \t \"prederr\" - prediction error'
              )
 
     if (is.null(x$confidence)
@@ -449,6 +450,9 @@ as.confidence <- function(x, conf) {
 
     models = names(x$model)
 
+#     if (is.null(x$bootstrap))
+#       stop('No bootstrap executed in this TRONCO object.')
+#         
     has.npb.bootstrap = is.null(x$bootstrap[[models[1]]]$npb)
     has.pb.bootstrap = is.null(x$bootstrap[[models[1]]]$pb)
     has.sb.bootstrap = is.null(x$bootstrap[[models[1]]]$sb)
@@ -465,6 +469,20 @@ as.confidence <- function(x, conf) {
         stop('Statistical bootstrap was not performed. Remove keyword\n')
     }
 
+#     if (is.null(x$kfold))
+#       stop('No crossvalidation executed in this TRONCO object.')
+#     
+    has.eloss.kfold = is.null(x$kfold[[models[1]]]$eloss)
+    has.prederr.kfold = is.null(x$kfold[[models[1]]]$prederr)
+
+    if ('eloss' %in% conf && has.eloss.kfold) {
+      stop('Entropy loss was not computed Remove keyword\n')
+    }
+    
+    if ('prederr' %in% conf && has.prederr.kfold) {
+      stop('Prediction erorr was not computed Remove keyword\n')
+    }
+    
     result = NULL
 
     if ('hg' %in% conf) {
@@ -499,6 +517,11 @@ as.confidence <- function(x, conf) {
                 list(x$bootstrap[[models[i]]]$sb$bootstrap.edge.confidence)  
         }
     }
+    
+    if ('eloss' %in% conf) { 
+        result$eloss = as.kfold.eloss(x, models)
+    }
+    
     return(result)  
 }
 
@@ -1134,45 +1157,88 @@ as.bootstrap.scores <- function(x,
     res = lapply(seq_along(matrix), matrix.to.df)
     names(res) = names(matrix)
 
-#     if(type == 'fit' && (has.npb.bootstrap || has.pb.bootstrap || has.sb.bootstrap))
-#     {
-#       regs = names(res)
-#      
-#        if(type == 'fit' && has.npb.bootstrap) {
-#         npb.boot.conf = lapply(as.confidence(x, conf = c('npb')), keysToNames, x = x)
-#       }
-#       
-#       if(type == 'fit' && has.sb.bootstrap) sb.boot.conf = lapply(as.confidence(x, conf = c('sb')), keysToNames, x = x)
-#       if(type == 'fit' && has.pb.bootstrap) pb.boot.conf = lapply(as.confidence(x, conf = c('pb')), keysToNames, x = x)
-#       
-#       for(i in 1:length(regs))
-#       {
-#       }
-#       }
-
-#     if(type == 'fit' && has.npb.bootstrap) df$BOOT.NPB = NULL
-#     if(type == 'fit' && has.sb.bootstrap) df$BOOT.SB = NULL
-#     if(type == 'fit' && has.pb.bootstrap) df$BOOT.PB = NULL
-#     
-#     if(type == 'fit' && has.npb.bootstrap) df$BOOT.NPB = c(df$BOOT.NPB, boot.conf$npb[rownames(m)[i], colnames(m)[j]])
-#     if(type == 'fit' && has.sb.bootstrap) df$BOOT.SB = c()
-#     if(type == 'fit' && has.pb.bootstrap) df$BOOT.PB = c()
-#     
-#     
-#     aux.fun = function(x, key, reg)
-#     {
-#       if(key == 'npb')
-#       {
-#         x$BOOT.NPB = NULL
-#         
-#         for(i in 1:nrow(x))
-#       }
-#       
-#       return(x)
-#     }
-
     return(res)
 }
+
+as.kfold.eloss <- function(x,
+                           models = names(x$model))
+{
+  is.compliant(x)
+  is.model(x)
+  
+  if(is.null(x$kfold))
+    stop('Cross-validation was never performed on this model!')
+  
+  ret = NULL
+  ret$C1 = NULL
+  ret$C2 = NULL
+  ret$C3 = NULL
+  ret$C4 = NULL
+  
+  for(i in 1:length(models))
+  {
+    if(!is.null(get(models[i], x$kfold)$eloss)) 
+    {
+      meanll = mean(get(models[i], x$kfold)$eloss)
+      ll = get(models[i], x$model)$logLik
+      ratio = meanll / abs(ll) * 100
+      
+      ret$C1 = c(ret$C1, meanll)
+      ret$C2 = c(ret$C2, ratio)
+      ret$C3 = c(ret$C3, sd(get(models[i], x$kfold)$eloss))
+      ret$C4 = c(ret$C4, paste(round(get(models[i], x$kfold)$eloss, 2), sep = ', ', collapse = ', '))
+    }
+  }
+  
+  ret = data.frame(ret)
+  rownames(ret) = models
+  colnames(ret) = c('Mean', '%-of-logLik', 'Stdev', 'Values (rounded, 2 digits)')
+  
+  return(ret)
+}
+
+as.kfold.prederr <- function(x,
+                                events = as.events(x),
+                                models = names(x$model)) {
+  is.compliant(x)
+  is.model(x)
+  is.events.list(x, events)
+  
+  matrix = 
+    as.adj.matrix(x,
+                  events = events,
+                  models = models,
+                  type = 'fit')
+  
+  
+  matrix = lapply(matrix, keysToNames, x = x)
+  
+  if (!(is.null(x$confidence) && is.na(x$confidence))) {
+    models = names(x$model)
+  }
+  
+  
+  matrix.to.df <- function(z) {   
+    m = matrix[[z]]
+    
+    entries = length(which(m == 1))
+    df = NULL
+    df$prederr = t(as.data.frame(x$kfold[[z]]$prederr))[, 1, drop = FALSE]
+    df$SELECTED = gsub("\\.", " ", rownames(df$prederr))
+    
+    print(df)
+    df = data.frame(df, stringsAsFactors = FALSE) 
+    rownames(df) = paste(1:nrow(df))
+    df = df[, c('SELECTED', 'prederr')]
+    return(df)
+  }
+  
+  res = lapply(seq_along(matrix), matrix.to.df)
+  names(res) = names(matrix)
+  
+  return(res)
+}
+
 
 
 #' Returns a dataframe with all the statistics for a 

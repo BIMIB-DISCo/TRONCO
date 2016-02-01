@@ -4,7 +4,7 @@
 \alias{delete.pattern}
 \title{delete.pattern}
 \usage{
-delete.pattern(x, pattern)
+\method{delete}{pattern}(x, pattern)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
