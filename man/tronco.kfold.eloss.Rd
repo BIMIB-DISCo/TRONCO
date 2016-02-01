@@ -17,7 +17,8 @@ tronco.kfold.eloss(x, regularization = as.parameters(x)$regularization,
 \item{data}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
 }
 \description{
-Perform a k-fold cross-validation using the function bn.cv.
+Perform a k-fold cross-validation using the function bn.cv
+to estimate the entropy loss.
 }
 \examples{
 data(test_model)
