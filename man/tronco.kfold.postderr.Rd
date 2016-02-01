@@ -19,7 +19,7 @@ tronco.kfold.postderr(x, regularization = as.parameters(x)$regularization,
 \item{k}{a positive integer number, the number of groups into which the data will be split}
 }
 \description{
-Perform a k-fold cross-validation (with k = 10) using the function bn.cv
+Perform a k-fold cross-validation using the function bn.cv
 and scan every node to estimate its posterior classification error.
 }
 \examples{
