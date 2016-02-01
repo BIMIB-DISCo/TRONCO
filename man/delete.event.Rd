@@ -4,7 +4,7 @@
 \alias{delete.event}
 \title{delete.event}
 \usage{
-\method{delete}{event}(x, gene, type)
+delete.event(x, gene, type)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

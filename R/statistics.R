@@ -167,7 +167,7 @@ tronco.kfold.eloss = function(x,
 #' data(test_model)
 #' tronco.kfold.prederr(test_model)
 #'
-#' @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
+#' @param x A reconstructed model (the output of tronco.capri)
 #' @param regularization The name of the selected regularization (default: "bic")
 #' @param events a list of event 
 #' @param runs a positive integer number, the number of times cross-validation will be run
@@ -176,10 +176,10 @@ tronco.kfold.eloss = function(x,
 #' @export tronco.kfold.prederr
 #'
 tronco.kfold.prederr <- function(x,
-                         regularization = as.parameters(x)$regularization,
-                         events = as.events(x),
-                         runs = 10,
-                         k = 10) {
+                                 regularization = as.parameters(x)$regularization,
+                                 events = as.events(x),
+                                 runs = 10,
+                                 k = 10) {
 
     ## Check if there is a reconstructed model.
 
@@ -195,25 +195,21 @@ tronco.kfold.prederr <- function(x,
 
     ## Integrity check over nodes.
     adj.matrix = as.adj.matrix(x,
-                             events = events,
-                             models = regularization,
-                             type = 'fit')
+                               events = events,
+                               models = regularization,
+                               type = 'fit')
   
-    # Andava fatto come sopra -- is.events.list() la chiama dentro as.adj.matrix
-#     for(event in events) {
-#         if(!event %in% rownames(adj.matrix)) {
-#             stop(paste("Invalid node found: ", event))
-#         }
-#     }
     events = apply(events, 1, function(z){paste(z, collapse = ' ')})
 
     if (!"kfold" %in% names(x)) {
         x$kfold = NULL
     }
 
-    ## Check if the selected regularization is used in the model.
 
     for (reg in regularization) {
+        
+        ## Check if the selected regularization is used in the model.
+        
         if (!reg %in% as.parameters(x)$regularization) {
             stop(paste(reg, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
         }
@@ -254,6 +250,112 @@ tronco.kfold.prederr <- function(x,
         }
         names(pred) = events
         x$kfold[[reg]]$prederr = pred
+    }
+    return(x)
+}
+
+
+#' Perform a k-fold cross-validation (with k = 10) using the function bn.cv
+#' and scan every node to estimate its posterior classification error. 
+#' @title tronco.kfold.postderr
+#'
+#' @examples
+#' data(test_model)
+#' tronco.kfold.postderr(test_model)
+#'
+#' @param x A reconstructed model (the output of tronco.capri)
+#' @param regularization The name of the selected regularization (default: "bic")
+#' @param events a list of event 
+#' @param runs a positive integer number, the number of times cross-validation will be run
+#' @param k a positive integer number, the number of groups into which the data will be split
+#' @importFrom bnlearn bn.cv
+#' @export tronco.kfold.postderr
+#'
+tronco.kfold.postderr <- function(x,
+                                 regularization = as.parameters(x)$regularization,
+                                 events = as.events(x),
+                                 runs = 10,
+                                 k = 10) {
+
+    ## Check if there is a reconstructed model.
+
+    if(!has.model(x)) {
+        stop('This object does not have a model.')
+    }
+
+    ## Check if the reconstruction has been made with CAPRI
+
+    if (x$parameters$algorithm != 'CAPRI') {
+        stop('The model contained in the input TRONCO object has not been reconstructed with CAPRI,  -- won\'t perform cross-validation!')
+    }
+
+    ## Integrity check over nodes.
+    adj.matrix = as.adj.matrix(x,
+                               events = events,
+                               models = regularization,
+                               type = 'fit')
+  
+    events = apply(events, 1, function(z){paste(z, collapse = ' ')})
+
+    if (!"kfold" %in% names(x)) {
+        x$kfold = NULL
+    }
+
+
+    for (reg in regularization) {
+        
+        ## Check if the selected regularization is used in the model.
+        
+        if (!reg %in% as.parameters(x)$regularization) {
+            stop(paste(reg, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
+        }
+
+        ## Get bnlearn network and the adj matrix.
+
+        bn = as.bnlearn.network(x, reg)
+        bndata = bn$data
+        bnnet = bn$net
+
+        adj.matrix = get(reg, as.adj.matrix(x))
+        adj.matrix = keysToNames(x, adj.matrix)
+        names(colnames(adj.matrix)) = NULL
+        names(rownames(adj.matrix)) = NULL
+        posterr.adj.matrix = array(list(NA), c(nrow(adj.matrix), ncol(adj.matrix)))
+        colnames(posterr.adj.matrix) = colnames(adj.matrix)
+        rownames(posterr.adj.matrix) = rownames(adj.matrix)
+  
+        pred = list()
+
+        ## Perform the estimation of the prediction error. 
+        
+        cat('Scanning', sum(adj.matrix == 1), 'edges for posterior classification error. Regularizer:', reg, '\n')
+        for (event in events) {
+            if (any(adj.matrix[,event,drop=F])) {
+                cat('\nTarget: ', event)
+            }
+            for (pre in rownames(posterr.adj.matrix)) {
+                if (adj.matrix[pre,event] == 1) {
+
+                    cat('\n\t from: ', pre, ': ')
+
+                    comp = bn.cv(bndata,
+                                 bnnet, 
+                                 loss = 'pred-lw', 
+                                 loss.args = list(target = event, from = pre),
+                                 runs = runs,
+                                 k = k)
+                    
+                    res = NULL
+                    for(i in 1:runs) {
+                        res = c(res, attributes(comp[[i]])$mean)
+                    }
+                    cat(mean(res), ' (', sd(res), ')')
+                    posterr.adj.matrix[[pre,event]] = res  
+                }
+            }
+        }
+        x$kfold[[reg]]$posterr = posterr.adj.matrix
+        cat('\n')
     }
     return(x)
 }
