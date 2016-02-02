@@ -469,25 +469,6 @@ as.confidence <- function(x, conf) {
     if ('sb' %in% conf && has.sb.bootstrap) {
         stop('Statistical bootstrap was not performed. Remove keyword\n')
     }
-
-#     if (is.null(x$kfold))
-#       stop('No crossvalidation executed in this TRONCO object.')
-#     
-    has.eloss.kfold = is.null(x$kfold[[models[1]]]$eloss)
-    has.prederr.kfold = is.null(x$kfold[[models[1]]]$prederr)
-    has.postderr.kfold = is.null(x$kfold[[models[1]]]$postderr)
-
-    if ('eloss' %in% conf && has.eloss.kfold) {
-      stop('Entropy loss was not computed Remove keyword\n')
-    }
-    
-    if ('prederr' %in% conf && has.prederr.kfold) {
-      stop('Prediction error was not computed Remove keyword\n')
-    }
-
-    if ('postderr' %in% conf && has.postderr.kfold) {
-      stop('Posterior classification error was not computed Remove keyword\n')
-    }
     
     result = NULL
 
@@ -527,6 +508,14 @@ as.confidence <- function(x, conf) {
     if ('eloss' %in% conf) { 
         result$eloss = as.kfold.eloss(x, models)
     }
+
+    if ('prederr' %in% conf) {
+        result$prederr = as.kfold.prederr(x, models = models)
+    }
+
+    if ('posterr' %in% conf) {
+        result$posterr = as.kfold.posterr(x, models = models)
+    }
     
     return(result)  
 }
@@ -549,6 +538,12 @@ as.models <- function(x, models=names(x$model)) {
     is.model(x)
     if (!is.vector(models)) {
         stop('"models" should be a vector.')
+    }
+
+    for (model in models) {
+        if ( !model %in% names(x$model)) {
+            stop(paste('model:', model, 'not present'))
+        }
     }
 
     return(x$model[models])
@@ -1262,7 +1257,9 @@ as.kfold.prederr <- function(x,
 
         df = data.frame(df, stringsAsFactors = FALSE) 
         rownames(df) = paste(1:nrow(df))
-        df = df[, c('SELECTED', 'MEAN.PREDERR', 'SD.PREDERR', 'Values (rounded, 3 digits)')]
+        #df = df[, c('SELECTED', 'MEAN.PREDERR', 'SD.PREDERR', 'Values (rounded, 3 digits)')]
+        df = df[, c('SELECTED', 'MEAN.PREDERR', 'SD.PREDERR', 'VALUES.PREDERR')]
+        colnames(df)[4] = 'PREDERR Values (rounded, 3 digits)'
 
         ## Filter out events if required.
 
@@ -1311,26 +1308,13 @@ as.kfold.posterr <- function(x,
 
     matrix = lapply(matrix, keysToNames, x = x)
 
-    if (!(is.null(x$kfold) && is.na(x$kfold))) {
-        models = names(x$model)
-    }
+    matrix.to.df <- function(z) {  
+        if ( is.null(get(z, x$kfold)$posterr) ) {
+            return(NULL)
+        }
 
-    has.npb.bootstrap = !is.null(x$bootstrap[[models[1]]]$npb)
-    has.pb.bootstrap = !is.null(x$bootstrap[[models[1]]]$pb)
-    has.sb.bootstrap = !is.null(x$bootstrap[[models[1]]]$sb)
-
-    if(has.npb.bootstrap) {
-        npb.boot.conf = lapply(as.confidence(x, conf = c('npb'))$npb, keysToNames, x = x)
-    }
-    if(has.pb.bootstrap) {
-        pb.boot.conf = lapply(as.confidence(x, conf = c('pb'))$pb, keysToNames, x = x)
-    }
-    if(has.sb.bootstrap) {
-        sb.boot.conf = lapply(as.confidence(x, conf = c('sb'))$sb, keysToNames, x = x)
-    }
-
-    matrix.to.df <- function(z) {   
         m = matrix[[z]]
+        posterr.matrix = keysToNames(get(z, x$kfold)$posterr, x = x)
 
         entries = length(which(m == 1))
         df = NULL
@@ -1344,81 +1328,45 @@ as.kfold.posterr <- function(x,
             return(NULL)
         }
 
-        ##### DA FINIRE #######
-
         for (i in 1:ncol(m)) {
             for (j in 1:nrow(m)) {
-
                 if (m[i, j] == 1) {
-                    df$SELECTS = c(df$SELECTS, rownames(m)[i])
+                    select = rownames(m)[i]
+                    df$SELECTS = c(df$SELECTS, select)
+                    selected = colnames(m)[j]
+                    val = posterr.matrix[[select,selected]]
                     df$SELECTED = c(df$SELECTED, colnames(m)[j])
-
-                    df$OBS.SELECTS = 
-                        c(df$OBS.SELECTS,
-                          sum(as.genotypes(x)[, nameToKey(x, rownames(m)[i])])
-                          )
-                    
-                    df$OBS.SELECTED =
-                        c(df$OBS.SELECTED,
-                          sum(as.genotypes(x)[, nameToKey(x, colnames(m)[j])])
-                          )
-
-                    if(has.npb.bootstrap) {
-                        df$BOOT.NPB = 
-                            c(df$BOOT.NPB,
-                              npb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100
-                              )
-                    } else {
-                        df$BOOT.NPB = c(df$BOOT.NPB, NA)
-                    }
+                    df$MEAN.POSTERR = c(df$MEAN.POSTERR, mean(val))
+                    df$SD.POSTERR = c(df$SD.POSTERR, sd(val))
+                    posterr = paste(round(val, 3), collapse=', ')
+                    df$POSTERR = c(df$POSTERR, posterr) 
                 }
             }
         }
 
+        
         df = cbind(df$SELECTS,
                    df$SELECTED,
-                   df$OBS.SELECTS,
-                   df$OBS.SELECTED,
-                   df$BOOT.NPB,
-                   df$BOOT.PB,
-                   df$BOOT.SB)
+                   df$MEAN.POSTERR,
+                   df$SD.POSTERR,
+                   df$POSTERR)
+
+        rownames(df) = c(1:nrow(df))
+        df = data.frame(df, stringsAsFactors = FALSE) 
 
         colnames(df) = 
             c('SELECTS',
               'SELECTED',
-              'OBS.SELECTS',
-              'OBS.SELECTED',
-              'NONPAR.BOOT',
-              'PAR.BOOT',
-              'STAT.BOOT')
+              'MEAN.POSTERR',
+              'SD.POSTERR',
+              'POSTERR Values (rounded, 3 digits)')
 
-        rownames(df) = paste(1:nrow(df))
 
-        df = data.frame(df, stringsAsFactors = FALSE) 
-        df$OBS.SELECTS = as.numeric(df$OBS.SELECTS)
-        df$OBS.SELECTED = as.numeric(df$OBS.SELECTED)
 
-        if (!has.npb.bootstrap) {
-            df$NONPAR.BOOT = NULL
-        } else {
-            df$NONPAR.BOOT = as.numeric(df$NONPAR.BOOT)
-        }
-
-        if (!has.pb.bootstrap) {
-            df$PAR.BOOT = NULL
-        } else {
-            df$PAR.BOOT = as.numeric(df$PAR.BOOT)
-        }
-
-        if (!has.sb.bootstrap) {
-            df$STAT.BOOT = NULL
-        } else {
-            df$STAT.BOOT = as.numeric(df$STAT.BOOT)
-        }
         return(df)
     }
 
-    res = lapply(seq_along(matrix), matrix.to.df)
+    res = lapply(models, matrix.to.df)
     names(res) = names(matrix)
 
     return(res)
@@ -1449,11 +1397,17 @@ as.summary.statistics <- function(x,
     rels = as.selective.advantage.relations(x, events = events, models = models)
     sco = as.bootstrap.scores(x, events = events, models = models)
     prederr = as.kfold.prederr(x, events = events, models = models)
+    posterr = as.kfold.posterr(x, events = events, models = models)
       
-    res = lapply(seq_along(rels), function(w)
-      { 
+    res = lapply(seq_along(rels), function(w) { 
         merge(rels[[w]], sco[[w]])
-      } )
+    })
+    res = lapply(seq_along(res), function(w) { 
+        merge(res[[w]], prederr[[w]])
+    })
+    res = lapply(seq_along(res), function(w) { 
+        merge(res[[w]], posterr[[w]])
+    })
     names(res) = names(rels)
 
     return(res)

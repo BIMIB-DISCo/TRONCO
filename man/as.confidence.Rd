@@ -9,7 +9,7 @@ as.confidence(x, conf)
 \arguments{
 \item{x}{A TRONCO model.}
 
-\item{conf}{A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb', 'sb', 'eloss' or 'prederr'.}
+\item{conf}{A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb', 'sb', 'eloss', 'prederr' or 'posterr'.}
 }
 \value{
 A list of matrices with the event-to-event confidence.
