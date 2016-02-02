@@ -9,7 +9,7 @@
 #### which accompanies this distribution.
 
 
-#' Convert a TRONCO object in a Bnlearn network
+#' Convert a TRONCO object in a Bnlearn network.
 #' @title as.bnlearn.network
 #'
 #' @examples
@@ -255,14 +255,13 @@ tronco.kfold.prederr <- function(x,
     return(x)
 }
 
-
 #' Perform a k-fold cross-validation using the function bn.cv
 #' and scan every node to estimate its posterior classification error. 
-#' @title tronco.kfold.postderr
+#' @title tronco.kfold.posterr
 #'
 #' @examples
 #' data(test_model)
-#' tronco.kfold.postderr(test_model)
+#' tronco.kfold.posterr(test_model)
 #'
 #' @param x A reconstructed model (the output of tronco.capri)
 #' @param regularization The name of the selected regularization (default: "bic")
@@ -270,9 +269,9 @@ tronco.kfold.prederr <- function(x,
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
 #' @importFrom bnlearn bn.cv
-#' @export tronco.kfold.postderr
+#' @export tronco.kfold.posterr
 #'
-tronco.kfold.postderr <- function(x,
+tronco.kfold.posterr <- function(x,
                                  regularization = as.parameters(x)$regularization,
                                  events = as.events(x),
                                  runs = 10,
