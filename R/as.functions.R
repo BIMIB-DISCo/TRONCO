@@ -1257,7 +1257,6 @@ as.kfold.prederr <- function(x,
 
         df = data.frame(df, stringsAsFactors = FALSE) 
         rownames(df) = paste(1:nrow(df))
-        #df = df[, c('SELECTED', 'MEAN.PREDERR', 'SD.PREDERR', 'Values (rounded, 3 digits)')]
         df = df[, c('SELECTED', 'MEAN.PREDERR', 'SD.PREDERR', 'VALUES.PREDERR')]
         colnames(df)[4] = 'PREDERR Values (rounded, 3 digits)'
 
@@ -1368,47 +1367,6 @@ as.kfold.posterr <- function(x,
 
     res = lapply(models, matrix.to.df)
     names(res) = names(matrix)
-
-    return(res)
-}
-
-
-
-#' Returns a dataframe with all the statistics for a 
-#' TRONCO model. It is possible to specify a subset of events or 
-#' models if multiple reconstruction have been performed. 
-#'
-#' @examples
-#' data(test_model)
-#' as.summary.statistics(test_model)
-#' as.summary.statistics(test_model, events=as.events(test_model)[5:15,])
-#'
-#' @title as.summary.statistics
-#' @param x A TRONCO model.
-#' @param events A subset of events as of \code{as.events(x)}, all by default.
-#' @param models A subset of reconstructed models, all by default.
-#' @return All the statistics for a TRONCO model 
-#' @export as.summary.statistics
-#' 
-as.summary.statistics <- function(x,
-                                  events = as.events(x),
-                                  models = names(x$model)) {
-
-    rels = as.selective.advantage.relations(x, events = events, models = models)
-    sco = as.bootstrap.scores(x, events = events, models = models)
-    prederr = as.kfold.prederr(x, events = events, models = models)
-    posterr = as.kfold.posterr(x, events = events, models = models)
-      
-    res = lapply(seq_along(rels), function(w) { 
-        merge(rels[[w]], sco[[w]])
-    })
-    res = lapply(seq_along(res), function(w) { 
-        merge(res[[w]], prederr[[w]])
-    })
-    res = lapply(seq_along(res), function(w) { 
-        merge(res[[w]], posterr[[w]])
-    })
-    names(res) = names(rels)
 
     return(res)
 }
