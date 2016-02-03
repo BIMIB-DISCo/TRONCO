@@ -12,7 +12,7 @@ as.bnlearn.network(obj, regularization = "bic")
 \item{data}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
 }
 \description{
-Convert a TRONCO object in a Bnlearn network
+Convert a TRONCO object in a Bnlearn network.
 }
 \examples{
 data(test_model)
