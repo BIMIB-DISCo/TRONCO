@@ -87,8 +87,6 @@ bootstrap.capri <- function(dataset,
         cores = 1
     }
 
-
-
     expected.execution.time =
         round(((reconstruction$execution.time[3] * nboot) / (cores)), digits = 0)
     cat("Expected completion in approx.",
