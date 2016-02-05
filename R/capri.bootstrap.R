@@ -82,9 +82,8 @@ bootstrap.capri <- function(dataset,
     overall.frequency[names(as.models(reconstruction))] = list(0)
 
     cores = detectCores() - 1
-    if (cores < 1) {
-        cores = 1
-    }
+    if (cores < 2) cores = 1
+    if (cores > 2) cores = floor(cores/2) # this should be exported as a parameter dcores \in [0,1]
 
     expected.execution.time =
         round(((reconstruction$execution.time[3] * nboot) / (cores)), digits = 0)
