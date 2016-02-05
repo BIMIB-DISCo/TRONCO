@@ -18,9 +18,10 @@
 #'
 #' @param data A reconstructed model (the output of tronco.capri or tronco.caprese)
 #' @param regularization The name of the selected regularization (default: "bic")
+#' @param makeValid To transform the bootstrapped data into a valid 2-categories input data
 #' @export as.bnlearn.network
 #'
-as.bnlearn.network <- function(obj, regularization = "bic") {
+as.bnlearn.network <- function(obj, regularization = "bic", makeValid = TRUE) {
 
     ## Check if there is a reconstructed model.
 
@@ -39,6 +40,16 @@ as.bnlearn.network <- function(obj, regularization = "bic") {
     genotypes = as.genotypes(obj)
     genotypes = keysToNames(obj, genotypes)
     names(colnames(genotypes)) = NULL
+
+    if (makeValid) {
+        for (i in 1:ncol(genotypes)) {
+            if (sum(genotypes[sample(1:nrow(genotypes), size=1), i]) == 0) {
+                genotypes[, i] = 1;
+            } else if (sum(genotypes[, i]) == nrow(genotypes)) {
+                genotypes[sample(1:nrow(genotypes), size=1), i] = 0;
+            }
+        }
+    }
 
     adj.matrix = get(regularization, as.adj.matrix(obj))
     adj.matrix = keysToNames(obj, adj.matrix)
