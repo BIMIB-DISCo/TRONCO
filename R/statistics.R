@@ -18,7 +18,7 @@
 #'
 #' @param data A reconstructed model (the output of tronco.capri or tronco.caprese)
 #' @param regularization The name of the selected regularization (default: "bic")
-#' @param makeValid To transform the bootstrapped data into a valid 2-categories input data
+#' @param makeValid Transform the bootstrapped data into a valid 2-categories input data
 #' @export as.bnlearn.network
 #'
 as.bnlearn.network <- function(obj, regularization = "bic", makeValid = TRUE) {
@@ -43,8 +43,8 @@ as.bnlearn.network <- function(obj, regularization = "bic", makeValid = TRUE) {
 
     if (makeValid) {
         for (i in 1:ncol(genotypes)) {
-            if (sum(genotypes[sample(1:nrow(genotypes), size=1), i]) == 0) {
-                genotypes[, i] = 1;
+            if (sum(genotypes[, i]) == 0) {
+                genotypes[sample(1:nrow(genotypes), size=1), i] = 1;
             } else if (sum(genotypes[, i]) == nrow(genotypes)) {
                 genotypes[sample(1:nrow(genotypes), size=1), i] = 0;
             }
