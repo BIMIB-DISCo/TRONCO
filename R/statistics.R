@@ -184,6 +184,7 @@ tronco.kfold.eloss = function(x,
 #' @param events a list of event 
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
+#' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
 #' @importFrom bnlearn bn.cv
 #' @export tronco.kfold.prederr
 #'
@@ -191,7 +192,9 @@ tronco.kfold.prederr <- function(x,
                                  regularization = as.parameters(x)$regularization,
                                  events = as.events(x),
                                  runs = 10,
-                                 k = 10) {
+                                 k = 10,
+                                 cores.ratio = 1,
+                                 verbose = FALSE) {
 
     ## Check if there is a reconstructed model.
 
@@ -216,6 +219,18 @@ tronco.kfold.prederr <- function(x,
     if (!"kfold" %in% names(x)) {
         x$kfold = NULL
     }
+
+    cores = as.integer(cores.ratio * (detectCores() - 1))
+    if (cores < 1) {
+        cores = 1
+    }
+    if (verbose) {
+        cl = makeCluster(cores, outfile = '')
+    } else {
+        cl = makeCluster(cores)
+    }
+    registerDoParallel(cl)
+    cat('*** Using', cores, 'cores via "parallel" \n')
 
 
     for (reg in regularization) {
@@ -242,8 +257,11 @@ tronco.kfold.prederr <- function(x,
         ## Perform the estimation of the prediction error. 
         
         cat('Scanning', length(events), 'nodes for their prediction error (all parents). Regularizer: ', reg, '\n')
-        for (i in 1:length(events)) {
-            cat(i, '. ', events[i], ': ')
+
+        
+
+        r = foreach(i = 1:length(events)) %dopar% {
+            cat('\tprocessing ', events[i], '\n')
 
             comp = bn.cv(bndata,
                          bnnet, 
@@ -256,13 +274,17 @@ tronco.kfold.prederr <- function(x,
             for(i in 1:runs) {
                 res = c(res, attributes(comp[[i]])$mean)
             }
-
-            pred = append(pred, list(res))
-            cat(mean(res), ' (', sd(res), ')\n')    
+ 
+            res  
         }
-        names(pred) = events
-        x$kfold[[reg]]$prederr = pred
+
+        cat("*** Reducing results\n")
+        names(res) = events      
+        x$kfold[[reg]]$prederr = res
     }
+
+    stopCluster(cl)
+
     return(x)
 }
 
