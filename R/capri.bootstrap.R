@@ -84,7 +84,8 @@ bootstrap.capri <- function(dataset,
     cores = detectCores() - 1
     if (cores < 2) cores = 1
     if (cores > 2) cores = floor(cores/2) # this should be exported as a parameter dcores \in [0,1]
-
+    if (cores > nboot) cores = nboot # more cores than bootstrap iterations
+    
     expected.execution.time =
         round(((reconstruction$execution.time[3] * nboot) / (cores)), digits = 0)
     cat("Expected completion in approx.",
