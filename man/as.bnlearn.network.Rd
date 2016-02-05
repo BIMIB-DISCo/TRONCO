@@ -9,7 +9,7 @@ as.bnlearn.network(obj, regularization = "bic", makeValid = TRUE)
 \arguments{
 \item{regularization}{The name of the selected regularization (default: "bic")}
 
-\item{makeValid}{To transform the bootstrapped data into a valid 2-categories input data}
+\item{makeValid}{Transform the bootstrapped data into a valid 2-categories input data}
 
 \item{data}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
 }

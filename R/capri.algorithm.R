@@ -1008,9 +1008,9 @@ perform.likelihood.fit <- function(dataset,
     
     for (i in 1:ncol(dataset)) {
         if (sum(dataset[, i]) == 0) {
-            dataset[1, i] = 1;
+            dataset[sample(1:nrow(dataset), size=1), i] = 1;
         } else if (sum(dataset[, i]) == nrow(dataset)) {
-            dataset[1, i] = 0;
+            dataset[sample(1:nrow(dataset), size=1), i] = 0;
         }
     }
 
