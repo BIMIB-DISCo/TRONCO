@@ -1463,7 +1463,7 @@ tronco.plot <- function(x,
         stat.pch = 0
         pt.bg = "white"
         col = "white"
-        if (regularization != 'caprese' && any(!is.na(confidence))) {
+        if (any(regularization != 'caprese') && any(!is.na(confidence))) {
             text =
                 c(expression(bold('Edge confidence')),
                   lapply(confidence,
@@ -1507,7 +1507,7 @@ tronco.plot <- function(x,
         pt.bg = c(pt.bg, rep('white', 2), rep('black', 2), rep('white', 2))
         col = c(col, rep('white', 2), rep('white', 2), rep('white', 2)) 
 
-        if (regularization != 'caprese') {
+        if (any(regularization != 'caprese')) {
             text = 
                 c(text, '\n',
                   expression(bold('Regularization')),
