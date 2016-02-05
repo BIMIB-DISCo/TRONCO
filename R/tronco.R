@@ -523,6 +523,7 @@ tronco.estimation <- function(reconstruction, error.rates = NA) {
 #' @param type Parameter to define the type of sampling to be performed, e.g., non-parametric for uniform sampling.
 #' @param nboot Number of bootstrap sampling to be performed when estimating the model confidence.
 #' @param verbose Should I be verbose?
+#' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
 #' @return A TRONCO compliant object with reconstructed model
 #' @import doParallel
 #' @export tronco.bootstrap
@@ -530,7 +531,8 @@ tronco.estimation <- function(reconstruction, error.rates = NA) {
 tronco.bootstrap <- function(reconstruction,
                              type = "non-parametric",
                              nboot = 100,
-                             verbose = FALSE) {
+                             verbose = FALSE,
+                             cores.ratio = 1) {
     
     ## Check for the inputs to be given.
     
@@ -651,7 +653,8 @@ tronco.bootstrap <- function(reconstruction,
                             type,
                             nboot,
                             bootstrap,
-                            verbose)
+                            verbose,
+                            cores.ratio)
 
         reconstruction$bootstrap = curr.boot
         

@@ -46,7 +46,8 @@ bootstrap.capri <- function(dataset,
                             command = "non-parametric",
                             nboot = 100,
                             bootstrap.statistics = list(),
-                            verbose = FALSE) {
+                            verbose = FALSE,
+                            cores.ratio = 1) {
     
     ## Start the clock to measure the execution time
     
@@ -81,10 +82,12 @@ bootstrap.capri <- function(dataset,
     overall.frequency = list()
     overall.frequency[names(as.models(reconstruction))] = list(0)
 
-    cores = detectCores() - 1
+    cores = as.integer(cores.ratio * (detectCores() - 1))
     if (cores < 1) {
         cores = 1
     }
+
+
 
     expected.execution.time =
         round(((reconstruction$execution.time[3] * nboot) / (cores)), digits = 0)
