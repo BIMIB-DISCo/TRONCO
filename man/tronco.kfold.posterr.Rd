@@ -5,7 +5,8 @@
 \title{tronco.kfold.posterr}
 \usage{
 tronco.kfold.posterr(x, regularization = as.parameters(x)$regularization,
-  events = as.events(x), runs = 10, k = 10)
+  events = as.events(x), runs = 10, k = 10, cores.ratio = 1,
+  verbose = FALSE)
 }
 \arguments{
 \item{x}{A reconstructed model (the output of tronco.capri)}
@@ -17,6 +18,10 @@ tronco.kfold.posterr(x, regularization = as.parameters(x)$regularization,
 \item{runs}{a positive integer number, the number of times cross-validation will be run}
 
 \item{k}{a positive integer number, the number of groups into which the data will be split}
+
+\item{cores.ratio}{Percentage of cores to use. coresRate * (numCores - 1)}
+
+\item{verbose}{should I print messages?}
 }
 \description{
 Perform a k-fold cross-validation using the function bn.cv
