@@ -37,26 +37,27 @@ is.compliant <- function(x,
         stop(paste(err.fun, ': input \'x\' has no genotypes field.'))	
     else if (!is.matrix(x$genotypes) && !is.data.frame(x$genotypes))
         stop(paste(err.fun, ': attribute genotypes in  \'x\' is not a matrix.'))
-    
-    ## Check if annotations is a matrix
-    
-    if (!is.matrix(x$annotations)) {
-        stop(paste(err.fun, ': attribute annotations in \'x\' is not a matrix.'))
-    }
-    
+        
     colnames(x$annotations) = c('type', 'event')
     colnames(x$types) = c('color')
+    
+    ## Check if annotations table is well-formed
     
     if (is.null(x$annotations) || any(is.na(x$annotations)))
         stop(paste(err.fun, ': input \'x\' has no annotations field.'))
     else if (!is.matrix(x$annotations) && !is.data.frame(x$annotations))
-        stop(paste(err.fun, ': attribute annotations in  \'x\' is not a matrix.'))	
+        stop(paste(err.fun, ': attribute annotations in  \'x\' is not a matrix.'))
+    if (!is.character(x$annotations)) {
+        stop(paste(err.fun, ': attribute annotations in \'x\' is not a matrix of character.'))
+    }
+
+    ## Check if annotations table is well-formed
 
     if (is.null(x$types) || any(is.na(x$types)))
         stop(paste(err.fun, ': input \'x\' has no types field.'))
     else if (!is.matrix(x$types) && !is.data.frame(x$types))
-        stop(paste(err.fun, ': attribute types in  \'x\' is not a matrix.'))	
-    
+        stop(paste(err.fun, ': attribute types in  \'x\' is not a matrix.'))
+        
     if (stage == TRUE && (is.null(x$stages) || all(is.na(x$stages))))
         stop(paste(err.fun, ': input \'x\' has no stage field.'))
     else if (stage == TRUE && !is.matrix(x$stages) && !is.data.frame(x$stages))
