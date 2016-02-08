@@ -260,7 +260,7 @@ tronco.kfold.prederr <- function(x,
 
         
 
-        r = foreach(i = 1:length(events)) %dopar% {
+        r = foreach(i = 1:length(events), .inorder = TRUE) %dopar% {
             cat('\tprocessing ', events[i], '\n')
 
             comp = bn.cv(bndata,
@@ -277,10 +277,9 @@ tronco.kfold.prederr <- function(x,
  
             res  
         }
-
         cat("*** Reducing results\n")
-        names(res) = events      
-        x$kfold[[reg]]$prederr = res
+        names(r) = events      
+        x$kfold[[reg]]$prederr = r
     }
 
     stopCluster(cl)
