@@ -20,6 +20,8 @@ tronco.kfold.prederr(x, regularization = as.parameters(x)$regularization,
 \item{k}{a positive integer number, the number of groups into which the data will be split}
 
 \item{cores.ratio}{Percentage of cores to use. coresRate * (numCores - 1)}
+
+\item{verbose}{Should I print messages?}
 }
 \description{
 Perform a k-fold cross-validation using the function bn.cv

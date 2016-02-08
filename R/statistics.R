@@ -185,6 +185,7 @@ tronco.kfold.eloss = function(x,
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
 #' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
+#' @param verbose Should I print messages?
 #' @importFrom bnlearn bn.cv
 #' @export tronco.kfold.prederr
 #'
@@ -300,6 +301,8 @@ tronco.kfold.prederr <- function(x,
 #' @param events a list of event 
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
+#' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
+#' @param verbose should I print messages?
 #' @importFrom bnlearn bn.cv
 #' @export tronco.kfold.posterr
 #'
@@ -307,7 +310,9 @@ tronco.kfold.posterr <- function(x,
                                  regularization = as.parameters(x)$regularization,
                                  events = as.events(x),
                                  runs = 10,
-                                 k = 10) {
+                                 k = 10,
+                                 cores.ratio = 1,
+                                 verbose = FALSE) {
 
     ## Check if there is a reconstructed model.
 
@@ -334,6 +339,19 @@ tronco.kfold.posterr <- function(x,
     }
 
 
+    cores = as.integer(cores.ratio * (detectCores() - 1))
+    if (cores < 1) {
+        cores = 1
+    }
+    if (verbose) {
+        cl = makeCluster(cores, outfile = '')
+    } else {
+        cl = makeCluster(cores)
+    }
+    registerDoParallel(cl)
+    cat('*** Using', cores, 'cores via "parallel" \n')
+
+
     for (reg in regularization) {
         
         ## Check if the selected regularization is used in the model.
@@ -352,20 +370,25 @@ tronco.kfold.posterr <- function(x,
         adj.matrix = keysToNames(x, adj.matrix)
         names(colnames(adj.matrix)) = NULL
         names(rownames(adj.matrix)) = NULL
-        posterr.adj.matrix = array(list(NA), c(nrow(adj.matrix), ncol(adj.matrix)))
-        colnames(posterr.adj.matrix) = colnames(adj.matrix)
-        rownames(posterr.adj.matrix) = rownames(adj.matrix)
-  
-        pred = list()
+        
+
 
         ## Perform the estimation of the prediction error. 
         
         cat('Scanning', sum(adj.matrix == 1), 'edges for posterior classification error. Regularizer:', reg, '\n')
-        for (event in events) {
+        
+
+        r = foreach(i = 1:length(events), .inorder = TRUE, .combine = cbind) %dopar% {
+            event = events[i]
+            posterr.adj.col = array(list(NA), c(nrow(adj.matrix), 1))
+            colnames(posterr.adj.col) = event
+            rownames(posterr.adj.col) = rownames(adj.matrix)
+            
             if (any(adj.matrix[,event,drop=F])) {
                 cat('\nTarget: ', event)
             }
-            for (pre in rownames(posterr.adj.matrix)) {
+            
+            for (pre in rownames(posterr.adj.col)) {
                 if (adj.matrix[pre,event] == 1) {
 
                     cat('\n\t from: ', pre, ': ')
@@ -382,12 +405,16 @@ tronco.kfold.posterr <- function(x,
                         res = c(res, attributes(comp[[i]])$mean)
                     }
                     cat(mean(res), ' (', sd(res), ')')
-                    posterr.adj.matrix[[pre,event]] = res  
+                    posterr.adj.col[[pre,event]] = res  
                 }
             }
+            posterr.adj.col
         }
-        x$kfold[[reg]]$posterr = posterr.adj.matrix
+
+        x$kfold[[reg]]$posterr = r
         cat('\n')
     }
+
+    stopCluster(cl)
     return(x)
 }
