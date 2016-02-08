@@ -36,7 +36,13 @@ is.compliant <- function(x,
     if (is.null(x$genotypes) || any(is.na(x$genotypes)))
         stop(paste(err.fun, ': input \'x\' has no genotypes field.'))	
     else if (!is.matrix(x$genotypes) && !is.data.frame(x$genotypes))
-        stop(paste(err.fun, ': attribute genotypes in  \'x\' is not a matrix.'))	
+        stop(paste(err.fun, ': attribute genotypes in  \'x\' is not a matrix.'))
+    
+    ## Check if annotations is a matrix
+    
+    if (!is.matrix(x$annotations)) {
+        stop(paste(err.fun, ': attribute annotations in \'x\' is not a matrix.'))
+    }
     
     colnames(x$annotations) = c('type', 'event')
     colnames(x$types) = c('color')
