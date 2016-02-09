@@ -144,7 +144,16 @@ tronco.kfold.eloss = function(x,
         ## Calculating the eloss with bn.cv
         cat('Calculating entropy loss with k-fold cross-validation [ k =', k,
             '| runs =', runs, '| regularizer =', reg, '] ... ')
-        bn.kcv.list = bn.cv(bndata, bnnet, loss = 'logl', runs = runs, k = k)
+
+        ## Scutari fix
+        
+        bn.kcv.list = bn.cv(bndata, 
+                            bnnet,
+                            loss = 'logl',
+                            runs = runs,
+                            k = k,
+                            fit = "bayes",
+                            fit.args = list(iss = 1))
 
         losses = NULL
         for(i in 1:length(bn.kcv.list)) {
@@ -264,12 +273,16 @@ tronco.kfold.prederr <- function(x,
         r = foreach(i = 1:length(events), .inorder = TRUE) %dopar% {
             cat('\tprocessing ', events[i], '\n')
 
+            ## Scutari fix
+
             comp = bn.cv(bndata,
                          bnnet, 
                          loss = 'pred', 
                          loss.args = list(target = events[i]),
                          runs = runs,
-                         k = k)
+                         k = k,
+                         fit = "bayes",
+                         fit.args = list(iss = 1))
             
             res = NULL
             for(i in 1:runs) {
@@ -393,12 +406,16 @@ tronco.kfold.posterr <- function(x,
 
                     cat('\n\t from: ', pre, ': ')
 
+                    ## Scutari fix
+
                     comp = bn.cv(bndata,
                                  bnnet, 
                                  loss = 'pred-lw', 
                                  loss.args = list(target = event, from = pre),
                                  runs = runs,
-                                 k = k)
+                                 k = k,
+                                 fit = "bayes",
+                                 fit.args = list(iss = 1))
                     
                     res = NULL
                     for(i in 1:runs) {
