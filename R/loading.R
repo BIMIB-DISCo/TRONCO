@@ -235,7 +235,9 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 #' Import mutation profiles from a Manual Annotation Format (MAF) file. All mutations are aggregated as a
 #' unique event type labeled "Mutation" and assigned a color according to the default of function
 #' \code{import.genotypes}. If this is a TCGA MAF file check for multiple samples per patient is performed
-#' and a warning is raised if these occurr.
+#' and a warning is raised if these occurr. Customized MAF files can be imported as well provided that 
+#' they have columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification. 
+#' Custom filters are possible (via filter.fun) to avoid loading the full MAF data
 #'
 #' @examples
 #' data(maf)
@@ -250,15 +252,42 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 #' @param is.TCGA TRUE if this MAF is from TCGA; thus its sample codenames can be interpreted
 #' @param filter.fun A filter function applied to each row. This is expected to return TRUE/FALSE.
 #' @param to.TRONCO If FALSE returns a dataframe with MAF data, not a TRONCO object
+#' @param irregular If TRUE seeks only for columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
 #' 
-import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.TRONCO = TRUE) {
+import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.TRONCO = TRUE, irregular = FALSE) {
 
     if (!(is.data.frame(file) || is.matrix(file)) && is.character(file)) {
         cat("*** Importing from file: ", file, "\n")
-        cat("Loading MAF file ...")
-        maf = read.delim(file, comment.char = "#", sep = sep, header = TRUE, stringsAsFactors = FALSE)
+        if(!irregular) 
+        {
+          cat("Loading MAF file ...")
+          maf = read.delim(file, comment.char = "#", sep = sep, header = TRUE, stringsAsFactors = FALSE)
+        }
+        else
+        {
+          cat("Loading MAF file, seeking only Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification columns [irregular = TRUE] ...")
+          read.irregular <- function(filenm) {
+            fileID <- file(filenm, open = "rt")
+            nFields <- count.fields(fileID)
+            mat <- matrix(nrow = length(nFields), ncol = max(nFields))
+            invisible(seek(fileID, where = 0, origin = "start", rw = "read"))
+            for (i in 1:nrow(mat)) {
+              mat[i, 1:nFields[i]] = scan(fileID, what = "", nlines = 1, 
+                                          quiet = TRUE)
+            }
+            close(fileID)
+            df = data.frame(mat, stringsAsFactors = FALSE)
+            return(df)
+          }
+          x = read.irregular(file)
+          if(all(c('Hugo_Symbol', 'Tumor_Sample_Barcode', 'Variant_Classification') %in% x[1,]))
+            stop('MAF file has no columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification!')
+          maf = x[, which(x[1,] %in% c('Hugo_Symbol', 'Tumor_Sample_Barcode', 'Variant_Classification'))]
+          colnames(maf) = maf[1,]
+          maf = maf[2:nrow(maf),]
+        }
         cat("DONE\n")
     } else {
         cat("*** Importing from dataframe\n")
