@@ -259,46 +259,45 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 #' 
 import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.TRONCO = TRUE, irregular = FALSE, paste.to.Hugo_Symbol = NULL) {
 
-  ###### Data loading
+    ## Data loading.
     if (!(is.data.frame(file) || is.matrix(file)) && is.character(file)) {
         cat("*** Importing from file: ", file, "\n")
-        if(!irregular) 
-        {
-          cat("Loading MAF file ...")
-          maf = read.delim(file, comment.char = "#", sep = sep, header = TRUE, stringsAsFactors = FALSE)
-        }
-        else
-        {
-          cat("*** [irregular = TRUE] Seeking only Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification columns")
-          read.irregular <- function(filenm) {
-            fileID <- file(filenm, open = "rt")
-            nFields <- count.fields(fileID)
-            mat <- matrix(nrow = length(nFields), ncol = max(nFields))
-            invisible(seek(fileID, where = 0, origin = "start", rw = "read"))
-            for (i in 1:nrow(mat)) {
-              mat[i, 1:nFields[i]] = scan(fileID, what = "", nlines = 1, 
-                                          quiet = TRUE)
+        if(!irregular) {
+            cat("Loading MAF file ...")
+            maf = read.delim(file, comment.char = "#", sep = sep, header = TRUE, stringsAsFactors = FALSE)
+        } else {
+            cat("*** [irregular = TRUE] Seeking only Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification columns")
+            
+            read.irregular <- function(filenm) {
+                fileID <- file(filenm, open = "rt")
+                nFields <- count.fields(fileID)
+                mat <- matrix(nrow = length(nFields), ncol = max(nFields))
+                invisible(seek(fileID, where = 0, origin = "start", rw = "read"))
+                for (i in 1:nrow(mat)) {
+                    mat[i, 1:nFields[i]] = scan(fileID, 
+                                                what = "", 
+                                                nlines = 1,
+                                                quiet = TRUE)
+                }
+                close(fileID)
+                df = data.frame(mat, stringsAsFactors = FALSE)
+                return(df)
             }
-            close(fileID)
-            df = data.frame(mat, stringsAsFactors = FALSE)
-            return(df)
-          }
-          x = read.irregular(file)
+            x = read.irregular(file)
           
-          req.columns = c('Hugo_Symbol', 'Tumor_Sample_Barcode', 'Variant_Classification', paste.to.Hugo_Symbol)
+            req.columns = c('Hugo_Symbol', 'Tumor_Sample_Barcode', 'Variant_Classification', paste.to.Hugo_Symbol)
         
-          if(!all(req.columns %in% x[1,]))
-            stop( paste(
-              '\nMAF file has no columns:', paste(req.columns, collapse = ' | '),
-              'Columns found:',
-              paste('\t', x[1,], collapse = '\n '), 
-              sep='\n '))
+            if(!all(req.columns %in% x[1,]))
+                stop( paste(
+                    '\nMAF file has no columns:', paste(req.columns, collapse = ' | '),
+                    'Columns found:',
+                    paste('\t', x[1,], collapse = '\n '), 
+                    sep='\n '))
           
-          maf = x[, which(x[1,] %in% req.columns)]
-          colnames(maf) = maf[1,]
-          maf = maf[2:nrow(maf),]
-          
-      }
+                maf = x[, which(x[1,] %in% req.columns)]
+                colnames(maf) = maf[1,]
+                maf = maf[2:nrow(maf),]
+        }
         cat("DONE\n")
     } else {
         cat("*** Importing from dataframe\n")
@@ -307,28 +306,29 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
         cat("DONE\n")
     }
 
-   # Build custom names
-   names.columns = c('Hugo_Symbol', paste.to.Hugo_Symbol)
-   if(is.vector(paste.to.Hugo_Symbol))
-   {
-     cat('*** Mutations names: augmenting Hugo_Symbol with values: ', paste(paste.to.Hugo_Symbol, sep = ', '), '\n')
-     maf[, 'Hugo_Symbol'] = 
-        apply(
-          maf[, names.columns], 
-            MARGIN = 1, function(x) {return(paste(x, collapse = '.'))}
-        )
+    ## Build custom names
+    names.columns = c('Hugo_Symbol', paste.to.Hugo_Symbol)
+    if (is.vector(paste.to.Hugo_Symbol)) {
+        cat('*** Mutations names: augmenting Hugo_Symbol with values: ', paste(paste.to.Hugo_Symbol, sep = ', '), '\n')
+        maf[, 'Hugo_Symbol'] = 
+            apply(maf[, names.columns], 
+                  MARGIN = 1,
+                  function(x) {return(paste(x, collapse = '.'))})
       
-   }
-   else cat('*** Mutations names: using Hugo_Symbol\n')
+    } else {
+        cat('*** Mutations names: using Hugo_Symbol\n')
+    }
    
-   if(is.null(filter.fun)) cat('*** Using full MAF: #entries ', nrow(maf), '\n')
-   else{
-     if(!is.function(filter.fun))
-       stop('filter.fun - should be a function')
+    if (is.null(filter.fun)) {
+        cat('*** Using full MAF: #entries ', nrow(maf), '\n')
+    } else {
+        if (!is.function(filter.fun)) {
+            stop('filter.fun - should be a function')
+        }
      
-   cat('*** Filtering full MAF: #entries ', nrow(maf), '\n' ) 
-   maf = maf[apply(maf, 1, filter.fun), ]
-   cat('*** Using reduced MAF: #entries ', nrow(maf), '\n' ) 
+        cat('*** Filtering full MAF: #entries ', nrow(maf), '\n' ) 
+        maf = maf[apply(maf, 1, filter.fun), ]
+        cat('*** Using reduced MAF: #entries ', nrow(maf), '\n' ) 
     }
   
     ## Auxiliary functions to extract information from the MAF file
@@ -407,7 +407,9 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
     }
     cat("Number of genes (Hugo_Symbol):", length(MAF.genes), "\n")
     
-    if(!to.TRONCO) return(maf);
+    if (!to.TRONCO) {
+        return(maf)
+    }
     
     cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
     cat(length(MAF.samples), "x", length(MAF.genes), "\n")
