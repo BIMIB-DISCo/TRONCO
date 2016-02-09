@@ -253,11 +253,13 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 #' @param filter.fun A filter function applied to each row. This is expected to return TRUE/FALSE.
 #' @param to.TRONCO If FALSE returns a dataframe with MAF data, not a TRONCO object
 #' @param irregular If TRUE seeks only for columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification
+#' @param paste.to.Hugo_Symbol If a list of column names, this will be pasted each Hugo_Symbol to yield names such as PHC2.chr1.33116215.33116215
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
 #' 
-import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.TRONCO = TRUE, irregular = FALSE) {
+import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.TRONCO = TRUE, irregular = FALSE, paste.to.Hugo_Symbol = NULL) {
 
+  ###### Data loading
     if (!(is.data.frame(file) || is.matrix(file)) && is.character(file)) {
         cat("*** Importing from file: ", file, "\n")
         if(!irregular) 
@@ -267,7 +269,7 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
         }
         else
         {
-          cat("Loading MAF file, seeking only Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification columns [irregular = TRUE] ...")
+          cat("*** [irregular = TRUE] Seeking only Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification columns")
           read.irregular <- function(filenm) {
             fileID <- file(filenm, open = "rt")
             nFields <- count.fields(fileID)
@@ -282,12 +284,21 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
             return(df)
           }
           x = read.irregular(file)
-          if(all(c('Hugo_Symbol', 'Tumor_Sample_Barcode', 'Variant_Classification') %in% x[1,]))
-            stop('MAF file has no columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification!')
-          maf = x[, which(x[1,] %in% c('Hugo_Symbol', 'Tumor_Sample_Barcode', 'Variant_Classification'))]
+          
+          req.columns = c('Hugo_Symbol', 'Tumor_Sample_Barcode', 'Variant_Classification', paste.to.Hugo_Symbol)
+        
+          if(!all(req.columns %in% x[1,]))
+            stop( paste(
+              '\nMAF file has no columns:', paste(req.columns, collapse = ' | '),
+              'Columns found:',
+              paste('\t', x[1,], collapse = '\n '), 
+              sep='\n '))
+          
+          maf = x[, which(x[1,] %in% req.columns)]
           colnames(maf) = maf[1,]
           maf = maf[2:nrow(maf),]
-        }
+          
+      }
         cat("DONE\n")
     } else {
         cat("*** Importing from dataframe\n")
@@ -296,17 +307,30 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
         cat("DONE\n")
     }
 
-    if(is.null(filter.fun)) cat('*** Using full MAF: #entries ', nrow(maf), '\n')
-    else{
-    	if(!is.function(filter.fun))
-    		stop('filter.fun - should be a function')
-
-		cat('*** Filtering full MAF: #entries ', nrow(maf), '\n' ) 
-		maf = maf[apply(maf, 1, filter.fun), ]
-		cat('*** Using reduced MAF: #entries ', nrow(maf), '\n' ) 
+   # Build custom names
+   names.columns = c('Hugo_Symbol', paste.to.Hugo_Symbol)
+   if(is.vector(paste.to.Hugo_Symbol))
+   {
+     cat('*** Mutations names: augmenting Hugo_Symbol with values: ', paste(paste.to.Hugo_Symbol, sep = ', '), '\n')
+     maf[, 'Hugo_Symbol'] = 
+        apply(
+          maf[, names.columns], 
+            MARGIN = 1, function(x) {return(paste(x, collapse = '.'))}
+        )
+      
+   }
+   else cat('*** Mutations names: using Hugo_Symbol\n')
+   
+   if(is.null(filter.fun)) cat('*** Using full MAF: #entries ', nrow(maf), '\n')
+   else{
+     if(!is.function(filter.fun))
+       stop('filter.fun - should be a function')
+     
+   cat('*** Filtering full MAF: #entries ', nrow(maf), '\n' ) 
+   maf = maf[apply(maf, 1, filter.fun), ]
+   cat('*** Using reduced MAF: #entries ', nrow(maf), '\n' ) 
     }
-
-
+  
     ## Auxiliary functions to extract information from the MAF file
     ## This is the possibly smallest type of information required to prepare a TRONCO file
     ## If any necessary information is missing, execution is aborted

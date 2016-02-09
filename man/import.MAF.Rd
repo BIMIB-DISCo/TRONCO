@@ -5,7 +5,7 @@
 \title{import.MAF}
 \usage{
 import.MAF(file, sep = "\\t", is.TCGA = TRUE, filter.fun = NULL,
-  to.TRONCO = TRUE)
+  to.TRONCO = TRUE, irregular = FALSE, paste.to.Hugo_Symbol = NULL)
 }
 \arguments{
 \item{file}{MAF filename}
@@ -17,6 +17,10 @@ import.MAF(file, sep = "\\t", is.TCGA = TRUE, filter.fun = NULL,
 \item{filter.fun}{A filter function applied to each row. This is expected to return TRUE/FALSE.}
 
 \item{to.TRONCO}{If FALSE returns a dataframe with MAF data, not a TRONCO object}
+
+\item{irregular}{If TRUE seeks only for columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification}
+
+\item{paste.to.Hugo_Symbol}{If a list of column names, this will be pasted each Hugo_Symbol to yield names such as PHC2.chr1.33116215.33116215}
 }
 \value{
 A TRONCO compliant representation of the input MAF
@@ -25,7 +29,9 @@ A TRONCO compliant representation of the input MAF
 Import mutation profiles from a Manual Annotation Format (MAF) file. All mutations are aggregated as a
 unique event type labeled "Mutation" and assigned a color according to the default of function
 \code{import.genotypes}. If this is a TCGA MAF file check for multiple samples per patient is performed
-and a warning is raised if these occurr.
+and a warning is raised if these occurr. Customized MAF files can be imported as well provided that 
+they have columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification. 
+Custom filters are possible (via filter.fun) to avoid loading the full MAF data
 }
 \examples{
 data(maf)
