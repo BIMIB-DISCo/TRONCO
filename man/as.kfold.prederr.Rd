@@ -4,7 +4,8 @@
 \alias{as.kfold.prederr}
 \title{as.kfold.prederr}
 \usage{
-as.kfold.prederr(x, events = as.events(x), models = names(x$model))
+as.kfold.prederr(x, events = as.events(x), models = names(x$model),
+  values = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO model.}
@@ -12,6 +13,8 @@ as.kfold.prederr(x, events = as.events(x), models = names(x$model))
 \item{events}{A subset of events as of \code{as.events(x)}, all by default.}
 
 \item{models}{A subset of reconstructed models, all by default.}
+
+\item{values}{If you want to see also the values}
 }
 \value{
 All the bootstrap scores in a TRONCO model

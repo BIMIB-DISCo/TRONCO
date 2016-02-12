@@ -152,6 +152,7 @@ tronco.kfold.eloss = function(x,
                             fit.args = list(iss = 1))
 
         losses = NULL
+
         for(i in 1:length(bn.kcv.list)) {
             losses = c(losses, attr(bn.kcv.list[[i]], "mean"))
         }
@@ -406,9 +407,8 @@ tronco.kfold.posterr <- function(x,
             }
             posterr.adj.col
         }
-
+        cat("*** Reducing results\n")
         x$kfold[[model]]$posterr = r
-        cat('\n')
     }
 
     stopCluster(cl)

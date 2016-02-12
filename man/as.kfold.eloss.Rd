@@ -4,18 +4,20 @@
 \alias{as.kfold.eloss}
 \title{as.kfold.eloss}
 \usage{
-as.kfold.eloss(x, models = names(x$model))
+as.kfold.eloss(x, models = names(x$model), values = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO model.}
 
 \item{models}{A subset of reconstructed models, all by default.}
+
+\item{values}{If you want to see also the values}
 }
 \value{
 All the bootstrap scores in a TRONCO model
 }
 \description{
-Returns a dataframe with all the entropy loss score in a 
+Returns a dataframe with all the average/stdev entropy loss score of a 
 TRONCO model. It is possible to specify models if multiple
 reconstruction have been performed.
 }

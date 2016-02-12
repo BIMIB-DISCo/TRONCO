@@ -145,6 +145,12 @@ tronco.caprese <- function(data,
     results$parameters = reconstruction$parameters;
     results$execution.time = reconstruction$execution.time;
 
+    cat('*** Evaluating LogLik informations.\n')
+
+    bayes.net = as.bnlearn.network(results, model = 'caprese')
+    logLik = logLik(bayes.net$net, data = bayes.net$data)
+    results$model$caprese$logLik = logLik
+
     ## The reconstruction has been completed.
     if (!silent)
         cat(paste(
