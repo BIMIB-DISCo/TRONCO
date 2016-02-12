@@ -341,8 +341,10 @@ tronco.capri <- function(data,
 
     ## Add BIC/AIC/LogLik informations
 
+    cat('*** Evaluating BIC / AIC / LogLik informations.\n')
+
     if ("bic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, regularization = 'bic')
+        bayes.net = as.bnlearn.network(results, model = 'bic')
         score = BIC(bayes.net$net, data = bayes.net$data)
         logLik = logLik(bayes.net$net, data = bayes.net$data)
         results$model$bic$score = score
@@ -350,7 +352,7 @@ tronco.capri <- function(data,
     }
 
     if ("aic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, regularization = 'aic')
+        bayes.net = as.bnlearn.network(results, model = 'aic')
         score = AIC(bayes.net$net, data = bayes.net$data)
         logLik = logLik(bayes.net$net, data = bayes.net$data)
         results$model$aic$score = score

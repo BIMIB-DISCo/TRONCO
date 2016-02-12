@@ -16,29 +16,31 @@
 #' data(test_model)
 #' as.bnlearn.network(test_model)
 #'
-#' @param data A reconstructed model (the output of tronco.capri or tronco.caprese)
-#' @param regularization The name of the selected regularization (default: "bic")
+#' @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
+#' @param model The name of the selected regularization
 #' @param makeValid Transform the bootstrapped data into a valid 2-categories input data
 #' @export as.bnlearn.network
 #'
-as.bnlearn.network <- function(obj, regularization = "bic", makeValid = TRUE) {
+as.bnlearn.network <- function(x, 
+                               model = names(as.models(x))[1], 
+                               makeValid = TRUE) {
 
     ## Check if there is a reconstructed model.
 
-    if(!has.model(obj)) {
-        stop('Input obj doesn\'t have a TRONCO object inside.')
+    if(!has.model(x)) {
+        stop('Input doesn\'t have a TRONCO object inside.')
     }
 
     ## Check if the selected regularization is used in the model.
 
-    if (!regularization %in% names(obj$model)) {
+    if (!model %in% names(as.models(x))) {
         stop(paste(regularization, " was not used to build the input TRONCO model!"))
     }
 
     ## Get genotypes and data.
 
-    genotypes = as.genotypes(obj)
-    genotypes = keysToNames(obj, genotypes)
+    genotypes = as.genotypes(x)
+    genotypes = keysToNames(x, genotypes)
     names(colnames(genotypes)) = NULL
 
     if (makeValid) {
@@ -51,8 +53,8 @@ as.bnlearn.network <- function(obj, regularization = "bic", makeValid = TRUE) {
         }
     }
 
-    adj.matrix = get(regularization, as.adj.matrix(obj))
-    adj.matrix = keysToNames(obj, adj.matrix)
+    adj.matrix = get(model, as.adj.matrix(x))
+    adj.matrix = keysToNames(x, adj.matrix)
     names(colnames(adj.matrix)) = NULL
     names(rownames(adj.matrix)) = NULL
     
@@ -102,14 +104,14 @@ as.bnlearn.network <- function(obj, regularization = "bic", makeValid = TRUE) {
 #' tronco.kfold.eloss(test_model)
 #'
 #' @param data A reconstructed model (the output of tronco.capri or tronco.caprese)
-#' @param regularization The name of the selected regularization (default: "bic")
+#' @param models The names of the selected regularizers (bic, aic or caprese)
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
 #' @importFrom bnlearn bn.cv
 #' @export tronco.kfold.eloss
 #'
 tronco.kfold.eloss = function(x, 
-                              regularization = as.parameters(x)$regularization,
+                              models = names(as.models(x)),
                               runs = 10,
                               k = 10) {   
 
@@ -119,31 +121,25 @@ tronco.kfold.eloss = function(x,
         stop('The input TRONCO object does not contain a model, you should first do that -- won\'t perform cross-validation!')
     }
 
-    ## Check if the reconstruction has been made with CAPRI
-
-    if (x$parameters$algorithm != 'CAPRI') {
-        stop('The model contained in the input TRONCO object has not been reconstructed with CAPRI,  -- won\'t perform cross-validation!')
-    }
-
     ## Check if the selected regularization is used in the model.
 
     if (!"kfold" %in% names(x)) {
         x$kfold = NULL
     }
 
-    for (reg in regularization) {
-        if (!reg %in% as.parameters(x)$regularization) {
+    for (model in models) {
+        if (!model %in% names(as.models(x))) {
             stop(paste(reg, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
         }
 
         ## Get bnlearn network.
-        bn = as.bnlearn.network(x, reg)
+        bn = as.bnlearn.network(x, model)
         bndata = bn$data
         bnnet = bn$net
 
         ## Calculating the eloss with bn.cv
         cat('Calculating entropy loss with k-fold cross-validation [ k =', k,
-            '| runs =', runs, '| regularizer =', reg, '] ... ')
+            '| runs =', runs, '| regularizer =', model, '] ... ')
 
         ## Scutari fix
         
@@ -165,7 +161,7 @@ tronco.kfold.eloss = function(x,
         eloss = losses[!is.na(losses)]
     
         meanll = mean(eloss)
-        ll = get(reg, x$model)$logLik
+        ll = get(model, x$model)$logLik
         ratio = meanll / abs(ll) * 100
     
         cat(' DONE\n')
@@ -173,8 +169,8 @@ tronco.kfold.eloss = function(x,
         cat('  Mean   eloss =', meanll,' | ', ratio,'% \n')
         cat('  Stdev  eloss = ', sd(eloss) ,'\n')
     
-        x$kfold[[reg]]$bn.kcv.list = bn.kcv.list
-        x$kfold[[reg]]$eloss = eloss
+        x$kfold[[model]]$bn.kcv.list = bn.kcv.list
+        x$kfold[[model]]$eloss = eloss
     }
     return(x)
 }
@@ -189,7 +185,7 @@ tronco.kfold.eloss = function(x,
 #' tronco.kfold.prederr(test_model)
 #'
 #' @param x A reconstructed model (the output of tronco.capri)
-#' @param regularization The name of the selected regularization (default: "bic")
+#' @param models The names of the selected regularizers (bic, aic or caprese)
 #' @param events a list of event 
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
@@ -199,7 +195,7 @@ tronco.kfold.eloss = function(x,
 #' @export tronco.kfold.prederr
 #'
 tronco.kfold.prederr <- function(x,
-                                 regularization = as.parameters(x)$regularization,
+                                 models = names(as.models(x)),
                                  events = as.events(x),
                                  runs = 10,
                                  k = 10,
@@ -212,17 +208,11 @@ tronco.kfold.prederr <- function(x,
         stop('This object does not have a model.')
     }
 
-    ## Check if the reconstruction has been made with CAPRI
-
-    if (x$parameters$algorithm != 'CAPRI') {
-        stop('The model contained in the input TRONCO object has not been reconstructed with CAPRI,  -- won\'t perform cross-validation!')
-    }
-
     ## Integrity check over nodes.
-    adj.matrix = as.adj.matrix(x,
-                               events = events,
-                               models = regularization,
-                               type = 'fit')
+    as.adj.matrix(x,
+                  events = events,
+                  models = models,
+                  type = 'fit')
   
     events = apply(events, 1, function(z){paste(z, collapse = ' ')})
 
@@ -243,21 +233,21 @@ tronco.kfold.prederr <- function(x,
     cat('*** Using', cores, 'cores via "parallel" \n')
 
 
-    for (reg in regularization) {
+    for (model in models) {
         
         ## Check if the selected regularization is used in the model.
         
-        if (!reg %in% as.parameters(x)$regularization) {
-            stop(paste(reg, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
+        if (!model %in% names(as.models(x))) {
+            stop(paste(model, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
         }
 
         ## Get bnlearn network and the adj matrix.
 
-        bn = as.bnlearn.network(x, reg)
+        bn = as.bnlearn.network(x, model)
         bndata = bn$data
         bnnet = bn$net
 
-        adj.matrix = get(reg, as.adj.matrix(x))
+        adj.matrix = get(model, as.adj.matrix(x))
         adj.matrix = keysToNames(x, adj.matrix)
         names(colnames(adj.matrix)) = NULL
         names(rownames(adj.matrix)) = NULL
@@ -266,19 +256,20 @@ tronco.kfold.prederr <- function(x,
 
         ## Perform the estimation of the prediction error. 
         
-        cat('Scanning', length(events), 'nodes for their prediction error (all parents). Regularizer: ', reg, '\n')
+        cat('\tScanning', length(events), 'nodes for their prediction error (all parents). Regularizer: ', model, '\n')
 
         
 
         r = foreach(i = 1:length(events), .inorder = TRUE) %dopar% {
-            cat('\tprocessing ', events[i], '\n')
 
             ## Scutari fix
+
+            event = events[i]
 
             comp = bn.cv(bndata,
                          bnnet, 
                          loss = 'pred', 
-                         loss.args = list(target = events[i]),
+                         loss.args = list(target = event),
                          runs = runs,
                          k = k,
                          fit = "bayes",
@@ -288,12 +279,12 @@ tronco.kfold.prederr <- function(x,
             for(i in 1:runs) {
                 res = c(res, attributes(comp[[i]])$mean)
             }
- 
+            cat('\t\t node:', event, 'mean:', mean(res), '(', sd(res), ')\n')
             res  
         }
         cat("*** Reducing results\n")
         names(r) = events      
-        x$kfold[[reg]]$prederr = r
+        x$kfold[[model]]$prederr = r
     }
 
     stopCluster(cl)
@@ -310,7 +301,7 @@ tronco.kfold.prederr <- function(x,
 #' tronco.kfold.posterr(test_model)
 #'
 #' @param x A reconstructed model (the output of tronco.capri)
-#' @param regularization The name of the selected regularization (default: "bic")
+#' @param models The names of the selected regularizers (bic, aic or caprese)
 #' @param events a list of event 
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
@@ -320,7 +311,7 @@ tronco.kfold.prederr <- function(x,
 #' @export tronco.kfold.posterr
 #'
 tronco.kfold.posterr <- function(x,
-                                 regularization = as.parameters(x)$regularization,
+                                 models = names(as.models(x)),
                                  events = as.events(x),
                                  runs = 10,
                                  k = 10,
@@ -333,17 +324,11 @@ tronco.kfold.posterr <- function(x,
         stop('This object does not have a model.')
     }
 
-    ## Check if the reconstruction has been made with CAPRI
-
-    if (x$parameters$algorithm != 'CAPRI') {
-        stop('The model contained in the input TRONCO object has not been reconstructed with CAPRI,  -- won\'t perform cross-validation!')
-    }
-
     ## Integrity check over nodes.
-    adj.matrix = as.adj.matrix(x,
-                               events = events,
-                               models = regularization,
-                               type = 'fit')
+    as.adj.matrix(x,
+                  events = events,
+                  models = models,
+                  type = 'fit')
   
     events = apply(events, 1, function(z){paste(z, collapse = ' ')})
 
@@ -365,21 +350,21 @@ tronco.kfold.posterr <- function(x,
     cat('*** Using', cores, 'cores via "parallel" \n')
 
 
-    for (reg in regularization) {
+    for (model in models) {
         
         ## Check if the selected regularization is used in the model.
         
-        if (!reg %in% as.parameters(x)$regularization) {
-            stop(paste(reg, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
+        if (!model %in% names(as.models(x))) {
+            stop(paste(model, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
         }
 
         ## Get bnlearn network and the adj matrix.
 
-        bn = as.bnlearn.network(x, reg)
+        bn = as.bnlearn.network(x, model)
         bndata = bn$data
         bnnet = bn$net
 
-        adj.matrix = get(reg, as.adj.matrix(x))
+        adj.matrix = get(model, as.adj.matrix(x))
         adj.matrix = keysToNames(x, adj.matrix)
         names(colnames(adj.matrix)) = NULL
         names(rownames(adj.matrix)) = NULL
@@ -388,7 +373,7 @@ tronco.kfold.posterr <- function(x,
 
         ## Perform the estimation of the prediction error. 
         
-        cat('Scanning', sum(adj.matrix == 1), 'edges for posterior classification error. Regularizer:', reg, '\n')
+        cat('\tScanning', sum(adj.matrix == 1), 'edges for posterior classification error. Regularizer:', model, '\n')
         
 
         r = foreach(i = 1:length(events), .inorder = TRUE, .combine = cbind) %dopar% {
@@ -396,15 +381,9 @@ tronco.kfold.posterr <- function(x,
             posterr.adj.col = array(list(NA), c(nrow(adj.matrix), 1))
             colnames(posterr.adj.col) = event
             rownames(posterr.adj.col) = rownames(adj.matrix)
-            
-            if (any(adj.matrix[,event,drop=F])) {
-                cat('\nTarget: ', event)
-            }
-            
+                        
             for (pre in rownames(posterr.adj.col)) {
                 if (adj.matrix[pre,event] == 1) {
-
-                    cat('\n\t from: ', pre, ': ')
 
                     ## Scutari fix
 
@@ -421,14 +400,14 @@ tronco.kfold.posterr <- function(x,
                     for(i in 1:runs) {
                         res = c(res, attributes(comp[[i]])$mean)
                     }
-                    cat(mean(res), ' (', sd(res), ')')
+                    cat('\t\tedge: ', pre, '->', event, 'mean: ', mean(res), ' (', sd(res), ')\n')
                     posterr.adj.col[[pre,event]] = res  
                 }
             }
             posterr.adj.col
         }
 
-        x$kfold[[reg]]$posterr = r
+        x$kfold[[model]]$posterr = r
         cat('\n')
     }
 

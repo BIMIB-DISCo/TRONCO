@@ -4,11 +4,10 @@
 \alias{tronco.kfold.eloss}
 \title{tronco.kfold.eloss}
 \usage{
-tronco.kfold.eloss(x, regularization = as.parameters(x)$regularization,
-  runs = 10, k = 10)
+tronco.kfold.eloss(x, models = names(as.models(x)), runs = 10, k = 10)
 }
 \arguments{
-\item{regularization}{The name of the selected regularization (default: "bic")}
+\item{models}{The names of the selected regularizers (bic, aic or caprese)}
 
 \item{runs}{a positive integer number, the number of times cross-validation will be run}
 

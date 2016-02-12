@@ -4,14 +4,14 @@
 \alias{as.bnlearn.network}
 \title{as.bnlearn.network}
 \usage{
-as.bnlearn.network(obj, regularization = "bic", makeValid = TRUE)
+as.bnlearn.network(x, model = names(as.models(x))[1], makeValid = TRUE)
 }
 \arguments{
-\item{regularization}{The name of the selected regularization (default: "bic")}
+\item{x}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
+
+\item{model}{The name of the selected regularization}
 
 \item{makeValid}{Transform the bootstrapped data into a valid 2-categories input data}
-
-\item{data}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
 }
 \description{
 Convert a TRONCO object in a Bnlearn network.

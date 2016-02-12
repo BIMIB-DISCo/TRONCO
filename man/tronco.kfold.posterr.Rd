@@ -4,14 +4,13 @@
 \alias{tronco.kfold.posterr}
 \title{tronco.kfold.posterr}
 \usage{
-tronco.kfold.posterr(x, regularization = as.parameters(x)$regularization,
-  events = as.events(x), runs = 10, k = 10, cores.ratio = 1,
-  verbose = FALSE)
+tronco.kfold.posterr(x, models = names(as.models(x)), events = as.events(x),
+  runs = 10, k = 10, cores.ratio = 1, verbose = FALSE)
 }
 \arguments{
 \item{x}{A reconstructed model (the output of tronco.capri)}
 
-\item{regularization}{The name of the selected regularization (default: "bic")}
+\item{models}{The names of the selected regularizers (bic, aic or caprese)}
 
 \item{events}{a list of event}
 
