@@ -1162,7 +1162,7 @@ as.bootstrap.scores <- function(x,
 }
 
 
-#' Returns a dataframe with all the entropy loss score in a 
+#' Returns a dataframe with all the average/stdev entropy loss score of a 
 #' TRONCO model. It is possible to specify models if multiple
 #' reconstruction have been performed. 
 #'
@@ -1174,11 +1174,13 @@ as.bootstrap.scores <- function(x,
 #' @title as.kfold.eloss
 #' @param x A TRONCO model.
 #' @param models A subset of reconstructed models, all by default.
+#' @param values If you want to see also the values
 #' @return All the bootstrap scores in a TRONCO model 
 #' @export as.kfold.eloss
 #' 
 as.kfold.eloss <- function(x,
-                           models = names(x$model)) {
+                           models = names(x$model),
+                           values = FALSE) {
     is.compliant(x)
     is.model(x)
 
@@ -1208,6 +1210,8 @@ as.kfold.eloss <- function(x,
     ret = data.frame(ret)
     rownames(ret) = models
     colnames(ret) = c('Mean', '%-of-logLik', 'Stdev', 'Values (rounded, 2 digits)')
+    
+    if(!values) ret = ret[, 1:3]
 
     return(ret)
 }
@@ -1226,12 +1230,14 @@ as.kfold.eloss <- function(x,
 #' @param x A TRONCO model.
 #' @param events A subset of events as of \code{as.events(x)}, all by default.
 #' @param models A subset of reconstructed models, all by default.
+#' @param values If you want to see also the values
 #' @return All the bootstrap scores in a TRONCO model 
 #' @export as.kfold.prederr
 #' 
 as.kfold.prederr <- function(x,
                              events = as.events(x),
-                             models = names(x$model)) {
+                             models = names(x$model),
+                             values = FALSE) {
     is.compliant(x)
     is.model(x)
     is.events.list(x, events)
@@ -1265,6 +1271,8 @@ as.kfold.prederr <- function(x,
         sel.events = apply(events, 1, function(z){paste(z, collapse = ' ')})
         df = df[which(df$SELECTED %in% sel.events), , drop = F]
 
+        if(!values) df = df[, 1:3]
+        
         return(df)
     }
 
@@ -1288,12 +1296,14 @@ as.kfold.prederr <- function(x,
 #' @param x A TRONCO model.
 #' @param events A subset of events as of \code{as.events(x)}, all by default.
 #' @param models A subset of reconstructed models, all by default.
+#' @param values If you want to see also the values
 #' @return All the posterior classification error scores in a TRONCO model 
 #' @export as.kfold.posterr
 #' 
 as.kfold.posterr <- function(x,
                              events = as.events(x),
-                             models = names(x$model)) {
+                             models = names(x$model),
+                             values = FALSE) {
     is.compliant(x)
     is.model(x)
     is.events.list(x, events)
@@ -1360,7 +1370,8 @@ as.kfold.posterr <- function(x,
               'SD.POSTERR',
               'POSTERR Values (rounded, 3 digits)')
 
-
+        if(!values) df = df[, 1:4]
+        
 
         return(df)
     }
