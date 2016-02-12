@@ -145,7 +145,10 @@ tronco.caprese <- function(data,
     results$parameters = reconstruction$parameters;
     results$execution.time = reconstruction$execution.time;
 
-    cat('*** Evaluating LogLik informations.\n')
+    if (!silent) {
+        cat('*** Evaluating LogLik informations.\n')
+
+    }
 
     bayes.net = as.bnlearn.network(results, model = 'caprese')
     logLik = logLik(bayes.net$net, data = bayes.net$data)
@@ -347,7 +350,9 @@ tronco.capri <- function(data,
 
     ## Add BIC/AIC/LogLik informations
 
-    cat('*** Evaluating BIC / AIC / LogLik informations.\n')
+    if (!silent) {
+        cat('*** Evaluating BIC / AIC / LogLik informations.\n')
+    }
 
     if ("bic" %in% regularization) {
         bayes.net = as.bnlearn.network(results, model = 'bic')
@@ -697,7 +702,7 @@ tronco.bootstrap <- function(reconstruction,
 #' tronco.plot(test_model)
 #'
 #' @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
-#' @param regularization A vector containing the names of regularizators used (BIC or AIC)
+#' @param models A vector containing the names of regularizators used (BIC, AIC or CAPRESE)
 #' @param fontsize For node names. Default NA for automatic rescaling
 #' @param height Proportion node height - node width. Default height 2
 #' @param width Proportion node height - node width. Default width 2
@@ -730,7 +735,7 @@ tronco.bootstrap <- function(reconstruction,
 #' @import igraph
 #' 
 tronco.plot <- function(x,
-                        regularization = names(x$model),
+                        models = names(x$model),
                         fontsize = NA, 
                         height=2,
                         width=3,
@@ -740,7 +745,7 @@ tronco.plot <- function(x,
                         scale.nodes=NA,
                         title = as.description(x),  
                         confidence = NA, 
-                        p.min = x$parameters$pvalue,
+                        p.min = 0.05,
                         legend = TRUE, 
                         legend.cex = 1.0, 
                         edge.cex = 1.0,
@@ -769,12 +774,12 @@ tronco.plot <- function(x,
     logical_op = list("AND", "OR", "NOT", "XOR", "*", "UPAND", "UPOR", "UPXOR")
 
 
-    if (length(regularization) > 2) {
+    if (length(models) > 2) {
         stop("Too many regularizators (max is 2)", call. = FALSE)
     }
 
-    if (!regularization[1] %in% names(x$model)) {
-        stop(paste(regularization[1], "not in model"), call. = FALSE);
+    if (!models[1] %in% names(x$model)) {
+        stop(paste(models[1], "not in model"), call. = FALSE);
     }
 
     if (!is.na(annotate.sample) && !is.null(pathways))
@@ -809,17 +814,17 @@ tronco.plot <- function(x,
         pathways.color = 'red'
     }
 
-    sec = ifelse(length(regularization) == 2, T, F)
+    sec = ifelse(length(models) == 2, T, F)
 
-    if (sec && !regularization[2] %in% names(x$model)) {
-        stop(paste(regularization[2], "not in model"), call.=FALSE);
+    if (sec && !models[2] %in% names(x$model)) {
+        stop(paste(models[2], "not in model"), call.=FALSE);
     }
 
     ## Models objects.
     
-    primary = as.models(x, models = regularization[1])[[1]]    
+    primary = as.models(x, models = models[1])[[1]]    
     if (sec) 
-        secondary = as.models(x, models = regularization[2])[[1]]
+        secondary = as.models(x, models = models[2])[[1]]
 
     ## USARE getters adj.matrix.
     
@@ -838,8 +843,8 @@ tronco.plot <- function(x,
 
     if (is.function(relations.filter)) {
         cat('*** Filtering relations according to function "relations.filter", visualizing:\n')
-        adj.matrix = as.adj.matrix(x, models = regularization)
-        sel.relation = as.selective.advantage.relations(x, models = regularization)
+        adj.matrix = as.adj.matrix(x, models = models)
+        sel.relation = as.selective.advantage.relations(x, models = models)
 
         ## Select only relations which get TRUE by "relations.filter".
         
@@ -856,7 +861,7 @@ tronco.plot <- function(x,
 
         print(sel.relation)
 
-        sel.relation = get(regularization[2], sel.relation)
+        sel.relation = get(models[2], sel.relation)
 
         c_matrix.names = rownames(c_matrix)
         c_matrix = matrix(0, nrow = nrow(c_matrix), ncol = ncol(c_matrix))
@@ -867,7 +872,7 @@ tronco.plot <- function(x,
                    nrow(sel.relation),
                    ' [out of ',
                    nrow(as.selective.advantage.relations(x,
-                                                         models = regularization)[[2]]),
+                                                         models = models)[[2]]),
                    ']\n'))
 
         if (nrow(sel.relation) > 0) {
@@ -1261,9 +1266,9 @@ tronco.plot <- function(x,
 
                 if (! i %in% pval.names) {
                     if (sec && primary$adj.matrix$adj.matrix.fit[conf_from, conf_to] == 0) {
-                        conf_sel = get(regularization[[2]], conf_sel)
+                        conf_sel = get(models[[2]], conf_sel)
                     } else {
-                        conf_sel = get(regularization[[1]], conf_sel)
+                        conf_sel = get(models[[1]], conf_sel)
                     }
                 }
 
@@ -1474,7 +1479,7 @@ tronco.plot <- function(x,
         stat.pch = 0
         pt.bg = "white"
         col = "white"
-        if (any(regularization != 'caprese') && any(!is.na(confidence))) {
+        if (any(!is.na(confidence))) {
             text =
                 c(expression(bold('Edge confidence')),
                   lapply(confidence,
@@ -1516,19 +1521,38 @@ tronco.plot <- function(x,
 
         stat.pch = c(stat.pch, rep(0, 2), rep(20, 2), rep(0, 2))
         pt.bg = c(pt.bg, rep('white', 2), rep('black', 2), rep('white', 2))
-        col = c(col, rep('white', 2), rep('white', 2), rep('white', 2)) 
+        col = c(col, rep('white', 2), rep('white', 2), rep('white', 2))
 
-        if (any(regularization != 'caprese')) {
-            text = 
-                c(text, '\n',
-                  expression(bold('Regularization')),
-                  paste0(names(x$model))
-                  )
-
-            stat.pch = c(stat.pch, rep(20, 2))
-            pt.bg = c(pt.bg, 'black', 'darkgrey')
-            col = c(col,'black', 'darkgrey') 
+        mods = NULL
+        for (model in models) {
+            mods_label = ''
+            if (model %in% c('bic', 'aic')) {
+                mods_label = paste(mods_label, 'capri', model)
+            } else {
+                mods_label = model
+            }
+            if (!is.null(x$kfold) && !is.null(get(model, x$kfold)$eloss)) {
+                mods_label = paste(mods_label, '- eloss:', round(mean(get(model, x$kfold)$eloss), 5))
+            }
+            mods = c(mods, mods_label)
         }
+
+        text = 
+            c(text, '\n',
+              expression(bold('Algorithm:')),
+              paste0(mods)
+              )
+
+        stat.pch = c(stat.pch, 20)
+        pt.bg = c(pt.bg, 'black')
+        col = c(col,'black') 
+
+        if (length(models) > 1) {
+            stat.pch = c(stat.pch, 20)
+            pt.bg = c(pt.bg, 'darkgrey')
+            col = c(col, 'darkgrey') 
+        }
+
 
         legend(legend.pos.l,
                legend = text,
