@@ -4,11 +4,11 @@
 \alias{tronco.plot}
 \title{tronco.plot}
 \usage{
-tronco.plot(x, regularization = names(x$model), fontsize = NA, height = 2,
+tronco.plot(x, models = names(x$model), fontsize = NA, height = 2,
   width = 3, height.logic = 1, pf = FALSE, disconnected = FALSE,
   scale.nodes = NA, title = as.description(x), confidence = NA,
-  p.min = x$parameters$pvalue, legend = TRUE, legend.cex = 1,
-  edge.cex = 1, label.edge.size = NA, expand = TRUE, genes = NULL,
+  p.min = 0.05, legend = TRUE, legend.cex = 1, edge.cex = 1,
+  label.edge.size = NA, expand = TRUE, genes = NULL,
   relations.filter = NA, edge.color = "black", pathways.color = "Set1",
   file = NA, legend.pos = "bottom", pathways = NULL, lwd = 3,
   annotate.sample = NA, ...)
@@ -16,7 +16,7 @@ tronco.plot(x, regularization = names(x$model), fontsize = NA, height = 2,
 \arguments{
 \item{x}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
 
-\item{regularization}{A vector containing the names of regularizators used (BIC or AIC)}
+\item{models}{A vector containing the names of regularizators used (BIC, AIC or CAPRESE)}
 
 \item{fontsize}{For node names. Default NA for automatic rescaling}
 
