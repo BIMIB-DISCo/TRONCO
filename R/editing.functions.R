@@ -533,8 +533,10 @@ delete.pattern <- function(x, pattern) {
 
     rm(list = pattern, envir = x$hypotheses$hstructure)
 
-    ## chiave da togliere model$hypotheses$`gene x` se contenuto = 'XOR_EZH2'
-    ## remove o rm?
+    if (! 'Pattern' %in% unique(x$annotations[,'type'])) {
+        x$types = x$types[-which(rownames(x$types) == 'Pattern'),,drop=F]
+
+    }
 
     is.compliant(x)
 
@@ -559,10 +561,12 @@ delete.model <- function(x) {
         stop("No model to delete in dataset")
     }
     x$model = NULL
+    x$bootstrap = NULL
     x$confidence = NULL
     x$parameters = NULL
     x$adj.matrix.prima.facie = NULL
     x$execution.time = NULL
+    x$kfold = NULL
 
     is.compliant(x)
 

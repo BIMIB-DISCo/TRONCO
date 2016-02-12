@@ -1427,6 +1427,26 @@ as.parameters <- function(x) {
 }
 
 
+#' Remove models, hypothesis and patterns from a TRONCO model.
+#'
+#' @title as.dataset
+#' @param x A TRONCO model.
+#' @return A TRONCO model without models, hypothesis and patterns.
+#' @export as.dataset
+#'
+as.dataset <- function(x) {
+    is.compliant(x)
+    if (has.model(x)) {
+        ret = delete.model(x)
+    }
+    for (pattern in as.patterns(ret)) {
+        ret = delete.pattern(ret, pattern)
+    }
+
+    return(ret) 
+}
+
+
 #' Return true if the TRONCO dataset 'x', which should be a TRONCO compliant dataset 
 #' - see \code{is.compliant} - has stage annotations for samples. Some sample stages 
 #' might be annotated as NA, but not all.
