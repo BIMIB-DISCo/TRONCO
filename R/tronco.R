@@ -1234,7 +1234,7 @@ tronco.plot <- function(x,
     pval.names = c('hg', 'pr', 'tp')
     boot.names = c('npb', 'pb', 'sb')
 
-    edge_label = function(value, conf, edge, pvalue) {
+    edge_label = function(value, conf, edge, model, pvalue) {
         print(edge)
         print(value)
 
@@ -1254,7 +1254,11 @@ tronco.plot <- function(x,
 
             # insert here edges visualization rules
 
-            if (c %in% pval.names && value > pvalue) {
+            if (c == 'hg' && value > pvalue) {
+                ret$fontcolor = 'red'
+                ret$label = paste0(ret$label, ' *')
+            }
+            else if (c %in% c('pr', 'tp') && model == 'capri' && value > pvalue) {
                 ret$fontcolor = 'red'
                 ret$label = paste0(ret$label, ' *')
             } else {
@@ -1300,8 +1304,10 @@ tronco.plot <- function(x,
                 if (!c %in% pval.names) {
                     if (sec && primary$adj.matrix$adj.matrix.fit[conf_from, conf_to] == 0) {
                         conf_sel = get(models[[2]], conf_sel)
+                        mod = models[[2]]
                     } else {
                         conf_sel = get(models[[1]], conf_sel)
+                        mod = models[[1]]
                     }
                 }
 
@@ -1312,7 +1318,7 @@ tronco.plot <- function(x,
                 }
 
 
-                edge_info = edge_label(conf_p[conf_from, conf_to], c, e, p.min)
+                edge_info = edge_label(conf_p[conf_from, conf_to], c, e, mod, p.min)
                 eAttrs$label[e] = edge_info$label
                 eAttrs$lwd[e] = edge_info$lwd
                 eAttrs$fontcolor[e] = edge_info$fontcolor
