@@ -1024,7 +1024,7 @@ tronco.plot <- function(x,
             prefix = gsub("_.*$", "", node)
             if ( !(prefix %in% logical_op)) {
                 
-                ## Scaling ANDRE.
+                ## Scaling ANDRE CITROLO.
                 
                 increase_coeff = scale.nodes + (marginal_p[node,] - min_p) / (max_p - min_p)
                 nAttrs$width[node] = nAttrs$width[node] * increase_coeff
@@ -1231,6 +1231,40 @@ tronco.plot <- function(x,
     eAttrs$logic = rep(F, length(edge_names))
     names(eAttrs$logic) = edge_names
 
+    pval.names = c('hg', 'pr', 'tp')
+    boot.names = c('npb', 'pb', 'sb')
+
+    edge_label = function(value, conf, edge, pvalue) {
+        print(edge)
+        print(value)
+
+        ret = list()
+
+        if (conf %in% boot.names) {
+            ret$lwd = 1 + (value * 3)
+        } else {
+            ret$lwd = eAttrs$lwd[edge]
+        }
+
+        ret$label =
+            paste0(eAttrs$label[edge],
+                   ifelse(value < 0.01,
+                          "< 0.01",
+                          round(value, 2)))
+
+            # insert here edges visualization rules
+
+            if (c %in% pval.names && value > pvalue) {
+                ret$fontcolor = 'red'
+                ret$label = paste0(ret$label, ' *')
+            } else {
+                ret$fontcolor = eAttrs$fontcolor[edge]
+            }
+            ret$label = paste0(ret$label, '\\\n')
+
+        return(ret)
+    }
+
     if (any(!is.na(confidence))) {
         cat('Adding confidence information: ')
         conf = as.confidence(x, confidence)
@@ -1242,8 +1276,7 @@ tronco.plot <- function(x,
             from = edge[1]
             to = edge[2]
 
-            pval.names = c('hg', 'pr', 'tp')
-            boot.names = c('npb', 'pb', 'sb')
+            
             red.lable = FALSE
 
             if (is.logic.node.up(from) || is.logic.node.down(to)) {
@@ -1261,10 +1294,10 @@ tronco.plot <- function(x,
                 conf_to = to
             }
 
-            for (i in confidence) {
-                conf_sel = get(i, as.confidence(x, i))
+            for (c in confidence) {
+                conf_sel = get(c, as.confidence(x, c))
 
-                if (! i %in% pval.names) {
+                if (!c %in% pval.names) {
                     if (sec && primary$adj.matrix$adj.matrix.fit[conf_from, conf_to] == 0) {
                         conf_sel = get(models[[2]], conf_sel)
                     } else {
@@ -1278,21 +1311,12 @@ tronco.plot <- function(x,
                     next
                 }
 
-                if (i %in% boot.names) {
-                    eAttrs$lwd[e] = (conf_p[conf_from, conf_to] * 5) + 1
-                }
 
-                eAttrs$label[e] =
-                    paste0(eAttrs$label[e],
-                           ifelse(conf_p[conf_from, conf_to] < 0.01,
-                                  "< 0.01",
-                                  round(conf_p[conf_from, conf_to], 2)))
+                edge_info = edge_label(conf_p[conf_from, conf_to], c, e, p.min)
+                eAttrs$label[e] = edge_info$label
+                eAttrs$lwd[e] = edge_info$lwd
+                eAttrs$fontcolor[e] = edge_info$fontcolor
 
-                if (i %in% pval.names && conf_p[conf_from, conf_to] > p.min) {
-                    eAttrs$fontcolor[e] = 'red'
-                    eAttrs$label[e] = paste0(eAttrs$label[e], ' *')
-                }
-                eAttrs$label[e] = paste0(eAttrs$label[e], '\\\n')
             }
         }
         cat('RGraphviz object prepared.\n')
@@ -1796,7 +1820,7 @@ tronco.consensus.plot <- function(models,
         for (node in node_names) {
             prefix = gsub("_.*$", "", node)
             if ( !(prefix %in% logical_op)) {
-                ## Scaling ANDRE.
+                ## Scaling ANDRE CRITOLO.
                 increase_coeff = scale.nodes + (marginal.probabilities[node,] - min_p) / (max_p - min_p)
                 nAttrs$width[node] = nAttrs$width[node] * increase_coeff
                 nAttrs$height[node] = nAttrs$height[node] * increase_coeff    
