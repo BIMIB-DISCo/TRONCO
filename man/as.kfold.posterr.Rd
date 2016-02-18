@@ -5,7 +5,7 @@
 \title{as.kfold.posterr}
 \usage{
 as.kfold.posterr(x, events = as.events(x), models = names(x$model),
-  values = FALSE)
+  values = FALSE, table = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO model.}
@@ -15,6 +15,8 @@ as.kfold.posterr(x, events = as.events(x), models = names(x$model),
 \item{models}{A subset of reconstructed models, all by default.}
 
 \item{values}{If you want to see also the values}
+
+\item{table}{Keep the original table (defaul false)}
 }
 \value{
 All the posterior classification error scores in a TRONCO model

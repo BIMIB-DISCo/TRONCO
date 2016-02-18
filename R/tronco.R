@@ -1235,9 +1235,6 @@ tronco.plot <- function(x,
     boot.names = c('npb', 'pb', 'sb')
 
     edge_label = function(value, conf, edge, model, pvalue) {
-        print(edge)
-        print(value)
-
         ret = list()
 
         if (conf %in% boot.names) {
@@ -1246,26 +1243,35 @@ tronco.plot <- function(x,
             ret$lwd = eAttrs$lwd[edge]
         }
 
-        ret$label =
-            paste0(eAttrs$label[edge],
-                   ifelse(value < 0.01,
-                          "< 0.01",
-                          round(value, 2)))
+        if (c == 'posterr') {
+            value = mean(unlist(value))
+            ret$label =
+                paste0(eAttrs$label[edge],
+                       ifelse(value < 0.01,
+                              "< 0.01",
+                              round(value, 2)))
+        } else {
+            ret$label =
+                paste0(eAttrs$label[edge],
+                       ifelse(value < 0.01,
+                              "< 0.01",
+                              round(value, 2)))
+        }
 
-            # insert here edges visualization rules
 
-            if (c == 'hg' && value > pvalue) {
-                ret$fontcolor = 'red'
-                ret$label = paste0(ret$label, ' *')
-            }
-            else if (c %in% c('pr', 'tp') && model == 'capri' && value > pvalue) {
-                ret$fontcolor = 'red'
-                ret$label = paste0(ret$label, ' *')
-            } else {
-                ret$fontcolor = eAttrs$fontcolor[edge]
-            }
-            ret$label = paste0(ret$label, '\\\n')
+        # insert here edges visualization rules
 
+        if (c == 'hg' && value > pvalue) {
+            ret$fontcolor = 'red'
+            ret$label = paste0(ret$label, ' *')
+        }
+        else if (c %in% c('pr', 'tp') && model == 'capri' && value > pvalue) {
+            ret$fontcolor = 'red'
+            ret$label = paste0(ret$label, ' *')
+        } else {
+            ret$fontcolor = eAttrs$fontcolor[edge]
+        }
+        ret$label = paste0(ret$label, '\\\n')
         return(ret)
     }
 
@@ -1274,59 +1280,69 @@ tronco.plot <- function(x,
         conf = as.confidence(x, confidence)
         cat(paste(paste(confidence, collapse = ', '), '\n'))
 
-        for(e in edge_names) {
-            edge = unlist(strsplit(e, '~'))
 
-            from = edge[1]
-            to = edge[2]
+        for (c in confidence) {
 
-            
-            red.lable = FALSE
-
-            if (is.logic.node.up(from) || is.logic.node.down(to)) {
+            if (c == 'eloss') {
                 next
+                cat('skip eloss \n')
             }
 
-            if (from %in% names(hypos_new_name)) {
-                conf_from = hypos_new_name[[from]]
+            if (c == 'posterr') {
+                conf_sel = as.kfold.posterr(x, table = TRUE)
             } else {
-                conf_from = from
-            }
-            if (to %in% names(hypos_new_name)) {
-                conf_to = hypos_new_name[[to]]
-            } else {
-                conf_to = to
-            }
-
-            for (c in confidence) {
                 conf_sel = get(c, as.confidence(x, c))
+            }
+             
+            for(e in edge_names) {
+
+                # configure conf_from and conf_to
+
+                edge = unlist(strsplit(e, '~'))
+
+                from = edge[1]
+                to = edge[2]
+
+                if (is.logic.node.up(from) || is.logic.node.down(to)) {
+                    next
+                }
+
+                if (from %in% names(hypos_new_name)) {
+                    conf_from = hypos_new_name[[from]]
+                } else {
+                    conf_from = from
+                }
+                if (to %in% names(hypos_new_name)) {
+                    conf_to = hypos_new_name[[to]]
+                } else {
+                    conf_to = to
+                }
+
+                conf_p = conf_sel
 
                 if (!c %in% pval.names) {
                     if (sec && primary$adj.matrix$adj.matrix.fit[conf_from, conf_to] == 0) {
-                        conf_sel = get(models[[2]], conf_sel)
+                        conf_p = get(models[[2]], conf_sel)
                         mod = models[[2]]
                     } else {
-                        conf_sel = get(models[[1]], conf_sel)
+                        conf_p = get(models[[1]], conf_sel)
                         mod = models[[1]]
                     }
                 }
 
-                conf_p = conf_sel
 
                 if (! (conf_from %in% rownames(conf_p) && conf_to %in% colnames(conf_p))) {
                     next
                 }
 
-
                 edge_info = edge_label(conf_p[conf_from, conf_to], c, e, mod, p.min)
                 eAttrs$label[e] = edge_info$label
                 eAttrs$lwd[e] = edge_info$lwd
                 eAttrs$fontcolor[e] = edge_info$fontcolor
-
             }
-        }
-        cat('RGraphviz object prepared.\n')
+        }        
     }
+    cat('RGraphviz object prepared.\n')
 
     ## Remove arrows from logic node (hidden and).
     
@@ -1509,6 +1525,7 @@ tronco.plot <- function(x,
         stat.pch = 0
         pt.bg = "white"
         col = "white"
+        confidence = confidence[confidence != 'eloss']
         if (any(!is.na(confidence))) {
             text =
                 c(expression(bold('Edge confidence')),
@@ -1526,9 +1543,13 @@ tronco.plot <- function(x,
                                  return("Statistical Bootstrap")
                              if (x == "npb")
                                  return("Non Parametric Bootstrap")
+                             if (x == "prederr")
+                                 return("Prediction Error")
+                             if (x == "posterr")
+                                 return("Posterior Classification Error")
 
                          }),
-                  paste("p <", p.min))
+                  paste("p-value cutoff <", p.min))
             
             stat.pch = c(0, rep(18, length(confidence)), 0)
             pt.bg = c('white', rep('white', length(confidence)), 'white')
