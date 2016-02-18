@@ -1232,13 +1232,15 @@ as.kfold.eloss <- function(x,
 #' @param events A subset of events as of \code{as.events(x)}, all by default.
 #' @param models A subset of reconstructed models, all by default.
 #' @param values If you want to see also the values
+#' @param table Keep the original table (defaul false)
 #' @return All the bootstrap scores in a TRONCO model 
 #' @export as.kfold.prederr
 #' 
 as.kfold.prederr <- function(x,
                              events = as.events(x),
                              models = names(x$model),
-                             values = FALSE) {
+                             values = FALSE,
+                             table = FALSE) {
     is.compliant(x)
     is.model(x)
     is.events.list(x, events)
@@ -1251,10 +1253,15 @@ as.kfold.prederr <- function(x,
         if ( any(is.null(x$kfold[[z]]$prederr)) ) {
             stop('Crossvalidation was not executed for the required model: ', models[z] )
         }
+        prederr.matrix = x$kfold[[z]]$prederr
+        if (table) {
+            names(prederr.matrix) = lapply(names(prederr.matrix), function(k) { nameToKey(x, k) })
+            return(prederr.matrix)
+        }
 
         # Already prepared data - just wrap it in a dataframe
         df = NULL
-        df$prederr = t(as.data.frame(x$kfold[[z]]$prederr)) # values
+        df$prederr = t(as.data.frame(prederr.matrix)) # values
 
         df$MEAN.PREDERR = apply(df$prederr, 1, mean) # means
         df$SD.PREDERR = apply(df$prederr, 1, sd) # standard deviation
