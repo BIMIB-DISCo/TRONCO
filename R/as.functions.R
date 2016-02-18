@@ -1880,7 +1880,19 @@ keysToNames <- function(x, matrix) {
     return(matrix)
 }
 
-
+#' Convert to key an intelligible event names, e.g., change 'Mutation KRAS' in G23.
+#' If a name is not found, an error is raised!
+#'
+#' @examples
+#' data(test_model)
+#' adj_matrix = as.adj.matrix(test_model, events=as.events(test_model)[5:15,])$bic
+#'
+#' @title nameToKey
+#' @param x A TRONCO compliant dataset.
+#' @param name A intelligible event name
+#' @return A TRONCO dataset key name
+#' @export nameToKey
+#'
 nameToKey <- function(x, name) {
     is.compliant(x)
 
