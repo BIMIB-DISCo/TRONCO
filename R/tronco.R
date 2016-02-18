@@ -1243,7 +1243,7 @@ tronco.plot <- function(x,
             ret$lwd = eAttrs$lwd[edge]
         }
 
-        if (c == 'posterr') {
+        if (c %in% c('posterr', 'prederr')) {
             value = mean(unlist(value))
             ret$label =
                 paste0(eAttrs$label[edge],
@@ -1290,6 +1290,8 @@ tronco.plot <- function(x,
 
             if (c == 'posterr') {
                 conf_sel = as.kfold.posterr(x, table = TRUE)
+            } else if (c == 'prederr'){
+                conf_sel = as.kfold.prederr(x, table = TRUE)
             } else {
                 conf_sel = get(c, as.confidence(x, c))
             }
@@ -1306,6 +1308,7 @@ tronco.plot <- function(x,
                 if (is.logic.node.up(from) || is.logic.node.down(to)) {
                     next
                 }
+
 
                 if (from %in% names(hypos_new_name)) {
                     conf_from = hypos_new_name[[from]]
@@ -1330,12 +1333,19 @@ tronco.plot <- function(x,
                     }
                 }
 
+                if (c == 'prederr') {
+                    value = conf_p[[conf_to]]
+                } else {
+                    value = conf_p[conf_from, conf_to]
+                }
 
-                if (! (conf_from %in% rownames(conf_p) && conf_to %in% colnames(conf_p))) {
+                if (c != 'prederr' && !(conf_from %in% rownames(conf_p) && conf_to %in% colnames(conf_p))) {
+                    next
+                } else if (c == 'prederr' && !(conf_to %in% names(conf_p))) {
                     next
                 }
 
-                edge_info = edge_label(conf_p[conf_from, conf_to], c, e, mod, p.min)
+                edge_info = edge_label(value, c, e, mod, p.min)
                 eAttrs$label[e] = edge_info$label
                 eAttrs$lwd[e] = edge_info$lwd
                 eAttrs$fontcolor[e] = edge_info$fontcolor
