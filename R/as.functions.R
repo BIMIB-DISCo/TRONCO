@@ -440,7 +440,7 @@ as.confidence <- function(x, conf) {
             \t \"sb\"      - statistical bootstrap\n
             \t \"eloss\"   - entropy loss\n
             \t \"prederr\" - prediction error\n
-            \t \"postderr\"- posterior classification error'
+            \t \"posterr\"- posterior classification error'
              )
 
     if (is.null(x$confidence)
@@ -506,7 +506,7 @@ as.confidence <- function(x, conf) {
     }
     
     if ('eloss' %in% conf) { 
-        result$eloss = as.kfold.eloss(x, models)
+        result$eloss = as.kfold.eloss(x, models = models)
     }
 
     if ('prederr' %in% conf) {
@@ -1194,17 +1194,18 @@ as.kfold.eloss <- function(x,
     ret$C3 = NULL
     ret$C4 = NULL
 
-    for (i in 1:length(models)) {
-        if (!is.null(get(models[i], x$kfold)$eloss)) {
-            meanll = mean(get(models[i], x$kfold)$eloss)
-            ll = get(models[i], x$model)$logLik
-            ratio = meanll / abs(ll) * 100
-
-            ret$C1 = c(ret$C1, meanll)
-            ret$C2 = c(ret$C2, ratio)
-            ret$C3 = c(ret$C3, sd(get(models[i], x$kfold)$eloss))
-            ret$C4 = c(ret$C4, paste(round(get(models[i], x$kfold)$eloss, 2), sep = ', ', collapse = ', '))
+    for (model in models) {
+        if (is.null(x$kfold[[model]]$eloss)) {
+            stop('Entropy loss was not estimated for \'', model, '\'')
         }
+        meanll = mean(get(model, x$kfold)$eloss)
+        ll = get(model, x$model)$logLik
+        ratio = meanll / abs(ll) * 100
+
+        ret$C1 = c(ret$C1, meanll)
+        ret$C2 = c(ret$C2, ratio)
+        ret$C3 = c(ret$C3, sd(get(model, x$kfold)$eloss))
+        ret$C4 = c(ret$C4, paste(round(get(model, x$kfold)$eloss, 2), sep = ', ', collapse = ', '))
     }
 
     ret = data.frame(ret)
@@ -1297,16 +1298,22 @@ as.kfold.prederr <- function(x,
 #' @param events A subset of events as of \code{as.events(x)}, all by default.
 #' @param models A subset of reconstructed models, all by default.
 #' @param values If you want to see also the values
+#' @param table Keep the original table (defaul false)
 #' @return All the posterior classification error scores in a TRONCO model 
 #' @export as.kfold.posterr
 #' 
 as.kfold.posterr <- function(x,
                              events = as.events(x),
                              models = names(x$model),
-                             values = FALSE) {
+                             values = FALSE,
+                             table = FALSE) {
     is.compliant(x)
     is.model(x)
     is.events.list(x, events)
+
+    if (is.null(x$kfold) ) {
+        stop('Crossvalidation was not executed for this object!')
+    }
 
     matrix = 
     as.adj.matrix(x,
@@ -1318,12 +1325,22 @@ as.kfold.posterr <- function(x,
     matrix = lapply(matrix, keysToNames, x = x)
 
     matrix.to.df <- function(z) {  
-        if ( is.null(get(z, x$kfold)$posterr) ) {
-            return(NULL)
+        if ( any(is.null(x$kfold[[z]]$posterr)) ) {
+            stop('Posterior classification error was not executed for the required model: ', z )
         }
 
         m = matrix[[z]]
-        posterr.matrix = keysToNames(get(z, x$kfold)$posterr, x = x)
+        posterr.matrix = get(z, x$kfold)$posterr
+
+        if (table) {
+            rownames(posterr.matrix) = lapply(rownames(posterr.matrix), function(k) { nameToKey(x, k) })
+            colnames(posterr.matrix) = lapply(colnames(posterr.matrix), function(k) { nameToKey(x, k) })
+            return(posterr.matrix)
+
+        }
+
+        posterr.matrix = keysToNames(posterr.matrix, x = x)
+
 
         entries = length(which(m == 1))
         df = NULL
