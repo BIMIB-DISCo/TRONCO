@@ -254,10 +254,11 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 #' @param to.TRONCO If FALSE returns a dataframe with MAF data, not a TRONCO object
 #' @param irregular If TRUE seeks only for columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification
 #' @param paste.to.Hugo_Symbol If a list of column names, this will be pasted each Hugo_Symbol to yield names such as PHC2.chr1.33116215.33116215
+#' @param merge.mutation.types If TRUE, all mutations are considered equivalent, regardless of their Variant_Classification value. Otherwise no.
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
 #' 
-import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.TRONCO = TRUE, irregular = FALSE, paste.to.Hugo_Symbol = NULL) {
+import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.TRONCO = TRUE, irregular = FALSE, paste.to.Hugo_Symbol = NULL, merge.mutation.types = TRUE) {
 
     ## Data loading.
     if (!(is.data.frame(file) || is.matrix(file)) && is.character(file)) {
@@ -378,11 +379,12 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
 
     MAF.variants = variants(maf)
     MAF.samples = samples(maf)
-    MAF.genes = genes(maf)
 
     cat("\nType of annotated mutations: \n")
     print(MAF.variants)
-
+    if(merge.mutation.types) cat('*** [merge.mutation.types = T] Mutations will be merged and annotated as \'Mutation\'\n')
+	else cat('*** [merge.mutation.types = F] Mutations will be distinguished by type\n')
+	
     cat("Number of samples:", length(MAF.samples), "\n")
 
     ## If it is TCGA you should check for multiple samples per patient
@@ -405,12 +407,17 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
     } else {
         cat("Mutations annotated with \"Valid\" flag (%): missing flag\n")
     }
+    
+    
+    MAF.genes = genes(maf)
     cat("Number of genes (Hugo_Symbol):", length(MAF.genes), "\n")
     
     if (!to.TRONCO) {
         return(maf)
     }
     
+    if(merge.mutation.types)
+    {
     cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
     cat(length(MAF.samples), "x", length(MAF.genes), "\n")
 
@@ -433,6 +440,51 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
     cat("Starting conversion from MAF to TRONCO data type.\n")
     tronco.data = import.genotypes(binary.mutations, event.type = "Mutation")
     is.compliant(tronco.data)
+    }
+    else
+    {
+    	cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
+
+    	flush.console()
+	    pb <- txtProgressBar(1, nrow(maf), style = 3)
+
+    	# For this case -- separate mutation types -- it is less convenient to use import.genotypes 
+    	tronco.data = list()
+    	tronco.data$genotypes = NULL
+		tronco.data$annotations = NULL
+		tronco.data$types = NULL
+
+    	
+    	# First, build the list of events that we will be creating
+    	tronco.data$annotations = as.matrix(unique(maf[, c('Variant_Classification', 'Hugo_Symbol')]))
+    	colnames(tronco.data$annotations) = c('type', 'event')
+    	rownames(tronco.data$annotations) = paste('G', 1:nrow(tronco.data$annotations), sep='')
+    	
+    	tronco.data$genotypes = matrix(0, nrow = length(MAF.samples), ncol = nrow(tronco.data$annotations))
+		colnames(tronco.data$genotypes) = rownames(tronco.data$annotations)
+    	rownames(tronco.data$genotypes) = MAF.samples
+
+	    for (i in 1:nrow(maf)) {
+    	    setTxtProgressBar(pb, i)
+			
+			ev = intersect(
+				which(tronco.data$annotations[, 'event'] == maf$Hugo_Symbol[i]), 
+				which(tronco.data$annotations[, 'type']  == maf$Variant_Classification[i])
+				)
+
+			tronco.data$genotypes[maf$Tumor_Sample_Barcode[i], ev] = 1
+		}
+		
+		
+		colors = colorRampPalette(brewer.pal(8, 'Accent'))(length(MAF.variants))
+		
+		tronco.data$types = matrix(colors, ncol = 1)
+		
+		rownames(tronco.data$types) = MAF.variants
+		colnames(tronco.data$types) = 'color'
+
+		is.compliant(tronco.data)	    	
+    }
 
     return(tronco.data)
 }
