@@ -5,7 +5,8 @@
 \title{import.MAF}
 \usage{
 import.MAF(file, sep = "\\t", is.TCGA = TRUE, filter.fun = NULL,
-  to.TRONCO = TRUE, irregular = FALSE, paste.to.Hugo_Symbol = NULL)
+  to.TRONCO = TRUE, irregular = FALSE, paste.to.Hugo_Symbol = NULL,
+  merge.mutation.types = TRUE)
 }
 \arguments{
 \item{file}{MAF filename}
@@ -21,6 +22,8 @@ import.MAF(file, sep = "\\t", is.TCGA = TRUE, filter.fun = NULL,
 \item{irregular}{If TRUE seeks only for columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification}
 
 \item{paste.to.Hugo_Symbol}{If a list of column names, this will be pasted each Hugo_Symbol to yield names such as PHC2.chr1.33116215.33116215}
+
+\item{merge.mutation.types}{If TRUE, all mutations are considered equivalent, regardless of their Variant_Classification value. Otherwise no.}
 }
 \value{
 A TRONCO compliant representation of the input MAF
