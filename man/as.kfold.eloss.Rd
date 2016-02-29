@@ -22,9 +22,9 @@ TRONCO model. It is possible to specify models if multiple
 reconstruction have been performed.
 }
 \examples{
-data(test_model)
-as.kfold.eloss(test_model)
-as.kfold.eloss(test_model, models='aic')
+data(test_model_kfold)
+as.kfold.eloss(test_model_kfold)
+as.kfold.eloss(test_model_kfold, models='aic')
 
 }
 

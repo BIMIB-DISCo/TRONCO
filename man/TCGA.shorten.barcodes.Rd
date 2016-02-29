@@ -15,4 +15,9 @@ A TRONCO compliant dataset
 \description{
 Keep only the first 12 character of samples barcode if there are no duplicates
 }
+\examples{
+data(test_dataset)
+TCGA.shorten.barcodes(test_dataset)
+
+}
 

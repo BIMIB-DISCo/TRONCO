@@ -31,8 +31,8 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
         data =
             read.table(geno,
                        header = TRUE,
-                       check.names = F,
-                       stringsAsFactors = F)
+                       check.names = FALSE,
+                       stringsAsFactors = FALSE)
 
         if (any(is.null(colnames(data))))
             stop('Input table should have column names.')
@@ -112,6 +112,8 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 #' 
 #' @title import.GISTIC
 #' @param x Either a dataframe or a filename
+#' @param filter.genes A list of genes
+#' @param filter.samples A list of samples
 #' @return A TRONCO compliant representation of the input CNAs.
 #' @export import.GISTIC
 #' 
@@ -127,8 +129,8 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
         data =
             read.table(x,
                        header = TRUE,
-                       check.names = F,
-                       stringsAsFactors = F)
+                       check.names = FALSE,
+                       stringsAsFactors = FALSE)
 
         cat('Data loaded.\n')
 
@@ -155,7 +157,7 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
         if(!is.vector(filter.genes))
             stop('filter.genes - should be vector')
 
-        x = x[, which(colnames(x) %in% filter.genes), drop = F ]
+        x = x[, which(colnames(x) %in% filter.genes), drop = FALSE ]
         cat('*** Using reduced GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
   }
 
@@ -584,7 +586,7 @@ cbio.query <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, ge
         stop("CBIO study id invalid. Aborting.")
     }
 
-    study <- cs[cs$cancer_study_id == cbio.study, , drop = F]
+    study <- cs[cs$cancer_study_id == cbio.study, , drop = FALSE]
 
     cat(paste("\nCancer codename: ", study[, 1], sep = ""))
     cat(paste("\nCancer Ref.: ", study[, 2], sep = ""))
@@ -612,7 +614,7 @@ cbio.query <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, ge
         }
     }
 
-    caselist =  csl[csl$case_list_id == cbio.dataset, , drop = F]
+    caselist =  csl[csl$case_list_id == cbio.dataset, , drop = FALSE]
 
     if (any(is.na(caselist))) stop("No data for selected study. Aborting.")
 
@@ -634,7 +636,7 @@ cbio.query <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, ge
         }
     }
 
-    profile = gp[gp$genetic_profile_id == cbio.profile, , drop = F]
+    profile = gp[gp$genetic_profile_id == cbio.profile, , drop = FALSE]
 
     if (any(is.na(cbio.profile))) {
         stop("No samples for this profile. Aborting")

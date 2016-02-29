@@ -109,6 +109,16 @@ NULL
 #' @author Luca De Sano
 NULL
 
+#' @name test_model_kfold
+#' @title A complete dataset with a reconstructed model and crossvalidation informations
+#' @description This dataset contains a model reconstructed with CAPRI
+#' @docType data
+#' @usage data(test_model_kfold)
+#' @format TRONCO compliant dataset
+#' @source fake data
+#' @author Luca De Sano
+NULL
+
 #' @name aCML
 #' @title Atypical chronic myeloid leukemia dataset
 #' @description This file contains a TRONCO compliant dataset 

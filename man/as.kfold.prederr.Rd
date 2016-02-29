@@ -27,9 +27,9 @@ TRONCO model. It is possible to specify a subset of events
 or models if multiple reconstruction have been performed.
 }
 \examples{
-data(test_model)
-as.kfold.prederr(test_model)
-as.kfold.prederr(test_model, models='aic')
+data(test_model_kfold)
+as.kfold.prederr(test_model_kfold)
+as.kfold.prederr(test_model_kfold, models='aic')
 
 }
 

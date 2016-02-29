@@ -180,11 +180,11 @@ bootstrap.caprese <- function(dataset,
                     
                     samples.probabilities[m] =
                         list(estimate.dag.samples(curr.dataset,
-                                                  as.adj.matrix(reconstruction,model = m)[[m]],
-                                                  as.marginal.probs(reconstruction,model = m, type = "fit")[[m]],
-                                                  as.conditional.probs(reconstruction,model = m, type = "fit")[[m]],
-                                                  as.parents.pos(reconstruction,model = m)[[m]],
-                                                  as.error.rates(reconstruction,model = m)[[m]]))
+                                                  as.adj.matrix(reconstruction, models = m)[[m]],
+                                                  as.marginal.probs(reconstruction, models = m, type = "fit")[[m]],
+                                                  as.conditional.probs(reconstruction, models = m, type = "fit")[[m]],
+                                                  as.parents.pos(reconstruction, models = m)[[m]],
+                                                  as.error.rates(reconstruction, models = m)[[m]]))
                     
                 }
 
@@ -241,7 +241,7 @@ bootstrap.caprese <- function(dataset,
             
             
             curr.adj.matrix =
-                as.adj.matrix(curr.reconstruction, model = m)[[m]]
+                as.adj.matrix(curr.reconstruction, models = m)[[m]]
             
             for (i in 1:nevents(curr.reconstruction)) {
                 for (j in 1:nevents(curr.reconstruction)) {
@@ -312,7 +312,7 @@ bootstrap.caprese <- function(dataset,
             ## topologies, increase the count.
             
             reconstructed.topology =
-                as.adj.matrix(reconstruction,model = m)[[m]]
+                as.adj.matrix(reconstruction, models = m)[[m]]
             flag = TRUE;
             for (j in 1:nrow(reconstructed.topology)) {
                 for (k in 1:ncol(reconstructed.topology)) {
@@ -334,7 +334,7 @@ bootstrap.caprese <- function(dataset,
     
     for (m in names(as.models(reconstruction))) {
         
-        curr.adj.matrix = as.adj.matrix(reconstruction, model = m)[[m]];
+        curr.adj.matrix = as.adj.matrix(reconstruction, models = m)[[m]];
 
         ## Save the edge confidence.
         

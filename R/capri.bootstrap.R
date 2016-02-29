@@ -144,18 +144,16 @@ bootstrap.capri <- function(dataset,
             
             samples.probabilities[m] =
                 list(estimate.dag.samples(curr.dataset,
-                                          as.adj.matrix(reconstruction,model = m)[[m]],
-                                          as.marginal.probs(reconstruction, model = m, type = "fit")[[m]],
-                                          as.conditional.probs(reconstruction, model = m, type = "fit")[[m]],
-                                          as.parents.pos(reconstruction, model = m)[[m]],
-                                          as.error.rates(reconstruction, model = m)[[m]]))
+                                          as.adj.matrix(reconstruction, models = m)[[m]],
+                                          as.marginal.probs(reconstruction, models = m, type = "fit")[[m]],
+                                          as.conditional.probs(reconstruction, models = m, type = "fit")[[m]],
+                                          as.parents.pos(reconstruction, models = m)[[m]],
+                                          as.error.rates(reconstruction, models = m)[[m]]))
         }
     }
     
-    ## r = foreach(num = 1:nboot, .export = ls(env = .GlobalEnv) ) %dopar% {
     r =
         foreach(num = 1:nboot ) %dopar% {    
-            curr.iteration = num
             
             ## Performed the bootstrapping procedure.
             
@@ -273,7 +271,7 @@ bootstrap.capri <- function(dataset,
                 
                 
                 curr.adj.matrix =
-                    as.adj.matrix(curr.reconstruction,model = m)[[m]]
+                    as.adj.matrix(curr.reconstruction, models = m)[[m]]
                 for (i in 1:nevents(curr.reconstruction)) {
                     for (j in 1:nevents(curr.reconstruction)) {
                         if (i != j && curr.adj.matrix[i, j] == 1) {
@@ -289,7 +287,6 @@ bootstrap.capri <- function(dataset,
                 
                 bootstrap.results[[m]] = t(parents.pos);
             }
-            cat("\nBootstrap iteration", curr.iteration, "performed")
             bootstrap.results
         }
 
@@ -364,7 +361,7 @@ bootstrap.capri <- function(dataset,
             ## topologies, increase the count.
             
             reconstructed.topology =
-                as.adj.matrix(reconstruction,model = m)[[m]]
+                as.adj.matrix(reconstruction, models = m)[[m]]
             flag = TRUE;
 
             for (j in 1:nrow(reconstructed.topology)) {
@@ -389,7 +386,7 @@ bootstrap.capri <- function(dataset,
     
     for (m in names(as.models(reconstruction))) {
         
-        curr.adj.matrix = as.adj.matrix(reconstruction, model = m)[[m]];
+        curr.adj.matrix = as.adj.matrix(reconstruction, models = m)[[m]];
         
         ## Save the edge confidence.
         

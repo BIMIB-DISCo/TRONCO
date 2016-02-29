@@ -19,6 +19,7 @@
 #' @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
 #' @param model The name of the selected regularization
 #' @param makeValid Transform the bootstrapped data into a valid 2-categories input data
+#' @importFrom bnlearn empty.graph set.arc
 #' @export as.bnlearn.network
 #'
 as.bnlearn.network <- function(x, 
@@ -34,12 +35,13 @@ as.bnlearn.network <- function(x,
     ## Check if the selected regularization is used in the model.
 
     if (!model %in% names(as.models(x))) {
-        stop(paste(regularization, " was not used to build the input TRONCO model!"))
+        stop(paste(model, " was not used to build the input TRONCO model!"))
     }
 
     ## Get genotypes and data.
 
     genotypes = as.genotypes(x)
+    genotypes = as.matrix(genotypes)
     genotypes = keysToNames(x, genotypes)
     names(colnames(genotypes)) = NULL
 
@@ -103,7 +105,7 @@ as.bnlearn.network <- function(x,
 #' data(test_model)
 #' tronco.kfold.eloss(test_model)
 #'
-#' @param data A reconstructed model (the output of tronco.capri or tronco.caprese)
+#' @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
 #' @param models The names of the selected regularizers (bic, aic or caprese)
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
@@ -129,7 +131,7 @@ tronco.kfold.eloss = function(x,
 
     for (model in models) {
         if (!model %in% names(as.models(x))) {
-            stop(paste(reg, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
+            stop(paste(model, " was not used to infer the input TRONCO object -- won\'t perform cross-validation!"))
         }
 
         ## Get bnlearn network.
@@ -193,6 +195,10 @@ tronco.kfold.eloss = function(x,
 #' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
 #' @param verbose Should I print messages?
 #' @importFrom bnlearn bn.cv
+#' @importFrom doParallel registerDoParallel  
+#' @importFrom foreach foreach %dopar%
+#' @importFrom iterators icount
+#' @importFrom parallel stopCluster makeCluster detectCores
 #' @export tronco.kfold.prederr
 #'
 tronco.kfold.prederr <- function(x,

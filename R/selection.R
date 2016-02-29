@@ -96,11 +96,11 @@ events.selection <- function(x,
 
         colnames =
             which(x$annotations[,2] %in% filter.in.names,
-                  arr.ind = T)
+                  arr.ind = TRUE)
 
         k =
             unique(x$annotations[which(x$annotations[ ,'event'] %in% filter.in.names,
-                                       arr.ind = T),
+                                       arr.ind = TRUE),
                                  'event'])
 
         cat(paste(' [', length(k), '/', length(filter.in.names), ' found].',
@@ -117,7 +117,7 @@ events.selection <- function(x,
                   paste(filter.out.names[1:shown], collapse=', '), ' ... '))
 
         colnames = which(x$annotations[,2] %in% filter.out.names,
-            arr.ind = T)
+            arr.ind = TRUE)
         cat(paste(' [',
                   length(colnames),
                   '/',
@@ -174,7 +174,7 @@ rank.recurrents <- function(x, n) {
 
     ## Get the names of the first n ranked.
     
-    sorted = sort(sums, decreasing = T)
+    sorted = sort(sums, decreasing = TRUE)
 
     ## print(sorted[1:20])
 

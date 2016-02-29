@@ -15,4 +15,9 @@ A list of parameters
 \description{
 Get parameters of a model
 }
+\examples{
+data(test_model)
+as.parameters(test_model)
+
+}
 

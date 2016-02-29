@@ -9,8 +9,8 @@
 #### which accompanies this distribution.
 
 
-# oncoPrint : plot a genotype
-# 
+#' oncoPrint : plot a genotype
+#' 
 #' @title oncoprint
 #' @param x A TRONCO compliant dataset
 #' @param excl.sort Boolean value, if TRUE sorts samples to enhance exclusivity of alterations
@@ -165,27 +165,27 @@ oncoprint <- function(x,
     }
 
     if (group.by.stage) {   
-        ord.stages = as.stages(x)[order(as.stages(x)), , drop = F]
+        ord.stages = as.stages(x)[order(as.stages(x)), , drop = FALSE]
         cat('Grouping samples by stage annotation.\n')
 
         aux.fun <- function(samp) {
             print(samp)
-            sub.data = data[, samp, drop= F]      
-            sub.data = sub.data[, order(colSums(sub.data), decreasing = FALSE), drop = F]
+            sub.data = data[, samp, drop= FALSE]      
+            sub.data = sub.data[, order(colSums(sub.data), decreasing = FALSE), drop = FALSE]
             return(sub.data)
         }
 
         new.data = NULL
-        u.stages = sort(unlist(unique(as.stages(x))), na.last = T)
+        u.stages = sort(unlist(unique(as.stages(x))), na.last = TRUE)
 
         ## print(str(ord.stages))
 
         for (i in u.stages) {
-            print(ord.stages[which(ord.stages == i), , drop=F])
+            print(ord.stages[which(ord.stages == i), , drop=FALSE])
             new.data = cbind(new.data, aux.fun(rownames(ord.stages[which(ord.stages == i), , drop= F])))
         }
         data = new.data
-        data = data[order(rowSums(data), decreasing = TRUE), , drop = F ]
+        data = data[order(rowSums(data), decreasing = TRUE), , drop = FALSE ]
     }
 
     ## Samples grouping via hasGroups.
@@ -236,7 +236,7 @@ oncoprint <- function(x,
     ## SAMPLES annotations: hits (total 1s per sample), stage or
     ## groups.
     
-    samples.annotation = data.frame(row.names = cn,  stringsAsFactors = F)
+    samples.annotation = data.frame(row.names = cn,  stringsAsFactors = FALSE)
     nmut = colSums(data)
 
     if (ann.hits)  samples.annotation$hits = nmut
@@ -369,7 +369,7 @@ oncoprint <- function(x,
         map.gradient = null.color
 
         for (i in 1:ntypes(obj)) {
-            events = as.events(obj, type = as.types(obj)[i])
+            events = as.events(obj, types = as.types(obj)[i])
             keys = rownames(events)
 
             if (ntypes(obj) > 1) {
@@ -380,10 +380,11 @@ oncoprint <- function(x,
                                            ## Are you sure (obj %in% # matrix)
                                            ## is not sufficient?
 
-                                           if (obj %in% matrix)
-                                               T
-                                           else
-                                               F},
+                                           if (obj %in% matrix) {
+                                               TRUE
+                                           } else {
+                                               FALSE
+                                           }},
                                        rownames(matrix)))]
                 sub.data = matrix[keys.subset, , drop = FALSE]
 
@@ -469,7 +470,7 @@ oncoprint <- function(x,
     ret =
         pheatmap(data, 
                  scale = "none", 
-                 col = map.gradient, 
+                 color = map.gradient, 
                  cluster_cols = samples.cluster,
                  cluster_rows = genes.cluster,
                  main = title,
@@ -480,7 +481,7 @@ oncoprint <- function(x,
                  annotation_row = genes.annotation,
                  annotation_colors = annotation_colors, 
                  border_color = border.color,
-                 border = T,
+                 border = TRUE,
                  margins = c(10,10),
                  cellwidth = cellwidth, 
                  cellheight = cellheight,
@@ -489,7 +490,7 @@ oncoprint <- function(x,
                  legend_labels = legend.labels,
                  legend.cex = legend.cex,
                  labels_row = gene.names,
-                 drop_levels = T,
+                 drop_levels = TRUE,
                  show_colnames = sample.id,
                  filename = file,
                  txt.stats = txt.stats,
@@ -500,7 +501,7 @@ oncoprint <- function(x,
 
     patt.table =
         gtable(widths = unit(c(7, 2), "null"),
-               height = unit(c(2, 7), "null"))
+               heights = unit(c(2, 7), "null"))
 
     patt.table = list()
     map.gradient = map.gradient[names(map.gradient) != 'Pattern']
@@ -513,13 +514,13 @@ oncoprint <- function(x,
 
         for (i in 1:length(patterns)) {
             genes.patt = as.events.in.patterns(x, patterns[i]) 
-            genes.patt.genos = data[rownames(genes.patt), , drop = F]
+            genes.patt.genos = data[rownames(genes.patt), , drop = FALSE]
 
 
             genes.patt.genos.gtable =
                 pheatmap(exclusivity.sort(genes.patt.genos)$M,
                          scale = "none",
-                         col = map.gradient,
+                         color = map.gradient,
                          cluster_cols = FALSE,
                          cluster_rows = FALSE,
                          main = paste('Pattern:', patterns[i]),
@@ -530,14 +531,14 @@ oncoprint <- function(x,
                          annotation_colors = annotation_colors,
                          annotation_legend  = FALSE,
                          border_color = border.color,
-                         border = T,
+                         border = TRUE,
                          cellwidth = 6,
                          cellheight = 6,
                          legend = FALSE,
                          labels_row = genes.patt[rownames(genes.patt.genos), 'event'],
-                         drop_levels = T,
+                         drop_levels = TRUE,
                          show_colnames = FALSE,
-                         silent = T,
+                         silent = TRUE,
                          ...)$gtable
 
             ## patt.table = gtable_add_grob(patt.table, genes.patt.genos.gtable, 2, 1)
@@ -1062,130 +1063,8 @@ genes.table.report <- function(x,
 }
 
 
-#' Generates stacked histogram
-#' @title genes.table.plot
-#'
-#' @param x A TRONCO compliant dataset
-#' @param name filename
-#' @param dir where to save the file
-#' @importFrom reshape2 melt
-#' @importFrom ggplot2 ggplot geom_bar
-#' @export genes.table.plot
-#' 
-genes.table.plot <- function(x, name, dir = getwd()) {  
-
-    cat('Preparing output table: creating alterations profiles and selecting events with minimum frequency.\n') 
-    alterations = sort.by.frequency(as.alterations(x))
-
-    cat('Stacked histogram with genes in the following order (head): ')
-    cat(head(as.genes(alterations)))
-    cat('\nRetrieving all events for the above genes.\n')
-
-    y = events.selection(x, filter.in.names = as.genes(alterations))
-    y = enforce.numeric(y)
-    ##  view(y)
-
-    ## print(ntypes(y))
-    ##  print(ngenes(y))
-
-    table =
-        matrix(rep(0, ntypes(y) * ngenes(y)),
-               ncol = ntypes(y),
-               nrow = ngenes(y))
-
-    rownames(table) = 1:ngenes(alterations)
-    colnames(table) = as.types(y)
-
-    cat('Populating histogram table.\n')
-    pb = txtProgressBar(1, ngenes(alterations), style = 3);      
-    for (i in 1:ngenes(alterations)) {
-        setTxtProgressBar(pb, i)  
-
-        g = colSums(as.gene(y, gene=as.genes(alterations)[i]))
-        table[i, ] = g
-    }
-    close(pb)
-
-    table = cbind(Rank=as.genes(alterations), table)
-    table.melt = melt(as.data.frame(table), id.var = 'Rank')  
-
-    ## print(table)
-    ## print(table.melt)
-
-
-    ## Problem, does not work well - can't assign colors in as.colors(y)
-    p = ggplot(table.melt, aes(x = Rank, y = value, fill = variable)) 
-    p + geom_bar(stat = "identity")
-    print(p)
-
-    return(table.melt)
-}
-
-
-# # cat('Latex tables (genes)')
-# genes.table.input = genes.report(input)
-# genes.table.sub1 = genes.report(sub1)
-# genes.table.sub2 = genes.report(sub2)
-# genes.table.sub3 = genes.report(sub3)
-# genes.table.sub4 = genes.report(sub4)
-# genes.table.nh = genes.report(non.hyper)
-# 
-# idx = rownames(genes.table.input)
-# full.table = cbind(TOT=genes.table.input[idx, 'Freq'], genes.table.sub1[idx, ])
-# full.table = cbind(
-# full.table, genes.table.sub2[idx, c('Amps', 'Dels', 'SNVs', 'Freq')], 
-# genes.table.sub3[idx, c('Amps', 'Dels', 'SNVs', 'Freq')], 
-# genes.table.sub4[idx, c('Amps', 'Dels', 'SNVs','Freq')])
-# 
-# print.table(full.table, 'Full-table', font = 10, width = 20)
-# print.table(pathway.genes.df, 'genes-list')
-
-
-# Calculate the likert
-# 
-# @importFrom likert likert
-# @param cluster_result Clustering result eg: [1, 2, 1, 3 ,3]
-# @param sample_stage Stage in which the sample is eg: [3, 3, 1, 2 ,2]
-# @param cluster_prefix Prefix to prefend to cluster data
-# @param sample_prefix Prefix to prefend to stage data
-# @export likertToClus
-#
-likertToClus <- function(cluster_result,
-                         sample_stage,
-                         cluster_prefix = '',
-                         sample_prefix = '') {
-
-    ## Check different value
-    
-    cluster = sort(unique(cluster_result), decreasing = T)
-    stage = sort(unique(sample_stage), na.last = T)
-
-    ## print('')
-
-    ## Create label ['1', '2'] + prefix='k' -> ['K1', 'K2']
-    
-    cluster_label = paste(cluster_prefix, cluster, sep = '')
-    stage_label = paste(sample_prefix, stage, sep = '')
-
-    ## Create factor based on clustering and stage data
-    
-    factor_c = factor(cluster_result, labels = cluster_label, exclude = NULL)
-    factor_s = factor(sample_stage, labels = stage_label, exclude = NULL)
-
-    ## data frame c1->stage, c2->cluster
-    
-    likert_df = data.frame(factor_s, factor_c)
-    col = likert_df[,1, drop=F]
-    
-    ## Calc likert
-    
-    result = likert(col, grouping = likert_df$factor_c)
-    result
-}
-
-
 #' @importFrom RColorBrewer brewer.pal
-"cluster.sensitivity" <- function(cluster.map,
+cluster.sensitivity <- function(cluster.map,
                                   reference,
                                   stages = NA,
                                   file = NA) {
@@ -1292,9 +1171,9 @@ likertToClus <- function(cluster_result,
 
     pheatmap(cluster.map,
              scale = "none",
-             cluster_col = F,
-             cluster_rows = F,
-             col = col,
+             cluster_cols = FALSE,
+             cluster_rows = FALSE,
+             color = col,
              main = main,
              fontsize = 6,
              fontsize_col = 8,
@@ -1302,11 +1181,11 @@ likertToClus <- function(cluster_result,
              annotation_row = annotation,
              annotation_colors = annotation_colors, 
              border_color = 'lightgray',
-             border = T,
+             border = TRUE,
              margins = c(10, 10),
              cellwidth = 25,
              cellheight = 2.2,
-             ## legend = T,
+             ## legend = TRUE,
              legend_breaks = 1:4,
              filename = file,
              gaps_col = 1:3,
@@ -1491,8 +1370,8 @@ lo <- function(rown,
 
     ## print(unit.c(main_height, treeheight_col, annot_col_height, mat_height, coln_height))
 
-    cw = convertWidth(mat_width - (length(gaps_col) * unit(4, "bigpts")), "bigpts", valueOnly = T) / ncol
-    ch = convertHeight(mat_height - (length(gaps_row) * unit(4, "bigpts")), "bigpts", valueOnly = T) / nrow
+    cw = convertWidth(mat_width - (length(gaps_col) * unit(4, "bigpts")), "bigpts", valueOnly = TRUE) / ncol
+    ch = convertHeight(mat_height - (length(gaps_row) * unit(4, "bigpts")), "bigpts", valueOnly = TRUE) / nrow
 
     ## Return minimal cell dimension in bigpts to decide if borders
     ## are drawn.
@@ -1523,7 +1402,7 @@ find_coordinates <- function(n, gaps, m = 1:n) {
 }
 
 
-draw_dendrogram <- function(hc, gaps, horizontal = T) {
+draw_dendrogram <- function(hc, gaps, horizontal = TRUE) {
     h = hc$height / max(hc$height) / 1.05
     m = hc$merge
     o = hc$order
@@ -1959,10 +1838,10 @@ heatmap_motor <- function(matrix,
 
     if (!is.na(filename)) {
         if (is.na(height)) {
-            height = convertHeight(gtable_height(res), "inches", valueOnly = T)
+            height = convertHeight(gtable_height(res), "inches", valueOnly = TRUE)
         }
         if (is.na(width)) {
-            width = convertWidth(gtable_width(res), "inches", valueOnly = T)
+            width = convertWidth(gtable_width(res), "inches", valueOnly = TRUE)
         }
 
         ## Get file type.
@@ -2050,14 +1929,14 @@ heatmap_motor <- function(matrix,
     ## Draw tree for the columns.
     
     if (!is.na(tree_col[[1]][1]) & treeheight_col != 0) {
-        elem = draw_dendrogram(tree_col, gaps_col, horizontal = T)
+        elem = draw_dendrogram(tree_col, gaps_col, horizontal = TRUE)
         res = gtable_add_grob(res, elem, t = 2, l = 3, name = "col_tree")
     }
 
     ## Draw tree for the rows.
     
     if (!is.na(tree_row[[1]][1]) & treeheight_row != 0) {
-        elem = draw_dendrogram(tree_row, gaps_row, horizontal = F)
+        elem = draw_dendrogram(tree_row, gaps_row, horizontal = FALSE)
         res = gtable_add_grob(res, elem, t = 4, l = 1, name = "row_tree")
     }
 
@@ -2094,12 +1973,12 @@ heatmap_motor <- function(matrix,
         ## Draw tracks.
         
         converted_annotation = convert_annotations(annotation_col, annotation_colors)
-        elem = draw_annotations(converted_annotation, border_color, gaps_col, fontsize, horizontal = T)
+        elem = draw_annotations(converted_annotation, border_color, gaps_col, fontsize, horizontal = TRUE)
         res = gtable_add_grob(res, elem, t = 3, l = 3, clip = "off", name = "col_annotation")
 
         ## Draw names.
         
-        elem = draw_annotation_names(annotation_col, fontsize, horizontal = T)
+        elem = draw_annotation_names(annotation_col, fontsize, horizontal = TRUE)
         res = gtable_add_grob(res, elem, t = 3, l = 4, clip = "off", name = "row_annotation_names")
     }
 
@@ -2109,12 +1988,12 @@ heatmap_motor <- function(matrix,
         ## Draw tracks.
         
         converted_annotation = convert_annotations(annotation_row, annotation_colors)
-        elem = draw_annotations(converted_annotation, border_color, gaps_row, fontsize, horizontal = F)
+        elem = draw_annotations(converted_annotation, border_color, gaps_row, fontsize, horizontal = FALSE)
         res = gtable_add_grob(res, elem, t = 4, l = 2, clip = "off", name = "row_annotation")
 
         ## Draw names.
         
-        elem = draw_annotation_names(annotation_row, fontsize, horizontal = F)
+        elem = draw_annotation_names(annotation_row, fontsize, horizontal = FALSE)
         res = gtable_add_grob(res, elem, t = 5, l = 2, clip = "off", name = "row_annotation_names")
     }
 
@@ -2143,20 +2022,20 @@ heatmap_motor <- function(matrix,
 }
 
 
-generate_breaks <- function(x, n, center = F) {
+generate_breaks <- function(x, n, center = FALSE) {
     if (center) {
-        m = max(abs(c(min(x, na.rm = T), max(x, na.rm = T))))
+        m = max(abs(c(min(x, na.rm = TRUE), max(x, na.rm = T))))
         res = seq(-m, m, length.out = n + 1)
     }
     else{
-        res = seq(min(x, na.rm = T), max(x, na.rm = T), length.out = n + 1)
+        res = seq(min(x, na.rm = TRUE), max(x, na.rm = TRUE), length.out = n + 1)
     }
 
     return(res)
 }
 
     scale_vec_colours = function(x, col = rainbow(10), breaks = NA) {
-        return(col[as.numeric(cut(x, breaks = breaks, include.lowest = T))])
+        return(col[as.numeric(cut(x, breaks = breaks, include.lowest = TRUE))])
     }
 
     scale_colours = function(mat, col = rainbow(10), breaks = NA) {
@@ -2211,8 +2090,8 @@ cluster_mat <- function(mat, distance, method) {
 
 
 scale_rows <- function(x) {
-    m = apply(x, 1, mean, na.rm = T)
-    s = apply(x, 1, sd, na.rm = T)
+    m = apply(x, 1, mean, na.rm = TRUE)
+    s = apply(x, 1, sd, na.rm = TRUE)
     return((x - m) / s)
 }
 
@@ -2522,13 +2401,13 @@ pheatmap <- function(mat,
                      annotation_colors = NA,
                      annotation_legend = TRUE,
                      drop_levels = TRUE,
-                     show_rownames = T,
-                     show_colnames = T,
+                     show_rownames = TRUE,
+                     show_colnames = TRUE,
                      main = NA,
                      fontsize = 10,
                      fontsize_row = fontsize,
                      fontsize_col = fontsize,
-                     display_numbers = F,
+                     display_numbers = FALSE,
                      number_format = "%.2f",
                      number_color = "grey30",
                      fontsize_number = 0.8 * fontsize,
@@ -2558,7 +2437,7 @@ pheatmap <- function(mat,
     if (scale != "none") {
         mat = scale_mat(mat, scale)
         if (is.na(breaks)) {
-            breaks = generate_breaks(mat, length(color), center = T)
+            breaks = generate_breaks(mat, length(color), center = TRUE)
         }
     }
 
@@ -2670,11 +2549,11 @@ pheatmap <- function(mat,
     ## Select only the ones present in the matrix.
     
     if (!is.na(annotation_col[[1]][1])) {
-        annotation_col = annotation_col[colnames(mat), , drop = F]
+        annotation_col = annotation_col[colnames(mat), , drop = FALSE]
     }
 
     if (!is.na(annotation_row[[1]][1])) {
-        annotation_row = annotation_row[rownames(mat), , drop = F]
+        annotation_row = annotation_row[rownames(mat), , drop = FALSE]
     }
 
     annotation = c(annotation_row, annotation_col)
@@ -2753,10 +2632,23 @@ pheatmap <- function(mat,
 }
 
 
-#  @importFrom circlize circos.clear circos.par chordDiagram 
-#  @importFrom circlize circos.trackPlotRegion circos.text
-pattern.plot <- function(x,
-                         group,
+#' tronco.pattern.plot : plot a genotype
+#' 
+#' @title tronco.pattern.plot
+#' @param x A TRONCO compliant dataset
+#' @param group A list of events (see as.events() for details)
+#' @param to A target event
+#' @param gap.cex cex parameter for gap
+#' @param legend.cex cex parameter for legend
+#' @param label.cex cex parameter for label
+#' @param title title
+#' @param mode can be 'circos' or 'barplot'
+#' @export tronco.pattern.plot
+#' @importFrom circlize circos.clear circos.par chordDiagram circos.text
+#' @importFrom circlize circos.trackPlotRegion get.cell.meta.data
+#' 
+tronco.pattern.plot <- function(x,
+                         group=as.events(x),
                          to,
                          gap.cex = 1.0,
                          legend.cex = 1.0,
@@ -2773,7 +2665,7 @@ pattern.plot <- function(x,
             c(keys,
               rownames(as.events(x,
                                  genes = group[i, 'event'],
-                                 types  =group[i, 'type'])))
+                                 types = group[i, 'type'])))
 
     cat('Group:\n')
     events.names = events[keys, , drop = FALSE]
@@ -2811,7 +2703,7 @@ pattern.plot <- function(x,
                     append(negative.samples, 
                            list(which.samples(x,
                                               gene = events.names[j, 'event'],
-                                              type= events.names[j, 'type'],
+                                              type = events.names[j, 'type'],
                                               neg = TRUE)))
 
         pattern.negative = Reduce(intersect, negative.samples)
@@ -2990,7 +2882,7 @@ pattern.plot <- function(x,
             barplot(summary,
                     5,
                     col = c('red', 'orange', 'darkgreen', 'gray'),
-                    horiz = F,
+                    horiz = FALSE,
                     space = 1,
                     las = 1,
                     main =
@@ -3014,7 +2906,7 @@ pattern.plot <- function(x,
             barplot(exclus[, 1],
                     ## widths,
                     col = link.color[1:length(keys)],
-                    horiz = T,
+                    horiz = TRUE,
                     space = 1,
                     las = 2,
                     main = paste0('Observations supporting \n hard-exclusivity'),
@@ -3030,7 +2922,7 @@ pattern.plot <- function(x,
                cex = 0.6  * legend.cex,
                pt.cex = 1,
                title = expression(bold('Table of observations')),
-               horiz=F,
+               horiz=FALSE,
                bty='n',
                legend =
                    c(paste(sum(matrix[1:length(keys) ,]), 'with 1 event (hard exclusivity)'),

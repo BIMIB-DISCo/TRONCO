@@ -27,9 +27,9 @@ score in a TRONCO model. It is possible to specify a subset of events
 or models if multiple reconstruction have been performed.
 }
 \examples{
-data(test_model)
-as.kfold.posterr(test_model)
-as.kfold.posterr(test_model, events=as.events(test_model)[5:15,])
+data(test_model_kfold)
+as.kfold.posterr(test_model_kfold)
+as.kfold.posterr(test_model_kfold, events=as.events(test_model)[5:15,])
 
 }
 

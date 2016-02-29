@@ -82,7 +82,7 @@ We will start by loading the TRONCO package in \textsc{R} along with an example 
 <<>>=
 library(TRONCO)
 data(aCML)
-hide.progress.bar <<- TRUE
+assign('hide.progress.bar', TRUE, inherit=TRUE)
 @
 
 We then use the function \texttt{show} to get a short summary of the aCML dataset that has just been loaded. 
@@ -145,11 +145,11 @@ hypo = annotate.description(hypo, 'CAPRI - Bionformatics aCML data (selected eve
 We show a new oncoprint of this latest dataset where we annotate the genes in \texttt{gene.hypotheses} in order to identify them. The sample names are also shown. 
 
 <<>>=
-dummy = oncoprint(hypo, gene.annot = list(priors= gene.hypotheses), sample.id = T, 
+dummy = oncoprint(hypo, gene.annot = list(priors= gene.hypotheses), sample.id = TRUE, 
 	font.row=12, font.column=5, cellheight=20, cellwidth=4)
 @
 <<include=FALSE,echo=FALSE>>=
-capture.output(oncoprint(hypo, gene.annot = list(priors= gene.hypotheses), sample.id = T, font.row=12, font.column=5, cellheight=20, cellwidth=4, file='onco-2.pdf'), file='NUL')
+capture.output(oncoprint(hypo, gene.annot = list(priors= gene.hypotheses), sample.id = TRUE, font.row=12, font.column=5, cellheight=20, cellwidth=4, file='onco-2.pdf'), file='NUL')
 @
 \incfig[ht]{onco-2}{0.9\textwidth}{Oncoprint output}{}
 
@@ -217,11 +217,11 @@ hypo = hypothesis.add.homologous(hypo)
 The final dataset that will be given as input to CAPRI is now finally shown. 
 
 <<>>=
-dummy = oncoprint(hypo, gene.annot = list(priors= gene.hypotheses), sample.id = T, 
+dummy = oncoprint(hypo, gene.annot = list(priors= gene.hypotheses), sample.id = TRUE, 
 	font.row=10, font.column=5, cellheight=15, cellwidth=4)
 @
 <<include=FALSE,echo=FALSE>>=
-capture.output(oncoprint(hypo, gene.annot = list(priors= gene.hypotheses), sample.id = T, font.row=10, font.column=5, cellheight=15, cellwidth=4, file='onco-5.pdf'), file='NUL')
+capture.output(oncoprint(hypo, gene.annot = list(priors= gene.hypotheses), sample.id = TRUE, font.row=10, font.column=5, cellheight=15, cellwidth=4, file='onco-5.pdf'), file='NUL')
 @
 \incfig[ht]{onco-5}{0.9\textwidth}{Oncoprint output}{}
 
@@ -238,7 +238,7 @@ model = tronco.capri(hypo, boot.seed = 12345, nboot=10)
 We then plot the model inferred by CAPRI with BIC as a regolarizator and we set some parameters to get a good plot; the confidence of each edge is shown both in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input). 
 
 <<figplot, fig=TRUE,include=FALSE>>=
-tronco.plot(model, fontsize = 13, scale.nodes = .6, regularization="bic", 
+tronco.plot(model, fontsize = 13, scale.nodes = .6, models="bic", 
 	confidence = c('tp', 'pr', 'hg'), height.logic = 0.25, legend.cex = .5, 
 	pathways =  list(priors= gene.hypotheses), label.edge.size=5)
 
@@ -257,7 +257,7 @@ model.boot = tronco.bootstrap(model, nboot=10)
 @
 
 <<figplotboot, fig=TRUE,include=FALSE>>=
-tronco.plot(model.boot, fontsize = 13, scale.nodes = .6, regularization="bic", 
+tronco.plot(model.boot, fontsize = 13, scale.nodes = .6, models="bic", 
 	confidence=c('npb'), height.logic = 0.25, legend.cex = .5, 
 	pathways = list(priors= gene.hypotheses), label.edge.size=10)
 

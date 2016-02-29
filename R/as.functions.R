@@ -268,10 +268,10 @@ as.hypotheses <- function(x, cause = NA, effect = NA) {
 
     hlist = x$hypotheses$hlist
 
-    list_c = x$annotations[hlist[,'cause'], c('type', 'event'), drop = F]
+    list_c = x$annotations[hlist[,'cause'], c('type', 'event'), drop = FALSE]
     colnames(list_c) = c('cause type', 'cause event')
     rownames(list_c) = NULL
-    list_e = x$annotations[hlist[,'effect'], c('type', 'event'), drop = F]
+    list_e = x$annotations[hlist[,'effect'], c('type', 'event'), drop = FALSE]
     colnames(list_e) = c('effect type', 'effect event')
     rownames(list_e) = NULL
 
@@ -809,6 +809,11 @@ as.joint.probs <- function(x,
 #' represent genotype keys - these can be resolved with function \code{keysToNames}. It is possible to
 #' specify a subset of events to build the matrix, a subset of models if multiple reconstruction have
 #' been performed. Also, either the observed or fit probabilities can be extracted.
+#' 
+#' #' @examples
+#' data(test_model)
+#' as.conditional.probs(test_model)
+#' as.conditional.probs(test_model, events=as.events(test_model)[5:15,])
 #'
 #' @title as.conditional.probs
 #' @param x A TRONCO model.
@@ -1167,9 +1172,9 @@ as.bootstrap.scores <- function(x,
 #' reconstruction have been performed. 
 #'
 #' @examples
-#' data(test_model)
-#' as.kfold.eloss(test_model)
-#' as.kfold.eloss(test_model, models='aic')
+#' data(test_model_kfold)
+#' as.kfold.eloss(test_model_kfold)
+#' as.kfold.eloss(test_model_kfold, models='aic')
 #'
 #' @title as.kfold.eloss
 #' @param x A TRONCO model.
@@ -1223,9 +1228,9 @@ as.kfold.eloss <- function(x,
 #' or models if multiple reconstruction have been performed. 
 #'
 #' @examples
-#' data(test_model)
-#' as.kfold.prederr(test_model)
-#' as.kfold.prederr(test_model, models='aic')
+#' data(test_model_kfold)
+#' as.kfold.prederr(test_model_kfold)
+#' as.kfold.prederr(test_model_kfold, models='aic')
 #'
 #' @title as.kfold.prederr
 #' @param x A TRONCO model.
@@ -1277,7 +1282,7 @@ as.kfold.prederr <- function(x,
         ## Filter out events if required.
 
         sel.events = apply(events, 1, function(z){paste(z, collapse = ' ')})
-        df = df[which(df$SELECTED %in% sel.events), , drop = F]
+        df = df[which(df$SELECTED %in% sel.events), , drop = FALSE]
 
         if(!values) df = df[, 1:3]
         
@@ -1296,9 +1301,9 @@ as.kfold.prederr <- function(x,
 #' or models if multiple reconstruction have been performed. 
 #'
 #' @examples
-#' data(test_model)
-#' as.kfold.posterr(test_model)
-#' as.kfold.posterr(test_model, events=as.events(test_model)[5:15,])
+#' data(test_model_kfold)
+#' as.kfold.posterr(test_model_kfold)
+#' as.kfold.posterr(test_model_kfold, events=as.events(test_model)[5:15,])
 #'
 #' @title as.kfold.posterr
 #' @param x A TRONCO model.
@@ -1439,6 +1444,11 @@ as.parents.pos <- function(x,
 #' Get parameters of a model
 #'
 #' @title as.parameters
+#' 
+#' @examples
+#' data(test_model)
+#' as.parameters(test_model)
+#' 
 #' @param x A TRONCO model.
 #' @return A list of parameters
 #' @export as.parameters
@@ -1448,26 +1458,6 @@ as.parameters <- function(x) {
     is.model(x)
 
     return(x$parameters) 
-}
-
-
-#' Remove models, hypothesis and patterns from a TRONCO model.
-#'
-#' @title as.dataset
-#' @param x A TRONCO model.
-#' @return A TRONCO model without models, hypothesis and patterns.
-#' @export as.dataset
-#'
-as.dataset <- function(x) {
-    is.compliant(x)
-    if (has.model(x)) {
-        ret = delete.model(x)
-    }
-    for (pattern in as.patterns(ret)) {
-        ret = delete.pattern(ret, pattern)
-    }
-
-    return(ret) 
 }
 
 
@@ -1847,8 +1837,8 @@ sort.by.frequency <- function(x, decreasing = TRUE, ...) {
     x = enforce.numeric(x)
     sums = colSums(x$genotypes)
 
-    x$genotypes = x$genotypes[, order(sums, decreasing = decreasing), drop = F]
-    x$annotations = x$annotations[colnames(x$genotypes), , drop = F]
+    x$genotypes = x$genotypes[, order(sums, decreasing = decreasing), drop = FALSE]
+    x$annotations = x$annotations[colnames(x$genotypes), , drop = FALSE]
 
     return(x)  
 }

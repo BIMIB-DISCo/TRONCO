@@ -8,6 +8,10 @@ import.GISTIC(x, filter.genes = NULL, filter.samples = NULL)
 }
 \arguments{
 \item{x}{Either a dataframe or a filename}
+
+\item{filter.genes}{A list of genes}
+
+\item{filter.samples}{A list of samples}
 }
 \value{
 A TRONCO compliant representation of the input CNAs.

@@ -1221,9 +1221,9 @@ remove.cycles <- function(adj.matrix,
         expansion =
             hypotheses.expansion(input_matrix = adj.matrix,
                                  map=hypotheses$hstructure,
-                                 hidden_and = F,
-                                 expand = T,
-                                 skip.disconnected = F);
+                                 hidden_and = FALSE,
+                                 expand = TRUE,
+                                 skip.disconnected = FALSE);
 
 
         for (i in 1:length(ordered.edges)) {
