@@ -47,11 +47,11 @@ export.mutex <- function(x,
     }
     if (length(label.amplification) >= 2) {
         amplification = 'amplification'
-        data = union.types(data, label.amplification[[1]], label.amplification[[2]], 'amplification', 'red')
+        data = merge.types(data, label.amplification[[1]], label.amplification[[2]], 'amplification', 'red')
     }
     if (length(label.amplification) > 2) {
         for (label in label.amplification[3:length(label.amplification)]) {
-            data = union.types(data, label, 'amplification', 'amplification', 'red')
+            data = merge.types(data, label, 'amplification', 'amplification', 'red')
         }
     }
 
@@ -62,11 +62,11 @@ export.mutex <- function(x,
     }
     if (length(label.deletion) >= 2) {
         deletion = 'deletion'
-        data = union.types(data, label.deletion[[1]], label.deletion[[2]], 'deletion', 'blue')
+        data = merge.types(data, label.deletion[[1]], label.deletion[[2]], 'deletion', 'blue')
     }
     if (length(label.deletion) > 2) {
         for (label in label.deletion[3:length(label.deletion)]) {
-            data = union.types(data, label, 'deletion', 'deletion', 'blue')
+            data = merge.types(data, label, 'deletion', 'deletion', 'blue')
         }
     }
 
@@ -77,11 +77,11 @@ export.mutex <- function(x,
     }
     if (length(label.mutation) >= 2) {
         mutation = 'mutation'
-        data = union.types(data, label.mutation[[1]], label.mutation[[2]], 'mutation', 'green')
+        data = merge.types(data, label.mutation[[1]], label.mutation[[2]], 'mutation', 'green')
     }
     if (length(label.mutation) > 2) {
         for (label in label.mutation[3:length(label.mutation)]) {
-            data = union.types(data, label, 'mutation', 'mutation', 'green')
+            data = merge.types(data, label, 'mutation', 'mutation', 'green')
         }
     }
 
@@ -143,7 +143,7 @@ export.mutex <- function(x,
     filepath = if (grepl("\\/$", filepath)) filepath else paste0(filepath, "/")
     con = paste0(filepath, filename)
     write(mutex.header, file = con, sep = "\t", ncolumns = length(mutex.header))
-    write.table(mutex.matrix, con, sep="\t", append = T, col.names = F, quote = F)
+    write.table(mutex.matrix, con, sep="\t", append = TRUE, col.names = FALSE, quote = FALSE)
 
     return(mutex.matrix)
 }
@@ -156,6 +156,7 @@ export.mutex <- function(x,
 #' @param x A TRONCO compliant dataset.
 #' @param map_hugo_entrez Hugo_Symbol-Entrez_Gene_Id map
 #' @param file output file name
+#' @importFrom R.matlab writeMat
 #' @export export.nbs.input
 #' 
 export.nbs.input <-function(x, 
@@ -249,20 +250,20 @@ import.mutex.groups <- function(file, fdr=.2, display = TRUE) {
     ## Remove header.
     
     cat(paste('*** Groups extracted - ', (nrow(x) -1), ' total groups.\n', sep=''))
-    x = x[-1, , drop = F]     # this is c('Score', 'q-val', 'Members')
+    x = x[-1, , drop = FALSE]     # this is c('Score', 'q-val', 'Members')
     x[, 1] = as.numeric(x[,1])          # fdr
     x[, 2] = as.numeric(x[,2])          # q-value
 
     ## Remove groups  with low fdr.
     
-    res = x[which(x[,1] < fdr), , drop = F] 
+    res = x[which(x[,1] < fdr), , drop = FALSE] 
 
     ## Remove duplicated groups (permutations).
     
     res.g = res[, 3:ncol(res)]
 
     for (i in 1:nrow(res.g))
-        res[i,3:ncol(res)] = sort(res.g[i,], na.last = T)   
+        res[i,3:ncol(res)] = sort(res.g[i,], na.last = TRUE)   
     res = res[!duplicated((res[ , 3:ncol(res), drop = FALSE])), ] 
 
     cat(paste('Selected ',
@@ -303,6 +304,10 @@ import.mutex.groups <- function(file, fdr=.2, display = TRUE) {
 
 #' Check if there are multiple sample in x, according to TCGA barcodes naming
 #' @title TCGA.multiple.samples
+#' 
+#' @examples
+#' data(test_dataset)
+#' TCGA.multiple.samples(test_dataset)
 #'
 #' @param x A TRONCO compliant dataset.
 #' @return A list of barcodes. NA if no duplicated barcode is found
@@ -318,7 +323,7 @@ TCGA.multiple.samples <- function(x) {
 
     if (length(patients) != nsamples(x)) {
         dup.samples.start = which(duplicated(samples.truncated)) 
-        dup.samples.last = which(duplicated(samples.truncated, fromLast = T))
+        dup.samples.last = which(duplicated(samples.truncated, fromLast = TRUE))
 
         return(sort(samples[c(dup.samples.start, dup.samples.last)])) 
     } else
@@ -328,6 +333,10 @@ TCGA.multiple.samples <- function(x) {
 
 #' If there are multiple sample in x, according to TCGA barcodes naming, remove them
 #' @title TCGA.remove.multiple.samples
+#' 
+#' @examples
+#' data(test_dataset)
+#' TCGA.remove.multiple.samples(test_dataset)
 #'
 #' @param x A TRONCO compliant dataset.
 #' @return A TRONCO compliant dataset
@@ -361,6 +370,10 @@ TCGA.remove.multiple.samples <- function(x) {
 
 #' Keep only the first 12 character of samples barcode if there are no duplicates
 #' @title TCGA.shorten.barcodes
+#' 
+#' @examples
+#' data(test_dataset)
+#' TCGA.shorten.barcodes(test_dataset)
 #'
 #' @param x A TRONCO compliant dataset.
 #' @return A TRONCO compliant dataset
@@ -404,7 +417,7 @@ TCGA.map.clinical.data <- function(file, sep='\t', column.samples, column.map) {
         read.delim(file = file,
                    sep = sep,
                    header = TRUE,
-                   stringsAsFactors = F)
+                   stringsAsFactors = FALSE)
 
     if (!(column.samples %in% colnames(data))) 
         stop(paste('Cannot find samples column \"',

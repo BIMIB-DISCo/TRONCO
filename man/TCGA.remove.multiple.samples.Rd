@@ -15,4 +15,9 @@ A TRONCO compliant dataset
 \description{
 If there are multiple sample in x, according to TCGA barcodes naming, remove them
 }
+\examples{
+data(test_dataset)
+TCGA.remove.multiple.samples(test_dataset)
+
+}
 

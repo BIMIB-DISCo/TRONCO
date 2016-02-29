@@ -7,13 +7,13 @@
 tronco.kfold.eloss(x, models = names(as.models(x)), runs = 10, k = 10)
 }
 \arguments{
+\item{x}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
+
 \item{models}{The names of the selected regularizers (bic, aic or caprese)}
 
 \item{runs}{a positive integer number, the number of times cross-validation will be run}
 
 \item{k}{a positive integer number, the number of groups into which the data will be split}
-
-\item{data}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
 }
 \description{
 Perform a k-fold cross-validation using the function bn.cv

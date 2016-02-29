@@ -15,4 +15,9 @@ A list of barcodes. NA if no duplicated barcode is found
 \description{
 Check if there are multiple sample in x, according to TCGA barcodes naming
 }
+\examples{
+data(test_dataset)
+TCGA.multiple.samples(test_dataset)
+
+}
 

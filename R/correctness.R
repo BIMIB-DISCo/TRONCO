@@ -12,6 +12,11 @@
 #' Check if 'x' is compliant with TRONCO's input: that is if it has dataframes 
 #' x$genotypes, x$annotations, x$types and x$stage (optional)
 #' @title is.compliant
+#' 
+#' @examples
+#' data(test_dataset)
+#' is.compliant(test_dataset)
+#' 
 #' @param x A TRONCO compliant dataset.
 #' @param err.fun string which identifies the function which called is.compliant
 #' @param stage boolean flag to check x$stage datagframe

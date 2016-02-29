@@ -21,4 +21,9 @@ on error stops the computation
 Check if 'x' is compliant with TRONCO's input: that is if it has dataframes 
 x$genotypes, x$annotations, x$types and x$stage (optional)
 }
+\examples{
+data(test_dataset)
+is.compliant(test_dataset)
+
+}
 

@@ -81,4 +81,7 @@ and sorted according to the number of mutations per sample - usefull when \code{
 
 \item{...}{other arguments to pass to pheatmap}
 }
+\description{
+oncoPrint : plot a genotype
+}
 

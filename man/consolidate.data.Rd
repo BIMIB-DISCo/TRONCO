@@ -19,4 +19,9 @@ Verify if the input data are consolidate, i.e., if there are events
 with 0 or 1 probability or indistinguishable in terms of
 observations
 }
+\examples{
+data(test_dataset)
+consolidate.data(test_dataset)
+
+}
 

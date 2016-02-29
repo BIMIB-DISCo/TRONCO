@@ -16,6 +16,10 @@
 #' observations
 #' 
 #' @title consolidate.data
+#' 
+#' @examples
+#' data(test_dataset)
+#' consolidate.data(test_dataset)
 #'
 #' @param x A TRONCO compliant dataset.
 #' @param print A boolean value stating whether to print of not the summary
@@ -254,7 +258,7 @@ rename.type <- function(x, old.name, new.name) {
             rownames(x$types)[which(rownames(x$types) == old.name)] = new.name
         } else {
             x$types =
-                x$types[!rownames(x$types) %in% list(old.name), , drop = F]
+                x$types[!rownames(x$types) %in% list(old.name), , drop = FALSE]
         }
     } else {
         stop(paste(old.name, 'not in as.types(x)'))
@@ -328,9 +332,9 @@ delete.type <- function(x, type) {
     if (type %in% as.types(x)) {
         events = as.events(x, types = setdiff(as.types(x), type))
 
-        x$genotypes = as.genotypes(x)[ , rownames(events), drop = F]
+        x$genotypes = as.genotypes(x)[ , rownames(events), drop = FALSE]
         x$annotations = events
-        x$types = x$types[which(rownames(x$types) != type), , drop = F]
+        x$types = x$types[which(rownames(x$types) != type), , drop = FALSE]
     } else {
         stop(paste(type, 'not in as.types(x)'))
     }
@@ -490,7 +494,7 @@ delete.hypothesis <- function(x, event = NA, cause = NA, effect = NA) {
     }
 
     x$hypotheses$num.hypotheses = x$hypotheses$num.hypotheses - 1
-    x$hypotheses$hlist = x$hypotheses$hlist[-to_remove, ,drop=F]
+    x$hypotheses$hlist = x$hypotheses$hlist[-to_remove, ,drop=FALSE]
 
     is.compliant(x)
 
@@ -520,8 +524,8 @@ delete.pattern <- function(x, pattern) {
     }
 
     x = delete.hypothesis(x, pattern)
-    x$annotations = x$annotations[-which(rownames(x$annotations) == pattern), , drop = F]
-    x$genotypes = x$genotypes[, -which(colnames(x$genotypes) == pattern), drop = F]
+    x$annotations = x$annotations[-which(rownames(x$annotations) == pattern), , drop = FALSE]
+    x$genotypes = x$genotypes[, -which(colnames(x$genotypes) == pattern), drop = FALSE]
     x$hypotheses$patterns[pattern] = NULL
     x$hypotheses$pvalues = NULL
 
@@ -600,7 +604,7 @@ delete.samples <- function(x, samples) {
         }
     }
 
-    x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, , drop = F]
+    x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, , drop = FALSE]
 
     if (stages) {
         x$stages = x$stages[!rownames(x$stages) %in% del, , drop = FALSE]

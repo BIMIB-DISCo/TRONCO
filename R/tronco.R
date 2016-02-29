@@ -45,7 +45,6 @@ NULL
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.caprese
-#' @import doParallel
 #' 
 tronco.caprese <- function(data,
                            lambda = 0.5,
@@ -190,8 +189,8 @@ tronco.caprese <- function(data,
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
 #' @importFrom bnlearn hc tabu
-#' @import igraph
-#' @import doParallel
+#' @importFrom igraph graph.adjacency get.adjacency graph.union edge
+#' @importFrom igraph get.shortest.paths
 #' 
 tronco.capri <- function(data,
                          command = "hc",
@@ -538,7 +537,10 @@ tronco.estimation <- function(reconstruction, error.rates = NA) {
 #' @param verbose Should I be verbose?
 #' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
 #' @return A TRONCO compliant object with reconstructed model
-#' @import doParallel
+#' @importFrom doParallel registerDoParallel  
+#' @importFrom foreach foreach %dopar%
+#' @importFrom iterators icount
+#' @importFrom parallel stopCluster makeCluster detectCores
 #' @export tronco.bootstrap
 #' 
 tronco.bootstrap <- function(reconstruction,
@@ -727,12 +729,14 @@ tronco.bootstrap <- function(reconstruction,
 #' @param pathways A vector containing pathways information as described in as.patterns()
 #' @param lwd Edge base lwd. Default 3
 #' @param annotate.sample = List of samples to search for events in model
+#' @param export.igraph If TRUE export the igraph object generated
 #' @param ... Additional arguments for RGraphviz plot function
 #' @return Information about the reconstructed model               
 #' @export tronco.plot
 #' @importFrom RColorBrewer brewer.pal.info brewer.pal
-#' @import Rgraphviz
-#' @import igraph
+#' @importFrom igraph graph.adjacency get.adjacency graph.union edge
+#' @importFrom igraph V V<- igraph.to.graphNEL igraph.from.graphNEL
+# importFrom Rgraphviz
 #' 
 tronco.plot <- function(x,
                         models = names(x$model),
@@ -760,9 +764,10 @@ tronco.plot <- function(x,
                         pathways = NULL,
                         lwd = 3,
                         annotate.sample = NA,
+                        export.igraph = FALSE,
                         ...
                         ) {
-    hidden.and = F
+    hidden.and = FALSE
 
     ## Checks if reconstruction exists.
     
@@ -814,7 +819,7 @@ tronco.plot <- function(x,
         pathways.color = 'red'
     }
 
-    sec = ifelse(length(models) == 2, T, F)
+    sec = ifelse(length(models) == 2, TRUE, FALSE)
 
     if (sec && !models[2] %in% names(x$model)) {
         stop(paste(models[2], "not in model"), call.=FALSE);
@@ -856,7 +861,7 @@ tronco.plot <- function(x,
                 mask = rep(T, nrow(z))
                 for(i in 1:nrow(z))
                     mask[i] = relations.filter(z[i, ]) 
-                return(z[mask, , drop = F])                              
+                return(z[mask, , drop = FALSE])                              
             })
 
         print(sel.relation)
@@ -898,8 +903,8 @@ tronco.plot <- function(x,
         c_matrix = adj.matrix$adj.matrix.pf
     }
 
-    if (all(c_matrix == F)
-        || (sec && all(primary$adj.matrix$adj.matrix.fit == F))) {
+    if (all(c_matrix == FALSE)
+        || (sec && all(primary$adj.matrix$adj.matrix.fit == FALSE))) {
         warning('No edge in adjacency matrix! Nothing to show here.')
         return(NULL)
     }
@@ -1228,7 +1233,7 @@ tronco.plot <- function(x,
 
     ## Record logic edge.
     
-    eAttrs$logic = rep(F, length(edge_names))
+    eAttrs$logic = rep(FALSE, length(edge_names))
     names(eAttrs$logic) = edge_names
 
     pval.names = c('hg', 'pr', 'tp')
@@ -1265,7 +1270,7 @@ tronco.plot <- function(x,
             ret$fontcolor = 'red'
             ret$label = paste0(ret$label, ' *')
         }
-        else if (c %in% c('pr', 'tp') && model == 'capri' && value > pvalue) {
+        else if (c %in% c('pr', 'tp') && model %in% c('bic', 'aic') && value > pvalue) {
             ret$fontcolor = 'red'
             ret$label = paste0(ret$label, ' *')
         } else {
@@ -1322,6 +1327,7 @@ tronco.plot <- function(x,
                 }
 
                 conf_p = conf_sel
+                mod = ''
 
                 if (!c %in% pval.names) {
                     if (sec && primary$adj.matrix$adj.matrix.fit[conf_from, conf_to] == 0) {
@@ -1634,6 +1640,10 @@ tronco.plot <- function(x,
         dev.copy2pdf(file = file)
     }
     cat('\n')
+
+    if (export.igraph) {
+        return(c(igraph.from.graphNEL(graph), nAttrs, eAttrs))
+    }
 }
 
 
@@ -2034,7 +2044,7 @@ tronco.consensus.plot <- function(models,
 
     ## Record logic edge.
     
-    eAttrs$logic = rep(F, length(edge_names))
+    eAttrs$logic = rep(FALSE, length(edge_names))
     names(eAttrs$logic) = edge_names
 
 
@@ -2103,7 +2113,7 @@ tronco.consensus.plot <- function(models,
             if (substr(from, start = 1, stop = 5) == 'UPAND')
                 eAttrs$color[e] = 'darkgreen'
         } else if (substr(from, start=1, stop=1) == '*') {
-            eAttrs$logic[e] = T
+            eAttrs$logic[e] = TRUE
             eAttrs$arrowsize[e] = 0
             eAttrs$color[e] = 'black'
         }

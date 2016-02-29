@@ -657,9 +657,9 @@ hypothesis.add.group <- function(x,
                function(g, x) {
                    ## Isn't (nevents(x, genes = g) > 1) enough?
                    if (nevents(x, genes = g) > 1) {
-                       T
+                       TRUE
                    } else { 
-                       F 
+                       FALSE
                    }
                },
                x)
@@ -804,9 +804,11 @@ hypothesis.add.homologous <- function(x,
     hom.group =
         lapply(genes,
                function(g, x) {
-                   if (nevents(x, genes = g) > 1) 
-                       T
-                   else F
+                   if (nevents(x, genes = g) > 1) {
+                       TRUE
+                   } else {
+                    FALSE
+                   }
                },
                x)
 
@@ -916,12 +918,11 @@ hypothesis.add.homologous <- function(x,
 # @param hidden_and Should I visualize hidden and?
 # @param expand Should I expand the hypotheses?
 # @param skip.disconnected Hide disconnected node
-# @import igraph
 #
 hypotheses.expansion <- function(input_matrix, 
                                  map = list(),
-                                 hidden_and = T,
-                                 expand = T,
+                                 hidden_and = TRUE,
+                                 expand = TRUE,
                                  skip.disconnected = TRUE
                                  ) {
     
@@ -1063,11 +1064,11 @@ hypotheses.expansion <- function(input_matrix,
                 }
             }
         }
-        min_matrix = get.adjacency(min_graph, sparse = F)
+        min_matrix = get.adjacency(min_graph, sparse = FALSE)
     }
 
     ## Now expand the hidden AND.
-    if (hidden_and == F) {
+    if (hidden_and == FALSE) {
         
         ## Sort col and row (igraph wants the same order).
         
