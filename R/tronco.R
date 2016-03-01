@@ -1642,7 +1642,13 @@ tronco.plot <- function(x,
     cat('\n')
 
     if (export.igraph) {
-        return(c(igraph.from.graphNEL(graph), nAttrs, eAttrs))
+        output = list()
+        output$graph = igraph.from.graphNEL(graph)
+        output$nodes = nAttrs
+        output$edges = eAttrs
+        output$description = title
+        output$models = models
+        return(output)
     }
 }
 

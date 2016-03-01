@@ -458,5 +458,155 @@ sample.RColorBrewer.colors <- function(palette, ncolors) {
     return(colors)
 }
 
+#' Create a graphML object which can be imported in cytoscape
+#' This function is based on the tronco.plot fuction
+#' 
+#' @title  export.graphml
+#' 
+#' @examples
+#' data(test_model)
+#' export.graphml(test_model, file='text.xml', scale.nodes=0.3)
+#'
+#' @param x A TRONCO compliant dataset
+#' @param file Where to save the output
+#' @param ... parameters for tronco.plot
+#' @export export.graphml
+#' @importFrom igraph write.graph V V<- set.vertex.attribute
+#' @importFrom igraph set.edge.attribute set.graph.attribute
+#' 
+export.graphml <- function(x, file, ...) {
+
+    is.compliant(x)
+    is.model(x)
+
+    plot.output = tronco.plot(x, export.igraph = TRUE, ...)
+    graph = plot.output$graph
+    nodes = plot.output$nodes
+    edges = plot.output$edges
+    description = plot.output$description
+    models = plot.output$models
+    node.names = V(graph)$name
+    edge.names = names(edges$label)
+
+    ## Display information about vertex name
+
+    V(graph)$name = V(graph)$label
+
+    ## Prepare and save vertex label
+
+    vertex.label = sapply(node.names, function(node) {
+        return(gsub("\\", "", nodes$label[node], fixed = TRUE))
+    })
+    V(graph)$label = vertex.label
+
+    ## Prepare and save vertex type
+
+    vertex.type = sapply(node.names, function(node) {
+        if (is.logic.node(node)) {
+            return('')
+        }
+        return(as.events(x)[node,'type'])
+    })
+    graph = set.vertex.attribute(graph, 'type', value=vertex.type)
+    
+    ## Prepare and save vertex bg color
+
+    vertex.fillcolor = sapply(node.names, function(node){
+        rgb(t(col2rgb(nodes$fillcolor[node])), maxColorValue = 255)
+    })
+    graph = set.vertex.attribute(graph, 'fillcolor', value=vertex.fillcolor)
+
+    ## Prepare and save vertex font color
+
+    vertex.fontcolor = sapply(node.names, function(node){
+        rgb(t(col2rgb(nodes$fontcolor[node])), maxColorValue = 255)
+    })
+    graph = set.vertex.attribute(graph, 'fontcolor', value=vertex.fontcolor)
+
+    ## Prepare and save vertex border color
+
+    vertex.bordercolor = sapply(node.names, function(node){
+        rgb(t(col2rgb(nodes$color[node])), maxColorValue = 255)
+    })
+    graph = set.vertex.attribute(graph, 'bordercolor', value=vertex.bordercolor)
+
+    ## Prepare and save vertex shape
+
+    vertex.shape = sapply(node.names, function(node){
+        shape = nodes$shape[node]
+        if (shape == 'box') {
+            return('Rectangle')
+        }
+        return(shape)
+    })
+    graph = set.vertex.attribute(graph, 'shape', value=vertex.shape)
+
+    ## Prepare and save vertex width
+
+    vertex.width = sapply(node.names, function(node){
+        return(nodes$width[node] * 50)
+    })
+    graph = set.vertex.attribute(graph, 'width', value=vertex.width)
+
+    ## Prepare and save vertex height
+
+    vertex.height = sapply(node.names, function(node){
+        return(nodes$height[node] * 50)
+    })
+    graph = set.vertex.attribute(graph, 'height', value=vertex.height)
+
+    ## Prepare and save label fontsize
+
+    vertex.fontsize = sapply(node.names, function(node){
+        return(nodes$fontsize[node] * 1.5)
+    })
+    graph = set.vertex.attribute(graph, 'fontsize', value=vertex.fontsize)
+
+    ## Prepare and save border width
+
+    vertex.borderwidth = sapply(node.names, function(node){
+        return(nodes$lwd[node])
+    })
+    graph = set.vertex.attribute(graph, 'borderwidth', value=vertex.borderwidth)
+
+    ## Prepare and save vertex shape
+
+    edge.line = sapply(edge.names, function(edge){
+        line = edges$lty[edge]
+        if (line == 'dashed') {
+            return('Dash')
+        }
+        return('Solid')
+    })
+    graph = set.edge.attribute(graph, 'line', value=edge.line)
+
+    ## Prepare and save arrow type
+
+    edge.arrow = sapply(edge.names, function(edge){
+        arrow = edges$arrowsize[edge]
+        if (arrow == 1) {
+            return('True')
+        }
+        return('False')
+    })
+    graph = set.edge.attribute(graph, 'arrow', value=edge.arrow)
+
+    ## Prepare and save vertex border color
+
+    edge.color = sapply(edge.names, function(edge){
+        rgb(t(col2rgb(edges$color[edge])), maxColorValue = 255)
+    })
+    graph = set.edge.attribute(graph, 'color', value=edge.color)
+    graph = set.graph.attribute(graph, 'name', description)
+    graph = set.graph.attribute(graph, 'models', paste(x$parameters$algorithm, 
+                                                       models, collapse=' - '))
+    graph = set.graph.attribute(graph,
+                                'informations',
+                                paste0('Generated with TRONCO v', packageVersion('TRONCO')))
+
+
+    write.graph(graph, file=file, format='graphml')
+}
+
 
 #### end of file -- external.R
