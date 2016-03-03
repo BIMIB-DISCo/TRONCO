@@ -591,15 +591,19 @@ export.graphml <- function(x, file, ...) {
     })
     graph = set.edge.attribute(graph, 'arrow', value=edge.arrow)
 
-    ## Prepare and save vertex border color
+    ## Prepare and save edge color
 
     edge.color = sapply(edge.names, function(edge){
         rgb(t(col2rgb(edges$color[edge])), maxColorValue = 255)
     })
     graph = set.edge.attribute(graph, 'color', value=edge.color)
+
+    ## Prepare and save graph attributes
+
     graph = set.graph.attribute(graph, 'name', description)
-    graph = set.graph.attribute(graph, 'models', paste(x$parameters$algorithm, 
-                                                       models, collapse=' - '))
+    graph = set.graph.attribute(graph, 
+                                'models',
+                                paste(x$parameters$algorithm, models, collapse=' - '))
     graph = set.graph.attribute(graph,
                                 'informations',
                                 paste0('Generated with TRONCO v', packageVersion('TRONCO')))
