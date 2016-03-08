@@ -19,10 +19,13 @@
 #' @export hypothesis.add
 #'
 hypothesis.add <- function(data,
-                           pattern.label, 
-                           lifted.pattern, 
-                           pattern.effect = "*", 
-                           pattern.cause = "*" ) {
+                           pattern.label,
+                           lifted.pattern,
+                           pattern.effect = "*",
+                           pattern.cause = "*") {
+
+
+    pattern.label = gsub("\ss+", "_", pattern.label)
 
     # check if there is a reconstructed model
     if(has.model(data)) {
