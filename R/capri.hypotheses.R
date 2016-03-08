@@ -25,7 +25,7 @@ hypothesis.add <- function(data,
                            pattern.cause = "*") {
 
 
-    pattern.label = gsub("\ss+", "_", pattern.label)
+    pattern.label = gsub('[[:space:]]+', '_', pattern.label)
 
     # check if there is a reconstructed model
     if(has.model(data)) {
