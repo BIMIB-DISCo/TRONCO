@@ -4,3 +4,8 @@ r:
   - release
   - devel
 cache: packages
+  
+branches:
+  only:
+    - master
+    - development
