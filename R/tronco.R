@@ -1403,7 +1403,7 @@ tronco.bootstrap <- function(reconstruction,
 #' data(test_model)
 #' tronco.plot(test_model)
 #'
-#' @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
+#' @param x A reconstructed model (the output of the inference by a tronco function)
 #' @param models A vector containing the names of regularizators used (BIC, AIC or CAPRESE)
 #' @param fontsize For node names. Default NA for automatic rescaling
 #' @param height Proportion node height - node width. Default height 2
