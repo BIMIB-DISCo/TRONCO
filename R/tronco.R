@@ -362,6 +362,634 @@ tronco.capri <- function(data,
 }
 
 
+#' Reconstruct a progression model using Edmonds algorithm combined with probabilistic causation
+#'
+#' @examples
+#' data(test_dataset)
+#' recon = tronco.edmonds(test_dataset)
+#' tronco.plot(recon)
+#'
+#' @title tronco edmonds
+#' @param data A TRONCO compliant dataset.
+#' @param regularization Select the regularization for the likelihood estimation, e.g., BIC, AIC. 
+#' @param do.boot A parameter to disable/enable the estimation of the error rates give the reconstructed model.
+#' @param nboot Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores. 
+#' @param pvalue Pvalue to accept/reject the valid selective advantage relations. 
+#' @param min.boot Minimum number of bootstrap sampling to be performed. 
+#' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
+#' @param boot.seed Initial seed for the bootstrap random sampling.
+#' @param do.estimation A parameter to disable/enable the estimation of the error rates give the reconstructed model.
+#' @param silent A parameter to disable/enable verbose messages.
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.edmonds
+#' @importFrom bnlearn hc tabu
+#' @importFrom igraph graph.adjacency get.adjacency graph.union edge
+#' @importFrom igraph get.shortest.paths
+#' @importFrom infotheo mutinformation
+#' 
+tronco.edmonds <- function(data,
+                         regularization = "none", 
+                         do.boot = TRUE, 
+                         nboot = 100, 
+                         pvalue = 0.05, 
+                         min.boot = 3, 
+                         min.stat = TRUE, 
+                         boot.seed = NULL, 
+                         do.estimation = FALSE, 
+                         silent = FALSE ) {
+
+    ## Enforce data to be numeric
+    data = enforce.numeric(data)
+
+    ##
+    ## DEV VERSION
+    ##
+    if (do.estimation) {
+        if (silent == FALSE) {
+            cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
+        }
+        do.estimation = FALSE
+    }
+
+    ## Check for the inputs to be correct.
+    
+    if (is.null(data) || is.null(data$genotypes)) {
+        stop("The dataset given as input is not valid.");
+    }
+    
+    if (is.null(data$hypotheses)) {
+        data$hypotheses = NA;
+    }
+    
+    if (
+        pvalue < 0 || pvalue > 1) {
+        stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
+    }
+
+    ## Check for the input to be compliant.
+    
+    is.compliant(data)
+
+    ## Reconstruct the reconstruction with Edmonds.
+    
+    if (is.null(boot.seed)) {
+        my.seed = "NULL"    
+    }
+    else {
+        my.seed = boot.seed;
+    }
+    if (silent == FALSE) {
+        cat('*** Checking input events.\n')
+        invalid = consolidate.data(data, TRUE)
+        if (length(unlist(invalid)) > 0) warning(
+            "Input events should be consolidated - see consolidate.data."
+        );
+
+        cat(paste0(
+            '*** Inferring a progression model with the following settings.\n',
+            '\tDataset size: n = ',
+            nsamples(data),
+            ', m = ',
+            nevents(data), '.\n',
+            '\tAlgorithm: Edmonds with \"',
+            paste0(regularization, collapse = ", "),
+            '\" regularization and \"',
+            '\tRandom seed: ',
+            my.seed, '.\n',
+            '\tBootstrap iterations (Wilcoxon): ',
+            ifelse(do.boot, nboot, 'disabled'), '.\n',
+            ifelse(do.boot, 
+                   paste0('\t\texhaustive bootstrap: ',
+                          min.stat,
+                          '.\n\t\tp-value: ',
+                          pvalue,
+                          '.\n\t\tminimum bootstrapped scores: ',
+                          min.boot, '.\n'), '')        
+        ))
+    }
+
+    reconstruction =
+        edmonds.fit(data$genotypes,
+                  regularization = regularization,
+                  do.boot = do.boot,
+                  nboot = nboot,
+                  pvalue = pvalue,
+                  min.boot = min.boot,
+                  min.stat = min.stat,
+                  boot.seed = boot.seed,
+                  do.estimation = do.estimation,
+                  silent = silent);
+
+    rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
+    colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
+
+    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
+    colnames(reconstruction$confidence) = "confidence";
+    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+
+    for (i in 1:length(reconstruction$model)) {
+
+        ## Set rownames and colnames to the probabilities.
+        
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
+
+        ## Set rownames and colnames to the parents positions.
+        
+        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
+
+        ## Set rownames and colnames to the adjacency matrices.
+        
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+
+        if (do.estimation == TRUE) {
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+        }
+    }
+
+    ## Structure to save the results.
+    
+    results = data;
+    results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
+    results$confidence = reconstruction$confidence;
+    results$model = reconstruction$model;
+    results$parameters = reconstruction$parameters;
+    results$execution.time = reconstruction$execution.time;
+
+    ## Add BIC/AIC/LogLik informations
+
+    if (!silent) {
+        cat('*** Evaluating BIC / AIC / LogLik informations.\n')
+    }
+
+    if ("bic" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'bic')
+        score = BIC(bayes.net$net, data = bayes.net$data)
+        logLik = logLik(bayes.net$net, data = bayes.net$data)
+        results$model$bic$score = score
+        results$model$bic$logLik = logLik
+    }
+
+    if ("aic" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'aic')
+        score = AIC(bayes.net$net, data = bayes.net$data)
+        logLik = logLik(bayes.net$net, data = bayes.net$data)
+        results$model$aic$score = score
+        results$model$aic$logLik = logLik
+    }
+
+    ## the reconstruction has been completed.
+    
+    if (!silent)
+        cat(paste(
+            "The reconstruction has been successfully completed in", 
+            format(.POSIXct(round(reconstruction$execution.time[3],
+                                  digits = 0),
+                            tz = "GMT"),
+                   "%Hh:%Mm:%Ss"), 
+            "\n"));
+
+    return(results);
+}
+
+
+#' Reconstruct a progression model using Chow Liu algorithm combined with probabilistic causation
+#'
+#' @examples
+#' data(test_dataset)
+#' recon = tronco.chow.liu(test_dataset)
+#' tronco.plot(recon)
+#'
+#' @title tronco chow liu
+#' @param data A TRONCO compliant dataset.
+#' @param regularization Select the regularization for the likelihood estimation, e.g., BIC, AIC. 
+#' @param do.boot A parameter to disable/enable the estimation of the error rates give the reconstructed model.
+#' @param nboot Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores. 
+#' @param pvalue Pvalue to accept/reject the valid selective advantage relations. 
+#' @param min.boot Minimum number of bootstrap sampling to be performed. 
+#' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
+#' @param boot.seed Initial seed for the bootstrap random sampling.
+#' @param do.estimation A parameter to disable/enable the estimation of the error rates give the reconstructed model.
+#' @param silent A parameter to disable/enable verbose messages.
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.chow.liu
+#' @importFrom bnlearn hc tabu
+#' @importFrom igraph graph.adjacency get.adjacency graph.union edge
+#' @importFrom igraph get.shortest.paths
+#' @importFrom gRapHD minForest
+#' 
+tronco.chow.liu <- function(data,
+                         regularization = c("bic","aic"), 
+                         do.boot = TRUE, 
+                         nboot = 100, 
+                         pvalue = 0.05, 
+                         min.boot = 3, 
+                         min.stat = TRUE, 
+                         boot.seed = NULL, 
+                         do.estimation = FALSE, 
+                         silent = FALSE ) {
+
+    ## Enforce data to be numeric
+    data = enforce.numeric(data)
+
+    ##
+    ## DEV VERSION
+    ##
+    if (do.estimation) {
+        if (silent == FALSE) {
+            cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
+        }
+        do.estimation = FALSE
+    }
+
+    ## Check for the inputs to be correct.
+    
+    if (is.null(data) || is.null(data$genotypes)) {
+        stop("The dataset given as input is not valid.");
+    }
+    
+    if (is.null(data$hypotheses)) {
+        data$hypotheses = NA;
+    }
+    
+    if (
+        pvalue < 0 || pvalue > 1) {
+        stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
+    }
+
+    ## Check for the input to be compliant.
+    
+    is.compliant(data)
+
+    ## Reconstruct the reconstruction with Chow Liu.
+    
+    if (is.null(boot.seed)) {
+        my.seed = "NULL"    
+    }
+    else {
+        my.seed = boot.seed;
+    }
+    if (silent == FALSE) {
+        cat('*** Checking input events.\n')
+        invalid = consolidate.data(data, TRUE)
+        if (length(unlist(invalid)) > 0) warning(
+            "Input events should be consolidated - see consolidate.data."
+        );
+
+        cat(paste0(
+            '*** Inferring a progression model with the following settings.\n',
+            '\tDataset size: n = ',
+            nsamples(data),
+            ', m = ',
+            nevents(data), '.\n',
+            '\tAlgorithm: Chow Liu with \"',
+            paste0(regularization, collapse = ", "),
+            '\" regularization and \"',
+            '\tRandom seed: ',
+            my.seed, '.\n',
+            '\tBootstrap iterations (Wilcoxon): ',
+            ifelse(do.boot, nboot, 'disabled'), '.\n',
+            ifelse(do.boot, 
+                   paste0('\t\texhaustive bootstrap: ',
+                          min.stat,
+                          '.\n\t\tp-value: ',
+                          pvalue,
+                          '.\n\t\tminimum bootstrapped scores: ',
+                          min.boot, '.\n'), '')        
+        ))
+    }
+
+    reconstruction =
+        chow.liu.fit(data$genotypes,
+                  regularization = regularization,
+                  do.boot = do.boot,
+                  nboot = nboot,
+                  pvalue = pvalue,
+                  min.boot = min.boot,
+                  min.stat = min.stat,
+                  boot.seed = boot.seed,
+                  do.estimation = do.estimation,
+                  silent = silent);
+
+    rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
+    colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
+
+    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
+    colnames(reconstruction$confidence) = "confidence";
+    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+
+    for (i in 1:length(reconstruction$model)) {
+
+        ## Set rownames and colnames to the probabilities.
+        
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
+
+        ## Set rownames and colnames to the parents positions.
+        
+        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
+
+        ## Set rownames and colnames to the adjacency matrices.
+        
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+
+        if (do.estimation == TRUE) {
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+        }
+    }
+
+    ## Structure to save the results.
+    
+    results = data;
+    results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
+    results$confidence = reconstruction$confidence;
+    results$model = reconstruction$model;
+    results$parameters = reconstruction$parameters;
+    results$execution.time = reconstruction$execution.time;
+
+    ## Add BIC/AIC/LogLik informations
+
+    if (!silent) {
+        cat('*** Evaluating BIC / AIC / LogLik informations.\n')
+    }
+
+    if ("bic" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'bic')
+        score = BIC(bayes.net$net, data = bayes.net$data)
+        logLik = logLik(bayes.net$net, data = bayes.net$data)
+        results$model$bic$score = score
+        results$model$bic$logLik = logLik
+    }
+
+    if ("aic" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'aic')
+        score = AIC(bayes.net$net, data = bayes.net$data)
+        logLik = logLik(bayes.net$net, data = bayes.net$data)
+        results$model$aic$score = score
+        results$model$aic$logLik = logLik
+    }
+
+    ## the reconstruction has been completed.
+    
+    if (!silent)
+        cat(paste(
+            "The reconstruction has been successfully completed in", 
+            format(.POSIXct(round(reconstruction$execution.time[3],
+                                  digits = 0),
+                            tz = "GMT"),
+                   "%Hh:%Mm:%Ss"), 
+            "\n"));
+
+    return(results);
+}
+
+
+#' Reconstruct a progression model using Prim algorithm combined with probabilistic causation
+#'
+#' @examples
+#' data(test_dataset)
+#' recon = tronco.prim(test_dataset)
+#' tronco.plot(recon)
+#'
+#' @title tronco prim
+#' @param data A TRONCO compliant dataset.
+#' @param regularization Select the regularization for the likelihood estimation, e.g., BIC, AIC. 
+#' @param do.boot A parameter to disable/enable the estimation of the error rates give the reconstructed model.
+#' @param nboot Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores. 
+#' @param pvalue Pvalue to accept/reject the valid selective advantage relations. 
+#' @param min.boot Minimum number of bootstrap sampling to be performed. 
+#' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
+#' @param boot.seed Initial seed for the bootstrap random sampling.
+#' @param do.estimation A parameter to disable/enable the estimation of the error rates give the reconstructed model.
+#' @param silent A parameter to disable/enable verbose messages.
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.prim
+#' @importFrom bnlearn hc tabu
+#' @importFrom igraph graph.adjacency get.adjacency graph.union edge
+#' @importFrom igraph get.shortest.paths
+#' @importFrom igraph minimum.spanning.tree
+#' @importFrom infotheo mutinformation
+#' 
+tronco.prim <- function(data,
+                         regularization = "none", 
+                         do.boot = TRUE, 
+                         nboot = 100, 
+                         pvalue = 0.05, 
+                         min.boot = 3, 
+                         min.stat = TRUE, 
+                         boot.seed = NULL, 
+                         do.estimation = FALSE, 
+                         silent = FALSE ) {
+
+    ## Enforce data to be numeric
+    data = enforce.numeric(data)
+
+    ##
+    ## DEV VERSION
+    ##
+    if (do.estimation) {
+        if (silent == FALSE) {
+            cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
+        }
+        do.estimation = FALSE
+    }
+
+    ## Check for the inputs to be correct.
+    
+    if (is.null(data) || is.null(data$genotypes)) {
+        stop("The dataset given as input is not valid.");
+    }
+    
+    if (is.null(data$hypotheses)) {
+        data$hypotheses = NA;
+    }
+    
+    if (
+        pvalue < 0 || pvalue > 1) {
+        stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
+    }
+
+    ## Check for the input to be compliant.
+    
+    is.compliant(data)
+
+    ## Reconstruct the reconstruction with Prim.
+    
+    if (is.null(boot.seed)) {
+        my.seed = "NULL"    
+    }
+    else {
+        my.seed = boot.seed;
+    }
+    if (silent == FALSE) {
+        cat('*** Checking input events.\n')
+        invalid = consolidate.data(data, TRUE)
+        if (length(unlist(invalid)) > 0) warning(
+            "Input events should be consolidated - see consolidate.data."
+        );
+
+        cat(paste0(
+            '*** Inferring a progression model with the following settings.\n',
+            '\tDataset size: n = ',
+            nsamples(data),
+            ', m = ',
+            nevents(data), '.\n',
+            '\tAlgorithm: Prim with \"',
+            paste0(regularization, collapse = ", "),
+            '\" regularization and \"',
+            '\tRandom seed: ',
+            my.seed, '.\n',
+            '\tBootstrap iterations (Wilcoxon): ',
+            ifelse(do.boot, nboot, 'disabled'), '.\n',
+            ifelse(do.boot, 
+                   paste0('\t\texhaustive bootstrap: ',
+                          min.stat,
+                          '.\n\t\tp-value: ',
+                          pvalue,
+                          '.\n\t\tminimum bootstrapped scores: ',
+                          min.boot, '.\n'), '')        
+        ))
+    }
+
+    reconstruction =
+        prim.fit(data$genotypes,
+                  regularization = regularization,
+                  do.boot = do.boot,
+                  nboot = nboot,
+                  pvalue = pvalue,
+                  min.boot = min.boot,
+                  min.stat = min.stat,
+                  boot.seed = boot.seed,
+                  do.estimation = do.estimation,
+                  silent = silent);
+
+    rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
+    colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
+
+    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
+    colnames(reconstruction$confidence) = "confidence";
+    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+
+    for (i in 1:length(reconstruction$model)) {
+
+        ## Set rownames and colnames to the probabilities.
+        
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
+
+        ## Set rownames and colnames to the parents positions.
+        
+        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
+
+        ## Set rownames and colnames to the adjacency matrices.
+        
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+
+        if (do.estimation == TRUE) {
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
+            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
+            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
+        }
+    }
+
+    ## Structure to save the results.
+    
+    results = data;
+    results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
+    results$confidence = reconstruction$confidence;
+    results$model = reconstruction$model;
+    results$parameters = reconstruction$parameters;
+    results$execution.time = reconstruction$execution.time;
+
+    ## Add BIC/AIC/LogLik informations
+
+    if (!silent) {
+        cat('*** Evaluating BIC / AIC / LogLik informations.\n')
+    }
+
+    if ("bic" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'bic')
+        score = BIC(bayes.net$net, data = bayes.net$data)
+        logLik = logLik(bayes.net$net, data = bayes.net$data)
+        results$model$bic$score = score
+        results$model$bic$logLik = logLik
+    }
+
+    if ("aic" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'aic')
+        score = AIC(bayes.net$net, data = bayes.net$data)
+        logLik = logLik(bayes.net$net, data = bayes.net$data)
+        results$model$aic$score = score
+        results$model$aic$logLik = logLik
+    }
+
+    ## the reconstruction has been completed.
+    
+    if (!silent)
+        cat(paste(
+            "The reconstruction has been successfully completed in", 
+            format(.POSIXct(round(reconstruction$execution.time[3],
+                                  digits = 0),
+                            tz = "GMT"),
+                   "%Hh:%Mm:%Ss"), 
+            "\n"));
+
+    return(results);
+}
+
+
 ### Not exporting this function for now.
 ### todo
 ###
@@ -390,7 +1018,7 @@ tronco.estimation <- function(reconstruction, error.rates = NA) {
 
     ## Run the estimations for the required algorithm.
     
-    if (reconstruction$parameters$algorithm == "CAPRESE") {
+    if (reconstruction$parameters$algorithm == "CAPRESE" | reconstruction$parameters$algorithm == "EDMONDS") {
 
         cat("Executing now the estimation procedure, this may take a long time...\n")
 
@@ -432,7 +1060,7 @@ tronco.estimation <- function(reconstruction, error.rates = NA) {
         colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
 
     }
-    else if (reconstruction$parameters$algorithm=="CAPRI") {
+    else if (reconstruction$parameters$algorithm=="CAPRI" || reconstruction$parameters$algorithm=="CHOW_LIU" || reconstruction$parameters$algorithm=="PRIM") {
 
         ##
         ## DEV VERSION
@@ -552,7 +1180,10 @@ tronco.bootstrap <- function(reconstruction,
     }
 
     if (type == "statistical"
-        && !(reconstruction$parameters$algorithm == "CAPRI"
+        && !((reconstruction$parameters$algorithm == "CAPRI"
+             || reconstruction$parameters$algorithm == "PRIM"
+             || reconstruction$parameters$algorithm == "CHOW_LIU"
+             || reconstruction$parameters$algorithm == "EDMONDS")
              && reconstruction$parameters$do.boot == TRUE)) {
         stop("To perform statistical bootstrap, the algorithm used for the reconstruction\nmust by CAPRI with bootstrap.",
              call. = FALSE)
@@ -587,6 +1218,18 @@ tronco.bootstrap <- function(reconstruction,
             }
 
             command.capri = reconstruction$parameters$command
+            regularization = reconstruction$parameters$regularization
+            do.boot = reconstruction$parameters$do.boot
+            nboot.capri = reconstruction$parameters$nboot
+            pvalue = reconstruction$parameters$pvalue
+            min.boot = reconstruction$parameters$min.boot
+            min.stat = reconstruction$parameters$min.stat
+            boot.seed = reconstruction$parameters$boot.seed
+            if (type == 'statistical') boot.seed = NULL
+        } else if (reconstruction$parameters$algorithm == "EDMONDS" 
+                   || reconstruction$parameters$algorithm == "CHOW_LIU" 
+                   || reconstruction$parameters$algorithm == "PRIM") {
+
             regularization = reconstruction$parameters$regularization
             do.boot = reconstruction$parameters$do.boot
             nboot.capri = reconstruction$parameters$nboot
@@ -648,6 +1291,85 @@ tronco.bootstrap <- function(reconstruction,
                             bootstrap,
                             verbose,
                             cores.ratio)
+
+        reconstruction$bootstrap = curr.boot
+        
+        if (do.boot == TRUE) {
+            cat(paste("\nPerformed ",
+                      type,
+                      " bootstrap with ",
+                      nboot,
+                      " resampling and ",
+                      pvalue,
+                      " as pvalue \nfor the statistical tests.\n\n",
+                      sep =""))
+        } else {
+            cat(paste("\nPerformed ",
+                      type,
+                      " bootstrap with ",
+                      nboot,
+                      " resampling.\n\n",
+                      sep =""))
+        }
+    } else if (reconstruction$parameters$algorithm == "EDMONDS" 
+               || reconstruction$parameters$algorithm == "CHOW_LIU" 
+               || reconstruction$parameters$algorithm == "PRIM") {
+        
+        if (reconstruction$parameters$algorithm == "EDMONDS") {
+        	curr.boot =
+            bootstrap.edmonds(dataset, 
+                            regularization, 
+                            do.boot,
+                            nboot.capri, 
+                            pvalue,
+                            min.boot,
+                            min.stat,
+                            boot.seed,
+                            do.estimation,
+                            silent,
+                            reconstruction, 
+                            type,
+                            nboot,
+                            bootstrap,
+                            verbose,
+                            cores.ratio)
+        } else if (reconstruction$parameters$algorithm == "CHOW_LIU") {
+        	curr.boot =
+            bootstrap.chow.liu(dataset, 
+                            regularization, 
+                            do.boot,
+                            nboot.capri, 
+                            pvalue,
+                            min.boot,
+                            min.stat,
+                            boot.seed,
+                            do.estimation,
+                            silent,
+                            reconstruction, 
+                            type,
+                            nboot,
+                            bootstrap,
+                            verbose,
+                            cores.ratio)
+        } else if (reconstruction$parameters$algorithm == "PRIM") {
+        	curr.boot =
+            bootstrap.prim(dataset, 
+                            regularization, 
+                            do.boot,
+                            nboot.capri, 
+                            pvalue,
+                            min.boot,
+                            min.stat,
+                            boot.seed,
+                            do.estimation,
+                            silent,
+                            reconstruction, 
+                            type,
+                            nboot,
+                            bootstrap,
+                            verbose,
+                            cores.ratio)
+        }
 
         reconstruction$bootstrap = curr.boot
         

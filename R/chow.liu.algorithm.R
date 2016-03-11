@@ -24,7 +24,7 @@
 # @return topology: the reconstructed tree topology
 #
 chow.liu.fit <- function(dataset,
-                      regularization = "none",
+                      regularization = c("bic","aic"),
                       do.boot = TRUE,
                       nboot = 100,
                       pvalue = 0.05,
