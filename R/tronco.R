@@ -453,7 +453,7 @@ tronco.edmonds <- function(data,
             nevents(data), '.\n',
             '\tAlgorithm: Edmonds with \"',
             paste0(regularization, collapse = ", "),
-            '\" regularization and \"',
+            '\" regularization',
             '\tRandom seed: ',
             my.seed, '.\n',
             '\tBootstrap iterations (Wilcoxon): ',
@@ -538,6 +538,14 @@ tronco.edmonds <- function(data,
 
     if (!silent) {
         cat('*** Evaluating BIC / AIC / LogLik informations.\n')
+    }
+    
+    if ("none" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'none')
+        score = logLik(bayes.net$net, data = bayes.net$data)
+        logLik = logLik(bayes.net$net, data = bayes.net$data)
+        results$model$none$score = score
+        results$model$none$logLik = logLik
     }
 
     if ("bic" %in% regularization) {
@@ -662,7 +670,7 @@ tronco.chow.liu <- function(data,
             nevents(data), '.\n',
             '\tAlgorithm: Chow Liu with \"',
             paste0(regularization, collapse = ", "),
-            '\" regularization and \"',
+            '\" regularization',
             '\tRandom seed: ',
             my.seed, '.\n',
             '\tBootstrap iterations (Wilcoxon): ',
@@ -801,9 +809,9 @@ tronco.chow.liu <- function(data,
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.prim
 #' @importFrom bnlearn hc tabu
+#' @importFrom igraph get.edgelist E E<-
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
-#' @importFrom igraph get.shortest.paths
-#' @importFrom igraph minimum.spanning.tree
+#' @importFrom igraph get.shortest.paths minimum.spanning.tree
 #' @importFrom infotheo mutinformation
 #' 
 tronco.prim <- function(data,
@@ -872,7 +880,7 @@ tronco.prim <- function(data,
             nevents(data), '.\n',
             '\tAlgorithm: Prim with \"',
             paste0(regularization, collapse = ", "),
-            '\" regularization and \"',
+            '\" regularization',
             '\tRandom seed: ',
             my.seed, '.\n',
             '\tBootstrap iterations (Wilcoxon): ',
@@ -957,6 +965,14 @@ tronco.prim <- function(data,
 
     if (!silent) {
         cat('*** Evaluating BIC / AIC / LogLik informations.\n')
+    }
+
+    if ("none" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'none')
+        score = logLik(bayes.net$net, data = bayes.net$data)
+        logLik = logLik(bayes.net$net, data = bayes.net$data)
+        results$model$none$score = score
+        results$model$none$logLik = logLik
     }
 
     if ("bic" %in% regularization) {
