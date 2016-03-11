@@ -2958,4 +2958,3 @@ tronco.pattern.plot <- function(x,
 }
 
 #### end of file -- visualization.R
-

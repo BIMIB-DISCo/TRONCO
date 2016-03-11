@@ -179,12 +179,11 @@ bootstrap.caprese <- function(dataset,
                     ## model.
                     
                     samples.probabilities[m] =
-                        list(estimate.dag.samples(curr.dataset,
-                                                  as.adj.matrix(reconstruction, models = m)[[m]],
-                                                  as.marginal.probs(reconstruction, models = m, type = "fit")[[m]],
-                                                  as.conditional.probs(reconstruction, models = m, type = "fit")[[m]],
-                                                  as.parents.pos(reconstruction, models = m)[[m]],
-                                                  as.error.rates(reconstruction, models = m)[[m]]))
+                        list(estimate.tree.samples(curr.dataset,
+                                          as.adj.matrix(reconstruction, models = m)[[m]],
+                                          as.marginal.probs(reconstruction, models = m, type = "fit")[[m]],
+                                          as.conditional.probs(reconstruction, models = m, type = "fit")[[m]],
+                                          as.error.rates(reconstruction, models = m)[[m]]))
                     
                 }
 
@@ -480,4 +479,3 @@ decimal.to.binary.tree <- function(num.decimal, num.bits) {
 
 
 #### end of file -- caprese.bootstrap.R
-

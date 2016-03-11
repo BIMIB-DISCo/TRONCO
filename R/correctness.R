@@ -142,4 +142,3 @@ is.events.list <- function(x, y) {
 
 
 #### end of file -- correctness.R
-
