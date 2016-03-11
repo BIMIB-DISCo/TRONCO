@@ -221,8 +221,20 @@ chow.liu.fit <- function(dataset,
 # @param regularization regularization term to be used in the likelihood fit
 # @return topology: the adjacency matrix of both the prima facie and causal topologies
 #
-perform.likelihood.fit.chow.liu = function( dataset, adj.matrix, regularization ) {
+perform.likelihood.fit.chow.liu = function( dataset, adj.matrix, regularization ) {{
+
+    ## Each variable should at least have 2 values: I'm ignoring
+    ## connection to invalid events but, still, need to make the
+    ## dataset valid for bnlearn.
     
+    for (i in 1:ncol(dataset)) {
+        if (sum(dataset[, i]) == 0) {
+            dataset[sample(1:nrow(dataset), size=1), i] = 1;
+        } else if (sum(dataset[, i]) == nrow(dataset)) {
+            dataset[sample(1:nrow(dataset), size=1), i] = 0;
+        }
+    }
+
     # adjacency matrix of the topology reconstructed by likelihood fit
     adj.matrix.fit = array(0,c(nrow(adj.matrix),ncol(adj.matrix)))
     rownames(adj.matrix.fit) = colnames(dataset)
