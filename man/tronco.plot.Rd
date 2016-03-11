@@ -14,7 +14,7 @@ tronco.plot(x, models = names(x$model), fontsize = NA, height = 2,
   annotate.sample = NA, export.igraph = FALSE, ...)
 }
 \arguments{
-\item{x}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
+\item{x}{A reconstructed model (the output of the inference by a tronco function)}
 
 \item{models}{A vector containing the names of regularizators used (BIC, AIC or CAPRESE)}
 

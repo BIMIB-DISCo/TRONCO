@@ -108,7 +108,6 @@ chow.liu.fit <- function(dataset,
         best.parents =
             perform.likelihood.fit.chow.liu(dataset,
                                    prima.facie.parents$adj.matrix$adj.matrix.acyclic,
-                                   command,
                                    regularization = reg);
 
         ## Set the structure to save the conditional probabilities of
@@ -221,7 +220,7 @@ chow.liu.fit <- function(dataset,
 # @param regularization regularization term to be used in the likelihood fit
 # @return topology: the adjacency matrix of both the prima facie and causal topologies
 #
-perform.likelihood.fit.chow.liu = function( dataset, adj.matrix, regularization ) {{
+perform.likelihood.fit.chow.liu = function( dataset, adj.matrix, regularization ) {
 
     ## Each variable should at least have 2 values: I'm ignoring
     ## connection to invalid events but, still, need to make the
@@ -287,6 +286,5 @@ perform.likelihood.fit.chow.liu = function( dataset, adj.matrix, regularization 
     return(topology)
 
 }
-
 
 #### end of file -- chow.liu.algorithm.R

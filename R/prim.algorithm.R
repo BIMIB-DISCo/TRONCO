@@ -108,7 +108,6 @@ prim.fit <- function(dataset,
         best.parents =
             perform.likelihood.fit.prim(dataset,
                                    prima.facie.parents$adj.matrix$adj.matrix.acyclic,
-                                   command,
                                    regularization = reg);
 
         ## Set the structure to save the conditional probabilities of
@@ -222,7 +221,7 @@ prim.fit <- function(dataset,
 # @param command type of search, either hill climbing (hc) or tabu (tabu)
 # @return topology: the adjacency matrix of both the prima facie and causal topologies
 #
-perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, command = "hc" ) {{
+perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, command = "hc" ) {
 
     ## Each variable should at least have 2 values: I'm ignoring
     ## connection to invalid events but, still, need to make the
