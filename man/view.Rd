@@ -4,7 +4,7 @@
 \alias{view}
 \title{view}
 \usage{
-view(x, view = 10)
+view(x, view = 5)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

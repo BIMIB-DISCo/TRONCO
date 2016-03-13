@@ -1,4 +1,3 @@
-/graph.xml
 /cfg.R
 # History files
 .Rhistory
@@ -10,6 +9,7 @@
 
 # RStudio files
 *.RData
+!/data/*.RData
 .Rproj.user/
 .Rproj
 .Rproj.user
