@@ -187,7 +187,9 @@ capri.fit <- function(dataset,
 
         ## Save the results for the model.
         
-        model[[reg]] =
+        model.name = paste('capri', reg, sep = '_')
+
+        model[[model.name]] =
             list(probabilities = probabilities,
                  parents.pos = parents.pos,
                  error.rates = error.rates,
@@ -219,6 +221,7 @@ capri.fit <- function(dataset,
              model = model,
              parameters = parameters,
              execution.time = (proc.time() - ptm));
+
     return(topology);
 }
 

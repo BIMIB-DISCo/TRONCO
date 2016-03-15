@@ -29,21 +29,21 @@
 # @return bootstrap.statistics: statistics of the bootstrap
 #
 bootstrap.chow.liu <- function(dataset, 
-                            regularization, 
-                            do.boot,
-                            nboot.algorithm, 
-                            pvalue,
-                            min.boot,
-                            min.stat,
-                            boot.seed,
-                            do.estimation,
-                            silent,
-                            reconstruction, 
-                            command = "non-parametric",
-                            nboot = 100,
-                            bootstrap.statistics = list(),
-                            verbose = FALSE,
-                            cores.ratio = 1) {
+                               regularization, 
+                               do.boot,
+                               nboot.algorithm, 
+                               pvalue,
+                               min.boot,
+                               min.stat,
+                               boot.seed,
+                               do.estimation,
+                               silent,
+                               reconstruction, 
+                               command = "non-parametric",
+                               nboot = 100,
+                               bootstrap.statistics = list(),
+                               verbose = FALSE,
+                               cores.ratio = 1) {
     
     ## Start the clock to measure the execution time
     
@@ -178,7 +178,6 @@ bootstrap.chow.liu <- function(dataset,
                                  min.boot,
                                  min.stat,
                                  boot.seed,
-                                 do.estimation,
                                  silent)
 
                 curr.reconstruction = bootstrapped.topology;
@@ -218,7 +217,6 @@ bootstrap.chow.liu <- function(dataset,
                                      min.boot,
                                      min.stat,
                                      boot.seed,
-                                     do.estimation,
                                      silent)
                     
                     ## Save the results for this model.
@@ -246,7 +244,6 @@ bootstrap.chow.liu <- function(dataset,
                                  min.boot,
                                  min.stat,
                                  boot.seed,
-                                 do.estimation,
                                  silent)
                 
                 curr.reconstruction = bootstrapped.topology;

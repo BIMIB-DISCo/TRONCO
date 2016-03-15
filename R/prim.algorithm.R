@@ -177,8 +177,10 @@ prim.fit <- function(dataset,
         error.rates = estimated.error.rates.fit;
 
         ## Save the results for the model.
+
+        model.name = paste('prim', reg, sep='_')
         
-        model[[reg]] =
+        model[[model.name]] =
             list(probabilities = probabilities,
                  parents.pos = parents.pos,
                  error.rates = error.rates,

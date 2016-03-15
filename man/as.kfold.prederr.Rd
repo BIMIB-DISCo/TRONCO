@@ -29,7 +29,7 @@ or models if multiple reconstruction have been performed.
 \examples{
 data(test_model_kfold)
 as.kfold.prederr(test_model_kfold)
-as.kfold.prederr(test_model_kfold, models='aic')
+as.kfold.prederr(test_model_kfold, models='capri_aic')
 
 }
 

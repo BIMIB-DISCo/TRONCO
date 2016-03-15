@@ -1174,7 +1174,7 @@ as.bootstrap.scores <- function(x,
 #' @examples
 #' data(test_model_kfold)
 #' as.kfold.eloss(test_model_kfold)
-#' as.kfold.eloss(test_model_kfold, models='aic')
+#' as.kfold.eloss(test_model_kfold, models='capri_aic')
 #'
 #' @title as.kfold.eloss
 #' @param x A TRONCO model.
@@ -1230,7 +1230,7 @@ as.kfold.eloss <- function(x,
 #' @examples
 #' data(test_model_kfold)
 #' as.kfold.prederr(test_model_kfold)
-#' as.kfold.prederr(test_model_kfold, models='aic')
+#' as.kfold.prederr(test_model_kfold, models='capri_aic')
 #'
 #' @title as.kfold.prederr
 #' @param x A TRONCO model.
@@ -1849,7 +1849,7 @@ sort.by.frequency <- function(x, decreasing = TRUE, ...) {
 #'
 #' @examples
 #' data(test_model)
-#' adj_matrix = as.adj.matrix(test_model, events=as.events(test_model)[5:15,])$bic
+#' adj_matrix = as.adj.matrix(test_model, events=as.events(test_model)[5:15,])$capri_bic
 #' keysToNames(test_model, adj_matrix)
 #'
 #'

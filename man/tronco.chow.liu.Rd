@@ -6,7 +6,7 @@
 \usage{
 tronco.chow.liu(data, regularization = c("bic", "aic"), do.boot = TRUE,
   nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE,
-  boot.seed = NULL, do.estimation = FALSE, silent = FALSE)
+  boot.seed = NULL, silent = FALSE)
 }
 \arguments{
 \item{data}{A TRONCO compliant dataset.}
@@ -24,8 +24,6 @@ tronco.chow.liu(data, regularization = c("bic", "aic"), do.boot = TRUE,
 \item{min.stat}{A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected.}
 
 \item{boot.seed}{Initial seed for the bootstrap random sampling.}
-
-\item{do.estimation}{A parameter to disable/enable the estimation of the error rates give the reconstructed model.}
 
 \item{silent}{A parameter to disable/enable verbose messages.}
 }

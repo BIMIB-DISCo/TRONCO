@@ -33,7 +33,7 @@ Imports:
     scales,
     R.matlab,
     gRapHD,
-    infotheo
+    infotheo,
 Suggests:
     BiocGenerics,
     BiocStyle,
@@ -60,7 +60,7 @@ Description:
     cross-validation to assess the goodness-of-data are implemented. 
 Encoding: UTF-8
 LazyData: TRUE
-License: GPL (>= 3.0)
+License: file LICENSE
 URL: https://sites.google.com/site/troncopackage/
 BugReports: https://github.com/BIMIB-DISCo/TRONCO
 biocViews: BiomedicalInformatics, 

@@ -131,7 +131,6 @@ bootstrap.caprese <- function(dataset,
             bootstrapped.topology =
                 tronco.caprese(curr.reconstruction,
                                lambda, 
-                               do.estimation,
                                silent)
             
             curr.reconstruction = bootstrapped.topology;
@@ -216,7 +215,6 @@ bootstrap.caprese <- function(dataset,
                 bootstrapped.topology =
                     tronco.caprese(curr.reconstruction,
                                    lambda, 
-                                   do.estimation,
                                    silent)
                 
                 ## Save the results for this model.

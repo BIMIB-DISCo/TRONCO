@@ -19,26 +19,13 @@
 #' @title tronco caprese
 #' @param data A TRONCO compliant dataset.
 #' @param lambda Coefficient to combine the raw estimate with a correction factor into a shrinkage estimator. 
-#' @param do.estimation A parameter to disable/enable the estimation of the error rates give the reconstructed model.
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.caprese
 #' 
 tronco.caprese <- function(data,
                            lambda = 0.5,
-                           do.estimation = FALSE, 
                            silent = FALSE ) {
-
-    ##
-    ## DEV VERSION
-    ##
-    
-    if (do.estimation) {
-        if (silent == FALSE) {
-            cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
-        }
-        do.estimation = FALSE
-    }
 
     ## Check for the inputs to be correct.
     
@@ -54,6 +41,12 @@ tronco.caprese <- function(data,
     
     is.compliant(data)
 
+    ## check if there are hypotheses
+
+    if (npatterns(data) > 0) {
+        warning("Patters found in input for tronco.caprese\n")
+    }
+
     ## Reconstruct the reconstruction with CAPRESE.
     
     if (silent == FALSE) {
@@ -68,7 +61,9 @@ tronco.caprese <- function(data,
             '\tAlgorithm: CAPRESE with shrinkage coefficient: ', lambda, '.\n'
         ))
     }
-    reconstruction = caprese.fit(data$genotypes,lambda,do.estimation,silent);
+    reconstruction = caprese.fit(dataset = data$genotypes,
+                                 lambda = lambda,
+                                 silent = silent);
 
     rownames(reconstruction$confidence) =
         c("temporal priority",
@@ -102,15 +97,6 @@ tronco.caprese <- function(data,
         
         rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
         colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-
-        if (do.estimation == TRUE) {
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
-        }
 
     }
 
@@ -162,7 +148,6 @@ tronco.caprese <- function(data,
 #' @param min.boot Minimum number of bootstrap sampling to be performed. 
 #' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
-#' @param do.estimation A parameter to disable/enable the estimation of the error rates give the reconstructed model.
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
@@ -179,21 +164,10 @@ tronco.capri <- function(data,
                          min.boot = 3, 
                          min.stat = TRUE, 
                          boot.seed = NULL, 
-                         do.estimation = FALSE, 
                          silent = FALSE ) {
 
     ## Enforce data to be numeric
     data = enforce.numeric(data)
-
-    ##
-    ## DEV VERSION
-    ##
-    if (do.estimation) {
-        if (silent == FALSE) {
-            cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
-        }
-        do.estimation = FALSE
-    }
 
     ## Check for the inputs to be correct.
     
@@ -268,7 +242,6 @@ tronco.capri <- function(data,
                   min.boot = min.boot,
                   min.stat = min.stat,
                   boot.seed = boot.seed,
-                  do.estimation = do.estimation,
                   silent = silent);
 
     rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
@@ -306,14 +279,6 @@ tronco.capri <- function(data,
         rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
         colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
 
-        if (do.estimation == TRUE) {
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
-        }
     }
 
     ## Structure to save the results.
@@ -332,19 +297,19 @@ tronco.capri <- function(data,
     }
 
     if ("bic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'bic')
+        bayes.net = as.bnlearn.network(results, model = 'capri_bic')
         score = BIC(bayes.net$net, data = bayes.net$data)
         logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$bic$score = score
-        results$model$bic$logLik = logLik
+        results$model$capri_bic$score = score
+        results$model$capri_bic$logLik = logLik
     }
 
     if ("aic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'aic')
+        bayes.net = as.bnlearn.network(results, model = 'capri_aic')
         score = AIC(bayes.net$net, data = bayes.net$data)
         logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$aic$score = score
-        results$model$aic$logLik = logLik
+        results$model$capri_aic$score = score
+        results$model$capri_aic$logLik = logLik
     }
 
     ## the reconstruction has been completed.
@@ -378,7 +343,6 @@ tronco.capri <- function(data,
 #' @param min.boot Minimum number of bootstrap sampling to be performed. 
 #' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
-#' @param do.estimation A parameter to disable/enable the estimation of the error rates give the reconstructed model.
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.edmonds
@@ -395,21 +359,10 @@ tronco.edmonds <- function(data,
                          min.boot = 3, 
                          min.stat = TRUE, 
                          boot.seed = NULL, 
-                         do.estimation = FALSE, 
                          silent = FALSE ) {
 
     ## Enforce data to be numeric
     data = enforce.numeric(data)
-
-    ##
-    ## DEV VERSION
-    ##
-    if (do.estimation) {
-        if (silent == FALSE) {
-            cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
-        }
-        do.estimation = FALSE
-    }
 
     ## Check for the inputs to be correct.
     
@@ -429,6 +382,12 @@ tronco.edmonds <- function(data,
     ## Check for the input to be compliant.
     
     is.compliant(data)
+
+    ## check if there are hypotheses
+
+    if (npatterns(data) > 0) {
+        warning("Patters found in input for tronco.edmonds\n")
+    }
 
     ## Reconstruct the reconstruction with Edmonds.
     
@@ -477,7 +436,6 @@ tronco.edmonds <- function(data,
                   min.boot = min.boot,
                   min.stat = min.stat,
                   boot.seed = boot.seed,
-                  do.estimation = do.estimation,
                   silent = silent);
 
     rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
@@ -515,14 +473,7 @@ tronco.edmonds <- function(data,
         rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
         colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
 
-        if (do.estimation == TRUE) {
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
-        }
+
     }
 
     ## Structure to save the results.
@@ -541,27 +492,27 @@ tronco.edmonds <- function(data,
     }
     
     if ("none" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'none')
+        bayes.net = as.bnlearn.network(results, model = 'edmonds_none')
         score = logLik(bayes.net$net, data = bayes.net$data)
-        logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$none$score = score
-        results$model$none$logLik = logLik
+        logLik = score
+        results$model$edmonds_none$score = score
+        results$model$edmonds_none$logLik = logLik
     }
 
     if ("bic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'bic')
+        bayes.net = as.bnlearn.network(results, model = 'edmonds_bic')
         score = BIC(bayes.net$net, data = bayes.net$data)
         logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$bic$score = score
-        results$model$bic$logLik = logLik
+        results$model$edmonds_bic$score = score
+        results$model$edmonds_bic$logLik = logLik
     }
 
     if ("aic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'aic')
+        bayes.net = as.bnlearn.network(results, model = 'edmonds_aic')
         score = AIC(bayes.net$net, data = bayes.net$data)
         logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$aic$score = score
-        results$model$aic$logLik = logLik
+        results$model$edmonds_aic$score = score
+        results$model$edmonds_aic$logLik = logLik
     }
 
     ## the reconstruction has been completed.
@@ -595,7 +546,6 @@ tronco.edmonds <- function(data,
 #' @param min.boot Minimum number of bootstrap sampling to be performed. 
 #' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
-#' @param do.estimation A parameter to disable/enable the estimation of the error rates give the reconstructed model.
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.chow.liu
@@ -612,21 +562,10 @@ tronco.chow.liu <- function(data,
                          min.boot = 3, 
                          min.stat = TRUE, 
                          boot.seed = NULL, 
-                         do.estimation = FALSE, 
                          silent = FALSE ) {
 
     ## Enforce data to be numeric
     data = enforce.numeric(data)
-
-    ##
-    ## DEV VERSION
-    ##
-    if (do.estimation) {
-        if (silent == FALSE) {
-            cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
-        }
-        do.estimation = FALSE
-    }
 
     ## Check for the inputs to be correct.
     
@@ -646,6 +585,12 @@ tronco.chow.liu <- function(data,
     ## Check for the input to be compliant.
     
     is.compliant(data)
+
+    ## check if there are hypotheses
+
+    if (npatterns(data) > 0) {
+        warning("Patters found in input for tronco.chow.liu\n")
+    }
 
     ## Reconstruct the reconstruction with Chow Liu.
     
@@ -694,7 +639,6 @@ tronco.chow.liu <- function(data,
                   min.boot = min.boot,
                   min.stat = min.stat,
                   boot.seed = boot.seed,
-                  do.estimation = do.estimation,
                   silent = silent);
 
     rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
@@ -732,14 +676,6 @@ tronco.chow.liu <- function(data,
         rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
         colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
 
-        if (do.estimation == TRUE) {
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
-        }
     }
 
     ## Structure to save the results.
@@ -758,19 +694,19 @@ tronco.chow.liu <- function(data,
     }
 
     if ("bic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'bic')
+        bayes.net = as.bnlearn.network(results, model = 'chow_liu_bic')
         score = BIC(bayes.net$net, data = bayes.net$data)
         logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$bic$score = score
-        results$model$bic$logLik = logLik
+        results$model$chow_liu_bic$score = score
+        results$model$chow_liu_bic$logLik = logLik
     }
 
     if ("aic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'aic')
+        bayes.net = as.bnlearn.network(results, model = 'chow_liu_aic')
         score = AIC(bayes.net$net, data = bayes.net$data)
         logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$aic$score = score
-        results$model$aic$logLik = logLik
+        results$model$chow_liu_aic$score = score
+        results$model$chow_liu_aic$logLik = logLik
     }
 
     ## the reconstruction has been completed.
@@ -804,7 +740,6 @@ tronco.chow.liu <- function(data,
 #' @param min.boot Minimum number of bootstrap sampling to be performed. 
 #' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
-#' @param do.estimation A parameter to disable/enable the estimation of the error rates give the reconstructed model.
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.prim
@@ -822,21 +757,10 @@ tronco.prim <- function(data,
                          min.boot = 3, 
                          min.stat = TRUE, 
                          boot.seed = NULL, 
-                         do.estimation = FALSE, 
                          silent = FALSE ) {
 
     ## Enforce data to be numeric
     data = enforce.numeric(data)
-
-    ##
-    ## DEV VERSION
-    ##
-    if (do.estimation) {
-        if (silent == FALSE) {
-            cat("The estimation of the error rates is not available in the current version. Disabling the estimation...")
-        }
-        do.estimation = FALSE
-    }
 
     ## Check for the inputs to be correct.
     
@@ -856,6 +780,12 @@ tronco.prim <- function(data,
     ## Check for the input to be compliant.
     
     is.compliant(data)
+
+    ## check if there are hypotheses
+
+    if (npatterns(data) > 0) {
+        warning("Patters found in input for tronco.prim\n")
+    }
 
     ## Reconstruct the reconstruction with Prim.
     
@@ -904,7 +834,6 @@ tronco.prim <- function(data,
                   min.boot = min.boot,
                   min.stat = min.stat,
                   boot.seed = boot.seed,
-                  do.estimation = do.estimation,
                   silent = silent);
 
     rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
@@ -942,14 +871,6 @@ tronco.prim <- function(data,
         rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
         colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
 
-        if (do.estimation == TRUE) {
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            rownames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[i]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
-        }
     }
 
     ## Structure to save the results.
@@ -968,27 +889,27 @@ tronco.prim <- function(data,
     }
 
     if ("none" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'none')
+        bayes.net = as.bnlearn.network(results, model = 'prim_none')
         score = logLik(bayes.net$net, data = bayes.net$data)
-        logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$none$score = score
-        results$model$none$logLik = logLik
+        logLik = score
+        results$model$prim_none$score = score
+        results$model$prim_none$logLik = logLik
     }
 
     if ("bic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'bic')
+        bayes.net = as.bnlearn.network(results, model = 'prim_bic')
         score = BIC(bayes.net$net, data = bayes.net$data)
         logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$bic$score = score
-        results$model$bic$logLik = logLik
+        results$model$prim_bic$score = score
+        results$model$prim_bic$logLik = logLik
     }
 
     if ("aic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'aic')
+        bayes.net = as.bnlearn.network(results, model = 'prim_aic')
         score = AIC(bayes.net$net, data = bayes.net$data)
         logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$aic$score = score
-        results$model$aic$logLik = logLik
+        results$model$prim_aic$score = score
+        results$model$prim_aic$logLik = logLik
     }
 
     ## the reconstruction has been completed.
@@ -1003,144 +924,6 @@ tronco.prim <- function(data,
             "\n"));
 
     return(results);
-}
-
-
-### Not exporting this function for now.
-### todo
-###
-### @examples
-### data(test_model)
-### recon = tronco.estimation(test_model)
-###
-### @title tronco.estimation
-### @param reconstruction A TRONCO compliant dataset with a reconstructed model associated.
-### @param error.rates todo
-### @return A TRONCO compliant object with reconstructed model and estimations
-
-tronco.estimation <- function(reconstruction, error.rates = NA) {
-    ##
-    ## DEV VERSION
-    ##
-
-    ## Check for the inputs to be correct.
-    if (is.null(reconstruction)) {
-        stop("A valid reconstruction has to be provided in order to estimate its confidence.", call. = FALSE);
-    }
-
-    ## Check for the input to be compliant.
-    
-    is.compliant(reconstruction)
-
-    ## Run the estimations for the required algorithm.
-    
-    if (reconstruction$parameters$algorithm == "CAPRESE" | reconstruction$parameters$algorithm == "EDMONDS") {
-
-        cat("Executing now the estimation procedure, this may take a long time...\n")
-
-        ## if I also need to estimate the error rates
-        
-        if (is.na(error.rates[1])) {
-            
-            ## Estimate the error rates
-            error.rates =
-                estimate.tree.error.rates(as.marginal.probs(reconstruction, models = "caprese")[[1]],
-                                          as.joint.probs(reconstruction, models = "caprese")[[1]],
-                                          as.parents.pos(reconstruction, models = "caprese")[[1]]);
-        }
-
-        ## Estimate the probabilities given the error rates.
-        
-        estimated.probabilities =
-            estimate.tree.probs(as.marginal.probs(reconstruction, models = "caprese")[[1]],
-                                as.joint.probs(reconstruction, models = "caprese")[[1]],
-                                as.parents.pos(reconstruction, models = "caprese")[[1]],
-                                error.rates);
-
-        ## Set the estimated error rates and probabilities.
-        
-        probabilities.fit =
-            list(estimated.marginal.probs = estimated.probabilities$marginal.probs,
-                 estimated.joint.probs = estimated.probabilities$joint.probs,
-                 estimated.conditional.probs = estimated.probabilities$conditional.probs);
-
-        reconstruction$model[["caprese"]]$error.rates = error.rates
-        reconstruction$model[["caprese"]]$probabilities$probabilities.fit = probabilities.fit
-
-                                        # set colnames and rownames
-        rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
-        rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-        rownames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[["caprese"]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
-
-    }
-    else if (reconstruction$parameters$algorithm=="CAPRI" || reconstruction$parameters$algorithm=="CHOW_LIU" || reconstruction$parameters$algorithm=="PRIM") {
-
-        ##
-        ## DEV VERSION
-        ##
-        stop("The estimation of the error rates is not available in the current version.")
-
-        cat("Executing now the estimation procedure, this may take a long time...\n")
-
-        ## Go through the models.
-        
-        do.estimate.error.rates = FALSE;
-        if (is.na(error.rates[1])) {
-            do.estimate.error.rates = TRUE;
-        }
-        for (m in names(as.models(reconstruction))) {
-
-            ## if I also need to estimate the error rates.
-            
-            if (do.estimate.error.rates) {
-                
-                ## Estimate the error rates.
-                error.rates =
-                    estimate.dag.error.rates(reconstruction$genotypes,
-                                             as.marginal.probs(reconstruction, models = m)[[1]],
-                                             as.joint.probs(reconstruction, models = m)[[1]],
-                                             as.parents.pos(reconstruction, models = m)[[1]]);
-            }
-
-            ## Estimate the probabilities given the error rates.
-            
-            estimated.probabilities =
-                estimate.dag.probs(reconstruction$genotypes,
-                                   as.marginal.probs(reconstruction, models = m)[[1]],
-                                   as.joint.probs(reconstruction, models = m)[[1]],
-                                   as.parents.pos(reconstruction, models = m)[[1]],
-                                   error.rates);
-
-            ## Set the estimated error rates and probabilities.
-            
-            probabilities.fit =
-                list(estimated.marginal.probs = estimated.probabilities$marginal.probs,
-                     estimated.joint.probs = estimated.probabilities$joint.probs,
-                     estimated.conditional.probs = estimated.probabilities$conditional.probs);
-
-            reconstruction$model[[m]]$error.rates = error.rates
-            reconstruction$model[[m]]$probabilities$probabilities.fit = probabilities.fit
-
-            ## Set colnames and rownames.
-            
-            rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.marginal.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.marginal.probs) = "marginal probability";
-            rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.joint.probs) = colnames(data$genotypes);
-            rownames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.conditional.probs) = colnames(data$genotypes);
-            colnames(reconstruction$model[[m]]$probabilities$probabilities.fit$estimated.conditional.probs) = "conditional probability";
-        }
-    }
-    else {
-        stop("A valid algorithm has to be provided in order to estimate its confidence.",
-             call. = FALSE);
-    }
-
-    reconstruction$parameters$do.estimation = TRUE;
-    return(reconstruction);
 }
 
 
@@ -1181,18 +964,15 @@ tronco.bootstrap <- function(reconstruction,
     ## Check for the input to be compliant.
     
     is.compliant(reconstruction)
+    
+    ## Just for compatibility
+    do.estimation = FALSE
 
     ##
     ## DEV VERSION
     ##
     if (type == "parametric") {
         stop("The parametric bootstrap is not available in the current version. Please choose an other option...")
-    }
-
-    if (reconstruction$parameters$do.estimation == FALSE
-        && type == "parametric") {
-        stop("To perform parametric bootstrap, the estimation of the error rates and probabilities\nshould be performed.",
-             call. = FALSE)
     }
 
     if (type == "statistical"
@@ -1213,7 +993,6 @@ tronco.bootstrap <- function(reconstruction,
         || type == "statistical") {
 
         dataset = reconstruction$genotypes
-        do.estimation = FALSE
         silent = TRUE
 
         if (!is.null(reconstruction$bootstrap)) {
@@ -1420,7 +1199,7 @@ tronco.bootstrap <- function(reconstruction,
 #' tronco.plot(test_model)
 #'
 #' @param x A reconstructed model (the output of the inference by a tronco function)
-#' @param models A vector containing the names of regularizators used (BIC, AIC or CAPRESE)
+#' @param models A vector containing the names of the algorithms used (caprese, capri_bic, etc)
 #' @param fontsize For node names. Default NA for automatic rescaling
 #' @param height Proportion node height - node width. Default height 2
 #' @param width Proportion node height - node width. Default width 2
@@ -1580,7 +1359,7 @@ tronco.plot <- function(x,
                 return(z[mask, , drop = FALSE])                              
             })
 
-        print(sel.relation)
+        #print(sel.relation)
 
         sel.relation = get(models[2], sel.relation)
 
@@ -1986,7 +1765,9 @@ tronco.plot <- function(x,
             ret$fontcolor = 'red'
             ret$label = paste0(ret$label, ' *')
         }
-        else if (c %in% c('pr', 'tp') && model %in% c('bic', 'aic') && value > pvalue) {
+        else if (c %in% c('pr', 'tp') 
+            && model != 'caprese' 
+            && value > pvalue) {
             ret$fontcolor = 'red'
             ret$label = paste0(ret$label, ' *')
         } else {
@@ -2308,12 +2089,7 @@ tronco.plot <- function(x,
 
         mods = NULL
         for (model in models) {
-            mods_label = ''
-            if (model %in% c('bic', 'aic')) {
-                mods_label = paste(mods_label, 'capri', model)
-            } else {
-                mods_label = model
-            }
+            mods_label = gsub('_', ' ', model)
             if (!is.null(x$kfold) && !is.null(get(model, x$kfold)$eloss)) {
                 mods_label = paste(mods_label, '- eloss:', round(mean(get(model, x$kfold)$eloss), 5))
             }

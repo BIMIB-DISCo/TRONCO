@@ -23,15 +23,15 @@
 # @return topology: the reconstructed tree topology
 #
 edmonds.fit <- function(dataset,
-                      regularization = "none",
-                      do.boot = TRUE,
-                      nboot = 100,
-                      pvalue = 0.05,
-                      min.boot = 3,
-                      min.stat = TRUE,
-                      boot.seed = NULL,
-                      do.estimation = FALSE,
-                      silent = FALSE ) {
+                        regularization = "none",
+                        do.boot = TRUE,
+                        nboot = 100,
+                        pvalue = 0.05,
+                        min.boot = 3,
+                        min.stat = TRUE,
+                        boot.seed = NULL,
+                        do.estimation = FALSE,
+                        silent = FALSE ) {
 
     ## Start the clock to measure the execution time.
     
@@ -174,8 +174,10 @@ edmonds.fit <- function(dataset,
         error.rates = estimated.error.rates.fit;
 
         ## Save the results for the model.
+
+        model.name = paste('edmonds', reg, sep='_')
         
-        model[[reg]] =
+        model[[model.name]] =
             list(probabilities = probabilities,
                  parents.pos = parents.pos,
                  error.rates = error.rates,
@@ -299,11 +301,10 @@ perform.likelihood.fit.edmonds = function( dataset, adj.matrix, regularization, 
                     if(adj.matrix[i,j]==0) {
                         # [i,j] refers to causation i --> j
                         cont = cont + 1
-                        if(cont==1) {
+                        if (cont == 1) {
                             parent = toString(i)
                             child = toString(j)
-                        }
-                        else {
+                        } else {
                             parent = c(parent,toString(i))
                             child = c(child,toString(j))
                         }

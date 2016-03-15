@@ -178,7 +178,6 @@ bootstrap.prim <- function(dataset,
                                  min.boot,
                                  min.stat,
                                  boot.seed,
-                                 do.estimation,
                                  silent)
 
                 curr.reconstruction = bootstrapped.topology;
@@ -218,7 +217,6 @@ bootstrap.prim <- function(dataset,
                                      min.boot,
                                      min.stat,
                                      boot.seed,
-                                     do.estimation,
                                      silent)
                     
                     ## Save the results for this model.
@@ -246,7 +244,6 @@ bootstrap.prim <- function(dataset,
                                  min.boot,
                                  min.stat,
                                  boot.seed,
-                                 do.estimation,
                                  silent)
                 
                 curr.reconstruction = bootstrapped.topology;

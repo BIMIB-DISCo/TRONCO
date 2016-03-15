@@ -16,7 +16,7 @@ tronco.plot(x, models = names(x$model), fontsize = NA, height = 2,
 \arguments{
 \item{x}{A reconstructed model (the output of the inference by a tronco function)}
 
-\item{models}{A vector containing the names of regularizators used (BIC, AIC or CAPRESE)}
+\item{models}{A vector containing the names of the algorithms used (caprese, capri_bic, etc)}
 
 \item{fontsize}{For node names. Default NA for automatic rescaling}
 

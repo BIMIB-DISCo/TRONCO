@@ -24,15 +24,15 @@
 # @return topology: the reconstructed tree topology
 #
 chow.liu.fit <- function(dataset,
-                      regularization = c("bic","aic"),
-                      do.boot = TRUE,
-                      nboot = 100,
-                      pvalue = 0.05,
-                      min.boot = 3,
-                      min.stat = TRUE,
-                      boot.seed = NULL,
-                      do.estimation = FALSE,
-                      silent = FALSE ) {
+                         regularization = c("bic","aic"),
+                         do.boot = TRUE,
+                         nboot = 100,
+                         pvalue = 0.05,
+                         min.boot = 3,
+                         min.stat = TRUE,
+                         boot.seed = NULL,
+                         do.estimation = FALSE,
+                         silent = FALSE ) {
 
     ## Start the clock to measure the execution time.
     
@@ -177,8 +177,10 @@ chow.liu.fit <- function(dataset,
         error.rates = estimated.error.rates.fit;
 
         ## Save the results for the model.
+
+        model.name = paste('chow_liu', reg, sep='_')
         
-        model[[reg]] =
+        model[[model.name]] =
             list(probabilities = probabilities,
                  parents.pos = parents.pos,
                  error.rates = error.rates,
@@ -220,7 +222,9 @@ chow.liu.fit <- function(dataset,
 # @param regularization regularization term to be used in the likelihood fit
 # @return topology: the adjacency matrix of both the prima facie and causal topologies
 #
-perform.likelihood.fit.chow.liu = function( dataset, adj.matrix, regularization ) {
+perform.likelihood.fit.chow.liu = function( dataset, 
+                                            adj.matrix,
+                                            regularization ) {
 
     ## Each variable should at least have 2 values: I'm ignoring
     ## connection to invalid events but, still, need to make the
@@ -242,11 +246,9 @@ perform.likelihood.fit.chow.liu = function( dataset, adj.matrix, regularization 
     # set the regularizator
     if(regularization=="loglik") {
         regularization = "LR"
-    }
-    else if(regularization=="aic") {
+    } else if(regularization=="aic") {
         regularization = "AIC"
-    }
-    else if(regularization=="bic") {
+    } else if(regularization=="bic") {
         regularization = "BIC"
     }
     
@@ -254,7 +256,9 @@ perform.likelihood.fit.chow.liu = function( dataset, adj.matrix, regularization 
     blacklist = NULL
     for (i in 1:nrow(adj.matrix)) {
         for (j in i:ncol(adj.matrix)) {
-            if(i!=j && adj.matrix[i,j]==0 && adj.matrix[j,i]==0) {
+            if (i != j 
+                && adj.matrix[i, j] == 0 
+                && adj.matrix[j, i] == 0) {
                 new_edge = c(i,j)
                 blacklist = rbind(blacklist,new_edge)
             }
