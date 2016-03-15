@@ -14,7 +14,7 @@ Authors@R: c(person("Marco", "Antoniotti", role=c("cph")),
     person("Daniele", "Ramazzotti", role=c("aut"), email="daniele.ramazzotti@disco.unimib.it"))
 Maintainer: BIMIB Group <tronco@disco.unimib.it>
 Depends:
-    R (>= 3.2),
+    R (>= 3.3),
 Imports:
     bnlearn,
     Rgraphviz,
