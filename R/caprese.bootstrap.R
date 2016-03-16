@@ -20,13 +20,18 @@
 # @param bootstrap.statistics Result of a previous bootstrap analysis
 # @return bootstrap.statistics: statistics of the bootstrap
 #
-bootstrap.caprese <- function(dataset, 
-                              lambda,
-                              silent,
-                              reconstruction, 
+bootstrap.caprese <- function(reconstruction, 
                               command = "non-parametric",
-                              nboot = 100,
-                              bootstrap.statistics = list()) {
+                              nboot) {
+
+
+    dataset = as.genotypes(reconstruction)
+    lambda = as.parameters(reconstruction)$lambda
+    silent = TRUE
+    bootstrap.statistics = list()
+    if (!is.null(reconstruction$bootstrap)) {
+        bootstrap.statistics = reconstruction$bootstrap
+    }
     
     ## Start the clock to measure the execution time.
     ptm <- proc.time();

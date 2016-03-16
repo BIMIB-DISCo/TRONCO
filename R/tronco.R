@@ -1015,57 +1015,63 @@ tronco.bootstrap <- function(reconstruction,
 
     ## Set all the needed parameters to perform the bootstrap
     ## estimation.
-    
-    if (type == "non-parametric"
-        || type == "parametric"
-        || type == "statistical") {
 
-        dataset = reconstruction$genotypes
-        silent = TRUE
-
-        if (!is.null(reconstruction$bootstrap)) {
-            bootstrap = reconstruction$bootstrap
-        }
-        else {
-            bootstrap = list()
-        }
-
-        if (reconstruction$parameters$algorithm == "CAPRESE") {
-            lambda = reconstruction$parameters$lambda
-        } else if (reconstruction$parameters$algorithm == "CAPRI") {
-
-            if (nhypotheses(reconstruction$hypotheses)) {
-                hypotheses = reconstruction$hypotheses
-            } else {
-                hypotheses = NA
-            }
-
-            command.capri = reconstruction$parameters$command
-            regularization = reconstruction$parameters$regularization
-            do.boot = reconstruction$parameters$do.boot
-            nboot.capri = reconstruction$parameters$nboot
-            pvalue = reconstruction$parameters$pvalue
-            min.boot = reconstruction$parameters$min.boot
-            min.stat = reconstruction$parameters$min.stat
-            boot.seed = reconstruction$parameters$boot.seed
-            if (type == 'statistical') boot.seed = NULL
-        } else if (reconstruction$parameters$algorithm == "EDMONDS" 
-                   || reconstruction$parameters$algorithm == "CHOW_LIU" 
-                   || reconstruction$parameters$algorithm == "PRIM") {
-
-            regularization = reconstruction$parameters$regularization
-            do.boot = reconstruction$parameters$do.boot
-            nboot.capri = reconstruction$parameters$nboot
-            pvalue = reconstruction$parameters$pvalue
-            min.boot = reconstruction$parameters$min.boot
-            min.stat = reconstruction$parameters$min.stat
-            boot.seed = reconstruction$parameters$boot.seed
-            if (type == 'statistical') boot.seed = NULL
-        }
-    } else {
-        stop("The types of bootstrap that can be performed are: non-parametric,\nparametric or statistical.",
+    if (!type %in% c()) {
+        stop(paste("The types of bootstrap that can be performed are:",
+                   "non-parametric, parametric or statistical.")
              call. = FALSE)
     }
+    
+#    if (type == "non-parametric"
+#        || type == "parametric"
+#        || type == "statistical") {
+#
+#        dataset = reconstruction$genotypes
+#        silent = TRUE
+#
+#        if (!is.null(reconstruction$bootstrap)) {
+#            bootstrap = reconstruction$bootstrap
+#        }
+#        else {
+#            bootstrap = list()
+#        }
+#
+#        if (reconstruction$parameters$algorithm == "CAPRESE") {
+#            lambda = reconstruction$parameters$lambda
+#        } else if (reconstruction$parameters$algorithm == "CAPRI") {
+#
+#            if (nhypotheses(reconstruction$hypotheses)) {
+#                hypotheses = reconstruction$hypotheses
+#            } else {
+#                hypotheses = NA
+#            }
+#
+#            command.capri = reconstruction$parameters$command
+#            regularization = reconstruction$parameters$regularization
+#            do.boot = reconstruction$parameters$do.boot
+#            nboot.capri = reconstruction$parameters$nboot
+#            pvalue = reconstruction$parameters$pvalue
+#            min.boot = reconstruction$parameters$min.boot
+#            min.stat = reconstruction$parameters$min.stat
+#            boot.seed = reconstruction$parameters$boot.seed
+#            if (type == 'statistical') boot.seed = NULL
+#        } else if (reconstruction$parameters$algorithm == "EDMONDS" 
+#                   || reconstruction$parameters$algorithm == "CHOW_LIU" 
+#                   || reconstruction$parameters$algorithm == "PRIM") {
+#
+#            regularization = reconstruction$parameters$regularization
+#            do.boot = reconstruction$parameters$do.boot
+#            nboot.capri = reconstruction$parameters$nboot
+#            pvalue = reconstruction$parameters$pvalue
+#            min.boot = reconstruction$parameters$min.boot
+#            min.stat = reconstruction$parameters$min.stat
+#            boot.seed = reconstruction$parameters$boot.seed
+#            if (type == 'statistical') boot.seed = NULL
+#        }
+#    } else {
+#        stop("The types of bootstrap that can be performed are: non-parametric,\nparametric or statistical.",
+#             call. = FALSE)
+#    }
 
     ## Perform the selected bootstrap procedure.
     
@@ -1073,143 +1079,50 @@ tronco.bootstrap <- function(reconstruction,
 
     if (reconstruction$parameters$algorithm == "CAPRESE") {
 
-        curr.boot =
-            bootstrap.caprese(dataset,
-                              lambda,
-                              silent,
-                              reconstruction, 
-                              type,
-                              nboot,
-                              bootstrap)
+        lambda = reconstruction$parameters$lambda
+        curr.boot = bootstrap.caprese(reconstruction, type, nboot)
+        cat("\nPerformed", type,
+            "bootstrap with", nboot,
+            "resampling and", lambda, 
+            "as shrinkage parameter.\n")
 
-
-        reconstruction$bootstrap = curr.boot
-
-        cat(paste("\nPerformed ",
-                  type,
-                  " bootstrap with ",
-                  nboot,
-                  " resampling and ",
-                  lambda, "\nas shrinkage parameter.\n\n",
-                  sep =""))
-
-    } else if (reconstruction$parameters$algorithm == "CAPRI") {
-        curr.boot =
-            bootstrap.capri(dataset, 
-                            hypotheses, 
-                            command.capri, 
-                            regularization, 
-                            do.boot,
-                            nboot.capri, 
-                            pvalue,
-                            min.boot,
-                            min.stat,
-                            boot.seed,
-                            silent,
-                            reconstruction, 
-                            type,
-                            nboot,
-                            bootstrap,
-                            verbose,
-                            cores.ratio)
-
-        reconstruction$bootstrap = curr.boot
+    } else {
         
-        if (do.boot == TRUE) {
-            cat(paste("\nPerformed ",
-                      type,
-                      " bootstrap with ",
-                      nboot,
-                      " resampling and ",
-                      pvalue,
-                      " as pvalue \nfor the statistical tests.\n\n",
-                      sep =""))
-        } else {
-            cat(paste("\nPerformed ",
-                      type,
-                      " bootstrap with ",
-                      nboot,
-                      " resampling.\n\n",
-                      sep =""))
-        }
-    } else if (reconstruction$parameters$algorithm == "EDMONDS" 
-               || reconstruction$parameters$algorithm == "CHOW_LIU" 
-               || reconstruction$parameters$algorithm == "PRIM") {
-        
-        if (reconstruction$parameters$algorithm == "EDMONDS") {
-        	curr.boot =
-            bootstrap.edmonds(dataset, 
-                            regularization, 
-                            do.boot,
-                            nboot.capri, 
-                            pvalue,
-                            min.boot,
-                            min.stat,
-                            boot.seed,
-                            silent,
-                            reconstruction, 
-                            type,
-                            nboot,
-                            bootstrap,
-                            verbose,
-                            cores.ratio)
+        if (reconstruction$parameters$algorithm == "CAPRI") {
+            curr.boot = bootstrap.capri(reconstruction, 
+                                        type,
+                                        verbose,
+                                        cores.ratio)
+
+        } else if (reconstruction$parameters$algorithm == "EDMONDS") {
+        	curr.boot = bootstrap.edmonds(reconstruction, 
+                                          type,
+                                          verbose,
+                                          cores.ratio)
         } else if (reconstruction$parameters$algorithm == "CHOW_LIU") {
-        	curr.boot =
-            bootstrap.chow.liu(dataset, 
-                            regularization, 
-                            do.boot,
-                            nboot.capri, 
-                            pvalue,
-                            min.boot,
-                            min.stat,
-                            boot.seed,
-                            silent,
-                            reconstruction, 
-                            type,
-                            nboot,
-                            bootstrap,
-                            verbose,
-                            cores.ratio)
+        	curr.boot = bootstrap.chow.liu(reconstruction, 
+                                           type,
+                                           verbose,
+                                           cores.ratio)
         } else if (reconstruction$parameters$algorithm == "PRIM") {
-        	curr.boot =
-            bootstrap.prim(dataset, 
-                            regularization, 
-                            do.boot,
-                            nboot.capri, 
-                            pvalue,
-                            min.boot,
-                            min.stat,
-                            boot.seed,
-                            silent,
-                            reconstruction, 
-                            type,
-                            nboot,
-                            bootstrap,
-                            verbose,
-                            cores.ratio)
+        	curr.boot = bootstrap.prim(reconstruction, 
+                                       type,
+                                       verbose,
+                                       cores.ratio)
         }
 
-        reconstruction$bootstrap = curr.boot
         
-        if (do.boot == TRUE) {
-            cat(paste("\nPerformed ",
-                      type,
-                      " bootstrap with ",
-                      nboot,
-                      " resampling and ",
-                      pvalue,
-                      " as pvalue \nfor the statistical tests.\n\n",
-                      sep =""))
-        } else {
-            cat(paste("\nPerformed ",
-                      type,
-                      " bootstrap with ",
-                      nboot,
-                      " resampling.\n\n",
-                      sep =""))
-        }
-    }
+        cat("\nPerformed", type,
+            "bootstrap with", nboot,
+            "resampling")
 
+        if (do.boot == TRUE) {
+            pvalue = reconstruction$parameters$pvalue
+            cat("and", pvalue, "as pvalue for the statistical tests")
+        } 
+        cat(".\n")
+    }
+    reconstruction$bootstrap = curr.boot
     return(reconstruction)
 }
 
