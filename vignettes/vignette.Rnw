@@ -12,7 +12,6 @@ BiocStyle::latex()
 
 \usepackage{fullpage}
 
-\usepackage{marginnote}
 \usepackage{graphicx}
 
 \usepackage[table]{xcolor} %http://ctan.org/pkg/xcolor
