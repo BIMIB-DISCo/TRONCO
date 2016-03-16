@@ -19,7 +19,6 @@
 # @param min.boot minimum number of bootstrapping to be performed
 # @param min.stat should I keep bootstrapping untill I have nboot valid values?
 # @param boot.seed seed to be used for the sampling
-# @param do.estimation should I perform the estimation of the error rates and probabilities?
 # @param silent should I be verbose?
 # @param reconstruction Result of a previous reconstruction
 # @param command should I perform non-parametric or parametric bootstrap?
@@ -36,7 +35,6 @@ bootstrap.edmonds <- function(dataset,
                               min.boot,
                               min.stat,
                               boot.seed,
-                              do.estimation,
                               silent,
                               reconstruction, 
                               command = "non-parametric",

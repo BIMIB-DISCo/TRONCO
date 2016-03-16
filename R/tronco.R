@@ -327,7 +327,8 @@ tronco.capri <- function(data,
 }
 
 
-#' Reconstruct a progression model using Edmonds algorithm combined with probabilistic causation
+#' Reconstruct a progression model using Edmonds algorithm combined 
+#' with probabilistic causation
 #'
 #' @examples
 #' data(test_dataset)
@@ -336,12 +337,19 @@ tronco.capri <- function(data,
 #'
 #' @title tronco edmonds
 #' @param data A TRONCO compliant dataset.
-#' @param regularization Select the regularization for the likelihood estimation, e.g., BIC, AIC. 
-#' @param do.boot A parameter to disable/enable the estimation of the error rates give the reconstructed model.
-#' @param nboot Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores. 
-#' @param pvalue Pvalue to accept/reject the valid selective advantage relations. 
-#' @param min.boot Minimum number of bootstrap sampling to be performed. 
-#' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
+#' @param regularization Select the regularization for the 
+#' likelihood estimation, e.g., BIC, AIC. 
+#' @param do.boot A parameter to disable/enable the estimation 
+#' of the error rates give the reconstructed model.
+#' @param nboot Number of bootstrap sampling (with rejection) 
+#' to be performed when estimating the selective advantage scores. 
+#' @param pvalue Pvalue to accept/reject the valid selective 
+#' advantage relations. 
+#' @param min.boot Minimum number of bootstrap sampling to be 
+#' performed. 
+#' @param min.stat A parameter to disable/enable the minimum number
+#' of bootstrap sampling required besides nboot if any sampling 
+#' is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
@@ -473,7 +481,6 @@ tronco.edmonds <- function(data,
         rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
         colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
 
-
     }
 
     ## Structure to save the results.
@@ -530,7 +537,8 @@ tronco.edmonds <- function(data,
 }
 
 
-#' Reconstruct a progression model using Chow Liu algorithm combined with probabilistic causation
+#' Reconstruct a progression model using Chow Liu 
+#' algorithm combined with probabilistic causation
 #'
 #' @examples
 #' data(test_dataset)
@@ -539,15 +547,25 @@ tronco.edmonds <- function(data,
 #'
 #' @title tronco chow liu
 #' @param data A TRONCO compliant dataset.
-#' @param regularization Select the regularization for the likelihood estimation, e.g., BIC, AIC. 
-#' @param do.boot A parameter to disable/enable the estimation of the error rates give the reconstructed model.
-#' @param nboot Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores. 
-#' @param pvalue Pvalue to accept/reject the valid selective advantage relations. 
-#' @param min.boot Minimum number of bootstrap sampling to be performed. 
-#' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
-#' @param boot.seed Initial seed for the bootstrap random sampling.
-#' @param silent A parameter to disable/enable verbose messages.
-#' @return A TRONCO compliant object with reconstructed model
+#' @param regularization Select the regularization for the
+#' likelihood estimation, e.g., BIC, AIC. 
+#' @param do.boot A parameter to disable/enable the estimation 
+#' of the error rates give the reconstructed model.
+#' @param nboot Number of bootstrap sampling (with rejection) 
+#' to be performed when estimating the selective advantage scores. 
+#' @param pvalue Pvalue to accept/reject the valid selective
+#' advantage relations. 
+#' @param min.boot Minimum number of bootstrap sampling 
+#' to be performed. 
+#' @param min.stat A parameter to disable/enable the minimum 
+#' number of bootstrap sampling required besides nboot if 
+#' any sampling is rejected. 
+#' @param boot.seed Initial seed for the bootstrap random 
+#' sampling.
+#' @param silent A parameter to disable/enable verbose 
+#' messages.
+#' @return A TRONCO compliant object with reconstructed 
+#' model
 #' @export tronco.chow.liu
 #' @importFrom bnlearn hc tabu
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
@@ -733,12 +751,19 @@ tronco.chow.liu <- function(data,
 #'
 #' @title tronco prim
 #' @param data A TRONCO compliant dataset.
-#' @param regularization Select the regularization for the likelihood estimation, e.g., BIC, AIC. 
-#' @param do.boot A parameter to disable/enable the estimation of the error rates give the reconstructed model.
-#' @param nboot Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores. 
-#' @param pvalue Pvalue to accept/reject the valid selective advantage relations. 
-#' @param min.boot Minimum number of bootstrap sampling to be performed. 
-#' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
+#' @param regularization Select the regularization for the 
+#' likelihood estimation, e.g., BIC, AIC. 
+#' @param do.boot A parameter to disable/enable the estimation 
+#' of the error rates give the reconstructed model.
+#' @param nboot Number of bootstrap sampling (with rejection) 
+#' to be performed when estimating the selective advantage scores. 
+#' @param pvalue Pvalue to accept/reject the valid selective 
+#' advantage relations. 
+#' @param min.boot Minimum number of bootstrap sampling to 
+#' be performed. 
+#' @param min.stat A parameter to disable/enable the minimum 
+#' number of bootstrap sampling required besides nboot if 
+#' any sampling is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
@@ -936,11 +961,15 @@ tronco.prim <- function(data,
 #' tronco.plot(boot)
 #'
 #' @title tronco bootstrap
-#' @param reconstruction The output of tronco.capri or tronco.caprese
-#' @param type Parameter to define the type of sampling to be performed, e.g., non-parametric for uniform sampling.
-#' @param nboot Number of bootstrap sampling to be performed when estimating the model confidence.
+#' @param reconstruction The output of tronco.capri or 
+#' tronco.caprese
+#' @param type Parameter to define the type of sampling 
+#' to be performed, e.g., non-parametric for uniform sampling.
+#' @param nboot Number of bootstrap sampling to be performed 
+#' when estimating the model confidence.
 #' @param verbose Should I be verbose?
-#' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
+#' @param cores.ratio Percentage of cores to use
+#' coresRate * (numCores - 1)
 #' @return A TRONCO compliant object with reconstructed model
 #' @importFrom doParallel registerDoParallel  
 #' @importFrom foreach foreach %dopar%
@@ -965,9 +994,6 @@ tronco.bootstrap <- function(reconstruction,
     
     is.compliant(reconstruction)
     
-    ## Just for compatibility
-    do.estimation = FALSE
-
     ##
     ## DEV VERSION
     ##
@@ -981,7 +1007,9 @@ tronco.bootstrap <- function(reconstruction,
              || reconstruction$parameters$algorithm == "CHOW_LIU"
              || reconstruction$parameters$algorithm == "EDMONDS")
              && reconstruction$parameters$do.boot == TRUE)) {
-        stop("To perform statistical bootstrap, the algorithm used for the reconstruction\nmust by CAPRI with bootstrap.",
+        stop(paste("To perform statistical bootstrap, the algorithm used for",
+                   "the reconstruction must be CAPRI, PRIM, CHOW_LIU or EDMONDS",
+                   "with bootstrap."),
              call. = FALSE)
     }
 
@@ -1006,7 +1034,7 @@ tronco.bootstrap <- function(reconstruction,
             lambda = reconstruction$parameters$lambda
         } else if (reconstruction$parameters$algorithm == "CAPRI") {
 
-            if (!is.null(reconstruction$hypotheses)) {
+            if (nhypotheses(reconstruction$hypotheses)) {
                 hypotheses = reconstruction$hypotheses
             } else {
                 hypotheses = NA
@@ -1048,7 +1076,6 @@ tronco.bootstrap <- function(reconstruction,
         curr.boot =
             bootstrap.caprese(dataset,
                               lambda,
-                              do.estimation,
                               silent,
                               reconstruction, 
                               type,
@@ -1078,7 +1105,6 @@ tronco.bootstrap <- function(reconstruction,
                             min.boot,
                             min.stat,
                             boot.seed,
-                            do.estimation,
                             silent,
                             reconstruction, 
                             type,
@@ -1120,7 +1146,6 @@ tronco.bootstrap <- function(reconstruction,
                             min.boot,
                             min.stat,
                             boot.seed,
-                            do.estimation,
                             silent,
                             reconstruction, 
                             type,
@@ -1138,7 +1163,6 @@ tronco.bootstrap <- function(reconstruction,
                             min.boot,
                             min.stat,
                             boot.seed,
-                            do.estimation,
                             silent,
                             reconstruction, 
                             type,
@@ -1156,7 +1180,6 @@ tronco.bootstrap <- function(reconstruction,
                             min.boot,
                             min.stat,
                             boot.seed,
-                            do.estimation,
                             silent,
                             reconstruction, 
                             type,
@@ -1198,34 +1221,53 @@ tronco.bootstrap <- function(reconstruction,
 #' data(test_model)
 #' tronco.plot(test_model)
 #'
-#' @param x A reconstructed model (the output of the inference by a tronco function)
-#' @param models A vector containing the names of the algorithms used (caprese, capri_bic, etc)
-#' @param fontsize For node names. Default NA for automatic rescaling
-#' @param height Proportion node height - node width. Default height 2
-#' @param width Proportion node height - node width. Default width 2
-#' @param height.logic Height of logical nodes. Defaul 1
-#' @param pf Should I print Prima Facie? Default False
-#' @param disconnected Should I print disconnected nodes? Default False
-#' @param scale.nodes Node scaling coefficient (based on node frequency). Default NA (autoscale)
+#' @param x A reconstructed model (the output of the inference 
+#' by a tronco function)
+#' @param models A vector containing the names of the 
+#' algorithms used (caprese, capri_bic, etc)
+#' @param fontsize For node names. Default NA for 
+#' automatic rescaling
+#' @param height Proportion node height - node width. 
+#' Default height 2
+#' @param width Proportion node height - node width. 
+#' Default width 2
+#' @param height.logic Height of logical nodes. 
+#' Defaul 1
+#' @param pf Should I print Prima Facie? 
+#' Default False
+#' @param disconnected Should I print disconnected 
+#' nodes? Default False
+#' @param scale.nodes Node scaling coefficient 
+#' (based on node frequency). Default NA (autoscale)
 #' @param title Title of the plot. Default as.description(x)  
-#' @param confidence Should I add confidence informations? No if NA
+#' @param confidence Should I add confidence 
+#' informations? No if NA
 #' @param p.min p-value cutoff. Default automatic
 #' @param legend Should I visualise the legend?
 #' @param legend.cex CEX value for legend. Default 1.0
 #' @param edge.cex CEX value for edge labels. Default 1.0
-#' @param label.edge.size Size of edge labels. Default NA for automatic rescaling
+#' @param label.edge.size Size of edge labels. 
+#' Default NA for automatic rescaling
 #' @param expand Should I expand hypotheses? Default TRUE
-#' @param genes Visualise only genes in this list. Default NULL, visualise all.
-#' @param relations.filter Filter relations to dispaly according to this functions. Default NA
+#' @param genes Visualise only genes in this list. 
+#' Default NULL, visualise all.
+#' @param relations.filter Filter relations to dispaly 
+#' according to this functions. Default NA
 #' @param edge.color Edge color. Default 'black'
-#' @param pathways.color RColorBrewer colorser for patways. Default 'Set1'.
-#' @param file String containing filename for PDF output. If NA no PDF output will be provided
+#' @param pathways.color RColorBrewer colorser 
+#' for patways. Default 'Set1'.
+#' @param file String containing filename for PDF output. 
+#' If NA no PDF output will be provided
 #' @param legend.pos Legend position. Default 'bottom',
-#' @param pathways A vector containing pathways information as described in as.patterns()
+#' @param pathways A vector containing pathways information 
+#' as described in as.patterns()
 #' @param lwd Edge base lwd. Default 3
-#' @param annotate.sample = List of samples to search for events in model
-#' @param export.igraph If TRUE export the igraph object generated
-#' @param ... Additional arguments for RGraphviz plot function
+#' @param annotate.sample = List of samples to search 
+#' for events in model
+#' @param export.igraph If TRUE export the igraph 
+#' object generated
+#' @param ... Additional arguments for RGraphviz 
+#' plot function
 #' @return Information about the reconstructed model               
 #' @export tronco.plot
 #' @importFrom RColorBrewer brewer.pal.info brewer.pal
@@ -1491,7 +1533,7 @@ tronco.plot <- function(x,
 
     if (is.na(fontsize)) {
         fontsize = 24 - 4*log(nrow(hypo_mat))
-        cat(paste0('Set automatic fontsize scaling for node labels: ', fontsize, '\n'))
+        cat('Set automatic fontsize scaling for node labels: ', fontsize, '\n')
     }
     nAttrs$fontsize = rep(fontsize, length(node_names))
     names(nAttrs$fontsize) = node_names
@@ -1541,7 +1583,7 @@ tronco.plot <- function(x,
         }
     }
 
-                                        ## Use colors defined in
+    ## Use colors defined in
     ## tronco$types.
     
     w =

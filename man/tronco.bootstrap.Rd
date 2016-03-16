@@ -8,15 +8,19 @@ tronco.bootstrap(reconstruction, type = "non-parametric", nboot = 100,
   verbose = FALSE, cores.ratio = 1)
 }
 \arguments{
-\item{reconstruction}{The output of tronco.capri or tronco.caprese}
+\item{reconstruction}{The output of tronco.capri or 
+tronco.caprese}
 
-\item{type}{Parameter to define the type of sampling to be performed, e.g., non-parametric for uniform sampling.}
+\item{type}{Parameter to define the type of sampling 
+to be performed, e.g., non-parametric for uniform sampling.}
 
-\item{nboot}{Number of bootstrap sampling to be performed when estimating the model confidence.}
+\item{nboot}{Number of bootstrap sampling to be performed 
+when estimating the model confidence.}
 
 \item{verbose}{Should I be verbose?}
 
-\item{cores.ratio}{Percentage of cores to use. coresRate * (numCores - 1)}
+\item{cores.ratio}{Percentage of cores to use
+coresRate * (numCores - 1)}
 }
 \value{
 A TRONCO compliant object with reconstructed model

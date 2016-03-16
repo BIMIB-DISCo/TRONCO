@@ -13,7 +13,6 @@
 # @title bootstrap.caprese
 # @param dataset a dataset describing a progressive phenomenon
 # @param lambda shrinkage parameter (value in [0,1])
-# @param do.estimation should I perform the estimation of the error rates and probabilities?
 # @param silent should I be verbose?
 # @param reconstruction Result of a previous reconstruction
 # @param command type of search for the likelihood fit, either hill climbing (hc) or tabu (tabu)
@@ -23,7 +22,6 @@
 #
 bootstrap.caprese <- function(dataset, 
                               lambda,
-                              do.estimation,
                               silent,
                               reconstruction, 
                               command = "non-parametric",

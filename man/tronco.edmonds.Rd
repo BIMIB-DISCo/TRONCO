@@ -11,17 +11,24 @@ tronco.edmonds(data, regularization = "none", do.boot = TRUE, nboot = 100,
 \arguments{
 \item{data}{A TRONCO compliant dataset.}
 
-\item{regularization}{Select the regularization for the likelihood estimation, e.g., BIC, AIC.}
+\item{regularization}{Select the regularization for the 
+likelihood estimation, e.g., BIC, AIC.}
 
-\item{do.boot}{A parameter to disable/enable the estimation of the error rates give the reconstructed model.}
+\item{do.boot}{A parameter to disable/enable the estimation 
+of the error rates give the reconstructed model.}
 
-\item{nboot}{Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores.}
+\item{nboot}{Number of bootstrap sampling (with rejection) 
+to be performed when estimating the selective advantage scores.}
 
-\item{pvalue}{Pvalue to accept/reject the valid selective advantage relations.}
+\item{pvalue}{Pvalue to accept/reject the valid selective 
+advantage relations.}
 
-\item{min.boot}{Minimum number of bootstrap sampling to be performed.}
+\item{min.boot}{Minimum number of bootstrap sampling to be 
+performed.}
 
-\item{min.stat}{A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected.}
+\item{min.stat}{A parameter to disable/enable the minimum number
+of bootstrap sampling required besides nboot if any sampling 
+is rejected.}
 
 \item{boot.seed}{Initial seed for the bootstrap random sampling.}
 
@@ -31,7 +38,8 @@ tronco.edmonds(data, regularization = "none", do.boot = TRUE, nboot = 100,
 A TRONCO compliant object with reconstructed model
 }
 \description{
-Reconstruct a progression model using Edmonds algorithm combined with probabilistic causation
+Reconstruct a progression model using Edmonds algorithm combined 
+with probabilistic causation
 }
 \examples{
 data(test_dataset)
