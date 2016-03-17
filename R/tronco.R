@@ -746,7 +746,7 @@ tronco.mst.chowliu <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.prim(test_dataset_no_hypos)
+#' recon = tronco.mst.prim(test_dataset_no_hypos)
 #' tronco.plot(recon)
 #'
 #' @title tronco mst prim

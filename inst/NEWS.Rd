@@ -1,9 +1,8 @@
-\name{cqnnews}
-\title{Rgraphviz News}
+\title{TRONCO News}
 \encoding{UTF-8}
 
-\section{Version 2.3.0}{
+\section{Changes in Version 2.3.0}{
   \itemize{
-    \item Release 
+    \item Release 2.3.0
   }
 }

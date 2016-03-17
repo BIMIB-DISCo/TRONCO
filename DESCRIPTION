@@ -65,5 +65,6 @@ URL: https://sites.google.com/site/troncopackage/
 BugReports: https://github.com/BIMIB-DISCo/TRONCO
 biocViews: BiomedicalInformatics, 
            Bayesian,
-           GraphAndNetwork 
+           GraphAndNetwork,
+           SomaticMutation
 RoxygenNote: 5.0.1
