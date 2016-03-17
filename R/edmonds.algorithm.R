@@ -18,7 +18,6 @@
 # @param min.boot minimum number of bootstrapping to be performed
 # @param min.stat should I keep bootstrapping untill I have nboot valid values?
 # @param boot.seed seed to be used for the sampling
-# @param do.estimation should I perform the estimation of the error rates and probabilities?
 # @param silent should I be verbose?
 # @return topology: the reconstructed tree topology
 #
@@ -30,7 +29,6 @@ edmonds.fit <- function(dataset,
                         min.boot = 3,
                         min.stat = TRUE,
                         boot.seed = NULL,
-                        do.estimation = FALSE,
                         silent = FALSE ) {
 
     ## Start the clock to measure the execution time.
@@ -134,28 +132,12 @@ edmonds.fit <- function(dataset,
 
         ## Perform the estimation of the probabilities if requested.
         
-        if (do.estimation) {
-            ## Estimate the error rates and, given them, the
-            ## probabilities.
-            
-            estimated.error.rates =
-                estimate.tree.error.rates(best.parents$marginal.probs,
-                                          best.parents$joint.probs,
-                                          parents.pos);
-            estimated.probabilities =
-                estimate.tree.probs(best.parents$marginal.probs,
-                                    best.parents$joint.probs,
-                                    parents.pos,
-                                    estimated.error.rates);
-        } else {
-            estimated.error.rates.fit =
-                list(error.fp = NA,
-                     error.fn = NA);
-            estimated.probabilities.fit =
-                list(marginal.probs = NA,
-                     joint.probs = NA,
-                     conditional.probs = NA);
-        }
+
+        estimated.error.rates.fit = list(error.fp = NA,
+                                         error.fn = NA)
+        estimated.probabilities.fit = list(marginal.probs = NA,
+                                           joint.probs = NA,
+                                           conditional.probs = NA);
 
         ## Set results for the current regolarizator.
         
@@ -195,7 +177,6 @@ edmonds.fit <- function(dataset,
              min.boot = min.boot,
              min.stat = min.stat,
              boot.seed = boot.seed,
-             do.estimation = do.estimation,
              silent = silent);
 
     ## Return the results.

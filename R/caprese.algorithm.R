@@ -13,13 +13,11 @@
 # @title caprese.fit
 # @param dataset a dataset describing a progressive phenomenon
 # @param lambda shrinkage parameter (value in [0,1])
-# @param do.estimation should I perform the estimation of the error rates and probabilities?
 # @param silent execute the algorithm in silent mode
 # @return topology: the reconstructed tree-like topology
 #
 caprese.fit <- function(dataset,
                         lambda = 0.5,
-                        do.estimation = FALSE,
                         silent = FALSE) {
     
     ## Start the clock to measure the execution time.
@@ -146,31 +144,12 @@ caprese.fit <- function(dataset,
         }
     }
     
-    if (do.estimation) {
-        
-        ## Estimate the error rates and, given them, the
-        ## probabilities.
-        
-        estimated.error.rates =
-            estimate.tree.error.rates(best.parents$marginal.probs,
-                                      best.parents$joint.probs,
-                                      parents.pos);
-        estimated.probabilities =
-            estimate.tree.probs(best.parents$marginal.probs,
-                                best.parents$joint.probs,
-                                parents.pos,
-                                estimated.error.rates);
-    } else {
-        estimated.error.rates =
-            list(error.fp = NA,
-                 error.fn = NA);
-        estimated.probabilities =
-            list(marginal.probs = NA,
-                 joint.probs = NA,
-                 conditional.probs = NA); 
-    }
-    error.rates = estimated.error.rates;
-    estimated.probabilities.fit = estimated.probabilities;
+    estimated.error.rates = list(error.fp = NA, error.fn = NA)
+    estimated.probabilities = list(marginal.probs = NA, 
+                                   joint.probs = NA,
+                                   conditional.probs = NA)
+    error.rates = estimated.error.rates
+    estimated.probabilities.fit = estimated.probabilities
     
     ## Structures where to save the results.
     
@@ -205,7 +184,6 @@ caprese.fit <- function(dataset,
     parameters =
         list(algorithm = "CAPRESE",
              lambda = lambda,
-             do.estimation = do.estimation,
              silent = silent);
     
     ## Return the results.

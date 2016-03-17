@@ -9,43 +9,62 @@
 #### which accompanies this distribution.
 
 
-# perform non-parametric or parametric bootstrap to evalutate the confidence of the reconstruction
-# @title bootstrap.chow.liu
-# @param dataset a dataset describing a progressive phenomenon
-# @param regularization regularizators to be used for the likelihood fit
-# @param do.boot should I perform bootstrap? Yes if TRUE, no otherwise
-# @param nboot.algorithm integer number (greater than 0) of bootstrap sampling to be performed
-# @param pvalue pvalue for the tests (value between 0 and 1)
-# @param min.boot minimum number of bootstrapping to be performed
-# @param min.stat should I keep bootstrapping untill I have nboot valid values?
-# @param boot.seed seed to be used for the sampling
-# @param silent should I be verbose?
+# perform non-parametric or statistical bootstrap to evalutate the confidence of the reconstruction
+# @title bootstrap.capri
 # @param reconstruction Result of a previous reconstruction
-# @param command should I perform non-parametric or parametric bootstrap?
-# @param nboot number of bootstrap resampling to be performed
-# @param bootstrap.statistics Result of a previous bootstrap analysis
-# @param verbose Should I print messages?
+# @param command should I perform non-parametric or statistical bootstrap?
+# @param nboot.algorithm integer number (greater than 0) of bootstrap sampling to be performed
+# @param cores.ratio Percentage of cores to use
 # @return bootstrap.statistics: statistics of the bootstrap
 #
-bootstrap.chow.liu <- function(dataset, 
-                               regularization, 
-                               do.boot,
-                               nboot.algorithm, 
-                               pvalue,
-                               min.boot,
-                               min.stat,
-                               boot.seed,
-                               silent,
-                               reconstruction, 
-                               command = "non-parametric",
-                               nboot = 100,
-                               bootstrap.statistics = list(),
-                               verbose = FALSE,
-                               cores.ratio = 1) {
+bootstrap <- function(reconstruction, 
+                      command = "non-parametric",
+                      nboot = 100,
+                      cores.ratio = 1) {
     
+
+    parameters = as.parameters(reconstruction)
+    type = parameters$algorithm
+
+    dataset = as.genotypes(reconstruction)
+
+    bootstrap.statistics = list()
+    if (!is.null(reconstruction$bootstrap)) {
+        bootstrap.statistics = reconstruction$bootstrap
+    }
+    
+    ## Get CAPRI parameters.
+    
+    if (type == 'CAPRI') {
+        command.capri = parameters$command
+        hypotheses = NA
+        if (nhypotheses(reconstruction) > 0) {
+            hypotheses = reconstruction$hypotheses
+        }
+    }
+
+    ## Get CAPRESE parameters.
+
+    if (type == 'CAPRESE') {
+        lambda = parameters$lambda
+    }
+
+    ## Get other parameters.
+
+    if (type %in% c('CAPRI', 'EDMONDS', 'CHOW_LIU', 'PRIM')) {
+        regularization = parameters$regularization
+        do.boot = parameters$do.boot
+        nboot.algorithm = parameters$nboot
+        pvalue = parameters$pvalue
+        min.boot = parameters$min.boot
+        min.stat = parameters$min.stat
+        boot.seed = parameters$boot.seed
+    }
+
+    silent = TRUE
+
+
     ## Start the clock to measure the execution time
-    
-    ## library(doParallel)
 
     ptm <- proc.time();
     
@@ -85,200 +104,129 @@ bootstrap.chow.liu <- function(dataset,
 
     expected.execution.time =
         round(((reconstruction$execution.time[3] * nboot) / (cores)), digits = 0)
-    cat("Expected completion in approx.",
+    cat("\tExpected completion in approx.",
         format(.POSIXct(expected.execution.time, tz="GMT"),
                "%Hh:%Mm:%Ss"),
         "\n")
 
-    if (!verbose) {
-        cl = makeCluster(cores)    
-    } else {
-        cl = makeCluster(cores, outfile="")
-    }
+
+    cl = makeCluster(cores)    
 
     registerDoParallel(cl)
-    cat('*** Using', cores, 'cores via "parallel" \n')
+    cat('\tUsing', cores, 'cores via "parallel" \n')
     
     ## Perform nboot bootstrap resampling
-    ## for (num in 1:nboot
-
-    ## If parametric bootstrap selected prepare input.
-
-    if (command == 'parametric') {
-        
-        ## Structure to save the samples probabilities.
-        
-        samples.probabilities = list();
-        
-        ## Define the possible samples given the current number of events.
-        
-        possible.strings = 2 ^ ncol(dataset)
-        
-        err = ""
-        message = "Too many events in the dataset! Parametric bootstrastap can not be performed."
-        err =
-            tryCatch({
-                curr.dataset = suppressWarnings(array(0, c(possible.strings, ncol(dataset))))
-            }, error = function(e) {
-                err <- message
-            })
-        
-        
-        if (toString(err) == message) {
-            stop(err, call. = FALSE)
-        }
-        
-        for (i in 1:possible.strings) {
-            curr.dataset[i, ] = decimal.to.binary.dag(i - 1, ncol(dataset))
-        }
-
-        colnames(curr.dataset) = colnames(dataset)
-        
-        for (m in names(as.models(reconstruction))) {
-            
-            ## Estimate the samples probabilities for each model.
-            
-            samples.probabilities[m] =
-                list(estimate.dag.samples(curr.dataset,
-                                          as.adj.matrix(reconstruction, models = m)[[m]],
-                                          as.marginal.probs(reconstruction, models = m, type = "fit")[[m]],
-                                          as.conditional.probs(reconstruction, models = m, type = "fit")[[m]],
-                                          as.parents.pos(reconstruction, models = m)[[m]],
-                                          as.error.rates(reconstruction, models = m)[[m]]))
-        }
-    }
     
-    r =
-        foreach(num = 1:nboot ) %dopar% {    
+    r = foreach(num = 1:nboot ) %dopar% {    
             
-            ## Performed the bootstrapping procedure.
-            
-            if (command == "non-parametric") {
-                
-                ## Perform the sampling for the current step of bootstrap.
-                
-                samples = sample(1:nrow(dataset), size = nrow(dataset), replace = TRUE)
-                bootstrapped.dataset = dataset[samples,]
-                
-                curr.reconstruction = list()
-                curr.reconstruction$genotypes = bootstrapped.dataset
-                curr.reconstruction$annotations = reconstruction$annotations
-                curr.reconstruction$types = reconstruction$types
-                
-                ## Perform the reconstruction on the bootstrapped dataset.
-                
-                bootstrapped.topology =
-                    tronco.chow.liu(curr.reconstruction,
-                                 regularization,
-                                 do.boot,
-                                 nboot.algorithm,
-                                 pvalue,
-                                 min.boot,
-                                 min.stat,
-                                 boot.seed,
-                                 silent)
+        ## Performed the bootstrapping procedure.
+        
+        curr.reconstruction = list()
 
-                curr.reconstruction = bootstrapped.topology;
-
-            } else if (command=="parametric") {
-                
-                ## Perform the reconstruction for each model.
-                
-                new.reconstruction = reconstruction;
-                new.reconstruction$model = list();
-                for (m in names(as.models(reconstruction))) {
-                    ## Perform the sampling for the current step of
-                    ## bootstrap and regularizator.
-                    
-                    samples =
-                        sample(1:nrow(curr.dataset), 
-                               size = nrow(dataset), 
-                               replace = TRUE, 
-                               prob = samples.probabilities[[m]])
-
-                    bootstrapped.dataset = curr.dataset[samples,]
-                    
-                    curr.reconstruction = list()
-                    curr.reconstruction$genotypes = bootstrapped.dataset
-                    curr.reconstruction$annotations = reconstruction$annotations
-                    curr.reconstruction$types = reconstruction$types
-                    
-                    ## Perform the reconstruction on the bootstrapped
-                    ## dataset.
-                    
-                    bootstrapped.topology =
-                        tronco.chow.liu(curr.reconstruction,
-                                     m,
-                                     do.boot,
-                                     nboot.algorithm,
-                                     pvalue,
-                                     min.boot,
-                                     min.stat,
-                                     boot.seed,
-                                     silent)
-                    
-                    ## Save the results for this model.
-                    
-                    new.reconstruction$model[m] =
-                        as.models(bootstrapped.topology,models = m)
-                }
-                curr.reconstruction = new.reconstruction;
-            } else if (command == "statistical") {
-                
-                curr.reconstruction = list()
-                curr.reconstruction$genotypes = reconstruction$genotypes;
-                curr.reconstruction$annotations = reconstruction$annotations;
-                curr.reconstruction$types = reconstruction$types;
-                
-                ## Perform the reconstruction on the bootstrapped
-                ## dataset.
-                
-                bootstrapped.topology =
-                    tronco.chow.liu(curr.reconstruction,
-                                 regularization,
-                                 do.boot,
-                                 nboot.algorithm,
-                                 pvalue,
-                                 min.boot,
-                                 min.stat,
-                                 boot.seed,
-                                 silent)
-                
-                curr.reconstruction = bootstrapped.topology;
-            }
+        if (command == "non-parametric") {
             
-            ## Set the reconstructed selective advantage edges.
+            ## Perform the sampling for the current step of bootstrap.
             
-            bootstrap.results = list()
-            for (m in names(as.models(curr.reconstruction))) {
-                
-                ## Get the parents pos.
-                parents.pos =
-                    array(list(), c(nevents(curr.reconstruction), 1))
-                
-                
-                curr.adj.matrix =
-                    as.adj.matrix(curr.reconstruction, models = m)[[m]]
-                for (i in 1:nevents(curr.reconstruction)) {
-                    for (j in 1:nevents(curr.reconstruction)) {
-                        if (i != j && curr.adj.matrix[i, j] == 1) {
-                            parents.pos[j, 1] =
-                                list(c(unlist(parents.pos[j, 1]), i))
-                        }
+            samples = sample(1:nrow(dataset), 
+                             size = nrow(dataset),
+                             replace = TRUE)
+            curr.reconstruction$genotypes = dataset[samples,]
+
+
+        } else if (command == "statistical") {
+            curr.reconstruction$genotypes = reconstruction$genotypes;
+        }
+
+        curr.reconstruction$annotations = reconstruction$annotations
+        curr.reconstruction$types = reconstruction$types
+
+        if (type == 'CAPRI') {
+            curr.reconstruction$hypotheses = hypotheses
+            bootstrapped.topology =
+                tronco.capri(curr.reconstruction,
+                             command.capri, 
+                             regularization,
+                             do.boot,
+                             nboot.algorithm,
+                             pvalue,
+                             min.boot,
+                             min.stat,
+                             boot.seed,
+                             silent)
+        } else if (type == 'CAPRESE') {
+            bootstrapped.topology =
+                tronco.caprese(curr.reconstruction,
+                               lambda, 
+                               silent)
+        } else if (type == 'CHOW_LIU') {
+            bootstrapped.topology = 
+                tronco.mst.chowliu(curr.reconstruction,
+                                   regularization,
+                                   do.boot,
+                                   nboot.algorithm,
+                                   pvalue,
+                                   min.boot,
+                                   min.stat,
+                                   boot.seed,
+                                   silent)
+        } else if (type == 'PRIM') {
+            bootstrapped.topology =
+                tronco.mst.prim(curr.reconstruction,
+                                regularization,
+                                do.boot,
+                                nboot.algorithm,
+                                pvalue,
+                                min.boot,
+                                min.stat,
+                                boot.seed,
+                                silent)
+        } else if (type == 'EDMONDS') {
+            bootstrapped.topology =
+                tronco.mst.edmonds(curr.reconstruction,
+                                   regularization,
+                                   do.boot,
+                                   nboot.algorithm,
+                                   pvalue,
+                                   min.boot,
+                                   min.stat,
+                                   boot.seed,
+                                   silent)
+        }
+            
+        curr.reconstruction = bootstrapped.topology
+        
+        ## Set the reconstructed selective advantage edges.
+        
+        bootstrap.results = list()
+        for (m in names(as.models(curr.reconstruction))) {
+            
+            ## Get the parents pos.
+            parents.pos =
+                array(list(), c(nevents(curr.reconstruction), 1))
+            
+            
+            curr.adj.matrix =
+                as.adj.matrix(curr.reconstruction, models = m)[[m]]
+            for (i in 1:nevents(curr.reconstruction)) {
+                for (j in 1:nevents(curr.reconstruction)) {
+                    if (i != j && curr.adj.matrix[i, j] == 1) {
+                        parents.pos[j, 1] =
+                            list(c(unlist(parents.pos[j, 1]), i))
                     }
                 }
-                
-                parents.pos[unlist(lapply(parents.pos,is.null))] = list(-1)
-                
-                ## Save the results.
-                
-                bootstrap.results[[m]] = t(parents.pos);
             }
-            bootstrap.results
+            
+            parents.pos[unlist(lapply(parents.pos,is.null))] = list(-1)
+            
+            ## Save the results.
+            
+            bootstrap.results[[m]] = t(parents.pos);
         }
+        bootstrap.results
+    }
 
     stopCluster(cl)
-    cat("\n*** Reducing results\n")
+    cat("\tReducing results\n")
 
     for (m in names(bootstrap.results)) {
         y = Reduce(rbind, lapply(r, function(z, type) { get(type, z) }, type = m))
@@ -288,15 +236,12 @@ bootstrap.chow.liu <- function(dataset,
     ## Set the statistics of the bootstrap.
     
     for (m in names(as.models(reconstruction))) {
-        
         curr.bootstrap.adj.matrix = bootstrap.adj.matrix[[m]]
         
         for (i in 2:ncol(curr.bootstrap.adj.matrix)) {
-            
             curr.result = bootstrap.results[[m]][ , i - 1]
             
             for (j in 1:length(curr.result)) {
-                
                 curr.val = curr.result[[j]]
                 
                 for (k in 1:length(curr.val)) {
@@ -309,7 +254,6 @@ bootstrap.chow.liu <- function(dataset,
                     }
                 }
             }
-            
         }
         
         bootstrap.adj.matrix[[m]] = curr.bootstrap.adj.matrix;
@@ -488,4 +432,34 @@ bootstrap.chow.liu <- function(dataset,
 }
 
 
-#### end of file -- chow.liu.bootstrap.R
+# convert an integer decimal number to binary
+# @title decimal.to.binary.dag
+# @param num.decimal decimal integer to be converted
+# @param num.bits number of bits to be used
+# @return num.binary: binary conversion of num.decimal
+#
+decimal.to.binary.dag <- function(num.decimal, num.bits) {
+    
+    ## Structure where to save the result.
+    
+    num.binary = rep(0, num.bits)
+    
+    ## Convert the integer decimal number to binary.
+    
+    pos = 0
+    while (num.decimal > 0) {
+        
+        ## Compute the value of the current step.
+        
+        num.binary[num.bits-pos] = num.decimal %% 2;
+        
+        ## Divide the number by 2 for the next iteration.
+        
+        num.decimal = num.decimal %/% 2
+        pos = pos + 1
+    }
+    return(num.binary)
+}
+
+
+#### end of file -- capri.bootstrap.R
