@@ -20,8 +20,8 @@ A TRONCO compliant object with reconstructed model
 Reconstruct a progression model using CAPRESE algorithm
 }
 \examples{
-data(test_dataset)
-recon = tronco.caprese(test_dataset)
+data(test_dataset_no_hypos)
+recon = tronco.caprese(test_dataset_no_hypos)
 tronco.plot(recon)
 
 }

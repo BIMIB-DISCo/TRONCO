@@ -12,8 +12,8 @@
 #' Reconstruct a progression model using CAPRESE algorithm
 #'
 #' @examples
-#' data(test_dataset)
-#' recon = tronco.caprese(test_dataset)
+#' data(test_dataset_no_hypos)
+#' recon = tronco.caprese(test_dataset_no_hypos)
 #' tronco.plot(recon)
 #'
 #' @title tronco caprese
@@ -331,11 +331,11 @@ tronco.capri <- function(data,
 #' with probabilistic causation
 #'
 #' @examples
-#' data(test_dataset)
-#' recon = tronco.edmonds(test_dataset)
+#' data(test_dataset_no_hypos)
+#' recon = tronco.mst.edmonds(test_dataset_no_hypos)
 #' tronco.plot(recon)
 #'
-#' @title tronco edmonds
+#' @title tronco mst edmonds
 #' @param data A TRONCO compliant dataset.
 #' @param regularization Select the regularization for the 
 #' likelihood estimation, e.g., BIC, AIC. 
@@ -353,21 +353,21 @@ tronco.capri <- function(data,
 #' @param boot.seed Initial seed for the bootstrap random sampling.
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
-#' @export tronco.edmonds
+#' @export tronco.mst.edmonds
 #' @importFrom bnlearn hc tabu
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
 #' @importFrom infotheo mutinformation
 #' 
-tronco.edmonds <- function(data,
-                         regularization = "none", 
-                         do.boot = TRUE, 
-                         nboot = 100, 
-                         pvalue = 0.05, 
-                         min.boot = 3, 
-                         min.stat = TRUE, 
-                         boot.seed = NULL, 
-                         silent = FALSE ) {
+tronco.mst.edmonds <- function(data,
+                               regularization = "none", 
+                               do.boot = TRUE, 
+                               nboot = 100, 
+                               pvalue = 0.05, 
+                               min.boot = 3, 
+                               min.stat = TRUE, 
+                               boot.seed = NULL, 
+                               silent = FALSE ) {
 
     ## Enforce data to be numeric
     data = enforce.numeric(data)
@@ -394,7 +394,7 @@ tronco.edmonds <- function(data,
     ## check if there are hypotheses
 
     if (npatterns(data) > 0) {
-        warning("Patters found in input for tronco.edmonds\n")
+        warning("Patters found in input for tronco.mst.edmonds\n")
     }
 
     ## Reconstruct the reconstruction with Edmonds.
@@ -541,11 +541,11 @@ tronco.edmonds <- function(data,
 #' algorithm combined with probabilistic causation
 #'
 #' @examples
-#' data(test_dataset)
-#' recon = tronco.chow.liu(test_dataset)
+#' data(test_dataset_no_hypos)
+#' recon = tronco.mst.chowliu(test_dataset_no_hypos)
 #' tronco.plot(recon)
 #'
-#' @title tronco chow liu
+#' @title tronco mst chow liu
 #' @param data A TRONCO compliant dataset.
 #' @param regularization Select the regularization for the
 #' likelihood estimation, e.g., BIC, AIC. 
@@ -566,21 +566,21 @@ tronco.edmonds <- function(data,
 #' messages.
 #' @return A TRONCO compliant object with reconstructed 
 #' model
-#' @export tronco.chow.liu
+#' @export tronco.mst.chowliu
 #' @importFrom bnlearn hc tabu
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
 #' @importFrom gRapHD minForest
 #' 
-tronco.chow.liu <- function(data,
-                         regularization = c("bic","aic"), 
-                         do.boot = TRUE, 
-                         nboot = 100, 
-                         pvalue = 0.05, 
-                         min.boot = 3, 
-                         min.stat = TRUE, 
-                         boot.seed = NULL, 
-                         silent = FALSE ) {
+tronco.mst.chowliu <- function(data,
+                               regularization = c("bic","aic"), 
+                               do.boot = TRUE, 
+                               nboot = 100, 
+                               pvalue = 0.05, 
+                               min.boot = 3, 
+                               min.stat = TRUE, 
+                               boot.seed = NULL, 
+                               silent = FALSE ) {
 
     ## Enforce data to be numeric
     data = enforce.numeric(data)
@@ -745,11 +745,11 @@ tronco.chow.liu <- function(data,
 #' Reconstruct a progression model using Prim algorithm combined with probabilistic causation
 #'
 #' @examples
-#' data(test_dataset)
-#' recon = tronco.prim(test_dataset)
+#' data(test_dataset_no_hypos)
+#' recon = tronco.mst.prim(test_dataset_no_hypos)
 #' tronco.plot(recon)
 #'
-#' @title tronco prim
+#' @title tronco mst prim
 #' @param data A TRONCO compliant dataset.
 #' @param regularization Select the regularization for the 
 #' likelihood estimation, e.g., BIC, AIC. 
@@ -767,22 +767,22 @@ tronco.chow.liu <- function(data,
 #' @param boot.seed Initial seed for the bootstrap random sampling.
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
-#' @export tronco.prim
+#' @export tronco.mst.prim
 #' @importFrom bnlearn hc tabu
 #' @importFrom igraph get.edgelist E E<-
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths minimum.spanning.tree
 #' @importFrom infotheo mutinformation
 #' 
-tronco.prim <- function(data,
-                         regularization = "none", 
-                         do.boot = TRUE, 
-                         nboot = 100, 
-                         pvalue = 0.05, 
-                         min.boot = 3, 
-                         min.stat = TRUE, 
-                         boot.seed = NULL, 
-                         silent = FALSE ) {
+tronco.mst.prim <- function(data,
+                            regularization = "none", 
+                            do.boot = TRUE, 
+                            nboot = 100, 
+                            pvalue = 0.05, 
+                            min.boot = 3, 
+                            min.stat = TRUE, 
+                            boot.seed = NULL, 
+                            silent = FALSE ) {
 
     ## Enforce data to be numeric
     data = enforce.numeric(data)
@@ -852,14 +852,14 @@ tronco.prim <- function(data,
 
     reconstruction =
         prim.fit(data$genotypes,
-                  regularization = regularization,
-                  do.boot = do.boot,
-                  nboot = nboot,
-                  pvalue = pvalue,
-                  min.boot = min.boot,
-                  min.stat = min.stat,
-                  boot.seed = boot.seed,
-                  silent = silent);
+                 regularization = regularization,
+                 do.boot = do.boot,
+                 nboot = nboot,
+                 pvalue = pvalue,
+                 min.boot = min.boot,
+                 min.stat = min.stat,
+                 boot.seed = boot.seed,
+                 silent = silent);
 
     rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
     colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
@@ -994,13 +994,6 @@ tronco.bootstrap <- function(reconstruction,
     
     is.compliant(reconstruction)
     
-    ##
-    ## DEV VERSION
-    ##
-    if (type == "parametric") {
-        stop("The parametric bootstrap is not available in the current version. Please choose an other option...")
-    }
-
     if (type == "statistical"
         && !((reconstruction$parameters$algorithm == "CAPRI"
              || reconstruction$parameters$algorithm == "PRIM"
@@ -1015,201 +1008,50 @@ tronco.bootstrap <- function(reconstruction,
 
     ## Set all the needed parameters to perform the bootstrap
     ## estimation.
-    
-    if (type == "non-parametric"
-        || type == "parametric"
-        || type == "statistical") {
 
-        dataset = reconstruction$genotypes
-        silent = TRUE
-
-        if (!is.null(reconstruction$bootstrap)) {
-            bootstrap = reconstruction$bootstrap
-        }
-        else {
-            bootstrap = list()
-        }
-
-        if (reconstruction$parameters$algorithm == "CAPRESE") {
-            lambda = reconstruction$parameters$lambda
-        } else if (reconstruction$parameters$algorithm == "CAPRI") {
-
-            if (nhypotheses(reconstruction$hypotheses)) {
-                hypotheses = reconstruction$hypotheses
-            } else {
-                hypotheses = NA
-            }
-
-            command.capri = reconstruction$parameters$command
-            regularization = reconstruction$parameters$regularization
-            do.boot = reconstruction$parameters$do.boot
-            nboot.capri = reconstruction$parameters$nboot
-            pvalue = reconstruction$parameters$pvalue
-            min.boot = reconstruction$parameters$min.boot
-            min.stat = reconstruction$parameters$min.stat
-            boot.seed = reconstruction$parameters$boot.seed
-            if (type == 'statistical') boot.seed = NULL
-        } else if (reconstruction$parameters$algorithm == "EDMONDS" 
-                   || reconstruction$parameters$algorithm == "CHOW_LIU" 
-                   || reconstruction$parameters$algorithm == "PRIM") {
-
-            regularization = reconstruction$parameters$regularization
-            do.boot = reconstruction$parameters$do.boot
-            nboot.capri = reconstruction$parameters$nboot
-            pvalue = reconstruction$parameters$pvalue
-            min.boot = reconstruction$parameters$min.boot
-            min.stat = reconstruction$parameters$min.stat
-            boot.seed = reconstruction$parameters$boot.seed
-            if (type == 'statistical') boot.seed = NULL
-        }
-    } else {
-        stop("The types of bootstrap that can be performed are: non-parametric,\nparametric or statistical.",
+    if (!type %in% c("non-parametric", "statistical")) {
+        stop(paste("The types of bootstrap that can be performed are:",
+                   "non-parametric, parametric or statistical."),
              call. = FALSE)
     }
-
+    
     ## Perform the selected bootstrap procedure.
     
-    cat("Executing now the bootstrap procedure, this may take a long time...\n")
+    cat("*** Executing now the bootstrap procedure, this may take a long time...\n")
 
-    if (reconstruction$parameters$algorithm == "CAPRESE") {
+    parameters = as.parameters(reconstruction)
 
-        curr.boot =
-            bootstrap.caprese(dataset,
-                              lambda,
-                              silent,
-                              reconstruction, 
+    if (parameters$algorithm == "CAPRESE") {
+
+        lambda = parameters$lambda
+        curr.boot = bootstrap(reconstruction, 
                               type,
                               nboot,
-                              bootstrap)
+                              cores.ratio)
+        cat("Performed", type,
+            "bootstrap with", nboot,
+            "resampling and", lambda, 
+            "as shrinkage parameter.\n")
 
+    } else {
 
-        reconstruction$bootstrap = curr.boot
+        curr.boot = bootstrap(reconstruction, 
+                              type,
+                              nboot,
+                              cores.ratio)
 
-        cat(paste("\nPerformed ",
-                  type,
-                  " bootstrap with ",
-                  nboot,
-                  " resampling and ",
-                  lambda, "\nas shrinkage parameter.\n\n",
-                  sep =""))
+        cat("Performed", type,
+            "bootstrap with", nboot,
+            "resampling")
 
-    } else if (reconstruction$parameters$algorithm == "CAPRI") {
-        curr.boot =
-            bootstrap.capri(dataset, 
-                            hypotheses, 
-                            command.capri, 
-                            regularization, 
-                            do.boot,
-                            nboot.capri, 
-                            pvalue,
-                            min.boot,
-                            min.stat,
-                            boot.seed,
-                            silent,
-                            reconstruction, 
-                            type,
-                            nboot,
-                            bootstrap,
-                            verbose,
-                            cores.ratio)
-
-        reconstruction$bootstrap = curr.boot
-        
-        if (do.boot == TRUE) {
-            cat(paste("\nPerformed ",
-                      type,
-                      " bootstrap with ",
-                      nboot,
-                      " resampling and ",
-                      pvalue,
-                      " as pvalue \nfor the statistical tests.\n\n",
-                      sep =""))
-        } else {
-            cat(paste("\nPerformed ",
-                      type,
-                      " bootstrap with ",
-                      nboot,
-                      " resampling.\n\n",
-                      sep =""))
-        }
-    } else if (reconstruction$parameters$algorithm == "EDMONDS" 
-               || reconstruction$parameters$algorithm == "CHOW_LIU" 
-               || reconstruction$parameters$algorithm == "PRIM") {
-        
-        if (reconstruction$parameters$algorithm == "EDMONDS") {
-        	curr.boot =
-            bootstrap.edmonds(dataset, 
-                            regularization, 
-                            do.boot,
-                            nboot.capri, 
-                            pvalue,
-                            min.boot,
-                            min.stat,
-                            boot.seed,
-                            silent,
-                            reconstruction, 
-                            type,
-                            nboot,
-                            bootstrap,
-                            verbose,
-                            cores.ratio)
-        } else if (reconstruction$parameters$algorithm == "CHOW_LIU") {
-        	curr.boot =
-            bootstrap.chow.liu(dataset, 
-                            regularization, 
-                            do.boot,
-                            nboot.capri, 
-                            pvalue,
-                            min.boot,
-                            min.stat,
-                            boot.seed,
-                            silent,
-                            reconstruction, 
-                            type,
-                            nboot,
-                            bootstrap,
-                            verbose,
-                            cores.ratio)
-        } else if (reconstruction$parameters$algorithm == "PRIM") {
-        	curr.boot =
-            bootstrap.prim(dataset, 
-                            regularization, 
-                            do.boot,
-                            nboot.capri, 
-                            pvalue,
-                            min.boot,
-                            min.stat,
-                            boot.seed,
-                            silent,
-                            reconstruction, 
-                            type,
-                            nboot,
-                            bootstrap,
-                            verbose,
-                            cores.ratio)
-        }
-
-        reconstruction$bootstrap = curr.boot
-        
-        if (do.boot == TRUE) {
-            cat(paste("\nPerformed ",
-                      type,
-                      " bootstrap with ",
-                      nboot,
-                      " resampling and ",
-                      pvalue,
-                      " as pvalue \nfor the statistical tests.\n\n",
-                      sep =""))
-        } else {
-            cat(paste("\nPerformed ",
-                      type,
-                      " bootstrap with ",
-                      nboot,
-                      " resampling.\n\n",
-                      sep =""))
-        }
+        if (parameters$do.boot == TRUE) {
+            cat(" and", 
+                parameters$pvalue,
+                "as pvalue for the statistical tests")
+        } 
+        cat(".\n")
     }
-
+    reconstruction$bootstrap = curr.boot
     return(reconstruction)
 }
 
@@ -1400,8 +1242,6 @@ tronco.plot <- function(x,
                     mask[i] = relations.filter(z[i, ]) 
                 return(z[mask, , drop = FALSE])                              
             })
-
-        #print(sel.relation)
 
         sel.relation = get(models[2], sel.relation)
 
