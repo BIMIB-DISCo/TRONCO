@@ -22,6 +22,7 @@
 #' @param stage boolean flag to check x$stage datagframe
 #' @return on error stops the computation
 #' @export is.compliant
+#' @importFrom utils head
 #' 
 is.compliant <- function(x,
                          err.fun = '[ERR]',

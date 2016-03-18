@@ -49,6 +49,7 @@
 #' @importFrom gridExtra grid.arrange
 #' @importFrom RColorBrewer brewer.pal brewer.pal.info
 #' @importFrom gtable gtable gtable_add_grob gtable_height gtable_width
+#' @importFrom grDevices colorRampPalette
 #' 
 oncoprint <- function(x, 
                       excl.sort = TRUE, 
@@ -645,19 +646,10 @@ pathway.visualization <- function(x,
 
             pathway = change.color(pathway, 'Pathway', pathway.colors[i])
             pathway = rename.type(pathway, 'Pathway', names[i])
-
-            ## view(pathway)
-            ## print(has.stages(pathway))
-            ## print('bindo..')
-            ## print(has.stages(data.pathways))
-
             data.pathways = ebind(data.pathways, pathway)
-            ## view(data.pathways)
         }
     }
 
-    ## data.pathways = enforce.numeric(data.pathways)
-    ## view(data.pathways)
     ret = oncoprint(trim(data.pathways), title=title, file=file, ...)
 
     return(ret)
@@ -2154,8 +2146,9 @@ find_gaps <- function(tree, cutree_n) {
 #' @importFrom grid grid.draw grid.pretty grid.newpage
 #' @importFrom scales dscale hue_pal brewer_pal
 #' @importFrom RColorBrewer brewer.pal
-#' @importFrom stats as.dist cor hclust dist cutree
-#' @importFrom grDevices colorRampPalette
+#' @importFrom stats as.dist cor hclust dist cutree sd kmeans sd
+#' @importFrom grDevices colorRampPalette pdf png jpeg tiff bmp dev.off rainbow
+#' @importFrom graphics strwidth
 #' 
 pheatmap <- function(mat,
                      color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100),
@@ -2428,6 +2421,8 @@ pheatmap <- function(mat,
 #' @export tronco.pattern.plot
 #' @importFrom circlize circos.clear circos.par chordDiagram circos.text
 #' @importFrom circlize circos.trackPlotRegion get.cell.meta.data
+#' @importFrom graphics layout par barplot plot.new legend
+#' @importFrom grDevices rgb col2rgb
 #' 
 tronco.pattern.plot <- function(x,
                          group=as.events(x),

@@ -1556,6 +1556,7 @@ duplicates <- function(x) {
 #' @param x A TRONCO compliant dataset.
 #' @param view The firse \code{view} events are shown via \code{head}.
 #' @export view
+#' @importFrom utils head
 #' 
 view <- function(x, view = 5) {
     is.compliant(x)

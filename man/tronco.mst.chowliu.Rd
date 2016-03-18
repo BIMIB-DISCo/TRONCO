@@ -47,7 +47,6 @@ algorithm combined with probabilistic causation
 \examples{
 data(test_dataset_no_hypos)
 recon = tronco.mst.chowliu(test_dataset_no_hypos)
-tronco.plot(recon)
 
 }
 

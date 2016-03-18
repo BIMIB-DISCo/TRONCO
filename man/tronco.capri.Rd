@@ -38,7 +38,6 @@ Reconstruct a progression model using CAPRI algorithm
 \examples{
 data(test_dataset)
 recon = tronco.capri(test_dataset)
-tronco.plot(recon)
 
 }
 

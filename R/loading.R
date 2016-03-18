@@ -20,6 +20,7 @@
 #' @param color This is the color used for visualization of events labeled as of "event.type"
 #' @return A TRONCO compliant dataset
 #' @export import.genotypes
+#' @importFrom utils read.table
 #'
 import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") {
     if (!(is.data.frame(geno) || is.matrix(geno)) && is.character(geno)) {
@@ -116,6 +117,7 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 #' @param filter.samples A list of samples
 #' @return A TRONCO compliant representation of the input CNAs.
 #' @export import.GISTIC
+#' @importFrom utils read.table
 #' 
 import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 
@@ -259,6 +261,9 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 #' @param merge.mutation.types If TRUE, all mutations are considered equivalent, regardless of their Variant_Classification value. Otherwise no.
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
+#' @importFrom utils read.table read.delim count.fields flush.console
+#' @importFrom utils txtProgressBar setTxtProgressBar
+#' @importFrom grDevices colorRampPalette
 #' 
 import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.TRONCO = TRUE, irregular = FALSE, paste.to.Hugo_Symbol = NULL, merge.mutation.types = TRUE) {
 

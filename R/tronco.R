@@ -14,7 +14,6 @@
 #' @examples
 #' data(test_dataset_no_hypos)
 #' recon = tronco.caprese(test_dataset_no_hypos)
-#' tronco.plot(recon)
 #'
 #' @title tronco caprese
 #' @param data A TRONCO compliant dataset.
@@ -137,7 +136,6 @@ tronco.caprese <- function(data,
 #' @examples
 #' data(test_dataset)
 #' recon = tronco.capri(test_dataset)
-#' tronco.plot(recon)
 #'
 #' @title tronco capri
 #' @param data A TRONCO compliant dataset.
@@ -155,6 +153,7 @@ tronco.caprese <- function(data,
 #' @importFrom bnlearn hc tabu
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
+#' @importFrom stats phyper AIC BIC wilcox.test
 #' 
 tronco.capri <- function(data,
                          command = "hc",
@@ -334,7 +333,6 @@ tronco.capri <- function(data,
 #' @examples
 #' data(test_dataset_no_hypos)
 #' recon = tronco.mst.edmonds(test_dataset_no_hypos)
-#' tronco.plot(recon)
 #'
 #' @title tronco mst edmonds
 #' @param data A TRONCO compliant dataset.
@@ -359,6 +357,7 @@ tronco.capri <- function(data,
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
 #' @importFrom infotheo mutinformation
+#' @importFrom stats phyper AIC BIC
 #' 
 tronco.mst.edmonds <- function(data,
                                regularization = "none", 
@@ -544,7 +543,6 @@ tronco.mst.edmonds <- function(data,
 #' @examples
 #' data(test_dataset_no_hypos)
 #' recon = tronco.mst.chowliu(test_dataset_no_hypos)
-#' tronco.plot(recon)
 #'
 #' @title tronco mst chow liu
 #' @param data A TRONCO compliant dataset.
@@ -572,6 +570,7 @@ tronco.mst.edmonds <- function(data,
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
 #' @importFrom gRapHD minForest
+#' @importFrom stats phyper AIC BIC
 #' 
 tronco.mst.chowliu <- function(data,
                                regularization = c("bic","aic"), 
@@ -748,7 +747,6 @@ tronco.mst.chowliu <- function(data,
 #' @examples
 #' data(test_dataset_no_hypos)
 #' recon = tronco.mst.prim(test_dataset_no_hypos)
-#' tronco.plot(recon)
 #'
 #' @title tronco mst prim
 #' @param data A TRONCO compliant dataset.
@@ -774,6 +772,7 @@ tronco.mst.chowliu <- function(data,
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths minimum.spanning.tree
 #' @importFrom infotheo mutinformation
+#' @importFrom stats phyper AIC BIC
 #' 
 tronco.mst.prim <- function(data,
                             regularization = "none", 
@@ -959,7 +958,6 @@ tronco.mst.prim <- function(data,
 #' data(test_dataset)
 #' recon = tronco.capri(test_dataset)
 #' boot = tronco.bootstrap(recon, nboot = 5)
-#' tronco.plot(boot)
 #'
 #' @title tronco bootstrap
 #' @param reconstruction The output of tronco.capri or 
@@ -1117,6 +1115,8 @@ tronco.bootstrap <- function(reconstruction,
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph V V<- igraph.to.graphNEL igraph.from.graphNEL
 #' @importFrom Rgraphviz edgeNames plot
+#' @importFrom graphics locator
+#' @importFrom grDevices dev.copy2pdf
 #' 
 tronco.plot <- function(x,
                         models = names(x$model),

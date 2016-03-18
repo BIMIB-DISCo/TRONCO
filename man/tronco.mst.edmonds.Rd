@@ -44,7 +44,6 @@ with probabilistic causation
 \examples{
 data(test_dataset_no_hypos)
 recon = tronco.mst.edmonds(test_dataset_no_hypos)
-tronco.plot(recon)
 
 }
 

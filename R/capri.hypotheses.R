@@ -17,6 +17,7 @@
 #' @param pattern.cause Possibile causes for the pattern. 
 #' @return A TRONCO compliant object with the added hypothesis
 #' @export hypothesis.add
+#' @importFrom stats fisher.test
 #'
 hypothesis.add <- function(data,
                            pattern.label,
@@ -68,7 +69,7 @@ hypothesis.add <- function(data,
         ## lifting.genotypes, make the backup of it.
         
         if (exists("lifting.genotypes")) {
-            roll.back.lifting.genotypes = lifting.genotypes;
+            roll.back.lifting.genotypes = get('lifting.genotypes', envir = .GlobalEnv)
             do.roll.back.lifting.genotypes = TRUE;
         }
         assign("lifting.genotypes", genotypes, envir = .GlobalEnv);
@@ -80,7 +81,7 @@ hypothesis.add <- function(data,
         ## lifting.annotations, make the backup of it.
         
         if (exists("lifting.annotations")) {
-            roll.back.lifting.annotations = lifting.annotations;
+            roll.back.lifting.annotations = get('lifting.annotations', envir = .GlobalEnv)
             do.roll.back.lifting.annotations = TRUE;
         }
         assign("lifting.annotations", annotations, envir = .GlobalEnv);
@@ -92,8 +93,8 @@ hypothesis.add <- function(data,
         ## make the backup of it.
         
         if (exists("lifting.edges")) {
-            roll.back.lifting.edges = lifting.edges;
-            do.roll.back.lifting.edges = TRUE;
+            roll.back.lifting.edges = get('lifting.edges', envir = .GlobalEnv)
+            do.roll.back.lifting.edges = TRUE
         }
         assign("lifting.edges", NULL, envir = .GlobalEnv);
 
@@ -104,7 +105,7 @@ hypothesis.add <- function(data,
         ## make the backup of it.
         
         if (exists("fisher.pvalues")) {
-            roll.back.fisher.pvalues = fisher.pvalues;
+            roll.back.fisher.pvalues = get('fisher.pvalues', envir = .GlobalEnv)
             do.roll.back.fisher.pvalues = TRUE;
         }
         assign("fisher.pvalues", NULL, envir = .GlobalEnv);
@@ -114,11 +115,11 @@ hypothesis.add <- function(data,
         
         curr_pattern = lifted.pattern$pattern;
         curr_hypotheses = lifted.pattern$hypotheses;
-        curr_pvalues = fisher.pvalues;
+        curr_pvalues = get('fisher.pvalues', envir = .GlobalEnv)
 
         ## Save the edges of the lifted pattern.
         
-        hstructure = lifting.edges;
+        hstructure = get('lifting.edges', envir = .GlobalEnv)
 
         ## Roll back to the previous value of the global variable
         ## lifting.genotypes if any or remove it.
@@ -128,7 +129,7 @@ hypothesis.add <- function(data,
                    roll.back.lifting.genotypes,
                    envir = .GlobalEnv);
         } else {
-            rm(lifting.genotypes, pos = ".GlobalEnv");
+            rm('lifting.genotypes', pos = ".GlobalEnv");
         }
 
         ## Roll back to the previous value of the global variable
@@ -139,7 +140,7 @@ hypothesis.add <- function(data,
                    roll.back.lifting.annotations,
                    envir = .GlobalEnv);
         } else {
-            rm(lifting.annotations, pos = ".GlobalEnv");
+            rm('lifting.annotations', pos = ".GlobalEnv")
         }
 
         ## Roll back to the previous value of the global variable
@@ -148,9 +149,9 @@ hypothesis.add <- function(data,
         if (do.roll.back.lifting.edges) {
             assign("lifting.edges",
                    roll.back.lifting.edges,
-                   envir = .GlobalEnv);
+                   envir = .GlobalEnv)
         } else {
-            rm(lifting.edges,pos=".GlobalEnv");
+            rm('lifting.edges', pos = ".GlobalEnv")
         }
 
         ## Roll back to the previous value of the global variable
@@ -159,17 +160,17 @@ hypothesis.add <- function(data,
         if (do.roll.back.fisher.pvalues) {
             assign("fisher.pvalues",
                    roll.back.fisher.pvalues,
-                   envir = .GlobalEnv);
+                   envir = .GlobalEnv)
         } else {
-            rm(fisher.pvalues, pos = ".GlobalEnv");
+            rm('fisher.pvalues', pos = ".GlobalEnv")
         }
 
         ## Set the hypotheses number.
         
         if (!is.na(hypotheses[1])) {
-            num.hypotheses = hypotheses$num.hypotheses;
+            num.hypotheses = hypotheses$num.hypotheses
         } else {
-            num.hypotheses = 0;
+            num.hypotheses = 0
         }
 
         ## * is a special pattern.effect which indicates to use all
@@ -603,6 +604,7 @@ hypothesis.lifted.effects <- function( ... ) {
 #' @param min.prob Minimum probability associated to each valid group.
 #' @return A TRONCO compliant object with the added hypotheses
 #' @export hypothesis.add.group
+#' @importFrom utils flush.console combn
 #' 
 hypothesis.add.group <- function(x, 
                                  FUN, 
@@ -714,10 +716,6 @@ hypothesis.add.group <- function(x,
 
     ## pb <- txtProgressBar(0, tot.patterns, style = 3)
     
-    if (!exists('hide.progress.bar') || !hide.progress.bar) {
-        flush.console()
-    }
-
     pbPos = 0
     for (i in min.groupsize:max.groupsize) {
         gr = combn(unlist(group), i)
@@ -790,6 +788,7 @@ hypothesis.add.group <- function(x,
 #' @param FUN Type of pattern to be added, e.g., co-occurance, soft or hard exclusivity.
 #' @return A TRONCO compliant object with the added hypotheses
 #' @export hypothesis.add.homologous
+#' @importFrom utils flush.console txtProgressBar setTxtProgressBar
 #' 
 hypothesis.add.homologous <- function(x, 
                                       pattern.cause = '*',
@@ -839,9 +838,7 @@ hypothesis.add.homologous <- function(x,
 
     ## Create a progress bar.
     
-    if (!exists('hide.progress.bar') || !hide.progress.bar) {
-        pb <- txtProgressBar(0, length(hom.group), style = 3)
-    }
+    pb <- txtProgressBar(0, length(hom.group), style = 3)
 
     error.summary = data.frame()
 
@@ -849,10 +846,8 @@ hypothesis.add.homologous <- function(x,
 
         ## Start the progress bar.
         
-        if (!exists('hide.progress.bar') || !hide.progress.bar) {
-            setTxtProgressBar(pb, i)
-        }
-        
+        setTxtProgressBar(pb, i)
+                
         ## Check if the joint probability of homologous events is > 0,
         ## if yes the event will be added as 'OR', otherwise 'XOR'.
         
@@ -897,10 +892,7 @@ hypothesis.add.homologous <- function(x,
     }
 
     ## Close progress bar.
-    
-    if (!exists('hide.progress.bar') || !hide.progress.bar) {
-        close(pb)
-    }
+    close(pb)
     
     if (nrow(error.summary) > 0) {
         cat(paste(nrow(error.summary),
@@ -1242,10 +1234,10 @@ aux.log <- function( genotypes, annotations, function.name, ... ) {
         ## Save the new edges
         
         for (k in 1:length(result$function.inputs)) {
-            lifting.edges =
-                rbind(lifting.edges,
+            lifting.edges.temp =
+                rbind(get('lifting.edges', envir = .GlobalEnv),
                       c(result$function.inputs[[k]], result$function.name))
-            assign("lifting.edges", lifting.edges, envir = .GlobalEnv)
+            assign("lifting.edges", lifting.edges.temp, envir = .GlobalEnv)
         }
         return(result)
     } else {
@@ -1266,8 +1258,9 @@ AND <- function( ... ) {
     ## Look for the global variables named lifting.genotypes and
     ## lifting.annotations.
     
-    genotypes = get('lifting.genotypes', envir=.GlobalEnv)
-    annotations = get('lifting.annotations', envir=.GlobalEnv)
+    genotypes = get('lifting.genotypes', envir = .GlobalEnv)
+    annotations = get('lifting.annotations', envir = .GlobalEnv)
+    fisher.pvalues.temp = get('fisher.pvalues', envir = .GlobalEnv)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1292,9 +1285,9 @@ AND <- function( ... ) {
                     curr.pvalue = curr.test[1]
                 }
 
-                fisher.pvalues = append(fisher.pvalues, curr.pvalue)
+                fisher.pvalues.temp = append(fisher.pvalues.temp, curr.pvalue)
             }
-            assign("fisher.pvalues", fisher.pvalues, envir = .GlobalEnv)
+            assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
         }
 
         ## Evaluate the AND operator.
@@ -1314,7 +1307,7 @@ AND <- function( ... ) {
                  hypotheses = hypotheses,
                  function.name = function.name,
                  function.inputs = function.inputs,
-                 fisher.pvalues = fisher.pvalues)
+                 fisher.pvalues = fisher.pvalues.temp)
         return(result)
     } else {
         stop("[ERR] Either the genotypes or the pattern not provided! No hypothesis will be created.");
@@ -1333,8 +1326,9 @@ OR <- function( ... ) {
     ## Look for the global variables named lifting.genotypes and
     ## lifting.annotations.
     
-    genotypes = get('lifting.genotypes', envir=.GlobalEnv)
-    annotations = get('lifting.annotations', envir=.GlobalEnv)
+    genotypes = get('lifting.genotypes', envir = .GlobalEnv)
+    annotations = get('lifting.annotations', envir = .GlobalEnv)
+    fisher.pvalues.temp = get('fisher.pvalues', envir = .GlobalEnv)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1355,9 +1349,9 @@ OR <- function( ... ) {
                 curr.test = result$tests[[i]]
                 curr.p.value = 1 - curr.test[1]
 
-                fisher.pvalues = append(fisher.pvalues, curr.p.value)
+                fisher.pvalues.temp = append(fisher.pvalues.temp, curr.p.value)
             }
-            assign("fisher.pvalues", fisher.pvalues, envir = .GlobalEnv)
+            assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
         }
 
         ## Evaluate the OR operator.
@@ -1375,7 +1369,7 @@ OR <- function( ... ) {
                  hypotheses = hypotheses,
                  function.name = function.name,
                  function.inputs = function.inputs,
-                 fisher.pvalues = fisher.pvalues)
+                 fisher.pvalues = fisher.pvalues.temp)
         return(result)
     } else {
         stop("[ERR] Either the genotypes or the pattern not provided! No hypothesis will be created.");
@@ -1393,8 +1387,9 @@ XOR <- function( ... ) {
     ## Look for the global variables named lifting.genotypes and
     ## lifting.annotations.
     
-    genotypes = get('lifting.genotypes', envir=.GlobalEnv)
-    annotations = get('lifting.annotations', envir=.GlobalEnv)
+    genotypes = get('lifting.genotypes', envir = .GlobalEnv)
+    annotations = get('lifting.annotations', envir = .GlobalEnv)
+    fisher.pvalues.temp = get('fisher.pvalues', envir = .GlobalEnv)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1421,9 +1416,9 @@ XOR <- function( ... ) {
                 else {
                     curr.pvalue = curr.test[1]
                 }
-                fisher.pvalues = append(fisher.pvalues, curr.pvalue)
+                fisher.pvalues.temp = append(fisher.pvalues.temp, curr.pvalue)
             }
-            assign("fisher.pvalues", fisher.pvalues, envir = .GlobalEnv)
+            assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
         }
 
         ## Evaluate the XOR operator.
@@ -1441,7 +1436,7 @@ XOR <- function( ... ) {
                  hypotheses = hypotheses,
                  function.name = function.name,
                  function.inputs = function.inputs,
-                 fisher.pvalues = fisher.pvalues)
+                 fisher.pvalues = fisher.pvalues.temp)
         return(result)
     } else {
         stop("[ERR] Either the genotypes or the pattern not provided! No hypothesis will be created.");
@@ -1497,168 +1492,6 @@ get.lifted.pattern <- function(lifted.edges) {
 }
 
 
-# evaluate cycles involving any hypothesis
-# @title hypothesis.evaluate.cycles
-# @param data input genotypes and its hypotheses
-# @param adj.matrix adjacency matrix of the reconstructed topology
-# @param hypotheses.labels label of all the existing hypotheses
-# @param weights.matrix weights of any edge in the topology
-#
-hypothesis.evaluate.cycles <- function(data,
-                                       adj.matrix, 
-                                       hypotheses.labels, 
-                                       weights.matrix) {
-
-    ## Create the structures where to save the weights in increasing
-    ## order of confidence.
-    
-    ordered.weights <- vector();
-    ordered.edges <- list();
-
-    ## Create a map structure where to save the atomic events of each
-    ## hypothesis.
-    
-    matomic = new.env(hash = TRUE, parent = emptyenv());
-
-    ## Create a map structure where to save the hypotheses of each
-    ## atomic event.
-    
-    mhypotheses = new.env(hash = TRUE, parent = emptyenv());
-
-    ## Evaluate all the existing hypotheses.
-    
-    for (i in 1:length(hypotheses.labels)) {
-
-        ## Evaluate the current hypothesis.
-        
-        connections =
-            hypothesis.connections(adj.matrix, hypotheses.labels[i]);
-        connections =
-            hypothesis.expand.connections(label = hypotheses.labels[i],
-                                          events = pattern.events(data,hypotheses.labels[i]),
-                                          incoming = connections$incoming,
-                                          outgoing = connections$outgoing,
-                                          hnames = colnames(adj.matrix),
-                                          matomic = matomic,
-                                          weights.matrix = weights.matrix);
-
-        ## Save the results for the current hypothesis.
-        
-        ordered.weights = c(ordered.weights,connections$ordered.weights);
-        ordered.edges = c(ordered.edges,connections$ordered.edges);
-        matomic = connections$matomic;
-    }
-
-    ## Add to the map the link between atomic to pattern.
-    
-    for (i in 1:ncol(adj.matrix)) {
-        if (!is.null(data$atoms[[colnames(adj.matrix)[i]]])) {
-
-            ## Add to the map the hypotheses of this atomic event.
-            mhypotheses[[toString(i)]] =
-                which(colnames(adj.matrix) %in% data$atoms[[colnames(adj.matrix)[i]]]);
-        }
-    }
-
-    ## Return the results.
-    return(list(ordered.weights = ordered.weights,
-                ordered.edges = ordered.edges,
-                matomic = matomic,
-                mhypotheses = mhypotheses));
-}
-
-
-# given the adj.matrix, return the incoming and outgoing connections for any hypothesis
-# @title hypothesis.connections
-# @param adj.matrix adjacency matrix of the topology
-# @param hypotheses.label label of the hypothesis
-hypothesis.connections <- function(adj.matrix, hypotheses.label) {
-
-    hypotheses.label = hypotheses.label[hypotheses.label %in% rownames(adj.matrix)]
-
-    incoming =
-        rownames(adj.matrix)[which(adj.matrix[, hypotheses.label] == 1)];
-    outgoing =
-        colnames(adj.matrix)[which(adj.matrix[hypotheses.label, ] == 1)];
-    connections = list(incoming=incoming,outgoing=outgoing);
-
-    return(connections);
-}
-
-
-# expand and enumerate all the connections incoming or outgoing an hypothesis
-# @title hypothesis.expand.connections
-# @param label name of the hypothesis
-# @param events events in the hypothesis
-# @param incoming incoming connections
-# @param outgoing outgoing connections
-# @param hnames Hypothesis names
-# @param matomic Map to atomic events
-# @param weights.matrix weights of any edge in the topology
-#
-hypothesis.expand.connections <- function(label, 
-                                          events, 
-                                          incoming, 
-                                          outgoing, 
-                                          hnames, 
-                                          matomic, 
-                                          weights.matrix) {
-
-    ## Create the structures where to save the weights in increasing
-    ## order of confidence.
-    
-    ordered.weights <- vector()
-    ordered.edges <- list()
-
-    ## Get the position of the hypothesis.
-    
-    hypothesis.pos = which(hnames == label)
-
-    ## Evalutate the incoming and outgoing connections.
-    
-    curr.edge.pos = 0;
-    if (length(incoming) > 0) {
-        for (i in 1:length(incoming)) {
-            ordered.weights =
-                rbind(ordered.weights,
-                      weights.matrix[which(hnames == incoming[i]), hypothesis.pos]);
-            curr.edge.pos = curr.edge.pos + 1
-            
-            new.edge <- array(0, c(2,1))
-            new.edge[1, 1] = which(hnames == incoming[i])
-            new.edge[2, 1] = hypothesis.pos
-            ordered.edges[curr.edge.pos] = list(new.edge)
-        }
-    }
-    
-    if (length(outgoing) > 0) {
-        for (i in 1:length(outgoing)) {
-            ordered.weights =
-                rbind(ordered.weights,
-                      weights.matrix[hypothesis.pos, which(hnames == outgoing[i])]);
-            curr.edge.pos = curr.edge.pos + 1
-            
-            new.edge <- array(0, c(2,1))
-            new.edge[1, 1] = hypothesis.pos
-            new.edge[2, 1] = which(hnames == outgoing[i])
-            ordered.edges[curr.edge.pos] = list(new.edge)
-        }
-    }
-
-    if (length(hypothesis.pos) > 0) {
-        ## Add to the map the atomic events of this hypothesis.
-        matomic[[toString(hypothesis.pos)]] = which(hnames %in% events)
-    } else {
-        print('hypothesis.pos == 0!')
-    }
-
-    ## Return the results.
-    return(list(ordered.weights = ordered.weights,
-                ordered.edges = ordered.edges,
-                matomic = matomic));
-}
-
-
 ### given the hypotheses and the adj.matrix, return the updated
 ### adj.matrix
 
@@ -1690,66 +1523,6 @@ hypothesis.adj.matrix <- function(hypotheses, adj.matrix) {
         }
     }
     return(adj.matrix);
-}
-
-
-### internal testing function
-testing <- function(data, g1, g2) {
-
-    ## Dataframe di tutto il genotypes.
-    
-    df = data.frame(row.names=as.samples(data))
-    df$x = rowSums(as.gene(data, genes=g1))
-    df$y = rowSums(as.gene(data, genes=g2))
-
-    ## Lifting xor.
-    
-    df$xor = df$x + df$y
-    df$xor[ df$xor > 1] = 0
-
-    ## Lifting or.
-    
-    df$or = df$x + df$y
-    df$or[ df$or > 1] = 1
-
-    ## Lifting and.
-    
-    df$and = df$x + df$y
-    df$and[ df$and < 2] = 0
-    df$and[ df$and == 2] = 1
-
-    ## Nomi per accedere successivamente .
-    
-    names(df$x) = g1
-    names(df$y) = g2
-    names(df$xor) = 'xor'
-    names(df$or) = 'or'
-    names(df$and) = 'and'
-
-    cat('genotypes\n')
-    print(df)
-
-    ## Tabella di contingenza 2x2.
-    
-    table.xor =
-        rbind(c(nrow(df) - sum(df$or), sum(df$or - df$y)),
-              c(sum(df$or - df$x), sum(df$and))
-              )
-
-    colnames(table.xor) = c(paste0('-', g1), paste0('+', g1))
-    rownames(table.xor) = c(paste0('-', g2), paste0('+', g2))
-
-    cat('\nCATEGORICAL\n')
-    print(table.xor)
-
-    ## Fisher 2-sided.
-    
-    test = fisher.test(table.xor)
-
-    ## p-value e log dell’odds ratio.
-    
-    cat('p-value (2-sided): ', test$p.value, '\n')
-    cat('log(odds ratio): ', log(test$estimate['odds ratio']))
 }
 
 

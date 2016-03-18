@@ -32,7 +32,6 @@ Bootstrap a reconstructed progression model
 data(test_dataset)
 recon = tronco.capri(test_dataset)
 boot = tronco.bootstrap(recon, nboot = 5)
-tronco.plot(boot)
 
 }
 

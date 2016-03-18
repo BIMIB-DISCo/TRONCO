@@ -223,6 +223,7 @@ export.nbs.input <-function(x,
 #' @param fdr cutoff for fdr
 #' @param display print summary table of extracted groups
 #' @export import.mutex.groups
+#' @importFrom utils count.fields
 #' 
 import.mutex.groups <- function(file, fdr=.2, display = TRUE) {
     ## Found somewhere on the web - makes sense.
