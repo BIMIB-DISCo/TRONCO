@@ -74,7 +74,8 @@ enumerate.all.paths <- function(ancestor.node, child.node, parents.pos) {
 # @param joint.probs joint probabilities
 # @param parents.pos which event is the parent? 0 if none, a number otherwise
 # @return estimated.error.rates: estimated probabilities, false positive and false negative error rates
-#
+#' @importFrom stats optim
+#'
 estimate.dag.error.rates <- function(dataset,
                                      marginal.probs,
                                      joint.probs,

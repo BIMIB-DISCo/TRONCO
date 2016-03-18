@@ -664,228 +664,6 @@ pathway.visualization <- function(x,
 }
 
 
-# #### Consensus matrix (intra-clusters)
-# oncoprint.consensus = function(models, MIN.HITS = 0)
-# {
-
-
-# smaller.to.bigger = function(m,cn)
-# {
-# x = matrix(0, nrow = length(cn), ncol = length(cn))
-# rownames(x) = cn
-# colnames(x) = cn
-
-
-# for(i in 1:nrow(m))
-# for(j in 1:nrow(m))
-# x[rownames(m)[i], rownames(m)[j]] = ifelse(m[i,j] == 1, 1, 0) 
-# return(x)
-# }
-
-
-# # All the adjacency matrices
-# matrices = list()
-# for(i in 1:length(models))
-# matrices = append(matrices, list(models[[i]]$adj.matrix$adj.matrix.bic))
-
-# # All their colnames - all possible events and types
-# cn = unique(Reduce(union, lapply(matrices, colnames)))
-
-# all.events = NULL
-# for(i in 1:length(models)) all.events = rbind(all.events, as.events(models[[i]]$data))
-# all.events = unique(all.events)
-
-# all.types = NULL
-# for(i in 1:length(models)) all.types = rbind(all.types, models[[i]]$data$types)
-# all.types = unique(all.types)
-
-# # Consensus + overall adjacency matrix
-# consensus = Reduce('+', lapply(matrices, smaller.to.bigger, cn=cn))
-# adjacency = consensus
-# adjacency[adjacency < MIN.HITS] = 0 
-# adjacency[adjacency > 1] = 1 
-
-# cat('Consensus adjacency matrix:', nrow(adjacency), 'x', ncol(adjacency), ', minimum consensus', MIN.HITS, '\n')
-
-
-
-# keys = Reduce(rbind, lapply(models, as.events))
-
-# types = data.frame(event=rep('pattern', nrow(super.model)), 
-# stringsAsFactors = F)
-
-# labels = data.frame(name=rep('none', nrow(super.model)), 
-# stringsAsFactors = F)
-
-# pattern.type =  data.frame(pattern=rep('NA', nrow(super.model)), 
-# stringsAsFactors = F)
-
-
-# for(i in 1:length(rownames(super.model)))
-# {
-# types$event[i] = keys[rownames(super.model)[i], 'type']   
-
-# labels$name[i] = keys[rownames(super.model)[i], 'event']        
-
-# prefix = gsub("_.*$", "", labels$name[i])
-# prefix = gsub( "\"","", prefix)
-
-# if (prefix %in% c('AND', 'OR', 'XOR'))
-# {     
-# pattern.type$pattern[i] = prefix
-# if (prefix == 'AND') pattern.type$pattern[i] = 'co-occurrence'
-# if (prefix == 'OR') pattern.type$pattern[i] = 'soft exclusivity'
-# if (prefix == 'XOR') pattern.type$pattern[i] = 'hard exclusivity'
-
-# compact.label = strsplit(labels$name[i], '_' )[[1]]
-# labels$name[i] = paste(
-# compact.label[2:length(compact.label)],
-# collapse = ' / ')
-# }
-# rownames(super.model)[i] = 
-# paste(
-# keys[rownames(super.model)[i], 'event'], 
-# keys[rownames(super.model)[i], 'type'])  
-# }
-
-# colnames(super.model) = rownames(super.model)
-# rownames(types) = rownames(super.model)
-# rownames(labels) = rownames(super.model)
-# rownames(pattern.type) = rownames(super.model)
-
-# types[types == 'Hypothesis'] = 'Pattern'
-
-# ########### Filetering for recurrrent
-# view = super.model
-# view = view[apply(view, 1, max) > MIN,]
-# view = view[, apply(view, 2, max) > MIN]
-
-# ########### Ordering according to the number of times a relation is found
-# group.order = function(x, k, margin)
-# {   
-# ord = which(apply(x, margin, max) == k)
-
-# if (margin == 1)
-# {
-# to.sort = x[ord, , drop = F]
-# to.sort = to.sort[order(rowSums(to.sort), decreasing = T), , drop = F]
-# rownames(x)[ord] = rownames(to.sort)    
-# x[ord, ] = to.sort
-# }
-# else
-# {
-# to.sort = x[, ord , drop = F]
-# to.sort = to.sort[, order(colSums(to.sort), decreasing = T), drop = F]
-# colnames(x)[ord] = colnames(to.sort)
-# x[, ord] = to.sort  
-# }
-
-# return(x)
-# } 
-
-# selects.recurr = order(apply(view, 1, max), decreasing = T)
-# view = view[selects.recurr, ] 
-
-# max.values = apply(view, 1, max)
-# for(i in 1:length(unique(max.values)))
-# view = group.order(view, unique(max.values)[i], 1)
-
-# selected.recurr = order(apply(view, 2, max), decreasing = T)
-# view = view[, selected.recurr]  
-
-# max.values = apply(view, 2, max)
-# for(i in 1:length(unique(max.values)))
-# view = group.order(view, unique(max.values)[i], 2)
-
-# gaps.row = match(
-# unique(apply(view, 1, max)),
-# apply(view, 1, max)) - 1
-
-# gaps.col = match(
-# unique(apply(view, 2, max)),
-# apply(view, 2, max)) - 1
-
-
-# ############
-# view.ones = view
-# view.ones[view.ones > 1] = 1
-# ann.row = data.frame(selects=rowSums(view.ones), 
-# row.names = rownames(view),
-# stringsAsFactors = F)
-
-# # ann.row$selects = .bincode(ann.row$selects,
-# # c(0, 
-# # max(ann.row$selects) / 4,
-# # max(ann.row$selects) / 2,
-# # max(ann.row$selects) * 3 / 4,
-# # max(ann.row$selects)), 
-# # TRUE)   
-
-
-# ann.row = cbind(
-# types[rownames(ann.row), , drop = FALSE], 
-# pattern.type[rownames(ann.row), , drop = FALSE],
-# ann.row)
-
-# ann.col = data.frame(selected=colSums(view.ones), 
-# row.names = colnames(view),
-# stringsAsFactors = F)
-
-# ann.col = cbind(
-# types[rownames(ann.col), , drop = FALSE], 
-# pattern.type[rownames(ann.col), , drop = FALSE],
-# ann.col)
-
-# selection = max(max(ann.row$selects), max(ann.col$selected))
-# selection.palette = brewer.pal(9, 'PuBuGn')[4:9]
-# # selection.palette = colorRampPalette(selection)(selection)
-
-# ann.colors = list(
-# event = as.colors(Cluster3.methylation_subtype.aic$data),
-# pattern = c('red', 'darkgreen', 'orange', 'white'),
-# # selects = colorRampPalette(brewer.pal(9, 'PuBuGn'))(max(ann.row$selects) + 1),
-# # selected = colorRampPalette(brewer.pal(9, 'PuBuGn'))(max(ann.col$selected) + 1)
-# # selects = selection.palette,
-# # selected = selection.palette
-# selects = colorRampPalette(selection.palette)(max(ann.row$selects) + 1),
-# selected = colorRampPalette(selection.palette)(max(ann.col$selected) + 1)
-# ) 
-# ann.colors$event['Hypothesis'] = 'white'
-# names(ann.colors$event)[4] = 'Pattern'
-# names(ann.colors$pattern) = c('hard exclusivity', 'co-occurrence', 'soft exclusivity', 'NA')
-
-# print(ann.colors$selects)
-
-# map.color = colorRampPalette(brewer.pal(3, 'YlOrBr'))(max(super.model) + 1)
-# # map.color = brewer.pal(max(super.model) + 1, 'YlOrBr')
-# map.color[1] = 'gray92'
-
-# map.nozeroes = view
-# map.nozeroes[view == 0] = ''
-
-# pheatmap(view, 
-# main = 'Selectivity relations (intra-clusters consensus)',
-# scale = 'none', 
-# color = map.color,
-# font.size=4,
-# fontsize_col = 6,
-# fontsize_row = 6,
-# annotation_row = ann.row,
-# annotation_col = ann.col,
-# annotation_colors = ann.colors,
-# fontsize_number = 6,
-# cluster_rows = F,
-# cluster_cols = F,
-# labels_row = labels[rownames(view), ],
-# labels_col = labels[colnames(view), ],
-# number_format = '%d',
-# display_numbers = map.nozeroes,
-# gaps_col = gaps.col,
-# gaps_row = gaps.row,
-# border_color = 'lightgray'
-# )
-# } 
-
 #' export input for cbio visualization at http://www.cbioportal.org/public-portal/oncoprinter.jsp
 #' @title oncoprint.cbio
 #'
@@ -953,6 +731,8 @@ oncoprint.cbio <- function(x,
 #' @return LaTEX code
 #' @importFrom gridExtra grid.table
 #' @importFrom xtable xtable
+#' @importFrom utils flush.console txtProgressBar setTxtProgressBar
+#' @importFrom grDevices pdf dev.cur dev.off dev.set
 #' @export genes.table.report
 #' 
 genes.table.report <- function(x,
@@ -2374,6 +2154,8 @@ find_gaps <- function(tree, cutree_n) {
 #' @importFrom grid grid.draw grid.pretty grid.newpage
 #' @importFrom scales dscale hue_pal brewer_pal
 #' @importFrom RColorBrewer brewer.pal
+#' @importFrom stats as.dist cor hclust dist cutree
+#' @importFrom grDevices colorRampPalette
 #' 
 pheatmap <- function(mat,
                      color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100),

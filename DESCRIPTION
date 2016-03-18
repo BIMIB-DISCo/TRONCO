@@ -34,6 +34,10 @@ Imports:
     R.matlab,
     gRapHD,
     infotheo,
+    grDevices,
+    graphics,
+    stats,
+    utils,
 Suggests:
     BiocGenerics,
     BiocStyle,

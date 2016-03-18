@@ -1266,8 +1266,8 @@ AND <- function( ... ) {
     ## Look for the global variables named lifting.genotypes and
     ## lifting.annotations.
     
-    genotypes = lifting.genotypes
-    annotations = lifting.annotations
+    genotypes = get('lifting.genotypes', envir=.GlobalEnv)
+    annotations = get('lifting.annotations', envir=.GlobalEnv)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1333,8 +1333,8 @@ OR <- function( ... ) {
     ## Look for the global variables named lifting.genotypes and
     ## lifting.annotations.
     
-    genotypes = lifting.genotypes
-    annotations = lifting.annotations
+    genotypes = get('lifting.genotypes', envir=.GlobalEnv)
+    annotations = get('lifting.annotations', envir=.GlobalEnv)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1393,8 +1393,8 @@ XOR <- function( ... ) {
     ## Look for the global variables named lifting.genotypes and
     ## lifting.annotations.
     
-    genotypes = lifting.genotypes
-    annotations = lifting.annotations
+    genotypes = get('lifting.genotypes', envir=.GlobalEnv)
+    annotations = get('lifting.annotations', envir=.GlobalEnv)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {

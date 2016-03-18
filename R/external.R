@@ -25,6 +25,7 @@
 #' @param label.deletion The event type to use as amplification (can be a list)
 #' @return A MUTEX example matrix
 #' @export export.mutex
+#' @importFrom utils write.table
 #' 
 export.mutex <- function(x, 
                          filename = 'tronco_to_mutex',
@@ -410,6 +411,7 @@ TCGA.shorten.barcodes <- function(x) {
 #' @param column.map Map to the required columns
 #' @return a map
 #' @export TCGA.map.clinical.data
+#' @importFrom utils read.delim
 #' 
 TCGA.map.clinical.data <- function(file, sep='\t', column.samples, column.map) {
 
@@ -473,6 +475,8 @@ sample.RColorBrewer.colors <- function(palette, ncolors) {
 #' @export export.graphml
 #' @importFrom igraph write.graph V V<- set.vertex.attribute
 #' @importFrom igraph set.edge.attribute set.graph.attribute
+#' @importFrom grDevices rgb col2rgb
+#' @importFrom utils packageVersion
 #' 
 export.graphml <- function(x, file, ...) {
 

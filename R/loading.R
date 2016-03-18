@@ -500,6 +500,7 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
 #' @param sep MAF separator, default \'\\t\'
 #' @return A mapHugo_Symbol -> Entrez_Gene_Id.
 #' @export extract.MAF.HuGO.Entrez.map
+#' @importFrom utils read.delim
 #' 
 extract.MAF.HuGO.Entrez.map <- function(file, sep = "\t") {
     cat("*** Importing from file: ", file, "\n")
@@ -533,7 +534,9 @@ extract.MAF.HuGO.Entrez.map <- function(file, sep = "\t") {
 #' @param genes A list of < 900 genes to query
 #' @return A list with two dataframe: the gentic profile required and clinical data for the Cbio study.
 #' @export cbio.query
-#' @importFrom cgdsr CGDS getCancerStudies getCaseLists getGeneticProfiles getProfileData getClinicalData
+#' @importFrom cgdsr CGDS getCancerStudies getCaseLists 
+#' @importFrom cgdsr getGeneticProfiles getProfileData getClinicalData
+#' @importFrom utils write.table
 #' 
 cbio.query <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, genes) {
     cat("*** CGDS plugin for Cbio query.\n")

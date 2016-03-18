@@ -1182,6 +1182,7 @@ as.bootstrap.scores <- function(x,
 #' @param values If you want to see also the values
 #' @return All the bootstrap scores in a TRONCO model 
 #' @export as.kfold.eloss
+#' @importFrom stats sd
 #' 
 as.kfold.eloss <- function(x,
                            models = names(x$model),
@@ -1240,6 +1241,7 @@ as.kfold.eloss <- function(x,
 #' @param table Keep the original table (defaul false)
 #' @return All the bootstrap scores in a TRONCO model 
 #' @export as.kfold.prederr
+#' @importFrom stats sd
 #' 
 as.kfold.prederr <- function(x,
                              events = as.events(x),
@@ -1313,6 +1315,7 @@ as.kfold.prederr <- function(x,
 #' @param table Keep the original table (defaul false)
 #' @return All the posterior classification error scores in a TRONCO model 
 #' @export as.kfold.posterr
+#' @importFrom stats sd
 #' 
 as.kfold.posterr <- function(x,
                              events = as.events(x),

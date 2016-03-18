@@ -22,6 +22,7 @@
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.caprese
+#' @importFrom stats phyper
 #' 
 tronco.caprese <- function(data,
                            lambda = 0.5,
