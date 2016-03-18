@@ -183,7 +183,7 @@ oncoprint <- function(x,
 
         for (i in u.stages) {
             print(ord.stages[which(ord.stages == i), , drop=FALSE])
-            new.data = cbind(new.data, aux.fun(rownames(ord.stages[which(ord.stages == i), , drop= F])))
+            new.data = cbind(new.data, aux.fun(rownames(ord.stages[which(ord.stages == i), , drop= FALSE])))
         }
         data = new.data
         data = data[order(rowSums(data), decreasing = TRUE), , drop = FALSE ]
@@ -1796,7 +1796,7 @@ heatmap_motor <- function(matrix,
 
 generate_breaks <- function(x, n, center = FALSE) {
     if (center) {
-        m = max(abs(c(min(x, na.rm = TRUE), max(x, na.rm = T))))
+        m = max(abs(c(min(x, na.rm = TRUE), max(x, na.rm = TRUE))))
         res = seq(-m, m, length.out = n + 1)
     }
     else{
@@ -2586,10 +2586,6 @@ tronco.pattern.plot <- function(x,
 
         circos.par(gap.degree = gaps)
 
-        ## matrix = matrix[ order(matrix[, 1]) , , drop = FALSE] 
-        ## matrix = matrix[ order(matrix[, 1], decreasing = T) , , drop = FALSE] 
-        ## print(matrix)
-
         chordDiagram(matrix, 
                      grid.col = sector.color,
                      annotationTrack = "grid", 
@@ -2599,12 +2595,6 @@ tronco.pattern.plot <- function(x,
                      link.lty = link.style,
                      link.lwd = 0.3
                      )
-
-        ## for (si in get.all.sector.index()) 
-        ## { 
-        ## # here the index for the grid track is 2 
-        ## circos.axis(h = "top", labels.cex = 0.3, major.tick.percentage = .4, sector.index = si, track.index = 2) 
-        ## } 
 
         circos.trackPlotRegion(track.index = 1, 
                                panel.fun = function(x, y) {

@@ -1238,7 +1238,7 @@ tronco.plot <- function(x,
                 ## Apply can not be used - implicit coercion to char is crap
                 ## z[ apply(z, 1, relations.filter), ]
 
-                mask = rep(T, nrow(z))
+                mask = rep(TRUE, nrow(z))
                 for(i in 1:nrow(z))
                     mask[i] = relations.filter(z[i, ]) 
                 return(z[mask, , drop = FALSE])                              
@@ -1748,7 +1748,7 @@ tronco.plot <- function(x,
         to = edge[2]
 
         if (is.logic.node.down(to)) {
-            eAttrs$logic[e] = T
+            eAttrs$logic[e] = TRUE
             eAttrs$arrowsize[e] = 0
 
             if (substr(to, start = 1, stop = 2) == 'OR')
@@ -1764,7 +1764,7 @@ tronco.plot <- function(x,
         }
 
         if (is.logic.node.up(from)) {
-            eAttrs$logic[e] = T
+            eAttrs$logic[e] = TRUE
             eAttrs$arrowsize[e] = 0
 
             eAttrs$lty[e] = 'dashed'
@@ -1778,7 +1778,7 @@ tronco.plot <- function(x,
 
 
         } else if (substr(from, start = 1, stop = 1) == '*') {
-            eAttrs$logic[e] = T
+            eAttrs$logic[e] = TRUE
             eAttrs$arrowsize[e] = 0
             eAttrs$color[e] = 'black'
         }
@@ -1914,7 +1914,7 @@ tronco.plot <- function(x,
                                           }))]
         }
 
-        valid_names = grep('^[*]_(.+)$', valid_names, value = T, invert=T)
+        valid_names = grep('^[*]_(.+)$', valid_names, value = TRUE, invert=TRUE)
 
 
         text = ""
