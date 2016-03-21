@@ -14,27 +14,37 @@ tronco.plot(x, models = names(x$model), fontsize = NA, height = 2,
   annotate.sample = NA, export.igraph = FALSE, ...)
 }
 \arguments{
-\item{x}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
+\item{x}{A reconstructed model (the output of the inference 
+by a tronco function)}
 
-\item{models}{A vector containing the names of regularizators used (BIC, AIC or CAPRESE)}
+\item{models}{A vector containing the names of the 
+algorithms used (caprese, capri_bic, etc)}
 
-\item{fontsize}{For node names. Default NA for automatic rescaling}
+\item{fontsize}{For node names. Default NA for 
+automatic rescaling}
 
-\item{height}{Proportion node height - node width. Default height 2}
+\item{height}{Proportion node height - node width. 
+Default height 2}
 
-\item{width}{Proportion node height - node width. Default width 2}
+\item{width}{Proportion node height - node width. 
+Default width 2}
 
-\item{height.logic}{Height of logical nodes. Defaul 1}
+\item{height.logic}{Height of logical nodes. 
+Defaul 1}
 
-\item{pf}{Should I print Prima Facie? Default False}
+\item{pf}{Should I print Prima Facie? 
+Default False}
 
-\item{disconnected}{Should I print disconnected nodes? Default False}
+\item{disconnected}{Should I print disconnected 
+nodes? Default False}
 
-\item{scale.nodes}{Node scaling coefficient (based on node frequency). Default NA (autoscale)}
+\item{scale.nodes}{Node scaling coefficient 
+(based on node frequency). Default NA (autoscale)}
 
 \item{title}{Title of the plot. Default as.description(x)}
 
-\item{confidence}{Should I add confidence informations? No if NA}
+\item{confidence}{Should I add confidence 
+informations? No if NA}
 
 \item{p.min}{p-value cutoff. Default automatic}
 
@@ -44,31 +54,40 @@ tronco.plot(x, models = names(x$model), fontsize = NA, height = 2,
 
 \item{edge.cex}{CEX value for edge labels. Default 1.0}
 
-\item{label.edge.size}{Size of edge labels. Default NA for automatic rescaling}
+\item{label.edge.size}{Size of edge labels. 
+Default NA for automatic rescaling}
 
 \item{expand}{Should I expand hypotheses? Default TRUE}
 
-\item{genes}{Visualise only genes in this list. Default NULL, visualise all.}
+\item{genes}{Visualise only genes in this list. 
+Default NULL, visualise all.}
 
-\item{relations.filter}{Filter relations to dispaly according to this functions. Default NA}
+\item{relations.filter}{Filter relations to dispaly 
+according to this functions. Default NA}
 
 \item{edge.color}{Edge color. Default 'black'}
 
-\item{pathways.color}{RColorBrewer colorser for patways. Default 'Set1'.}
+\item{pathways.color}{RColorBrewer colorser 
+for patways. Default 'Set1'.}
 
-\item{file}{String containing filename for PDF output. If NA no PDF output will be provided}
+\item{file}{String containing filename for PDF output. 
+If NA no PDF output will be provided}
 
 \item{legend.pos}{Legend position. Default 'bottom',}
 
-\item{pathways}{A vector containing pathways information as described in as.patterns()}
+\item{pathways}{A vector containing pathways information 
+as described in as.patterns()}
 
 \item{lwd}{Edge base lwd. Default 3}
 
-\item{annotate.sample}{= List of samples to search for events in model}
+\item{annotate.sample}{= List of samples to search 
+for events in model}
 
-\item{export.igraph}{If TRUE export the igraph object generated}
+\item{export.igraph}{If TRUE export the igraph 
+object generated}
 
-\item{...}{Additional arguments for RGraphviz plot function}
+\item{...}{Additional arguments for RGraphviz 
+plot function}
 }
 \value{
 Information about the reconstructed model

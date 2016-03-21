@@ -6,8 +6,7 @@
 \usage{
 tronco.capri(data, command = "hc", regularization = c("bic", "aic"),
   do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3,
-  min.stat = TRUE, boot.seed = NULL, do.estimation = FALSE,
-  silent = FALSE)
+  min.stat = TRUE, boot.seed = NULL, silent = FALSE)
 }
 \arguments{
 \item{data}{A TRONCO compliant dataset.}
@@ -28,8 +27,6 @@ tronco.capri(data, command = "hc", regularization = c("bic", "aic"),
 
 \item{boot.seed}{Initial seed for the bootstrap random sampling.}
 
-\item{do.estimation}{A parameter to disable/enable the estimation of the error rates give the reconstructed model.}
-
 \item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
@@ -41,7 +38,6 @@ Reconstruct a progression model using CAPRI algorithm
 \examples{
 data(test_dataset)
 recon = tronco.capri(test_dataset)
-tronco.plot(recon)
 
 }
 

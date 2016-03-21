@@ -1,4 +1,3 @@
-
 data(maf)
 muts = import.MAF(maf)
 context("AS functions test")
@@ -53,9 +52,3 @@ test_that("as.colors returns a list of types", {
     expect_true(all(areColors(as.colors(muts))))
     expect_equal(as.colors(NULL), NULL)
 })
-
-
-
-
-
-

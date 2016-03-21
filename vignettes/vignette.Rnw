@@ -237,7 +237,7 @@ model = tronco.capri(hypo, boot.seed = 12345, nboot=10)
 We then plot the model inferred by CAPRI with BIC as a regolarizator and we set some parameters to get a good plot; the confidence of each edge is shown both in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input). 
 
 <<figplot, fig=TRUE,include=FALSE>>=
-tronco.plot(model, fontsize = 13, scale.nodes = .6, models="bic", 
+tronco.plot(model, fontsize = 13, scale.nodes = .6, models="capri_bic", 
 	confidence = c('tp', 'pr', 'hg'), height.logic = 0.25, legend.cex = .5, 
 	pathways =  list(priors= gene.hypotheses), label.edge.size=5)
 
@@ -256,7 +256,7 @@ model.boot = tronco.bootstrap(model, nboot=10)
 @
 
 <<figplotboot, fig=TRUE,include=FALSE>>=
-tronco.plot(model.boot, fontsize = 13, scale.nodes = .6, models="bic", 
+tronco.plot(model.boot, fontsize = 13, scale.nodes = .6, models="capri_bic", 
 	confidence=c('npb'), height.logic = 0.25, legend.cex = .5, 
 	pathways = list(priors= gene.hypotheses), label.edge.size=10)
 

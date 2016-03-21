@@ -110,6 +110,7 @@ as.bnlearn.network <- function(x,
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
 #' @importFrom bnlearn bn.cv
+#' @importFrom stats sd
 #' @export tronco.kfold.eloss
 #'
 tronco.kfold.eloss = function(x, 
@@ -199,6 +200,7 @@ tronco.kfold.eloss = function(x,
 #' @importFrom foreach foreach %dopar%
 #' @importFrom iterators icount
 #' @importFrom parallel stopCluster makeCluster detectCores
+#' @importFrom stats sd
 #' @export tronco.kfold.prederr
 #'
 tronco.kfold.prederr <- function(x,
@@ -315,6 +317,7 @@ tronco.kfold.prederr <- function(x,
 #' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
 #' @param verbose should I print messages?
 #' @importFrom bnlearn bn.cv
+#' @importFrom stats sd
 #' @export tronco.kfold.posterr
 #'
 tronco.kfold.posterr <- function(x,

@@ -1,8 +1,7 @@
 language: r
 bioc_required: true
 r:
-  - release
-  
+  - devel
 cache: packages
 
 r_github_packages:

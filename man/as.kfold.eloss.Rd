@@ -24,7 +24,7 @@ reconstruction have been performed.
 \examples{
 data(test_model_kfold)
 as.kfold.eloss(test_model_kfold)
-as.kfold.eloss(test_model_kfold, models='aic')
+as.kfold.eloss(test_model_kfold, models='capri_aic')
 
 }
 

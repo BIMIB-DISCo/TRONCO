@@ -20,6 +20,7 @@
 #' @param color This is the color used for visualization of events labeled as of "event.type"
 #' @return A TRONCO compliant dataset
 #' @export import.genotypes
+#' @importFrom utils read.table
 #'
 import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") {
     if (!(is.data.frame(geno) || is.matrix(geno)) && is.character(geno)) {
@@ -116,6 +117,7 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 #' @param filter.samples A list of samples
 #' @return A TRONCO compliant representation of the input CNAs.
 #' @export import.GISTIC
+#' @importFrom utils read.table
 #' 
 import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 
@@ -259,6 +261,9 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 #' @param merge.mutation.types If TRUE, all mutations are considered equivalent, regardless of their Variant_Classification value. Otherwise no.
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
+#' @importFrom utils read.table read.delim count.fields flush.console
+#' @importFrom utils txtProgressBar setTxtProgressBar
+#' @importFrom grDevices colorRampPalette
 #' 
 import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.TRONCO = TRUE, irregular = FALSE, paste.to.Hugo_Symbol = NULL, merge.mutation.types = TRUE) {
 
@@ -500,6 +505,7 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
 #' @param sep MAF separator, default \'\\t\'
 #' @return A mapHugo_Symbol -> Entrez_Gene_Id.
 #' @export extract.MAF.HuGO.Entrez.map
+#' @importFrom utils read.delim
 #' 
 extract.MAF.HuGO.Entrez.map <- function(file, sep = "\t") {
     cat("*** Importing from file: ", file, "\n")
@@ -533,7 +539,9 @@ extract.MAF.HuGO.Entrez.map <- function(file, sep = "\t") {
 #' @param genes A list of < 900 genes to query
 #' @return A list with two dataframe: the gentic profile required and clinical data for the Cbio study.
 #' @export cbio.query
-#' @importFrom cgdsr CGDS getCancerStudies getCaseLists getGeneticProfiles getProfileData getClinicalData
+#' @importFrom cgdsr CGDS getCancerStudies getCaseLists 
+#' @importFrom cgdsr getGeneticProfiles getProfileData getClinicalData
+#' @importFrom utils write.table
 #' 
 cbio.query <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, genes) {
     cat("*** CGDS plugin for Cbio query.\n")

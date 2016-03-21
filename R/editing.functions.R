@@ -538,7 +538,7 @@ delete.pattern <- function(x, pattern) {
     rm(list = pattern, envir = x$hypotheses$hstructure)
 
     if (! 'Pattern' %in% unique(x$annotations[,'type'])) {
-        x$types = x$types[-which(rownames(x$types) == 'Pattern'),,drop=F]
+        x$types = x$types[-which(rownames(x$types) == 'Pattern'),,drop=FALSE]
 
     }
 
@@ -804,6 +804,7 @@ sbind <- function(...) {
 #' @param new.color color for the new type to create
 #' @return A TRONCO compliant dataset.
 #' @export merge.types
+#' @importFrom utils txtProgressBar flush.console setTxtProgressBar
 #' 
 merge.types <- function(x, ..., new.type = "new.type", new.color = "khaki") {
 
@@ -868,15 +869,11 @@ merge.types <- function(x, ..., new.type = "new.type", new.color = "khaki") {
     cat("Dropping event types", paste(input, collapse = ", ", sep = ""), "for", length(genes), "genes.\n")
     geno.matrix = matrix(, nrow = nsamples(x), ncol = length(genes))
 
-    if (!exists('hide.progress.bar') || !hide.progress.bar) {
-        pb = txtProgressBar(1, length(genes), style = 3)
-        flush.console()
-    }
-
+    pb = txtProgressBar(1, length(genes), style = 3)
+    flush.console()
+    
     for (i in 1:length(genes)) {
-        if (!exists('hide.progress.bar') || !hide.progress.bar) {
-            setTxtProgressBar(pb, i)
-        }
+        setTxtProgressBar(pb, i)
 
         geno = as.matrix(rowSums(as.gene(x, genes[i], types = input)))
         geno[geno > 1] = 1
@@ -886,9 +883,7 @@ merge.types <- function(x, ..., new.type = "new.type", new.color = "khaki") {
 
     rownames(geno.matrix) = as.samples(x)
     colnames(geno.matrix) = genes
-    if (!exists('hide.progress.bar') || !hide.progress.bar) {
-        close(pb)
-    }
+    close(pb)
 
     z = import.genotypes(geno.matrix, event.type = new.type, color = new.color)
     if (has.stages(x)) {
