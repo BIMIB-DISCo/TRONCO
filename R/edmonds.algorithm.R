@@ -22,7 +22,7 @@
 # @return topology: the reconstructed tree topology
 #
 edmonds.fit <- function(dataset,
-                        regularization = "no-reg",
+                        regularization = "no_reg",
                         do.boot = TRUE,
                         nboot = 100,
                         pvalue = 0.05,
@@ -270,7 +270,7 @@ perform.likelihood.fit.edmonds = function( dataset, adj.matrix, regularization, 
     }
     
     # perform the likelihood fit if requested
-    if (regularization != "no-reg") {
+    if (regularization != "no_reg") {
     
         # create the blacklist based on the prima facie topology and the tree-structure assumption
         cont = 0

@@ -364,7 +364,7 @@ tronco.capri <- function(data,
 #' @importFrom stats phyper AIC BIC
 #' 
 tronco.mst.edmonds <- function(data,
-                               regularization = "no-reg", 
+                               regularization = "no_reg", 
                                do.boot = TRUE, 
                                nboot = 100, 
                                pvalue = 0.05, 
@@ -390,7 +390,7 @@ tronco.mst.edmonds <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! regularization %in% c('no-reg', 'bic', 'aic')) {
+    if (! regularization %in% c('no_reg', 'bic', 'aic')) {
         stop("Possible regularization are no-reg, bic or aic",call. = FALSE);
     }
 
@@ -444,60 +444,60 @@ tronco.mst.edmonds <- function(data,
 
     reconstruction =
         edmonds.fit(data$genotypes,
-                  regularization = regularization,
-                  do.boot = do.boot,
-                  nboot = nboot,
-                  pvalue = pvalue,
-                  min.boot = min.boot,
-                  min.stat = min.stat,
-                  boot.seed = boot.seed,
-                  silent = silent);
+                    regularization = regularization,
+                    do.boot = do.boot,
+                    nboot = nboot,
+                    pvalue = pvalue,
+                    min.boot = min.boot,
+                    min.stat = min.stat,
+                    boot.seed = boot.seed,
+                    silent = silent)
 
-    rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
-    colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
+    rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes)
+    colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes)
 
-    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
-    colnames(reconstruction$confidence) = "confidence";
-    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
-    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
-    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
+    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test")
+    colnames(reconstruction$confidence) = "confidence"
+    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes)
+    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes)
+    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes)
+    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes)
+    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes)
+    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes)
 
     for (i in 1:length(reconstruction$model)) {
 
         ## Set rownames and colnames to the probabilities.
         
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes)
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability"
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes)
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes)
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes)
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability"
 
         ## Set rownames and colnames to the parents positions.
         
-        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
+        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes)
+        colnames(reconstruction$model[[i]]$parents.pos) = "parents"
 
         ## Set rownames and colnames to the adjacency matrices.
         
-        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes)
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes)
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes)
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes)
 
     }
 
     ## Structure to save the results.
     
-    results = data;
+    results = data
     results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
-    results$confidence = reconstruction$confidence;
-    results$model = reconstruction$model;
-    results$parameters = reconstruction$parameters;
-    results$execution.time = reconstruction$execution.time;
+    results$confidence = reconstruction$confidence
+    results$model = reconstruction$model
+    results$parameters = reconstruction$parameters
+    results$execution.time = reconstruction$execution.time
 
     ## Add BIC/AIC/LogLik informations
 
@@ -505,12 +505,12 @@ tronco.mst.edmonds <- function(data,
         cat('*** Evaluating BIC / AIC / LogLik informations.\n')
     }
     
-    if ("no-reg" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'edmonds_no-reg')
+    if ("no_reg" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'edmonds_no_reg')
         score = logLik(bayes.net$net, data = bayes.net$data)
         logLik = score
-        results$model$edmonds_none$score = score
-        results$model$edmonds_none$logLik = logLik
+        results$model$edmonds_no_reg$score = score
+        results$model$edmonds_no_reg$logLik = logLik
     }
 
     if ("bic" %in% regularization) {
@@ -785,7 +785,7 @@ tronco.mst.chowliu <- function(data,
 #' @importFrom stats phyper AIC BIC
 #' 
 tronco.mst.prim <- function(data,
-                            regularization = "no-reg", 
+                            regularization = "no_reg", 
                             do.boot = TRUE, 
                             nboot = 100, 
                             pvalue = 0.05, 
@@ -811,7 +811,7 @@ tronco.mst.prim <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! regularization %in% c('no-reg', 'bic', 'aic')) {
+    if (! regularization %in% c('no_reg', 'bic', 'aic')) {
         stop("Possible regularization are no-reg, bic or aic",call. = FALSE);
     }
 
@@ -926,12 +926,12 @@ tronco.mst.prim <- function(data,
         cat('*** Evaluating BIC / AIC / LogLik informations.\n')
     }
 
-    if ("no-reg" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'prim_no-reg')
+    if ("no_reg" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'prim_no_reg')
         score = logLik(bayes.net$net, data = bayes.net$data)
         logLik = score
-        results$model$prim_none$score = score
-        results$model$prim_none$logLik = logLik
+        results$model$prim_no_reg$score = score
+        results$model$prim_no_reg$logLik = logLik
     }
 
     if ("bic" %in% regularization) {
@@ -1177,7 +1177,10 @@ tronco.plot <- function(x,
     }
 
     if (!models[1] %in% names(x$model)) {
-        stop(paste(models[1], "not in model"), call. = FALSE);
+        stop(paste(models[1], 
+                   "not in reconstructed models. Use: ",
+                   paste(names(x$model), collapse=' ')),
+        call. = FALSE);
     }
 
     if (!is.na(annotate.sample) && !is.null(pathways))
