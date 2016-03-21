@@ -1,6 +1,12 @@
 TRONCO (TRanslational ONCOlogy)
 ===============================
 
+| Branch              | Stato CI      |  Code Coverage  |
+|---------------------|---------------|-----------------|
+| master | [![Build Status](https://travis-ci.org/BIMIB-DISCo/TRONCO.svg?branch=master)](https://travis-ci.org/BIMIB-DISCo/TRONCO) |  [![codecov.io](https://codecov.io/github/BIMIB-DISCo/TRONCO/coverage.svg?branch=master)](https://codecov.io/github/BIMIB-DISCo/TRONCO?branch=master) |
+| development | [![Build Status](https://travis-ci.org/BIMIB-DISCo/TRONCO.svg?branch=development)](https://travis-ci.org/BIMIB-DISCo/TRONCO) |  [![codecov.io](https://codecov.io/github/BIMIB-DISCo/TRONCO/coverage.svg?branch=development)](https://codecov.io/github/BIMIB-DISCo/TRONCO?branch=development) |
+
+
 **TRONCO** is an **R** package which collects algorithms to infer *progression models* from Bernoulli 0/1 profiles of genomic alterations across a tumor sample. 
 
 Such profiles are usually visualized as a binary input matrix where each row represents a patient’s sample (e.g., the result of a sequenced tumor biopsy), and each column an event relevant to the progression (a certain type of somatic mutation, a focal or higher-level chromosomal copy number alteration, etc.); a 0/1 value models the absence/presence of that alteration in the sample. 
