@@ -1691,9 +1691,9 @@ tronco.plot <- function(x,
             }
 
             if (c == 'posterr') {
-                conf_sel = as.kfold.posterr(x, table = TRUE)
+                conf_sel = as.kfold.posterr(x, models=models, table = TRUE)
             } else if (c == 'prederr'){
-                conf_sel = as.kfold.prederr(x, table = TRUE)
+                conf_sel = as.kfold.prederr(x, models=models, table = TRUE)
             } else {
                 conf_sel = get(c, as.confidence(x, c))
             }
@@ -1988,14 +1988,15 @@ tronco.plot <- function(x,
         col = c(col, rep('white', 2), rep('white', 2), rep('white', 2))
 
         mods = NULL
-        for (model in models) {
-            mods_label = gsub('_', ' ', model)
-            if (!is.null(x$kfold) && !is.null(get(model, x$kfold)$eloss)) {
-                mods_label = paste(mods_label, '- eloss:', round(mean(get(model, x$kfold)$eloss), 5))
+        if ('eloss' %in% confidence) {
+            for (model in models) {
+                mods_label = gsub('_', ' ', model)
+                if (!is.null(x$kfold) && !is.null(get(model, x$kfold)$eloss)) {
+                    mods_label = paste(mods_label, '- eloss:', round(mean(get(model, x$kfold)$eloss), 5))
+                }
+                mods = c(mods, mods_label)
             }
-            mods = c(mods, mods_label)
         }
-
         text = 
             c(text, '\n',
               expression(bold('Algorithm:')),

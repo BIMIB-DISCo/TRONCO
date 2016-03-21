@@ -246,6 +246,69 @@ oncoprint(alterations,font.row=12,cellheight=20,cellwidth=4)
 
 \FloatBarrier
 
+We now show how to annotate e visualize any information regarding stages of the patients.
+
+<<stages>>=
+stages = c(rep('stage 1', 32), rep('stage 2', 32))
+stages = as.matrix(stages)
+rownames(stages) = as.samples(aCML)
+dataset = annotate.stages(aCML, stages = stages)
+has.stages(aCML)
+head(as.stages(dataset))
+@
+
+<<onco-stages, fig=TRUE, include=FALSE, width=6.5, height=7>>=
+oncoprint(dataset, font.row = 12, cellheight = 15, cellwidth = 4)
+@
+
+\begin{figure*}[ht]
+\begin{center}
+\includegraphics[width=0.9\textwidth, page=2]{vignette-onco-stages}
+\end{center}
+\vspace*{.05in}
+\caption{\texttt{oncoprint} output}
+\end{figure*}
+
+<<pathway>>=
+pathway = as.pathway(dataset,
+    pathway.genes = c('SETBP1', 'EZH2', 'WT1'), 
+    pathway.name = 'PATHWAY',
+    pathway.color = 'red',
+    aggregate.pathway = FALSE)
+@
+
+
+<<onco-pathway, fig=TRUE, include=FALSE, width=6.5, height=2.5>>=
+oncoprint(pathway, font.row = 12, cellheight = 15, cellwidth = 4)
+@
+
+\begin{figure*}[ht]
+\begin{center}
+\includegraphics[width=0.9\textwidth, page=2]{vignette-onco-pathway}
+\end{center}
+\vspace*{.05in}
+\caption{\texttt{oncoprint} output}
+\end{figure*}
+
+<<onco-pathway-viz, fig=TRUE, include=FALSE, width=6.5, height=2.5>>=
+pathway.visualization(dataset, 
+    pathways=list(
+        P1 = c('TET2', 'IRAK4'), 
+        P2=c('SETBP1', 'KIT')), 
+    aggregate.pathways=F)
+@
+
+\begin{figure*}[ht]
+\begin{center}
+\includegraphics[width=0.9\textwidth, page=2]{vignette-onco-pathway-viz}
+\end{center}
+\vspace*{.05in}
+\caption{\texttt{oncoprint} output}
+\end{figure*}
+
+
+\FloatBarrier
+
 \paragraph{\large Adding Hypotheses}{\ }\\
 
 \TRONCO{} allow to input patterns among events, i.e., any anticipated boolean relation among them (see the original CAPRI paper). Also it is possible to specify the possible target of such patterns as hypotheses. In this section we describe how the package can handle hypotheses and patterns.
@@ -425,6 +488,34 @@ dataset = delete.pattern(dataset, pattern = 'OR_ASXL1_CBL')
 view(dataset)
 @
 
+We next show two visualizations to investigate possible patterns over sets of events.
+
+
+<<pattern-plot, fig=TRUE,include=FALSE>>=
+tronco.pattern.plot(aCML.hypo,
+    group = as.events(aCML, genes=c('TET2', 'ASXL1')),
+    to = 'CBL',
+    legend.cex=1.5,
+    label.cex=1.9)
+@
+\incfig[ht]{vignette-pattern-plot}{0.8\textwidth}{Batplot over hypotheses}{}
+
+
+\FloatBarrier
+
+<<pattern-plot-circos, fig=TRUE,include=FALSE>>=
+tronco.pattern.plot(aCML.hypo,
+    group = as.events(aCML, genes=c('TET2', 'ASXL1')),
+    to = 'CBL',
+    legend.cex=1.5,
+    label.cex=1.9,
+    mode='circos')
+@
+\incfig[ht]{vignette-pattern-plot-circos}{0.6\textwidth}{Circos over hypotheses}{}
+
+
+\FloatBarrier
+
 \paragraph{\large Model reconstruction}{\ }\\
 
 We run the inference of the model by CAPRI algorithm with its default parameter: we use both AIC and BIC as regularizators, Hill-climbing as heuristic search of the solutions and exhaustive bootstrap (nboot replicates or more for Wilcoxon testing, i.e., more iterations can be performed if samples are rejected), p-value set at 0.05. We set the seed for the sake of reproducibility. 
@@ -516,10 +607,17 @@ Finally we can visualize with the function \texttt{as.parameters}, all the param
 as.parameters(model.capri)
 @
 
+We now show how to remove a model after the reconstruction
+
+<<>>=
+has.model(model.chowliu)
+dataset = delete.model(model.chowliu)
+@
+
 
 \paragraph{\large Bootstrapping data}{\ }\\
 
-Finally, we perform non-parametric bootstrap as a further estimation of the confidence in the inferred results. 
+Now, we perform non-parametric bootstrap as a further estimation of the confidence in the inferred results. 
 
 <<>>=
 model.boot = tronco.bootstrap(model.capri, nboot=10)
@@ -533,5 +631,48 @@ tronco.plot(model.boot, fontsize = 13, scale.nodes = .6, models="capri_bic",
 @
 \incfig[ht]{vignette-figplotboot}{0.9\textwidth}{aCML Reconstructed model}
 {After bootstrap.}
+
+\FloatBarrier
+
+With the following function we provede a matrix with confidence of any arc assessed by bootstrap.
+
+<<bootstrap-table>>=
+as.bootstrap.scores(model.boot, models='capri_bic')
+@
+
+\paragraph{\large Performing cross-validation}{\ }\\
+
+We provide an estimation of the confidence of the model as cross-validation. In particular three loss functions are implemented: negative entropy (the negated expected log likelyhood), the prediction error and the posterior classification error.
+
+<<kfold>>=
+model.boot = tronco.kfold.eloss(model.boot, 
+    models = 'capri_bic')
+model.boot = tronco.kfold.prederr(model.boot, 
+    models = 'capri_bic')
+model.boot = tronco.kfold.posterr(model.boot, 
+    models = 'capri_bic')
+@
+
+As for the boostrap we can also visualize the confidence by any type of cross-validation as a matrix.
+
+<<as-kfold>>=
+as.kfold.eloss(model.boot,
+    models = 'capri_bic')
+as.kfold.prederr(model.boot,
+    models = 'capri_bic')
+as.kfold.posterr(model.boot,
+    models = 'capri_bic')
+@
+
+We finally show the plot of the model with the confidences by cross-validation.
+%<<plot-conf, fig=TRUE,include=FALSE>>=
+%tronco.plot(model.boot, fontsize = 13, scale.nodes = .6, models="capri_bic", 
+%    confidence=c('npb', 'prederr', 'posterr'), height.logic = 0.25, legend.cex = .5, 
+%    pathways = list(priors= gene.hypotheses), label.edge.size=10)
+%
+%@
+%\incfig[ht]{vignette-plot-conf}{0.9\textwidth}{aCML Reconstructed model}
+%{After bootstrap.}
+
 
 \end{document}

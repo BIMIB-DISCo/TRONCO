@@ -588,7 +588,7 @@ pathway.visualization <- function(x,
                                   title =
                                       paste('Pathways:',
                                             paste(names(pathways), collapse=', ', sep='')),
-                                  file,
+                                  file = NA,
                                   pathways.color = 'Set2',
                                   aggregate.pathways,
                                   pathways,
@@ -599,8 +599,7 @@ pathway.visualization <- function(x,
         && pathways.color %in% rownames(brewer.pal.info)) {
         cat('Annotating pathways with RColorBrewer color palette', pathways.color, '.\n')
         pathway.colors = brewer.pal(n=length(names), name=pathways.color)
-    } else {
-        print(pathways.color)   
+    } else { 
         if (length(pathways.color) != length(names)) 
             stop('You did not provide enough colors to annotate ',
                  length(names),
@@ -629,7 +628,7 @@ pathway.visualization <- function(x,
                    pathway.name = names[1],
                    aggregate.pathway = aggregate.pathways)
 
-    data.pathways = change.color(data.pathways, 'Pathway', pathways.color[1])
+    data.pathways = change.color(data.pathways, 'Pathway', pathway.colors[1])
     data.pathways = rename.type(data.pathways, 'Pathway', names[1])
 
     if (length(names) > 1) {  
