@@ -22,7 +22,7 @@
 # @return topology: the reconstructed tree topology
 #
 edmonds.fit <- function(dataset,
-                        regularization = "none",
+                        regularization = "no-reg",
                         do.boot = TRUE,
                         nboot = 100,
                         pvalue = 0.05,
@@ -101,7 +101,7 @@ edmonds.fit <- function(dataset,
         ## score on the prima facie topology.
         
         if (!silent)
-            cat(paste0('*** Performing likelihood-fit with regularization ',reg,'.\n'))
+            cat('*** Performing likelihood-fit with regularization:', reg, '.\n')
         best.parents =
             perform.likelihood.fit.edmonds(dataset,
                                    prima.facie.parents$adj.matrix$adj.matrix.acyclic,
@@ -270,7 +270,7 @@ perform.likelihood.fit.edmonds = function( dataset, adj.matrix, regularization, 
     }
     
     # perform the likelihood fit if requested
-    if(regularization!="none") {
+    if (regularization != "no-reg") {
     
         # create the blacklist based on the prima facie topology and the tree-structure assumption
         cont = 0
@@ -278,8 +278,8 @@ perform.likelihood.fit.edmonds = function( dataset, adj.matrix, regularization, 
         child = -1
         for (i in 1:nrow(adj.matrix)) {
             for (j in 1:ncol(adj.matrix)) {
-                if(i!=j) {
-                    if(adj.matrix[i,j]==0) {
+                if (i != j) {
+                    if (adj.matrix[i,j] == 0) {
                         # [i,j] refers to causation i --> j
                         cont = cont + 1
                         if (cont == 1) {
@@ -296,35 +296,32 @@ perform.likelihood.fit.edmonds = function( dataset, adj.matrix, regularization, 
     
         # perform the reconstruction by likelihood fit with regularization
         # either the hill climbing or the tabu search is used as the mathematical optimization technique
-        if(cont>0) {
-            blacklist = data.frame(from = parent,to = child)
-            if(command=="hc") {
-                    my.net = hc(data,score= regularization,blacklist=blacklist)
+        if (cont > 0) {
+            blacklist = data.frame(from = parent, to = child)
+            if (command == "hc") {
+                    my.net = hc(data, score = regularization, blacklist = blacklist)
+            } else if (command == "tabu") {
+                    my.net = tabu(data, score = regularization, blacklist = blacklist)
             }
-            else if(command=="tabu") {
-                    my.net = tabu(data,score= regularization,blacklist=blacklist)
-            }
-        }
-        else {
-                if(command=="hc") {
-                    my.net = hc(data,score= regularization)
-                }
-            else if(command=="tabu") {
-                    my.net = tabu(data,score= regularization)
+        } else {
+            if (command == "hc") {
+                my.net = hc(data, score = regularization)
+            } else if(command == "tabu") {
+                my.net = tabu(data, score = regularization)
             }
         }
         my.arcs = my.net$arcs
         
         # build the adjacency matrix of the reconstructed topology
-        if(length(nrow(my.arcs))>0 && nrow(my.arcs)>0) {
+        if (length(nrow(my.arcs)) > 0 && nrow(my.arcs) > 0) {
             for (i in 1:nrow(my.arcs)) {
                 # [i,j] refers to causation i --> j
-                adj.matrix.fit[as.numeric(my.arcs[i,1]),as.numeric(my.arcs[i,2])] = 1
+                adj.matrix.fit[as.numeric(my.arcs[i,1]), 
+                               as.numeric(my.arcs[i,2])] = 1
             }
         }
         
-    }
-    else {
+    } else {
         adj.matrix.fit = adj.matrix
     }
     
@@ -332,8 +329,8 @@ perform.likelihood.fit.edmonds = function( dataset, adj.matrix, regularization, 
     
     adj.matrix =
         list(adj.matrix.pf = adj.matrix.prima.facie,
-             adj.matrix.fit = adj.matrix.fit);
-    topology = list(adj.matrix = adj.matrix);
+             adj.matrix.fit = adj.matrix.fit)
+    topology = list(adj.matrix = adj.matrix)
     return(topology)
 
 }

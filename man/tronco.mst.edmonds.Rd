@@ -4,7 +4,7 @@
 \alias{tronco.mst.edmonds}
 \title{tronco mst edmonds}
 \usage{
-tronco.mst.edmonds(data, regularization = "none", do.boot = TRUE,
+tronco.mst.edmonds(data, regularization = "no-reg", do.boot = TRUE,
   nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE,
   boot.seed = NULL, silent = FALSE)
 }

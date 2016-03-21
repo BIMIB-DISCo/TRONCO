@@ -24,7 +24,7 @@
 # @return topology: the reconstructed tree topology
 #
 prim.fit <- function(dataset,
-                      regularization = "none",
+                      regularization = "no-reg",
                       do.boot = TRUE,
                       nboot = 100,
                       pvalue = 0.05,
@@ -104,7 +104,7 @@ prim.fit <- function(dataset,
         ## score on the prima facie topology.
         
         if (!silent)
-            cat(paste0('*** Performing likelihood-fit with regularization ',reg,'.\n'))
+            cat('*** Performing likelihood-fit with regularization:',reg,'.\n')
         best.parents =
             perform.likelihood.fit.prim(dataset,
                                    prima.facie.parents$adj.matrix$adj.matrix.acyclic,
@@ -122,16 +122,16 @@ prim.fit <- function(dataset,
             for (j in 1:ncol(dataset)) {
                 if (i!=j && best.parents$adj.matrix$adj.matrix.fit[i, j] == 1) {
                     parents.pos.fit[j,1] =
-                        list(c(unlist(parents.pos.fit[j, 1]), i));
+                        list(c(unlist(parents.pos.fit[j, 1]), i))
                     conditional.probs.fit[j,1] =
                         list(c(unlist(conditional.probs.fit[j, 1]),
                                prima.facie.parents$joint.probs[i, j] /
-                                   prima.facie.parents$marginal.probs[i]));
+                                   prima.facie.parents$marginal.probs[i]))
                 }
             }
         }
-        parents.pos.fit[unlist(lapply(parents.pos.fit, is.null))] = list(-1);
-        conditional.probs.fit[unlist(lapply(conditional.probs.fit, is.null))] = list(1);
+        parents.pos.fit[unlist(lapply(parents.pos.fit, is.null))] = list(-1)
+        conditional.probs.fit[unlist(lapply(conditional.probs.fit, is.null))] = list(1)
 
         ## Perform the estimation of the probabilities if requested.
         
@@ -143,21 +143,21 @@ prim.fit <- function(dataset,
                 estimate.dag.error.rates(dataset,
                                          prima.facie.parents$marginal.probs,
                                          prima.facie.parents$joint.probs,
-                                         parents.pos.fit);
+                                         parents.pos.fit)
             estimated.probabilities.fit =
                 estimate.dag.probs(dataset,
                                    prima.facie.parents$marginal.probs,
                                    prima.facie.parents$joint.probs,
                                    parents.pos.fit,
-                                   estimated.error.rates.fit);
+                                   estimated.error.rates.fit)
         } else {
             estimated.error.rates.fit =
                 list(error.fp = NA,
-                     error.fn = NA);
+                     error.fn = NA)
             estimated.probabilities.fit =
                 list(marginal.probs = NA,
                      joint.probs = NA,
-                     conditional.probs = NA);
+                     conditional.probs = NA)
         }
 
         ## Set results for the current regolarizator.
@@ -165,16 +165,16 @@ prim.fit <- function(dataset,
         probabilities.observed =
             list(marginal.probs = prima.facie.parents$marginal.probs,
                  joint.probs = prima.facie.parents$joint.probs,
-                 conditional.probs = conditional.probs.fit);
+                 conditional.probs = conditional.probs.fit)
         probabilities.fit =
             list(estimated.marginal.probs = estimated.probabilities.fit$marginal.probs,
                  estimated.joint.probs = estimated.probabilities.fit$joint.probs,
-                 estimated.conditional.probs = estimated.probabilities.fit$conditional.probs);
+                 estimated.conditional.probs = estimated.probabilities.fit$conditional.probs)
         probabilities =
             list(probabilities.observed = probabilities.observed,
-                 probabilities.fit = probabilities.fit);
-        parents.pos = parents.pos.fit;
-        error.rates = estimated.error.rates.fit;
+                 probabilities.fit = probabilities.fit)
+        parents.pos = parents.pos.fit
+        error.rates = estimated.error.rates.fit
 
         ## Save the results for the model.
 
@@ -184,7 +184,7 @@ prim.fit <- function(dataset,
             list(probabilities = probabilities,
                  parents.pos = parents.pos,
                  error.rates = error.rates,
-                 adj.matrix = best.parents$adj.matrix);
+                 adj.matrix = best.parents$adj.matrix)
     }
 
     ## Set the execution parameters.
@@ -199,7 +199,7 @@ prim.fit <- function(dataset,
              min.stat = min.stat,
              boot.seed = boot.seed,
              do.estimation = do.estimation,
-             silent = silent);
+             silent = silent)
 
     ## Return the results.
     
@@ -210,8 +210,8 @@ prim.fit <- function(dataset,
              confidence = prima.facie.parents$pf.confidence,
              model = model,
              parameters = parameters,
-             execution.time = (proc.time() - ptm));
-    return(topology);
+             execution.time = (proc.time() - ptm))
+    return(topology)
 }
 
 
@@ -231,9 +231,9 @@ perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, com
     
     for (i in 1:ncol(dataset)) {
         if (sum(dataset[, i]) == 0) {
-            dataset[sample(1:nrow(dataset), size=1), i] = 1;
+            dataset[sample(1:nrow(dataset), size=1), i] = 1
         } else if (sum(dataset[, i]) == nrow(dataset)) {
-            dataset[sample(1:nrow(dataset), size=1), i] = 0;
+            dataset[sample(1:nrow(dataset), size=1), i] = 0
         }
     }
 
@@ -265,7 +265,7 @@ perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, com
     cont = 0
     for (i in 1:nrow(curr_valid.adj.matrix)) {
         for (j in i:nrow(curr_valid.adj.matrix)) {
-            if(!(adj.matrix[i,j]==0 && adj.matrix[j,i]==0)) {
+            if (!(adj.matrix[i,j] == 0 && adj.matrix[j,i] == 0)) {
                 cont = cont + 1
                 curr_valid.adj.matrix[i,j] = 1
                 curr_valid.adj.matrix[j,i] = 1
@@ -274,38 +274,38 @@ perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, com
     }
     
     # if the graph has at least one edge, build to weighted igraph object
-    if(cont>0) {
-        curr.graph = graph.adjacency(curr_valid.adj.matrix,mode="undirected")
+    if (cont > 0) {
+        curr.graph = graph.adjacency(curr_valid.adj.matrix,mode = "undirected")
         all_edges = get.edgelist(curr.graph)
         # set the weights to the edges
         new_weights = NULL
-        if(cont==1) {
-            new_weights = mutinformation(data[,all_edges[1,1]],data[,all_edges[1,2]])
-        }
-        else {
-            for(i in 1:nrow(all_edges)) {
-                new_weights = c(new_weights,mutinformation(data[,all_edges[i,1]],data[,all_edges[i,2]]))
+        if (cont == 1) {
+            new_weights = mutinformation(data[ ,all_edges[1,1]], data[ ,all_edges[1,2]])
+        } else {
+            for (i in 1:nrow(all_edges)) {
+                new_weights = c(new_weights,
+                                mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
             }
         }
         # set the weights to the graph
-        E(curr.graph)$weight = max(new_weights)-new_weights
+        E(curr.graph)$weight = max(new_weights) - new_weights
         # get the minimum spanning tree by Prim algorithm
-        curr_valid.adj.matrix = as.matrix(get.adjacency(minimum.spanning.tree(curr.graph, algorithm="prim")))
+        curr_valid.adj.matrix = as.matrix(get.adjacency(minimum.spanning.tree(curr.graph, 
+                                                                              algorithm="prim")))
     }
     
     # build the matrix of the priors
-    if(cont>0) {
-        new_prior_matrix = array(0,c(nrow(adj.matrix),ncol(adj.matrix)))
+    if(cont > 0) {
+        new_prior_matrix = array(0, c(nrow(adj.matrix), ncol(adj.matrix)))
         rownames(new_prior_matrix) = colnames(dataset)
         colnames(new_prior_matrix) = colnames(dataset)
-        for(i in 1:nrow(curr_valid.adj.matrix)) {
-            for(j in i:ncol(curr_valid.adj.matrix)) {
-                if(i!=j) {
-                    if(curr_valid.adj.matrix[i,j]==1) {
-                        if(adj.matrix[i,j]==1) {
+        for (i in 1:nrow(curr_valid.adj.matrix)) {
+            for (j in i:ncol(curr_valid.adj.matrix)) {
+                if (i != j) {
+                    if (curr_valid.adj.matrix[i,j] == 1) {
+                        if (adj.matrix[i,j] == 1) {
                             new_prior_matrix[i,j] = 1
-                        }
-                        else if(adj.matrix[j,i]==1) {
+                        } else if(adj.matrix[j,i] == 1) {
                             new_prior_matrix[j,i] = 1
                         }
                     }
@@ -319,7 +319,7 @@ perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, com
     adj.matrix.fit = adj.matrix
     
     # perform the likelihood fit if requested
-    if(regularization!="none") {
+    if (regularization != "no-reg") {
     
         # create the blacklist based on the prima facie topology and the tree-structure assumption
         cont = 0
@@ -327,17 +327,16 @@ perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, com
         child = -1
         for (i in 1:nrow(adj.matrix)) {
             for (j in 1:ncol(adj.matrix)) {
-                if(i!=j) {
-                    if(adj.matrix[i,j]==0) {
+                if(i != j) {
+                    if (adj.matrix[i,j] == 0) {
                         # [i,j] refers to causation i --> j
                         cont = cont + 1
-                        if(cont==1) {
+                        if (cont == 1) {
                             parent = toString(i)
                             child = toString(j)
-                        }
-                        else {
-                            parent = c(parent,toString(i))
-                            child = c(child,toString(j))
+                        } else {
+                            parent = c(parent, toString(i))
+                            child = c(child, toString(j))
                         }
                     }
                 }
@@ -346,30 +345,28 @@ perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, com
     
         # perform the reconstruction by likelihood fit with regularization
         # either the hill climbing or the tabu search is used as the mathematical optimization technique
-        if(cont>0) {
+        if (cont > 0) {
             blacklist = data.frame(from = parent,to = child)
-            if(command=="hc") {
-                    my.net = hc(data,score= regularization,blacklist=blacklist)
+            if (command == "hc") {
+                my.net = hc(data,score= regularization,blacklist=blacklist)
+            } else if (command == "tabu") {
+                my.net = tabu(data,score= regularization,blacklist=blacklist)
             }
-            else if(command=="tabu") {
-                    my.net = tabu(data,score= regularization,blacklist=blacklist)
-            }
-        }
-        else {
-                if(command=="hc") {
-                    my.net = hc(data,score= regularization)
-                }
-            else if(command=="tabu") {
-                    my.net = tabu(data,score= regularization)
+        } else {
+            if (command == "hc") {
+                my.net = hc(data, score = regularization)
+            } else if (command == "tabu") {
+                my.net = tabu(data, score = regularization)
             }
         }
         my.arcs = my.net$arcs
         
         # build the adjacency matrix of the reconstructed topology
-        if(length(nrow(my.arcs))>0 && nrow(my.arcs)>0) {
+        if (length(nrow(my.arcs)) > 0 && nrow(my.arcs) > 0) {
             for (i in 1:nrow(my.arcs)) {
                 # [i,j] refers to causation i --> j
-                adj.matrix.fit[as.numeric(my.arcs[i,1]),as.numeric(my.arcs[i,2])] = 1
+                adj.matrix.fit[as.numeric(my.arcs[i,1]), 
+                               as.numeric(my.arcs[i,2])] = 1
             }
         }
         
@@ -379,8 +376,8 @@ perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, com
     
     adj.matrix =
         list(adj.matrix.pf = adj.matrix.prima.facie,
-             adj.matrix.fit = adj.matrix.fit);
-    topology = list(adj.matrix = adj.matrix);
+             adj.matrix.fit = adj.matrix.fit)
+    topology = list(adj.matrix = adj.matrix)
     return(topology)
 
 }

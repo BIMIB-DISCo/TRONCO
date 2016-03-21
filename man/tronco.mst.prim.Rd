@@ -4,7 +4,7 @@
 \alias{tronco.mst.prim}
 \title{tronco mst prim}
 \usage{
-tronco.mst.prim(data, regularization = "none", do.boot = TRUE,
+tronco.mst.prim(data, regularization = "no-reg", do.boot = TRUE,
   nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE,
   boot.seed = NULL, silent = FALSE)
 }

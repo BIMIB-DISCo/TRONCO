@@ -182,9 +182,13 @@ tronco.capri <- function(data,
     if (command != "hc" && command != "tabu") {
         stop("The inference can be performed either by hill climbing or tabu search!",call. = FALSE);
     }
-    if (
-        pvalue < 0 || pvalue > 1) {
+
+    if (pvalue < 0 || pvalue > 1) {
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
+    }
+
+    if (! regularization %in% c('bic', 'aic')) {
+        stop("Possible regularization are bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
@@ -360,7 +364,7 @@ tronco.capri <- function(data,
 #' @importFrom stats phyper AIC BIC
 #' 
 tronco.mst.edmonds <- function(data,
-                               regularization = "none", 
+                               regularization = "no-reg", 
                                do.boot = TRUE, 
                                nboot = 100, 
                                pvalue = 0.05, 
@@ -382,9 +386,12 @@ tronco.mst.edmonds <- function(data,
         data$hypotheses = NA;
     }
     
-    if (
-        pvalue < 0 || pvalue > 1) {
+    if (pvalue < 0 || pvalue > 1) {
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
+    }
+
+    if (! regularization %in% c('no-reg', 'bic', 'aic')) {
+        stop("Possible regularization are no-reg, bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
@@ -498,8 +505,8 @@ tronco.mst.edmonds <- function(data,
         cat('*** Evaluating BIC / AIC / LogLik informations.\n')
     }
     
-    if ("none" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'edmonds_none')
+    if ("no-reg" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'edmonds_no-reg')
         score = logLik(bayes.net$net, data = bayes.net$data)
         logLik = score
         results$model$edmonds_none$score = score
@@ -595,9 +602,12 @@ tronco.mst.chowliu <- function(data,
         data$hypotheses = NA;
     }
     
-    if (
-        pvalue < 0 || pvalue > 1) {
+    if (pvalue < 0 || pvalue > 1) {
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
+    }
+
+    if (! regularization %in% c('bic', 'aic')) {
+        stop("Possible regularization are bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
@@ -775,7 +785,7 @@ tronco.mst.chowliu <- function(data,
 #' @importFrom stats phyper AIC BIC
 #' 
 tronco.mst.prim <- function(data,
-                            regularization = "none", 
+                            regularization = "no-reg", 
                             do.boot = TRUE, 
                             nboot = 100, 
                             pvalue = 0.05, 
@@ -797,9 +807,12 @@ tronco.mst.prim <- function(data,
         data$hypotheses = NA;
     }
     
-    if (
-        pvalue < 0 || pvalue > 1) {
+    if (pvalue < 0 || pvalue > 1) {
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
+    }
+
+    if (! regularization %in% c('no-reg', 'bic', 'aic')) {
+        stop("Possible regularization are no-reg, bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
@@ -913,8 +926,8 @@ tronco.mst.prim <- function(data,
         cat('*** Evaluating BIC / AIC / LogLik informations.\n')
     }
 
-    if ("none" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'prim_none')
+    if ("no-reg" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'prim_no-reg')
         score = logLik(bayes.net$net, data = bayes.net$data)
         logLik = score
         results$model$prim_none$score = score
