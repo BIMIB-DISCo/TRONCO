@@ -315,9 +315,6 @@ perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, com
         adj.matrix = new_prior_matrix
     }
     
-    # set the obtained topology
-    adj.matrix.fit = adj.matrix
-    
     # perform the likelihood fit if requested
     if (regularization != "no_reg") {
     
@@ -370,6 +367,8 @@ perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, com
             }
         }
         
+    } else {
+        adj.matrix.fit = adj.matrix
     }
     
     ## Save the results and return them.
