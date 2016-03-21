@@ -22,6 +22,7 @@
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.caprese
 #' @importFrom stats phyper
+#' @importFrom bnlearn empty.graph set.arc
 #' 
 tronco.caprese <- function(data,
                            lambda = 0.5,
@@ -135,7 +136,7 @@ tronco.caprese <- function(data,
 #'
 #' @examples
 #' data(test_dataset)
-#' recon = tronco.capri(test_dataset)
+#' recon = tronco.capri(test_dataset, nboot = 10)
 #'
 #' @title tronco capri
 #' @param data A TRONCO compliant dataset.
@@ -150,7 +151,7 @@ tronco.caprese <- function(data,
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
-#' @importFrom bnlearn hc tabu
+#' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
 #' @importFrom stats phyper AIC BIC wilcox.test
@@ -187,7 +188,7 @@ tronco.capri <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! regularization %in% c('bic', 'aic')) {
+    if (! all(regularization %in% c('bic', 'aic'))) {
         stop("Possible regularization are bic or aic",call. = FALSE);
     }
 
@@ -336,7 +337,7 @@ tronco.capri <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.edmonds(test_dataset_no_hypos)
+#' recon = tronco.mst.edmonds(test_dataset_no_hypos, nboot = 10)
 #'
 #' @title tronco mst edmonds
 #' @param data A TRONCO compliant dataset.
@@ -357,7 +358,7 @@ tronco.capri <- function(data,
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.mst.edmonds
-#' @importFrom bnlearn hc tabu
+#' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
 #' @importFrom infotheo mutinformation
@@ -390,7 +391,7 @@ tronco.mst.edmonds <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! regularization %in% c('no_reg', 'bic', 'aic')) {
+    if (! all(regularization %in% c('no_reg', 'bic', 'aic'))) {
         stop("Possible regularization are no-reg, bic or aic",call. = FALSE);
     }
 
@@ -549,7 +550,7 @@ tronco.mst.edmonds <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.chowliu(test_dataset_no_hypos)
+#' recon = tronco.mst.chowliu(test_dataset_no_hypos, nboot = 10)
 #'
 #' @title tronco mst chow liu
 #' @param data A TRONCO compliant dataset.
@@ -573,7 +574,7 @@ tronco.mst.edmonds <- function(data,
 #' @return A TRONCO compliant object with reconstructed 
 #' model
 #' @export tronco.mst.chowliu
-#' @importFrom bnlearn hc tabu
+#' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
 #' @importFrom gRapHD minForest
@@ -606,7 +607,7 @@ tronco.mst.chowliu <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! regularization %in% c('bic', 'aic')) {
+    if (! all(regularization %in% c('bic', 'aic'))) {
         stop("Possible regularization are bic or aic",call. = FALSE);
     }
 
@@ -756,7 +757,7 @@ tronco.mst.chowliu <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.prim(test_dataset_no_hypos)
+#' recon = tronco.mst.prim(test_dataset_no_hypos, nboot = 10)
 #'
 #' @title tronco mst prim
 #' @param data A TRONCO compliant dataset.
@@ -777,7 +778,7 @@ tronco.mst.chowliu <- function(data,
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.mst.prim
-#' @importFrom bnlearn hc tabu
+#' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph get.edgelist E E<-
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths minimum.spanning.tree
@@ -811,7 +812,7 @@ tronco.mst.prim <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! regularization %in% c('no_reg', 'bic', 'aic')) {
+    if (! all(regularization %in% c('no_reg', 'bic', 'aic'))) {
         stop("Possible regularization are no-reg, bic or aic",call. = FALSE);
     }
 
@@ -1023,7 +1024,7 @@ tronco.bootstrap <- function(reconstruction,
 
     if (!type %in% c("non-parametric", "statistical")) {
         stop(paste("The types of bootstrap that can be performed are:",
-                   "non-parametric, parametric or statistical."),
+                   "non-parametric or statistical."),
              call. = FALSE)
     }
     
@@ -1176,8 +1177,8 @@ tronco.plot <- function(x,
         stop("Too many regularizators (max is 2)", call. = FALSE)
     }
 
-    if (!models[1] %in% names(x$model)) {
-        stop(paste(models[1], 
+    if (! all(models %in% names(x$model))) {
+        stop(paste(paste(models, collapse=' '), 
                    "not in reconstructed models. Use: ",
                    paste(names(x$model), collapse=' ')),
         call. = FALSE);

@@ -263,7 +263,7 @@ rename.type <- function(x, old.name, new.name) {
     } else {
         stop(paste(old.name, 'not in as.types(x)'))
     }
-    cat('Events of type', old.name, 'renamed as', new.name, '.\n')
+    cat('Events of type ', old.name, 'renamed as ', new.name, '.\n', sep='')
 
     is.compliant(x, err.fun = 'rename.type: output')
     return(x)
@@ -791,22 +791,22 @@ sbind <- function(...) {
 #' For an input dataset merge all the events of two or more distincit types
 #' (e.g., say that missense and indel mutations are events
 #' of a unique "mutation" type)
-#' @title merge.types
+#' @title join.types
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' merge.types(test_dataset_no_hypos, 'ins_del', 'missense_point_mutations')
-#' merge.types(test_dataset_no_hypos, 'ins_del', 'missense_point_mutations', new.type='mut', new.color='green')
+#' join.types(test_dataset_no_hypos, 'ins_del', 'missense_point_mutations')
+#' join.types(test_dataset_no_hypos, 'ins_del', 'missense_point_mutations', new.type='mut', new.color='green')
 #'
 #' @param x A TRONCO compliant dataset.
 #' @param ... type to merge
 #' @param new.type label for the new type to create
 #' @param new.color color for the new type to create
 #' @return A TRONCO compliant dataset.
-#' @export merge.types
+#' @export join.types
 #' @importFrom utils txtProgressBar flush.console setTxtProgressBar
 #' 
-merge.types <- function(x, ..., new.type = "new.type", new.color = "khaki") {
+join.types <- function(x, ..., new.type = "new.type", new.color = "khaki") {
 
     ## Check if x is compliant.
     
@@ -1037,11 +1037,11 @@ tsplit <- function(x) {
 
 
 #' Merge a list of events in an unique event
-#' @title merge.events
+#' @title join.events
 #'
 #' @examples
 #' data(muts)
-#' dataset = merge.events(muts, 'G1', 'G2', new.event='test', new.type='banana', event.color='yellow')
+#' dataset = join.events(muts, 'G1', 'G2', new.event='test', new.type='banana', event.color='yellow')
 #'
 #' @param x A TRONCO compliant dataset.
 #' @param ... A list of events to merge
@@ -1049,9 +1049,9 @@ tsplit <- function(x) {
 #' @param new.type The type of the new event
 #' @param event.color The color of the new event
 #' @return A TRONCO compliant dataset.
-#' @export merge.events
+#' @export join.events
 #' 
-merge.events <- function(x, ..., new.event, new.type, event.color) {
+join.events <- function(x, ..., new.event, new.type, event.color) {
 
     events = list(...)
 
@@ -1069,7 +1069,7 @@ merge.events <- function(x, ..., new.event, new.type, event.color) {
 
     y = x
     as_ev = as.events(x)
-    print(events)
+
     for (event in events) {
         y = delete.event(y, gene = as_ev[event, 'event'], type = as_ev[event, 'type'])
     }

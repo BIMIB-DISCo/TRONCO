@@ -42,7 +42,7 @@ Reconstruct a progression model using Prim algorithm combined with probabilistic
 }
 \examples{
 data(test_dataset_no_hypos)
-recon = tronco.mst.prim(test_dataset_no_hypos)
+recon = tronco.mst.prim(test_dataset_no_hypos, nboot = 10)
 
 }
 

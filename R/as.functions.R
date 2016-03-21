@@ -222,7 +222,7 @@ as.alterations <- function(x, new.type = 'Alteration', new.color = 'khaki') {
         stop('Patterns found. Delete patterns first.\n')
     }
 
-    merge.types(x, NULL, new.type = new.type, new.color = new.color)
+    join.types(x, NULL, new.type = new.type, new.color = new.color)
 }
 
 #' Return the patterns in the dataset which constitute CAPRI's hypotheses.

@@ -48,11 +48,11 @@ export.mutex <- function(x,
     }
     if (length(label.amplification) >= 2) {
         amplification = 'amplification'
-        data = merge.types(data, label.amplification[[1]], label.amplification[[2]], 'amplification', 'red')
+        data = join.types(data, label.amplification[[1]], label.amplification[[2]], 'amplification', 'red')
     }
     if (length(label.amplification) > 2) {
         for (label in label.amplification[3:length(label.amplification)]) {
-            data = merge.types(data, label, 'amplification', 'amplification', 'red')
+            data = join.types(data, label, 'amplification', 'amplification', 'red')
         }
     }
 
@@ -63,11 +63,11 @@ export.mutex <- function(x,
     }
     if (length(label.deletion) >= 2) {
         deletion = 'deletion'
-        data = merge.types(data, label.deletion[[1]], label.deletion[[2]], 'deletion', 'blue')
+        data = join.types(data, label.deletion[[1]], label.deletion[[2]], 'deletion', 'blue')
     }
     if (length(label.deletion) > 2) {
         for (label in label.deletion[3:length(label.deletion)]) {
-            data = merge.types(data, label, 'deletion', 'deletion', 'blue')
+            data = join.types(data, label, 'deletion', 'deletion', 'blue')
         }
     }
 
@@ -78,11 +78,11 @@ export.mutex <- function(x,
     }
     if (length(label.mutation) >= 2) {
         mutation = 'mutation'
-        data = merge.types(data, label.mutation[[1]], label.mutation[[2]], 'mutation', 'green')
+        data = join.types(data, label.mutation[[1]], label.mutation[[2]], 'mutation', 'green')
     }
     if (length(label.mutation) > 2) {
         for (label in label.mutation[3:length(label.mutation)]) {
-            data = merge.types(data, label, 'mutation', 'mutation', 'green')
+            data = join.types(data, label, 'mutation', 'mutation', 'green')
         }
     }
 
