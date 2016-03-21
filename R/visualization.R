@@ -326,22 +326,30 @@ oncoprint <- function(x,
     
     if (annotate.consolidate.events) {
         cat('Annotating events to consolidate - see consolidate.data\n')
-        invalid = consolidate.data(x, FALSE)
+        invalid = consolidate.data(x, print = FALSE)
 
         genes.annotation$consolidate = 'none'
 
-        genes.annotation[
-                         unlist(
-                             lapply(
-                                 invalid$indistinguishable, 
-                                 function(z) {
-                                     return(rownames(unlist(z)))
-                                 }
-                             )),
-                         'consolidate'] = 'indistinguishable'
+        if (length(invalid$indistinguishable) > 0) {
 
-        genes.annotation[ unlist(invalid$zeroes), 'consolidate'] = 'missing'
-        genes.annotation[ unlist(invalid$ones), 'consolidate'] = 'persistent'
+            genes.annotation[
+                             unlist(
+                                 lapply(
+                                     invalid$indistinguishable, 
+                                     function(z) {
+                                         return(rownames(unlist(z)))
+                                     }
+                                 )),
+                             'consolidate'] = 'indistinguishable'
+        }
+
+        if (length(invalid$zeroes) > 0) {
+            genes.annotation[ unlist(invalid$zeroes), 'consolidate'] = 'missing'
+        }
+
+        if (length(invalid$ones) > 0) {
+            genes.annotation[ unlist(invalid$ones), 'consolidate'] = 'persistent'
+        }
 
         consolidate.colors = c('white', 'brown1', 'darkorange4', 'firebrick4', 'deepskyblue3')
         names(consolidate.colors) = c('none', 'indistinguishable', 'missing', 'persistent')
