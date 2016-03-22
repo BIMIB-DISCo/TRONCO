@@ -417,6 +417,7 @@ as.events.in.sample <- function(x, sample) {
 #' @title as.confidence
 #' @param x A TRONCO model.
 #' @param conf A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb', 'sb', 'eloss', 'prederr' or 'posterr'. 
+#' @param models The name of the models to extract, all by default. 
 #' @return A list of matrices with the event-to-event confidence. 
 #' @export as.confidence
 #' 
