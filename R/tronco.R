@@ -188,8 +188,8 @@ tronco.capri <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! all(regularization %in% c('bic', 'aic'))) {
-        stop("Possible regularization are bic or aic",call. = FALSE);
+    if (! all(regularization %in% c('loglik', 'bic', 'aic'))) {
+        stop("Possible regularization are loglik, bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
@@ -391,8 +391,8 @@ tronco.mst.edmonds <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! all(regularization %in% c('no_reg', 'bic', 'aic'))) {
-        stop("Possible regularization are no-reg, bic or aic",call. = FALSE);
+    if (! all(regularization %in% c('no_reg', 'loglik', 'bic', 'aic'))) {
+        stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
@@ -607,8 +607,8 @@ tronco.mst.chowliu <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! all(regularization %in% c('bic', 'aic'))) {
-        stop("Possible regularization are bic or aic",call. = FALSE);
+    if (! all(regularization %in% c('loglik','bic', 'aic'))) {
+        stop("Possible regularization are loglik, bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
@@ -812,8 +812,8 @@ tronco.mst.prim <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! all(regularization %in% c('no_reg', 'bic', 'aic'))) {
-        stop("Possible regularization are no-reg, bic or aic",call. = FALSE);
+    if (! all(regularization %in% c('no_reg','loglik', 'bic', 'aic'))) {
+        stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
