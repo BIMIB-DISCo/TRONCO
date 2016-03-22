@@ -1117,7 +1117,7 @@ tronco.bootstrap <- function(reconstruction,
 #' @param pathways A vector containing pathways information 
 #' as described in as.patterns()
 #' @param lwd Edge base lwd. Default 3
-#' @param annotate.sample = List of samples to search 
+#' @param samples.annotation = List of samples to search 
 #' for events in model
 #' @param export.igraph If TRUE export the igraph 
 #' object generated
@@ -1157,10 +1157,9 @@ tronco.plot <- function(x,
                         legend.pos = 'bottom',
                         pathways = NULL,
                         lwd = 3,
-                        annotate.sample = NA,
+                        samples.annotation = NA,
                         export.igraph = FALSE,
-                        ...
-                        ) {
+                        ...) {
     hidden.and = FALSE
 
     ## Checks if reconstruction exists.
@@ -1184,32 +1183,34 @@ tronco.plot <- function(x,
         call. = FALSE);
     }
 
-    if (!is.na(annotate.sample) && !is.null(pathways))
+    if (!is.na(samples.annotation) && !is.null(pathways))
         stop('Select either to annotate pathways or a sample.')
 
     ## Annotate samples.
     
-    if (!is.na(annotate.sample)) {  
-        if (!all(annotate.sample %in% as.samples(x)))
+    if (!all(is.na(samples.annotation))) {  
+        if (!all(samples.annotation %in% as.samples(x))) {
             stop('Sample(s) to annotate are not in the dataset -- see as.samples.')
+        }
 
-        if (npatterns(x) > 0) 
-            nopatt.data = delete.type(x, 'Pattern')
-        else 
+        if (npatterns(x) > 0) {
+            nopatt.data = delete.model(x)
+            nopatt.data = delete.type(nopatt.data, 'Pattern')
+        } else {
             nopatt.data = x
+        }
 
-
-        sample.events = Reduce(rbind, as.events.in.sample(nopatt.data, annotate.sample))
+        sample.events = Reduce(rbind, as.events.in.sample(nopatt.data, samples.annotation))
         sample.events = unique(sample.events[, 'event'])
 
         cat('Annotating sample',
-            annotate.sample,
+            samples.annotation,
             'with color red. Annotated genes:',
             paste(sample.events, collapse = ', '),
             '\n')
 
         pathways = list(sample.events)
-        names(pathways) = paste(annotate.sample, collapse = ', ')
+        names(pathways) = paste(samples.annotation, collapse = ', ')
         if (nchar(names(pathways)) > 15)
             names(pathways) = paste0(substr(names(pathways), 1, 15), '...')
 
