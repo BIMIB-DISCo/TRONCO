@@ -9,19 +9,19 @@
 #### which accompanies this distribution.
 
 
-#' Convert a TRONCO object in a Bnlearn network.
-#' @title as.bnlearn.network
-#'
-#' @examples
-#' data(test_model)
-#' as.bnlearn.network(test_model)
-#'
-#' @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
-#' @param model The name of the selected regularization
-#' @param makeValid Transform the bootstrapped data into a valid 2-categories input data
-#' @importFrom bnlearn empty.graph set.arc
-#' @export as.bnlearn.network
-#'
+# Convert a TRONCO object in a Bnlearn network.
+# @title as.bnlearn.network
+#
+# @examples
+# data(test_model)
+# as.bnlearn.network(test_model)
+#
+# @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
+# @param model The name of the selected regularization
+# @param makeValid Transform the bootstrapped data into a valid 2-categories input data
+# @export as.bnlearn.network
+# @importFrom bnlearn empty.graph set.arc
+#
 as.bnlearn.network <- function(x, 
                                model = names(as.models(x))[1], 
                                makeValid = TRUE) {
@@ -109,7 +109,7 @@ as.bnlearn.network <- function(x,
 #' @param models The names of the selected regularizers (bic, aic or caprese)
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
-#' @importFrom bnlearn bn.cv
+#' @importFrom bnlearn bn.cv empty.graph set.arc
 #' @importFrom stats sd
 #' @export tronco.kfold.eloss
 #'
@@ -141,7 +141,7 @@ tronco.kfold.eloss = function(x,
         bnnet = bn$net
 
         ## Calculating the eloss with bn.cv
-        cat('Calculating entropy loss with k-fold cross-validation [ k =', k,
+        cat('Calculating entropy loss with k-fold cross-validation \n\t[ k =', k,
             '| runs =', runs, '| regularizer =', model, '] ... ')
 
         ## Scutari fix
@@ -195,7 +195,7 @@ tronco.kfold.eloss = function(x,
 #' @param k a positive integer number, the number of groups into which the data will be split
 #' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
 #' @param verbose Should I print messages?
-#' @importFrom bnlearn bn.cv
+#' @importFrom bnlearn bn.cv empty.graph set.arc
 #' @importFrom doParallel registerDoParallel  
 #' @importFrom foreach foreach %dopar%
 #' @importFrom iterators icount
@@ -265,7 +265,7 @@ tronco.kfold.prederr <- function(x,
 
         ## Perform the estimation of the prediction error. 
         
-        cat('\tScanning', length(events), 'nodes for their prediction error (all parents). Regularizer: ', model, '\n')
+        cat('\tScanning', length(events), 'nodes for their prediction error (all parents). \n\tRegularizer: ', model, '\n')
 
         
 
@@ -316,7 +316,7 @@ tronco.kfold.prederr <- function(x,
 #' @param k a positive integer number, the number of groups into which the data will be split
 #' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
 #' @param verbose should I print messages?
-#' @importFrom bnlearn bn.cv
+#' @importFrom bnlearn bn.cv empty.graph set.arc
 #' @importFrom stats sd
 #' @export tronco.kfold.posterr
 #'
@@ -383,7 +383,7 @@ tronco.kfold.posterr <- function(x,
 
         ## Perform the estimation of the prediction error. 
         
-        cat('\tScanning', sum(adj.matrix == 1), 'edges for posterior classification error. Regularizer:', model, '\n')
+        cat('\tScanning', sum(adj.matrix == 1), 'edges for posterior classification error. \n\tRegularizer:', model, '\n')
         
 
         r = foreach(i = 1:length(events), .inorder = TRUE, .combine = cbind) %dopar% {

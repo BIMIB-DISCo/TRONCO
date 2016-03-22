@@ -15,7 +15,7 @@ oncoprint(x, excl.sort = TRUE, samples.cluster = FALSE,
   gene.annot = NA, gene.annot.color = "Set1", show.patterns = FALSE,
   annotate.consolidate.events = FALSE, txt.stats = paste(nsamples(x),
   " samples\\n", nevents(x), " events\\n", ngenes(x), " genes\\n", npatterns(x),
-  " patterns", sep = ""), ...)
+  " patterns", sep = ""), gtable = FALSE, ...)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset}
@@ -78,6 +78,8 @@ and sorted according to the number of mutations per sample - usefull when \code{
 \item{annotate.consolidate.events}{Default is FALSE. If TRUE an annotation for events to consolidate is shown.}
 
 \item{txt.stats}{By default, shows a summary statistics for shown data (n,m, |G| and |P|)}
+
+\item{gtable}{If TRUE return the gtable object}
 
 \item{...}{other arguments to pass to pheatmap}
 }

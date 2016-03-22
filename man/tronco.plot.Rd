@@ -11,7 +11,7 @@ tronco.plot(x, models = names(x$model), fontsize = NA, height = 2,
   label.edge.size = NA, expand = TRUE, genes = NULL,
   relations.filter = NA, edge.color = "black", pathways.color = "Set1",
   file = NA, legend.pos = "bottom", pathways = NULL, lwd = 3,
-  annotate.sample = NA, export.igraph = FALSE, ...)
+  samples.annotation = NA, export.igraph = FALSE, ...)
 }
 \arguments{
 \item{x}{A reconstructed model (the output of the inference 
@@ -80,7 +80,7 @@ as described in as.patterns()}
 
 \item{lwd}{Edge base lwd. Default 3}
 
-\item{annotate.sample}{= List of samples to search 
+\item{samples.annotation}{= List of samples to search 
 for events in model}
 
 \item{export.igraph}{If TRUE export the igraph 

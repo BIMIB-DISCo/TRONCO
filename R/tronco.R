@@ -22,6 +22,7 @@
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.caprese
 #' @importFrom stats phyper
+#' @importFrom bnlearn empty.graph set.arc
 #' 
 tronco.caprese <- function(data,
                            lambda = 0.5,
@@ -135,7 +136,7 @@ tronco.caprese <- function(data,
 #'
 #' @examples
 #' data(test_dataset)
-#' recon = tronco.capri(test_dataset)
+#' recon = tronco.capri(test_dataset, nboot = 10)
 #'
 #' @title tronco capri
 #' @param data A TRONCO compliant dataset.
@@ -150,7 +151,7 @@ tronco.caprese <- function(data,
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
-#' @importFrom bnlearn hc tabu
+#' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
 #' @importFrom stats phyper AIC BIC wilcox.test
@@ -187,8 +188,8 @@ tronco.capri <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! regularization %in% c('bic', 'aic')) {
-        stop("Possible regularization are bic or aic",call. = FALSE);
+    if (! all(regularization %in% c('loglik', 'bic', 'aic'))) {
+        stop("Possible regularization are loglik, bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
@@ -336,7 +337,7 @@ tronco.capri <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.edmonds(test_dataset_no_hypos)
+#' recon = tronco.mst.edmonds(test_dataset_no_hypos, nboot = 10)
 #'
 #' @title tronco mst edmonds
 #' @param data A TRONCO compliant dataset.
@@ -357,7 +358,7 @@ tronco.capri <- function(data,
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.mst.edmonds
-#' @importFrom bnlearn hc tabu
+#' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
 #' @importFrom infotheo mutinformation
@@ -390,8 +391,8 @@ tronco.mst.edmonds <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! regularization %in% c('no_reg', 'bic', 'aic')) {
-        stop("Possible regularization are no-reg, bic or aic",call. = FALSE);
+    if (! all(regularization %in% c('no_reg', 'loglik', 'bic', 'aic'))) {
+        stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
@@ -549,7 +550,7 @@ tronco.mst.edmonds <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.chowliu(test_dataset_no_hypos)
+#' recon = tronco.mst.chowliu(test_dataset_no_hypos, nboot = 10)
 #'
 #' @title tronco mst chow liu
 #' @param data A TRONCO compliant dataset.
@@ -573,7 +574,7 @@ tronco.mst.edmonds <- function(data,
 #' @return A TRONCO compliant object with reconstructed 
 #' model
 #' @export tronco.mst.chowliu
-#' @importFrom bnlearn hc tabu
+#' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
 #' @importFrom gRapHD minForest
@@ -606,8 +607,8 @@ tronco.mst.chowliu <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! regularization %in% c('bic', 'aic')) {
-        stop("Possible regularization are bic or aic",call. = FALSE);
+    if (! all(regularization %in% c('loglik','bic', 'aic'))) {
+        stop("Possible regularization are loglik, bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
@@ -756,7 +757,7 @@ tronco.mst.chowliu <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.prim(test_dataset_no_hypos)
+#' recon = tronco.mst.prim(test_dataset_no_hypos, nboot = 10)
 #'
 #' @title tronco mst prim
 #' @param data A TRONCO compliant dataset.
@@ -777,7 +778,7 @@ tronco.mst.chowliu <- function(data,
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.mst.prim
-#' @importFrom bnlearn hc tabu
+#' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph get.edgelist E E<-
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths minimum.spanning.tree
@@ -811,8 +812,8 @@ tronco.mst.prim <- function(data,
         stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
     }
 
-    if (! regularization %in% c('no_reg', 'bic', 'aic')) {
-        stop("Possible regularization are no-reg, bic or aic",call. = FALSE);
+    if (! all(regularization %in% c('no_reg','loglik', 'bic', 'aic'))) {
+        stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
     }
 
     ## Check for the input to be compliant.
@@ -1023,7 +1024,7 @@ tronco.bootstrap <- function(reconstruction,
 
     if (!type %in% c("non-parametric", "statistical")) {
         stop(paste("The types of bootstrap that can be performed are:",
-                   "non-parametric, parametric or statistical."),
+                   "non-parametric or statistical."),
              call. = FALSE)
     }
     
@@ -1116,7 +1117,7 @@ tronco.bootstrap <- function(reconstruction,
 #' @param pathways A vector containing pathways information 
 #' as described in as.patterns()
 #' @param lwd Edge base lwd. Default 3
-#' @param annotate.sample = List of samples to search 
+#' @param samples.annotation = List of samples to search 
 #' for events in model
 #' @param export.igraph If TRUE export the igraph 
 #' object generated
@@ -1156,10 +1157,9 @@ tronco.plot <- function(x,
                         legend.pos = 'bottom',
                         pathways = NULL,
                         lwd = 3,
-                        annotate.sample = NA,
+                        samples.annotation = NA,
                         export.igraph = FALSE,
-                        ...
-                        ) {
+                        ...) {
     hidden.and = FALSE
 
     ## Checks if reconstruction exists.
@@ -1176,39 +1176,41 @@ tronco.plot <- function(x,
         stop("Too many regularizators (max is 2)", call. = FALSE)
     }
 
-    if (!models[1] %in% names(x$model)) {
-        stop(paste(models[1], 
+    if (! all(models %in% names(x$model))) {
+        stop(paste(paste(models, collapse=' '), 
                    "not in reconstructed models. Use: ",
                    paste(names(x$model), collapse=' ')),
         call. = FALSE);
     }
 
-    if (!is.na(annotate.sample) && !is.null(pathways))
+    if (!is.na(samples.annotation) && !is.null(pathways))
         stop('Select either to annotate pathways or a sample.')
 
     ## Annotate samples.
     
-    if (!is.na(annotate.sample)) {  
-        if (!all(annotate.sample %in% as.samples(x)))
+    if (!all(is.na(samples.annotation))) {  
+        if (!all(samples.annotation %in% as.samples(x))) {
             stop('Sample(s) to annotate are not in the dataset -- see as.samples.')
+        }
 
-        if (npatterns(x) > 0) 
-            nopatt.data = delete.type(x, 'Pattern')
-        else 
+        if (npatterns(x) > 0) {
+            nopatt.data = delete.model(x)
+            nopatt.data = delete.type(nopatt.data, 'Pattern')
+        } else {
             nopatt.data = x
+        }
 
-
-        sample.events = Reduce(rbind, as.events.in.sample(nopatt.data, annotate.sample))
+        sample.events = Reduce(rbind, as.events.in.sample(nopatt.data, samples.annotation))
         sample.events = unique(sample.events[, 'event'])
 
         cat('Annotating sample',
-            annotate.sample,
+            samples.annotation,
             'with color red. Annotated genes:',
             paste(sample.events, collapse = ', '),
             '\n')
 
         pathways = list(sample.events)
-        names(pathways) = paste(annotate.sample, collapse = ', ')
+        names(pathways) = paste(samples.annotation, collapse = ', ')
         if (nchar(names(pathways)) > 15)
             names(pathways) = paste0(substr(names(pathways), 1, 15), '...')
 
@@ -1678,7 +1680,7 @@ tronco.plot <- function(x,
 
     if (any(!is.na(confidence))) {
         cat('Adding confidence information: ')
-        conf = as.confidence(x, confidence)
+        conf = as.confidence(x, confidence, models)
         cat(paste(paste(confidence, collapse = ', '), '\n'))
 
 
@@ -1690,9 +1692,9 @@ tronco.plot <- function(x,
             }
 
             if (c == 'posterr') {
-                conf_sel = as.kfold.posterr(x, table = TRUE)
+                conf_sel = as.kfold.posterr(x, models=models, table = TRUE)
             } else if (c == 'prederr'){
-                conf_sel = as.kfold.prederr(x, table = TRUE)
+                conf_sel = as.kfold.prederr(x, models=models, table = TRUE)
             } else {
                 conf_sel = get(c, as.confidence(x, c))
             }
@@ -1937,6 +1939,10 @@ tronco.plot <- function(x,
         stat.pch = 0
         pt.bg = "white"
         col = "white"
+        eloss = FALSE
+        if ('eloss' %in% confidence) {
+            eloss = TRUE
+        }
         confidence = confidence[confidence != 'eloss']
         if (any(!is.na(confidence))) {
             text =
@@ -1987,14 +1993,21 @@ tronco.plot <- function(x,
         col = c(col, rep('white', 2), rep('white', 2), rep('white', 2))
 
         mods = NULL
-        for (model in models) {
-            mods_label = gsub('_', ' ', model)
-            if (!is.null(x$kfold) && !is.null(get(model, x$kfold)$eloss)) {
-                mods_label = paste(mods_label, '- eloss:', round(mean(get(model, x$kfold)$eloss), 5))
-            }
-            mods = c(mods, mods_label)
-        }
 
+        if (eloss) {
+            for (model in models) {
+                mods_label = gsub('_', ' ', model)
+                if (!is.null(x$kfold) && !is.null(get(model, x$kfold)$eloss)) {
+                    mods_label = paste(mods_label, '- eloss:', round(mean(get(model, x$kfold)$eloss), 5))
+                }
+                mods = c(mods, mods_label)
+            }
+        } else {
+            for (model in models) {
+                mods_label = gsub('_', ' ', model)
+                mods = c(mods, mods_label)
+            }
+        }
         text = 
             c(text, '\n',
               expression(bold('Algorithm:')),

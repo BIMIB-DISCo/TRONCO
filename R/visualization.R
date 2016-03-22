@@ -44,6 +44,7 @@
 #' @param show.patterns If TRUE shows also a separate oncoprint for each pattern. Default is FALSE
 #' @param annotate.consolidate.events Default is FALSE. If TRUE an annotation for events to consolidate is shown.
 #' @param txt.stats By default, shows a summary statistics for shown data (n,m, |G| and |P|)
+#' @param gtable If TRUE return the gtable object
 #' @param ... other arguments to pass to pheatmap
 #' @export oncoprint
 #' @importFrom gridExtra grid.arrange
@@ -89,6 +90,7 @@ oncoprint <- function(x,
                                 npatterns(x),
                                 ' patterns',
                                 sep = ''),
+                      gtable = FALSE,
                       ...) {
 
     font.size = text.cex * 7
@@ -452,24 +454,6 @@ oncoprint <- function(x,
         print(list(...))
     }
 
-                                        #   if (!is.na(txt.stats))
-                                        #   {
-                                        #     if (npatterns(x) > 0)
-                                        #     {
-                                        #       patterns = as.patterns(x)
-                                        #       
-                                        #       for(i in 1:length(patterns))
-                                        #       {
-                                        #         genes.patt = as.events.in.patterns(x, patterns[i]) 
-                                        #         txt.stats = paste(txt.stats, '\n\n',
-                                        #                           patterns[i], '\n',
-                                        #                           paste(apply(genes.patt, 1, paste, collapse=' '), collapse='\n')                          
-                                        #                           )
-                                        #         
-                                        #       }
-                                        #     }
-                                        #   }
-
     ## Real pheatmap.
     
     if (ncol(samples.annotation) == 0) {
@@ -580,8 +564,9 @@ oncoprint <- function(x,
     ## ret$gtable = gtable_add_grob(ret$gtable, patt.table, 1 , 1)
     ## grid.newpage()
     ## grid.draw(ret$gtable)
-
-    return(ret)
+    if (gtable) {
+        return(ret)
+    }
 }
 
 
@@ -603,7 +588,7 @@ pathway.visualization <- function(x,
                                   title =
                                       paste('Pathways:',
                                             paste(names(pathways), collapse=', ', sep='')),
-                                  file,
+                                  file = NA,
                                   pathways.color = 'Set2',
                                   aggregate.pathways,
                                   pathways,
@@ -614,8 +599,7 @@ pathway.visualization <- function(x,
         && pathways.color %in% rownames(brewer.pal.info)) {
         cat('Annotating pathways with RColorBrewer color palette', pathways.color, '.\n')
         pathway.colors = brewer.pal(n=length(names), name=pathways.color)
-    } else {
-        print(pathways.color)   
+    } else { 
         if (length(pathways.color) != length(names)) 
             stop('You did not provide enough colors to annotate ',
                  length(names),
@@ -644,7 +628,7 @@ pathway.visualization <- function(x,
                    pathway.name = names[1],
                    aggregate.pathway = aggregate.pathways)
 
-    data.pathways = change.color(data.pathways, 'Pathway', pathways.color[1])
+    data.pathways = change.color(data.pathways, 'Pathway', pathway.colors[1])
     data.pathways = rename.type(data.pathways, 'Pathway', names[1])
 
     if (length(names) > 1) {  
@@ -2086,68 +2070,7 @@ find_gaps <- function(tree, cutree_n) {
 #' 
 #' # Draw heatmaps
 #' pheatmap(test)
-#' pheatmap(test, kmeans_k = 2)
-#' pheatmap(test, scale = "row", clustering_distance_rows = "correlation")
-#' pheatmap(test, color = colorRampPalette(c("navy", "white", "firebrick3"))(50))
-#' pheatmap(test, cluster_row = FALSE)
-#' pheatmap(test, legend = FALSE)
-#' 
-#' # Show text within cells
-#' pheatmap(test, display_numbers = TRUE)
-#' pheatmap(test, display_numbers = TRUE, number_format = "\%.1e")
-#' pheatmap(test, display_numbers = matrix(ifelse(test > 5, "*", ""), nrow(test)))
-#' pheatmap(test, cluster_row = FALSE, legend_breaks = -1:4, legend_labels = c("0",
-#' "1e-4", "1e-3", "1e-2", "1e-1", "1"))
-#' 
-#' # Fix cell sizes and save to file with correct size
-#' pheatmap(test, cellwidth = 15, cellheight = 12, main = "Example heatmap")
-#' pheatmap(test, cellwidth = 15, cellheight = 12, fontsize = 8, filename = "test.pdf")
-#' 
-#' # Generate annotations for rows and columns
-#' annotation_col = data.frame(
-#'                     CellType = factor(rep(c("CT1", "CT2"), 5)), 
-#'                     Time = 1:5
-#'                 )
-#' rownames(annotation_col) = paste("Test", 1:10, sep = "")
-#' 
-#' annotation_row = data.frame(
-#'                     GeneClass = factor(rep(c("Path1", "Path2", "Path3"), c(10, 4, 6)))
-#'                 )
-#' rownames(annotation_row) = paste("Gene", 1:20, sep = "")
-#' 
-#' # Display row and color annotations
-#' pheatmap(test, annotation_col = annotation_col)
-#' pheatmap(test, annotation_col = annotation_col, annotation_legend = FALSE)
-#' pheatmap(test, annotation_col = annotation_col, annotation_row = annotation_row)
-#' 
-#' 
-#' # Specify colors
-#' ann_colors = list(
-#'     Time = c("white", "firebrick"),
-#'     CellType = c(CT1 = "#1B9E77", CT2 = "#D95F02"),
-#'     GeneClass = c(Path1 = "#7570B3", Path2 = "#E7298A", Path3 = "#66A61E")
-#' )
-#' 
-#' pheatmap(test, annotation_col = annotation_col, annotation_colors = ann_colors, main = "Title")
-#' pheatmap(test, annotation_col = annotation_col, annotation_row = annotation_row, 
-#'          annotation_colors = ann_colors)
-#' pheatmap(test, annotation_col = annotation_col, annotation_colors = ann_colors[2]) 
-#' 
-#' # Gaps in heatmaps
-#' pheatmap(test, annotation_col = annotation_col, cluster_rows = FALSE, gaps_row = c(10, 14))
-#' pheatmap(test, annotation_col = annotation_col, cluster_rows = FALSE, gaps_row = c(10, 14), 
-#'          cutree_col = 2)
-#' 
-#' # Show custom strings as row/col names
-#' labels_row = c("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 
-#' "", "", "Il10", "Il15", "Il1b")
-#' 
-#' pheatmap(test, annotation_col = annotation_col, labels_row = labels_row)
-#' 
-#' # Specifying clustering from distance matrix
-#' drows = dist(test, method = "minkowski")
-#' dcols = dist(t(test), method = "minkowski")
-#' pheatmap(test, clustering_distance_rows = drows, clustering_distance_cols = dcols)
+
 #' @export pheatmap
 #' @importFrom grid unit textGrob gpar unit.c viewport convertWidth
 #' @importFrom grid convertHeight gList gTree rectGrob grobTree polylineGrob
@@ -2389,22 +2312,6 @@ pheatmap <- function(mat,
                       legend.cex = legend.cex,
                       txt.stats = txt.stats,
                       ...)
-
-    ## gtsub = heatmap_motor(mat, border_color = border_color,
-    ## cellwidth = cellwidth, cellheight = cellheight, treeheight_col
-    ## = treeheight_col, treeheight_row = treeheight_row, tree_col =
-    ## tree_col, tree_row = tree_row, filename = filename, width =
-    ## width, height = height, breaks = breaks, color = color, legend
-    ## = legend, annotation_row = annotation_row, annotation_col =
-    ## annotation_col, annotation_colors = annotation_colors,
-    ## annotation_legend = annotation_legend, main = main, fontsize =
-    ## fontsize, fontsize_row = fontsize_row, fontsize_col =
-    ## fontsize_col, fmat = fmat, fontsize_number = fontsize_number,
-    ## number_color = number_color, gaps_row = gaps_row, gaps_col =
-    ## gaps_col, labels_row = labels_row, labels_col = labels_col,
-    ## legend.cex = legend.cex, txt.stats = txt.stats, ...)
-
-    ## gt = rbind(gt, gtsub, size='max')
 
     if (is.na(filename) & !silent) {
         grid.newpage()

@@ -4,12 +4,14 @@
 \alias{as.confidence}
 \title{as.confidence}
 \usage{
-as.confidence(x, conf)
+as.confidence(x, conf, models = names(x$model))
 }
 \arguments{
 \item{x}{A TRONCO model.}
 
 \item{conf}{A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb', 'sb', 'eloss', 'prederr' or 'posterr'.}
+
+\item{models}{The name of the models to extract, all by default.}
 }
 \value{
 A list of matrices with the event-to-event confidence.

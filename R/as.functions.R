@@ -222,7 +222,7 @@ as.alterations <- function(x, new.type = 'Alteration', new.color = 'khaki') {
         stop('Patterns found. Delete patterns first.\n')
     }
 
-    merge.types(x, NULL, new.type = new.type, new.color = new.color)
+    join.types(x, NULL, new.type = new.type, new.color = new.color)
 }
 
 #' Return the patterns in the dataset which constitute CAPRI's hypotheses.
@@ -417,10 +417,11 @@ as.events.in.sample <- function(x, sample) {
 #' @title as.confidence
 #' @param x A TRONCO model.
 #' @param conf A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb', 'sb', 'eloss', 'prederr' or 'posterr'. 
+#' @param models The name of the models to extract, all by default. 
 #' @return A list of matrices with the event-to-event confidence. 
 #' @export as.confidence
 #' 
-as.confidence <- function(x, conf) {
+as.confidence <- function(x, conf, models = names(x$model)) {
     is.compliant(x)
     is.model(x)
     if (!is.vector(conf)) stop('"conf" should be a vector.')
@@ -448,8 +449,6 @@ as.confidence <- function(x, conf) {
         || is.null(x$model)
         || is.na(x$model))
         stop('Input \'x\' does not contain a TRONCO model. No confidence to show.\n')
-
-    models = names(x$model)
 
 #     if (is.null(x$bootstrap))
 #       stop('No bootstrap executed in this TRONCO object.')
