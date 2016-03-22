@@ -665,14 +665,14 @@ as.kfold.posterr(model.boot,
 @
 
 We finally show the plot of the model with the confidences by cross-validation.
-%<<plot-conf, fig=TRUE,include=FALSE>>=
-%tronco.plot(model.boot, fontsize = 13, scale.nodes = .6, models="capri_bic", 
-%    confidence=c('npb', 'prederr', 'posterr'), height.logic = 0.25, legend.cex = .5, 
-%    pathways = list(priors= gene.hypotheses), label.edge.size=10)
-%
-%@
-%\incfig[ht]{vignette-plot-conf}{0.9\textwidth}{aCML Reconstructed model}
-%{After bootstrap.}
+<<plot-conf, fig=TRUE,include=FALSE>>=
+tronco.plot(model.boot, fontsize = 13, scale.nodes = .6, models="capri_bic", 
+    confidence=c('npb', 'eloss', 'prederr', 'posterr'), height.logic = 0.25, legend.cex = .5, 
+    pathways = list(priors= gene.hypotheses), label.edge.size=10)
+
+@
+\incfig[ht]{vignette-plot-conf}{0.9\textwidth}{aCML Reconstructed model}
+{After bootstrap.}
 
 
 \end{document}

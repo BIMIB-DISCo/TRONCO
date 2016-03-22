@@ -4,7 +4,7 @@
 \alias{as.confidence}
 \title{as.confidence}
 \usage{
-as.confidence(x, conf)
+as.confidence(x, conf, models = names(x$model))
 }
 \arguments{
 \item{x}{A TRONCO model.}

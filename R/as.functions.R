@@ -420,7 +420,7 @@ as.events.in.sample <- function(x, sample) {
 #' @return A list of matrices with the event-to-event confidence. 
 #' @export as.confidence
 #' 
-as.confidence <- function(x, conf) {
+as.confidence <- function(x, conf, models = names(x$model)) {
     is.compliant(x)
     is.model(x)
     if (!is.vector(conf)) stop('"conf" should be a vector.')
@@ -448,8 +448,6 @@ as.confidence <- function(x, conf) {
         || is.null(x$model)
         || is.na(x$model))
         stop('Input \'x\' does not contain a TRONCO model. No confidence to show.\n')
-
-    models = names(x$model)
 
 #     if (is.null(x$bootstrap))
 #       stop('No bootstrap executed in this TRONCO object.')

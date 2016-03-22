@@ -1680,7 +1680,7 @@ tronco.plot <- function(x,
 
     if (any(!is.na(confidence))) {
         cat('Adding confidence information: ')
-        conf = as.confidence(x, confidence)
+        conf = as.confidence(x, confidence, models)
         cat(paste(paste(confidence, collapse = ', '), '\n'))
 
 
@@ -1939,6 +1939,10 @@ tronco.plot <- function(x,
         stat.pch = 0
         pt.bg = "white"
         col = "white"
+        eloss = FALSE
+        if ('eloss' %in% confidence) {
+            eloss = TRUE
+        }
         confidence = confidence[confidence != 'eloss']
         if (any(!is.na(confidence))) {
             text =
@@ -1989,12 +1993,18 @@ tronco.plot <- function(x,
         col = c(col, rep('white', 2), rep('white', 2), rep('white', 2))
 
         mods = NULL
-        if ('eloss' %in% confidence) {
+
+        if (eloss) {
             for (model in models) {
                 mods_label = gsub('_', ' ', model)
                 if (!is.null(x$kfold) && !is.null(get(model, x$kfold)$eloss)) {
                     mods_label = paste(mods_label, '- eloss:', round(mean(get(model, x$kfold)$eloss), 5))
                 }
+                mods = c(mods, mods_label)
+            }
+        } else {
+            for (model in models) {
+                mods_label = gsub('_', ' ', model)
                 mods = c(mods, mods_label)
             }
         }

@@ -141,7 +141,7 @@ tronco.kfold.eloss = function(x,
         bnnet = bn$net
 
         ## Calculating the eloss with bn.cv
-        cat('Calculating entropy loss with k-fold cross-validation [ k =', k,
+        cat('Calculating entropy loss with k-fold cross-validation \n\t[ k =', k,
             '| runs =', runs, '| regularizer =', model, '] ... ')
 
         ## Scutari fix
@@ -265,7 +265,7 @@ tronco.kfold.prederr <- function(x,
 
         ## Perform the estimation of the prediction error. 
         
-        cat('\tScanning', length(events), 'nodes for their prediction error (all parents). Regularizer: ', model, '\n')
+        cat('\tScanning', length(events), 'nodes for their prediction error (all parents). \n\tRegularizer: ', model, '\n')
 
         
 
@@ -383,7 +383,7 @@ tronco.kfold.posterr <- function(x,
 
         ## Perform the estimation of the prediction error. 
         
-        cat('\tScanning', sum(adj.matrix == 1), 'edges for posterior classification error. Regularizer:', model, '\n')
+        cat('\tScanning', sum(adj.matrix == 1), 'edges for posterior classification error. \n\tRegularizer:', model, '\n')
         
 
         r = foreach(i = 1:length(events), .inorder = TRUE, .combine = cbind) %dopar% {
