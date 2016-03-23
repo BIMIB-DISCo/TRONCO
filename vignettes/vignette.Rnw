@@ -1277,7 +1277,7 @@ If we want to access a matrix with the scores and visualize that in a heatmap we
 
 \begin{mybox}
 <<hboot, fig=TRUE,include=FALSE>>=
-library(pheatmap)
+
 pheatmap(keysToNames(model.boot, as.confidence(model.boot, conf = 'sb')$sb$capri_aic) * 100, 
            main =  'Statistical bootstrap scores for AIC model',
            fontsize_row = 6,

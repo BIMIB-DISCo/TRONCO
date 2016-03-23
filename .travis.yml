@@ -6,8 +6,6 @@ r:
   - devel
 cache: packages
 
-r_packages: pheatmap
-
 before_install:
   - tlmgr install tcolorbox
 
