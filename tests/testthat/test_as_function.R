@@ -25,6 +25,7 @@ test_that("as.genes returns a list of samples", {
     expect_equal(as.genes(muts), unique(as.character(maf$Hugo_Symbol)))
     expect_equal(as.genes(hypo), unique(as.character(maf$Hugo_Symbol)))
     expect_equal(as.genes(NULL), NULL)
+    expect_error(as.genes(hypo, type = 'Pattern'))
 })
 
 test_that("as.events returns a list of samples", {
@@ -91,3 +92,36 @@ test_that("as.hypotheses return a list of hypotheses", {
     expect_error(as.hypotheses(hypo, effect = 'X'))
 })
 
+test_that("as.events.in.patterns return the right amount of genes", {
+    expect_equal(length(as.events.in.patterns(hypo)), 4)
+    expect_equal(length(as.events.in.patterns(hypo, pattern = 'test')), 4)
+    expect_error(as.events.in.patterns(hypo, pattern = 'X'))
+})
+
+test_that("as.genes.in.patterns return the right amount of genes", {
+    expect_equal(length(as.genes.in.patterns(hypo)), 2)
+})
+
+test_that("as.types.in.patterns return the right amount of genes", {
+    expect_equal(length(as.types.in.patterns(hypo)), 1)
+})
+
+test_that("as.events.in.sample return the right amount of genes", {
+    expect_equal(length(as.events.in.sample(muts, as.samples(muts)[1])), 8)
+})
+
+test_that("as.models return a model", {
+    expect_equal(length(as.models(gistic_model)), 1)
+    expect_error(as.models(gistic_model, models = 'X'))
+})
+
+test_that("as.description return a description", {
+    expect_equal(as.description(hypo), "")
+    desc = annotate.description(hypo, 'desc')
+    expect_equal(as.description(desc), "desc")
+})
+
+test_that("as.pathway return compliant dataset", {
+    path = as.pathway(muts, pathway.name='test', pathway.genes='APC')
+    expect_silent(is.compliant(path))
+})

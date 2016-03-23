@@ -534,9 +534,6 @@ as.confidence <- function(x, conf, models = names(x$model)) {
 as.models <- function(x, models=names(x$model)) {
     is.compliant(x)
     is.model(x)
-    if (!is.vector(models)) {
-        stop('"models" should be a vector.')
-    }
 
     for (model in models) {
         if ( !model %in% names(x$model)) {
