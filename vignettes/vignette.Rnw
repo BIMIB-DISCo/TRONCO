@@ -26,6 +26,7 @@ BiocStyle::latex()
 \usepackage{url}
 
 \usepackage{placeins}
+\usepackage{blindtext}
 
 \usepackage[many]{tcolorbox}
 %\tcbuselibrary{listings}
@@ -78,7 +79,7 @@ Daniele Ramazzotti$^\ast$
 \maketitle
 
 
-\begin{tcolorbox}{\bf Overview.} The \TRONCO{} ({\sc TR}{\em anslational} {\sc ONCO}{\em logy})  \textsc{R} package  collects algorithms to infer  progression models via the approach of Suppes-Bayes Causal Network, both from an ensemble of tumors (cross-sectional samples) and within an individual patient (multi-region or single-cell samples). The package provides parallel implementation of algorithms that process binary matrices where each row represents a tumor sample and each column a single-nucleotide or a structural variant driving the  progression; a 0/1 value models the absence/presence of that alteration in the sample. The tool can import data from plain,  MAF or GISTIC format files, and can fetch it from the cBioPortal for cancer genomics. Functions for  data manipulation and visualization are provided, as well as functions to import/export such data to other bioinformatics  tools for, e.g,  clustering or detection of mutually exclusive alterations. Inferred models can be visualized and tested for their confidence via bootstrap and cross-validation. TRONCO is used for  the implementation of the Pipeline for Cancer Inference. \\
+\begin{tcolorbox}{\bf Overview.} The \TRONCO{} ({\sc TR}{\em anslational} {\sc ONCO}{\em logy})  \textsc{R} package implements a set of algorithms to infer graphical models of cancer progression depicted by Suppes-Bayes Causal Network, both from an ensemble of tumors (cross-sectional samples) and within an individual patient (multi-region or single-cell samples). The package provides parallel implementation of algorithms that process binary matrices where each row represents a tumor sample and each column a single-nucleotide or a structural variant driving the  progression; any 0/1 value in the matrix models the absence/presence of that alteration in the sample. The tool can import data from plain,  MAF or GISTIC format files, and can fetch them from the cBioPortal for cancer genomics. Functions for  data manipulation and visualization are provided, as well as functions to import/export such data to other bioinformatics  tools for, e.g,  clustering or detection of mutually exclusive alterations. Inferred models can be visualized and tested for their confidence via bootstrap and cross-validation. TRONCO can be used for the implementation of the Pipeline for Cancer Inference (PICNIC). \\
 
 {\bf Contact.} \email{tronco@disco.unimib.it} \\
 {\bf Website.} \url{https://sites.google.com/site/troncopackage/}
@@ -117,30 +118,59 @@ TRONCO since version {\bf XX} is used to implement the {\bf Pipeline For Cancer 
 
 COADREAD
 
-\section{Requirements} 
-In this vigntte, we will present a case study for the usage of the TRONCO package based on the work presented in the main \textit{CAPRI} paper. 
-We will start by loading the TRONCO package in \textsc{R} along with an example \textit{"dataset"} that comes within the package. 
+\section{Preliminaries} 
+In this vigntte, we show a series of examples to present the usage of the TRONCO package. Most of the data are based on the work presented in the main \textit{CAPRI} paper. Moreover, we also use datasets of colorectal tumors which are a reduced version of the data available from the \textit{COADREAD} study by \textit{TCGA}. 
+
+We start by loading the TRONCO package in \textsc{R} along with the example \textit{"datasets"} that come within the package. 
 
 \begin{mybox}
 <<req>>=
 library(TRONCO)
 data(aCML)
+data(crc_maf)
+data(crc_gistic)
+data(crc_plain)
 @
 \end{mybox}
 
 \section{Loading data}
 
-Explain which data is supported. spiega annotate.description
+\TRONCO{} supports the import of data from 3 formats. The Mutation Annotation Format (\textit{MAF}) is a tab-delimited file containing somatic and/or germline mutation annotations; the \textit{GISTIC} format for copy number alterations as defined by TCGA and a custom boolean matrix format where the user can directly specify the mutational profiles to be importend. 
 
 \subsection{MAF}
-
-\subsection{GISTIC}
-
-\subsection{Custom boolean matrices}
+We use the function \texttt{import.MAF} to import a dataset in MAF format. 
 
 \begin{mybox}
-<<req>>=
-data(aCML)
+<<view>>=
+dataset_maf = import.MAF(crc_maf)
+@
+\end{mybox}
+
+We then use the function \texttt{view} to get a short summary of a dataset that we   loaded in TRONCO; this function reports on the number of samples and  events, plus some meta information that could be displayed graphically.  
+
+\begin{mybox}
+<<view>>=
+view(dataset_maf)
+@
+\end{mybox}
+
+\subsection{GISTIC}
+We use the function \texttt{import.GISTIC} to import a dataset in GISTIC format. 
+
+\begin{mybox}
+<<view>>=
+dataset_gistic = import.GISTIC(crc_gistic)
+view(dataset_gistic)
+@
+\end{mybox}
+
+\subsection{Custom boolean matrices}
+Finally, we use the function \texttt{import.genotypes} to import data from a custom binaRy matrix. 
+
+\begin{mybox}
+<<view>>=
+dataset_plain = import.genotypes(crc_plain)
+view(dataset_plain)
 @
 \end{mybox}
 
@@ -151,7 +181,7 @@ All examples in this section will be done with the the aCML dataset as reference
 
 \subsection{Summary report for a dataset and boolean queries}
 
-We use the function \texttt{view} to get a short summary of a dataset that we   loaded in TRONCO; this function reports on the number of samples and  events, plus some meta information that could be displayed graphically.  
+We start by using the function \texttt{view} to get a short summary of the aCML dataset that we will consider now. 
 
 \begin{mybox}
 <<view>>=
@@ -161,7 +191,7 @@ view(aCML)
 %ss
 \end{mybox}
 
-{\bf HERE ALL THE HAS FUNCTIONS SHOULD BE DOCUEMNTED}
+%{\bf HERE ALL THE HAS FUNCTIONS SHOULD BE DOCUEMNTED}
 
 \subsection{Creating views with the ``as'' functions}
 
@@ -267,7 +297,7 @@ npatterns(aCML)
 
 \subsection{Oncoprints}
 
-Oncoprints are the most effective  data-visualization functions in TRONCO. These are heatmaps where .... {\bf SPIEGAZIONE SULLE MAPPE ETC}
+Oncoprints are the most effective data-visualization functions in TRONCO. These are concise and compact graphical summary of genomic alterations in multiple genes across a set of tumor samples. 
 
 A basic oncoprint of the included aCML dataset is shown below; more complex prints will be shown later in the vignette. 
 
