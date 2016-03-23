@@ -2599,6 +2599,8 @@ tronco.pattern.plot <- function(x,
 
         par(mai = c(0, 0, 0, 0))
         plot.new()
+        
+        }
 
         legend("topleft",
                cex = 0.6  * legend.cex,
@@ -2636,7 +2638,7 @@ tronco.pattern.plot <- function(x,
                col = as.colors(x)[unique(events.names[, 'type'])]
                ## pt.bg = pt_bg
                )
-    }
+    
 }
 
 #### end of file -- visualization.R
