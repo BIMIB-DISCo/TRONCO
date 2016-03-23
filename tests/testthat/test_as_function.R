@@ -1,5 +1,13 @@
 context("AS functions test")
 
+data(maf)
+muts = import.MAF(maf)
+hypo = hypothesis.add(muts, 'test', OR('ABAT', 'ABCC3'))
+no_hypo = delete.hypothesis(hypo, 'test')
+data(gistic)
+gistic = import.GISTIC(gistic)
+gistic_model = tronco.caprese(gistic)
+
 test_that("as.genotypes returns a genotypes matrix", {
     data(as.genotypes.test)
     expect_equal(as.genotypes(muts), as.genotypes.test)
@@ -16,13 +24,15 @@ test_that("as.genes returns a list of samples", {
     expect_equal(as.genes(muts), unique(as.character(maf$Hugo_Symbol)))
     expect_equal(as.genes(hypo), unique(as.character(maf$Hugo_Symbol)))
     expect_equal(as.genes(NULL), NULL)
-    expect_error(as.genes(hypo, type = 'Pattern'))
+    expect_error(as.genes(hypo, types = 'Pattern'))
+    expect_equal(length(as.genes(hypo)), 13)
 })
 
 test_that("as.events returns a list of samples", {
     data(as.events.test)
     expect_equal(as.events(muts), as.events.test)
-    expect_equal(as.events(hypo, keysToName = TRUE)[1],
+    expect_equal(length(as.events(hypo, types = 'Mutation')), 26)
+    expect_equal(as.events(hypo, keysToNames = TRUE)[1],
                  "Mutation A2BP1")
     expect_equal(as.events(NULL), NULL)
 })
