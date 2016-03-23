@@ -159,3 +159,8 @@ test_that("duplicates return 0", {
     expect_equal(length(duplicates(hypo)), 0)
 })
 
+test_that("npatterns return the right amount of pattern", {
+    expect_equal(length(duplicates(hypo)), 0)
+})
+
+
