@@ -183,298 +183,298 @@ TRONCO transforms input data in a sort of database-alike format, where three mai
 
  
  
-%
-%\subsection{Mutations annotated in a MAF format}
-%We use the function \texttt{import.MAF} to import a dataset in MAF format, in this case the following  TCGA dataset
-%\begin{mybox}
-%<<>>=
-% head(crc_maf[, 1:10])
-%@
-%\end{mybox}
-%
-%A default importation is done  without adding parameters to \texttt{import.MAF}. In this case, all mutations per gene will be considered equivalent, regardless of the type that is annotated in the MAF.  Also, all genes will be imported, and all samples.
-%
-%\begin{mybox}
-%<<import.MAF, results=hide>>=
-%dataset_maf = import.MAF(crc_maf)
-%@
-%\begin{verbatim}
-%*** Importing from dataframe
-%Loading MAF dataframe ...DONE
-%*** Mutations names: using Hugo_Symbol
-%*** Using full MAF: #entries  17 
-%*** MAF report: TCGA=TRUE
-%Type of annotated mutations: 
-%[1] "Missense_Mutation" "Nonsense_Mutation"
-%*** [merge.mutation.types = T] Mutations will be merged and annotated as 'Mutation'
-%Number of samples: 9 
-%[TCGA = TRUE] Number of TCGA patients: 9 
-%Number of annotated mutations: 17 
-%Mutations annotated with "Valid" flag (%): 71 
-%Number of genes (Hugo_Symbol): 6 
-%Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :9 x 6 
-%|======================================================================| 100%
-%Starting conversion from MAF to TRONCO data type.
-%\end{verbatim}
-%\end{mybox}
-%
-%See \S \ref{sec:view} to understand how to visualize a TRONCO dataset. In the above case -- where we see that mutations are annotated as {\tt Missense\_Mutation} or {\tt Nonsense\_Mutation}, if a gene in a sample has both, these will be merged to a unique {\tt Mutation} type. In this case a pair gene name with {\tt Mutation} will be what we call an ``event'' in our dataset -- e.g.,  APC {\tt Mutation}.
-%
-%If one would like  to have two distinct events in the dataset, i.e., APC {\tt Missense\_Mutation} and APC {\tt Nonsense\_Mutation}, parameter {\tt merge.mutation.types} should be set to false in the call to {\tt import.MAF}. 
-%
-%\begin{mybox}
-%<<import.MAF, results=hide>>=
-%dataset_maf = import.MAF(crc_maf, merge.mutation.types = FALSE)
-%@
-%\end{mybox}
-%
-%Sometimes, we might want to filter out some of the entries in a MAF -- maybe restricting the type of genes, mutations or sample that we want to process. If one defines
-%{\tt filter.fun} as a function that returns {\tt TRUE} only for those entries which shall be considered, he gets a filter process which is applied to each row of the MAF file prior to transforming that into a TRONCO dataset. In this example we select only mutations annotated to APC -- we access that through the {\tt Hugo\_Symbol} flag of a MAF. 
-%\begin{mybox}
-%<<import.MAF,results=hide>>=
-%dataset_maf = import.MAF(crc_maf, filter.fun = function(x){ x['Hugo_Symbol'] == 'APC'} )
-%@
-%\begin{verbatim}
-%*** Importing from dataframe
-%Loading MAF dataframe ...DONE
-%*** Mutations names: using Hugo_Symbol
-%*** Filtering full MAF: #entries  17
-%*** Using reduced MAF: #entries  3
-%*** MAF report: TCGA=TRUE
-%Type of annotated mutations: 
-%[1] "Nonsense_Mutation"
-%*** [merge.mutation.types = T] Mutations will be merged and annotated as 'Mutation'
-%Number of samples: 3
-%[TCGA = TRUE] Number of TCGA patients: 3
-%Number of annotated mutations: 173
-%Mutations annotated with "Valid" flag (%): 33
-%Number of genes (Hugo_Symbol): 1
-%Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :3 x 1 
-%|======================================================================| 100%
-%Starting conversion from MAF to TRONCO data type.
-%\end{verbatim}
-%\end{mybox}
-%
-%It is also sometimes convenient -- especially when working with data collected from a single individual patient -- to distinguish the type of mutations and their position in a gene, or if they are somehow annotated to COSMIC or other databases. For instance, we might want to want to use the {\tt MA.protein.change} annotation in the MAF file to get composite names such as TP53.R175H, TP53.R213, TP53.R267W etc. This can be done by setting {\tt paste.to.Hugo\_Symbol} to have the relevant name of the MAF annotation
-%
-%\begin{mybox}
-%<<import.MAF, results=hide>>=
-%dataset_maf = import.MAF(crc_maf, 
-%	merge.mutation.types = FALSE, 
-%	paste.to.Hugo_Symbol = c('MA.protein.change')
-%	)
-%@
-%\end{mybox}
-%
-%TRONCO supports custom  MAF files, where possibly not all the standard annotations are present, via {\tt irregular = TRUE}.
-%
-%
-%%We then use the function \texttt{view} to get a short summary of a dataset that we   loaded in TRONCO; this function reports on the number of samples and  events, plus some meta information that could be displayed graphically.  
-%%
-%%\begin{mybox}
-%%<<view>>=
-%%view(dataset_maf)
-%%@
-%%\end{mybox}
-%
-%\subsection{Copy Number Variants annotated in the GISTIC format}
-%We use the function \texttt{import.GISTIC} to import a dataset in GISTIC format, in this case from
-%\begin{mybox}
-%<<>>=
-%crc_gistic
-%@
-%\end{mybox}
-%
-%In its default execution all the data annotated in the file is imported. But in principle  it is possible to avoid to import some   genes or samples; in this case it is sufficient to use parameters {\tt filter.genes} and {\tt filter.samples} for this function.
-%
-%
-%\begin{mybox}
-%<<import.GISTIC>>=
-%dataset_gistic = import.GISTIC(crc_gistic)
-%@
-%\end{mybox}
-%
-%
-% 
-%
-%
-%\subsection{Custom alterations annotated in a boolean matrix}
-%One can annotate its custom type of alterations in a boolean matrix such as {\tt crc\_plain}
-%\begin{mybox}
-%<<>>=
-%crc_plain
-%@
-%\end{mybox}
-%In this case,  function \texttt{import.genotypes} will convert the matrix to a TRONCO  object where events' names and samples codes will be set from column and row names of the matrix. If this is not possible, these will be generated from templates. By default, the {\tt event.type} is set to {\tt variant} but one can specify a custom name for the alteration that is reported in the matrix
-%\begin{mybox}
-%<<import.genotypes>>=
-%dataset_plain = import.genotypes(crc_plain, event.type='myVariant')
-%@
-%\end{mybox}
-%
-%
-%\subsection{Downloading data from the cBio portal for cancer genomics}
-%
-%TRONCO uses the R interface to cBio to query data from the portal. All type of data can be downloaded from the portal, which includes MAF/GISTIC data for a lot of different cancer studies. An example of interaction with the portal is archived at the tool's webpage. 
-%
-%Here, we  show how to download lung cancer data somatic mutations for genes TP53, KRAS and PIK3CA,  from the lung cancer project run by TCGA, which is archived as  {\tt luad\_tcga\_pub} at cBio. If some of the parameters to {\tt cbio.query} are missing the function will become interactive by showing a list of possible data available at the portal.
-%\begin{mybox}
-%<<results=hide>>=
-% data = cbio.query(
-%	genes=c('TP53', 'KRAS', 'PIK3CA'), 
-%	cbio.study = 'luad_tcga_pub',
-%	cbio.dataset = 'luad_tcga_pub_cnaseq', 
-%	cbio.profile = 'luad_tcga_pub_mutations'
-%	)
-%@
-%\begin{verbatim}
-%*** CGDS plugin for Cbio query.
-%
-%Automatic CBIO study index: luad_tcga_pub
-%Automatic CBIO dataset index: luad_tcga_pub_cnaseq
-%Automatic CBIO profile index: luad_tcga_pub_mutations
-%Cancer codename: luad_tcga_pub
-%Cancer Ref.: Lung Adenocarcinoma (TCGA, Nature 2014)
-%Cancer Syn.: TCGA Lung Adenocarcinoma, containing 230 samples; 
-%Data codename: luad_tcga_pub_cnaseq
-%Data Ref.: Tumor Samples with sequencing and CNA data
-%Data Syn.: All tumor samples that have CNA and sequencing data (230 samples)
-%Samples codename: luad_tcga_pub_mutations
-%Data Ref.: Mutations
-%Data Syn.: Mutation data from whole exome sequencing.
-%
-%Querying the following list of genes: TP53, KRAS, PIK3CA 
-%Symbol "." was replaced with "-" in sample IDs.
-%
-%Data retrieved: 230 samples, 3 genes.
-%Retrieved also clinical data for samples: luad_tcga_pub_cnaseq
-%Data exported to file: luad_tcga_pub.luad_tcga_pub_cnaseq.luad_tcga_pub_mutations.Rdata
-%\end{verbatim}
-%
-%\end{mybox}
-%
-%
-%\section{Data visualisation}
-%
-%All examples in this section will be done with the the aCML dataset as reference.
-%
-%\subsection{Summary report for a dataset and boolean queries}\label{sec:view}
-%
-%We use the function \texttt{view} to get a short summary of a dataset that we   loaded in TRONCO; this function reports on the number of samples and  events, plus some meta information that could be displayed graphically.  
+
+\subsection{Mutations annotated in a MAF format}
+We use the function \texttt{import.MAF} to import a dataset in MAF format, in this case the following  TCGA dataset
+\begin{mybox}
+<<>>=
+ head(crc_maf[, 1:10])
+@
+\end{mybox}
+
+A default importation is done  without adding parameters to \texttt{import.MAF}. In this case, all mutations per gene will be considered equivalent, regardless of the type that is annotated in the MAF.  Also, all genes will be imported, and all samples.
+
+\begin{mybox}
+<<import.MAF, results=hide>>=
+dataset_maf = import.MAF(crc_maf)
+@
+\begin{verbatim}
+*** Importing from dataframe
+Loading MAF dataframe ...DONE
+*** Mutations names: using Hugo_Symbol
+*** Using full MAF: #entries  17 
+*** MAF report: TCGA=TRUE
+Type of annotated mutations: 
+[1] "Missense_Mutation" "Nonsense_Mutation"
+*** [merge.mutation.types = T] Mutations will be merged and annotated as 'Mutation'
+Number of samples: 9 
+[TCGA = TRUE] Number of TCGA patients: 9 
+Number of annotated mutations: 17 
+Mutations annotated with "Valid" flag (%): 71 
+Number of genes (Hugo_Symbol): 6 
+Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :9 x 6 
+|======================================================================| 100%
+Starting conversion from MAF to TRONCO data type.
+\end{verbatim}
+\end{mybox}
+
+See \S \ref{sec:view} to understand how to visualize a TRONCO dataset. In the above case -- where we see that mutations are annotated as {\tt Missense\_Mutation} or {\tt Nonsense\_Mutation}, if a gene in a sample has both, these will be merged to a unique {\tt Mutation} type. In this case a pair gene name with {\tt Mutation} will be what we call an ``event'' in our dataset -- e.g.,  APC {\tt Mutation}.
+
+If one would like  to have two distinct events in the dataset, i.e., APC {\tt Missense\_Mutation} and APC {\tt Nonsense\_Mutation}, parameter {\tt merge.mutation.types} should be set to false in the call to {\tt import.MAF}. 
+
+\begin{mybox}
+<<import.MAF, results=hide>>=
+dataset_maf = import.MAF(crc_maf, merge.mutation.types = FALSE)
+@
+\end{mybox}
+
+Sometimes, we might want to filter out some of the entries in a MAF -- maybe restricting the type of genes, mutations or sample that we want to process. If one defines
+{\tt filter.fun} as a function that returns {\tt TRUE} only for those entries which shall be considered, he gets a filter process which is applied to each row of the MAF file prior to transforming that into a TRONCO dataset. In this example we select only mutations annotated to APC -- we access that through the {\tt Hugo\_Symbol} flag of a MAF. 
+\begin{mybox}
+<<import.MAF,results=hide>>=
+dataset_maf = import.MAF(crc_maf, filter.fun = function(x){ x['Hugo_Symbol'] == 'APC'} )
+@
+\begin{verbatim}
+*** Importing from dataframe
+Loading MAF dataframe ...DONE
+*** Mutations names: using Hugo_Symbol
+*** Filtering full MAF: #entries  17
+*** Using reduced MAF: #entries  3
+*** MAF report: TCGA=TRUE
+Type of annotated mutations: 
+[1] "Nonsense_Mutation"
+*** [merge.mutation.types = T] Mutations will be merged and annotated as 'Mutation'
+Number of samples: 3
+[TCGA = TRUE] Number of TCGA patients: 3
+Number of annotated mutations: 173
+Mutations annotated with "Valid" flag (%): 33
+Number of genes (Hugo_Symbol): 1
+Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :3 x 1 
+|======================================================================| 100%
+Starting conversion from MAF to TRONCO data type.
+\end{verbatim}
+\end{mybox}
+
+It is also sometimes convenient -- especially when working with data collected from a single individual patient -- to distinguish the type of mutations and their position in a gene, or if they are somehow annotated to COSMIC or other databases. For instance, we might want to want to use the {\tt MA.protein.change} annotation in the MAF file to get composite names such as TP53.R175H, TP53.R213, TP53.R267W etc. This can be done by setting {\tt paste.to.Hugo\_Symbol} to have the relevant name of the MAF annotation
+
+\begin{mybox}
+<<import.MAF, results=hide>>=
+dataset_maf = import.MAF(crc_maf, 
+	merge.mutation.types = FALSE, 
+	paste.to.Hugo_Symbol = c('MA.protein.change')
+	)
+@
+\end{mybox}
+
+TRONCO supports custom  MAF files, where possibly not all the standard annotations are present, via {\tt irregular = TRUE}.
+
+
+%We then use the function \texttt{view} to get a short summary of a dataset that we   loaded in TRONCO; this function reports on the number of samples and  events, plus some meta information that could be displayed graphically.  
 %
 %\begin{mybox}
 %<<view>>=
-%view(aCML)
+%view(dataset_maf)
 %@
-%%\tcblower
-%%ss
 %\end{mybox}
-%
 
-%
-%
-%
-%
-%\subsection{Creating views with the ``as'' functions}
-%
-%Several functions are available to create views over a dataset, with a set of parameter which can constraint the view -- as in the SELECT/JOIN approaches in databases. In the following examples we  show their execution with the default parameters, but  shorten their output to make this document readable.
-%
-%The main ``as'' functions  are here documented.  \texttt{as.genotypes}, that we can use to get the matrix of ``genotypes'' that we imported.
-%
-%\begin{mybox}
-%<<asgenotypes>>=
-%as.genotypes(aCML)[1:10,5:10]
-%@
-%\end{mybox}
-%
-%Differently,  \texttt{as.events} and \texttt{as.events.in.samples}, that show tables with the events that we are processing in  all dataset or in a specific sample that we want to examine.
-%
-%\begin{mybox}
-%<<asevents>>=
-%as.events(aCML)[1:5, ]
-%as.events.in.sample(aCML, sample = 'patient 2')
-%@
-%\end{mybox}
-%
-%Concerning genes,  \texttt{as.genes} shows the mnemonic names of the genes (or chromosomes, cytobands, etc.) that we included in our dataset.
-%
-%\begin{mybox}
-%<<asgenes>>=
-%as.genes(aCML)[1:8]
-%@
-%\end{mybox}
-%
-%And \texttt{as.types} shows the types of alterations (e.g., mutations, amplifications, etc.) that we have  find in our dataset, and  function \texttt{as.colors} shows the list of the  colors which are associated to each type.
-%
-%\begin{mybox}
-%<<astypes>>=
-%as.types(aCML)
-%as.colors(aCML)
-%@
-%\end{mybox}
-%
-%
-%A function \texttt{as.gene} can be used to display the alterations of a specific gene  across the samples
-%
-%\begin{mybox}
-%<<asgene>>=
-%head(as.gene(aCML, genes='SETBP1'))
-%@
-%\end{mybox}
-%
-%Views over samples can be created as well.  \texttt{as.samples} and \texttt{which.samples} list all the samples in the data, or return a list of samples that harbour a certain alteration. The former is 
-%
-%\begin{mybox}
-%<<assamples1>>=
-%as.samples(aCML)[1:10]
-%@
-%\end{mybox}
-%
-%and the latter is
-% 
-%\begin{mybox}
-%<<assamples>>=
-%which.samples(aCML, gene='TET2', type='Nonsense point')
-%@
-%\end{mybox}
-%
-%A slightly different function, which manipulates the data,  is \texttt{as.alterations}, which transforms a dataset with events of different type  to events of a unique type, labeled ``Alteration''.
-%
-%\begin{mybox}
-%<<asalterations, results=hide>>=
-%dataset = as.alterations(aCML)
-%@
-%\begin{verbatim}
-%*** Aggregating events of type(s) {Ins/Del, Missense point, Nonsense Ins/Del, 
-%	Nonsense point} in a unique event with label "Alteration".
-%Dropping event types Ins/Del, Missense point, Nonsense Ins/Del, Nonsense point 
-%	for 23 genes.  
-%|======================================================================| 100%
-%*** Binding events for 2 datasets.
-%\end{verbatim}
-%<<asalterations>>=
-%view(dataset)
-%@
-%\end{mybox}
-%
-%
-%
-% 
-%When samples are enriched with stage information function  \texttt{as.stages} can be used to create a view over such table. Views over patterns can be created as well -- see Model Inference with CAPRI.
-%
-%\subsection{Dataset size}
-%
-%A set of functions allow to get the number of genes, events, samples, types and patterns in a dataset.
-%
-%\begin{mybox}
-%<<number>>=
-%ngenes(aCML)
-%nevents(aCML)
-%nsamples(aCML)
-%ntypes(aCML)
-%npatterns(aCML)
-%@
-%\end{mybox}
+\subsection{Copy Number Variants annotated in the GISTIC format}
+We use the function \texttt{import.GISTIC} to import a dataset in GISTIC format, in this case from
+\begin{mybox}
+<<>>=
+crc_gistic
+@
+\end{mybox}
+
+In its default execution all the data annotated in the file is imported. But in principle  it is possible to avoid to import some   genes or samples; in this case it is sufficient to use parameters {\tt filter.genes} and {\tt filter.samples} for this function.
+
+
+\begin{mybox}
+<<import.GISTIC>>=
+dataset_gistic = import.GISTIC(crc_gistic)
+@
+\end{mybox}
+
+
+ 
+
+
+\subsection{Custom alterations annotated in a boolean matrix}
+One can annotate its custom type of alterations in a boolean matrix such as {\tt crc\_plain}
+\begin{mybox}
+<<>>=
+crc_plain
+@
+\end{mybox}
+In this case,  function \texttt{import.genotypes} will convert the matrix to a TRONCO  object where events' names and samples codes will be set from column and row names of the matrix. If this is not possible, these will be generated from templates. By default, the {\tt event.type} is set to {\tt variant} but one can specify a custom name for the alteration that is reported in the matrix
+\begin{mybox}
+<<import.genotypes>>=
+dataset_plain = import.genotypes(crc_plain, event.type='myVariant')
+@
+\end{mybox}
+
+
+\subsection{Downloading data from the cBio portal for cancer genomics}
+
+TRONCO uses the R interface to cBio to query data from the portal. All type of data can be downloaded from the portal, which includes MAF/GISTIC data for a lot of different cancer studies. An example of interaction with the portal is archived at the tool's webpage. 
+
+Here, we  show how to download lung cancer data somatic mutations for genes TP53, KRAS and PIK3CA,  from the lung cancer project run by TCGA, which is archived as  {\tt luad\_tcga\_pub} at cBio. If some of the parameters to {\tt cbio.query} are missing the function will become interactive by showing a list of possible data available at the portal.
+\begin{mybox}
+<<results=hide>>=
+ data = cbio.query(
+	genes=c('TP53', 'KRAS', 'PIK3CA'), 
+	cbio.study = 'luad_tcga_pub',
+	cbio.dataset = 'luad_tcga_pub_cnaseq', 
+	cbio.profile = 'luad_tcga_pub_mutations'
+	)
+@
+\begin{verbatim}
+*** CGDS plugin for Cbio query.
+
+Automatic CBIO study index: luad_tcga_pub
+Automatic CBIO dataset index: luad_tcga_pub_cnaseq
+Automatic CBIO profile index: luad_tcga_pub_mutations
+Cancer codename: luad_tcga_pub
+Cancer Ref.: Lung Adenocarcinoma (TCGA, Nature 2014)
+Cancer Syn.: TCGA Lung Adenocarcinoma, containing 230 samples; 
+Data codename: luad_tcga_pub_cnaseq
+Data Ref.: Tumor Samples with sequencing and CNA data
+Data Syn.: All tumor samples that have CNA and sequencing data (230 samples)
+Samples codename: luad_tcga_pub_mutations
+Data Ref.: Mutations
+Data Syn.: Mutation data from whole exome sequencing.
+
+Querying the following list of genes: TP53, KRAS, PIK3CA 
+Symbol "." was replaced with "-" in sample IDs.
+
+Data retrieved: 230 samples, 3 genes.
+Retrieved also clinical data for samples: luad_tcga_pub_cnaseq
+Data exported to file: luad_tcga_pub.luad_tcga_pub_cnaseq.luad_tcga_pub_mutations.Rdata
+\end{verbatim}
+
+\end{mybox}
+
+
+\section{Data visualisation}
+
+All examples in this section will be done with the the aCML dataset as reference.
+
+\subsection{Summary report for a dataset and boolean queries}\label{sec:view}
+
+We use the function \texttt{view} to get a short summary of a dataset that we   loaded in TRONCO; this function reports on the number of samples and  events, plus some meta information that could be displayed graphically.  
+
+\begin{mybox}
+<<view>>=
+view(aCML)
+@
+%\tcblower
+%ss
+\end{mybox}
+
+
+
+
+
+
+\subsection{Creating views with the ``as'' functions}
+
+Several functions are available to create views over a dataset, with a set of parameter which can constraint the view -- as in the SELECT/JOIN approaches in databases. In the following examples we  show their execution with the default parameters, but  shorten their output to make this document readable.
+
+The main ``as'' functions  are here documented.  \texttt{as.genotypes}, that we can use to get the matrix of ``genotypes'' that we imported.
+
+\begin{mybox}
+<<asgenotypes>>=
+as.genotypes(aCML)[1:10,5:10]
+@
+\end{mybox}
+
+Differently,  \texttt{as.events} and \texttt{as.events.in.samples}, that show tables with the events that we are processing in  all dataset or in a specific sample that we want to examine.
+
+\begin{mybox}
+<<asevents>>=
+as.events(aCML)[1:5, ]
+as.events.in.sample(aCML, sample = 'patient 2')
+@
+\end{mybox}
+
+Concerning genes,  \texttt{as.genes} shows the mnemonic names of the genes (or chromosomes, cytobands, etc.) that we included in our dataset.
+
+\begin{mybox}
+<<asgenes>>=
+as.genes(aCML)[1:8]
+@
+\end{mybox}
+
+And \texttt{as.types} shows the types of alterations (e.g., mutations, amplifications, etc.) that we have  find in our dataset, and  function \texttt{as.colors} shows the list of the  colors which are associated to each type.
+
+\begin{mybox}
+<<astypes>>=
+as.types(aCML)
+as.colors(aCML)
+@
+\end{mybox}
+
+
+A function \texttt{as.gene} can be used to display the alterations of a specific gene  across the samples
+
+\begin{mybox}
+<<asgene>>=
+head(as.gene(aCML, genes='SETBP1'))
+@
+\end{mybox}
+
+Views over samples can be created as well.  \texttt{as.samples} and \texttt{which.samples} list all the samples in the data, or return a list of samples that harbour a certain alteration. The former is 
+
+\begin{mybox}
+<<assamples1>>=
+as.samples(aCML)[1:10]
+@
+\end{mybox}
+
+and the latter is
+ 
+\begin{mybox}
+<<assamples>>=
+which.samples(aCML, gene='TET2', type='Nonsense point')
+@
+\end{mybox}
+
+A slightly different function, which manipulates the data,  is \texttt{as.alterations}, which transforms a dataset with events of different type  to events of a unique type, labeled ``Alteration''.
+
+\begin{mybox}
+<<asalterations, results=hide>>=
+dataset = as.alterations(aCML)
+@
+\begin{verbatim}
+*** Aggregating events of type(s) {Ins/Del, Missense point, Nonsense Ins/Del, 
+	Nonsense point} in a unique event with label "Alteration".
+Dropping event types Ins/Del, Missense point, Nonsense Ins/Del, Nonsense point 
+	for 23 genes.  
+|======================================================================| 100%
+*** Binding events for 2 datasets.
+\end{verbatim}
+<<asalterations>>=
+view(dataset)
+@
+\end{mybox}
+
+
+
+ 
+When samples are enriched with stage information function  \texttt{as.stages} can be used to create a view over such table. Views over patterns can be created as well -- see Model Inference with CAPRI.
+
+\subsection{Dataset size}
+
+A set of functions allow to get the number of genes, events, samples, types and patterns in a dataset.
+
+\begin{mybox}
+<<number>>=
+ngenes(aCML)
+nevents(aCML)
+nsamples(aCML)
+ntypes(aCML)
+npatterns(aCML)
+@
+\end{mybox}
 
 
 \subsection{Oncoprints}
