@@ -1823,18 +1823,15 @@ enforce.string <- function(x) {
 #'
 #' @examples
 #' data(test_dataset)
-#' sort.by.frequency(test_dataset)
+#' order.frequency(test_dataset)
 #'
-#' @title sort.by.frequency
+#' @title order.frequency
 #' @param x A TRONCO compliant dataset.
 #' @param decreasing Inverse order. Default TRUE
-#' @param ... just for compatibility
 #' @return A TRONCO compliant dataset with the internal genotypes sorted according to event frequency.
-#' @export sort.by.frequency
+#' @export order.frequency
 #' 
-sort.by.frequency <- function(x, decreasing = TRUE, ...) {
-    other.argument = list(...)
-
+order.frequency <- function(x, decreasing = TRUE) {
     is.compliant(x)
 
     x = enforce.numeric(x)
