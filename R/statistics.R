@@ -55,7 +55,7 @@ as.bnlearn.network <- function(x,
         }
     }
 
-    adj.matrix = get(model, as.adj.matrix(x))
+    adj.matrix = get(model, as.adj.matrix(x, models = model))
     adj.matrix = keysToNames(x, adj.matrix)
     names(colnames(adj.matrix)) = NULL
     names(rownames(adj.matrix)) = NULL

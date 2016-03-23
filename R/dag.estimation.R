@@ -583,7 +583,7 @@ estimate.dag.probs <- function(dataset,
                 } else {
                     curr.parents.pos[j] = 0;
                 }
-            }	
+            }   
         }
         estimated.conditional.probs[[i, 1]] = curr.parents.pos;
     }

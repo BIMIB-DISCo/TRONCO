@@ -301,6 +301,14 @@ tronco.capri <- function(data,
         cat('*** Evaluating BIC / AIC / LogLik informations.\n')
     }
 
+    if ("loglik" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'capri_loglik')
+        score = logLik(bayes.net$net, data = bayes.net$data)
+        logLik = score
+        results$model$capri_loglik$score = score
+        results$model$capri_loglik$logLik = logLik
+    }
+
     if ("bic" %in% regularization) {
         bayes.net = as.bnlearn.network(results, model = 'capri_bic')
         score = BIC(bayes.net$net, data = bayes.net$data)
@@ -505,13 +513,21 @@ tronco.mst.edmonds <- function(data,
     if (!silent) {
         cat('*** Evaluating BIC / AIC / LogLik informations.\n')
     }
-    
+
     if ("no_reg" %in% regularization) {
         bayes.net = as.bnlearn.network(results, model = 'edmonds_no_reg')
         score = logLik(bayes.net$net, data = bayes.net$data)
         logLik = score
         results$model$edmonds_no_reg$score = score
         results$model$edmonds_no_reg$logLik = logLik
+    }
+    
+    if ("loglik" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'edmonds_loglik')
+        score = logLik(bayes.net$net, data = bayes.net$data)
+        logLik = score
+        results$model$edmonds_loglik$score = score
+        results$model$edmonds_loglik$logLik = logLik
     }
 
     if ("bic" %in% regularization) {
@@ -720,6 +736,14 @@ tronco.mst.chowliu <- function(data,
 
     if (!silent) {
         cat('*** Evaluating BIC / AIC / LogLik informations.\n')
+    }
+
+    if ("loglik" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'chow_liu_loglik')
+        score = logLik(bayes.net$net, data = bayes.net$data)
+        logLik = score
+        results$model$chow_liu_loglik$score = score
+        results$model$chow_liu_loglik$logLik = logLik
     }
 
     if ("bic" %in% regularization) {
@@ -933,6 +957,14 @@ tronco.mst.prim <- function(data,
         logLik = score
         results$model$prim_no_reg$score = score
         results$model$prim_no_reg$logLik = logLik
+    }
+
+    if ("loglik" %in% regularization) {
+        bayes.net = as.bnlearn.network(results, model = 'prim_no_loglik')
+        score = logLik(bayes.net$net, data = bayes.net$data)
+        logLik = score
+        results$model$prim_loglik$score = score
+        results$model$prim_loglik$logLik = logLik
     }
 
     if ("bic" %in% regularization) {

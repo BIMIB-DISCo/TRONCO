@@ -390,8 +390,8 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
     cat("\nType of annotated mutations: \n")
     print(MAF.variants)
     if(merge.mutation.types) cat('*** [merge.mutation.types = T] Mutations will be merged and annotated as \'Mutation\'\n')
-	else cat('*** [merge.mutation.types = F] Mutations will be distinguished by type\n')
-	
+    else cat('*** [merge.mutation.types = F] Mutations will be distinguished by type\n')
+    
     cat("Number of samples:", length(MAF.samples), "\n")
 
     ## If it is TCGA you should check for multiple samples per patient
@@ -450,47 +450,47 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
     }
     else
     {
-    	cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
+        cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
 
-    	flush.console()
-	    pb <- txtProgressBar(1, nrow(maf), style = 3)
+        flush.console()
+        pb <- txtProgressBar(1, nrow(maf), style = 3)
 
-    	# For this case -- separate mutation types -- it is less convenient to use import.genotypes 
-    	tronco.data = list()
-    	tronco.data$genotypes = NULL
-		tronco.data$annotations = NULL
-		tronco.data$types = NULL
+        # For this case -- separate mutation types -- it is less convenient to use import.genotypes 
+        tronco.data = list()
+        tronco.data$genotypes = NULL
+        tronco.data$annotations = NULL
+        tronco.data$types = NULL
 
-    	
-    	# First, build the list of events that we will be creating
-    	tronco.data$annotations = as.matrix(unique(maf[, c('Variant_Classification', 'Hugo_Symbol')]))
-    	colnames(tronco.data$annotations) = c('type', 'event')
-    	rownames(tronco.data$annotations) = paste('G', 1:nrow(tronco.data$annotations), sep='')
-    	
-    	tronco.data$genotypes = matrix(0, nrow = length(MAF.samples), ncol = nrow(tronco.data$annotations))
-		colnames(tronco.data$genotypes) = rownames(tronco.data$annotations)
-    	rownames(tronco.data$genotypes) = MAF.samples
+        
+        # First, build the list of events that we will be creating
+        tronco.data$annotations = as.matrix(unique(maf[, c('Variant_Classification', 'Hugo_Symbol')]))
+        colnames(tronco.data$annotations) = c('type', 'event')
+        rownames(tronco.data$annotations) = paste('G', 1:nrow(tronco.data$annotations), sep='')
+        
+        tronco.data$genotypes = matrix(0, nrow = length(MAF.samples), ncol = nrow(tronco.data$annotations))
+        colnames(tronco.data$genotypes) = rownames(tronco.data$annotations)
+        rownames(tronco.data$genotypes) = MAF.samples
 
-	    for (i in 1:nrow(maf)) {
-    	    setTxtProgressBar(pb, i)
-			
-			ev = intersect(
-				which(tronco.data$annotations[, 'event'] == maf$Hugo_Symbol[i]), 
-				which(tronco.data$annotations[, 'type']  == maf$Variant_Classification[i])
-				)
+        for (i in 1:nrow(maf)) {
+            setTxtProgressBar(pb, i)
+            
+            ev = intersect(
+                which(tronco.data$annotations[, 'event'] == maf$Hugo_Symbol[i]), 
+                which(tronco.data$annotations[, 'type']  == maf$Variant_Classification[i])
+                )
 
-			tronco.data$genotypes[maf$Tumor_Sample_Barcode[i], ev] = 1
-		}
-		
-		
-		colors = colorRampPalette(brewer.pal(8, 'Accent'))(length(MAF.variants))
-		
-		tronco.data$types = matrix(colors, ncol = 1)
-		
-		rownames(tronco.data$types) = MAF.variants
-		colnames(tronco.data$types) = 'color'
+            tronco.data$genotypes[maf$Tumor_Sample_Barcode[i], ev] = 1
+        }
+        
+        
+        colors = colorRampPalette(brewer.pal(8, 'Accent'))(length(MAF.variants))
+        
+        tronco.data$types = matrix(colors, ncol = 1)
+        
+        rownames(tronco.data$types) = MAF.variants
+        colnames(tronco.data$types) = 'color'
 
-		is.compliant(tronco.data)	    	
+        is.compliant(tronco.data)           
     }
 
     return(tronco.data)

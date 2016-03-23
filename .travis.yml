@@ -1,8 +1,13 @@
 language: r
 bioc_required: true
+bioc_use_devel: true
+
 r:
   - devel
 cache: packages
+
+before_install:
+  - tlmgr install tcolorbox
 
 r_github_packages:
   - jimhester/covr

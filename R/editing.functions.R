@@ -796,7 +796,8 @@ sbind <- function(...) {
 #' @examples
 #' data(test_dataset_no_hypos)
 #' join.types(test_dataset_no_hypos, 'ins_del', 'missense_point_mutations')
-#' join.types(test_dataset_no_hypos, 'ins_del', 'missense_point_mutations', new.type='mut', new.color='green')
+#' join.types(test_dataset_no_hypos, 'ins_del',
+#'      'missense_point_mutations', new.type='mut', new.color='green')
 #'
 #' @param x A TRONCO compliant dataset.
 #' @param ... type to merge

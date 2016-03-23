@@ -92,12 +92,10 @@ as.events <- function(x, genes = NA, types = NA, keysToNames = FALSE) {
     ann = x$annotations[ , c('type', 'event'), drop = FALSE]
 
     if (!any(is.na(genes)))
-        ann =
-            ann[which(ann[, 'event', drop=FALSE] %in% genes), , drop = FALSE]
+        ann = ann[which(ann[, 'event', drop=FALSE] %in% genes), , drop = FALSE]
     
     if (!any(is.na(types)))
-        ann =
-            ann[which(ann[, 'type', drop = FALSE] %in% types), , drop = FALSE] 
+        ann = ann[which(ann[, 'type', drop = FALSE] %in% types), , drop = FALSE] 
 
     if (keysToNames) {
         ann = keysToNames(x, ann)
@@ -186,12 +184,13 @@ as.colors <- function(x) {
 as.gene <- function(x, genes, types = NA) {
     keys = as.events(x, genes = genes, types = types)
 
-    data =
-        data.frame(x$genotypes[, rownames(keys)],
-                   row.names = as.samples(x))
+    data = data.frame(x$genotypes[, rownames(keys)],
+                      row.names = as.samples(x))
     
-    colnames(data) =
-        apply(keys, 1, FUN = paste, collapse = ' ')
+    colnames(data) = apply(keys,
+                           1,
+                           FUN = paste,
+                           collapse = ' ')
 
     return(data)
 }
@@ -237,15 +236,11 @@ as.alterations <- function(x, new.type = 'Alteration', new.color = 'khaki') {
 #' @export as.patterns
 #' 
 as.patterns <- function(x) {
-    if (length(x$hypotheses) == 0 || is.na(x$hypotheses)) {
+    is.compliant(x)
+    if (npatterns(x) == 0) {
         return(NULL)
     }
-
-    is.compliant(x)
-    if ('hstructure' %in% names(x$hypotheses)) {
-        return(ls(x$hypotheses$hstructure))
-    }
-    return(NULL)
+    return(ls(x$hypotheses$hstructure))
 }
 
 
@@ -535,9 +530,6 @@ as.confidence <- function(x, conf, models = names(x$model)) {
 as.models <- function(x, models=names(x$model)) {
     is.compliant(x)
     is.model(x)
-    if (!is.vector(models)) {
-        stop('"models" should be a vector.')
-    }
 
     for (model in models) {
         if ( !model %in% names(x$model)) {
@@ -662,8 +654,8 @@ as.adj.matrix <- function(x,
     is.model(x)
     is.events.list(x, events)
 
-    if (!is.vector(models)) {
-        stop('"models" should be a vector.') 
+    if (!all(models %in% names(x$model))) {
+        stop('not all "models" are reconstructed model.') 
     }
     
     if (!type %in% c('fit', 'pf')  ) {
@@ -674,8 +666,11 @@ as.adj.matrix <- function(x,
 
     ret = list()
     for (i in models) {
-        if (type == 'fit') mat = m[[i]]$adj.matrix$adj.matrix.fit
-        if (type == 'pf') mat = m[[i]]$adj.matrix$adj.matrix.pf
+        if (type == 'fit') {
+            mat = m[[i]]$adj.matrix$adj.matrix.fit
+        } else if (type == 'pf') {
+            mat = m[[i]]$adj.matrix$adj.matrix.pf
+        }
 
         mat = mat[rownames(events), , drop = FALSE]
         mat = mat[, rownames(events), drop = FALSE]
@@ -1823,18 +1818,15 @@ enforce.string <- function(x) {
 #'
 #' @examples
 #' data(test_dataset)
-#' sort.by.frequency(test_dataset)
+#' order.frequency(test_dataset)
 #'
-#' @title sort.by.frequency
+#' @title order.frequency
 #' @param x A TRONCO compliant dataset.
 #' @param decreasing Inverse order. Default TRUE
-#' @param ... just for compatibility
 #' @return A TRONCO compliant dataset with the internal genotypes sorted according to event frequency.
-#' @export sort.by.frequency
+#' @export order.frequency
 #' 
-sort.by.frequency <- function(x, decreasing = TRUE, ...) {
-    other.argument = list(...)
-
+order.frequency <- function(x, decreasing = TRUE) {
     is.compliant(x)
 
     x = enforce.numeric(x)
