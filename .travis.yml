@@ -7,7 +7,7 @@ r:
 cache: packages
 
 before_install:
-  - tlmgr install tcolorbox
+  - tlmgr install tcolorbox blind­text
 
 r_github_packages:
   - jimhester/covr
