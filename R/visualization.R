@@ -2581,8 +2581,6 @@ tronco.pattern.plot <- function(x,
         exclus = matrix[1:length(keys), 1, drop = FALSE]
         ## print(exclus)
 
-        events.legend.pch = rep(19, length(unique(events.names[, 'type'])))
-
 
         midpts =
             barplot(exclus[, 1],
@@ -2601,6 +2599,8 @@ tronco.pattern.plot <- function(x,
         plot.new()
         
         }
+
+        events.legend.pch = rep(19, length(unique(events.names[, 'type'])))
 
         legend("topleft",
                cex = 0.6  * legend.cex,
