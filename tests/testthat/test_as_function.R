@@ -7,6 +7,13 @@ no_hypo = delete.hypothesis(hypo, 'test')
 data(gistic)
 gistic = import.GISTIC(gistic)
 gistic_model = tronco.caprese(gistic)
+gistic_model_capri = tronco.capri(gistic, nboot = 2)
+
+stages = list()
+stages$stage = c('A', 'B', 'C')
+names(stages$stage) = as.samples(muts)
+stages = as.data.frame(stages)
+muts_stages = annotate.stages(muts, stages=stages)
 
 test_that("as.genotypes returns a genotypes matrix", {
     data(as.genotypes.test)
@@ -39,11 +46,6 @@ test_that("as.events returns a list of samples", {
 
 test_that("as.stages returns a list of stages", {
     data(as.stages.test)
-    stages = list()
-    stages$stage = c('A', 'B', 'C')
-    names(stages$stage) = as.samples(muts)
-    stages = as.data.frame(stages)
-    muts_stages = annotate.stages(muts, stages=stages)
     expect_equal(as.stages(muts_stages), as.stages.test)
     expect_equal(as.stages(muts), NA)
     expect_equal(as.stages(NULL), NA)
@@ -123,6 +125,37 @@ test_that("as.description return a description", {
 })
 
 test_that("as.pathway return compliant dataset", {
-    path = as.pathway(muts, pathway.name='test', pathway.genes='APC')
+    path = as.pathway(muts,
+                      pathway.name = 'test',
+                      pathway.genes = 'APC')
+    expect_silent(is.compliant(path))
+    path = as.pathway(muts,
+                      pathway.name = 'test',
+                      pathway.genes = 'APC',
+                      aggregate.pathway = TRUE)
+    expect_silent(is.compliant(path))
+    path = as.pathway(muts_stages,
+                      pathway.name = 'test',
+                      pathway.genes = 'APC')
     expect_silent(is.compliant(path))
 })
+
+test_that("as.adj.matrix return a matrix", {
+    expect_equal(length(as.adj.matrix(gistic_model_capri, 
+                                      type = 'fit')), 2)
+    expect_equal(length(as.adj.matrix(gistic_model_capri,
+                                      type = 'pf')), 2)
+    expect_error(as.adj.matrix(gistic_model_capri,
+                               type = 'X'))
+    expect_error(as.adj.matrix(gistic_model_capri,
+                               models = 'X'))
+})
+
+test_that("as.duplicates return false", {
+    expect_false(has.duplicates(hypo))
+})
+
+test_that("duplicates return 0", {
+    expect_equal(length(duplicates(hypo)), 0)
+})
+

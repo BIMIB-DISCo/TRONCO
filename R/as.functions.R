@@ -236,15 +236,11 @@ as.alterations <- function(x, new.type = 'Alteration', new.color = 'khaki') {
 #' @export as.patterns
 #' 
 as.patterns <- function(x) {
-    if (length(x$hypotheses) == 0 || is.na(x$hypotheses)) {
+    is.compliant(x)
+    if (npatterns(x) == 0) {
         return(NULL)
     }
-
-    is.compliant(x)
-    if ('hstructure' %in% names(x$hypotheses)) {
-        return(ls(x$hypotheses$hstructure))
-    }
-    return(NULL)
+    return(ls(x$hypotheses$hstructure))
 }
 
 
@@ -658,8 +654,8 @@ as.adj.matrix <- function(x,
     is.model(x)
     is.events.list(x, events)
 
-    if (!is.vector(models)) {
-        stop('"models" should be a vector.') 
+    if (!all(models %in% names(x$model))) {
+        stop('not all "models" are reconstructed model.') 
     }
     
     if (!type %in% c('fit', 'pf')  ) {
@@ -670,8 +666,11 @@ as.adj.matrix <- function(x,
 
     ret = list()
     for (i in models) {
-        if (type == 'fit') mat = m[[i]]$adj.matrix$adj.matrix.fit
-        if (type == 'pf') mat = m[[i]]$adj.matrix$adj.matrix.pf
+        if (type == 'fit') {
+            mat = m[[i]]$adj.matrix$adj.matrix.fit
+        } else if (type == 'pf') {
+            mat = m[[i]]$adj.matrix$adj.matrix.pf
+        }
 
         mat = mat[rownames(events), , drop = FALSE]
         mat = mat[, rownames(events), drop = FALSE]
