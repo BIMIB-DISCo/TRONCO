@@ -26,11 +26,8 @@ BiocStyle::latex()
 \usepackage{url}
 
 \usepackage{placeins}
-\usepackage{blindtext}
 
 \usepackage[many]{tcolorbox}
-%\tcbuselibrary{listings}
-%\tcbuselibrary{minted}
 
 
 
