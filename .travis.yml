@@ -1,5 +1,7 @@
 language: r
 bioc_required: true
+bioc_use_devel: true
+
 r:
   - devel
 cache: packages
