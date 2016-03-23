@@ -4,6 +4,9 @@ r:
   - devel
 cache: packages
 
+before_install:
+  - tlmgr install tcolorbox
+
 r_github_packages:
   - jimhester/covr
 after_success:
