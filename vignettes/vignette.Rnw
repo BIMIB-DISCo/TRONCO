@@ -156,7 +156,7 @@ Number of annotated mutations: 17
 Mutations annotated with "Valid" flag (%): 71 
 Number of genes (Hugo_Symbol): 6 
 Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :9 x 6 
-  |================================================================================================================================================================| 100%
+|======================================================================| 100%
 Starting conversion from MAF to TRONCO data type.
 \end{verbatim}
 \end{mybox}
