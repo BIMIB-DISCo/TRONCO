@@ -138,7 +138,7 @@ data(crc_plain)
 We use the function \texttt{import.MAF} to import a dataset in MAF format. 
 
 \begin{mybox}
-<<view>>=
+<<view results=hide>>=
 dataset_maf = import.MAF(crc_maf)
 @
 \end{mybox}
@@ -162,7 +162,7 @@ view(dataset_gistic)
 \end{mybox}
 
 \subsection{Custom boolean matrices}
-Finally, we use the function \texttt{import.genotypes} to import data from a custom binaRy matrix. 
+Finally, we use the function \texttt{import.genotypes} to import data from a custom binary matrix. 
 
 \begin{mybox}
 <<view>>=
