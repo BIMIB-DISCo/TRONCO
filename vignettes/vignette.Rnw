@@ -27,16 +27,28 @@ BiocStyle::latex()
 
 \usepackage{placeins}
 \usepackage{blindtext}
-\usepackage{tcolorbox}
+
+\usepackage[many]{tcolorbox}
+%\tcbuselibrary{listings}
+%\tcbuselibrary{minted}
+
+
 
 \definecolor{mycolor}{rgb}{0.35, 0.169, 0.73}
 %\definecolor{mycolor}{rgb}{0.171, 0.198, 0.81}
 
 \newtcolorbox{mybox}[1][]
 {
-  colframe = cyan,
-  colback  = cyan!10,
-  #1,
+%  colframe = cyan,
+%  colback  = cyan!10,
+  colframe = black!75!white,
+  colback  = blue!5!white,
+%  listing engine=minted,
+%  minted language=R,
+%  minted style=trac,
+%  minted options={fontsize=\small,linenos,numbersep=3mm},
+%  listing only
+  #1
 }
 
 
@@ -84,7 +96,7 @@ Daniele Ramazzotti$^\ast$
 
 What changed version by version
 
-\section{Implemented Algorithms, pipelines and case-sudies}
+\section{Algorithms, pipelines and available case-sudies}
 
 \begin{center}
 \begin{tabular}{l | p{5.0cm} | l  | p{6.0cm}}
@@ -146,6 +158,8 @@ We use the function \texttt{view} to get a short summary of a dataset that we   
 <<view>>=
 view(aCML)
 @
+%\tcblower
+%ss
 \end{mybox}
 
 {\bf HERE ALL THE HAS FUNCTIONS SHOULD BE DOCUEMNTED}
@@ -474,7 +488,8 @@ dataset = events.selection(aCML,  filter.freq = .05,
 @
 \begin{verbatim}
  *** Events selection: #events = 31, #types = 4 
-        Filters freq|in|out = {TRUE, TRUE, TRUE}        Minimum event frequency: 0.05 (3 alterations out of 64 samples).
+        Filters freq|in|out = {TRUE, TRUE, TRUE}
+        Minimum event frequency: 0.05 (3 alterations out of 64 samples).
 |======================================================================| 100%
 Selected 9 events.
 
@@ -597,7 +612,7 @@ oncoprint(aCML.clean,
 
 \subsubsection{Testable hypotheses via logical formulas (i.e., patterns)}
 
-CAPRI is the only algorithm in TRONCO that supports hypotheses via logical formulas. Every formula is transformed into a a CAPRI  pattern among events (see the original CAPRI paper). For every hypothesis/pattern it is possible  to specify against which possible target it should be tested; if this is not done, it is tested against all other events in the dataset but those which constitute the pattern.
+CAPRI is the only algorithm in TRONCO that supports hypotheses-testing of certain causal structures expressed as logical formulas. Every formula is transformed into a a CAPRI  pattern among events -- see the original CAPRI paper. For every hypothesis it is possible  to specify against which possible target it should be tested; if this is not done, it is tested against all other events in the dataset but those which constitute the pattern. An instance of a pattern tested against one other event is called an hypothesis.
 
 \paragraph{Adding custom hypotheses.}
 
@@ -746,171 +761,224 @@ dataset = hypothesis.add.group(aCML.clean, OR, group = c('SETBP1', 'ASXL1', 'CBL
 
 \FloatBarrier
 
-\paragraph{Querying and manipulating CAPRI's patterns.}
+\paragraph{Querying, visualizing and manipulating CAPRI's patterns.}
 
-{\bf SONO ARRIVATO FINO QUI CONTINUO DOPO}
+
 
 We also provide functions to get the number of hypotheses and patterns present in the data.
-
+\begin{mybox}
 <<n-hypo-pat>>=
 npatterns(dataset)
 nhypotheses(dataset)
 @
+\end{mybox}
 
 We can visualize any pattern or the elements involved in them with the following functions.
-
+\begin{mybox}
 <<as-patterns>>=
 as.patterns(dataset)
 as.events.in.patterns(dataset)
 as.genes.in.patterns(dataset)
 as.types.in.patterns(dataset)
 @
+\end{mybox}
 
-Similarily, we can enumerate the added hypotheses with the funcion \texttt{as.hypotheses}.
+Similarily, we can enumerate the added hypotheses with the funcion \texttt{as.hypotheses}, and delete certain patterns and hypotheses. Deleting a pattern consists in deleting all of its hypotheses.
 
+\begin{mybox}
 <<as-hypotheses>>=
 head(as.hypotheses(dataset))
-@
-
-We finally provide functions for deleting patterns and hypotheses.
-
-<<delete-hypo>>=
 dataset = delete.hypothesis(dataset, event = 'TET2')
 dataset = delete.pattern(dataset, pattern = 'OR_ASXL1_CBL')
-view(dataset)
 @
+\end{mybox}
 
-We next show two visualizations to investigate possible patterns over sets of events.
+It is sometimes of help to plot some information about a certain combination of events, and a target -- especially to disentangle the proper logical connectives to use.
+Here, we test genes SETBP1 and ASXL1 versus Missense point mutations of  CSF3R, and observe that the majority of observations are mutually exclusive, but almost half of the 
+CSF3R mutated samples with Missense point mutations do not harbout any mutation in SETBP1 and ASXL1.
 
-
+\begin{mybox}
 <<pattern-plot, fig=TRUE,include=FALSE>>=
 tronco.pattern.plot(aCML.hypo,
-    group = as.events(aCML, genes=c('TET2', 'ASXL1')),
-    to = 'CBL',
+    group = as.events(aCML, genes=c('SETBP1', 'ASXL1')),
+    to = c('CSF3R', 'Missense point'),
     legend.cex=1.5,
     label.cex=1.9)
 @
-\incfig[ht]{vignette-pattern-plot}{0.8\textwidth}{Batplot over hypotheses}{}
+\end{mybox}
+
+\incfig[ht]{vignette-pattern-plot}{0.8\textwidth}{Barplot to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missense point mutations of  CSF3R }{}
 
 
 \FloatBarrier
 
-<<pattern-plot-circos, fig=TRUE,include=FALSE>>=
+It is also possible to create a circle plot where we can observe the contribution of genes SETBP1 and ASXL1 in every match with a Missense point mutations of  CSF3R.
+
+\begin{mybox}
+<<pattern-plot-circos, fig=TRUE,include=FALSE,results=hide>>=
 tronco.pattern.plot(aCML.hypo,
     group = as.events(aCML, genes=c('TET2', 'ASXL1')),
-    to = 'CBL',
-    legend.cex=1.5,
-    label.cex=1.9,
+    to = c('CSF3R', 'Missense point'),
+    legend.cex=1.0,
+    label.cex=1.0,
     mode='circos')
 @
-\incfig[ht]{vignette-pattern-plot-circos}{0.6\textwidth}{Circos over hypotheses}{}
+\end{mybox}
+
+\incfig[ht]{vignette-pattern-plot-circos}{0.8\textwidth}{Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missense point mutations of  CSF3R.}{}
 
 
 \FloatBarrier
-%
-%\paragraph{\large Model reconstruction}{\ }\\
-%
-%We run the inference of the model by CAPRI algorithm with its default parameter: we use both AIC and BIC as regularizators, Hill-climbing as heuristic search of the solutions and exhaustive bootstrap (nboot replicates or more for Wilcoxon testing, i.e., more iterations can be performed if samples are rejected), p-value set at 0.05. We set the seed for the sake of reproducibility. 
-%
+
+
+\subsubsection{Model reconstruction}
+
+We run the inference of the model by CAPRI algorithm with its default parameter: we use both AIC and BIC as regularizators, Hill-climbing as heuristic search of the solutions and exhaustive bootstrap ({\tt nboot} replicates or more for Wilcoxon testing, i.e., more iterations can be performed if samples are rejected), p-value are set at $0.05$. We set the seed for the sake of reproducibility. 
+
+\begin{mybox}
+<<>>=
+model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot=1)
+@
+\end{mybox}
+
 %<<>>=
-%model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot=1)
+%model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot=10)
 %@
+
+
+\subsection{CAPRESE}
+
+\TRONCO{} provides also others algorithms for the same problem but with different assumpions on the valid solutions. Besides CAPRI, the CAPRESE algorithm to reconstruct progression trees and three algorithms based on the formulation of the same problem in terms of minimum spamming tree (exploiting results from Edmons, Prim and Chow Liu) are also provided (see the respective papers). We show the execution of these algorithms.
+
+<<caprese-plot, fig=TRUE,include=FALSE>>=
+model.caprese = tronco.caprese(aCML.clean)
+model.caprese = annotate.description(model.caprese,
+    'CAPRESE - Bionformatics aCML data (selected events)')
+tronco.plot(model.caprese, fontsize = 14, scale.nodes = 0.6,
+    legend.cex = 0.6, legend.pos = 'top')
+@
+\incfig[ht]{vignette-caprese-plot}{0.8\textwidth}{aCML Reconstructed model}{with CAPRESE}
+
+\FloatBarrier
+
+\subsection{Minimum Spanning Tree - EDMOND}
+
+
+<<edmonds-plot, fig=TRUE,include=FALSE>>=
+model.edmonds = tronco.mst.edmonds(aCML.clean, nboot = 10, boot.seed = 12345)
+model.edmonds = annotate.description(model.edmonds,
+    'EDMONDS - Bionformatics aCML data (selected events)')
+@
+
+\FloatBarrier
+
+
+\subsection{Minimum Spanning Tree - CHOWLIU}
+
+<<chow-liu-plot, fig=TRUE,include=FALSE>>=
+model.chowliu = tronco.mst.chowliu(aCML.clean, nboot = 10, boot.seed = 12345)
+model.chowliu = annotate.description(model.chowliu,
+    'CHOW LIU - Bionformatics aCML data (selected events)')
+@
+
+\FloatBarrier
+
+
+\subsection{Minimum Spanning Tree - PRIM}
+
+
+<<prim-plot, fig=TRUE,include=FALSE>>=
+model.prim = tronco.mst.prim(aCML.clean, nboot = 10, boot.seed = 12345)
+model.prim = annotate.description(model.prim,
+    'PRIM - Bionformatics aCML data (selected events)')
+@
+
+\FloatBarrier
+
+
+\section{Post-reconstruction}
+
+\subsection{Visualizing a reconstructed model}
+
+We can plot a model by using function {\tt tronco.plot}. Here, we plot the aCML one inferred by CAPRI with BIC as a regolarizator. We set some parameters to get a nice plot; the confidence of each edge is shown both in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input). Events are annotated as in the oncoprint.
+
+\begin{mybox}
+<<capri-plot, fig=TRUE,include=FALSE>>=
+tronco.plot(model.capri, 
+	fontsize = 12, 
+	scale.nodes = 0.6, 
+	confidence = c('tp', 'pr', 'hg'), 
+	height.logic = 0.25, 
+	legend.cex = 0.5, 
+	pathways = list(priors = gene.hypotheses), 
+	label.edge.size = 8,
+	legend.pos='top'
+	)
+@
+\end{mybox}
+
+\incfig[ht]{vignette-capri-plot}{0.9\textwidth}{aCML model reconstructed by CAPRI with  with BIC as a regolarizator; the confidence of each edge is shown both in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input). 
+}
 %
-%%<<>>=
-%%model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot=10)
-%%@
-%
-%We then plot the model inferred by CAPRI with BIC as a regolarizator and we set some parameters to get a good plot; the confidence of each edge is shown both in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input). 
-%
-%<<capri-plot, fig=TRUE,include=FALSE>>=
-%tronco.plot(model.capri, fontsize = 13, scale.nodes = 0.6, models="capri_bic", 
-%    confidence = c('tp', 'pr', 'hg'), height.logic = 0.25, legend.cex = 0.5, 
-%    pathways = list(priors = gene.hypotheses), label.edge.size = 5)
-%
-%@
-%\incfig[ht]{vignette-capri-plot}{0.9\textwidth}{aCML Reconstructed model}{with CAPRI.}
-%
-%\FloatBarrier
-%
-%\TRONCO{} provides also others algorithms for the same problem but with different assumpions on the valid solutions. Besides CAPRI, the CAPRESE algorithm to reconstruct progression trees and three algorithms based on the formulation of the same problem in terms of minimum spamming tree (exploiting results from Edmons, Prim and Chow Liu) are also provided (see the respective papers). We show the execution of these algorithms.
-%
-%<<caprese-plot, fig=TRUE,include=FALSE>>=
-%model.caprese = tronco.caprese(aCML.clean)
-%model.caprese = annotate.description(model.caprese,
-%    'CAPRESE - Bionformatics aCML data (selected events)')
-%tronco.plot(model.caprese, fontsize = 14, scale.nodes = 0.6,
-%    legend.cex = 0.6, legend.pos = 'top')
-%@
-%\incfig[ht]{vignette-caprese-plot}{0.8\textwidth}{aCML Reconstructed model}{with CAPRESE}
-%
-%\FloatBarrier
-%
-%<<prim-plot, fig=TRUE,include=FALSE>>=
-%model.prim = tronco.mst.prim(aCML.clean, nboot = 10, boot.seed = 12345)
-%model.prim = annotate.description(model.prim,
-%    'PRIM - Bionformatics aCML data (selected events)')
-%tronco.plot(model.prim, fontsize = 14, scale.nodes = 0.6,
-%    legend.cex = 0.6, legend.pos = 'bottom')
-%@
-%\incfig[ht]{vignette-prim-plot}{0.8\textwidth}{aCML Reconstructed model}{with PRIM}
-%
-%\FloatBarrier
-%
-%<<edmonds-plot, fig=TRUE,include=FALSE>>=
-%model.edmonds = tronco.mst.edmonds(aCML.clean, nboot = 10, boot.seed = 12345)
-%model.edmonds = annotate.description(model.edmonds,
-%    'EDMONDS - Bionformatics aCML data (selected events)')
-%tronco.plot(model.edmonds, fontsize = 14, scale.nodes = 0.6,
-%    legend.cex = 0.6, legend.pos = 'top')
-%@
-%\incfig[ht]{vignette-edmonds-plot}{0.8\textwidth}{aCML Reconstructed model}{with EDMONDS}
-%
-%\FloatBarrier
-%
-%<<chow-liu-plot, fig=TRUE,include=FALSE>>=
-%model.chowliu = tronco.mst.chowliu(aCML.clean, nboot = 10, boot.seed = 12345)
-%model.chowliu = annotate.description(model.chowliu,
-%    'CHOW LIU - Bionformatics aCML data (selected events)')
-%tronco.plot(model.chowliu, fontsize = 14, scale.nodes = 0.6,
-%    legend.cex = 0.6, legend.pos = 'bottom')
-%@
-%\incfig[ht]{vignette-chow-liu-plot}{0.8\textwidth}{aCML Reconstructed model}{with CHOW LIU}
-%
-%\FloatBarrier
-%
-%We now show a set of functions to visualize the content of the reconstructed model.
-%
-%<<probs>>=
-%adj.matrix = as.adj.matrix(model.capri, models='capri_bic')
-%adj.matrix$capri_bic[1:8, 1:8]
-%marginal.prob = as.marginal.probs(model.capri, models='capri_bic')
-%head(marginal.prob$capri_bic)
-%joint.prob = as.joint.probs(model.capri, models='capri_bic')
-%joint.prob$capri_bic[1:8, 1:8]
-%conditional.prob = as.conditional.probs(model.capri, models='capri_bic')
-%head(conditional.prob$capri_bic)
-%@
-%
-%With the following function, we can visualize the set of arcs which are valid according to Suppes' theory of probabilistic causation (see the CAPRI paper).
-%
-%<<selective-advantage>>=
-%as.selective.advantage.relations(model.capri, models='capri_bic')
-%@
-%
-%Finally we can visualize with the function \texttt{as.parameters}, all the parameters used for the reconstruction.
-%
-%<<>>=
-%as.parameters(model.capri)
-%@
-%
-%We now show how to remove a model after the reconstruction
-%
-%<<>>=
-%has.model(model.chowliu)
-%dataset = delete.model(model.chowliu)
-%@
-%
-%
+\FloatBarrier
+
+We can plot
+
+<<mst-plot, fig=TRUE,include=FALSE,results=hide>>=
+par(mfrow=c(3,1))
+tronco.plot(model.edmonds, fontsize = 14, scale.nodes = 0.6,
+    legend.cex = 0.6, legend.pos = 'top')
+tronco.plot(model.chowliu, fontsize = 14, scale.nodes = 0.6,
+    legend.cex = 0.6, legend.pos = 'bottom')
+tronco.plot(model.prim, fontsize = 14, scale.nodes = 0.6,
+    legend.cex = 0.6, legend.pos = 'bottom')
+@
+    
+    \incfig[ht]{vignette-mst-plot}{0.8\textwidth}{aCML Reconstructed model by MST algorithms with EDMONDS, CHOW LIU and PRIM variants.}
+
+
+
+
+A set of functions can be used to visualize the content of object which contains the reconstructed model. We can access the asjacency matrix of a model.
+
+\begin{mybox}
+<<>>=
+str(as.adj.matrix(model.capri, models='capri_bic')$capri_bic)
+@
+\end{mybox}
+
+Or can access the empitical  tables of marginal, joint and conditional probabilities for all the events, as these are estimated before performing any algorithm. These can be printed by using external heatmap functions.
+\begin{mybox}
+<<>>=
+marginal.prob = as.marginal.probs(model.capri, models='capri_bic')
+head(marginal.prob$capri_bic)
+joint.prob = as.joint.probs(model.capri, models='capri_bic')
+joint.prob$capri_bic[1:3, 1:3]
+conditional.prob = as.conditional.probs(model.capri, models='capri_bic')
+head(conditional.prob$capri_bic)
+@
+\end{mybox}
+
+
+With  can visualize also a table summarizing  statistics for each edge in the model. Function {\tt as.selective.advantage.relations} returns the  p-values for temporal priority, probability raising and hypergeometric testing.
+
+\begin{mybox}
+<<selective-advantage>>=
+as.selective.advantage.relations(model.capri)
+@
+\end{mybox}
+
+Finally we can visualize a summary of the parameters   used for the reconstruction, test if an object has a model or delete it.
+
+\begin{mybox}
+<<>>=
+as.parameters(model.capri)
+has.model(model.chowliu)
+dataset = delete.model(model.chowliu)
+@
+\end{mybox}
+
+
 %\paragraph{\large Bootstrapping data}{\ }\\
 %
 %Now, we perform non-parametric bootstrap as a further estimation of the confidence in the inferred results. 

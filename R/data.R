@@ -128,3 +128,33 @@ NULL
 #' @source data from http://www.nature.com/ng/journal/v45/n1/full/ng.2495.html
 #' @author Luca De Sano
 NULL
+
+#' @name crc_maf
+#' @title MAF example data
+#' @description This dataset contains an example of MAF input of a crc cohort of patients 
+#' @docType data
+#' @usage data(crc_maf)
+#' @format Manual Annotated Format
+#' @source data from http://www.nature.com/nature/journal/v487/n7407/full/nature11252.html
+#' @author Daniele Ramazzotti
+NULL
+
+#' @name crc_gistic
+#' @title GISTIC example data
+#' @description This dataset contains an example of GISTIC input of a crc cohort of patients 
+#' @docType data
+#' @usage data(crc_gistic)
+#' @format GISTIC score
+#' @source data from http://www.nature.com/nature/journal/v487/n7407/full/nature11252.html
+#' @author Daniele Ramazzotti
+NULL
+
+#' @name crc_plain
+#' @title Plain mutation dataset
+#' @description This dataset contains an example of plain input of a crc cohort of patients
+#' @docType data
+#' @usage data(crc_plain)
+#' @format plain data
+#' @source data from http://www.nature.com/nature/journal/v487/n7407/full/nature11252.html
+#' @author Daniele Ramazzotti
+NULL

@@ -1,5 +1,5 @@
 \name{NEWS}
-\title{News for Package \pkg{TRONCO}}
+\title{News for the package \pkg{TRONCO}}
 \encoding{UTF-8}
 
 \section{Changes in Version 2.3.0}{

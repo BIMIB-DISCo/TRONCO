@@ -26,3 +26,9 @@
 
 # Configuration file
 cfg.R
+
+*.log
+
+*.out
+
+*.toc
