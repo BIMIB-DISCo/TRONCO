@@ -92,12 +92,10 @@ as.events <- function(x, genes = NA, types = NA, keysToNames = FALSE) {
     ann = x$annotations[ , c('type', 'event'), drop = FALSE]
 
     if (!any(is.na(genes)))
-        ann =
-            ann[which(ann[, 'event', drop=FALSE] %in% genes), , drop = FALSE]
+        ann = ann[which(ann[, 'event', drop=FALSE] %in% genes), , drop = FALSE]
     
     if (!any(is.na(types)))
-        ann =
-            ann[which(ann[, 'type', drop = FALSE] %in% types), , drop = FALSE] 
+        ann = ann[which(ann[, 'type', drop = FALSE] %in% types), , drop = FALSE] 
 
     if (keysToNames) {
         ann = keysToNames(x, ann)
@@ -186,12 +184,13 @@ as.colors <- function(x) {
 as.gene <- function(x, genes, types = NA) {
     keys = as.events(x, genes = genes, types = types)
 
-    data =
-        data.frame(x$genotypes[, rownames(keys)],
-                   row.names = as.samples(x))
+    data = data.frame(x$genotypes[, rownames(keys)],
+                      row.names = as.samples(x))
     
-    colnames(data) =
-        apply(keys, 1, FUN = paste, collapse = ' ')
+    colnames(data) = apply(keys,
+                           1,
+                           FUN = paste,
+                           collapse = ' ')
 
     return(data)
 }
