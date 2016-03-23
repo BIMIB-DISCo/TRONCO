@@ -279,9 +279,9 @@ dataset = as.alterations(aCML)
 @
 \begin{verbatim}
 *** Aggregating events of type(s) {Ins/Del, Missense point, Nonsense Ins/Del, 
-	Nonsense point} in a unique event with label "Alteration".
+    Nonsense point} in a unique event with label "Alteration".
 Dropping event types Ins/Del, Missense point, Nonsense Ins/Del, Nonsense point 
-	for 23 genes.  
+    for 23 genes.  
 |======================================================================| 100%
 *** Binding events for 2 datasets.
 \end{verbatim}
@@ -392,7 +392,7 @@ Which we then visualize with an oncoprint
 \begin{mybox}
 <<onco-pathway, fig=TRUE, include=FALSE, width=6.5, height=2.5>>=
 oncoprint(pathway, title = 'Custom pathway',  font.row = 8, 
-	cellheight = 15, cellwidth = 4)
+    cellheight = 15, cellwidth = 4)
 @
 \end{mybox}
 
@@ -411,8 +411,8 @@ In TRONCO there is also a function which creates the pathway view and the corres
 pathway.visualization(aCML, 
     pathways=list(
         P1 = c('TET2', 'IRAK4'), 
-        P2=c('SETBP1', 'KIT')), 
-        aggregate.pathways=F)
+        P2 = c('SETBP1', 'KIT')), 
+        aggregate.pathways = FALSE)
 @
 \end{mybox}
 
@@ -431,8 +431,8 @@ If we had to visualize just the signature of the pathway, we could set  {\tt agg
 pathway.visualization(aCML, 
     pathways=list(
         P1 = c('TET2', 'IRAK4'), 
-        P2=c('SETBP1', 'KIT')), 
-        aggregate.pathways=T)
+        P2 = c('SETBP1', 'KIT')), 
+        aggregate.pathways = TRUE)
 @
 \end{mybox}
 
@@ -527,8 +527,8 @@ Function \texttt{events.selection}, instead, performs selection according to a f
 \begin{mybox}
 <<eventsselection,results=hide>>=
 dataset = events.selection(aCML,  filter.freq = .05, 
-	filter.in.names = c('ETH1','ETH2'), 
-	filter.out.names = 'SETBP1')
+    filter.in.names = c('ETH1','ETH2'), 
+    filter.out.names = 'SETBP1')
 @
 \begin{verbatim}
  *** Events selection: #events = 31, #types = 4 
@@ -553,11 +553,11 @@ An example visualization of the data before and after the selection process can 
 <<onco-ex-sel, fig=TRUE, include=FALSE, width=8, height=7.5>>=
 library(gridExtra)
 grid.arrange(
-	oncoprint(aCML, cellheight=6, cellwidth=4, gtable = T, 
-		silent = T, font.row = 6)$gtable,
-	oncoprint(dataset, cellheight=6, cellwidth=4, gtable = T, 
-		silent = T, font.row = 6)$gtable,	
-	ncol = 1	
+    oncoprint(aCML, cellheight=6, cellwidth=4, gtable = TRUE, 
+        silent = TRUE, font.row = 6)$gtable,
+    oncoprint(dataset, cellheight=6, cellwidth=4, gtable = TRUE, 
+        silent = TRUE, font.row = 6)$gtable,    
+    ncol = 1    
 )
 @
 \end{mybox}
@@ -624,9 +624,9 @@ To proceed further with the example we  create the \texttt{dataset} to be used f
 \begin{mybox}
 <<results=hide>>=
 aCML.clean = events.selection(aCML,
-	filter.in.names=c(as.genes(alterations), gene.hypotheses))
+    filter.in.names=c(as.genes(alterations), gene.hypotheses))
 aCML.clean = annotate.description(aCML.clean, 
-	'CAPRI - Bionformatics aCML data (selected events)')
+    'CAPRI - Bionformatics aCML data (selected events)')
 @
 \end{mybox}
 
@@ -949,15 +949,15 @@ We can plot a model by using function {\tt tronco.plot}. Here, we plot the aCML 
 \begin{mybox}
 <<capri-plot, fig=TRUE,include=FALSE>>=
 tronco.plot(model.capri, 
-	fontsize = 12, 
-	scale.nodes = 0.6, 
-	confidence = c('tp', 'pr', 'hg'), 
-	height.logic = 0.25, 
-	legend.cex = 0.5, 
-	pathways = list(priors = gene.hypotheses), 
-	label.edge.size = 8,
-	legend.pos='top'
-	)
+    fontsize = 12, 
+    scale.nodes = 0.6, 
+    confidence = c('tp', 'pr', 'hg'), 
+    height.logic = 0.25, 
+    legend.cex = 0.5, 
+    pathways = list(priors = gene.hypotheses), 
+    label.edge.size = 8,
+    legend.pos='top'
+    )
 @
 \end{mybox}
 

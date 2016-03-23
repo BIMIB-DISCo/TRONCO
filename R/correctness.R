@@ -40,7 +40,7 @@ is.compliant <- function(x,
     ## Check then if x has required fields.
     
     if (is.null(x$genotypes) || any(is.na(x$genotypes)))
-        stop(paste(err.fun, ': input \'x\' has no genotypes field.'))	
+        stop(paste(err.fun, ': input \'x\' has no genotypes field.'))   
     else if (!is.matrix(x$genotypes) && !is.data.frame(x$genotypes))
         stop(paste(err.fun, ': attribute genotypes in  \'x\' is not a matrix.'))
         
@@ -67,14 +67,14 @@ is.compliant <- function(x,
     if (stage == TRUE && (is.null(x$stages) || all(is.na(x$stages))))
         stop(paste(err.fun, ': input \'x\' has no stage field.'))
     else if (stage == TRUE && !is.matrix(x$stages) && !is.data.frame(x$stages))
-        stop(paste(err.fun, ': attribute stage in  \'x\' is not a matrix.'))	
+        stop(paste(err.fun, ': attribute stage in  \'x\' is not a matrix.'))    
 
     ## Annotations sould be present for all genotypes columns.
     
     if (nrow(x$annotations) != ncol(x$genotypes) ) 
-        stop(paste(err.fun, ': input \'x\' has less annotations than expected.'))			
+        stop(paste(err.fun, ': input \'x\' has less annotations than expected.'))           
     if (!all(colnames(x$genotypes) == rownames(x$annotations))) 
-        stop(paste(err.fun, ': input \'x\' has inconsistent annotations.'))			
+        stop(paste(err.fun, ': input \'x\' has inconsistent annotations.'))         
 
     ## Types should be defined for every annotation.
     
@@ -84,7 +84,7 @@ is.compliant <- function(x,
         message('[ERROR] Annotated event types:',
                 paste(unique(x$annotations[,1]), collapse = ', ', sep = ''))
         
-        stop(paste(err.fun, ': input \'x\' has less types than expected.'))			
+        stop(paste(err.fun, ': input \'x\' has less types than expected.'))         
     }
     
     if (!all(unique(x$annotations[,'type']) %in% rownames(x$types))) {
@@ -94,17 +94,17 @@ is.compliant <- function(x,
                    ' vs ',
                    paste(rownames(x$types), collapse=','),
                    ').', 
-                   sep = ''))				
+                   sep = ''))               
     }
 
     ## Stage should be defined for every samples.
     
     if (stage == TRUE && nrow(x$stages) != nrow(x$genotypes)) 
-        stop(paste(err.fun, ': input \'x\' has less stages than expected.'))			
+        stop(paste(err.fun, ': input \'x\' has less stages than expected.'))            
     if (stage == TRUE && !all(rownames(x$stages) == rownames(x$genotypes))) 
-        stop(paste(err.fun, ': input \'x\' has inconsistent stages.'))			
+        stop(paste(err.fun, ': input \'x\' has inconsistent stages.'))          
     
-    if (stage == TRUE)	colnames(x$stages) = c('stage')
+    if (stage == TRUE)  colnames(x$stages) = c('stage')
     
     dup = duplicated(x$annotations)
     if (any(dup)) {

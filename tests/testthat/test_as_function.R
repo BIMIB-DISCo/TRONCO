@@ -1,12 +1,3 @@
-data(maf)
-muts = import.MAF(maf)
-hypo = hypothesis.add(muts, 'test', OR('ABAT', 'ABCC3'))
-no_hypo = delete.hypothesis(hypo, 'test')
-data(gistic)
-gistic = import.GISTIC(gistic)
-gistic_model = tronco.caprese(gistic)
-
-
 context("AS functions test")
 
 test_that("as.genotypes returns a genotypes matrix", {
