@@ -167,14 +167,14 @@ tronco.capri <- function(data,
                          boot.seed = NULL, 
                          silent = FALSE ) {
 
-    ## Enforce data to be numeric
-    data = enforce.numeric(data)
-
     ## Check for the inputs to be correct.
     
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
     }
+    
+    ## Enforce data to be numeric
+    data = enforce.numeric(data)
     
     if (is.null(data$hypotheses)) {
         data$hypotheses = NA;
@@ -382,14 +382,14 @@ tronco.mst.edmonds <- function(data,
                                boot.seed = NULL, 
                                silent = FALSE ) {
 
-    ## Enforce data to be numeric
-    data = enforce.numeric(data)
-
-    ## Check for the inputs to be correct.
-    
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
     }
+
+    ## Enforce data to be numeric
+    data = enforce.numeric(data)
+    
+    ## Check for the inputs to be correct.
     
     if (is.null(data$hypotheses)) {
         data$hypotheses = NA;
@@ -606,15 +606,15 @@ tronco.mst.chowliu <- function(data,
                                boot.seed = NULL, 
                                silent = FALSE ) {
 
-    ## Enforce data to be numeric
-    data = enforce.numeric(data)
-
     ## Check for the inputs to be correct.
     
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
     }
     
+    ## Enforce data to be numeric
+    data = enforce.numeric(data)
+
     if (is.null(data$hypotheses)) {
         data$hypotheses = NA;
     }
@@ -819,14 +819,14 @@ tronco.mst.prim <- function(data,
                             boot.seed = NULL, 
                             silent = FALSE ) {
 
-    ## Enforce data to be numeric
-    data = enforce.numeric(data)
-
     ## Check for the inputs to be correct.
     
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
     }
+
+    ## Enforce data to be numeric
+    data = enforce.numeric(data)
     
     if (is.null(data$hypotheses)) {
         data$hypotheses = NA;
