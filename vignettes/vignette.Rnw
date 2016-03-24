@@ -1389,4 +1389,27 @@ tronco.plot(model.boot,
 \caption{aCML model reconstructed by CAPRI with  AIC/BIC as regolarizators and annotated with  non-parametric, as well as with entropy loss, prediction and posterior classification errors computed via cross-validation. Edge thickness is proportional to   the non-parametric  scores.}
 \end{figure*}
 
+
+\section{Import/export with other tools}
+
+We implemented the interface of TRONCO with other tools to support the {\bf Pipeline for Cancer Inference PiCnIc}, our attempt at devise an effective pipeline to extract ensemble-level cancer progression models from cross-sectional data (see \ref{sec:stuff}). 
+
+
+PiCnIc is versatile, modular and customizable and exploits state-of-the-art data processing and machine learning tools to: 
+\begin{enumerate}
+\item  identify tumor subtypes and then in each subtype;
+\item select (epi)genomic events driving the progression;
+\item identify groups of events that are likely to be observed as mutually exclusive;
+\item infer progression models from groups and such data, and annotate them with associated statistical confidence.
+\end{enumerate}
+
+The algorithms for cancer progression inference exploited by PicNiC are implemented within TRONCO, the other steps of the pipeline rely on dedicated tools (for clustering, drivers selection and exclusiviyt groups detection). The tools that PicNiC can exploit are of different nature, and we plan to interface them with TRONCO   as far as our case studies are developed.
+
+The current version of TRONCO supports input/output towards these tools:
+\begin{enumerate}
+\item \href{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3866081/}{Network Based Stratification (NBS)},  a method for stratification (clustering) of patients in a cancer cohort based on genome scale somatic mutations measurements and a gene interaction network. You can export a TRONCO object in the NBS input format with  function {\tt export.nbs.input}, clustering outputs can be handled with standard TRONCO functions.
+\item \href{http://www.ncbi.nlm.nih.gov/pubmed/25887147}{MUTEX}, a method for the identification of sets of mutually exclusive gene alterations in a given set of genomic profiles by scanning the groups of genes with a common downstream effect on the signaling network. You can export a TRONCO object in the MUTEX input format with  function {\tt export.mutex}, and output results can be imported with function {\tt import.mutex.groups}.
+\end{enumerate}
+
+
 \end{document}
