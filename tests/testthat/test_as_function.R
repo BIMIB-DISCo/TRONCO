@@ -132,7 +132,7 @@ test_that("as.pathway return compliant dataset", {
     path = as.pathway(muts,
                       pathway.name = 'test',
                       pathway.genes = 'APC',
-                      aggregate.pathway = TRUE)
+                      aggregate.pathway = FALSE)
     expect_silent(is.compliant(path))
     path = as.pathway(muts_stages,
                       pathway.name = 'test',
@@ -163,4 +163,7 @@ test_that("npatterns return the right amount of pattern", {
     expect_equal(length(duplicates(hypo)), 0)
 })
 
+test_that("view return output", {
+    expect_output(view(gistic_model_capri), regexp=NA)
+})
 

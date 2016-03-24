@@ -1602,56 +1602,48 @@ view <- function(x, view = 5) {
     if (has.model(x)) {
         cat('\n-- TRONCO Model(s): ', x$parameters$algorithm, '\n')
 
-        if (x$parameters$algorithm == 'CAPRI') {
+        if (as.parameters(x)$algorithm == 'CAPRI') {
             cat('Score optimization via ')
             if (x$parameters$command == 'hc') {
-                cat('Hill-Climbing with ')
+                cat('Hill-Climbing.\n')
             }
 
             if (x$parameters$command == 'tabu') {
-                cat('Tabu Search with ')
+                cat('Tabu Search.\n')
             }
+        }
+
+        if (as.parameters(x)$algorithm != 'CAPRESE') {
             
             cat(paste(toupper(x$parameters$regularization), sep = ', ', collapse = ', '),' regularizers.\n', sep = '')
-        
-            if ('bic' %in% x$parameters$regularization) {
-                cat('BIC: ')
-                cat('score', x$model$bic$score ,'|',
-                    'logLik', x$model$bic$logLik ,'|', 
-                    nrow(as.selective.advantage.relations(x)$bic), 'selective advantage relations.\n')
-            }
-          
-            if ('aic' %in% x$parameters$regularization) {
-                cat('AIC: ')
-                cat('score', x$model$aic$score ,'|',
-                    'logLik', x$model$aic$logLik ,'|', 
-                    nrow(as.selective.advantage.relations(x)$aic), 'selective advantage relations.\n')
+            models = as.models(x)
+            sel.adv.rel = as.selective.advantage.relations(x)
+
+
+            for (reg in as.parameters(x)$regularization) {
+                model = paste0(tolower(as.parameters(x)$algorithm), '_', reg)
+                cat(toupper(reg), ': ', sep = '')
+                score = get(model, models)$score
+                logLik = get(model, models)$logLik
+                row = nrow(get(model, sel.adv.rel))
+                cat('score', score, '|',
+                    'logLik', logLik, '|',
+                    row, 'selective advantage relations.\n')
+
             }
         }
       
         cat('Available confidence measures:\n')
-        cat('\tp-values: Temporal priority | Probability raising | Hypergeometric\n')
-
-        if (!(is.null(x$confidence) && is.na(x$confidence))) {
-            models = names(x$model)
-        }
-      
-        has.npb.bootstrap = is.null(x$bootstrap[[models[1]]]$npb)
-        has.pb.bootstrap = is.null(x$bootstrap[[models[1]]]$pb)
-        has.sb.bootstrap = is.null(x$bootstrap[[models[1]]]$sb)
+        cat('\tTemporal priority | Probability raising | Hypergeometric\n')
       
         if(!is.null(x$bootstrap)) {
-            cat('\tBootstrap scores: ')
-            if (!is.null(x$bootstrap[[models[1]]]$npb)) {
-                cat('Non-parametric | ')
-            }
-            if (!is.null(x$bootstrap[[models[1]]]$pb)) {
-                cat('Parametric | ')
-            }
-            if (!is.null(x$bootstrap[[models[1]]]$sb)) {
-                cat('Statistical')
-            }
+            cat('Bootstrap estimation available.\n')
         }
+
+        if(!is.null(x$kfold)) {
+            cat('Cross-validation assessment available.\n')
+        }
+
         cat('\n')
     }
 } 
