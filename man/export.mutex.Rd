@@ -29,8 +29,8 @@ Create an input file for MUTEX
 (ref: https://code.google.com/p/mutex/ )
 }
 \examples{
-data(gistic)
-dataset = import.GISTIC(gistic)
+data(crc_gistic)
+dataset = import.GISTIC(crc_gistic)
 export.mutex(dataset)
 
 }

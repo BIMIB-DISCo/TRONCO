@@ -13,8 +13,8 @@
 #' @title export,mutex
 #'
 #' @examples
-#' data(gistic)
-#' dataset = import.GISTIC(gistic)
+#' data(crc_gistic)
+#' dataset = import.GISTIC(crc_gistic)
 #' export.mutex(dataset)
 #'
 #' @param x A TRONCO compliant dataset.
