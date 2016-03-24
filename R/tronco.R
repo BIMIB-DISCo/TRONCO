@@ -960,7 +960,7 @@ tronco.mst.prim <- function(data,
     }
 
     if ("loglik" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'prim_no_loglik')
+        bayes.net = as.bnlearn.network(results, model = 'prim_loglik')
         score = logLik(bayes.net$net, data = bayes.net$data)
         logLik = score
         results$model$prim_loglik$score = score
