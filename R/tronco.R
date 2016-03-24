@@ -136,7 +136,7 @@ tronco.caprese <- function(data,
 #'
 #' @examples
 #' data(test_dataset)
-#' recon = tronco.capri(test_dataset, nboot = 10)
+#' recon = tronco.capri(test_dataset, nboot = 5)
 #'
 #' @title tronco capri
 #' @param data A TRONCO compliant dataset.
@@ -345,7 +345,7 @@ tronco.capri <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.edmonds(test_dataset_no_hypos, nboot = 10)
+#' recon = tronco.mst.edmonds(test_dataset_no_hypos, nboot = 5)
 #'
 #' @title tronco mst edmonds
 #' @param data A TRONCO compliant dataset.
@@ -566,7 +566,7 @@ tronco.mst.edmonds <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.chowliu(test_dataset_no_hypos, nboot = 10)
+#' recon = tronco.mst.chowliu(test_dataset_no_hypos, nboot = 5)
 #'
 #' @title tronco mst chow liu
 #' @param data A TRONCO compliant dataset.
@@ -781,7 +781,7 @@ tronco.mst.chowliu <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.prim(test_dataset_no_hypos, nboot = 10)
+#' recon = tronco.mst.prim(test_dataset_no_hypos, nboot = 5)
 #'
 #' @title tronco mst prim
 #' @param data A TRONCO compliant dataset.
@@ -1001,9 +1001,8 @@ tronco.mst.prim <- function(data,
 #' Bootstrap a reconstructed progression model
 #'
 #' @examples
-#' data(test_dataset)
-#' recon = tronco.capri(test_dataset)
-#' boot = tronco.bootstrap(recon, nboot = 5)
+#' data(test_model)
+#' boot = tronco.bootstrap(test_model, nboot = 5)
 #'
 #' @title tronco bootstrap
 #' @param reconstruction The output of tronco.capri or 

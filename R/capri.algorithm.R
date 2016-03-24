@@ -1265,10 +1265,11 @@ remove.cycles <- function(adj.matrix,
             
             curr.graph = graph.adjacency(expansion[[1]], mode = "directed")
 
-            is.path =
-                length(unlist(get.shortest.paths(curr.graph,
-                                                 curr.edge.j.exp,
-                                                 curr.edge.i.exp)$vpath));
+            is.path = suppressWarnings(get.shortest.paths(curr.graph,
+                                       curr.edge.j.exp,
+                                       curr.edge.i.exp)$vpath)
+
+            is.path = length(unlist(is.path))
 
             ## If there is a path between the two nodes, remove edge i --> j
             
@@ -1327,11 +1328,11 @@ verify.probability.raising.do.boot <- function(prima.facie.model.distributions,
 
                 ## pvalue for the probability raising condition for i --> j
 
-                second.pvalue.i.j =
+                second.pvalue.i.j = suppressWarnings(
                     wilcox.test(unlist(prima.facie.model.distributions[i, j]),
                                 unlist(prima.facie.null.distributions[i,j]),
                                 alternative = "greater",
-                                mu = 0)$p.value;
+                                mu = 0))$p.value;
                 if (is.na(second.pvalue.i.j)
                     || is.nan(second.pvalue.i.j)) {
 
@@ -1349,10 +1350,10 @@ verify.probability.raising.do.boot <- function(prima.facie.model.distributions,
 
                 ## pvalue for the probability raising condition for j --> i
 
-                second.pvalue.j.i =
+                second.pvalue.j.i = suppressWarnings(
                     wilcox.test(unlist(prima.facie.model.distributions[j, i]),
                                 unlist(prima.facie.null.distributions[j,i]),
-                                alternative = "greater", mu = 0)$p.value;
+                                alternative = "greater", mu = 0))$p.value;
                 if (is.na(second.pvalue.j.i)
                     || is.nan(second.pvalue.j.i)) {
 
@@ -1485,11 +1486,11 @@ verify.temporal.priority.do.boot <- function(marginal.probs.distributions,
                 ## i --> j is valid for temporal priority.
                 
                 ## Test i --> j
-                first.pvalue.i.j =
+                first.pvalue.i.j = suppressWarnings(
                     wilcox.test(unlist(marginal.probs.distributions[i, 1]),
                                 unlist(marginal.probs.distributions[j, 1]),
                                 alternative = "greater",
-                                mu = 0)$p.value;
+                                mu = 0))$p.value;
                 if (is.na(first.pvalue.i.j)
                     || is.nan(first.pvalue.i.j)) {
 
@@ -1501,11 +1502,11 @@ verify.temporal.priority.do.boot <- function(marginal.probs.distributions,
 
                 ## Test j --> i
                 
-                first.pvalue.j.i =
+                first.pvalue.j.i = suppressWarnings(
                     wilcox.test(unlist(marginal.probs.distributions[j, 1]),
                                 unlist(marginal.probs.distributions[i, 1]),
                                 alternative = "greater",
-                                mu = 0)$p.value;
+                                mu = 0))$p.value;
                 if (is.na(first.pvalue.j.i)
                     || is.nan(first.pvalue.j.i)) {
                     

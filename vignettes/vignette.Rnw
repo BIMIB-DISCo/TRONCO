@@ -23,11 +23,11 @@ BiocStyle::latex()
 
 \newtcolorbox{mybox}[1][]
 {
-  colframe = black!75!white,
-  colback  = blue!5!white,
-  fontupper=\fontsize{3mm}{3mm}\selectfont\bfseries\sffamily,
-  breakable,
-  #1
+    colframe = black!75!white,
+    colback  = blue!5!white,
+    fontupper=\fontsize{3mm}{3mm}\selectfont\bfseries\sffamily,
+    breakable,
+    #1
 }
 
 
@@ -240,9 +240,8 @@ It is also sometimes convenient -- especially when working with data collected f
 \begin{mybox}
 <<import.MAF, results=hide>>=
 dataset_maf = import.MAF(crc_maf, 
-	merge.mutation.types = FALSE, 
-	paste.to.Hugo_Symbol = c('MA.protein.change')
-	)
+    merge.mutation.types = FALSE, 
+    paste.to.Hugo_Symbol = c('MA.protein.change'))
 @
 \end{mybox}
 
@@ -292,12 +291,11 @@ TRONCO uses the R interface to cBio to query data from the portal. All type of d
 Here, we  show how to download lung cancer data somatic mutations for genes TP53, KRAS and PIK3CA,  from the lung cancer project run by TCGA, which is archived as  {\tt luad\_tcga\_pub} at cBio. If some of the parameters to {\tt cbio.query} are missing the function will become interactive by showing a list of possible data available at the portal.
 \begin{mybox}
 <<results=hide>>=
- data = cbio.query(
-	genes=c('TP53', 'KRAS', 'PIK3CA'), 
-	cbio.study = 'luad_tcga_pub',
-	cbio.dataset = 'luad_tcga_pub_cnaseq', 
-	cbio.profile = 'luad_tcga_pub_mutations'
-	)
+data = cbio.query(
+    genes=c('TP53', 'KRAS', 'PIK3CA'), 
+    cbio.study = 'luad_tcga_pub',
+    cbio.dataset = 'luad_tcga_pub_cnaseq', 
+    cbio.profile = 'luad_tcga_pub_mutations')
 @
 \begin{verbatim}
 *** CGDS plugin for Cbio query.
@@ -340,11 +338,6 @@ view(aCML)
 %\tcblower
 %ss
 \end{mybox}
-
-
-
-
-
 
 \subsection{Creating views with the ``as'' functions}
 
@@ -417,9 +410,9 @@ dataset = as.alterations(aCML)
 @
 \begin{verbatim}
 *** Aggregating events of type(s) {Ins/Del, Missense point, Nonsense Ins/Del, 
-	Nonsense point} in a unique event with label "Alteration".
+    Nonsense point} in a unique event with label "Alteration".
 Dropping event types Ins/Del, Missense point, Nonsense Ins/Del, Nonsense point 
-	for 23 genes.  
+    for 23 genes.  
 |======================================================================| 100%
 *** Binding events for 2 datasets.
 \end{verbatim}
@@ -465,12 +458,11 @@ But the sorting mechanism is bypassed if one wants to cluster samples or events,
 \begin{mybox}
 <<oncocl, fig=TRUE, include=FALSE, width=5, height=5>>=
 oncoprint(aCML, 
- 	legend = FALSE, 
- 	samples.cluster = TRUE, 
- 	gene.annot = list(one = list('NRAS', 'SETBP1'), two = list('EZH2', 'TET2')),
- 	gene.annot.color = 'Set2',
- 	genes.cluster = TRUE
- 	)
+    legend = FALSE, 
+    samples.cluster = TRUE, 
+    gene.annot = list(one = list('NRAS', 'SETBP1'), two = list('EZH2', 'TET2')),
+    gene.annot.color = 'Set2',
+    genes.cluster = TRUE)
 @
 \end{mybox}
 
@@ -539,137 +531,135 @@ oncoprint(dataset, group.samples = as.stages(dataset))
 
 
     
-    \subsection{Groups visualization (e.g., pathways)}
+\subsection{Groups visualization (e.g., pathways)}
+
+TRONCO provides functions to visualize groups of events, which in this case are called pathways -- though this could be any group that one would like to define. Aggregation happens with the same rational as the {\tt as.alterations} function, namely by merging the events in the group.
+
+We make an example of a pathway called {\tt MyPATHWAY} involving genes SETBP1, EZH2 and WT1; we want it to be colored in red, and we want to have the genotype of each event to be maintened in the dataset. We proceed as follows  (R's output is omitted).
+
+\begin{mybox}
+<<pathway, results=hide>>=
+pathway = as.pathway(aCML,
+    pathway.genes = c('SETBP1', 'EZH2', 'WT1'), 
+    pathway.name = 'MyPATHWAY',
+    pathway.color = 'red',
+    aggregate.pathway = FALSE)
+@
+\end{mybox}
     
-    TRONCO provides functions to visualize groups of events, which in this case are called pathways -- though this could be any group that one would like to define. Aggregation happens with the same rational as the {\tt as.alterations} function, namely by merging the events in the group.
-    
-    We make an example of a pathway called {\tt MyPATHWAY} involving genes SETBP1, EZH2 and WT1; we want it to be colored in red, and we want to have the genotype of each event to be maintened in the dataset. We proceed as follows  (R's output is omitted).
-    
-    \begin{mybox}
-    <<pathway, results=hide>>=
-    pathway = as.pathway(aCML,
-        pathway.genes = c('SETBP1', 'EZH2', 'WT1'), 
-        pathway.name = 'MyPATHWAY',
-        pathway.color = 'red',
-        aggregate.pathway = FALSE)
-    @
-    \end{mybox}
-    
-    Which we then visualize with an oncoprint
-    
-    \begin{mybox}
-    <<onco-pathway, fig=TRUE, include=FALSE, width=6.5, height=2>>=
-    oncoprint(pathway, title = 'Custom pathway',  font.row = 8, cellheight = 15, cellwidth = 4)
-    @
-    \end{mybox}
-    
-    \begin{figure*}[ht]
-    \begin{center}
-    \includegraphics[width=0.9\textwidth, page=2]{vignette-onco-pathway}
-    \end{center}
-    \vspace*{.05in}
-    \caption{\texttt{oncoprint} output of a custom pathway called {\tt MyPATHWAY} involving genes SETBP1, EZH2 and WT1; the genotype of each event is shown.}
-    \end{figure*}
-    
-    In TRONCO there is also a function which creates the pathway view and the corresponding oncoprint to  multiple pathways, when these are given as a list. We make here a simple example of two custom pathways.
-    
-    \begin{mybox}
-    <<onco-pathway-viz, fig=TRUE, include=FALSE, width=6.5, height=1.8, results=hide>>=
-    pathway.visualization(aCML, 
-    	pathways=list(P1 = c('TET2', 'IRAK4'),  P2=c('SETBP1', 'KIT')),        
-    	aggregate.pathways=F,
-    	font.row = 8
-    	)
-    @
-    \end{mybox}
-    
+Which we then visualize with an oncoprint
+
+\begin{mybox}
+<<onco-pathway, fig=TRUE, include=FALSE, width=6.5, height=2>>=
+oncoprint(pathway, title = 'Custom pathway',  font.row = 8, cellheight = 15, cellwidth = 4)
+@
+\end{mybox}
+
+\begin{figure*}[ht]
+\begin{center}
+\includegraphics[width=0.9\textwidth, page=2]{vignette-onco-pathway}
+\end{center}
+\vspace*{.05in}
+\caption{\texttt{oncoprint} output of a custom pathway called {\tt MyPATHWAY} involving genes SETBP1, EZH2 and WT1; the genotype of each event is shown.}
+\end{figure*}
+
+In TRONCO there is also a function which creates the pathway view and the corresponding oncoprint to  multiple pathways, when these are given as a list. We make here a simple example of two custom pathways.
+
+\begin{mybox}
+<<onco-pathway-viz, fig=TRUE, include=FALSE, width=6.5, height=1.8, results=hide>>=
+pathway.visualization(aCML, 
+    pathways=list(P1 = c('TET2', 'IRAK4'),  P2=c('SETBP1', 'KIT')),        
+    aggregate.pathways=FALSE,
+    font.row = 8)
+@
+\end{mybox}
     
     
-    If we had to visualize just the signature of the pathway, we could set  {\tt aggregate.pathways=T}.
     
-    \begin{mybox}
-    <<onco-pathway-viz2, fig=TRUE, include=FALSE, width=6.5, height=1, results=hide>>=
-    pathway.visualization(aCML, 
-    	pathways=list(P1 = c('TET2', 'IRAK4'),  P2=c('SETBP1', 'KIT')),
-    	aggregate.pathways=T,
-    	font.row = 8
-    	)
-    @
-    \end{mybox}
+If we had to visualize just the signature of the pathway, we could set  {\tt aggregate.pathways=T}.
+
+\begin{mybox}
+<<onco-pathway-viz2, fig=TRUE, include=FALSE, width=6.5, height=1, results=hide>>=
+pathway.visualization(aCML, 
+    pathways=list(P1 = c('TET2', 'IRAK4'),  P2=c('SETBP1', 'KIT')),
+    aggregate.pathways = TRUE,
+    font.row = 8)
+@
+\end{mybox}
     
-    \begin{figure*}[ht]
-    \begin{center}
-    \includegraphics[width=0.9\textwidth, page=2]{vignette-onco-pathway-viz}
-    \includegraphics[width=0.9\textwidth, page=2]{vignette-onco-pathway-viz2}
-    \end{center}
-    \vspace*{.05in}
-    \caption{\texttt{oncoprint} output of a custom pair of pathways, with events shown in top and hidden in bottom.}
-    \end{figure*}
+\begin{figure*}[ht]
+\begin{center}
+\includegraphics[width=0.9\textwidth, page=2]{vignette-onco-pathway-viz}
+\includegraphics[width=0.9\textwidth, page=2]{vignette-onco-pathway-viz2}
+\end{center}
+\vspace*{.05in}
+\caption{\texttt{oncoprint} output of a custom pair of pathways, with events shown in top and hidden in bottom.}
+\end{figure*}
     
     
-    \section{Data manipulation} \label{sec:datamanip}
+\section{Data manipulation} \label{sec:datamanip}
+
+All examples in this section will be done with the the aCML dataset as reference.
+
+\subsection{Modifying events and samples}
+
+TRONCO  provides functions for renaming the events that were included in a dataset, or the type associated to a set of events (e.g., a ``Mutation'' could be renamed to a ``Missense Mutation'').
+
+\begin{mybox}
+<<rename>>=
+dataset = rename.gene(aCML, 'TET2', 'new name')
+dataset = rename.type(dataset, 'Ins/Del', 'new type')
+as.events(dataset, type = 'new type')
+@
+\end{mybox}
+
+and return a modified TRONCO object. More complex operations are also possible. For instance, two events with the same signature -- i.e., appearing in the same samples -- can be joined to a new event (see also Data Consolidation in Model Inference) with the same signature and a new name.
+
+\begin{mybox}
+<<join1>>=
+dataset = join.events(aCML, 
+    'gene 4',
+    'gene 88',
+    new.event='test',
+    new.type='banana',
+    event.color='yellow')
+@
+\end{mybox}
     
-    All examples in this section will be done with the the aCML dataset as reference.
+where in this case we also created a new event type, with its own color.
+
+In a similar way we can decide to join all the events of two distinct types, in this case if a gene $x$ has signatures for both type of events, he will get a unique signature with an alteration present if it is either of the second {\em or} the second type 
+\begin{mybox}
+<<join2, results=hide>>=
+dataset = join.types(dataset, 'Nonsense point', 'Nonsense Ins/Del')
+@
+\begin{verbatim}
+*** Aggregating events of type(s) {Nonsense point, Nonsense Ins/Del}
+in a unique event with label "new.type".
+Dropping event types Nonsense point, Nonsense Ins/Del for 6 genes.
+|======================================================================| 100%
+*** Binding events for 2 datasets.
+\end{verbatim}
+<<join3>>=
+as.types(dataset)
+@
+\end{mybox}
+
+TRONCO also provides  functions for deleting specific events, samples or types.
+
+\begin{mybox}
+<<delete>>=
+dataset = delete.gene(aCML, gene = 'TET2')
+dataset = delete.event(dataset, gene = 'ASXL1', type = 'Ins/Del')
+dataset = delete.samples(dataset, samples = c('patient 5', 'patient 6'))
+dataset = delete.type(dataset, type = 'Missense point')
+view(dataset)
+@
+\end{mybox}
     
-    \subsection{Modifying events and samples}
-    
-    TRONCO  provides functions for renaming the events that were included in a dataset, or the type associated to a set of events (e.g., a ``Mutation'' could be renamed to a ``Missense Mutation'').
-    
-    \begin{mybox}
-    <<rename>>=
-    dataset = rename.gene(aCML, 'TET2', 'new name')
-    dataset = rename.type(dataset, 'Ins/Del', 'new type')
-    as.events(dataset, type = 'new type')
-    @
-    \end{mybox}
-    
-    and return a modified TRONCO object. More complex operations are also possible. For instance, two events with the same signature -- i.e., appearing in the same samples -- can be joined to a new event (see also Data Consolidation in Model Inference) with the same signature and a new name.
-    
-    \begin{mybox}
-    <<join1>>=
-    dataset = join.events(aCML, 
-        'gene 4',
-        'gene 88',
-        new.event='test',
-        new.type='banana',
-        event.color='yellow')
-    @
-    \end{mybox}
-    
-    where in this case we also created a new event type, with its own color.
-    
-    In a similar way we can decide to join all the events of two distinct types, in this case if a gene $x$ has signatures for both type of events, he will get a unique signature with an alteration present if it is either of the second {\em or} the second type 
-    \begin{mybox}
-    <<join2, results=hide>>=
-    dataset = join.types(dataset, 'Nonsense point', 'Nonsense Ins/Del')
-    @
-    \begin{verbatim}
-    *** Aggregating events of type(s) {Nonsense point, Nonsense Ins/Del}
-    in a unique event with label "new.type".
-    Dropping event types Nonsense point, Nonsense Ins/Del for 6 genes.
-    |======================================================================| 100%
-    *** Binding events for 2 datasets.
-    \end{verbatim}
-    <<join3>>=
-    as.types(dataset)
-    @
-    \end{mybox}
-    
-    TRONCO also provides  functions for deleting specific events, samples or types.
-    
-    \begin{mybox}
-    <<delete>>=
-    dataset = delete.gene(aCML, gene = 'TET2')
-    dataset = delete.event(dataset, gene = 'ASXL1', type = 'Ins/Del')
-    dataset = delete.samples(dataset, samples = c('patient 5', 'patient 6'))
-    dataset = delete.type(dataset, type = 'Missense point')
-    view(dataset)
-    @
-    \end{mybox}
-    
-    \subsection{Modifying patterns}
-    
-    TRONCO  provides functions to edit patterns,  pretty much as for any other type of events. Patterns however have a special denotation and are supported only by CAPRI algorithm -- see Model Reconstruction with CAPRI to see a practical application of that.
+\subsection{Modifying patterns}
+
+TRONCO  provides functions to edit patterns,  pretty much as for any other type of events. Patterns however have a special denotation and are supported only by CAPRI algorithm -- see Model Reconstruction with CAPRI to see a practical application of that.
 
 
 \subsection{Subsetting a dataset}
@@ -688,8 +678,8 @@ Function \texttt{events.selection}, instead, performs selection according to a f
 \begin{mybox}
 <<eventsselection,results=hide>>=
 dataset = events.selection(aCML,  filter.freq = .05, 
-	filter.in.names = c('EZH1','EZH2'), 
-	filter.out.names = 'SETBP1')
+    filter.in.names = c('EZH1','EZH2'), 
+    filter.out.names = 'SETBP1')
 @
 \begin{verbatim}
  *** Events selection: #events = 31, #types = 4 
@@ -714,11 +704,12 @@ An example visualization of the data before and after the selection process can 
 <<onco-ex-sel, fig=TRUE, include=FALSE, width=7, height=5.5, results=hide>>=
 library(gridExtra)
 grid.arrange(
-	oncoprint(as.alterations(aCML, new.color = 'brown3'), 
-		cellheight=6, cellwidth=4, gtable = T, silent = T, font.row = 6)$gtable,
-	oncoprint(dataset, cellheight=6, cellwidth=4, gtable = T, silent = T, font.row = 6)$gtable,	
-	ncol = 1	
-)
+    oncoprint(as.alterations(aCML, new.color = 'brown3'), 
+        cellheight = 6, cellwidth = 4, gtable = TRUE,
+        silent = TRUE, font.row = 6)$gtable,
+    oncoprint(dataset, cellheight = 6, cellwidth = 4,
+        gtable = TRUE, silent = TRUE, font.row = 6)$gtable, 
+    ncol = 1)
 @
 \end{mybox}
 
@@ -771,9 +762,9 @@ To proceed further with the example we  create the \texttt{dataset} to be used f
 <<results=hide>>=
 gene.hypotheses = c('KRAS', 'NRAS', 'IDH1', 'IDH2', 'TET2', 'SF3B1', 'ASXL1')
 aCML.clean = events.selection(aCML,
-	filter.in.names=c(as.genes(alterations), gene.hypotheses))
+    filter.in.names=c(as.genes(alterations), gene.hypotheses))
 aCML.clean = annotate.description(aCML.clean, 
-	'CAPRI - Bionformatics aCML data (selected events)')
+    'CAPRI - Bionformatics aCML data (selected events)')
 @
 \end{mybox}
 
@@ -1039,7 +1030,7 @@ We run the inference of the model by CAPRI algorithm with its default parameter:
 
 \begin{mybox}
 <<>>=
-model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot=1)
+model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot = 1)
 model.capri = annotate.description(model.capri, 'CAPRI - aCML')
 @
 \end{mybox}
@@ -1123,15 +1114,15 @@ We can plot a model by using function {\tt tronco.plot}. Here, we plot the aCML 
 \begin{mybox}
 <<capri-plot, fig=TRUE,include=FALSE,width=4,height=4>>=
 tronco.plot(model.capri, 
-	fontsize = 12, 
-	scale.nodes = 0.6, 
-	confidence = c('tp', 'pr', 'hg'), 
-	height.logic = 0.25, 
-	legend.cex = 0.35, 
-	pathways = list(priors = gene.hypotheses), 
-	label.edge.size = 10,
-	legend.pos='top'
-	)
+    fontsize = 12, 
+    scale.nodes = 0.6, 
+    confidence = c('tp', 'pr', 'hg'), 
+    height.logic = 0.25, 
+    legend.cex = 0.35, 
+    pathways = list(priors = gene.hypotheses), 
+    label.edge.size = 10,
+    legend.pos='top'
+    )
 @
 \end{mybox}
 
@@ -1148,11 +1139,11 @@ We can also make a multiplot with this function,  which in this case we do by sh
 
 \begin{mybox}
 <<mst-plot, fig=TRUE,include=FALSE,results=hide,width=7,height=7>>=
-par(mfrow=c(2,2))
-tronco.plot(model.caprese, fontsize = 25, scale.nodes = 0.6, legend = F)
-tronco.plot(model.edmonds, fontsize = 25, scale.nodes = 0.6, legend = F)
+par(mfrow = c(2,2))
+tronco.plot(model.caprese, fontsize = 25, scale.nodes = 0.6, legend = FALSE)
+tronco.plot(model.edmonds, fontsize = 25, scale.nodes = 0.6, legend = FALSE)
 tronco.plot(model.chowliu, fontsize = 25, scale.nodes = 0.6, legend.cex = .7)
-tronco.plot(model.prim, fontsize = 25, scale.nodes = 0.6, legend = F)
+tronco.plot(model.prim, fontsize = 25, scale.nodes = 0.6, legend = FALSE)
 @
 \end{mybox}
 
@@ -1242,8 +1233,8 @@ Parameter {\tt nboot} controls the number of bootstrap iterations.
 
 \begin{mybox}
 <<>>=
-model.boot = tronco.bootstrap(model.capri, nboot=1)
-model.boot = tronco.bootstrap(model.boot, nboot=1, type = 'statistical')
+model.boot = tronco.bootstrap(model.capri, nboot = 1)
+model.boot = tronco.bootstrap(model.boot, nboot = 1, type = 'statistical')
 @
 \end{mybox}
 
@@ -1252,15 +1243,14 @@ Bootstrap scores can be annotated to the {\tt tronco.plot} output by setting the
 \begin{mybox}
 <<figplotboot, fig=TRUE,include=FALSE,width=4,height=4>>=
 tronco.plot(model.boot, 
-	fontsize = 12, 
-	scale.nodes = .6,   
-	confidence=c('sb', 'npb'), 
-	height.logic = 0.25, 
-	legend.cex = .35, 
-    	pathways = list(priors= gene.hypotheses), 
-	label.edge.size=10, 
-	legend.pos = 'top'
-	)
+    fontsize = 12, 
+    scale.nodes = .6,   
+    confidence=c('sb', 'npb'), 
+    height.logic = 0.25, 
+    legend.cex = .35, 
+        pathways = list(priors= gene.hypotheses), 
+    label.edge.size=10, 
+    legend.pos = 'top')
 @
 \end{mybox}
 
@@ -1293,7 +1283,7 @@ pheatmap(keysToNames(model.boot, as.confidence(model.boot, conf = 'sb')$sb$capri
            main =  'Statistical bootstrap scores for AIC model',
            fontsize_row = 6,
            fontsize_col = 6,
-           display_numbers = T,
+           display_numbers = TRUE,
            number_format = "%d"
            )
 @
@@ -1322,7 +1312,7 @@ By default, a 10 repetitions from  10-fold cross-validation experiment are perfo
  
 \begin{mybox}
 <<kfold>>=
-model.boot = tronco.kfold.eloss(model.boot,)
+model.boot = tronco.kfold.eloss(model.boot)
 model.boot = tronco.kfold.prederr(model.boot)
 model.boot = tronco.kfold.posterr(model.boot)
 @
@@ -1342,21 +1332,17 @@ Notice that these can be combined to create a nice table with all these statisti
 \begin{mybox}
 <<as-kfold>>=
 tabular = function(obj, M){
-  tab = Reduce(
-    function(...) merge(..., all = T), 
-      list(
-      as.selective.advantage.relations(obj, models = M),
-      as.bootstrap.scores(obj, models = M),
-      as.kfold.prederr(obj, models = M),
-      as.kfold.posterr(obj,models = M)
-    )
-  )
+    tab = Reduce(
+        function(...) merge(..., all = TRUE), 
+            list(as.selective.advantage.relations(obj, models = M),
+                as.bootstrap.scores(obj, models = M),
+                as.kfold.prederr(obj, models = M),
+                as.kfold.posterr(obj,models = M)))
   
-   # merge reverses first with second column
-  tab = tab[, c(2,1,3:ncol(tab))]
-  tab = tab[order(tab[, paste(M, '.NONPAR.BOOT', sep='')], na.last = TRUE, decreasing = TRUE), ]
-  
-  return(tab)
+    # merge reverses first with second column
+    tab = tab[, c(2,1,3:ncol(tab))]
+    tab = tab[order(tab[, paste(M, '.NONPAR.BOOT', sep='')], na.last = TRUE, decreasing = TRUE), ]
+    return(tab)
 }
 
 head(tabular(model.boot, 'capri_bic'))
@@ -1369,15 +1355,14 @@ We finally show the plot of the model with the confidences by cross-validation.
 \begin{mybox}
 <<plot-conf, fig=TRUE,include=FALSE,width=4,height=4>>=
 tronco.plot(model.boot, 
-	fontsize = 12, 
-	scale.nodes = .6, 
-	confidence=c('npb', 'eloss', 'prederr', 'posterr'), 
-	height.logic = 0.25, 
-	legend.cex = .35, 
-	pathways = list(priors= gene.hypotheses), 
-	label.edge.size=10,
-	legend.pos = 'top'
-	)
+    fontsize = 12, 
+    scale.nodes = .6, 
+    confidence=c('npb', 'eloss', 'prederr', 'posterr'), 
+    height.logic = 0.25, 
+    legend.cex = .35, 
+    pathways = list(priors= gene.hypotheses), 
+    label.edge.size=10,
+    legend.pos = 'top')
 @
 \end{mybox}
 
