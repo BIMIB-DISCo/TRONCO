@@ -1290,7 +1290,7 @@ pheatmap(keysToNames(model.boot, as.confidence(model.boot, conf = 'sb')$sb$capri
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.9\textwidth, page=2]{vignette-hboot}
+\includegraphics[width=0.9\textwidth, page=2]{vignette-hboot} 
 \end{center}
 \vspace*{.05in}
 \caption{Example visualization with the {\tt pheatmap} package of the bootstrap scores for a model.}
