@@ -3,8 +3,9 @@ data(maf)
 muts = import.MAF(maf)
 hypo = hypothesis.add(muts, 'test', OR('ABAT', 'ABCC3'))
 no_hypo = delete.hypothesis(hypo, 'test')
-data(gistic)
-gistic = import.GISTIC(gistic)
+data(crc_gistic)
+gistic_err = import.GISTIC(crc_gistic)
+gistic = delete.gene(gistic_err, 'APC')
 gistic_model = tronco.caprese(gistic)
 gistic_model_capri = tronco.capri(gistic, nboot = 2)
 
@@ -14,19 +15,22 @@ names(stages$stage) = as.samples(muts)
 stages = as.data.frame(stages)
 muts_stages = annotate.stages(muts, stages=stages)
 
-context("AS functions test")
+context("as.genotypes")
 
 test_that("as.genotypes returns a genotypes matrix", {
-    data(as.genotypes.test)
-    expect_equal(as.genotypes(muts), as.genotypes.test)
+    expect_equal(length(as.genotypes(muts)), 39)
     expect_equal(as.genotypes(NULL), NULL)
 })
+
+context("as.samples")
 
 test_that("as.samples returns a list of samples", {
     expect_equal(as.samples(muts), 
                  unique(as.character(maf$Tumor_Sample_Barcode)))
     expect_equal(as.samples(NULL), NULL)
 })
+
+context("as.genes")
 
 test_that("as.genes returns a list of samples", {
     expect_equal(as.genes(muts), unique(as.character(maf$Hugo_Symbol)))
@@ -36,26 +40,32 @@ test_that("as.genes returns a list of samples", {
     expect_equal(length(as.genes(hypo)), 13)
 })
 
+context("as.events")
+
 test_that("as.events returns a list of samples", {
-    data(as.events.test)
-    expect_equal(as.events(muts), as.events.test)
+    expect_equal(length(as.events(muts)), 26)
     expect_equal(length(as.events(hypo, types = 'Mutation')), 26)
     expect_equal(as.events(hypo, keysToNames = TRUE)[1],
                  "Mutation A2BP1")
     expect_equal(as.events(NULL), NULL)
 })
 
+context("as.stages")
+
 test_that("as.stages returns a list of stages", {
-    data(as.stages.test)
-    expect_equal(as.stages(muts_stages), as.stages.test)
+    expect_equal(length(as.stages(muts_stages)), 1)
     expect_equal(as.stages(muts), NA)
     expect_equal(as.stages(NULL), NA)
 })
+
+context("as.types")
 
 test_that("as.types returns a list of types", {
     expect_equal(as.types(muts), 'Mutation')
     expect_equal(as.types(NULL), NULL)
 })
+
+context("as.colors")
 
 test_that("as.colors returns a list of types", {
     areColors <- function(x) {
@@ -68,10 +78,13 @@ test_that("as.colors returns a list of types", {
     expect_equal(as.colors(NULL), NULL)
 })
 
+context("as.gene")
+
 test_that("as.gene returns a list of types", {
     expect_equal(as.gene(muts, genes='A2BP1')[1,1], 1)
 })
 
+context("as.alteration")
 
 test_that("as.alteration returns a compliant dataset", {
     expect_equal(unique(as.alterations(gistic)$annotations[,'type']),
@@ -80,11 +93,15 @@ test_that("as.alteration returns a compliant dataset", {
     expect_error(as.alterations(gistic_model))
 })
 
+context("as.patterns")
+
 test_that("as.patterns return a list of patterns", {
     expect_null(as.patterns(muts))
     expect_equal(as.patterns(hypo),
                  "test")
 })
+
+context("as.hypotheses")
 
 test_that("as.hypotheses return a list of hypotheses", {
     expect_null(as.hypotheses(gistic))
@@ -95,34 +112,48 @@ test_that("as.hypotheses return a list of hypotheses", {
     expect_error(as.hypotheses(hypo, effect = 'X'))
 })
 
+context("as.events.in.sample")
+
 test_that("as.events.in.patterns return the right amount of genes", {
     expect_equal(length(as.events.in.patterns(hypo)), 4)
     expect_equal(length(as.events.in.patterns(hypo, pattern = 'test')), 4)
     expect_error(as.events.in.patterns(hypo, pattern = 'X'))
 })
 
+context("as.genes.in.patterns")
+
 test_that("as.genes.in.patterns return the right amount of genes", {
     expect_equal(length(as.genes.in.patterns(hypo)), 2)
 })
+
+context("as.types.in.patterns")
 
 test_that("as.types.in.patterns return the right amount of genes", {
     expect_equal(length(as.types.in.patterns(hypo)), 1)
 })
 
+context("as.events.in.sample")
+
 test_that("as.events.in.sample return the right amount of genes", {
     expect_equal(length(as.events.in.sample(muts, as.samples(muts)[1])), 8)
 })
+
+context("as.models")
 
 test_that("as.models return a model", {
     expect_equal(length(as.models(gistic_model)), 1)
     expect_error(as.models(gistic_model, models = 'X'))
 })
 
+context("as.description")
+
 test_that("as.description return a description", {
     expect_equal(as.description(hypo), "")
     desc = annotate.description(hypo, 'desc')
     expect_equal(as.description(desc), "desc")
 })
+
+context("as.pathway")
 
 test_that("as.pathway return compliant dataset", {
     path = as.pathway(muts,
@@ -140,6 +171,8 @@ test_that("as.pathway return compliant dataset", {
     expect_silent(is.compliant(path))
 })
 
+context("as.adj.matrix")
+
 test_that("as.adj.matrix return a matrix", {
     expect_equal(length(as.adj.matrix(gistic_model_capri, 
                                       type = 'fit')), 2)
@@ -151,17 +184,25 @@ test_that("as.adj.matrix return a matrix", {
                                models = 'X'))
 })
 
+context("as.duplicates")
+
 test_that("as.duplicates return false", {
     expect_false(has.duplicates(hypo))
 })
+
+context("duplicates")
 
 test_that("duplicates return 0", {
     expect_equal(length(duplicates(hypo)), 0)
 })
 
+context("npatterns")
+
 test_that("npatterns return the right amount of pattern", {
     expect_equal(length(duplicates(hypo)), 0)
 })
+
+context("view")
 
 test_that("view return output", {
     expect_output(view(gistic_model_capri), regexp=NA)

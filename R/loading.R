@@ -106,10 +106,7 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 #'  Loss" (-1), "Low-level Gain" (+1), "High-level Gain" (+2).
 #'
 #' @examples
-#' data(gistic)
-#' gistic = import.GISTIC(gistic)
-#' gistic = annotate.description(gistic, 'Example GISTIC')
-#' oncoprint(gistic)
+#' gistic = import.GISTIC(crc_gistic)
 #' 
 #' @title import.GISTIC
 #' @param x Either a dataframe or a filename

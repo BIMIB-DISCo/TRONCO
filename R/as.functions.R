@@ -1597,7 +1597,6 @@ view <- function(x, view = 5) {
     cat(paste(to.show, collapse = '\n'))
 
     cat(paste('\nGenotypes (', view, ' shown):\n', sep = ''))
-    print(head(x$genotypes[,1:view, drop = FALSE]))
 
     if (has.model(x)) {
         cat('\n-- TRONCO Model(s): ', x$parameters$algorithm, '\n')

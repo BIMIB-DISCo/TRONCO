@@ -26,10 +26,7 @@ one row for each gene, a column Hugo_Symbol with every gene name and a column En
  Loss" (-1), "Low-level Gain" (+1), "High-level Gain" (+2).
 }
 \examples{
-data(gistic)
-gistic = import.GISTIC(gistic)
-gistic = annotate.description(gistic, 'Example GISTIC')
-oncoprint(gistic)
+gistic = import.GISTIC(crc_gistic)
 
 }
 

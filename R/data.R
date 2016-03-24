@@ -19,52 +19,12 @@
 #' @author Luca De Sano
 NULL
 
-#' @name gistic
-#' @title GISTIC example data
-#' @description This dataset contains a standard GISTIC input for TRONCO 
-#' @docType data
-#' @usage data(gistic)
-#' @format GISTIC score
-#' @source fake data
-#' @author Luca De Sano
-NULL
-
 #' @name muts
 #' @title Simple mutation dataset
 #' @description A simple mutation dataset without hypotheses
 #' @docType data
 #' @usage data(muts)
 #' @format TRONCO compliant dataset
-#' @source fake data
-#' @author Luca De Sano
-NULL
-
-#' @name as.genotypes.test
-#' @title as genotypes matrix
-#' @description This data set list ...
-#' @docType data
-#' @usage data(as.genotypes.test)
-#' @format matrix
-#' @source da mettere
-#' @author Luca De Sano
-NULL
-
-#' @name as.events.test
-#' @title as events matrix
-#' @description This data set list ...
-#' @docType data
-#' @usage data(as.events.test)
-#' @format matrix
-#' @source fake data
-#' @author Luca De Sano
-NULL
-
-#' @name as.stages.test
-#' @title as stages matrix
-#' @description This data set list ...
-#' @docType data
-#' @usage data(as.stages.test)
-#' @format matrix
 #' @source fake data
 #' @author Luca De Sano
 NULL
