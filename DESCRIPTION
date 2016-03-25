@@ -42,23 +42,20 @@ Suggests:
 Name: 
     An R package for the inference of cancer progression models from heterogeneous genomic data
 Description:
-    TRONCO is an R package which collects algorithms to infer progression models from 
-    Bernoulli 0/1 profiles of genomic alterations across a tumor sample. 
-    Such profiles are usually visualized as a binary input matrix where each row 
-    represents a patient’s sample (e.g., the result of a sequenced tumor biopsy), and 
-    each column an event relevant to the progression (a certain type of somatic mutation, 
-    a focal or higher-level chromosomal copy number alteration, etc.); a 0/1 value models 
-    the absence/presence of that alteration in the sample. 
-    In this version of TRONCO such profiles can be readily imported by boolean matrices 
-    and MAF or GISTIC files. The package provides various functions to editing, visualize 
-    and subset such data, as well as functions to query the cBioPortal for cancer genomics. 
-    In the current version, TRONCO provides parallel implementations of various algorithms 
-    for the inference of cancer progression models such as the CAPRESE 
-    [PLoS ONE 9(12): e115570] and CAPRI [Bioinformatics, doi:10.1093/bioinformatics/btv296] 
-    algorithms to infer progression models arranged as trees or general direct acyclic 
-    graphs. Bootstrap procedures to assess the non-prametric and statistical confidence 
-    of the inferred models are also provided. Furthermore, procedures based on 
-    cross-validation to assess the goodness-of-data are implemented. 
+    The TRONCO (TRanslational ONCOlogy) R package collects algorithms to infer
+    progression models via the approach of Suppes-Bayes Causal Network, both 
+    from an ensemble of tumors (cross-sectional samples) and within an individual 
+    patient (multi-region or single-cell samples). The package provides parallel 
+    implementation of algorithms that process binary matrices where each row 
+    represents a tumor sample and each column a single-nucleotide or a structural 
+    variant driving the  progression; a 0/1 value models the absence/presence of 
+    that alteration in the sample. The tool can import data from plain, MAF or 
+    GISTIC format files, and can fetch it from the cBioPortal for cancer genomics. 
+    Functions for  data manipulation and visualization are provided, as well as 
+    functions to import/export such data to other bioinformatics  tools for, e.g, 
+    clustering or detection of mutually exclusive alterations. Inferred models can be 
+    visualized and tested for their confidence via bootstrap and cross-validation.
+    TRONCO is used for  the implementation of the Pipeline for Cancer Inference.
 Encoding: UTF-8
 LazyData: TRUE
 License: file LICENSE
