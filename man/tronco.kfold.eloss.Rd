@@ -4,7 +4,8 @@
 \alias{tronco.kfold.eloss}
 \title{tronco.kfold.eloss}
 \usage{
-tronco.kfold.eloss(x, models = names(as.models(x)), runs = 10, k = 10)
+tronco.kfold.eloss(x, models = names(as.models(x)), runs = 10, k = 10,
+  silent = FALSE)
 }
 \arguments{
 \item{x}{A reconstructed model (the output of tronco.capri or tronco.caprese)}
@@ -14,6 +15,8 @@ tronco.kfold.eloss(x, models = names(as.models(x)), runs = 10, k = 10)
 \item{runs}{a positive integer number, the number of times cross-validation will be run}
 
 \item{k}{a positive integer number, the number of groups into which the data will be split}
+
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \description{
 Perform a k-fold cross-validation using the function bn.cv
@@ -21,7 +24,7 @@ to estimate the entropy loss.
 }
 \examples{
 data(test_model)
-tronco.kfold.eloss(test_model)
+tronco.kfold.eloss(test_model, k = 2, runs = 2)
 
 }
 

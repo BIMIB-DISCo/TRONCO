@@ -674,10 +674,12 @@ intersect.datasets <- function(x,y, intersect.genomes = TRUE) {
 #' @title ebind
 #'
 #' @param ... the input datasets
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO complian dataset.
 #' @export ebind
 #' 
-ebind <- function(...) {
+ebind <- function(...,
+                  silent = FALSE) {
     
     ## Merge two  datasets at a time.
     events.pairwise.bind <- function(x, y) {
@@ -733,7 +735,9 @@ ebind <- function(...) {
 
     input = list(...)
 
-    cat('*** Binding events for', length(input), 'datasets.\n')
+    if (!silent) {
+        cat('*** Binding events for', length(input), 'datasets.\n')
+    }
     return(Reduce(events.pairwise.bind, input))
 }
 
@@ -803,11 +807,16 @@ sbind <- function(...) {
 #' @param ... type to merge
 #' @param new.type label for the new type to create
 #' @param new.color color for the new type to create
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant dataset.
 #' @export join.types
 #' @importFrom utils txtProgressBar flush.console setTxtProgressBar
 #' 
-join.types <- function(x, ..., new.type = "new.type", new.color = "khaki") {
+join.types <- function(x,
+                       ...,
+                       new.type = "new.type",
+                       new.color = "khaki",
+                       silent = FALSE) {
 
     ## Check if x is compliant.
     
@@ -828,15 +837,18 @@ join.types <- function(x, ..., new.type = "new.type", new.color = "khaki") {
         input = as.list(as.types(x))
     }
 
-    cat(paste("*** Aggregating events of type(s) {",
-              paste(unlist(input), collapse = ", ", sep = ""),
-              "}\nin a unique event with label \"",
-              new.type,
-              "\".\n",
-              sep = ""))
+    if (!silent) {
+        cat("*** Aggregating events of type(s) {",
+            paste(unlist(input), collapse = ", ", sep = ""),
+            "}\nin a unique event with label \"",
+            new.type,
+            "\".\n")
+    }
 
     if (length(input) <= 1) {
-        cat("One input type provided, using renaming functions.\n")
+        if (!silent) {
+            cat("One input type provided, using renaming functions.\n")
+        }
 
         x = rename.type(x, input[[1]], new.type)
         x = change.color(x, new.type, new.color)
@@ -867,14 +879,24 @@ join.types <- function(x, ..., new.type = "new.type", new.color = "khaki") {
     input = unlist(input)
 
     genes = as.genes(x, types = input)
-    cat("Dropping event types", paste(input, collapse = ", ", sep = ""), "for", length(genes), "genes.\n")
+    if (!silent) {
+        cat("Dropping event types",
+            paste(input, collapse = ", ", sep = ""),
+            "for",
+            length(genes),
+            "genes.\n")
+    }
     geno.matrix = matrix(, nrow = nsamples(x), ncol = length(genes))
 
-    pb = txtProgressBar(1, length(genes), style = 3)
-    flush.console()
+    if (!silent) {
+        pb = txtProgressBar(1, length(genes), style = 3)
+        flush.console()
+    }
     
     for (i in 1:length(genes)) {
-        setTxtProgressBar(pb, i)
+        if (!silent) {
+            setTxtProgressBar(pb, i)
+        }
 
         geno = as.matrix(rowSums(as.gene(x, genes[i], types = input)))
         geno[geno > 1] = 1
@@ -884,7 +906,9 @@ join.types <- function(x, ..., new.type = "new.type", new.color = "khaki") {
 
     rownames(geno.matrix) = as.samples(x)
     colnames(geno.matrix) = genes
-    close(pb)
+    if (!silent) {
+        close(pb)
+    }
 
     z = import.genotypes(geno.matrix, event.type = new.type, color = new.color)
     if (has.stages(x)) {
@@ -896,7 +920,7 @@ join.types <- function(x, ..., new.type = "new.type", new.color = "khaki") {
         y = delete.type(y, i)
     }
 
-    w = ebind(y, z)
+    w = ebind(y, z, silent = silent)
     is.compliant(w)
 
     return(w)

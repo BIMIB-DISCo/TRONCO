@@ -4,7 +4,8 @@
 \alias{as.alterations}
 \title{as.alterations}
 \usage{
-as.alterations(x, new.type = "Alteration", new.color = "khaki")
+as.alterations(x, new.type = "Alteration", new.color = "khaki",
+  silent = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
@@ -12,6 +13,8 @@ as.alterations(x, new.type = "Alteration", new.color = "khaki")
 \item{new.type}{The types label of the new event type, 'Alteration' by default.}
 
 \item{new.color}{The color of the event \code{new.type}, default 'khaki'.}
+
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
 A TRONCO compliant dataset with alteration profiles.

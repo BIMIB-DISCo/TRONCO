@@ -208,10 +208,14 @@ as.gene <- function(x, genes, types = NA) {
 #' @param x A TRONCO compliant dataset.
 #' @param new.type The types label of the new event type, 'Alteration' by default.
 #' @param new.color The color of the event \code{new.type}, default 'khaki'.
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant dataset with alteration profiles.
 #' @export as.alterations
 #' 
-as.alterations <- function(x, new.type = 'Alteration', new.color = 'khaki') {
+as.alterations <- function(x,
+                           new.type = 'Alteration',
+                           new.color = 'khaki',
+                           silent = FALSE) {
     is.compliant(x)
     if(has.model(x)) {
         stop("There's a reconstructed model, types cannot be merged now. \nUse delete.model()")
@@ -221,7 +225,11 @@ as.alterations <- function(x, new.type = 'Alteration', new.color = 'khaki') {
         stop('Patterns found. Delete patterns first.\n')
     }
 
-    join.types(x, NULL, new.type = new.type, new.color = new.color)
+    join.types(x,
+               NULL,
+               new.type = new.type,
+               new.color = new.color,
+               silent = silent)
 }
 
 #' Return the patterns in the dataset which constitute CAPRI's hypotheses.
@@ -432,7 +440,6 @@ as.confidence <- function(x, conf, models = names(x$model)) {
             \t \"pr\" - probability raising (selectivity among events)\n
             MODEL CONFIDENCE - requires post-reconstruction bootstrap or cross-validation\n
             \t \"npb\"     - non-parametric bootstrap,\n
-            \t \"pb\"      - parametric bootstrap\n
             \t \"sb\"      - statistical bootstrap\n
             \t \"eloss\"   - entropy loss\n
             \t \"prederr\" - prediction error\n
@@ -449,15 +456,10 @@ as.confidence <- function(x, conf, models = names(x$model)) {
 #       stop('No bootstrap executed in this TRONCO object.')
 #         
     has.npb.bootstrap = is.null(x$bootstrap[[models[1]]]$npb)
-    has.pb.bootstrap = is.null(x$bootstrap[[models[1]]]$pb)
     has.sb.bootstrap = is.null(x$bootstrap[[models[1]]]$sb)
 
     if ('npb' %in% conf && has.npb.bootstrap) {
         stop('Non-parametric bootstrap was not performed. Remove keyword\n')
-    }
-
-    if ('pb' %in% conf && has.pb.bootstrap) {
-        stop('Parametric bootstrap was not performed. Remove keyword\n')
     }
 
     if ('sb' %in% conf && has.sb.bootstrap) {
@@ -485,13 +487,6 @@ as.confidence <- function(x, conf, models = names(x$model)) {
         }
     }
     
-    if ('pb' %in% conf) {
-        for (i in 1:length(models)) {
-            result$pb[models[i]] =
-                list(x$bootstrap[[models[i]]]$pb$bootstrap.edge.confidence)  
-        }
-    }
-
     if ('sb' %in% conf) { 
         for (i in 1:length(models)) {
             result$sb[models[i]] =
@@ -574,6 +569,7 @@ as.description <- function(x) {
 #' @param pathway.name Pathway name for visualization.
 #' @param pathway.color Pathway color for visualization.
 #' @param aggregate.pathway If TRUE drop the events for the genes in the pathway.
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return Extract the subset of events for genes which are part of a pathway.
 #' @export as.pathway
 #' 
@@ -581,14 +577,16 @@ as.pathway <- function(x,
                        pathway.genes, 
                        pathway.name, 
                        pathway.color='yellow', 
-                       aggregate.pathway = TRUE) {
+                       aggregate.pathway = TRUE,
+                       silent = FALSE) {
     
     is.compliant(x, 'as.pathway: input')
     data = x$genotypes
-    cat(paste('*** Extracting events for pathway: ',
-              pathway.name,
-              '.\n',
-              sep = ''))
+    if (!silent) {
+        cat('*** Extracting events for pathway: ',
+            pathway.name,
+            '.\n')
+    }
 
     ## Select only those events involving a gene in pathway.genes
     ## which is also in x.
@@ -611,10 +609,12 @@ as.pathway <- function(x,
                          event.type = 'Pathway',
                          color = pathway.color)
 
-    cat('Pathway extracted succesfully.\n')
+    if (!silent) {
+        cat('Pathway extracted succesfully.\n')
+    }
 
     if (!aggregate.pathway) {
-        pathway = ebind(pathway, y)
+        pathway = ebind(pathway, y, silent = silent)
     }
 
     if (has.stages(y)) {
@@ -697,7 +697,7 @@ as.adj.matrix <- function(x,
 #' @param x A TRONCO model.
 #' @param events A subset of events as of \code{as.events(x)}, all by default.
 #' @param models A subset of reconstructed models, all by default.
-#' @param type Either observed ('observed') or fit ('fit') probabilities, 'observed' by default.
+#' @param type observed.
 #' @return The marginal probabilities in a TRONCO model. 
 #' @export as.marginal.probs
 as.marginal.probs <- function(x,
@@ -708,29 +708,19 @@ as.marginal.probs <- function(x,
     is.model(x)
     is.events.list(x, events)
 
-    if (!type %in% c('observed', 'fit')) {
-        stop('Marginal probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).') 
+    if (type != 'observed') {
+        stop('Marginal probabilities are available for \'observed\' (empirical).') 
     }
     
     if (any(is.null(colnames(events)))) {
-        stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
+        stop('Events should have colnames to access the adjacency matrix - use \'as.events\' function?')
     }
 
     m = as.models(x, models = models)
 
     ret = list()
     for (i in models) {
-        if (type == 'observed')
-            mat =
-                m[[i]]$probabilities$probabilities.observed$marginal.probs
-        
-        if (type == 'fit')
-            mat =
-                m[[i]]$probabilities$probabilities.fit$estimated.marginal.probs
-
-        if (type == 'fit' && is.na(mat))
-            stop('Marginal probabilities have not been estimated yet - see TRONCO Manual.')       
-
+        mat = m[[i]]$probabilities$probabilities.observed$marginal.probs
         mat = mat[rownames(events), , drop = FALSE]
         ret = append(ret, list(mat)) 
     }
@@ -754,7 +744,7 @@ as.marginal.probs <- function(x,
 #' @param x A TRONCO model.
 #' @param events A subset of events as of \code{as.events(x)}, all by default.
 #' @param models A subset of reconstructed models, all by default.
-#' @param type Either observed ('observed') or fit ('fit') probabilities, 'observed' by default.
+#' @param type observed
 #' @return The joint probabilities in a TRONCO model. 
 #' @export as.joint.probs
 #'
@@ -766,8 +756,8 @@ as.joint.probs <- function(x,
     is.model(x)
     is.events.list(x, events)
 
-    if (!type %in% c('observed', 'fit')) {
-        stop('Joint probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).') 
+    if (type != 'observed') {
+        stop('Joint probabilities are available for \'observed\' (empirical).') 
     }
     
     if (any(is.null(colnames(events)))) {
@@ -778,17 +768,7 @@ as.joint.probs <- function(x,
 
     ret = list()
     for (i in models) {
-        if (type == 'observed')
-            mat =
-                m[[i]]$probabilities$probabilities.observed$joint.probs
-        
-        if (type == 'fit')
-            mat =
-                m[[i]]$probabilities$probabilities.fit$estimated.joint.probs
-
-        if (type == 'fit' && is.na(mat))
-            stop('Joint probabilities have not been estimated yet - see the TRONCO Manual.')        
-
+        mat = m[[i]]$probabilities$probabilities.observed$joint.probs
         mat = mat[rownames(events), , drop = FALSE]
         mat = mat[, rownames(events), drop = FALSE]
         ret = append(ret, list(mat)) 
@@ -813,7 +793,7 @@ as.joint.probs <- function(x,
 #' @param x A TRONCO model.
 #' @param events A subset of events as of \code{as.events(x)}, all by default.
 #' @param models A subset of reconstructed models, all by default.
-#' @param type Either observed ('observed') or fit ('fit') probabilities, 'observed' by default.
+#' @param type observed ('observed') 
 #' @return The conditional probabilities in a TRONCO model. 
 #' @export as.conditional.probs
 #' 
@@ -825,8 +805,8 @@ as.conditional.probs <- function(x,
     is.model(x)
     is.events.list(x, events)
 
-    if (!type %in% c('observed', 'fit'))
-        stop('Conditional probabilities are available for \'observed\' (empirical) or \'fit\' (estimated).')  
+    if (type != 'observed')
+        stop('Conditional probabilities are available for \'observed\' (empirical).')  
     
     if (any(is.null(colnames(events))))
         stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
@@ -835,17 +815,7 @@ as.conditional.probs <- function(x,
 
     ret = list()
     for (i in models) {
-        if (type == 'observed')
-            mat =
-                m[[i]]$probabilities$probabilities.observed$conditional.probs
-        
-        if (type == 'fit')
-            mat =
-                m[[i]]$probabilities$probabilities.fit$estimated.conditional.probs
-
-        if (type == 'fit' && is.na(mat))
-            stop('Conditional probabilities have not been estimated yet - see the TRONCO Manual.')        
-
+        mat = m[[i]]$probabilities$probabilities.observed$conditional.probs
         mat = mat[rownames(events), , drop = FALSE]
         ret = append(ret, list(mat)) 
     }

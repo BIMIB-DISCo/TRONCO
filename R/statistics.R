@@ -103,12 +103,13 @@ as.bnlearn.network <- function(x,
 #'
 #' @examples
 #' data(test_model)
-#' tronco.kfold.eloss(test_model)
+#' tronco.kfold.eloss(test_model, k = 2, runs = 2)
 #'
 #' @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
 #' @param models The names of the selected regularizers (bic, aic or caprese)
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
+#' @param silent A parameter to disable/enable verbose messages.
 #' @importFrom bnlearn bn.cv empty.graph set.arc
 #' @importFrom stats sd
 #' @export tronco.kfold.eloss
@@ -116,7 +117,8 @@ as.bnlearn.network <- function(x,
 tronco.kfold.eloss = function(x, 
                               models = names(as.models(x)),
                               runs = 10,
-                              k = 10) {   
+                              k = 10, 
+                              silent = FALSE) {   
 
     ## Check if there is a reconstructed model.
 
@@ -141,8 +143,10 @@ tronco.kfold.eloss = function(x,
         bnnet = bn$net
 
         ## Calculating the eloss with bn.cv
-        cat('Calculating entropy loss with k-fold cross-validation \n\t[ k =', k,
-            '| runs =', runs, '| regularizer =', model, '] ... ')
+        if (!silent) {
+            cat('Calculating entropy loss with k-fold cross-validation \n\t[ k =', k,
+                '| runs =', runs, '| regularizer =', model, '] ... ')
+        }
 
         ## Scutari fix
         
@@ -168,10 +172,12 @@ tronco.kfold.eloss = function(x,
         ll = get(model, x$model)$logLik
         ratio = meanll / abs(ll) * 100
     
-        cat(' DONE\n')
-        cat('  Model logLik =', ll, '\n')
-        cat('  Mean   eloss =', meanll,' | ', ratio,'% \n')
-        cat('  Stdev  eloss = ', sd(eloss) ,'\n')
+        if (!silent) {
+            cat(' DONE\n')
+            cat('  Model logLik =', ll, '\n')
+            cat('  Mean   eloss =', meanll,' | ', ratio,'% \n')
+            cat('  Stdev  eloss = ', sd(eloss) ,'\n')
+        }
     
         x$kfold[[model]]$bn.kcv.list = bn.kcv.list
         x$kfold[[model]]$eloss = eloss
@@ -186,7 +192,7 @@ tronco.kfold.eloss = function(x,
 #'
 #' @examples
 #' data(test_model)
-#' tronco.kfold.prederr(test_model)
+#' tronco.kfold.prederr(test_model, k = 2, runs = 2)
 #'
 #' @param x A reconstructed model (the output of tronco.capri)
 #' @param models The names of the selected regularizers (bic, aic or caprese)
@@ -194,7 +200,7 @@ tronco.kfold.eloss = function(x,
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
 #' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
-#' @param verbose Should I print messages?
+#' @param silent A parameter to disable/enable verbose messages.
 #' @importFrom bnlearn bn.cv empty.graph set.arc
 #' @importFrom doParallel registerDoParallel  
 #' @importFrom foreach foreach %dopar%
@@ -209,7 +215,7 @@ tronco.kfold.prederr <- function(x,
                                  runs = 10,
                                  k = 10,
                                  cores.ratio = 1,
-                                 verbose = FALSE) {
+                                 silent = FALSE) {
 
     ## Check if there is a reconstructed model.
 
@@ -233,13 +239,13 @@ tronco.kfold.prederr <- function(x,
     if (cores < 1) {
         cores = 1
     }
-    if (verbose) {
-        cl = makeCluster(cores, outfile = '')
-    } else {
-        cl = makeCluster(cores)
-    }
+
+    cl = makeCluster(cores)
     registerDoParallel(cl)
-    cat('*** Using', cores, 'cores via "parallel" \n')
+
+    if (!silent) {
+        cat('*** Using', cores, 'cores via "parallel" \n')
+    }
 
 
     for (model in models) {
@@ -264,9 +270,13 @@ tronco.kfold.prederr <- function(x,
         pred = list()
 
         ## Perform the estimation of the prediction error. 
-        
-        cat('\tScanning', length(events), 'nodes for their prediction error (all parents). \n\tRegularizer: ', model, '\n')
-
+        if (!silent) {
+            cat('\tScanning',
+                length(events),
+                'nodes for their prediction error (all parents). \n\tRegularizer: ',
+                model,
+                '\n')
+        }
         
 
         r = foreach(i = 1:length(events), .inorder = TRUE) %dopar% {
@@ -291,7 +301,9 @@ tronco.kfold.prederr <- function(x,
             cat('\t\t node:', event, 'mean:', mean(res), '(', sd(res), ')\n')
             res  
         }
-        cat("*** Reducing results\n")
+        if (!silent) {
+            cat("*** Reducing results\n")
+        }
         names(r) = events      
         x$kfold[[model]]$prederr = r
     }
@@ -307,7 +319,7 @@ tronco.kfold.prederr <- function(x,
 #'
 #' @examples
 #' data(test_model)
-#' tronco.kfold.posterr(test_model)
+#' tronco.kfold.posterr(test_model, k = 2, runs = 2)
 #'
 #' @param x A reconstructed model (the output of tronco.capri)
 #' @param models The names of the selected regularizers (bic, aic or caprese)
@@ -315,7 +327,7 @@ tronco.kfold.prederr <- function(x,
 #' @param runs a positive integer number, the number of times cross-validation will be run
 #' @param k a positive integer number, the number of groups into which the data will be split
 #' @param cores.ratio Percentage of cores to use. coresRate * (numCores - 1)
-#' @param verbose should I print messages?
+#' @param silent A parameter to disable/enable verbose messages.
 #' @importFrom bnlearn bn.cv empty.graph set.arc
 #' @importFrom stats sd
 #' @export tronco.kfold.posterr
@@ -326,7 +338,7 @@ tronco.kfold.posterr <- function(x,
                                  runs = 10,
                                  k = 10,
                                  cores.ratio = 1,
-                                 verbose = FALSE) {
+                                 silent = FALSE) {
 
     ## Check if there is a reconstructed model.
 
@@ -351,14 +363,13 @@ tronco.kfold.posterr <- function(x,
     if (cores < 1) {
         cores = 1
     }
-    if (verbose) {
-        cl = makeCluster(cores, outfile = '')
-    } else {
-        cl = makeCluster(cores)
-    }
-    registerDoParallel(cl)
-    cat('*** Using', cores, 'cores via "parallel" \n')
 
+    cl = makeCluster(cores)
+
+    registerDoParallel(cl)
+    if (!silent) {
+        cat('*** Using', cores, 'cores via "parallel" \n')
+    }
 
     for (model in models) {
         
@@ -383,8 +394,13 @@ tronco.kfold.posterr <- function(x,
 
         ## Perform the estimation of the prediction error. 
         
-        cat('\tScanning', sum(adj.matrix == 1), 'edges for posterior classification error. \n\tRegularizer:', model, '\n')
-        
+        if (!silent) {
+            cat('\tScanning',
+                sum(adj.matrix == 1),
+                'edges for posterior classification error. \n\tRegularizer:',
+                model,
+                '\n')
+        }    
 
         r = foreach(i = 1:length(events), .inorder = TRUE, .combine = cbind) %dopar% {
             event = events[i]
@@ -416,7 +432,9 @@ tronco.kfold.posterr <- function(x,
             }
             posterr.adj.col
         }
-        cat("*** Reducing results\n")
+        if (!silent) {
+            cat("*** Reducing results\n")
+        }
         x$kfold[[model]]$posterr = r
     }
 

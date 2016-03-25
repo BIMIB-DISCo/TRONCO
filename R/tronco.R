@@ -1011,9 +1011,9 @@ tronco.mst.prim <- function(data,
 #' to be performed, e.g., non-parametric for uniform sampling.
 #' @param nboot Number of bootstrap sampling to be performed 
 #' when estimating the model confidence.
-#' @param verbose Should I be verbose?
 #' @param cores.ratio Percentage of cores to use
 #' coresRate * (numCores - 1)
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with reconstructed model
 #' @importFrom doParallel registerDoParallel  
 #' @importFrom foreach foreach %dopar%
@@ -1024,8 +1024,8 @@ tronco.mst.prim <- function(data,
 tronco.bootstrap <- function(reconstruction,
                              type = "non-parametric",
                              nboot = 100,
-                             verbose = FALSE,
-                             cores.ratio = 1) {
+                             cores.ratio = 1,
+                             silent = FALSE) {
     
     ## Check for the inputs to be given.
     
@@ -1061,7 +1061,9 @@ tronco.bootstrap <- function(reconstruction,
     
     ## Perform the selected bootstrap procedure.
     
-    cat("*** Executing now the bootstrap procedure, this may take a long time...\n")
+    if (!silent) {
+        cat("*** Executing now the bootstrap procedure, this may take a long time...\n")
+    }
 
     parameters = as.parameters(reconstruction)
 
@@ -1071,29 +1073,33 @@ tronco.bootstrap <- function(reconstruction,
         curr.boot = bootstrap(reconstruction, 
                               type,
                               nboot,
-                              cores.ratio)
-        cat("Performed", type,
-            "bootstrap with", nboot,
-            "resampling and", lambda, 
-            "as shrinkage parameter.\n")
+                              cores.ratio,
+                              silent = silent)
+        if (!silent) {
+            cat("Performed", type,
+                "bootstrap with", nboot,
+                "resampling and", lambda, 
+                "as shrinkage parameter.\n")
+        }
 
     } else {
 
         curr.boot = bootstrap(reconstruction, 
                               type,
                               nboot,
-                              cores.ratio)
-
-        cat("Performed", type,
-            "bootstrap with", nboot,
-            "resampling")
-
-        if (parameters$do.boot == TRUE) {
-            cat(" and", 
-                parameters$pvalue,
-                "as pvalue for the statistical tests")
-        } 
-        cat(".\n")
+                              cores.ratio,
+                              silent = silent)
+        if (!silent) {
+            cat("Performed", type,
+                "bootstrap with", nboot,
+                "resampling")
+            if (parameters$do.boot == TRUE) {
+                cat(" and", 
+                    parameters$pvalue,
+                    "as pvalue for the statistical tests")
+            } 
+            cat(".\n")
+        }
     }
     reconstruction$bootstrap = curr.boot
     return(reconstruction)
