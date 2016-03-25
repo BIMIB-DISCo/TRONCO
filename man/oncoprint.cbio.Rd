@@ -28,8 +28,8 @@ A file containing instruction for the CBio visualization Tool
 export input for cbio visualization at http://www.cbioportal.org/public-portal/oncoprinter.jsp
 }
 \examples{
-data(gistic)
-gistic = import.GISTIC(gistic)
+data(crc_gistic)
+gistic = import.GISTIC(crc_gistic)
 oncoprint.cbio(gistic)
 
 }

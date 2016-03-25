@@ -652,8 +652,8 @@ pathway.visualization <- function(x,
 #' @title oncoprint.cbio
 #'
 #' @examples
-#' data(gistic)
-#' gistic = import.GISTIC(gistic)
+#' data(crc_gistic)
+#' gistic = import.GISTIC(crc_gistic)
 #' oncoprint.cbio(gistic)
 #'
 #' @param x A TRONCO compliant dataset.

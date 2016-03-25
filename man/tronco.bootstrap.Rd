@@ -29,9 +29,8 @@ A TRONCO compliant object with reconstructed model
 Bootstrap a reconstructed progression model
 }
 \examples{
-data(test_dataset)
-recon = tronco.capri(test_dataset)
-boot = tronco.bootstrap(recon, nboot = 5)
+data(test_model)
+boot = tronco.bootstrap(test_model, nboot = 1)
 
 }
 
