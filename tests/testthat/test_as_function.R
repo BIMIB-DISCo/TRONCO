@@ -1,4 +1,3 @@
-
 data(maf)
 muts = import.MAF(maf)
 hypo = hypothesis.add(muts, 'test', OR('ABAT', 'ABCC3'))
