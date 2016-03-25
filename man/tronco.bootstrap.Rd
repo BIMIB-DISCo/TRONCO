@@ -5,7 +5,7 @@
 \title{tronco bootstrap}
 \usage{
 tronco.bootstrap(reconstruction, type = "non-parametric", nboot = 100,
-  verbose = FALSE, cores.ratio = 1)
+  cores.ratio = 1, silent = FALSE)
 }
 \arguments{
 \item{reconstruction}{The output of tronco.capri or 
@@ -17,10 +17,10 @@ to be performed, e.g., non-parametric for uniform sampling.}
 \item{nboot}{Number of bootstrap sampling to be performed 
 when estimating the model confidence.}
 
-\item{verbose}{Should I be verbose?}
-
 \item{cores.ratio}{Percentage of cores to use
 coresRate * (numCores - 1)}
+
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
 A TRONCO compliant object with reconstructed model

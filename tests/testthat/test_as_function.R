@@ -1,12 +1,12 @@
 data(maf)
-muts = import.MAF(maf)
+muts = import.MAF(maf, silent = TRUE)
 hypo = hypothesis.add(muts, 'test', OR('ABAT', 'ABCC3'))
 no_hypo = delete.hypothesis(hypo, 'test')
 data(crc_gistic)
-gistic_err = import.GISTIC(crc_gistic)
+gistic_err = import.GISTIC(crc_gistic, silent = TRUE)
 gistic = delete.gene(gistic_err, 'APC')
-gistic_model = tronco.caprese(gistic)
-gistic_model_capri = tronco.capri(gistic, nboot = 2)
+gistic_model = tronco.caprese(gistic, silent = TRUE)
+gistic_model_capri = tronco.capri(gistic, nboot = 2, silent = TRUE)
 
 stages = list()
 stages$stage = c('A', 'B', 'C')
@@ -86,7 +86,7 @@ test_that("as.gene returns a list of types", {
 context("as.alteration")
 
 test_that("as.alteration returns a compliant dataset", {
-    expect_equal(unique(as.alterations(gistic)$annotations[,'type']),
+    expect_equal(unique(as.alterations(gistic, silent = TRUE)$annotations[,'type']),
                  "Alteration")
     expect_error(as.alterations(hypo))
     expect_error(as.alterations(gistic_model))
@@ -155,19 +155,19 @@ test_that("as.description return a description", {
 context("as.pathway")
 
 test_that("as.pathway return compliant dataset", {
-    path = as.pathway(muts,
+    expect_output(as.pathway(muts,
                       pathway.name = 'test',
-                      pathway.genes = 'APC')
-    expect_silent(is.compliant(path))
-    path = as.pathway(muts,
+                      pathway.genes = 'APC'),
+                "succesfully.")
+    expect_output(as.pathway(muts,
                       pathway.name = 'test',
                       pathway.genes = 'APC',
-                      aggregate.pathway = FALSE)
-    expect_silent(is.compliant(path))
-    path = as.pathway(muts_stages,
+                      aggregate.pathway = FALSE),
+                "succesfully.")
+    expect_output(as.pathway(muts_stages,
                       pathway.name = 'test',
-                      pathway.genes = 'APC')
-    expect_silent(is.compliant(path))
+                      pathway.genes = 'APC'),
+                "succesfully.")
 })
 
 context("as.adj.matrix")

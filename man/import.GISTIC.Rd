@@ -4,7 +4,8 @@
 \alias{import.GISTIC}
 \title{import.GISTIC}
 \usage{
-import.GISTIC(x, filter.genes = NULL, filter.samples = NULL)
+import.GISTIC(x, filter.genes = NULL, filter.samples = NULL,
+  silent = FALSE)
 }
 \arguments{
 \item{x}{Either a dataframe or a filename}
@@ -12,6 +13,8 @@ import.GISTIC(x, filter.genes = NULL, filter.samples = NULL)
 \item{filter.genes}{A list of genes}
 
 \item{filter.samples}{A list of samples}
+
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
 A TRONCO compliant representation of the input CNAs.

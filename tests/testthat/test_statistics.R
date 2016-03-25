@@ -3,9 +3,9 @@ data(test_dataset)
 data(test_dataset_no_hypos)
 
 model = tronco.capri(test_dataset, nboot = 1, silent = TRUE)
-eloss = tronco.kfold.eloss(model, k = 2, runs = 2)
-prederr = tronco.kfold.prederr(model, k = 2, runs = 2)
-posterr = tronco.kfold.posterr(model, k = 2, runs = 2)
+eloss = tronco.kfold.eloss(model, k = 2, runs = 2, silent = TRUE)
+prederr = tronco.kfold.prederr(model, k = 2, runs = 2, silent = TRUE)
+posterr = tronco.kfold.posterr(model, k = 2, runs = 2, silent = TRUE)
 
 context("eloss")
 

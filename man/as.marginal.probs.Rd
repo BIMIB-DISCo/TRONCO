@@ -14,7 +14,7 @@ as.marginal.probs(x, events = as.events(x), models = names(x$model),
 
 \item{models}{A subset of reconstructed models, all by default.}
 
-\item{type}{Either observed ('observed') or fit ('fit') probabilities, 'observed' by default.}
+\item{type}{observed.}
 }
 \value{
 The marginal probabilities in a TRONCO model.

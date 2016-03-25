@@ -5,7 +5,7 @@
 \title{tronco.kfold.prederr}
 \usage{
 tronco.kfold.prederr(x, models = names(as.models(x)), events = as.events(x),
-  runs = 10, k = 10, cores.ratio = 1, verbose = FALSE)
+  runs = 10, k = 10, cores.ratio = 1, silent = FALSE)
 }
 \arguments{
 \item{x}{A reconstructed model (the output of tronco.capri)}
@@ -20,7 +20,7 @@ tronco.kfold.prederr(x, models = names(as.models(x)), events = as.events(x),
 
 \item{cores.ratio}{Percentage of cores to use. coresRate * (numCores - 1)}
 
-\item{verbose}{Should I print messages?}
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \description{
 Perform a k-fold cross-validation using the function bn.cv
@@ -28,7 +28,7 @@ and scan every node to estimate its prediction error.
 }
 \examples{
 data(test_model)
-tronco.kfold.prederr(test_model)
+tronco.kfold.prederr(test_model, k = 2, runs = 2)
 
 }
 

@@ -112,18 +112,24 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 #' @param x Either a dataframe or a filename
 #' @param filter.genes A list of genes
 #' @param filter.samples A list of samples
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant representation of the input CNAs.
 #' @export import.GISTIC
 #' @importFrom utils read.table
 #' 
-import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
+import.GISTIC <- function(x,
+                          filter.genes = NULL,
+                          filter.samples = NULL,
+                          silent = FALSE) {
 
     if (!(is.data.frame(x) || is.matrix(x)) && is.character(x)) {
-        cat('*** Input "x" is a character, interpreting it as a filename to load a table.
-            Required table format constitent with TCGA data for focal CNAs:
-            \t- one column for each sample, one row for each gene;
-            \t- a column Hugo_Symbol with every gene name;
-            \t- a column Entrez_Gene_Id with every gene\'s Entrez ID.\n')
+        if (!silent) {
+            cat('*** Input "x" is a character, interpreting it as a filename to load a table.
+                Required table format constitent with TCGA data for focal CNAs:
+                \t- one column for each sample, one row for each gene;
+                \t- a column Hugo_Symbol with every gene name;
+                \t- a column Entrez_Gene_Id with every gene\'s Entrez ID.\n')
+        }
 
         data =
             read.table(x,
@@ -131,8 +137,9 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
                        check.names = FALSE,
                        stringsAsFactors = FALSE)
 
-        cat('Data loaded.\n')
-
+        if (!silent) {
+            cat('Data loaded.\n')
+        }
         if (any(is.null(colnames(data)))) {
             stop('Input table should have column names.')
         }
@@ -148,36 +155,45 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
         x = t(data)
     }
 
-    if(is.null(filter.genes) && is.null(filter.samples)) cat('*** Using full GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
-    else cat('*** Filtering full GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
-
-    if(!is.null(filter.genes))
-    {
-        if(!is.vector(filter.genes))
-            stop('filter.genes - should be vector')
-
-        x = x[, which(colnames(x) %in% filter.genes), drop = FALSE ]
-        cat('*** Using reduced GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
-  }
-
-    if(!is.null(filter.samples))
-    {
-       if(!is.vector(filter.samples))
-            stop('filter.samples - should be vectors')
-
-         x = x[which(rownames(x) %in% filter.samples), ]
-        cat('*** Using reduced GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
+    if (!silent && is.null(filter.genes) && is.null(filter.samples)) {
+        cat('*** Using full GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' )
+    } else if (!silent) {
+        cat('*** Filtering full GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' )
     }
 
-        
+    if(!is.null(filter.genes)) {
+        if(!is.vector(filter.genes)) {
+            stop('filter.genes - should be vector')
+        }
+        x = x[, which(colnames(x) %in% filter.genes), drop = FALSE ]
 
-    cat("*** GISTIC input format conversion started.\n")
+        if (!silent) {
+            cat('*** Using reduced GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
+        }
+    }
+
+    if(!is.null(filter.samples)) {
+        if(!is.vector(filter.samples)) {
+            stop('filter.samples - should be vectors')
+        }
+        x = x[which(rownames(x) %in% filter.samples), ]
+        
+        if (!silent) {
+            cat('*** Using reduced GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
+        }
+    }
+
+    if (!silent) {
+        cat("*** GISTIC input format conversion started.\n")
+    }
 
     ## For next operations it is convenient to have everything as
     ## 'char' rather than 'int'
 
     if (typeof(x[, 1]) != typeof("somechar")) {
-        cat("Converting input data to character for import speedup.\n")
+        if (!silent) {
+            cat("Converting input data to character for import speedup.\n")
+        }
         rn = rownames(x)
         x = apply(x, 2, as.character)
         rownames(x) = rn
@@ -188,46 +204,59 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
     }
     x[is.na(x)] = 0
 
-    cat("Creating ", 4 * (ncol(x)), "events for", ncol(x), "genes \n")
+    if (!silent) {
+        cat("Creating ", 4 * (ncol(x)), "events for", ncol(x), "genes \n")
+    }
 
-                                        # gene symbols
+    # gene symbols
     enames <- colnames(x)
     if (is.null(enames)) {
         stop("Error: gistic file has no column names and can not imported, aborting!")
     }
 
-    cat("Extracting \"Homozygous Loss\" events (GISTIC = -2) \n")
+    if (!silent) {
+        cat("Extracting \"Homozygous Loss\" events (GISTIC = -2) \n")
+    }
     d.homo = x
     d.homo[d.homo != -2] <- 0
     d.homo[d.homo == -2] <- 1
 
-    cat("Extracting \"Heterozygous Loss\" events (GISTIC = -1) \n")
+    if (!silent) {
+        cat("Extracting \"Heterozygous Loss\" events (GISTIC = -1) \n")
+    }
     d.het <- x
     d.het[d.het != -1] <- 0
     d.het[d.het == -1] <- 1
 
-    cat("Extracting \"Low-level Gain\" events (GISTIC = +1) \n")
+    if (!silent) {
+        cat("Extracting \"Low-level Gain\" events (GISTIC = +1) \n")
+    }
     d.low <- x
     d.low[d.low != 1] <- 0
 
-    cat("Extracting \"High-level Gain\" events (GISTIC = +2) \n")
+    if (!silent) {
+        cat("Extracting \"High-level Gain\" events (GISTIC = +2) \n")
+    }
     d.high <- x
     d.high[d.high != 2] <- 0
     d.high[d.high == 2] <- 1
 
-    cat("Transforming events in TRONCO data types ..... \n")
+    if (!silent) {
+        cat("Transforming events in TRONCO data types ..... \n")
+    }
     d.homo = trim(import.genotypes(d.homo, event.type = "Homozygous Loss", color = "dodgerblue4"))
     d.het = trim(import.genotypes(d.het, event.type = "Heterozygous Loss", color = "dodgerblue1"))
     d.low = trim(import.genotypes(d.low, event.type = "Low-level Gain", color = "firebrick1"))
     d.high = trim(import.genotypes(d.high, event.type = "High-level Gain", color = "firebrick4"))
 
-    d.cnv.all = ebind(d.homo, d.het, d.low, d.high)
+    d.cnv.all = ebind(d.homo, d.het, d.low, d.high, silent = silent)
 
-    cat("*** Data extracted, returning only events observed in at least one sample \n",
-        "Number of events: n =", nevents(d.cnv.all), "\n",
-        "Number of genes: |G| =", ngenes(d.cnv.all), "\n",
-        "Number of samples: m =", nsamples(d.cnv.all), "\n")
-
+    if (!silent) {
+        cat("*** Data extracted, returning only events observed in at least one sample \n",
+            "Number of events: n =", nevents(d.cnv.all), "\n",
+            "Number of genes: |G| =", ngenes(d.cnv.all), "\n",
+            "Number of samples: m =", nsamples(d.cnv.all), "\n")
+    }
     is.compliant(d.cnv.all, "import.gistic: output")
     return(d.cnv.all)
 }
@@ -256,22 +285,37 @@ import.GISTIC <- function(x, filter.genes = NULL, filter.samples = NULL) {
 #' @param irregular If TRUE seeks only for columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification
 #' @param paste.to.Hugo_Symbol If a list of column names, this will be pasted each Hugo_Symbol to yield names such as PHC2.chr1.33116215.33116215
 #' @param merge.mutation.types If TRUE, all mutations are considered equivalent, regardless of their Variant_Classification value. Otherwise no.
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
 #' @importFrom utils read.table read.delim count.fields flush.console
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom grDevices colorRampPalette
 #' 
-import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.TRONCO = TRUE, irregular = FALSE, paste.to.Hugo_Symbol = NULL, merge.mutation.types = TRUE) {
+import.MAF <- function(file,
+                       sep = '\t',
+                       is.TCGA = TRUE,
+                       filter.fun = NULL,
+                       to.TRONCO = TRUE,
+                       irregular = FALSE,
+                       paste.to.Hugo_Symbol = NULL,
+                       merge.mutation.types = TRUE,
+                       silent = FALSE) {
 
     ## Data loading.
     if (!(is.data.frame(file) || is.matrix(file)) && is.character(file)) {
-        cat("*** Importing from file: ", file, "\n")
+        if (!silent) {
+            cat("*** Importing from file: ", file, "\n")
+        }
         if(!irregular) {
-            cat("Loading MAF file ...")
+            if (!silent) {
+                cat("Loading MAF file ...")
+            }
             maf = read.delim(file, comment.char = "#", sep = sep, header = TRUE, stringsAsFactors = FALSE)
         } else {
-            cat("*** [irregular = TRUE] Seeking only Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification columns")
+            if (!silent) {
+                cat("*** [irregular = TRUE] Seeking only Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification columns")
+            }
             
             read.irregular <- function(filenm) {
                 fileID <- file(filenm, open = "rt")
@@ -303,37 +347,50 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
                 colnames(maf) = maf[1,]
                 maf = maf[2:nrow(maf),]
         }
-        cat("DONE\n")
+        if (!silent) {
+            cat("DONE\n")
+        }
     } else {
-        cat("*** Importing from dataframe\n")
-        cat("Loading MAF dataframe ...")
+        if (!silent) {
+            cat("*** Importing from dataframe\n")
+            cat("Loading MAF dataframe ...")
+        }
         maf = file
-        cat("DONE\n")
+        if (!silent) {
+            cat("DONE\n")
+        }
     }
 
     ## Build custom names
     names.columns = c('Hugo_Symbol', paste.to.Hugo_Symbol)
     if (is.vector(paste.to.Hugo_Symbol)) {
-        cat('*** Mutations names: augmenting Hugo_Symbol with values: ', paste(paste.to.Hugo_Symbol, sep = ', '), '\n')
+        if (!silent) {
+            cat('*** Mutations names: augmenting Hugo_Symbol with values: ', paste(paste.to.Hugo_Symbol, sep = ', '), '\n')
+        }
         maf[, 'Hugo_Symbol'] = 
             apply(maf[, names.columns], 
                   MARGIN = 1,
                   function(x) {return(paste(x, collapse = '.'))})
       
-    } else {
+    } else if (!silent) {
         cat('*** Mutations names: using Hugo_Symbol\n')
     }
    
     if (is.null(filter.fun)) {
-        cat('*** Using full MAF: #entries ', nrow(maf), '\n')
+        if (!silent) {
+            cat('*** Using full MAF: #entries ', nrow(maf), '\n')
+        }
     } else {
         if (!is.function(filter.fun)) {
             stop('filter.fun - should be a function')
         }
-     
-        cat('*** Filtering full MAF: #entries ', nrow(maf), '\n' ) 
+        if (!silent) {
+            cat('*** Filtering full MAF: #entries ', nrow(maf), '\n' ) 
+        }
         maf = maf[apply(maf, 1, filter.fun), ]
-        cat('*** Using reduced MAF: #entries ', nrow(maf), '\n' ) 
+        if (!silent) {
+            cat('*** Using reduced MAF: #entries ', nrow(maf), '\n' )
+        }
     }
   
     ## Auxiliary functions to extract information from the MAF file
@@ -376,26 +433,37 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
 
     ## General report about the mutations stored in this MAF
 
-    cat("*** MAF report: ")
-    if (is.TCGA) {
+    if (!silent) {
+        cat("*** MAF report: ")
+    }
+    if (is.TCGA && !silent) {
         cat("TCGA=TRUE")
     }
 
     MAF.variants = variants(maf)
     MAF.samples = samples(maf)
 
-    cat("\nType of annotated mutations: \n")
-    print(MAF.variants)
-    if(merge.mutation.types) cat('*** [merge.mutation.types = T] Mutations will be merged and annotated as \'Mutation\'\n')
-    else cat('*** [merge.mutation.types = F] Mutations will be distinguished by type\n')
+    if (!silent) {
+        cat("\nType of annotated mutations: \n")
+        print(MAF.variants)
+    }
+    if(!silent && merge.mutation.types) {
+        cat('*** [merge.mutation.types = T] Mutations will be merged and annotated as \'Mutation\'\n')
+    } else if (!silent) {
+        cat('*** [merge.mutation.types = F] Mutations will be distinguished by type\n')
+    }
     
-    cat("Number of samples:", length(MAF.samples), "\n")
+    if (!silent) {
+        cat("Number of samples:", length(MAF.samples), "\n")
+    }
 
     ## If it is TCGA you should check for multiple samples per patient
 
     if (is.TCGA) {
         TCGA.patients = as.TCGA.patients(maf)
-        cat("[TCGA = TRUE] Number of TCGA patients:", length(TCGA.patients), "\n")
+        if (!silent) {
+            cat("[TCGA = TRUE] Number of TCGA patients:", length(TCGA.patients), "\n")
+        }
 
         if (length(TCGA.patients) != length(MAF.samples)) {
             warning("This MAF contains duplicate samples for some patients - use TCGA functions for further information")
@@ -404,53 +472,61 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
 
     which.valid.calls = valid.calls(maf)
     n.valid = length(which.valid.calls)
-    cat("Number of annotated mutations:", nrow(maf), "\n")
+    if (!silent) {
+        cat("Number of annotated mutations:", nrow(maf), "\n")
+    }
 
-    if (("Validation_Status" %in% colnames(maf))) {
+    if (!silent && ("Validation_Status" %in% colnames(maf))) {
         cat("Mutations annotated with \"Valid\" flag (%):", round(n.valid/nrow(maf) * 100, 0), "\n")
-    } else {
+    } else if (!silent) {
         cat("Mutations annotated with \"Valid\" flag (%): missing flag\n")
     }
     
     
     MAF.genes = genes(maf)
-    cat("Number of genes (Hugo_Symbol):", length(MAF.genes), "\n")
+    if (!silent) {
+        cat("Number of genes (Hugo_Symbol):", length(MAF.genes), "\n")
+    }
     
     if (!to.TRONCO) {
         return(maf)
     }
     
-    if(merge.mutation.types)
-    {
-    cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
-    cat(length(MAF.samples), "x", length(MAF.genes), "\n")
+    if(merge.mutation.types) {
+        if (!silent) {
+            cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
+            cat(length(MAF.samples), "x", length(MAF.genes), "\n")
+            flush.console()
+            pb <- txtProgressBar(1, nrow(maf), style = 3)
+        }
 
-    flush.console()
-    pb <- txtProgressBar(1, nrow(maf), style = 3)
 
-    ## Temporary binary matrix
+        ## Temporary binary matrix
 
-    binary.mutations = matrix(0, nrow = length(MAF.samples), ncol = length(MAF.genes))
+        binary.mutations = matrix(0, nrow = length(MAF.samples), ncol = length(MAF.genes))
 
-    colnames(binary.mutations) = MAF.genes
-    rownames(binary.mutations) = MAF.samples
+        colnames(binary.mutations) = MAF.genes
+        rownames(binary.mutations) = MAF.samples
 
-    for (i in 1:nrow(maf)) {
-        setTxtProgressBar(pb, i)
-        binary.mutations[maf$Tumor_Sample_Barcode[i], maf$Hugo_Symbol[i]] = 1
-    }
-    close(pb)
+        for (i in 1:nrow(maf)) {
+            if (!silent) {
+                setTxtProgressBar(pb, i)
+            }
+            binary.mutations[maf$Tumor_Sample_Barcode[i], maf$Hugo_Symbol[i]] = 1
+        }
+        if (!silent) {
+            close(pb)
+            cat("Starting conversion from MAF to TRONCO data type.\n")
+        }
+        tronco.data = import.genotypes(binary.mutations, event.type = "Mutation")
+        is.compliant(tronco.data)
+    } else {
+        if (!silent) {
+            cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
+            flush.console()
+            pb <- txtProgressBar(1, nrow(maf), style = 3)
+        }
 
-    cat("Starting conversion from MAF to TRONCO data type.\n")
-    tronco.data = import.genotypes(binary.mutations, event.type = "Mutation")
-    is.compliant(tronco.data)
-    }
-    else
-    {
-        cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
-
-        flush.console()
-        pb <- txtProgressBar(1, nrow(maf), style = 3)
 
         # For this case -- separate mutation types -- it is less convenient to use import.genotypes 
         tronco.data = list()
@@ -469,7 +545,9 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
         rownames(tronco.data$genotypes) = MAF.samples
 
         for (i in 1:nrow(maf)) {
-            setTxtProgressBar(pb, i)
+            if (!silent) {
+                setTxtProgressBar(pb, i)
+            }
             
             ev = intersect(
                 which(tronco.data$annotations[, 'event'] == maf$Hugo_Symbol[i]), 
@@ -477,6 +555,10 @@ import.MAF <- function(file, sep = '\t', is.TCGA = TRUE, filter.fun = NULL, to.T
                 )
 
             tronco.data$genotypes[maf$Tumor_Sample_Barcode[i], ev] = 1
+        }
+
+        if (!silent) {
+            close(pb)
         }
         
         

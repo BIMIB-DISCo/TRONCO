@@ -20,7 +20,8 @@
 bootstrap <- function(reconstruction, 
                       command = "non-parametric",
                       nboot = 100,
-                      cores.ratio = 1) {
+                      cores.ratio = 1,
+                      silent = FALSE) {
     
 
     parameters = as.parameters(reconstruction)
@@ -61,9 +62,6 @@ bootstrap <- function(reconstruction,
         boot.seed = parameters$boot.seed
     }
 
-    silent = TRUE
-
-
     ## Start the clock to measure the execution time
 
     ptm <- proc.time();
@@ -101,20 +99,21 @@ bootstrap <- function(reconstruction,
     }
 
 
-
     expected.execution.time =
         round(((reconstruction$execution.time[3] * nboot) / (cores)), digits = 0)
-    cat("\tExpected completion in approx.",
-        format(.POSIXct(expected.execution.time, tz="GMT"),
-               "%Hh:%Mm:%Ss"),
-        "\n")
+    if (!silent) {
+        cat("\tExpected completion in approx.",
+            format(.POSIXct(expected.execution.time, tz="GMT"),
+                   "%Hh:%Mm:%Ss"),
+            "\n")
+    }
 
 
     cl = makeCluster(cores)    
-
     registerDoParallel(cl)
-    cat('\tUsing', cores, 'cores via "parallel" \n')
-    
+    if (!silent) {
+        cat('\tUsing', cores, 'cores via "parallel" \n')
+    }
     ## Perform nboot bootstrap resampling
     
     r = foreach(num = 1:nboot ) %dopar% {    
@@ -152,12 +151,12 @@ bootstrap <- function(reconstruction,
                              min.boot,
                              min.stat,
                              boot.seed,
-                             silent)
+                             silent = TRUE)
         } else if (type == 'CAPRESE') {
             bootstrapped.topology =
                 tronco.caprese(curr.reconstruction,
                                lambda, 
-                               silent)
+                               silent = TRUE)
         } else if (type == 'CHOW_LIU') {
             bootstrapped.topology = 
                 tronco.mst.chowliu(curr.reconstruction,
@@ -168,7 +167,7 @@ bootstrap <- function(reconstruction,
                                    min.boot,
                                    min.stat,
                                    boot.seed,
-                                   silent)
+                                   silent = TRUE)
         } else if (type == 'PRIM') {
             bootstrapped.topology =
                 tronco.mst.prim(curr.reconstruction,
@@ -179,7 +178,7 @@ bootstrap <- function(reconstruction,
                                 min.boot,
                                 min.stat,
                                 boot.seed,
-                                silent)
+                                silent = TRUE)
         } else if (type == 'EDMONDS') {
             bootstrapped.topology =
                 tronco.mst.edmonds(curr.reconstruction,
@@ -190,7 +189,7 @@ bootstrap <- function(reconstruction,
                                    min.boot,
                                    min.stat,
                                    boot.seed,
-                                   silent)
+                                   silent = TRUE)
         }
             
         curr.reconstruction = bootstrapped.topology
@@ -226,8 +225,9 @@ bootstrap <- function(reconstruction,
     }
 
     stopCluster(cl)
-    cat("\tReducing results\n")
-
+    if (!silent) {
+        cat("\tReducing results\n")
+    }
     for (m in names(bootstrap.results)) {
         y = Reduce(rbind, lapply(r, function(z, type) { get(type, z) }, type = m))
         bootstrap.results[[m]] = y

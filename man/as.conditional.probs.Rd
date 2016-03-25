@@ -14,7 +14,7 @@ as.conditional.probs(x, events = as.events(x), models = names(x$model),
 
 \item{models}{A subset of reconstructed models, all by default.}
 
-\item{type}{Either observed ('observed') or fit ('fit') probabilities, 'observed' by default.}
+\item{type}{observed ('observed')}
 }
 \value{
 The conditional probabilities in a TRONCO model.

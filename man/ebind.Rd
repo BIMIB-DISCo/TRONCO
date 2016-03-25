@@ -4,10 +4,12 @@
 \alias{ebind}
 \title{ebind}
 \usage{
-ebind(...)
+ebind(..., silent = FALSE)
 }
 \arguments{
 \item{...}{the input datasets}
+
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
 A TRONCO complian dataset.

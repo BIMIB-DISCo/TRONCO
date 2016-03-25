@@ -5,7 +5,7 @@
 \title{as.pathway}
 \usage{
 as.pathway(x, pathway.genes, pathway.name, pathway.color = "yellow",
-  aggregate.pathway = TRUE)
+  aggregate.pathway = TRUE, silent = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
@@ -17,6 +17,8 @@ as.pathway(x, pathway.genes, pathway.name, pathway.color = "yellow",
 \item{pathway.color}{Pathway color for visualization.}
 
 \item{aggregate.pathway}{If TRUE drop the events for the genes in the pathway.}
+
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
 Extract the subset of events for genes which are part of a pathway.
