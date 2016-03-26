@@ -20,7 +20,6 @@
 # @param min.boot minimum number of bootstrapping to be performed
 # @param min.stat should I keep bootstrapping untill I have nboot valid values?
 # @param boot.seed seed to be used for the sampling
-# @param do.estimation should I perform the estimation of the error rates and probabilities?
 # @param silent should I be verbose?
 # @return topology: the reconstructed tree topology
 #

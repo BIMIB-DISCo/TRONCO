@@ -19,7 +19,6 @@
 # @param min.boot minimum number of bootstrapping to be performed
 # @param min.stat should I keep bootstrapping untill I have nboot valid values?
 # @param boot.seed seed to be used for the sampling
-# @param do.estimation should I perform the estimation of the error rates and probabilities?
 # @param silent should I be verbose?
 # @return topology: the reconstructed tree topology
 #
@@ -31,7 +30,6 @@ prim.fit <- function(dataset,
                       min.boot = 3,
                       min.stat = TRUE,
                       boot.seed = NULL,
-                      do.estimation = FALSE,
                       silent = FALSE ) {
 
     ## Start the clock to measure the execution time.
@@ -135,30 +133,13 @@ prim.fit <- function(dataset,
 
         ## Perform the estimation of the probabilities if requested.
         
-        if (do.estimation) {
-            ## Estimate the error rates and, given them, the
-            ## probabilities for the causal topology.
-            
-            estimated.error.rates.fit =
-                estimate.dag.error.rates(dataset,
-                                         prima.facie.parents$marginal.probs,
-                                         prima.facie.parents$joint.probs,
-                                         parents.pos.fit)
-            estimated.probabilities.fit =
-                estimate.dag.probs(dataset,
-                                   prima.facie.parents$marginal.probs,
-                                   prima.facie.parents$joint.probs,
-                                   parents.pos.fit,
-                                   estimated.error.rates.fit)
-        } else {
-            estimated.error.rates.fit =
-                list(error.fp = NA,
-                     error.fn = NA)
-            estimated.probabilities.fit =
-                list(marginal.probs = NA,
-                     joint.probs = NA,
-                     conditional.probs = NA)
-        }
+        estimated.error.rates.fit =
+            list(error.fp = NA,
+                 error.fn = NA)
+        estimated.probabilities.fit =
+            list(marginal.probs = NA,
+                 joint.probs = NA,
+                 conditional.probs = NA)
 
         ## Set results for the current regolarizator.
         
@@ -198,7 +179,6 @@ prim.fit <- function(dataset,
              min.boot = min.boot,
              min.stat = min.stat,
              boot.seed = boot.seed,
-             do.estimation = do.estimation,
              silent = silent)
 
     ## Return the results.
