@@ -189,6 +189,13 @@ test_that("as.duplicates return false", {
     expect_false(has.duplicates(hypo))
 })
 
+context("as.parents.pos")
+
+test_that("as.parents.pos return the right amount of models", {
+    expect_equal(length(as.parents.pos(gistic_model_capri)), 2)
+    expect_error(as.parents.pos(gistic_model_capri, models = 'banana'))
+})
+
 context("duplicates")
 
 test_that("duplicates return 0", {
@@ -205,5 +212,17 @@ context("view")
 
 test_that("view return output", {
     expect_output(view(gistic_model_capri), regexp=NA)
+})
+
+context("order.frequency")
+
+test_that("order.frequency reorder the genotypes", {
+    expect_equal(length(order.frequency(gistic_model_capri)), 9)
+})
+
+context("enforce.string")
+
+test_that("enforce.string return a string genotypes", {
+    expect_equal(length(enforce.string(gistic_model_capri)), 9)
 })
 

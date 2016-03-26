@@ -707,13 +707,17 @@ as.marginal.probs <- function(x,
     is.compliant(x)
     is.model(x)
     is.events.list(x, events)
-
-    if (type != 'observed') {
-        stop('Marginal probabilities are available for \'observed\' (empirical).') 
-    }
     
     if (any(is.null(colnames(events)))) {
         stop('Events should have colnames to access the adjacency matrix - use \'as.events\' function?')
+    }
+
+    if (!all(models %in% names(x$model))) {
+        stop('not all "models" are reconstructed model.') 
+    }
+
+    if (type != 'observed') {
+        stop('Marginal probabilities are available for \'observed\' (empirical).') 
     }
 
     m = as.models(x, models = models)
@@ -756,12 +760,16 @@ as.joint.probs <- function(x,
     is.model(x)
     is.events.list(x, events)
 
-    if (type != 'observed') {
-        stop('Joint probabilities are available for \'observed\' (empirical).') 
-    }
-    
     if (any(is.null(colnames(events)))) {
-        stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
+        stop('Events should have colnames to access the adjacency matrix - use \'as.events\' function?')
+    }
+
+    if (!all(models %in% names(x$model))) {
+        stop('not all "models" are reconstructed model.') 
+    }
+
+    if (type != 'observed') {
+        stop('Marginal probabilities are available for \'observed\' (empirical).') 
     }
 
     m = as.models(x, models = models)
@@ -805,11 +813,17 @@ as.conditional.probs <- function(x,
     is.model(x)
     is.events.list(x, events)
 
-    if (type != 'observed')
-        stop('Conditional probabilities are available for \'observed\' (empirical).')  
-    
-    if (any(is.null(colnames(events))))
-        stop('Events should have rownames to access the adjacency matrix - use \'as.events\' function?')
+    if (any(is.null(colnames(events)))) {
+        stop('Events should have colnames to access the adjacency matrix - use \'as.events\' function?')
+    }
+
+    if (!all(models %in% names(x$model))) {
+        stop('not all "models" are reconstructed model.') 
+    }
+
+    if (type != 'observed') {
+        stop('Marginal probabilities are available for \'observed\' (empirical).') 
+    }
 
     m = as.models(x, models = models)
 
@@ -840,6 +854,10 @@ as.conditional.probs <- function(x,
 as.error.rates <- function(x, models = names(x$model)) {
     is.compliant(x)
     is.model(x)
+
+    if (!all(models %in% names(x$model))) {
+        stop('not all "models" are reconstructed model.') 
+    }
 
     m = as.models(x, models = models)
 
@@ -990,6 +1008,10 @@ as.bootstrap.scores <- function(x,
     is.model(x)
     is.events.list(x, events)
 
+    if (!all(models %in% names(x$model))) {
+        stop('not all "models" are reconstructed model.') 
+    }
+
     matrix = 
     as.adj.matrix(x,
         events = events,
@@ -1004,14 +1026,10 @@ as.bootstrap.scores <- function(x,
     }
 
     has.npb.bootstrap = !is.null(x$bootstrap[[models[1]]]$npb)
-    has.pb.bootstrap = !is.null(x$bootstrap[[models[1]]]$pb)
     has.sb.bootstrap = !is.null(x$bootstrap[[models[1]]]$sb)
 
     if(has.npb.bootstrap) {
         npb.boot.conf = lapply(as.confidence(x, conf = c('npb'))$npb, keysToNames, x = x)
-    }
-    if(has.pb.bootstrap) {
-        pb.boot.conf = lapply(as.confidence(x, conf = c('pb'))$pb, keysToNames, x = x)
     }
     if(has.sb.bootstrap) {
         sb.boot.conf = lapply(as.confidence(x, conf = c('sb'))$sb, keysToNames, x = x)
@@ -1041,39 +1059,22 @@ as.bootstrap.scores <- function(x,
                     df$SELECTS = c(df$SELECTS, rownames(m)[i])
                     df$SELECTED = c(df$SELECTED, colnames(m)[j])
 
-                    df$OBS.SELECTS = 
-                        c(df$OBS.SELECTS,
-                          sum(as.genotypes(x)[, nameToKey(x, rownames(m)[i])])
-                          )
+                    df$OBS.SELECTS = c(df$OBS.SELECTS,
+                                       sum(as.genotypes(x)[, nameToKey(x, rownames(m)[i])]))
                     
-                    df$OBS.SELECTED =
-                        c(df$OBS.SELECTED,
-                          sum(as.genotypes(x)[, nameToKey(x, colnames(m)[j])])
-                          )
+                    df$OBS.SELECTED = c(df$OBS.SELECTED,
+                                       sum(as.genotypes(x)[, nameToKey(x, colnames(m)[j])]))
 
-                    if(has.npb.bootstrap) {
-                        df$BOOT.NPB = 
-                            c(df$BOOT.NPB,
-                              npb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100
-                              )
+                    if (has.npb.bootstrap) {
+                        df$BOOT.NPB = c(df$BOOT.NPB,
+                                        npb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100)
                     } else {
                         df$BOOT.NPB = c(df$BOOT.NPB, NA)
                     }
 
-                    if(has.pb.bootstrap) {
-                        df$BOOT.PB = 
-                            c(df$BOOT.PB,
-                              pb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100
-                              )
-                    } else {
-                        df$BOOT.PB = c(df$BOOT.PB, NA)
-                    }
-
-                    if(has.sb.bootstrap) {
-                        df$BOOT.SB = 
-                            c(df$BOOT.SB,
-                              sb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100
-                              )
+                    if (has.sb.bootstrap) {
+                        df$BOOT.SB = c(df$BOOT.SB,
+                                       sb.boot.conf[[z]][ rownames(m)[i], colnames(m)[j] ] * 100)
                     } else {
                         df$BOOT.SB = c(df$BOOT.SB, NA)
                     }
@@ -1086,7 +1087,6 @@ as.bootstrap.scores <- function(x,
                    df$OBS.SELECTS,
                    df$OBS.SELECTED,
                    df$BOOT.NPB,
-                   df$BOOT.PB,
                    df$BOOT.SB)
 
         colnames(df) = 
@@ -1095,7 +1095,6 @@ as.bootstrap.scores <- function(x,
               'OBS.SELECTS',
               'OBS.SELECTED',
               'NONPAR.BOOT',
-              'PAR.BOOT',
               'STAT.BOOT')
 
         rownames(df) = paste(1:nrow(df))
@@ -1108,12 +1107,6 @@ as.bootstrap.scores <- function(x,
             df$NONPAR.BOOT = NULL
         } else {
             df$NONPAR.BOOT = as.numeric(df$NONPAR.BOOT)
-        }
-
-        if (!has.pb.bootstrap) {
-            df$PAR.BOOT = NULL
-        } else {
-            df$PAR.BOOT = as.numeric(df$PAR.BOOT)
         }
 
         if (!has.sb.bootstrap) {
@@ -1393,6 +1386,10 @@ as.parents.pos <- function(x,
     is.compliant(x)
     is.model(x)
     is.events.list(x, events)
+
+    if (!all(models %in% names(x$model))) {
+        stop('not all "models" are reconstructed model.') 
+    }
 
     m = as.models(x, models = models)
 

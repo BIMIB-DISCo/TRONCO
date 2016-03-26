@@ -140,7 +140,9 @@ context("confidences")
 test_that('as.confidence work with reconstruction and bootstrap', {
     expect_equal(length(as.confidence(caprese, conf=c('pr', 'tp', 'hg'))), 3)
     expect_equal(length(as.confidence(npb, conf = 'npb')), 1)
+    expect_error(as.confidence(capri, conf = 'npb'))
     expect_equal(length(as.confidence(sb, conf = 'sb')), 1)
+    expect_error(as.confidence(capri, conf = 'sb'))
 })
 
 context("probabilities")
@@ -149,11 +151,25 @@ test_that('as.prob work with reconstruction', {
     expect_equal(length(as.joint.probs(capri)), 2)
     expect_error(as.joint.probs(capri, events = c('a')))
     expect_error(as.joint.probs(capri, type = 'banana'))
+    expect_error(as.joint.probs(capri, models = 'banana'))
     expect_equal(length(as.conditional.probs(capri)), 2)
     expect_error(as.conditional.probs(capri, events = c('a')))
     expect_error(as.conditional.probs(capri, type = 'banana'))
+    expect_error(as.conditional.probs(capri, models = 'banana'))
     expect_equal(length(as.marginal.probs(capri)), 2)
     expect_error(as.marginal.probs(capri, events = c('a')))
     expect_error(as.marginal.probs(capri, type = 'banana'))
+    expect_error(as.marginal.probs(capri, models = 'banana'))
+    expect_equal(length(as.error.rates(capri)), 2)
+    expect_error(as.error.rates(capri, models = 'banana'))
+})
+
+context("as.bootstrap.scores")
+
+test_that('as.bootstrap.scores return results', {
+    expect_equal(length(as.bootstrap.scores(npb)), 2)
+    expect_equal(length(as.bootstrap.scores(sb)), 2)
+    expect_error(as.bootstrap.scores(npb, events = 'asd'))
+    expect_error(as.bootstrap.scores(npb, models = 'banana'))
 })
 
