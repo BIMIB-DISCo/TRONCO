@@ -1,35 +1,19 @@
+%\VignetteEngine{knitr::knitr}
+
 \documentclass[a4paper, 9pt]{article}
 
 
-<<style-Sweave, eval=TRUE, echo=FALSE, results=tex>>=
+<<style-knitr, eval=TRUE, echo=FALSE, results="asis">>=
 BiocStyle::latex()
 @
 
 %% \VignetteIndexEntry{An R Package for TRanslational ONCOlogy}
 
-\usepackage{hyperref}
-
-%\usepackage{fullpage}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{placeins}
-
-
 \usepackage{url}
-
-\usepackage[many]{tcolorbox}
-
-\definecolor{mycolor}{rgb}{0.35, 0.169, 0.73}
-
-\newtcolorbox{mybox}[1][]
-{
-    colframe = black!75!white,
-    colback  = blue!5!white,
-    fontupper=\fontsize{3mm}{3mm}\selectfont\bfseries\sffamily,
-    breakable,
-    #1
-}
-
+\usepackage{tcolorbox}
 
 \begin{document}
 
@@ -70,7 +54,15 @@ Daniele Ramazzotti$^\ast$
 \end{tabular}
 \end{tcolorbox}
 
-\SweaveOpts{concordance=TRUE}
+
+<<include=FALSE>>=
+library(knitr)
+opts_chunk$set(
+concordance = TRUE,
+background = "#f3f3ff"
+)
+@
+
 
 
 
@@ -132,7 +124,7 @@ MST (Prim) & Undirected Minimum Spanning Tree with Mutual Information & Ind & \h
 \paragraph{Preliminaries.} 
 
 
-\begin{mybox}
+
 <<req>>=
 library(TRONCO)
 data(aCML)
@@ -140,7 +132,7 @@ data(crc_maf)
 data(crc_gistic)
 data(crc_plain)
 @
-\end{mybox}
+
 
 TRONCO transforms input data in a sort of database-alike format, where three main fields are presente: {\tt genotypes} which contains the genomic signatures of the input samples, {\tt annotations} which provides an index to the events present in the data and {\tt types}, a field mapping type of events (e.g., mutations, CNAs, etc.) to colors for display visualization. Other annotations are generated when a dataset is augmented with some metadata.  A TRONCO object shall be edited by using TRONCO functions,  to avoid to create inconsistencies in its internal representation. Function {\tt is.compliant} can be used to test if a TRONCO object is consistent; the function is called by any TRONCO function before returning  a modified object, so to ensure that consistency is preserved -- {\tt is.compliant}  will raise an error if this is not the case.
 
@@ -158,112 +150,75 @@ TRONCO supports the import of data from 3 formats. The Mutation Annotation Forma
 Whatever is dataset created as explained in the next sections, it can be annotated by adding a mnemonic description of the data, which will be used as plot titles when possible.
 Function {\tt annotate.description} raises a warning if the dataset was previously annotated.
 
-\begin{mybox}
+
 aCML = annotate.description(aCML, 'aCML data (Bioinf.)')
-\end{mybox}
+
 
  
 
 \subsection{Mutations annotated in a MAF format}
 We use the function \texttt{import.MAF} to import a dataset in MAF format, in this case the following  TCGA dataset
-\begin{mybox}
+
 <<>>=
  head(crc_maf[, 1:10])
 @
-\end{mybox}
+
 
 A default importation is done  without adding parameters to \texttt{import.MAF}. In this case, all mutations per gene will be considered equivalent, regardless of the type that is annotated in the MAF.  Also, all genes will be imported, and all samples.
 
-\begin{mybox}
-<<import.MAF, results=hide>>=
+
+<<import.MAF, results='hide'>>=
 dataset_maf = import.MAF(crc_maf)
 @
-\begin{verbatim}
-*** Importing from dataframe
-Loading MAF dataframe ...DONE
-*** Mutations names: using Hugo_Symbol
-*** Using full MAF: #entries  17 
-*** MAF report: TCGA=TRUE
-Type of annotated mutations: 
-[1] "Missense_Mutation" "Nonsense_Mutation"
-*** [merge.mutation.types = T] Mutations will be merged and annotated as 'Mutation'
-Number of samples: 9 
-[TCGA = TRUE] Number of TCGA patients: 9 
-Number of annotated mutations: 17 
-Mutations annotated with "Valid" flag (%): 71 
-Number of genes (Hugo_Symbol): 6 
-Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :9 x 6 
-|======================================================================| 100%
-Starting conversion from MAF to TRONCO data type.
-\end{verbatim}
-\end{mybox}
+
 
 See \S \ref{sec:view} to understand how to visualize a TRONCO dataset. In the above case -- where we see that mutations are annotated as {\tt Missense\_Mutation} or {\tt Nonsense\_Mutation}, if a gene in a sample has both, these will be merged to a unique {\tt Mutation} type. In this case a pair gene name with {\tt Mutation} will be what we call an ``event'' in our dataset -- e.g.,  APC {\tt Mutation}.
 
 If one would like  to have two distinct events in the dataset, i.e., APC {\tt Missense\_Mutation} and APC {\tt Nonsense\_Mutation}, parameter {\tt merge.mutation.types} should be set to false in the call to {\tt import.MAF}. 
 
-\begin{mybox}
-<<import.MAF, results=hide>>=
+
+<<import.MAF.real, results='hide'>>=
 dataset_maf = import.MAF(crc_maf, merge.mutation.types = FALSE)
 @
-\end{mybox}
+
 
 Sometimes, we might want to filter out some of the entries in a MAF -- maybe restricting the type of genes, mutations or sample that we want to process. If one defines
 {\tt filter.fun} as a function that returns {\tt TRUE} only for those entries which shall be considered, he gets a filter process which is applied to each row of the MAF file prior to transforming that into a TRONCO dataset. In this example we select only mutations annotated to APC -- we access that through the {\tt Hugo\_Symbol} flag of a MAF. 
-\begin{mybox}
-<<import.MAF,results=hide>>=
+
+<<import.MAF.box,results='hide'>>=
 dataset_maf = import.MAF(crc_maf, filter.fun = function(x){ x['Hugo_Symbol'] == 'APC'} )
 @
-\begin{verbatim}
-*** Importing from dataframe
-Loading MAF dataframe ...DONE
-*** Mutations names: using Hugo_Symbol
-*** Filtering full MAF: #entries  17
-*** Using reduced MAF: #entries  3
-*** MAF report: TCGA=TRUE
-Type of annotated mutations: 
-[1] "Nonsense_Mutation"
-*** [merge.mutation.types = T] Mutations will be merged and annotated as 'Mutation'
-Number of samples: 3
-[TCGA = TRUE] Number of TCGA patients: 3
-Number of annotated mutations: 173
-Mutations annotated with "Valid" flag (%): 33
-Number of genes (Hugo_Symbol): 1
-Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :3 x 1 
-|======================================================================| 100%
-Starting conversion from MAF to TRONCO data type.
-\end{verbatim}
-\end{mybox}
+
 
 It is also sometimes convenient -- especially when working with data collected from a single individual patient -- to distinguish the type of mutations and their position in a gene, or if they are somehow annotated to COSMIC or other databases. For instance, we might want to want to use the {\tt MA.protein.change} annotation in the MAF file to get composite names such as TP53.R175H, TP53.R213, TP53.R267W etc. This can be done by setting {\tt paste.to.Hugo\_Symbol} to have the relevant name of the MAF annotation
 
-\begin{mybox}
-<<import.MAF, results=hide>>=
+
+<<import.MAF.crc_maf, results='hide'>>=
 dataset_maf = import.MAF(crc_maf, 
     merge.mutation.types = FALSE, 
     paste.to.Hugo_Symbol = c('MA.protein.change'))
 @
-\end{mybox}
+
 
 TRONCO supports custom  MAF files, where possibly not all the standard annotations are present, via {\tt irregular = TRUE}.
 
 
 \subsection{Copy Number Variants annotated in the GISTIC format}
 We use the function \texttt{import.GISTIC} to import a dataset in GISTIC format, in this case from
-\begin{mybox}
+
 <<>>=
 crc_gistic
 @
-\end{mybox}
+
 
 In its default execution all the data annotated in the file is imported. But in principle  it is possible to avoid to import some   genes or samples; in this case it is sufficient to use parameters {\tt filter.genes} and {\tt filter.samples} for this function.
 
 
-\begin{mybox}
+
 <<import.GISTIC>>=
 dataset_gistic = import.GISTIC(crc_gistic)
 @
-\end{mybox}
+
 
 
  
@@ -271,17 +226,17 @@ dataset_gistic = import.GISTIC(crc_gistic)
 
 \subsection{Custom alterations annotated in a boolean matrix}
 One can annotate its custom type of alterations in a boolean matrix such as {\tt crc\_plain}
-\begin{mybox}
+
 <<>>=
 crc_plain
 @
-\end{mybox}
+
 In this case,  function \texttt{import.genotypes} will convert the matrix to a TRONCO  object where events' names and samples codes will be set from column and row names of the matrix. If this is not possible, these will be generated from templates. By default, the {\tt event.type} is set to {\tt variant} but one can specify a custom name for the alteration that is reported in the matrix
-\begin{mybox}
+
 <<import.genotypes>>=
 dataset_plain = import.genotypes(crc_plain, event.type='myVariant')
 @
-\end{mybox}
+
 
 
 \subsection{Downloading data from the cBio portal for cancer genomics}
@@ -289,38 +244,14 @@ dataset_plain = import.genotypes(crc_plain, event.type='myVariant')
 TRONCO uses the R interface to cBio to query data from the portal. All type of data can be downloaded from the portal, which includes MAF/GISTIC data for a lot of different cancer studies. An example of interaction with the portal is archived at the tool's webpage. 
 
 Here, we  show how to download lung cancer data somatic mutations for genes TP53, KRAS and PIK3CA,  from the lung cancer project run by TCGA, which is archived as  {\tt luad\_tcga\_pub} at cBio. If some of the parameters to {\tt cbio.query} are missing the function will become interactive by showing a list of possible data available at the portal.
-\begin{mybox}
-<<results=hide>>=
+
+<<results='hide'>>=
 data = cbio.query(
     genes=c('TP53', 'KRAS', 'PIK3CA'), 
     cbio.study = 'luad_tcga_pub',
     cbio.dataset = 'luad_tcga_pub_cnaseq', 
     cbio.profile = 'luad_tcga_pub_mutations')
 @
-\begin{verbatim}
-*** CGDS plugin for Cbio query.
-
-Automatic CBIO study index: luad_tcga_pub
-Automatic CBIO dataset index: luad_tcga_pub_cnaseq
-Automatic CBIO profile index: luad_tcga_pub_mutations
-Cancer codename: luad_tcga_pub
-Cancer Ref.: Lung Adenocarcinoma (TCGA, Nature 2014)
-Cancer Syn.: TCGA Lung Adenocarcinoma, containing 230 samples; 
-Data codename: luad_tcga_pub_cnaseq
-Data Ref.: Tumor Samples with sequencing and CNA data
-Data Syn.: All tumor samples that have CNA and sequencing data (230 samples)
-Samples codename: luad_tcga_pub_mutations
-Data Ref.: Mutations
-Data Syn.: Mutation data from whole exome sequencing.
-
-Querying the following list of genes: TP53, KRAS, PIK3CA 
-Symbol "." was replaced with "-" in sample IDs.
-
-Data retrieved: 230 samples, 3 genes.
-Retrieved also clinical data for samples: luad_tcga_pub_cnaseq
-Data exported to file: luad_tcga_pub.luad_tcga_pub_cnaseq.luad_tcga_pub_mutations.Rdata
-\end{verbatim}
-\end{mybox}
 
 
 \section{Data visualisation}
@@ -331,13 +262,13 @@ All examples in this section will be done with the the aCML dataset as reference
 
 We use the function \texttt{view} to get a short summary of a dataset that we   loaded in TRONCO; this function reports on the number of samples and  events, plus some meta information that could be displayed graphically.  
 
-\begin{mybox}
+
 <<view>>=
 view(aCML)
 @
 %\tcblower
 %ss
-\end{mybox}
+
 
 \subsection{Creating views with the ``as'' functions}
 
@@ -345,81 +276,73 @@ Several functions are available to create views over a dataset, with a set of pa
 
 The main ``as'' functions  are here documented.  \texttt{as.genotypes}, that we can use to get the matrix of ``genotypes'' that we imported.
 
-\begin{mybox}
+
 <<asgenotypes>>=
 as.genotypes(aCML)[1:10,5:10]
 @
-\end{mybox}
+
 
 Differently,  \texttt{as.events} and \texttt{as.events.in.samples}, that show tables with the events that we are processing in  all dataset or in a specific sample that we want to examine.
 
-\begin{mybox}
+
 <<asevents>>=
 as.events(aCML)[1:5, ]
 as.events.in.sample(aCML, sample = 'patient 2')
 @
-\end{mybox}
+
 
 Concerning genes,  \texttt{as.genes} shows the mnemonic names of the genes (or chromosomes, cytobands, etc.) that we included in our dataset.
 
-\begin{mybox}
+
 <<asgenes>>=
 as.genes(aCML)[1:8]
 @
-\end{mybox}
+
 
 And \texttt{as.types} shows the types of alterations (e.g., mutations, amplifications, etc.) that we have  find in our dataset, and  function \texttt{as.colors} shows the list of the  colors which are associated to each type.
 
-\begin{mybox}
+
 <<astypes>>=
 as.types(aCML)
 as.colors(aCML)
 @
-\end{mybox}
+
 
 
 A function \texttt{as.gene} can be used to display the alterations of a specific gene  across the samples
 
-\begin{mybox}
+
 <<asgene>>=
 head(as.gene(aCML, genes='SETBP1'))
 @
-\end{mybox}
+
 
 Views over samples can be created as well.  \texttt{as.samples} and \texttt{which.samples} list all the samples in the data, or return a list of samples that harbour a certain alteration. The former is 
 
-\begin{mybox}
-<<assamples1>>=
+
+<<assamples-acml>>=
 as.samples(aCML)[1:10]
 @
-\end{mybox}
+
 
 and the latter is
  
-\begin{mybox}
-<<assamples>>=
+
+<<assamples-acml-tet>>=
 which.samples(aCML, gene='TET2', type='Nonsense point')
 @
-\end{mybox}
+
 
 A slightly different function, which manipulates the data,  is \texttt{as.alterations}, which transforms a dataset with events of different type  to events of a unique type, labeled ``Alteration''.
 
-\begin{mybox}
-<<asalterations, results=hide>>=
+
+<<asalterations, results='hide'>>=
 dataset = as.alterations(aCML)
 @
-\begin{verbatim}
-*** Aggregating events of type(s) {Ins/Del, Missense point, Nonsense Ins/Del, 
-    Nonsense point} in a unique event with label "Alteration".
-Dropping event types Ins/Del, Missense point, Nonsense Ins/Del, Nonsense point 
-    for 23 genes.  
-|======================================================================| 100%
-*** Binding events for 2 datasets.
-\end{verbatim}
-<<asalterations>>=
+<<asalterations.view>>=
 view(dataset)
 @
-\end{mybox}
+
 
 
 
@@ -430,7 +353,7 @@ When samples are enriched with stage information function  \texttt{as.stages} ca
 
 A set of functions allow to get the number of genes, events, samples, types and patterns in a dataset.
 
-\begin{mybox}
+
 <<number>>=
 ngenes(aCML)
 nevents(aCML)
@@ -438,7 +361,7 @@ nsamples(aCML)
 ntypes(aCML)
 npatterns(aCML)
 @
-\end{mybox}
+
 
 
 \subsection{Oncoprints}
@@ -447,16 +370,16 @@ Oncoprints are the most effective  data-visualization functions in TRONCO. These
 
 By default {\tt oncoprint}  will try to  sort samples and events to enhance exclusivity patterns among the events.
 
-\begin{mybox}
-<<onco, fig=TRUE, include=FALSE, width=6, height=5>>=
+
+<<onco, fig.show='hide', fig.width=6, fig.height=5>>=
 oncoprint(aCML)
 @
-\end{mybox}
+
 
 But the sorting mechanism is bypassed if one wants to cluster samples or events, or if one wants to split samples by cluster (not shown). In the clustering case, the ordering is given by the dendrograms. In this case we also show the annotation of some groups of events via parameter {\tt gene.annot}.
 
-\begin{mybox}
-<<oncocl, fig=TRUE, include=FALSE, width=5, height=5>>=
+
+<<oncocl, fig.show='hide', fig.width=5, fig.height=5>>=
 oncoprint(aCML, 
     legend = FALSE, 
     samples.cluster = TRUE, 
@@ -464,12 +387,12 @@ oncoprint(aCML,
     gene.annot.color = 'Set2',
     genes.cluster = TRUE)
 @
-\end{mybox}
+
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.5\textwidth, page=2]{vignette-onco}
-\includegraphics[width=0.45\textwidth, page=2]{vignette-oncocl}
+\includegraphics[width=0.5\textwidth]{figure/onco-1}
+\includegraphics[width=0.45\textwidth]{figure/oncocl-1}
 \end{center}
 \caption{Two different calls to \texttt{oncoprint} with  aCML data. This plot gives a graphical visualization of the events that are in the dataset -- with a color per event type -- but in left it sorts samples to enhance exclusivity patterns among the events, while in right it clusters samples/events.}
 \end{figure*}
@@ -478,7 +401,7 @@ oncoprint(aCML,
 Oncoprints can be annotated; a special type of annotation is given by stage data. As this is not available for the aCML dataset, we create it randomly, just for the sake of showing how the oncoprint is enriched with this information. This is the random stage map that we create -- if some samples had no stage a NA would be added automatically. 
 
 
-\begin{mybox}
+
 <<stages>>=
 stages = c(rep('stage 1', 32), rep('stage 2', 32))
 stages = as.matrix(stages)
@@ -487,39 +410,39 @@ dataset = annotate.stages(aCML, stages = stages)
 has.stages(aCML)
 head(as.stages(dataset))
 @
-\end{mybox}
+
 
 The {\tt as.stages} function can now be used to create a view over stages.
-\begin{mybox}
+
 <<>>=
 head(as.stages(dataset))
 @
-\end{mybox}
+
 
 
 After that the data is annotated via {\tt annotate.stages} function, we can again plot an oncoprint -- which this time will detect that the dataset has also stages associated, and will diplay those 
 
-\begin{mybox}
-<<onco-stages, fig=TRUE, include=FALSE, width=6, height=5>>=
+
+<<onco-stages, fig.show='hide', fig.width=6, fig.height=5>>=
 oncoprint(dataset, legend = FALSE)
 @
-\end{mybox}
+
 
 
 If one is willing to display samples grouped according to some variable, for instance after a sample clustering task, he can use {\tt group.samples} parameter of {\tt oncoprint} and that will override the mutual exclusivity ordering. Here, we make the trick of using the stages as if they were such clustering result.
 
-\begin{mybox}
-<<onco-clus2, fig=TRUE, include=FALSE, width=6, height=5>>=
+
+<<onco-clus2, fig.show='hide', fig.width=6, fig.height=5>>=
 oncoprint(dataset, group.samples = as.stages(dataset))
 @
-\end{mybox}
+
 
 
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.45\textwidth, page=2]{vignette-onco-stages}
-\includegraphics[width=0.45\textwidth, page=2]{vignette-onco-clus2}
+\includegraphics[width=0.45\textwidth]{figure/onco-stages-1}
+\includegraphics[width=0.45\textwidth]{figure/onco-clus2-1}
 \end{center}
 \vspace*{.05in}
 \caption{Example \texttt{oncoprint} output for aCML data with randomly annotated stages, in left, and samples clustered by group assignment in right -- for simplicity the group variable is again the stage annotation.}
@@ -537,27 +460,27 @@ TRONCO provides functions to visualize groups of events, which in this case are 
 
 We make an example of a pathway called {\tt MyPATHWAY} involving genes SETBP1, EZH2 and WT1; we want it to be colored in red, and we want to have the genotype of each event to be maintened in the dataset. We proceed as follows  (R's output is omitted).
 
-\begin{mybox}
-<<pathway, results=hide>>=
+
+<<pathway, results='hide'>>=
 pathway = as.pathway(aCML,
     pathway.genes = c('SETBP1', 'EZH2', 'WT1'), 
     pathway.name = 'MyPATHWAY',
     pathway.color = 'red',
     aggregate.pathway = FALSE)
 @
-\end{mybox}
+
     
 Which we then visualize with an oncoprint
 
-\begin{mybox}
-<<onco-pathway, fig=TRUE, include=FALSE, width=6.5, height=2>>=
+
+<<onco-pathway, fig.show='hide', fig.width=6.5, fig.height=2>>=
 oncoprint(pathway, title = 'Custom pathway',  font.row = 8, cellheight = 15, cellwidth = 4)
 @
-\end{mybox}
+
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.9\textwidth, page=2]{vignette-onco-pathway}
+\includegraphics[width=0.9\textwidth]{figure/onco-pathway-1}
 \end{center}
 \vspace*{.05in}
 \caption{\texttt{oncoprint} output of a custom pathway called {\tt MyPATHWAY} involving genes SETBP1, EZH2 and WT1; the genotype of each event is shown.}
@@ -565,32 +488,32 @@ oncoprint(pathway, title = 'Custom pathway',  font.row = 8, cellheight = 15, cel
 
 In TRONCO there is also a function which creates the pathway view and the corresponding oncoprint to  multiple pathways, when these are given as a list. We make here a simple example of two custom pathways.
 
-\begin{mybox}
-<<onco-pathway-viz, fig=TRUE, include=FALSE, width=6.5, height=1.8, results=hide>>=
+
+<<onco-pathway-viz, fig.show='hide', fig.width=6.5, fig.height=1.8, results='hide'>>=
 pathway.visualization(aCML, 
     pathways=list(P1 = c('TET2', 'IRAK4'),  P2=c('SETBP1', 'KIT')),        
     aggregate.pathways=FALSE,
     font.row = 8)
 @
-\end{mybox}
+
     
     
     
 If we had to visualize just the signature of the pathway, we could set  {\tt aggregate.pathways=T}.
 
-\begin{mybox}
-<<onco-pathway-viz2, fig=TRUE, include=FALSE, width=6.5, height=1, results=hide>>=
+
+<<onco-pathway-viz2, fig.show='hide', fig.width=6.5, fig.height=1, results='hide'>>=
 pathway.visualization(aCML, 
     pathways=list(P1 = c('TET2', 'IRAK4'),  P2=c('SETBP1', 'KIT')),
     aggregate.pathways = TRUE,
     font.row = 8)
 @
-\end{mybox}
+
     
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.9\textwidth, page=2]{vignette-onco-pathway-viz}
-\includegraphics[width=0.9\textwidth, page=2]{vignette-onco-pathway-viz2}
+\includegraphics[width=0.9\textwidth]{figure/onco-pathway-viz-1}
+\includegraphics[width=0.9\textwidth]{figure/onco-pathway-viz2-1}
 \end{center}
 \vspace*{.05in}
 \caption{\texttt{oncoprint} output of a custom pair of pathways, with events shown in top and hidden in bottom.}
@@ -605,17 +528,17 @@ All examples in this section will be done with the the aCML dataset as reference
 
 TRONCO  provides functions for renaming the events that were included in a dataset, or the type associated to a set of events (e.g., a ``Mutation'' could be renamed to a ``Missense Mutation'').
 
-\begin{mybox}
+
 <<rename>>=
 dataset = rename.gene(aCML, 'TET2', 'new name')
 dataset = rename.type(dataset, 'Ins/Del', 'new type')
 as.events(dataset, type = 'new type')
 @
-\end{mybox}
+
 
 and return a modified TRONCO object. More complex operations are also possible. For instance, two events with the same signature -- i.e., appearing in the same samples -- can be joined to a new event (see also Data Consolidation in Model Inference) with the same signature and a new name.
 
-\begin{mybox}
+
 <<join1>>=
 dataset = join.events(aCML, 
     'gene 4',
@@ -624,30 +547,23 @@ dataset = join.events(aCML,
     new.type='banana',
     event.color='yellow')
 @
-\end{mybox}
+
     
 where in this case we also created a new event type, with its own color.
 
 In a similar way we can decide to join all the events of two distinct types, in this case if a gene $x$ has signatures for both type of events, he will get a unique signature with an alteration present if it is either of the second {\em or} the second type 
-\begin{mybox}
-<<join2, results=hide>>=
+
+<<join2, results='hide'>>=
 dataset = join.types(dataset, 'Nonsense point', 'Nonsense Ins/Del')
 @
-\begin{verbatim}
-*** Aggregating events of type(s) {Nonsense point, Nonsense Ins/Del}
-in a unique event with label "new.type".
-Dropping event types Nonsense point, Nonsense Ins/Del for 6 genes.
-|======================================================================| 100%
-*** Binding events for 2 datasets.
-\end{verbatim}
 <<join3>>=
 as.types(dataset)
 @
-\end{mybox}
+
 
 TRONCO also provides  functions for deleting specific events, samples or types.
 
-\begin{mybox}
+
 <<delete>>=
 dataset = delete.gene(aCML, gene = 'TET2')
 dataset = delete.event(dataset, gene = 'ASXL1', type = 'Ins/Del')
@@ -655,7 +571,7 @@ dataset = delete.samples(dataset, samples = c('patient 5', 'patient 6'))
 dataset = delete.type(dataset, type = 'Missense point')
 view(dataset)
 @
-\end{mybox}
+
     
 \subsection{Modifying patterns}
 
@@ -667,41 +583,30 @@ TRONCO  provides functions to edit patterns,  pretty much as for any other type 
 
 It is very often the case that we want to subset a dataset by either selecting only some of its samples, or some of its events. Function \texttt{samples.selection} returns a dataset with only some selected samples.
 
-\begin{mybox}
-<<assamples>>=
+
+<<assamples-assamples>>=
 dataset = samples.selection(aCML, samples = as.samples(aCML)[1:3])
 view(dataset)
 @
-\end{mybox}
+
 
 Function \texttt{events.selection}, instead, performs selection according to a filter of events. With this function, we can subset data according to a frequency, and we can force inclusion/exclusion of certain events by specifying their name. For instance, here we pick all events with a minimum frequency of 5\%, force exclusion of SETBP1 (all events associated), and inclusion of EZH1 and EZH2.
-\begin{mybox}
-<<eventsselection,results=hide>>=
+
+<<eventsselection,results='hide'>>=
 dataset = events.selection(aCML,  filter.freq = .05, 
     filter.in.names = c('EZH1','EZH2'), 
     filter.out.names = 'SETBP1')
 @
-\begin{verbatim}
- *** Events selection: #events = 31, #types = 4 
-        Filters freq|in|out = {TRUE, TRUE, TRUE}
-        Minimum event frequency: 0.05 (3 alterations out of 64 samples).
-|======================================================================| 100%
-Selected 9 events.
-
-[filter.in] Genes hold: EZH1, EZH2 ...  [1/2 found].
-[filter.out] Genes dropped: SETBP1 ...  [1/1 found].
-Selected 10 events, returning.
-\end{verbatim}
 <<eventsselection2>>=
 as.events(dataset)
 @
-\end{mybox}
+
 
 An example visualization of the data before and after the selection process can be obtained by combining the {\tt gtable} objects returned by {\tt oncoprint}. We here use 
 {\tt gtable = T} to get access to have a  GROB table returned, and {\tt silent = T} to avoid that the calls to the function display on the device; the call to {\tt grid.arrange} displays the captured {\tt gtable} objects.
 
-\begin{mybox}
-<<onco-ex-sel, fig=TRUE, include=FALSE, width=7, height=5.5, results=hide>>=
+
+<<onco-ex-sel, fig.show='hide', fig.width=7, fig.height=5.5, results='hide'>>=
 library(gridExtra)
 grid.arrange(
     oncoprint(as.alterations(aCML, new.color = 'brown3'), 
@@ -711,11 +616,11 @@ grid.arrange(
         gtable = TRUE, silent = TRUE, font.row = 6)$gtable, 
     ncol = 1)
 @
-\end{mybox}
+
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.9\textwidth, page=1]{vignette-onco-ex-sel}
+\includegraphics[width=0.9\textwidth]{figure/onco-ex-sel-1}
 \end{center}
 \caption{Multiple output from \texttt{oncoprint} can be captured as a {\tt gtable} and composed via {\tt grid.arrange} (package {\tt gridExtra}). In this case we show  aCML data on top -- displayed after the {\tt as.alterations} transformation -- versus a selected subdataset of events with a minimum frequency of 5\%, force exclusion of SETBP1 (all events associated), and inclusion of EZH1 and EZH2.}
 \end{figure*}
@@ -727,21 +632,21 @@ We make use of the most of the  functions described above to show how to perform
 
 To replicate the plots of the original  paper were the aCML dataset was first analyzed with  {CAPRI}, we can change the colors assigned to each type of event with the function \texttt{change.color}. 
 
-\begin{mybox}
+
 <<>>=
 dataset = change.color(aCML, 'Ins/Del', 'dodgerblue4')
 dataset = change.color(dataset, 'Missense point', '#7FC97F')
 as.colors(dataset)
 @
-\end{mybox}
+
 
 
 \paragraph{Data consolidation.} All TRONCO algorithms require an input dataset were events have non-zero/non-one probability, and are all distinguishable. The tool provides a function to  return lists of events which do not satisfy these constraint.
-\begin{mybox}
+
 <<>>=
 consolidate.data(dataset)
 @
-\end{mybox}
+
 
 The aCML data has none of the above issues (the call returns empty lists); if this were not the case data manipulation functions can be used to edit a TRONCO object (\S \ref{sec:datamanip}).
 
@@ -750,35 +655,35 @@ The aCML data has none of the above issues (the call returns empty lists); if th
 
  In what follows, we show CAPRI's functioning by replicating the aCML case study presented in CAPRI's original paper. Regardless from which types of mutations we include, we select only the genes  mutated at least in the $5\%$ of the patients -- thus   we first use {\tt as.alterations} to have gene-level frequencies, and then we apply there a frequency filter (R's output is omitted). 
 
-\begin{mybox}
-<<results=hide>>=
+
+<<results='hide'>>=
 alterations = events.selection(as.alterations(aCML), filter.freq = .05)
 @
-\end{mybox}
+
 
 To proceed further with the example we  create the \texttt{dataset} to be used for the inference of the  model. From the original dataset  we select all the genes whose mutations are occurring at least the $5\%$ of the times, and we get that by the alterations profiles; also we force inclusion of all the events for the  genes involved in an hypothesis (those included in variable {\tt gene.hypotheses}, this list is based on the support  found in the literature of potential aCML patterns).
 
-\begin{mybox}
-<<results=hide>>=
+
+<<results='hide'>>=
 gene.hypotheses = c('KRAS', 'NRAS', 'IDH1', 'IDH2', 'TET2', 'SF3B1', 'ASXL1')
 aCML.clean = events.selection(aCML,
     filter.in.names=c(as.genes(alterations), gene.hypotheses))
 aCML.clean = annotate.description(aCML.clean, 
     'CAPRI - Bionformatics aCML data (selected events)')
 @
-\end{mybox}
+
 
 We show a new oncoprint of this latest dataset where we annotate the genes in \texttt{gene.hypotheses} in order to identify them. The sample names are also shown. 
 
-\begin{mybox}
-<<onco-edited, fig=TRUE, include=FALSE, width=8, height=5.5,results=hide>>=
+
+<<onco-edited, fig.show='hide', fig.width=8, fig.height=5.5,results='hide'>>=
 oncoprint(aCML.clean, gene.annot = list(priors = gene.hypotheses), sample.id = TRUE)
 @
-\end{mybox}
+
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.8\textwidth, page=2]{vignette-onco-edited}
+\includegraphics[width=0.8\textwidth]{figure/onco-edited-1}
 \end{center}
 \vspace*{.05in}
 \caption{Data selected for aCML reconstruction annotated with the events which are part of a pattern that we will input to CAPRI.}
@@ -805,26 +710,29 @@ NRAS:Missense point XOR KRAS:Missense point
 \end{center}
 tested against all the events in the dataset (default {\tt pattern.effect = *})
  
-\begin{mybox}
+
 <<>>=
 aCML.hypo = hypothesis.add(aCML.clean, 'NRAS xor KRAS', XOR('NRAS', 'KRAS'))
 @
-\end{mybox}
+
 
 When a pattern is included, a new column in the dataset is created -- whose signature is given by the evaluation of the formula constituting the pattern. We call this operation {\bf lifting of a pattern}, and this shall create not inconsistency in the data -- i.e., it shall not duplicate any of the other columns. TRONCO check this; for instance when we try to include  a soft exclusivity (OR) pattern for the above genes we get an error (not shown).
-\begin{mybox}
+
 <<eval=FALSE>>=
 aCML.hypo = hypothesis.add(aCML.hypo, 'NRAS or KRAS',  OR('NRAS', 'KRAS'))
 @
-\end{mybox}
+
 
 Notice that TRONCO functions can be used to look at their alterations and understand why the OR signature is equivalent to the XOR one -- this happens as no samples harbour both mutations.
 
-\begin{mybox}
-<<onco-kras-nras, fig=TRUE, include=FALSE, width=6, height=1>>=
-oncoprint(events.selection(aCML.hypo, filter.in.names = c('KRAS', 'NRAS')), font.row = 8, ann.hits = FALSE)
+
+<<onco-kras-nras, fig.show='hide', fig.width=6, fig.height=1>>=
+oncoprint(events.selection(aCML.hypo,
+    filter.in.names = c('KRAS', 'NRAS')),
+    font.row = 8,
+    ann.hits = FALSE)
 @
-\end{mybox}
+
 
 We repeated the same analysis as before for other hypotheses and for the same reasons, we will include only the hard exclusivity pattern. In this case we add a two-levels pattern
 \begin{center}
@@ -832,17 +740,17 @@ SF3B1:Missense point XOR (ASXL1:Ins/Del XOR ASXL1:Nonsense point)
 \end{center}
 since ASXL1 is mutated in two different ways, and no samples harbour both mutation types. 
 
-\begin{mybox}
+
 <<>>=
 aCML.hypo = hypothesis.add(aCML.hypo, 'SF3B1 xor ASXL1', XOR('SF3B1', XOR('ASXL1')),
     '*')
 @
-\end{mybox}
+
 
 
 Finally, we now do the same for genes TET2 and IDH2. In this case $3$ events for the gene TET2 are present, that is ``Ins/Del'', ``Missense point'' and ``Nonsense point''. For this reason, since we are not specifying any subset of such events to be considered, all TET2 alterations are used. Since the events present a perfect hard exclusivity, their patters will be included as a XOR. 
 
-\begin{mybox}
+
 <<>>=
 as.events(aCML.hypo, genes = 'TET2') 
 aCML.hypo = hypothesis.add(aCML.hypo,
@@ -854,7 +762,7 @@ aCML.hypo = hypothesis.add(aCML.hypo,
     OR('TET2', 'IDH2'),
     '*')
 @
-\end{mybox}
+
 
 Which is the following pattern
 \begin{center}
@@ -862,16 +770,19 @@ Which is the following pattern
 \end{center}
 which we can visualize via {\tt an oncoprint}.
 
-\begin{mybox}
-<<onco-tet2-idh2, fig=TRUE, include=FALSE, width=7, height=2,results=hide>>=
-oncoprint(events.selection(aCML.hypo, filter.in.names = c('TET2', 'IDH2')), font.row = 8, ann.hits = FALSE)
+
+<<onco-tet2-idh2, fig.show='hide', fig.width=7, fig.height=2,results='hide'>>=
+oncoprint(events.selection(aCML.hypo,
+    filter.in.names = c('TET2', 'IDH2')),
+    font.row = 8,
+    ann.hits = FALSE)
 @
-\end{mybox}
+
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.8\textwidth, page=2]{vignette-onco-kras-nras}
-\includegraphics[width=0.8\textwidth, page=2]{vignette-onco-tet2-idh2}
+\includegraphics[width=0.8\textwidth]{figure/onco-kras-nras-1}
+\includegraphics[width=0.8\textwidth]{figure/onco-tet2-idh2-1}
 \end{center}
 \vspace*{.05in}
 \caption{\texttt{oncoprint} output to show the perfect (hard) exclusivity among NRAS/KRAS mutations in aCML on top, and the sofy-one among  TET2 and IDH2 alterations.}
@@ -884,20 +795,11 @@ oncoprint(events.selection(aCML.hypo, filter.in.names = c('TET2', 'IDH2')), font
 It could be a good idea to test such events, in terms of progression fitness, to test is they might be equivalent; we can do that by building a pattern of exclusivity among them. TRONCO has a function to make this automatically which, by default, adds a soft exclusivity OR pattern among them. 
 
 
-\begin{mybox}
-<<results=hide>>=
+
+<<results='hide'>>=
 aCML.hypo = hypothesis.add.homologous(aCML.hypo)
 @
-\begin{verbatim}
-*** Adding hypotheses for Homologous Patterns
-Genes: TET2, EZH2, CBL, ASXL1, CSF3R
-Function: OR
-Cause: *
-Effect: *
-|============================================================================| 100%
-Hypothesis created for all possible gene patterns.
-\end{verbatim}
-\end{mybox}
+
 
 This function added one  pattern for each of TET2, EZH2, CBL, ASXL1, CSF3R (unless they created duplicated columns in the dataset), with a connective OR/XOR which is appropriate for the events considered; for instance the TET2 homologous pattern 
 \begin{center}
@@ -912,11 +814,11 @@ The idea behind the previous function is generalized by {\tt hypothesis.add.grou
 
 This function takes, among its inputs, the top-level logical connective, AND/OR/XOR, a minimum/maximum pattern size -- to restrict the combinatorial sampling of subgroups --, plus a parameter that can be used to constrain the minimum event frequency. If, among the events included some of them have homologous, these are put automatically nested with the same logic of the {\tt hypothesis.add.group} function.
 
-\begin{mybox}
+
 <<hypo-add-hom>>=
 dataset = hypothesis.add.group(aCML.clean, OR, group = c('SETBP1', 'ASXL1', 'CBL'))
 @
-\end{mybox}
+
 
 \FloatBarrier
 
@@ -925,16 +827,16 @@ dataset = hypothesis.add.group(aCML.clean, OR, group = c('SETBP1', 'ASXL1', 'CBL
 
 
 The final dataset that will be given as input to CAPRI is  finally shown. Notice the signatures of  all the lifted patterns.
-\begin{mybox}
-<<onco-priors, fig=TRUE, include=FALSE, width=8, height=6.5,results=hide>>=
+
+<<onco-priors, fig.show='hide', fig.width=8, fig.height=6.5,results='hide'>>=
 oncoprint(aCML.hypo, gene.annot = list(priors = gene.hypotheses), sample.id = TRUE, 
     font.row=10, font.column=5, cellheight=15, cellwidth=4)
 @
-\end{mybox}
+
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.9\textwidth, page=2]{vignette-onco-priors}
+\includegraphics[width=0.9\textwidth]{figure/onco-priors-1}
 \end{center}
 \vspace*{.05in}
 \caption{\texttt{oncoprint} output of the a dataset that has patterns that could be given as input to CAPRI to retrieve a progression model.}
@@ -947,51 +849,51 @@ oncoprint(aCML.hypo, gene.annot = list(priors = gene.hypotheses), sample.id = TR
 
 
 We also provide functions to get the number of hypotheses and patterns present in the data.
-\begin{mybox}
+
 <<n-hypo-pat>>=
 npatterns(dataset)
 nhypotheses(dataset)
 @
-\end{mybox}
+
 
 We can visualize any pattern or the elements involved in them with the following functions.
-\begin{mybox}
+
 <<as-patterns>>=
 as.patterns(dataset)
 as.events.in.patterns(dataset)
 as.genes.in.patterns(dataset)
 as.types.in.patterns(dataset)
 @
-\end{mybox}
+
 
 Similarily, we can enumerate the  hypotheses with the function \texttt{as.hypotheses}, and delete certain patterns and hypotheses. Deleting a pattern consists in deleting all of its hypotheses.
 
-\begin{mybox}
+
 <<as-hypotheses>>=
 head(as.hypotheses(dataset))
 dataset = delete.hypothesis(dataset, event = 'TET2')
 dataset = delete.pattern(dataset, pattern = 'OR_ASXL1_CBL')
 @
-\end{mybox}
+
 
 \paragraph{How to build a pattern.}
 
 It is sometimes of help to plot some information about a certain combination of events, and a target -- especially to disentangle the proper logical connectives to use when building a pattern. Here, we test genes SETBP1 and ASXL1 versus Missense point mutations of  CSF3R, and observe that the majority of observations are mutually exclusive, but almost half of the  CSF3R mutated samples with Missense point mutations do not harbout any mutation in SETBP1 and ASXL1.
 
-\begin{mybox}
-<<pattern-plot, fig=TRUE,include=FALSE, width = 4, height = 2.2>>=
+
+<<pattern-plot,fig.show='hide', fig.width=4, fig.height=2.2>>=
 tronco.pattern.plot(aCML,
     group = as.events(aCML, genes=c('SETBP1', 'ASXL1')),
     to = c('CSF3R', 'Missense point'),
     legend.cex=0.8,
     label.cex=1.0)
 @
-\end{mybox}
+
 
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.8\textwidth]{vignette-pattern-plot}
+\includegraphics[width=0.8\textwidth]{figure/pattern-plot-1}
 \end{center}
 \caption{Barplot to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missense point mutations of  CSF3R, which suggests that  that pattern does not ``capture'' all the samples with  CSF3R mutations. }
 \end{figure*}
@@ -1000,8 +902,8 @@ tronco.pattern.plot(aCML,
 
  It is also possible to create a circle plot where we can observe the contribution of genes SETBP1 and ASXL1 in every match with a Missense point mutations of  CSF3R.
 
-\begin{mybox}
-<<pattern-plot-circos, fig=TRUE,include=FALSE,results=hide,  width = 6, height = 6>>=
+
+<<pattern-plot-circos,fig.show='hide',results='hide',  fig.width=6, fig.height=6>>=
 tronco.pattern.plot(aCML,
     group = as.events(aCML, genes=c('TET2', 'ASXL1')),
     to = c('CSF3R', 'Missense point'),
@@ -1009,13 +911,13 @@ tronco.pattern.plot(aCML,
     label.cex = 0.8,
     mode='circos')
 @
-\end{mybox}
+
 
 
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.8\textwidth]{vignette-pattern-plot-circos}
+\includegraphics[width=0.8\textwidth]{figure/pattern-plot-circos-1}
 \end{center}
 \caption{Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missense point mutations of  CSF3R. The combination of this and the previous  plots should allow to understand which pattern we shall write in an attempt to capture a potential causality relation between the pattern and the event.
 }
@@ -1028,12 +930,14 @@ tronco.pattern.plot(aCML,
 
 We run the inference of the model by CAPRI algorithm with its default parameter: we use both AIC and BIC as regularizators, Hill-climbing as heuristic search of the solutions and exhaustive bootstrap ({\tt nboot} replicates or more for Wilcoxon testing, i.e., more iterations can be performed if samples are rejected), p-value are set at $0.05$. We set the seed for the sake of reproducibility. 
 
-\begin{mybox}
-<<>>=
+
+<<model-capri, results='hide'>>=
 model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot = 1)
+@
+<<model-capri-annotate>>=
 model.capri = annotate.description(model.capri, 'CAPRI - aCML')
 @
-\end{mybox}
+
 
 \subsection{CAPRESE}
 
@@ -1041,12 +945,12 @@ The CAPRESE algorithm is one of a set of algorithms to reconstruct progression m
 
 Despite this is derived to infer progression models from individual level data, we use it here to process aCML data (without patterns and with its default parameters). This algorithm has no bootstrap and, as such, is the quickest available in TRONCO.
 
-\begin{mybox}
+
 <<caprese-plot>>=
 model.caprese = tronco.caprese(aCML.clean)
 model.caprese = annotate.description(model.caprese, 'CAPRESE - aCML')
 @
-\end{mybox}
+
 
 \FloatBarrier
 
@@ -1055,12 +959,14 @@ model.caprese = annotate.description(model.caprese, 'CAPRESE - aCML')
 This algorithm is meant to  extract a forest of trees of progression from data of an individual patient. This algorithm is based on a 
 formulation of the  problem in terms of minimum spamming trees and exploits results from Edmonds. We test it to infer a model from aCML data as we did with CAPRESE.
 
-\begin{mybox}
-<<edmonds-plot>>=
+
+<<edmonds-plot, results='hide'>>=
 model.edmonds = tronco.mst.edmonds(aCML.clean, nboot = 10, boot.seed = 12345)
+@
+<<edmonds-plot-annotate>>=
 model.edmonds = annotate.description(model.edmonds, 'MST Edmonds - aCML')
 @
-\end{mybox}
+
 
 \FloatBarrier
 
@@ -1072,12 +978,14 @@ formulation of the  problem in terms of minimum spamming trees and exploits resu
 
  We test it to aCML data as all the other algorithms.
 
-\begin{mybox}
-<<chow-liu-plot>>=
+
+<<chow-liu-plot, results='hide'>>=
 model.chowliu = tronco.mst.chowliu(aCML.clean, nboot = 10, boot.seed = 12345)
+@
+<<chow-liu-plot-annotate>>=
 model.chowliu = annotate.description(model.chowliu, 'MST Chow Liu - aCML')
 @
-\end{mybox}
+
 
 \FloatBarrier
 
@@ -1086,12 +994,14 @@ model.chowliu = annotate.description(model.chowliu, 'MST Chow Liu - aCML')
 This algorithm is meant   to extract a progression  from data of an individual patient. As the Chow Liu algorithm, this  could retrieve a direct acyclic graph  according to the level of noise and heterogeneity of the input data. This algorithm formulatesf the  problem in terms of undirected minimum spamming trees and exploits results from Prim, which are a generalization of Edomonds' ones.  We test it to aCML data as all the other algorithms.
 
 
-\begin{mybox}
-<<prim-plot>>=
+
+<<prim-plot, results='hide'>>=
 model.prim = tronco.mst.prim(aCML.clean, nboot = 10, boot.seed = 12345)
+@
+<<prim-plot-annotate>>=
 model.prim = annotate.description(model.prim, 'MST Prim - aCML data')
 @
-\end{mybox}
+
 
 \FloatBarrier
 
@@ -1101,18 +1011,18 @@ model.prim = annotate.description(model.prim, 'MST Prim - aCML data')
 TRONCO provides functions to plot a model, access information about the probabilities used to extract it from data, and two types of confidence measures: those used to infer the model, and those computed a posteriori from it.
 
 Function {\tt view} provides updated information about a model if this is available. 
-\begin{mybox}
+
 <<>>=
 view(model.capri)
 @
-\end{mybox}
+
 
 \subsection{Visualizing a reconstructed model}
 
 We can plot a model by using function {\tt tronco.plot}. Here, we plot the aCML model inferred by CAPRI with BIC and AIC as a regolarizator. We set some parameters to get a nice plot (scaling etc.), and distinguish the edges detected by the two regularization techniques. The confidence of each edge is shown  in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input). Events are annotated as in the oncoprint, edge p-values above a minium threshold (default 0.05) are red.
 
-\begin{mybox}
-<<capri-plot, fig=TRUE,include=FALSE,width=4,height=4>>=
+
+<<capri-plot,fig.show='hide',fig.width=4,fig.height=4>>=
 tronco.plot(model.capri, 
     fontsize = 12, 
     scale.nodes = 0.6, 
@@ -1124,11 +1034,11 @@ tronco.plot(model.capri,
     legend.pos='top'
     )
 @
-\end{mybox}
+
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.8\textwidth]{vignette-capri-plot}
+\includegraphics[width=0.8\textwidth]{figure/capri-plot-1}
 \end{center}
 \caption{aCML model reconstructed by CAPRI with  AIC/BIC as  regolarizators; the confidence of each edge is shown both in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input).}
 \end{figure*}
@@ -1137,19 +1047,19 @@ tronco.plot(model.capri,
 
 We can also make a multiplot with this function,  which in this case we do by showing the models inferred by the other algorithms based on Minimum Spanning Trees.
 
-\begin{mybox}
-<<mst-plot, fig=TRUE,include=FALSE,results=hide,width=7,height=7>>=
+
+<<mst-plot,fig.show='hide',results='hide',fig.width=7,fig.height=7>>=
 par(mfrow = c(2,2))
 tronco.plot(model.caprese, fontsize = 25, scale.nodes = 0.6, legend = FALSE)
 tronco.plot(model.edmonds, fontsize = 25, scale.nodes = 0.6, legend = FALSE)
 tronco.plot(model.chowliu, fontsize = 25, scale.nodes = 0.6, legend.cex = .7)
 tronco.plot(model.prim, fontsize = 25, scale.nodes = 0.6, legend = FALSE)
 @
-\end{mybox}
+
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=1\textwidth]{vignette-mst-plot}
+\includegraphics[width=1\textwidth]{figure/mst-plot-1}
 \end{center}
 \caption{aCML data processed model by algorithms to extract models from individual patients, we show the otput of  CAPRESE,  and all algorithms based on Minimum Spanning Trees (Edmonds, Chow Liu and Prim). Only the  model retrieved by Chow Liu has two different edge colors as it was regularized with two different strategies: AIC and BIC.
 }
@@ -1158,22 +1068,22 @@ tronco.plot(model.prim, fontsize = 25, scale.nodes = 0.6, legend = FALSE)
 \subsection{Accessing information within a model (e.g., confidence)}
 
 We can visualize a summary of the parameters   used for the reconstruction, test if an object has a model or delete it (which shall be done to retrieve the original dataset).
-\begin{mybox}
+
 <<>>=
  as.data.frame(as.parameters(model.capri))
 has.model(model.capri)
 dataset = delete.model(model.capri)
 @
-\end{mybox}
+
 
 \paragraph{Model structure.}
 A set of functions can be used to visualize the content of object which contains the reconstructed model. For instance, we can access the adjacency matrix of a model by using {\tt as.adj.matrix} which will return a matrix for each one of the regularizators used -- in this case because CAPRI was run with both BIC/AIC.
 
-\begin{mybox}
+
 <<>>=
 str(as.adj.matrix(model.capri))
 @
-\end{mybox}
+
 
 
 
@@ -1181,47 +1091,47 @@ str(as.adj.matrix(model.capri))
 \paragraph{Empirical probabilities.}
 
 Every model is inferred by estimating the empirical marginal, joint and conditional probabilities for all the events, from input data. These in some cases are estimated by a bootstrap procedure (see the algorithms implemented). TRONCO has functions to extract such table, that could be in turn printed by using external  functions for, e.g., heatmap visualization (see below for an example via the {\tt pheatmap} package). We show these functions working with the CAPRI model; in this case the tables are the same for both BIC/AIC structures as they are computed before performing penalized likelihood-fit. The marginal  $P(x)$ for $x$ an event in the dataset are obtained by {\tt as.marginal.probs}. 
-\begin{mybox}
+
 <<>>=
 marginal.prob = as.marginal.probs(model.capri)
 head(marginal.prob$capri_bic)
 @
-\end{mybox}
+
 
 Similarly,   the joint $P(x,y)$ for every pair of events in the dataset is given by {\tt as.joint.probs}.
-\begin{mybox}
+
 <<>>=
 joint.prob = as.joint.probs(model.capri, models='capri_bic')
 joint.prob$capri_bic[1:3, 1:3]
 @
-\end{mybox}
+
 
 And {\tt as.conditional.probs} finally gives the conditional $P(x\mid y)$ for every edge in the dataset.
-\begin{mybox}
+
 <<>>=
 conditional.prob = as.conditional.probs(model.capri, models='capri_bic')
 head(conditional.prob$capri_bic)
 @
-\end{mybox}
+
 
 \paragraph{Confidence measures.}
 
 Confidence scores  can be accessed by function {\tt as.confidence}, which takes as parameter the type of confidence measure that one wants to access to. This will work for either confidence measures assessed before reconstructing the model -- if available --, or afterwards.
-\begin{mybox}
+
 <<>>=
 str(as.confidence(model.capri, conf = c('tp', 'pr', 'hg')))
 @
-\end{mybox}
+
 
 
 
 Other functions  visualize  tables summarizing the  statistics for each edge in the model, For instance, if one uses function {\tt as.selective.advantage.relations}  the  p-values for temporal priority, probability raising and hypergeometric testing, as well as other information about each edge  can be accessed, e.g., the number of observations for the upstream and the downstream events.
 
-\begin{mybox}
+
 <<selective-advantage>>=
 as.selective.advantage.relations(model.capri)
 @
-\end{mybox}
+
 
 
 
@@ -1231,17 +1141,17 @@ as.selective.advantage.relations(model.capri)
 TRONCO provides three different strategies to perform  bootstrap and assess confidence of each edge in terms of a score in the range [0, 100] (100 is the highest confidence). Non-parametric (default), parametric and statistical bootstrap strategies are available, and can be executed by calling function {\tt tronco.bootstrap} with {\tt type} parameter set appropriately. This function is parallel, and parameter {\tt cores.ratio} (default 1) can be used to percentage of available cores that shall be used to compute the scores.
 Parameter {\tt nboot} controls the number of bootstrap iterations.
 
-\begin{mybox}
+
 <<>>=
 model.boot = tronco.bootstrap(model.capri, nboot = 1)
 model.boot = tronco.bootstrap(model.boot, nboot = 1, type = 'statistical')
 @
-\end{mybox}
+
 
 
 Bootstrap scores can be annotated to the {\tt tronco.plot} output by setting them via the confidence parameter {\tt confidence=c('npb', 'sb')}. In this case edge thickness will be proportional to the non-parametric ({\tt npb}) scores -- the last to appear in the {\tt confidence} parameter.
-\begin{mybox}
-<<figplotboot, fig=TRUE,include=FALSE,width=4,height=4>>=
+
+<<figplotboot,fig.show='hide',fig.width=4,fig.height=4>>=
 tronco.plot(model.boot, 
     fontsize = 12, 
     scale.nodes = .6,   
@@ -1252,12 +1162,12 @@ tronco.plot(model.boot,
     label.edge.size=10, 
     legend.pos = 'top')
 @
-\end{mybox}
+
 
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.8\textwidth]{vignette-figplotboot}
+\includegraphics[width=0.8\textwidth]{figure/figplotboot-1}
 \end{center}
 \caption{aCML model reconstructed by CAPRI with  AIC/BIC as  regolarizators and annotated with both non-parametric and statistical bootstrap scores. 
 Edge thickness is proportional to   the non-parametric  scores.}
@@ -1268,17 +1178,17 @@ Edge thickness is proportional to   the non-parametric  scores.}
 
 Bootstrap scores can extracted or visualized even with other TRONCO functions. For instance, we can accessall scores via {\tt as.bootstrap.scores}, which resembles  function{\tt as.selective.advantage.relations} and will display the scores per edge. Notice that even function {\tt view} gives an update output by mentioning the available bootstrap scores.
 
-\begin{mybox}
+
 <<bootstrap-table>>=
 as.bootstrap.scores(model.boot)
 view(model.boot)
 @
-\end{mybox}
+
 
 If we want to access a matrix with the scores and visualize that in a heatmap we can use for instance the {\tt pheatmap} function of TRONCO. In this case we need to use also function {\tt keysToNames} to translate internal TRONCO keys to mnemonic names in the plot 
 
-\begin{mybox}
-<<hboot, fig=TRUE,include=FALSE,width=7,height=7>>=
+
+<<hboot,fig.show='hide',fig.width=7,fig.height=7>>=
 pheatmap(keysToNames(model.boot, as.confidence(model.boot, conf = 'sb')$sb$capri_aic) * 100, 
            main =  'Statistical bootstrap scores for AIC model',
            fontsize_row = 6,
@@ -1287,12 +1197,12 @@ pheatmap(keysToNames(model.boot, as.confidence(model.boot, conf = 'sb')$sb$capri
            number_format = "%d"
            )
 @
-\end{mybox}
+
 
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.7\textwidth, page=2]{vignette-hboot} 
+\includegraphics[width=0.7\textwidth]{figure/hboot-1} 
 \end{center}
 \vspace*{.05in}
 \caption{Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization).}
@@ -1310,27 +1220,27 @@ TRONCO implements $k$-fold cross-validation routines (from the {\tt bnlearn} pac
 
 By default, a 10 repetitions from  10-fold cross-validation experiment are perfomed, for all the models which are found inside a TRONCO object -- in this case 2, one for CAPRI with BIC and one for CAPRI with AIC.
  
-\begin{mybox}
+
 <<kfold>>=
 model.boot = tronco.kfold.eloss(model.boot)
-model.boot = tronco.kfold.prederr(model.boot)
-model.boot = tronco.kfold.posterr(model.boot)
+model.boot = tronco.kfold.prederr(model.boot, runs = 2)
+model.boot = tronco.kfold.posterr(model.boot, runs = 2)
 @
-\end{mybox}
+
 
 These results can be visualized in terms of summary tables, as for the other confidence scores.
 
-\begin{mybox}
-<<as-kfold>>=
+
+<<as-kfold-ex>>=
 as.kfold.eloss(model.boot)
 as.kfold.prederr(model.boot)
 as.kfold.posterr(model.boot)
 @
-\end{mybox}
+
 
 Notice that these can be combined to create a nice table with all these statistics  -- we make here the example of a table with all the BIC statistics. This format can be readily exported to external spreadsheets for further visualization.
-\begin{mybox}
-<<as-kfold>>=
+
+<<as-kfold-tab>>=
 tabular = function(obj, M){
     tab = Reduce(
         function(...) merge(..., all = TRUE), 
@@ -1347,13 +1257,13 @@ tabular = function(obj, M){
 
 head(tabular(model.boot, 'capri_bic'))
 @
-\end{mybox}
+
 
 
 We finally show the plot of the model with the confidences by cross-validation.
 
-\begin{mybox}
-<<plot-conf, fig=TRUE,include=FALSE,width=4,height=4>>=
+
+<<plot-conf,fig.show='hide',fig.width=4,fig.height=4>>=
 tronco.plot(model.boot, 
     fontsize = 12, 
     scale.nodes = .6, 
@@ -1364,12 +1274,12 @@ tronco.plot(model.boot,
     label.edge.size=10,
     legend.pos = 'top')
 @
-\end{mybox}
+
 
 
 \begin{figure*}[ht]
 \begin{center}
-\includegraphics[width=0.8\textwidth]{vignette-plot-conf}
+\includegraphics[width=0.8\textwidth]{figure/plot-conf-1}
 \end{center}
 \caption{aCML model reconstructed by CAPRI with  AIC/BIC as regolarizators and annotated with  non-parametric, as well as with entropy loss, prediction and posterior classification errors computed via cross-validation. Edge thickness is proportional to   the non-parametric  scores.}
 \end{figure*}

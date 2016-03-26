@@ -39,6 +39,7 @@ Suggests:
     BiocGenerics,
     BiocStyle,
     testthat,
+    knitr,
 Name: 
     An R package for the inference of cancer progression models from heterogeneous genomic data
 Description:
@@ -64,5 +65,10 @@ BugReports: https://github.com/BIMIB-DISCo/TRONCO
 biocViews: BiomedicalInformatics, 
            Bayesian,
            GraphAndNetwork,
-           SomaticMutation
+           SomaticMutation,
+           NetworkInference,
+           Network,
+           Clustering,
+           DataImport
 RoxygenNote: 5.0.1
+VignetteBuilder: knitr
