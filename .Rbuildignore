@@ -3,5 +3,3 @@
 ^.gitignore$
 ^.travis.yml$
 ^.git/.*$
-^R/dag.estimation.R$
-^R/tree.estimation.R$
