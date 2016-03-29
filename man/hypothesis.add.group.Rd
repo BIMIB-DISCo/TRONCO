@@ -6,7 +6,7 @@
 \usage{
 hypothesis.add.group(x, FUN, group, pattern.cause = "*",
   pattern.effect = "*", dim.min = 2, dim.max = length(group),
-  min.prob = 0)
+  min.prob = 0, silent = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
@@ -24,6 +24,8 @@ hypothesis.add.group(x, FUN, group, pattern.cause = "*",
 \item{dim.max}{Maximum cardinality of the subgroups to be considered.}
 
 \item{min.prob}{Minimum probability associated to each valid group.}
+
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
 A TRONCO compliant object with the added hypotheses

@@ -1594,7 +1594,11 @@ tronco.plot <- function(x,
         if (length(pathways.color) == 1
             && pathways.color %in% rownames(brewer.pal.info)) {
             cat('Annotating pathways with RColorBrewer color palette', pathways.color, '.\n')
-            cols = brewer.pal(n=length(names(pathways)), name=pathways.color)
+            n=length(names(pathways))
+            if (n < 3) {
+                n = 3
+            }
+            cols = brewer.pal(n = n, name = pathways.color)
         } else {
             if (length(pathways.color) != length(names(pathways))) 
                 stop('You did not provide enough colors to annotate',

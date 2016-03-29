@@ -290,7 +290,7 @@ import.GISTIC <- function(x,
 #' @export import.MAF
 #' @importFrom utils read.table read.delim count.fields flush.console
 #' @importFrom utils txtProgressBar setTxtProgressBar
-#' @importFrom grDevices colorRampPalette
+# @importFrom grDevices colorRampPalette
 #' 
 import.MAF <- function(file,
                        sep = '\t',
@@ -496,8 +496,8 @@ import.MAF <- function(file,
         if (!silent) {
             cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
             cat(length(MAF.samples), "x", length(MAF.genes), "\n")
-            flush.console()
-            pb <- txtProgressBar(1, nrow(maf), style = 3)
+            #flush.console()
+            #pb <- txtProgressBar(1, nrow(maf), style = 3)
         }
 
 
@@ -509,13 +509,13 @@ import.MAF <- function(file,
         rownames(binary.mutations) = MAF.samples
 
         for (i in 1:nrow(maf)) {
-            if (!silent) {
-                setTxtProgressBar(pb, i)
-            }
+            #if (!silent) {
+            #    setTxtProgressBar(pb, i)
+            #}
             binary.mutations[maf$Tumor_Sample_Barcode[i], maf$Hugo_Symbol[i]] = 1
         }
         if (!silent) {
-            close(pb)
+            #close(pb)
             cat("Starting conversion from MAF to TRONCO data type.\n")
         }
         tronco.data = import.genotypes(binary.mutations, event.type = "Mutation")
@@ -523,8 +523,8 @@ import.MAF <- function(file,
     } else {
         if (!silent) {
             cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
-            flush.console()
-            pb <- txtProgressBar(1, nrow(maf), style = 3)
+            #flush.console()
+            #pb <- txtProgressBar(1, nrow(maf), style = 3)
         }
 
 
@@ -545,9 +545,9 @@ import.MAF <- function(file,
         rownames(tronco.data$genotypes) = MAF.samples
 
         for (i in 1:nrow(maf)) {
-            if (!silent) {
-                setTxtProgressBar(pb, i)
-            }
+            #if (!silent) {
+            #    setTxtProgressBar(pb, i)
+            #}
             
             ev = intersect(
                 which(tronco.data$annotations[, 'event'] == maf$Hugo_Symbol[i]), 
@@ -557,9 +557,9 @@ import.MAF <- function(file,
             tronco.data$genotypes[maf$Tumor_Sample_Barcode[i], ev] = 1
         }
 
-        if (!silent) {
-            close(pb)
-        }
+        #if (!silent) {
+        #    close(pb)
+        #}
         
         
         colors = colorRampPalette(brewer.pal(8, 'Accent'))(length(MAF.variants))

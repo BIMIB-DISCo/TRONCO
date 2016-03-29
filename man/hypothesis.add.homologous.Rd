@@ -5,7 +5,7 @@
 \title{hypothesis.add.homologous}
 \usage{
 hypothesis.add.homologous(x, pattern.cause = "*", pattern.effect = "*",
-  genes = as.genes(x), FUN = OR)
+  genes = as.genes(x), FUN = OR, silent = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
@@ -17,6 +17,8 @@ hypothesis.add.homologous(x, pattern.cause = "*", pattern.effect = "*",
 \item{genes}{List of genes to be considered as possible homologous. For these genes, all the types of mutations will be considered functionally equivalent.}
 
 \item{FUN}{Type of pattern to be added, e.g., co-occurance, soft or hard exclusivity.}
+
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
 A TRONCO compliant object with the added hypotheses

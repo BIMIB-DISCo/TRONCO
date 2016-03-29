@@ -6,7 +6,7 @@ r:
   - devel
 cache: packages
 
-before_install:
+before_install:    
   - tlmgr install tcolorbox
 
 r_github_packages:

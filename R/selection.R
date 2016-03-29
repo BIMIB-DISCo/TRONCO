@@ -21,29 +21,31 @@
 #' @param filter.freq [0,1] value which constriants the minimum frequence of selected events
 #' @param filter.in.names gene symbols which will be included
 #' @param filter.out.names gene symbols which will NOT be included
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant dataset.
 #' @export events.selection
-#' @importFrom utils flush.console txtProgressBar setTxtProgressBar
+# @importFrom utils flush.console txtProgressBar setTxtProgressBar
 #' 
 events.selection <- function(x,
                              filter.freq = NA,
                              filter.in.names = NA,
-                             filter.out.names = NA) {
+                             filter.out.names = NA,
+                             silent = FALSE) {
 
     is.compliant(x, err.fun='events.selection: input')
     dataset = x$genotypes
 
-    cat(paste('*** Events selection: #events = ',
-                  nevents(x),
-              ', #types = ',
-              ntypes(x),
-              sep = ''))
+    if (!silent) {
+        cat('*** Events selection: #events = ',
+            nevents(x),
+            ', #types = ',
+            ntypes(x))
 
-        cat(paste(' Filters freq|in|out = {', 
-                  !is.na(filter.freq), ', ',
-                  !any(is.na(filter.in.names)), ', ',
-                  !any(is.na(filter.out.names)), '}',
-                  sep= ''))
+        cat(' Filters freq|in|out = {', 
+            !is.na(filter.freq), ', ',
+            !any(is.na(filter.in.names)), ', ',
+            !any(is.na(filter.out.names)), '}')
+    }
 
 
     if (is.na(filter.out.names) && is.na(filter.in.names) && is.na(filter.freq)) {
@@ -53,53 +55,56 @@ events.selection <- function(x,
     valid = rep(FALSE, ncol(x$genotypes))
 
     if (!is.na(filter.freq)) {
-        cat(paste('\nMinimum event frequency: ',
-                  filter.freq,
-                  ' (',
-                  round(nsamples(x) * filter.freq, 0),
-                  ' alterations out of ',
-                  nsamples(x),
-                  ' samples).\n',
-                  sep = ''))
+
+        if (!silent) {
+            cat('\nMinimum event frequency: ',
+                filter.freq,
+                ' (',
+                round(nsamples(x) * filter.freq, 0),
+                ' alterations out of ',
+                nsamples(x),
+                ' samples).\n')
+        }
         x = enforce.numeric(x)
 
 
-        flush.console()
-        pb = txtProgressBar(1, nevents(x), style = 3)
+        #flush.console()
+        #pb = txtProgressBar(1, nevents(x), style = 3)
         
         for (i in 1:nevents(x)) {   
-            setTxtProgressBar(pb, i)
+            #setTxtProgressBar(pb, i)
             mut.freq = sum(x$genotypes[,i])/nsamples(x)
             valid[i] = mut.freq > filter.freq
         }
         
-        close(pb)
+        #close(pb)
 
-        cat(paste('Selected ',
-                  nrow(as.events(x)[valid, ]),
-                  ' events.\n',
-                  sep = ''))
+        if (!silent) {
+            cat('Selected ',
+                nrow(as.events(x)[valid, ]),
+                ' events.\n')
+        }
     }
 
     if (!any(is.na(filter.in.names))) {
         shown = min(5, length(filter.in.names))
 
-        cat(paste('\n[filter.in] Genes hold: ', 
-                  sep='',
-                  paste(filter.in.names[1:shown], collapse=', '),
-                  ' ... '))
+        if (!silent) {
+            cat('\n[filter.in] Genes hold: ', 
+                paste(filter.in.names[1:shown], collapse=', '),
+                ' ... ')
+        }
 
-        colnames =
-            which(x$annotations[,2] %in% filter.in.names,
-                  arr.ind = TRUE)
+        colnames = which(x$annotations[,2] %in% filter.in.names,
+            arr.ind = TRUE)
 
-        k =
-            unique(x$annotations[which(x$annotations[ ,'event'] %in% filter.in.names,
-                                       arr.ind = TRUE),
-                                 'event'])
+        k = unique(x$annotations[which(x$annotations[ ,'event'] %in% filter.in.names, 
+                                    arr.ind = TRUE),
+                                    'event'])
 
-        cat(paste(' [', length(k), '/', length(filter.in.names), ' found].',
-                  sep = ''))
+        if (!silent) {
+            cat(' [', length(k), '/', length(filter.in.names), ' found].')
+        }
 
         valid[colnames] = TRUE
     }
@@ -107,19 +112,22 @@ events.selection <- function(x,
     if (!any(is.na(filter.out.names))) {
         shown = min(5, length(filter.out.names))
 
-        cat(paste('\n[filter.out] Genes dropped: ', 
-                  sep = '',
-                  paste(filter.out.names[1:shown], collapse=', '), ' ... '))
+        if (!silent) {
+            cat('\n[filter.out] Genes dropped: ', 
+                paste(filter.out.names[1:shown], collapse=', '),
+                ' ... ')
+        }
 
         colnames = which(x$annotations[,2] %in% filter.out.names,
             arr.ind = TRUE)
-        cat(paste(' [',
-                  length(colnames),
-                  '/',
-                  length(filter.out.names),
-                  ' found].',
-                  sep = ''))
 
+        if (!silent) {
+            cat(' [',
+                length(colnames),
+                '/',
+                length(filter.out.names),
+                ' found].')
+        }
         valid[colnames] = FALSE
     }
 
@@ -137,7 +145,9 @@ events.selection <- function(x,
     if (!is.null(x$stages)) y$stages=x$stages
     is.compliant(x, err.fun='events.selection: output')
 
-    cat(paste('\nSelected ', nevents(y), ' events, returning.\n', sep=''))
+    if (!silent) {
+        cat('\nSelected ', nevents(y), ' events, returning.\n')
+    }
 
     return(y)
 }

@@ -248,9 +248,15 @@ rename.type <- function(x, old.name, new.name) {
     is.compliant(x, 'rename.type: input dataset')
     types = as.types(x)
 
+    if (old.name == 'Pattern'
+        || new.name == 'Pattern') {
+        stop("Pattern is a reserved keyword in TRONCO")
+    }
+
     if (old.name == new.name) {
         return(x)
     }
+
 
     if (old.name %in% types) {
         x$annotations[which(x$annotations[ , 'type'] == old.name), 'type'] = new.name
@@ -263,7 +269,6 @@ rename.type <- function(x, old.name, new.name) {
     } else {
         stop(paste(old.name, 'not in as.types(x)'))
     }
-    cat('Events of type ', old.name, 'renamed as ', new.name, '.\n', sep='')
 
     is.compliant(x, err.fun = 'rename.type: output')
     return(x)
@@ -339,6 +344,10 @@ delete.type <- function(x, type) {
         stop(paste(type, 'not in as.types(x)'))
     }
 
+    if (type == 'Pattern') {
+        x$hypotheses = NA
+    }
+
     is.compliant(x)
     return(x)
 }
@@ -410,6 +419,16 @@ delete.gene <- function(x, gene) {
 #' 
 delete.event <- function(x, gene, type) {
 
+    is.compliant(x, 'delete.event: input')
+
+    if (has.model(x)) {
+        stop("There's a reconstructed model, a type cannot be deleted now. \nUse delete.model()")
+    }
+
+    if (type == 'Pattern') {
+        stop("Pattern is a reserved keyword in TRONCO. See delete.pattern")
+    }
+
     for (pattern in as.patterns(x)) {
         events = as.events.in.patterns(x, patterns=pattern)
         if (length(which(events[,'type'] == type & events[,'event'] == gene)) > 0) {
@@ -423,7 +442,6 @@ delete.event <- function(x, gene, type) {
         }
     }
 
-    is.compliant(x, 'delete.event: input')
 
     if (all(c(type, gene) %in% as.events(x))) {
         drops = rownames(as.events(x, genes = gene, types = type))
@@ -810,7 +828,7 @@ sbind <- function(...) {
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant dataset.
 #' @export join.types
-#' @importFrom utils txtProgressBar flush.console setTxtProgressBar
+# @importFrom utils txtProgressBar flush.console setTxtProgressBar
 #' 
 join.types <- function(x,
                        ...,
@@ -888,15 +906,15 @@ join.types <- function(x,
     }
     geno.matrix = matrix(, nrow = nsamples(x), ncol = length(genes))
 
-    if (!silent) {
-        pb = txtProgressBar(1, length(genes), style = 3)
-        flush.console()
-    }
+    #if (!silent) {
+    #    pb = txtProgressBar(1, length(genes), style = 3)
+    #    flush.console()
+    #}
     
     for (i in 1:length(genes)) {
-        if (!silent) {
-            setTxtProgressBar(pb, i)
-        }
+        #if (!silent) {
+        #    setTxtProgressBar(pb, i)
+        #}
 
         geno = as.matrix(rowSums(as.gene(x, genes[i], types = input)))
         geno[geno > 1] = 1
@@ -906,9 +924,9 @@ join.types <- function(x,
 
     rownames(geno.matrix) = as.samples(x)
     colnames(geno.matrix) = genes
-    if (!silent) {
-        close(pb)
-    }
+    #if (!silent) {
+    #    close(pb)
+    #}
 
     z = import.genotypes(geno.matrix, event.type = new.type, color = new.color)
     if (has.stages(x)) {
