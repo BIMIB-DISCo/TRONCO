@@ -5,7 +5,7 @@
 \title{events.selection}
 \usage{
 events.selection(x, filter.freq = NA, filter.in.names = NA,
-  filter.out.names = NA)
+  filter.out.names = NA, silent = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
@@ -15,6 +15,8 @@ events.selection(x, filter.freq = NA, filter.in.names = NA,
 \item{filter.in.names}{gene symbols which will be included}
 
 \item{filter.out.names}{gene symbols which will NOT be included}
+
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
 A TRONCO compliant dataset.
