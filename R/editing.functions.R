@@ -324,10 +324,6 @@ delete.type <- function(x, type) {
         stop("There's a reconstructed model, a type cannot be deleted now. \nUse delete.model()")
     }
 
-    if (type == 'Pattern') {
-        stop("Pattern is a reserved keyword in TRONCO. See delete.pattern")
-    }
-
     for (pattern in as.patterns(x)) {
         if (type %in% as.types.in.patterns(x, patterns=pattern)) {
             stop('Found type \"',
@@ -346,6 +342,10 @@ delete.type <- function(x, type) {
         x$types = x$types[which(rownames(x$types) != type), , drop = FALSE]
     } else {
         stop(paste(type, 'not in as.types(x)'))
+    }
+
+    if (type == 'Pattern') {
+        x$hypotheses = NA
     }
 
     is.compliant(x)

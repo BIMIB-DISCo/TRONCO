@@ -37,8 +37,8 @@ context("delete.type")
 
 test_that("delete.type is working", {
     expect_equal(length(delete.type(test_dataset_no_hypos, 'ins_del')), 5)
+    expect_equal(length(delete.type(test_dataset, 'Pattern')), 5)
     expect_error(delete.type(test_model, 'ins_del'))
-    expect_error(delete.type(test_dataset, 'Pattern'))
     expect_error(delete.type(test_dataset, 'ins_del'))
     expect_error(delete.type(test_dataset_no_hypos, 'banana'))
 })
@@ -59,6 +59,6 @@ test_that("delete.event is working", {
     expect_error(delete.event(test_dataset, 'TET2', 'Pattern'))
     expect_error(delete.event(test_model, 'TET2', 'ins_del'))
     expect_error(delete.event(test_dataset, 'EZH2', 'ins_del'))
-    expect_error(delete.event(test_dataset, 'XXX', 'ins_del'))
+    expect_error(delete.event(test_dataset, 'XXX', 'Pattern'))
 })
 
