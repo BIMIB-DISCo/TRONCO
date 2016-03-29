@@ -23,7 +23,7 @@
 #' @param filter.out.names gene symbols which will NOT be included
 #' @return A TRONCO compliant dataset.
 #' @export events.selection
-#' @importFrom utils flush.console txtProgressBar setTxtProgressBar
+# @importFrom utils flush.console txtProgressBar setTxtProgressBar
 #' 
 events.selection <- function(x,
                              filter.freq = NA,
@@ -64,16 +64,16 @@ events.selection <- function(x,
         x = enforce.numeric(x)
 
 
-        flush.console()
-        pb = txtProgressBar(1, nevents(x), style = 3)
+        #flush.console()
+        #pb = txtProgressBar(1, nevents(x), style = 3)
         
         for (i in 1:nevents(x)) {   
-            setTxtProgressBar(pb, i)
+            #setTxtProgressBar(pb, i)
             mut.freq = sum(x$genotypes[,i])/nsamples(x)
             valid[i] = mut.freq > filter.freq
         }
         
-        close(pb)
+        #close(pb)
 
         cat(paste('Selected ',
                   nrow(as.events(x)[valid, ]),

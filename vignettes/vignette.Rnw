@@ -160,14 +160,14 @@ aCML = annotate.description(aCML, 'aCML data (Bioinf.)')
 We use the function \texttt{import.MAF} to import a dataset in MAF format, in this case the following  TCGA dataset
 
 <<>>=
- head(crc_maf[, 1:10])
+head(crc_maf[, 1:10])
 @
 
 
 A default importation is done  without adding parameters to \texttt{import.MAF}. In this case, all mutations per gene will be considered equivalent, regardless of the type that is annotated in the MAF.  Also, all genes will be imported, and all samples.
 
 
-<<import.MAF, results='hide'>>=
+<<import.MAF>>=
 dataset_maf = import.MAF(crc_maf)
 @
 
@@ -177,7 +177,7 @@ See \S \ref{sec:view} to understand how to visualize a TRONCO dataset. In the ab
 If one would like  to have two distinct events in the dataset, i.e., APC {\tt Missense\_Mutation} and APC {\tt Nonsense\_Mutation}, parameter {\tt merge.mutation.types} should be set to false in the call to {\tt import.MAF}. 
 
 
-<<import.MAF.real, results='hide'>>=
+<<import.MAF.real>>=
 dataset_maf = import.MAF(crc_maf, merge.mutation.types = FALSE)
 @
 
@@ -185,7 +185,7 @@ dataset_maf = import.MAF(crc_maf, merge.mutation.types = FALSE)
 Sometimes, we might want to filter out some of the entries in a MAF -- maybe restricting the type of genes, mutations or sample that we want to process. If one defines
 {\tt filter.fun} as a function that returns {\tt TRUE} only for those entries which shall be considered, he gets a filter process which is applied to each row of the MAF file prior to transforming that into a TRONCO dataset. In this example we select only mutations annotated to APC -- we access that through the {\tt Hugo\_Symbol} flag of a MAF. 
 
-<<import.MAF.box,results='hide'>>=
+<<import.MAF.box>>=
 dataset_maf = import.MAF(crc_maf, filter.fun = function(x){ x['Hugo_Symbol'] == 'APC'} )
 @
 
@@ -193,7 +193,7 @@ dataset_maf = import.MAF(crc_maf, filter.fun = function(x){ x['Hugo_Symbol'] == 
 It is also sometimes convenient -- especially when working with data collected from a single individual patient -- to distinguish the type of mutations and their position in a gene, or if they are somehow annotated to COSMIC or other databases. For instance, we might want to want to use the {\tt MA.protein.change} annotation in the MAF file to get composite names such as TP53.R175H, TP53.R213, TP53.R267W etc. This can be done by setting {\tt paste.to.Hugo\_Symbol} to have the relevant name of the MAF annotation
 
 
-<<import.MAF.crc_maf, results='hide'>>=
+<<import.MAF.crc_maf>>=
 dataset_maf = import.MAF(crc_maf, 
     merge.mutation.types = FALSE, 
     paste.to.Hugo_Symbol = c('MA.protein.change'))
@@ -245,7 +245,7 @@ TRONCO uses the R interface to cBio to query data from the portal. All type of d
 
 Here, we  show how to download lung cancer data somatic mutations for genes TP53, KRAS and PIK3CA,  from the lung cancer project run by TCGA, which is archived as  {\tt luad\_tcga\_pub} at cBio. If some of the parameters to {\tt cbio.query} are missing the function will become interactive by showing a list of possible data available at the portal.
 
-<<results='hide'>>=
+<<results='hide', eval=FALSE>>=
 data = cbio.query(
     genes=c('TP53', 'KRAS', 'PIK3CA'), 
     cbio.study = 'luad_tcga_pub',
@@ -336,7 +336,7 @@ which.samples(aCML, gene='TET2', type='Nonsense point')
 A slightly different function, which manipulates the data,  is \texttt{as.alterations}, which transforms a dataset with events of different type  to events of a unique type, labeled ``Alteration''.
 
 
-<<asalterations, results='hide'>>=
+<<asalterations>>=
 dataset = as.alterations(aCML)
 @
 <<asalterations.view>>=
@@ -379,7 +379,7 @@ oncoprint(aCML)
 But the sorting mechanism is bypassed if one wants to cluster samples or events, or if one wants to split samples by cluster (not shown). In the clustering case, the ordering is given by the dendrograms. In this case we also show the annotation of some groups of events via parameter {\tt gene.annot}.
 
 
-<<oncocl, fig.show='hide', fig.width=5, fig.height=5>>=
+<<oncocl, fig.show='hide', fig.width=5, fig.height=5,results='hide'>>=
 oncoprint(aCML, 
     legend = FALSE, 
     samples.cluster = TRUE, 
@@ -423,7 +423,7 @@ head(as.stages(dataset))
 After that the data is annotated via {\tt annotate.stages} function, we can again plot an oncoprint -- which this time will detect that the dataset has also stages associated, and will diplay those 
 
 
-<<onco-stages, fig.show='hide', fig.width=6, fig.height=5>>=
+<<onco-stages, fig.show='hide', fig.width=6, fig.height=5, results='hide'>>=
 oncoprint(dataset, legend = FALSE)
 @
 
@@ -432,7 +432,7 @@ oncoprint(dataset, legend = FALSE)
 If one is willing to display samples grouped according to some variable, for instance after a sample clustering task, he can use {\tt group.samples} parameter of {\tt oncoprint} and that will override the mutual exclusivity ordering. Here, we make the trick of using the stages as if they were such clustering result.
 
 
-<<onco-clus2, fig.show='hide', fig.width=6, fig.height=5>>=
+<<onco-clus2, fig.show='hide', fig.width=6, fig.height=5, results='hide'>>=
 oncoprint(dataset, group.samples = as.stages(dataset))
 @
 
@@ -461,7 +461,7 @@ TRONCO provides functions to visualize groups of events, which in this case are 
 We make an example of a pathway called {\tt MyPATHWAY} involving genes SETBP1, EZH2 and WT1; we want it to be colored in red, and we want to have the genotype of each event to be maintened in the dataset. We proceed as follows  (R's output is omitted).
 
 
-<<pathway, results='hide'>>=
+<<pathway>>=
 pathway = as.pathway(aCML,
     pathway.genes = c('SETBP1', 'EZH2', 'WT1'), 
     pathway.name = 'MyPATHWAY',
@@ -473,7 +473,7 @@ pathway = as.pathway(aCML,
 Which we then visualize with an oncoprint
 
 
-<<onco-pathway, fig.show='hide', fig.width=6.5, fig.height=2>>=
+<<onco-pathway, fig.show='hide', fig.width=6.5, fig.height=2, results='hide'>>=
 oncoprint(pathway, title = 'Custom pathway',  font.row = 8, cellheight = 15, cellwidth = 4)
 @
 
@@ -489,7 +489,7 @@ oncoprint(pathway, title = 'Custom pathway',  font.row = 8, cellheight = 15, cel
 In TRONCO there is also a function which creates the pathway view and the corresponding oncoprint to  multiple pathways, when these are given as a list. We make here a simple example of two custom pathways.
 
 
-<<onco-pathway-viz, fig.show='hide', fig.width=6.5, fig.height=1.8, results='hide'>>=
+<<onco-pathway-viz, fig.show='hide', fig.width=6.5, fig.height=1.8>>=
 pathway.visualization(aCML, 
     pathways=list(P1 = c('TET2', 'IRAK4'),  P2=c('SETBP1', 'KIT')),        
     aggregate.pathways=FALSE,
@@ -592,7 +592,7 @@ view(dataset)
 
 Function \texttt{events.selection}, instead, performs selection according to a filter of events. With this function, we can subset data according to a frequency, and we can force inclusion/exclusion of certain events by specifying their name. For instance, here we pick all events with a minimum frequency of 5\%, force exclusion of SETBP1 (all events associated), and inclusion of EZH1 and EZH2.
 
-<<eventsselection,results='hide'>>=
+<<eventsselection>>=
 dataset = events.selection(aCML,  filter.freq = .05, 
     filter.in.names = c('EZH1','EZH2'), 
     filter.out.names = 'SETBP1')
@@ -656,7 +656,7 @@ The aCML data has none of the above issues (the call returns empty lists); if th
  In what follows, we show CAPRI's functioning by replicating the aCML case study presented in CAPRI's original paper. Regardless from which types of mutations we include, we select only the genes  mutated at least in the $5\%$ of the patients -- thus   we first use {\tt as.alterations} to have gene-level frequencies, and then we apply there a frequency filter (R's output is omitted). 
 
 
-<<results='hide'>>=
+<<other-alterations>>=
 alterations = events.selection(as.alterations(aCML), filter.freq = .05)
 @
 
@@ -664,7 +664,7 @@ alterations = events.selection(as.alterations(aCML), filter.freq = .05)
 To proceed further with the example we  create the \texttt{dataset} to be used for the inference of the  model. From the original dataset  we select all the genes whose mutations are occurring at least the $5\%$ of the times, and we get that by the alterations profiles; also we force inclusion of all the events for the  genes involved in an hypothesis (those included in variable {\tt gene.hypotheses}, this list is based on the support  found in the literature of potential aCML patterns).
 
 
-<<results='hide'>>=
+<<>>=
 gene.hypotheses = c('KRAS', 'NRAS', 'IDH1', 'IDH2', 'TET2', 'SF3B1', 'ASXL1')
 aCML.clean = events.selection(aCML,
     filter.in.names=c(as.genes(alterations), gene.hypotheses))
@@ -676,7 +676,7 @@ aCML.clean = annotate.description(aCML.clean,
 We show a new oncoprint of this latest dataset where we annotate the genes in \texttt{gene.hypotheses} in order to identify them. The sample names are also shown. 
 
 
-<<onco-edited, fig.show='hide', fig.width=8, fig.height=5.5,results='hide'>>=
+<<onco-edited, fig.show='hide', fig.width=8, fig.height=5.5, results='hide'>>=
 oncoprint(aCML.clean, gene.annot = list(priors = gene.hypotheses), sample.id = TRUE)
 @
 
@@ -726,7 +726,7 @@ aCML.hypo = hypothesis.add(aCML.hypo, 'NRAS or KRAS',  OR('NRAS', 'KRAS'))
 Notice that TRONCO functions can be used to look at their alterations and understand why the OR signature is equivalent to the XOR one -- this happens as no samples harbour both mutations.
 
 
-<<onco-kras-nras, fig.show='hide', fig.width=6, fig.height=1>>=
+<<onco-kras-nras, fig.show='hide', fig.width=6, fig.height=1, results='hide'>>=
 oncoprint(events.selection(aCML.hypo,
     filter.in.names = c('KRAS', 'NRAS')),
     font.row = 8,
@@ -771,7 +771,7 @@ Which is the following pattern
 which we can visualize via {\tt an oncoprint}.
 
 
-<<onco-tet2-idh2, fig.show='hide', fig.width=7, fig.height=2,results='hide'>>=
+<<onco-tet2-idh2, fig.show='hide', fig.width=7, fig.height=2, results='hide'>>=
 oncoprint(events.selection(aCML.hypo,
     filter.in.names = c('TET2', 'IDH2')),
     font.row = 8,
@@ -796,7 +796,7 @@ It could be a good idea to test such events, in terms of progression fitness, to
 
 
 
-<<results='hide'>>=
+<<>>=
 aCML.hypo = hypothesis.add.homologous(aCML.hypo)
 @
 
@@ -930,11 +930,13 @@ tronco.pattern.plot(aCML,
 
 We run the inference of the model by CAPRI algorithm with its default parameter: we use both AIC and BIC as regularizators, Hill-climbing as heuristic search of the solutions and exhaustive bootstrap ({\tt nboot} replicates or more for Wilcoxon testing, i.e., more iterations can be performed if samples are rejected), p-value are set at $0.05$. We set the seed for the sake of reproducibility. 
 
-
-<<model-capri, results='hide'>>=
-model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot = 1)
+<<delete-description, results='hide', include=FALSE>>==
+aCML.hypo = annotate.description(aCML.hypo, '')
+aCML.clean = annotate.description(aCML.clean, '')
 @
-<<model-capri-annotate>>=
+
+<<model-capri>>=
+model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot = 1)
 model.capri = annotate.description(model.capri, 'CAPRI - aCML')
 @
 
@@ -960,10 +962,8 @@ This algorithm is meant to  extract a forest of trees of progression from data o
 formulation of the  problem in terms of minimum spamming trees and exploits results from Edmonds. We test it to infer a model from aCML data as we did with CAPRESE.
 
 
-<<edmonds-plot, results='hide'>>=
+<<edmonds-plot>>=
 model.edmonds = tronco.mst.edmonds(aCML.clean, nboot = 10, boot.seed = 12345)
-@
-<<edmonds-plot-annotate>>=
 model.edmonds = annotate.description(model.edmonds, 'MST Edmonds - aCML')
 @
 
@@ -979,10 +979,8 @@ formulation of the  problem in terms of minimum spamming trees and exploits resu
  We test it to aCML data as all the other algorithms.
 
 
-<<chow-liu-plot, results='hide'>>=
+<<chow-liu-plot>>=
 model.chowliu = tronco.mst.chowliu(aCML.clean, nboot = 10, boot.seed = 12345)
-@
-<<chow-liu-plot-annotate>>=
 model.chowliu = annotate.description(model.chowliu, 'MST Chow Liu - aCML')
 @
 
@@ -995,10 +993,8 @@ This algorithm is meant   to extract a progression  from data of an individual p
 
 
 
-<<prim-plot, results='hide'>>=
+<<prim-plot>>=
 model.prim = tronco.mst.prim(aCML.clean, nboot = 10, boot.seed = 12345)
-@
-<<prim-plot-annotate>>=
 model.prim = annotate.description(model.prim, 'MST Prim - aCML data')
 @
 
@@ -1050,10 +1046,10 @@ We can also make a multiplot with this function,  which in this case we do by sh
 
 <<mst-plot,fig.show='hide',results='hide',fig.width=7,fig.height=7>>=
 par(mfrow = c(2,2))
-tronco.plot(model.caprese, fontsize = 25, scale.nodes = 0.6, legend = FALSE)
-tronco.plot(model.edmonds, fontsize = 25, scale.nodes = 0.6, legend = FALSE)
-tronco.plot(model.chowliu, fontsize = 25, scale.nodes = 0.6, legend.cex = .7)
-tronco.plot(model.prim, fontsize = 25, scale.nodes = 0.6, legend = FALSE)
+tronco.plot(model.caprese, fontsize = 22, scale.nodes = 0.6, legend = FALSE)
+tronco.plot(model.edmonds, fontsize = 22, scale.nodes = 0.6, legend = FALSE)
+tronco.plot(model.chowliu, fontsize = 22, scale.nodes = 0.6, legend.cex = .7)
+tronco.plot(model.prim, fontsize = 22, scale.nodes = 0.6, legend = FALSE)
 @
 
 

@@ -810,7 +810,7 @@ sbind <- function(...) {
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant dataset.
 #' @export join.types
-#' @importFrom utils txtProgressBar flush.console setTxtProgressBar
+# @importFrom utils txtProgressBar flush.console setTxtProgressBar
 #' 
 join.types <- function(x,
                        ...,
@@ -888,15 +888,15 @@ join.types <- function(x,
     }
     geno.matrix = matrix(, nrow = nsamples(x), ncol = length(genes))
 
-    if (!silent) {
-        pb = txtProgressBar(1, length(genes), style = 3)
-        flush.console()
-    }
+    #if (!silent) {
+    #    pb = txtProgressBar(1, length(genes), style = 3)
+    #    flush.console()
+    #}
     
     for (i in 1:length(genes)) {
-        if (!silent) {
-            setTxtProgressBar(pb, i)
-        }
+        #if (!silent) {
+        #    setTxtProgressBar(pb, i)
+        #}
 
         geno = as.matrix(rowSums(as.gene(x, genes[i], types = input)))
         geno[geno > 1] = 1
@@ -906,9 +906,9 @@ join.types <- function(x,
 
     rownames(geno.matrix) = as.samples(x)
     colnames(geno.matrix) = genes
-    if (!silent) {
-        close(pb)
-    }
+    #if (!silent) {
+    #    close(pb)
+    #}
 
     z = import.genotypes(geno.matrix, event.type = new.type, color = new.color)
     if (has.stages(x)) {

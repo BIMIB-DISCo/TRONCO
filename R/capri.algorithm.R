@@ -388,11 +388,11 @@ get.bootstapped.scores <- function(dataset,
     
     set.seed(boot.seed);
 
-    if (silent == FALSE) {
-        ## Create a progress bar.
-        flush.console();
-        pb <- txtProgressBar(curr.iteration, nboot, style = 3);
-    }
+    #if (silent == FALSE) {
+    #    ## Create a progress bar.
+    #    flush.console();
+    #    pb <- txtProgressBar(curr.iteration, nboot, style = 3);
+    #}
 
     while (curr.iteration<nboot) {
 
@@ -490,20 +490,20 @@ get.bootstapped.scores <- function(dataset,
             curr.iteration = nboot;
         }
 
-        if (silent == FALSE) {
-            ## Increment the progress bar.
-            if (min.stat == FALSE) {
-                setTxtProgressBar(pb, boot.counter);
-            } else {
-                setTxtProgressBar(pb, curr.iteration);
-            }
-        }
+        #if (silent == FALSE) {
+        #    ## Increment the progress bar.
+        #    if (min.stat == FALSE) {
+        #        setTxtProgressBar(pb, boot.counter);
+        #    } else {
+        #        setTxtProgressBar(pb, curr.iteration);
+        #    }
+        #}
     }
 
-    if (silent == FALSE) {
-        ## Close the progress bar.
-        close(pb);
-    }
+    #if (silent == FALSE) {
+    #    ## Close the progress bar.
+    #    close(pb);
+    #}
 
     ## Save the results and return them.
     scores =

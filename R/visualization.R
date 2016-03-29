@@ -598,7 +598,11 @@ pathway.visualization <- function(x,
     if (length(pathways.color) == 1
         && pathways.color %in% rownames(brewer.pal.info)) {
         cat('Annotating pathways with RColorBrewer color palette', pathways.color, '.\n')
-        pathway.colors = brewer.pal(n=length(names), name=pathways.color)
+        n = length(names)
+        if (n < 3) {
+            n = 3
+        }
+        pathway.colors = brewer.pal(n = n, name=pathways.color)
     } else { 
         if (length(pathways.color) != length(names)) 
             stop('You did not provide enough colors to annotate ',
@@ -715,7 +719,7 @@ oncoprint.cbio <- function(x,
 #' @return LaTEX code
 #' @importFrom gridExtra grid.table
 #' @importFrom xtable xtable
-#' @importFrom utils flush.console txtProgressBar setTxtProgressBar
+# @importFrom utils flush.console txtProgressBar setTxtProgressBar
 #' @importFrom grDevices pdf dev.cur dev.off dev.set
 #' @export genes.table.report
 #' 
@@ -755,11 +759,11 @@ genes.table.report <- function(x,
         
         npages = ceiling(nrow(table)/maxrow); 
 
-        flush.console()
+        #flush.console()
 
-        pb = txtProgressBar(1, npages, style = 3);      
+        #pb = txtProgressBar(1, npages, style = 3);      
         for (i in 1:npages) {
-            setTxtProgressBar(pb, i)  
+            #setTxtProgressBar(pb, i)  
             idx = seq(1+((i-1)*maxrow), i*maxrow); 
 
             if (max(idx) > nrow(table)) idx = idx[idx < nrow(table)]   
@@ -770,7 +774,7 @@ genes.table.report <- function(x,
                        gpar.corefill = gpar(fill = fill, alpha=0.5, col = NA),
                        h.even.alpha = 0.5)
         } 
-        close(pb)
+        #close(pb)
 
         ## Output latex.
         

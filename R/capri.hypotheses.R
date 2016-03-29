@@ -602,6 +602,7 @@ hypothesis.lifted.effects <- function( ... ) {
 #' @param dim.min Minimum cardinality of the subgroups to be considered.
 #' @param dim.max Maximum cardinality of the subgroups to be considered.
 #' @param min.prob Minimum probability associated to each valid group.
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with the added hypotheses
 #' @export hypothesis.add.group
 #' @importFrom utils flush.console combn
@@ -613,7 +614,8 @@ hypothesis.add.group <- function(x,
                                  pattern.effect = '*',
                                  dim.min = 2,
                                  dim.max = length(group),
-                                 min.prob = 0) {
+                                 min.prob = 0,
+                                 silent = FALSE) {
 
     # check if there is a reconstructed model
     if(has.model(x)) {
@@ -631,24 +633,29 @@ hypothesis.add.group <- function(x,
         return(x)
     }
 
-    cat("*** Adding Group Hypotheses\n")
-    cat(' Group:', paste(group, collapse = ", ", sep = ""), '\n')
-    cat(' Function:', op, '\n')
-    cat(' Cause:', paste(pattern.cause, collapse=", "), '; ')
-    cat(' Effect:', paste(pattern.effect, collapse=", "), '.\n')
-    flush.console()
+    if (!silent) {
+        cat("*** Adding Group Hypotheses\n")
+        cat(' Group:', paste(group, collapse = ", ", sep = ""), '\n')
+        cat(' Function:', op, '\n')
+        cat(' Cause:', paste(pattern.cause, collapse=", "), '; ')
+        cat(' Effect:', paste(pattern.effect, collapse=", "), '.\n')
+    }
 
     if (min.prob > 0) {
-        cat('\nFiltering genes within the group with alteration frequency below',
-            min.prob,
-            '\n')
+        if (!silent)  {
+            cat('\nFiltering genes within the group with alteration frequency below',
+                min.prob,
+                '\n')
+        }
 
         temp = events.selection(x, filter.in.names = group)
         temp = as.alterations(temp)
         temp = events.selection(temp, filter.freq = min.prob)
 
         group = as.genes(temp)
-        cat('New group:', paste(group, collapse = ", ", sep = ""), '\n')
+        if (!silent) {
+            cat('New group:', paste(group, collapse = ", ", sep = ""), '\n')
+        }
     }
 
     ngroup = length(group)
@@ -689,12 +696,13 @@ hypothesis.add.group <- function(x,
         stop('ERROR - min.groupsize > max.groupsize')
     }
 
-    if (length(hom.group) > 0) 
+    if (length(hom.group) > 0 && !silent) { 
         cat("Genes with multiple events: ",
             paste(unlist(hom.group),
                   collapse=', ',
                   sep = ''),
             "\n")
+    }
 
     error.summary = data.frame()
 
@@ -706,13 +714,15 @@ hypothesis.add.group <- function(x,
     }
 
     ## Create a progress bar.
-    cat('Generating ',
-        tot.patterns,
-        'patterns [size: min =',
-        max.groupsize,
-        ' -  max =',
-        max.groupsize,
-        '].\n')
+    if (!silent) {
+        cat('Generating ',
+            tot.patterns,
+            'patterns [size: min =',
+            max.groupsize,
+            ' -  max =',
+            max.groupsize,
+            '].\n')
+    }
 
     ## pb <- txtProgressBar(0, tot.patterns, style = 3)
     
@@ -773,8 +783,9 @@ hypothesis.add.group <- function(x,
                   " genes pattern could not be added -- showing errors\n",
                   sep = ""))
         print(error.summary)
-    } else
+    } else if (!silent) {
         cat("Hypothesis created for all possible patterns.\n")
+    }
     return(x)
 }
 
@@ -786,15 +797,17 @@ hypothesis.add.group <- function(x,
 #' @param pattern.effect Possibile effects for the pattern. 
 #' @param genes List of genes to be considered as possible homologous. For these genes, all the types of mutations will be considered functionally equivalent.
 #' @param FUN Type of pattern to be added, e.g., co-occurance, soft or hard exclusivity.
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with the added hypotheses
 #' @export hypothesis.add.homologous
-#' @importFrom utils flush.console txtProgressBar setTxtProgressBar
+# @importFrom utils flush.console txtProgressBar setTxtProgressBar
 #' 
 hypothesis.add.homologous <- function(x, 
                                       pattern.cause = '*',
                                       pattern.effect = '*',
                                       genes = as.genes(x),
-                                      FUN = OR) {
+                                      FUN = OR,
+                                      silent = FALSE) {
 
     # check if there is a reconstructed model
     if(has.model(x)) {
@@ -821,12 +834,13 @@ hypothesis.add.homologous <- function(x,
         return(x)
     }
 
-    cat("*** Adding hypotheses for Homologous Patterns\n")
-    cat(' Genes:', paste(hom.group, collapse = ", ", sep = ""), '\n')
-    cat(' Function:', op, '\n')
-    cat(' Cause:', paste(pattern.cause, collapse=", "), '\n')
-    cat(' Effect:', paste(pattern.effect, collapse=", "), '\n')
-    flush.console()
+    if (!silent) {
+        cat("*** Adding hypotheses for Homologous Patterns\n")
+        cat(' Genes:', paste(hom.group, collapse = ", ", sep = ""), '\n')
+        cat(' Function:', op, '\n')
+        cat(' Cause:', paste(pattern.cause, collapse=", "), '\n')
+        cat(' Effect:', paste(pattern.effect, collapse=", "), '\n')
+    }
 
     effect = paste0("c('", paste(pattern.effect, collapse = "', '"), "')")
     cause = paste0("c('", paste(pattern.cause, collapse = "', '"), "')")
@@ -838,7 +852,7 @@ hypothesis.add.homologous <- function(x,
 
     ## Create a progress bar.
     
-    pb <- txtProgressBar(0, length(hom.group), style = 3)
+    #pb <- txtProgressBar(0, length(hom.group), style = 3)
 
     error.summary = data.frame()
 
@@ -846,7 +860,7 @@ hypothesis.add.homologous <- function(x,
 
         ## Start the progress bar.
         
-        setTxtProgressBar(pb, i)
+        #setTxtProgressBar(pb, i)
                 
         ## Check if the joint probability of homologous events is > 0,
         ## if yes the event will be added as 'OR', otherwise 'XOR'.
@@ -892,15 +906,16 @@ hypothesis.add.homologous <- function(x,
     }
 
     ## Close progress bar.
-    close(pb)
+    #close(pb)
     
     if (nrow(error.summary) > 0) {
         cat(paste(nrow(error.summary),
                   " patterns could not be added -- showing errors\n",
                   sep = ""))
         print(error.summary)
-    } else
+    } else if (!silent) {
         cat("Hypothesis created for all possible gene patterns.\n")
+    }
 
     return(x)
 }
