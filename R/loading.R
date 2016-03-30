@@ -113,6 +113,7 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 #' @param filter.genes A list of genes
 #' @param filter.samples A list of samples
 #' @param silent A parameter to disable/enable verbose messages.
+#' @param trim Remove the events without occurrence
 #' @return A TRONCO compliant representation of the input CNAs.
 #' @export import.GISTIC
 #' @importFrom utils read.table
@@ -120,7 +121,8 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 import.GISTIC <- function(x,
                           filter.genes = NULL,
                           filter.samples = NULL,
-                          silent = FALSE) {
+                          silent = FALSE,
+                          trim = TRUE) {
 
     if (!(is.data.frame(x) || is.matrix(x)) && is.character(x)) {
         if (!silent) {
@@ -244,12 +246,16 @@ import.GISTIC <- function(x,
     if (!silent) {
         cat("Transforming events in TRONCO data types ..... \n")
     }
-    d.homo = trim(import.genotypes(d.homo, event.type = "Homozygous Loss", color = "dodgerblue4"))
-    d.het = trim(import.genotypes(d.het, event.type = "Heterozygous Loss", color = "dodgerblue1"))
-    d.low = trim(import.genotypes(d.low, event.type = "Low-level Gain", color = "firebrick1"))
-    d.high = trim(import.genotypes(d.high, event.type = "High-level Gain", color = "firebrick4"))
+    d.homo = import.genotypes(d.homo, event.type = "Homozygous Loss", color = "dodgerblue4")
+    d.het = import.genotypes(d.het, event.type = "Heterozygous Loss", color = "dodgerblue1")
+    d.low = import.genotypes(d.low, event.type = "Low-level Gain", color = "firebrick1")
+    d.high = import.genotypes(d.high, event.type = "High-level Gain", color = "firebrick4")
 
     d.cnv.all = ebind(d.homo, d.het, d.low, d.high, silent = silent)
+
+    if (trim) {
+        d.cnv.all = trim(d.cnv.all)
+    }
 
     if (!silent) {
         cat("*** Data extracted, returning only events observed in at least one sample \n",

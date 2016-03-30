@@ -588,6 +588,7 @@ delete.pattern <- function(x, pattern) {
 #' @export delete.model
 #' 
 delete.model <- function(x) {
+    is.compliant(x)
     if (! has.model(x)) {
         stop("No model to delete in dataset")
     }
@@ -619,23 +620,24 @@ delete.model <- function(x) {
 #' 
 delete.samples <- function(x, samples) {
     is.compliant(x, 'delete.samples input')
-    stages = has.stages(x)
-    del = list()
-    actual.samples = as.samples(x)
+
+    if (has.model(x)) {
+        stop("There's a reconstructed model, a sample cannot be deleted now. \nUse delete.model()")
+    }
+
     samples = unique(samples)
-    for (sample in samples) {
-        if (!sample %in% actual.samples) {
-            warning('Sample: ', sample, ' not in as.samples(x)')
-        } else {
-            del = append(del, sample)
-        }
+    if (!all(samples %in% as.samples(x))) {
+        stop("Not all sample in as.samples(x)")
     }
 
-    x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, , drop = FALSE]
+    genotypes = x$genotypes[!rownames(x$genotypes) %in% samples, , drop = FALSE]
 
-    if (stages) {
-        x$stages = x$stages[!rownames(x$stages) %in% del, , drop = FALSE]
+    if (has.stages(x)) {
+        stages = x$stages[!rownames(x$stages) %in% samples, , drop = FALSE]
+        x$stages = stages
     }
+
+    x$genotypes = genotypes
 
     is.compliant(x, 'delete.samples output')
 

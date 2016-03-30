@@ -85,3 +85,18 @@ test_that("delete.pattern is working", {
     a =  delete.pattern(test_dataset, pattern = 'XOR_EZH2')
     expect_equal(length(delete.pattern(a, pattern = 'OR_CSF3R')), 5)
 })
+
+context("delete.model")
+
+test_that("delete.model is working", {
+    expect_equal(length(delete.model(test_model)), 5)
+    expect_error(delete.model(test_dataset))
+})
+
+context("delete.samples")
+
+test_that("delete.model is working", {
+    expect_equal(length(delete.samples(test_dataset_no_hypos, samples='patient 1')), 5)
+    expect_error(delete.samples(test_dataset_no_hypos, samples='EROS'))
+    expect_error(delete.samples(test_model))
+})

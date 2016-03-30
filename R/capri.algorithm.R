@@ -395,7 +395,9 @@ get.bootstapped.scores <- function(dataset,
     #}
 
     dot = 0
-    cat('\t')
+    if (!silent) {
+        cat('\t')
+    }
 
     while (curr.iteration<nboot) {
 

@@ -297,8 +297,7 @@ tronco.kfold.prederr <- function(x,
             res = NULL
             for(i in 1:runs) {
                 res = c(res, attributes(comp[[i]])$mean)
-            }
-            cat('\t\t node:', event, 'mean:', mean(res), '(', sd(res), ')\n')
+            }            
             res  
         }
         if (!silent) {
@@ -426,7 +425,6 @@ tronco.kfold.posterr <- function(x,
                     for(i in 1:runs) {
                         res = c(res, attributes(comp[[i]])$mean)
                     }
-                    cat('\t\tedge: ', pre, '->', event, 'mean: ', mean(res), ' (', sd(res), ')\n')
                     posterr.adj.col[[pre,event]] = res  
                 }
             }
