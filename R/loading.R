@@ -778,8 +778,6 @@ cbio.query <- function(cbio.study = NA,
     clinicaldata = getClinicalData(mycgds, cbio.dataset)
     rownames(clinicaldata) = gsub('\\.', '-', rownames(clinicaldata))
 
-    #ofile <- paste(cbio.study, cbio.dataset, samples.name, "Rdata", sep = ".")
-
     ret = NULL
     ret$profile = data
     ret$clinical = clinicaldata
@@ -787,9 +785,6 @@ cbio.query <- function(cbio.study = NA,
     if (!is.na(file)) {
         save(ret, file=file)
     }
-
-    cat(paste("\nData exported to file: ", ofile, sep = ""))
-    #write.table(data, file = ofile)
 
     return(ret)
 }
