@@ -1428,7 +1428,7 @@ tronco.plot <- function(x,
     ## Set fontsize.
 
     if (is.na(fontsize)) {
-        fontsize = 24 - 4*log(nrow(hypo_mat))
+        fontsize = 44 - 3 * log(nrow(hypo_mat))
         cat('Set automatic fontsize scaling for node labels: ', fontsize, '\n')
     }
     nAttrs$fontsize = rep(fontsize, length(node_names))

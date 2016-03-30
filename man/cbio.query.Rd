@@ -4,7 +4,8 @@
 \alias{cbio.query}
 \title{cbio.query}
 \usage{
-cbio.query(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, genes)
+cbio.query(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, genes,
+  file = NA)
 }
 \arguments{
 \item{cbio.study}{Cbio study ID}
@@ -14,6 +15,8 @@ cbio.query(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, genes)
 \item{cbio.profile}{Cbio genetic profile ID}
 
 \item{genes}{A list of < 900 genes to query}
+
+\item{file}{String containing filename for RData output. If NA no output will be provided}
 }
 \value{
 A list with two dataframe: the gentic profile required and clinical data for the Cbio study.

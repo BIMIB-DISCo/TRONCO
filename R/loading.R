@@ -630,13 +630,18 @@ extract.MAF.HuGO.Entrez.map <- function(file, sep = "\t") {
 #' @param cbio.dataset Cbio dataset ID
 #' @param cbio.profile Cbio genetic profile ID
 #' @param genes A list of < 900 genes to query
+#' @param file String containing filename for RData output. If NA no output will be provided
 #' @return A list with two dataframe: the gentic profile required and clinical data for the Cbio study.
 #' @export cbio.query
 #' @importFrom cgdsr CGDS getCancerStudies getCaseLists 
 #' @importFrom cgdsr getGeneticProfiles getProfileData getClinicalData
 #' @importFrom utils write.table
 #' 
-cbio.query <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, genes) {
+cbio.query <- function(cbio.study = NA,
+                       cbio.dataset = NA,
+                       cbio.profile = NA,
+                       genes,
+                       file = NA) {
     cat("*** CGDS plugin for Cbio query.\n")
     ## require("cgdsr")
 
@@ -773,16 +778,18 @@ cbio.query <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, ge
     clinicaldata = getClinicalData(mycgds, cbio.dataset)
     rownames(clinicaldata) = gsub('\\.', '-', rownames(clinicaldata))
 
-    ofile <- paste(cbio.study, cbio.dataset, samples.name, "Rdata", sep = ".")
+    #ofile <- paste(cbio.study, cbio.dataset, samples.name, "Rdata", sep = ".")
 
     ret = NULL
     ret$profile = data
     ret$clinical = clinicaldata
 
-    save(ret, file=ofile)
+    if (!is.na(file)) {
+        save(ret, file=file)
+    }
 
     cat(paste("\nData exported to file: ", ofile, sep = ""))
-    write.table(data, file = ofile)
+    #write.table(data, file = ofile)
 
     return(ret)
 }
