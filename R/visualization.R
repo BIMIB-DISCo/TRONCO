@@ -719,7 +719,6 @@ oncoprint.cbio <- function(x,
 #' @return LaTEX code
 #' @importFrom gridExtra grid.table
 #' @importFrom xtable xtable
-# @importFrom utils flush.console txtProgressBar setTxtProgressBar
 #' @importFrom grDevices pdf dev.cur dev.off dev.set
 #' @export genes.table.report
 #' 
@@ -763,6 +762,9 @@ genes.table.report <- function(x,
 
         #pb = txtProgressBar(1, npages, style = 3);      
         for (i in 1:npages) {
+            if (!silent) {
+              cat('.')
+            }
             #setTxtProgressBar(pb, i)  
             idx = seq(1+((i-1)*maxrow), i*maxrow); 
 
@@ -775,6 +777,9 @@ genes.table.report <- function(x,
                        h.even.alpha = 0.5)
         } 
         #close(pb)
+        if (!silent) {
+          cat('\n')
+        }
 
         ## Output latex.
         

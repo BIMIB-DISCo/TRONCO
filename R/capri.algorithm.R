@@ -394,6 +394,9 @@ get.bootstapped.scores <- function(dataset,
     #    pb <- txtProgressBar(curr.iteration, nboot, style = 3);
     #}
 
+    dot = 0
+    cat('\t')
+
     while (curr.iteration<nboot) {
 
         ## Define the dataset to be used in this iteration and compute
@@ -498,12 +501,22 @@ get.bootstapped.scores <- function(dataset,
         #        setTxtProgressBar(pb, curr.iteration);
         #    }
         #}
+        if (!silent && (curr.iteration %% 5 == 0)) {
+            cat('.')
+            dot = dot + 1
+            if (dot %% 50 == 0) {
+                cat('\n\t')
+            }
+        }
     }
 
     #if (silent == FALSE) {
     #    ## Close the progress bar.
     #    close(pb);
     #}
+    if (!silent) {
+        cat('\n')
+    }
 
     ## Save the results and return them.
     scores =

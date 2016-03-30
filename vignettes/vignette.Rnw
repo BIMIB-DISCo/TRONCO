@@ -518,8 +518,9 @@ pathway.visualization(aCML,
 \vspace*{.05in}
 \caption{\texttt{oncoprint} output of a custom pair of pathways, with events shown in top and hidden in bottom.}
 \end{figure*}
-    
-    
+
+\FloatBarrier
+
 \section{Data manipulation} \label{sec:datamanip}
 
 All examples in this section will be done with the the aCML dataset as reference.
@@ -553,10 +554,8 @@ where in this case we also created a new event type, with its own color.
 
 In a similar way we can decide to join all the events of two distinct types, in this case if a gene $x$ has signatures for both type of events, he will get a unique signature with an alteration present if it is either of the second {\em or} the second type 
 
-<<join2, results='hide'>>=
+<<join2>>=
 dataset = join.types(dataset, 'Nonsense point', 'Nonsense Ins/Del')
-@
-<<join3>>=
 as.types(dataset)
 @
 
@@ -617,7 +616,6 @@ grid.arrange(
     ncol = 1)
 @
 
-
 \begin{figure*}[ht]
 \begin{center}
 \includegraphics[width=0.9\textwidth]{figure/onco-ex-sel-1}
@@ -625,6 +623,7 @@ grid.arrange(
 \caption{Multiple output from \texttt{oncoprint} can be captured as a {\tt gtable} and composed via {\tt grid.arrange} (package {\tt gridExtra}). In this case we show  aCML data on top -- displayed after the {\tt as.alterations} transformation -- versus a selected subdataset of events with a minimum frequency of 5\%, force exclusion of SETBP1 (all events associated), and inclusion of EZH1 and EZH2.}
 \end{figure*}
 
+\FloatBarrier
 
 \section{Model inference}
 
@@ -690,7 +689,6 @@ oncoprint(aCML.clean, gene.annot = list(priors = gene.hypotheses), sample.id = T
 \end{figure*}
 
 \FloatBarrier
-
 
 \subsubsection{Testable hypotheses via logical formulas (i.e., patterns)}
 
@@ -788,7 +786,6 @@ oncoprint(events.selection(aCML.hypo,
 \caption{\texttt{oncoprint} output to show the perfect (hard) exclusivity among NRAS/KRAS mutations in aCML on top, and the sofy-one among  TET2 and IDH2 alterations.}
 \end{figure*}
 
-
 \FloatBarrier
 
 \paragraph{Adding (automatically) hypotheses for homologous events.} We consider homologous events those having the same mnemonic name -- as of function {\tt as.genes} -- but events of different type. For instance, mutations and deletions of the same gene would be considered such (e.g., in the aCML dataset ASXL1 Ins/Del and Nonsense point).
@@ -823,9 +820,6 @@ dataset = hypothesis.add.group(aCML.clean, OR, group = c('SETBP1', 'ASXL1', 'CBL
 \FloatBarrier
 
 
-
-
-
 The final dataset that will be given as input to CAPRI is  finally shown. Notice the signatures of  all the lifted patterns.
 
 <<onco-priors, fig.show='hide', fig.width=8, fig.height=6.5,results='hide'>>=
@@ -842,10 +836,9 @@ oncoprint(aCML.hypo, gene.annot = list(priors = gene.hypotheses), sample.id = TR
 \caption{\texttt{oncoprint} output of the a dataset that has patterns that could be given as input to CAPRI to retrieve a progression model.}
 \end{figure*}
 
-
+\FloatBarrier
 
 \paragraph{Querying, visualizing and manipulating CAPRI's patterns.}
-
 
 
 We also provide functions to get the number of hypotheses and patterns present in the data.
@@ -911,8 +904,6 @@ tronco.pattern.plot(aCML,
     label.cex = 0.8,
     mode='circos')
 @
-
-
 
 
 \begin{figure*}[ht]

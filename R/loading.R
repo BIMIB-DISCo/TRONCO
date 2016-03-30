@@ -289,8 +289,7 @@ import.GISTIC <- function(x,
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
 #' @importFrom utils read.table read.delim count.fields flush.console
-#' @importFrom utils txtProgressBar setTxtProgressBar
-# @importFrom grDevices colorRampPalette
+#' @importFrom grDevices colorRampPalette
 #' 
 import.MAF <- function(file,
                        sep = '\t',
@@ -512,17 +511,21 @@ import.MAF <- function(file,
             #if (!silent) {
             #    setTxtProgressBar(pb, i)
             #}
+            if (!silent) {
+                cat('.')
+            }
             binary.mutations[maf$Tumor_Sample_Barcode[i], maf$Hugo_Symbol[i]] = 1
         }
+
         if (!silent) {
             #close(pb)
-            cat("Starting conversion from MAF to TRONCO data type.\n")
+            cat("\nStarting conversion from MAF to TRONCO data type.\n")
         }
         tronco.data = import.genotypes(binary.mutations, event.type = "Mutation")
         is.compliant(tronco.data)
     } else {
         if (!silent) {
-            cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
+            cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :\n")
             #flush.console()
             #pb <- txtProgressBar(1, nrow(maf), style = 3)
         }
@@ -548,7 +551,9 @@ import.MAF <- function(file,
             #if (!silent) {
             #    setTxtProgressBar(pb, i)
             #}
-            
+            if (!silent) {
+                cat('.')
+            }
             ev = intersect(
                 which(tronco.data$annotations[, 'event'] == maf$Hugo_Symbol[i]), 
                 which(tronco.data$annotations[, 'type']  == maf$Variant_Classification[i])
@@ -560,6 +565,9 @@ import.MAF <- function(file,
         #if (!silent) {
         #    close(pb)
         #}
+        if (!silent) {
+            cat('\n')
+        }
         
         
         colors = colorRampPalette(brewer.pal(8, 'Accent'))(length(MAF.variants))

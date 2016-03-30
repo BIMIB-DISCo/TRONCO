@@ -828,7 +828,6 @@ sbind <- function(...) {
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant dataset.
 #' @export join.types
-# @importFrom utils txtProgressBar flush.console setTxtProgressBar
 #' 
 join.types <- function(x,
                        ...,
@@ -915,11 +914,17 @@ join.types <- function(x,
         #if (!silent) {
         #    setTxtProgressBar(pb, i)
         #}
+        if (!silent) {
+            cat('.')
+        }
 
         geno = as.matrix(rowSums(as.gene(x, genes[i], types = input)))
         geno[geno > 1] = 1
 
         geno.matrix[, i] = geno
+    }
+    if (!silent) {
+        cat('\n')
     }
 
     rownames(geno.matrix) = as.samples(x)

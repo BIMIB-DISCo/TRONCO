@@ -787,7 +787,6 @@ hypothesis.add.group <- function(x,
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with the added hypotheses
 #' @export hypothesis.add.homologous
-# @importFrom utils flush.console txtProgressBar setTxtProgressBar
 #' 
 hypothesis.add.homologous <- function(x, 
                                       pattern.cause = '*',
@@ -849,6 +848,10 @@ hypothesis.add.homologous <- function(x,
         ## Start the progress bar.
         
         #setTxtProgressBar(pb, i)
+
+        if (!silent) {
+            cat('.')
+        }
                 
         ## Check if the joint probability of homologous events is > 0,
         ## if yes the event will be added as 'OR', otherwise 'XOR'.

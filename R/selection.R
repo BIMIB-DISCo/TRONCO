@@ -24,7 +24,6 @@
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant dataset.
 #' @export events.selection
-# @importFrom utils flush.console txtProgressBar setTxtProgressBar
 #' 
 events.selection <- function(x,
                              filter.freq = NA,
@@ -75,12 +74,15 @@ events.selection <- function(x,
             #setTxtProgressBar(pb, i)
             mut.freq = sum(x$genotypes[,i])/nsamples(x)
             valid[i] = mut.freq > filter.freq
+            if (!silent) {
+                cat('.')
+            }
         }
         
         #close(pb)
 
         if (!silent) {
-            cat('Selected ',
+            cat('\nSelected ',
                 nrow(as.events(x)[valid, ]),
                 ' events.\n')
         }
