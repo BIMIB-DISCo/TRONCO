@@ -248,7 +248,7 @@ as.patterns <- function(x) {
     if (npatterns(x) == 0) {
         return(NULL)
     }
-    return(ls(x$hypotheses$hstructure))
+    return(names(x$hypotheses$hstructure))
 }
 
 

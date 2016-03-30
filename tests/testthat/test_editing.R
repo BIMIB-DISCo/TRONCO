@@ -82,8 +82,6 @@ test_that("delete.pattern is working", {
     expect_equal(length(delete.pattern(test_dataset, pattern = 'XOR_EZH2')), 5)
     expect_error(delete.pattern(test_model, pattern = 'XOR_EZH2'))
     expect_error(delete.pattern(test_dataset, pattern = 'banana'))
-    data(test_dataset)
     a =  delete.pattern(test_dataset, pattern = 'XOR_EZH2')
     expect_equal(length(delete.pattern(a, pattern = 'OR_CSF3R')), 5)
-    data(test_dataset)
 })

@@ -562,7 +562,7 @@ delete.pattern <- function(x, pattern) {
         }
     }
 
-    rm(list = pattern, envir = x$hypotheses$hstructure)
+    x$hypotheses$hstructure[pattern] = NULL
 
     if (! 'Pattern' %in% unique(x$annotations[,'type'])) {
         x$types = x$types[-which(rownames(x$types) == 'Pattern'),,drop=FALSE]
