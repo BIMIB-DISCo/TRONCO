@@ -1,5 +1,6 @@
 data(test_dataset_no_hypos)
 data(test_model)
+data(test_dataset)
 
 context("change.color")
 
@@ -62,3 +63,27 @@ test_that("delete.event is working", {
     expect_error(delete.event(test_dataset, 'XXX', 'Pattern'))
 })
 
+context("delete.hypothesis")
+
+test_that("delete.hypothesis is working", {
+    expect_equal(length(delete.hypothesis(test_dataset, event = 'TET2')), 5)
+    expect_equal(length(delete.hypothesis(test_dataset, cause = c('TET2', 'EZH2'))), 5)
+    expect_equal(length(delete.hypothesis(test_dataset, effect = c('TET2', 'EZH2'))), 5)
+    expect_warning(delete.hypothesis(test_dataset))
+    expect_error(delete.hypothesis(test_dataset, event = c('TET2', 'EZH2')))
+    expect_error(delete.hypothesis(test_model, event = 'TET2'))
+    expect_error(delete.hypothesis(test_dataset, cause = 'XXX'))
+    expect_error(delete.hypothesis(test_dataset, effect = 'XXX'))
+})
+
+context("delete.pattern")
+
+test_that("delete.pattern is working", {
+    expect_equal(length(delete.pattern(test_dataset, pattern = 'XOR_EZH2')), 5)
+    expect_error(delete.pattern(test_model, pattern = 'XOR_EZH2'))
+    expect_error(delete.pattern(test_dataset, pattern = 'banana'))
+    data(test_dataset)
+    a =  delete.pattern(test_dataset, pattern = 'XOR_EZH2')
+    expect_equal(length(delete.pattern(a, pattern = 'OR_CSF3R')), 5)
+    data(test_dataset)
+})

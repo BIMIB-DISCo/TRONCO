@@ -477,13 +477,16 @@ delete.event <- function(x, gene, type) {
 #' @export delete.hypothesis
 #' 
 delete.hypothesis <- function(x, event = NA, cause = NA, effect = NA) {
+
+    is.compliant(x)
     if (has.model(x)) {
         stop("There's a reconstructed model, hypotheses cannot be deleted now.\nUse delete.model()")
     }
 
     hypo_map = as.hypotheses(x)
     to_remove = c()
-    if (!is.na(event)) {
+
+    if (!any(is.na(event))) {
         if (length(event) == 1 && event %in% as.events(x)[ , 'event']) {
             cause_del = which(hypo_map[ , 'cause event'] == event)
             effect_del = which(hypo_map[ , 'effect event'] == event)
@@ -493,8 +496,8 @@ delete.hypothesis <- function(x, event = NA, cause = NA, effect = NA) {
         }
     }
 
-    if (! is.na(cause)) {
-        if (cause %in% as.events(x)[ , 'event']) {
+    if (! any(is.na(cause))) {
+        if (all(cause %in% as.events(x)[ , 'event'])) {
             cause_del = which(hypo_map[ , 'cause event'] == cause)
             to_remove = unique(c(to_remove, cause_del))
         } else {
@@ -502,13 +505,18 @@ delete.hypothesis <- function(x, event = NA, cause = NA, effect = NA) {
         }
     }
 
-    if (! is.na(effect)) {
-        if ( effect %in% as.events(x)[ , 'event']) {
+    if (! any(is.na(effect))) {
+        if (all(effect %in% as.events(x)[ , 'event'])) {
             effect_del = which(hypo_map[ , 'effect event'] == effect)
             to_remove = unique(c(to_remove, effect_del))
         } else {
             stop('Wrong effect, select only events present in as.events')
         }
+    }
+
+    if (length(to_remove) == 0) {
+        warning("Nothing to remove")
+        return(x)
     }
 
     x$hypotheses$num.hypotheses = x$hypotheses$num.hypotheses - 1
@@ -533,6 +541,7 @@ delete.hypothesis <- function(x, event = NA, cause = NA, effect = NA) {
 #' @export delete.pattern
 #' 
 delete.pattern <- function(x, pattern) {
+    is.compliant(x)
     if (has.model(x)) {
         stop("There's a reconstructed model, a pattern cannot be deleted now. \nUse delete.model()")
     }
