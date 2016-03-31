@@ -9,22 +9,25 @@ lregfit <- function(data,
         return(adj.matrix)
     }
 
-    # create the blacklist based on the prima facie topology and the tree-structure assumption
+
+    ## Create the blacklist based on the prima facie topology
+    ## and the tree-structure assumption
     cont = 0
     parent = -1
     child = -1
-    for (i in 1:nrow(adj.matrix)) {
-        for (j in 1:ncol(adj.matrix)) {
+
+    for (i in rownames(adj.matrix)) {
+        for (j in colnames(adj.matrix)) {
             if(i != j) {
                 if (adj.matrix[i,j] == 0) {
                     # [i,j] refers to causation i --> j
                     cont = cont + 1
                     if (cont == 1) {
-                        parent = toString(i)
-                        child = toString(j)
+                        parent = i
+                        child = j
                     } else {
-                        parent = c(parent, toString(i))
-                        child = c(child, toString(j))
+                        parent = c(parent, i)
+                        child = c(child, j)
                     }
                 }
             }
@@ -53,8 +56,7 @@ lregfit <- function(data,
     if (length(nrow(my.arcs)) > 0 && nrow(my.arcs) > 0) {
         for (i in 1:nrow(my.arcs)) {
             # [i,j] refers to causation i --> j
-            adj.matrix.fit[as.numeric(my.arcs[i,1]), 
-                           as.numeric(my.arcs[i,2])] = 1
+            adj.matrix.fit[my.arcs[i,1], my.arcs[i,2]] = 1
         }
     }
 

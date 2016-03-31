@@ -1900,4 +1900,41 @@ is.logic.node <- function(node) {
 }
 
 
+as.categorical.dataset <- function(dataset, make.valid = TRUE){
+
+    ## Each variable should at least have 2 values: I'm ignoring
+    ## connection to invalid events but, still, need to make the
+    ## dataset valid for bnlearn.
+
+    if (make.valid) {
+        for (i in 1:ncol(dataset)) {
+            if (sum(dataset[, i]) == 0) {
+                dataset[sample(1:nrow(dataset), size = 1), i] = 1
+            } else if (sum(dataset[, i]) == nrow(dataset)) {
+                dataset[sample(1:nrow(dataset), size = 1), i] = 0
+            }
+        }
+    }
+
+    ## Create a categorical data frame from the dataset
+
+    data = array("missing", c(nrow(dataset), ncol(dataset)))
+    for (i in 1:nrow(dataset)) {
+        for (j in 1:ncol(dataset)) {
+            if (dataset[i,j] == 1) {
+                data[i,j] = "observed"
+            }
+        }
+    }
+
+    ## Renaming
+
+    data = as.data.frame(data)
+    colnames(data) = colnames(dataset)
+    rownames(data) = rownames(dataset)
+    
+    return(data)
+}
+
+
 #### end of file -- as.functions.R

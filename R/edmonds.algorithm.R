@@ -201,72 +201,46 @@ edmonds.fit <- function(dataset,
 # @param command type of search, either hill climbing (hc) or tabu (tabu)
 # @return topology: the adjacency matrix of both the prima facie and causal topologies
 #
-perform.likelihood.fit.edmonds = function( dataset, adj.matrix, regularization, command = "hc" ) {
+perform.likelihood.fit.edmonds = function(dataset,
+                                          adj.matrix,
+                                          regularization,
+                                          command = "hc"){
 
-    ## Each variable should at least have 2 values: I'm ignoring
-    ## connection to invalid events but, still, need to make the
-    ## dataset valid for bnlearn.
-    
-    for (i in 1:ncol(dataset)) {
-        if (sum(dataset[, i]) == 0) {
-            dataset[sample(1:nrow(dataset), size=1), i] = 1;
-        } else if (sum(dataset[, i]) == nrow(dataset)) {
-            dataset[sample(1:nrow(dataset), size=1), i] = 0;
-        }
-    }
-
+    data = as.categorical.dataset(dataset)
     adj.matrix.prima.facie = adj.matrix
     
     # adjacency matrix of the topology reconstructed by likelihood fit
     adj.matrix.fit = array(0,c(nrow(adj.matrix),ncol(adj.matrix)))
     rownames(adj.matrix.fit) = colnames(dataset)
     colnames(adj.matrix.fit) = colnames(dataset)
-    
-    # create a categorical data frame from the dataset
-    data = array("missing",c(nrow(dataset),ncol(dataset)))
-    for (i in 1:nrow(dataset)) {
-        for (j in 1:ncol(dataset)) {
-            if(dataset[i,j]==1) {
-                data[i,j] = "observed"
-            }
-        }
-    }
-    data = as.data.frame(data)
-    my.names = names(data)
-    for (i in 1:length(my.names)) {
-        my.names[i] = toString(i)
-    }
-    names(data) = my.names
-    
+       
     # set at most one parent per node based on mutual information
     for (i in 1:ncol(adj.matrix)) {
             
         # consider the parents of i
-        curr_parents = which(adj.matrix[,i]==1)
+        curr_parents = which(adj.matrix[,i] == 1)
         
         # if I have more then one valid parent
-        if(length(curr_parents)>1) {
+        if (length(curr_parents) > 1) {
             
             # find the best parent
             curr_best_parent = -1
             curr_best_score = -1
-            for(j in curr_parents) {
-                new_score = mutinformation(data[,i],data[,j])
-                if(new_score>curr_best_score) {
+            for (j in curr_parents) {
+                new_score = mutinformation(data[,i], data[,j])
+                if (new_score > curr_best_score) {
                     curr_best_parent = j
                     curr_best_score = new_score
                 }
             }
             
             # set the best parent
-            for(j in curr_parents) {
-                if(j!=curr_best_parent) {
+            for (j in curr_parents) {
+                if (j != curr_best_parent) {
                     adj.matrix[j,i] = 0
                 }
             }
-            
         }
-        
     }
     
     # perform the likelihood fit if requested
@@ -275,60 +249,6 @@ perform.likelihood.fit.edmonds = function( dataset, adj.matrix, regularization, 
         adj.matrix.fit,
         regularization,
         command)
-    #if (regularization != "no_reg") {
-    #
-    #    # create the blacklist based on the prima facie topology and the tree-structure assumption
-    #    cont = 0
-    #    parent = -1
-    #    child = -1
-    #    for (i in 1:nrow(adj.matrix)) {
-    #        for (j in 1:ncol(adj.matrix)) {
-    #            if (i != j) {
-    #                if (adj.matrix[i,j] == 0) {
-    #                    # [i,j] refers to causation i --> j
-    #                    cont = cont + 1
-    #                    if (cont == 1) {
-    #                        parent = toString(i)
-    #                        child = toString(j)
-    #                    } else {
-    #                        parent = c(parent,toString(i))
-    #                        child = c(child,toString(j))
-    #                    }
-    #                }
-    #            }
-    #        }
-    #    }
-    #
-    #    # perform the reconstruction by likelihood fit with regularization
-    #    # either the hill climbing or the tabu search is used as the mathematical optimization technique
-    #    if (cont > 0) {
-    #        blacklist = data.frame(from = parent, to = child)
-    #        if (command == "hc") {
-    #                my.net = hc(data, score = regularization, blacklist = blacklist)
-    #        } else if (command == "tabu") {
-    #                my.net = tabu(data, score = regularization, blacklist = blacklist)
-    #        }
-    #    } else {
-    #        if (command == "hc") {
-    #            my.net = hc(data, score = regularization)
-    #        } else if(command == "tabu") {
-    #            my.net = tabu(data, score = regularization)
-    #        }
-    #    }
-    #    my.arcs = my.net$arcs
-    #    
-    #    # build the adjacency matrix of the reconstructed topology
-    #    if (length(nrow(my.arcs)) > 0 && nrow(my.arcs) > 0) {
-    #        for (i in 1:nrow(my.arcs)) {
-    #            # [i,j] refers to causation i --> j
-    #            adj.matrix.fit[as.numeric(my.arcs[i,1]), 
-    #                           as.numeric(my.arcs[i,2])] = 1
-    #        }
-    #    }
-    #    
-    #} else {
-    #    adj.matrix.fit = adj.matrix
-    #}
     
     ## Save the results and return them.
     

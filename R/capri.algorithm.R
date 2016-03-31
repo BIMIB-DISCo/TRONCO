@@ -112,10 +112,10 @@ capri.fit <- function(dataset,
         if (!silent)
             cat(paste0('*** Performing likelihood-fit with regularization ',reg,'.\n'))
         best.parents =
-            perform.likelihood.fit(dataset,
-                                   prima.facie.parents$adj.matrix$adj.matrix.acyclic,
-                                   command,
-                                   regularization = reg);
+            perform.likelihood.fit.capri(dataset,
+                prima.facie.parents$adj.matrix$adj.matrix.acyclic,
+                command,
+                regularization = reg)
 
         ## Set the structure to save the conditional probabilities of
         ## the reconstructed topology.
@@ -983,111 +983,33 @@ get.prima.facie.parents.no.boot <- function(dataset,
 
 
 # reconstruct the best causal topology by likelihood fit
-# @title perform.likelihood.fit
+# @title perform.likelihood.fit.capri
 # @param dataset a valid dataset
 # @param adj.matrix the adjacency matrix of the prima facie causes
 # @param command type of search, either hill climbing (hc) or tabu (tabu)
 # @param regularization regularization term to be used in the likelihood fit
 # @return topology: the adjacency matrix of both the prima facie and causal topologies
 #
-perform.likelihood.fit <- function(dataset,
-                                   adj.matrix,
-                                   command,
-                                   regularization ) {
+perform.likelihood.fit.capri <- function(dataset,
+                                         adj.matrix,
+                                         command,
+                                         regularization) {
 
-    ## Each variable should at least have 2 values: I'm ignoring
-    ## connection to invalid events but, still, need to make the
-    ## dataset valid for bnlearn.
-    
-    for (i in 1:ncol(dataset)) {
-        if (sum(dataset[, i]) == 0) {
-            dataset[sample(1:nrow(dataset), size=1), i] = 1;
-        } else if (sum(dataset[, i]) == nrow(dataset)) {
-            dataset[sample(1:nrow(dataset), size=1), i] = 0;
-        }
-    }
-
-    ## Load the bnlearn library required for the likelihood fit with
-    ## regularizator.
-    
     ## Adjacency matrix of the topology reconstructed by likelihood
     ## fit.
-    
-    adj.matrix.fit = array(0, c(nrow(adj.matrix), ncol(adj.matrix)));
+    adj.matrix.fit = array(0, c(nrow(adj.matrix), ncol(adj.matrix)))
+    rownames(adj.matrix.fit) = colnames(dataset)
+    colnames(adj.matrix.fit) = colnames(dataset)
 
     ## Create a categorical data frame from the dataset.
-    
-    data = array("missing", c(nrow(dataset), ncol(dataset)));
-    for (i in 1:nrow(dataset)) {
-        for (j in 1:ncol(dataset)) {
-            if (dataset[i, j] == 1) {
-                data[i, j] = "observed";
-            }
-        }
-    }
-    data = as.data.frame(data);
-    my.names = names(data);
-    for (i in 1:length(my.names)) {
-        my.names[i] = toString(i);
-    }
-    names(data) = my.names;
+    data = as.categorical.dataset(dataset)
 
-    ## Create the blacklist based on the prima facie topology.
-    
-    cont = 0;
-    parent = -1;
-    child = -1;
-    for (i in 1:nrow(adj.matrix)) {
-        for (j in 1:ncol(adj.matrix)) {
-            if (i != j) {
-                if (adj.matrix[i, j] == 0) {
-                    ## [i,j] refers to causation i --> j
-                    cont = cont + 1;
-                    if (cont == 1) {
-                        parent = toString(i);
-                        child = toString(j);
-                    } else {
-                        parent = c(parent, toString(i));
-                        child = c(child, toString(j));
-                    }
-                }
-            }
-        }
-    }
-
-    ## Perform the reconstruction by likelihood fit with
-    ## regularization either the hill climbing or the tabu search is
-    ## used as the mathematical optimization technique.
-    
-    ## cat('Performing likelihood-fit with regularization:', regularization, '(bnlearn)\n');
-    ## cat('Heuristic search method:', command, '(bnlearn)\n');
-
-    if (cont > 0) {
-        blacklist = data.frame(from = parent, to = child);
-        if (command == "hc") {
-            my.net = hc(data, score = regularization, blacklist = blacklist);
-        } else if (command == "tabu") {
-            my.net = tabu(data,score = regularization, blacklist = blacklist);
-        }
-    } else {
-        if (command == "hc") {
-            my.net = hc(data, score = regularization);
-        }
-        else if (command == "tabu") {
-            my.net = tabu(data, score = regularization);
-        }
-    }
-    my.arcs = my.net$arcs;
-
-    ## Build the adjacency matrix of the reconstructed topology.
-    
-    if (length(nrow(my.arcs)) > 0 && nrow(my.arcs) > 0) {
-        for (i in 1:nrow(my.arcs)) {
-            ## [i, j] refers to causation i --> j
-            adj.matrix.fit[as.numeric(my.arcs[i, 1]),
-                           as.numeric(my.arcs[i, 2])] = 1;
-        }
-    }
+    ## Perform the likelihood fit
+    adj.matrix.fit = lregfit(data,
+        adj.matrix,
+        adj.matrix.fit,
+        regularization,
+        command)
 
     ## Save the results and return them.
     

@@ -196,66 +196,42 @@ prim.fit <- function(dataset,
 
 
 # reconstruct the best causal topology by Prim algorithm combined with probabilistic causation
-# @title perform.likelihood.fit.prim
-# @param dataset a valid dataset
-# @param adj.matrix the adjacency matrix of the prima facie causes
-# @param regularization regularization term to be used in the likelihood fit
-# @param command type of search, either hill climbing (hc) or tabu (tabu)
-# @return topology: the adjacency matrix of both the prima facie and causal topologies
+# title perform.likelihood.fit.prim
+# param dataset a valid dataset
+# param adj.matrix the adjacency matrix of the prima facie causes
+# param regularization regularization term to be used in the likelihood fit
+# param command type of search, either hill climbing (hc) or tabu (tabu)
+# return topology: the adjacency matrix of both the prima facie and causal topologies
 #
-perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, command = "hc" ) {
+perform.likelihood.fit.prim = function(dataset,
+                                       adj.matrix,
+                                       regularization,
+                                       command = "hc"){
 
-    ## Each variable should at least have 2 values: I'm ignoring
-    ## connection to invalid events but, still, need to make the
-    ## dataset valid for bnlearn.
-    
-    for (i in 1:ncol(dataset)) {
-        if (sum(dataset[, i]) == 0) {
-            dataset[sample(1:nrow(dataset), size=1), i] = 1
-        } else if (sum(dataset[, i]) == nrow(dataset)) {
-            dataset[sample(1:nrow(dataset), size=1), i] = 0
-        }
-    }
-
+    data = as.categorical.dataset(dataset)
     adj.matrix.prima.facie = adj.matrix
     
     # adjacency matrix of the topology reconstructed by likelihood fit
     adj.matrix.fit = array(0,c(nrow(adj.matrix),ncol(adj.matrix)))
     rownames(adj.matrix.fit) = colnames(dataset)
     colnames(adj.matrix.fit) = colnames(dataset)
-    
-    # create a categorical data frame from the dataset
-    data = array("missing",c(nrow(dataset),ncol(dataset)))
-    for (i in 1:nrow(dataset)) {
-        for (j in 1:ncol(dataset)) {
-            if(dataset[i,j]==1) {
-                data[i,j] = "observed"
-            }
-        }
-    }
-    data = as.data.frame(data)
-    my.names = names(data)
-    for (i in 1:length(my.names)) {
-        my.names[i] = toString(i)
-    }
-    names(data) = my.names
-    
+       
     # create the graph of valid edges
-    curr_valid.adj.matrix = array(0,c(nrow(adj.matrix),ncol(adj.matrix)))
+    curr.valid.adj.matrix = array(0, c(nrow(adj.matrix), ncol(adj.matrix)))
     cont = 0
-    for (i in 1:nrow(curr_valid.adj.matrix)) {
-        for (j in i:nrow(curr_valid.adj.matrix)) {
+    for (i in 1:nrow(curr.valid.adj.matrix)) {
+        for (j in i:nrow(curr.valid.adj.matrix)) {
             if (!(adj.matrix[i,j] == 0 && adj.matrix[j,i] == 0)) {
                 cont = cont + 1
-                curr_valid.adj.matrix[i,j] = 1
-                curr_valid.adj.matrix[j,i] = 1
+                curr.valid.adj.matrix[i,j] = 1
+                curr.valid.adj.matrix[j,i] = 1
             }
         }
     }
     
     # if the graph has at least one edge, build to weighted igraph object
     if (cont > 0) {
-        curr.graph = graph.adjacency(curr_valid.adj.matrix,mode = "undirected")
+        curr.graph = graph.adjacency(curr.valid.adj.matrix, mode = "undirected")
         all_edges = get.edgelist(curr.graph)
         # set the weights to the edges
         new_weights = NULL
@@ -263,26 +239,24 @@ perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, com
             new_weights = mutinformation(data[ ,all_edges[1,1]], data[ ,all_edges[1,2]])
         } else {
             for (i in 1:nrow(all_edges)) {
-                new_weights = c(new_weights,
-                                mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
+                new_weights = c(new_weights, 
+                    mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
             }
         }
         # set the weights to the graph
         E(curr.graph)$weight = max(new_weights) - new_weights
         # get the minimum spanning tree by Prim algorithm
-        curr_valid.adj.matrix = as.matrix(get.adjacency(minimum.spanning.tree(curr.graph, 
+        curr.valid.adj.matrix = as.matrix(get.adjacency(minimum.spanning.tree(curr.graph, 
                                                                               algorithm="prim")))
-    }
-    
-    # build the matrix of the priors
-    if(cont > 0) {
+
+        # build the matrix of the priors
         new_prior_matrix = array(0, c(nrow(adj.matrix), ncol(adj.matrix)))
         rownames(new_prior_matrix) = colnames(dataset)
         colnames(new_prior_matrix) = colnames(dataset)
-        for (i in 1:nrow(curr_valid.adj.matrix)) {
-            for (j in i:ncol(curr_valid.adj.matrix)) {
+        for (i in 1:nrow(curr.valid.adj.matrix)) {
+            for (j in i:ncol(curr.valid.adj.matrix)) {
                 if (i != j) {
-                    if (curr_valid.adj.matrix[i,j] == 1) {
+                    if (curr.valid.adj.matrix[i,j] == 1) {
                         if (adj.matrix[i,j] == 1) {
                             new_prior_matrix[i,j] = 1
                         } else if(adj.matrix[j,i] == 1) {
@@ -293,79 +267,20 @@ perform.likelihood.fit.prim = function( dataset, adj.matrix, regularization, com
             }
         }
         adj.matrix = new_prior_matrix
+
+        ## Perform the likelihood fit if requested
+        adj.matrix.fit = lregfit(data,
+            adj.matrix,
+            adj.matrix.fit,
+            regularization,
+            command)
     }
     
-    # perform the likelihood fit if requested
-    adj.matrix.fit = lregfit(data,
-        adj.matrix,
-        adj.matrix.fit,
-        regularization,
-        command)
     
-    #if (regularization != "no_reg") {
-
-    
-        ## create the blacklist based on the prima facie topology and the tree-structure assumption
-        #cont = 0
-        #parent = -1
-        #child = -1
-        #for (i in 1:nrow(adj.matrix)) {
-        #    for (j in 1:ncol(adj.matrix)) {
-        #        if(i != j) {
-        #            if (adj.matrix[i,j] == 0) {
-        #                # [i,j] refers to causation i --> j
-        #                cont = cont + 1
-        #                if (cont == 1) {
-        #                    parent = toString(i)
-        #                    child = toString(j)
-        #                } else {
-        #                    parent = c(parent, toString(i))
-        #                    child = c(child, toString(j))
-        #                }
-        #            }
-        #        }
-        #    }
-        #}
-    
-        # perform the reconstruction by likelihood fit with regularization
-        # either the hill climbing or the tabu search is used as the mathematical optimization technique
-        #if (cont > 0) {
-        #    blacklist = data.frame(from = parent,to = child)
-        #    if (command == "hc") {
-        #        my.net = hc(data,score= regularization,blacklist=blacklist)
-        #    } else if (command == "tabu") {
-        #        my.net = tabu(data,score= regularization,blacklist=blacklist)
-        #    }
-        #} else {
-        #    if (command == "hc") {
-        #        my.net = hc(data, score = regularization)
-        #    } else if (command == "tabu") {
-        #        my.net = tabu(data, score = regularization)
-        #    }
-        #}
-        #my.arcs = my.net$arcs
-        
-        # build the adjacency matrix of the reconstructed topology
-        #if (length(nrow(my.arcs)) > 0 && nrow(my.arcs) > 0) {
-        #    for (i in 1:nrow(my.arcs)) {
-        #        # [i,j] refers to causation i --> j
-        #        adj.matrix.fit[as.numeric(my.arcs[i,1]), 
-        #                       as.numeric(my.arcs[i,2])] = 1
-        #    }
-        #}
-        
-    #} else {
-    #    adj.matrix.fit = adj.matrix
-    #}
-    
-    ## Save the results and return them.
-    
-    adj.matrix =
-        list(adj.matrix.pf = adj.matrix.prima.facie,
-             adj.matrix.fit = adj.matrix.fit)
+    adj.matrix = list(adj.matrix.pf = adj.matrix.prima.facie,
+        adj.matrix.fit = adj.matrix.fit)
     topology = list(adj.matrix = adj.matrix)
     return(topology)
-
 }
 
 

@@ -24,7 +24,7 @@
 #
 as.bnlearn.network <- function(x, 
                                model = names(as.models(x))[1], 
-                               makeValid = TRUE) {
+                               make.valid = TRUE) {
 
     ## Check if there is a reconstructed model.
 
@@ -45,15 +45,7 @@ as.bnlearn.network <- function(x,
     genotypes = keysToNames(x, genotypes)
     names(colnames(genotypes)) = NULL
 
-    if (makeValid) {
-        for (i in 1:ncol(genotypes)) {
-            if (sum(genotypes[, i]) == 0) {
-                genotypes[sample(1:nrow(genotypes), size=1), i] = 1;
-            } else if (sum(genotypes[, i]) == nrow(genotypes)) {
-                genotypes[sample(1:nrow(genotypes), size=1), i] = 0;
-            }
-        }
-    }
+    df = as.categorical.dataset(genotypes, make.valid = make.valid)
 
     adj.matrix = get(model, as.adj.matrix(x, models = model))
     adj.matrix = keysToNames(x, adj.matrix)
@@ -61,23 +53,6 @@ as.bnlearn.network <- function(x,
     names(rownames(adj.matrix)) = NULL
     
     bayes.net = NULL
-            
-    ## Create a categorical data frame from the dataset.
-    df = array("missing",c(nrow(genotypes),ncol(genotypes)))
-    for (i in 1:nrow(genotypes)) {
-        for (j in 1:ncol(genotypes)) {
-            if(genotypes[i,j]==1) {
-                df[i,j] = "observed"
-            }
-        }
-    }
-    df = as.data.frame(df)
-    my.names = names(df)
-    
-    for (i in 1:length(my.names)) {
-        my.names[i] = toString(i)
-    }
-    colnames(df) = colnames(genotypes)
     bayes.net$data = df
         
     ## Create the Bayesian Network of the fitted model.
@@ -87,8 +62,8 @@ as.bnlearn.network <- function(x,
             if(adj.matrix[i,j]==1) {
                 bayes.net$net = set.arc(
                     bayes.net$net, 
-                    from=colnames(genotypes)[i], 
-                    to=colnames(genotypes)[j])
+                    from = colnames(genotypes)[i], 
+                    to = colnames(genotypes)[j])
             }
         }
     }
