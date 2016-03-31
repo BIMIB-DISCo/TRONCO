@@ -180,8 +180,8 @@ tronco.capri <- function(data,
         data$hypotheses = NA;
     }
     
-    if (command != "hc" && command != "tabu") {
-        stop("The inference can be performed either by hill climbing or tabu search!",call. = FALSE);
+    if (!command %in% c("hc", "tabu")) {
+        stop("The inference can be performed either by hill climbing or tabu search!",call. = FALSE)
     }
 
     if (pvalue < 0 || pvalue > 1) {
@@ -996,6 +996,27 @@ tronco.mst.prim <- function(data,
 
     return(results);
 }
+
+
+#
+tronco.lregfit <- function(x,
+                           models = names(x$models),
+                           command = 'hc') {
+    is.compliant(x)
+
+    if (!all(models %in% names(x$model))) {
+        stop('not all "models" are reconstructed model.', call. = FALSE) 
+    }
+
+    if (!command %in% c("hc", "tabu")) {
+        stop("The inference can be performed either by hill climbing or tabu search!", call. = FALSE)
+    }
+
+    is.compliant(x)
+    return(x)
+}
+
+
 
 
 #' Bootstrap a reconstructed progression model
