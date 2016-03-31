@@ -1,8 +1,7 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
 #### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
-#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
-#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
 #### are made available under the terms of the GNU GPL v3.0
@@ -716,10 +715,10 @@ oncoprint.cbio <- function(x,
 #' @param height table height
 #' @param width table width
 #' @param fill fill color
+#' @param silent A parameter to disable/enable verbose messages.
 #' @return LaTEX code
 #' @importFrom gridExtra grid.table
 #' @importFrom xtable xtable
-# @importFrom utils flush.console txtProgressBar setTxtProgressBar
 #' @importFrom grDevices pdf dev.cur dev.off dev.set
 #' @export genes.table.report
 #' 
@@ -730,7 +729,8 @@ genes.table.report <- function(x,
                                font = 10,
                                height = 11,
                                width = 8.5,
-                               fill = "lightblue") {
+                               fill = "lightblue",
+                               silent = FALSE) {
     ## Print table with gridExtra and xtables.
     
     print.table <- function(table,
@@ -763,6 +763,9 @@ genes.table.report <- function(x,
 
         #pb = txtProgressBar(1, npages, style = 3);      
         for (i in 1:npages) {
+            if (!silent) {
+              cat('.')
+            }
             #setTxtProgressBar(pb, i)  
             idx = seq(1+((i-1)*maxrow), i*maxrow); 
 
@@ -775,6 +778,9 @@ genes.table.report <- function(x,
                        h.even.alpha = 0.5)
         } 
         #close(pb)
+        if (!silent) {
+          cat('\n')
+        }
 
         ## Output latex.
         
@@ -797,9 +803,13 @@ genes.table.report <- function(x,
 
     x = enforce.numeric(x)
 
-    pb = txtProgressBar(1, ngenes(x), style = 3);
+    #pb = txtProgressBar(1, ngenes(x), style = 3);
     for (i in 1:ngenes(x)) {
-        setTxtProgressBar(pb, i)  
+        #setTxtProgressBar(pb, i)  
+        if (!silent) {
+            cat('.')
+        }
+
         g = as.gene(x, genes=genes[i])
 
         if (ncol(g) > 0) {
@@ -813,7 +823,11 @@ genes.table.report <- function(x,
         }
     }
                                         ## Close progress bar.
-    close(pb)
+    #close(pb)
+
+    if (!silent) {
+        cat('\n')
+    }
 
     genes.table = genes.table[order(genes.table$Frequency, decreasing = TRUE), ]
     genes.table$Frequency = NULL

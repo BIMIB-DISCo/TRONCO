@@ -5,7 +5,7 @@
 \title{import.GISTIC}
 \usage{
 import.GISTIC(x, filter.genes = NULL, filter.samples = NULL,
-  silent = FALSE)
+  silent = FALSE, trim = TRUE)
 }
 \arguments{
 \item{x}{Either a dataframe or a filename}
@@ -15,6 +15,8 @@ import.GISTIC(x, filter.genes = NULL, filter.samples = NULL,
 \item{filter.samples}{A list of samples}
 
 \item{silent}{A parameter to disable/enable verbose messages.}
+
+\item{trim}{Remove the events without occurrence}
 }
 \value{
 A TRONCO compliant representation of the input CNAs.

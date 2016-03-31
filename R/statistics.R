@@ -1,100 +1,11 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
 #### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
-#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
-#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
 #### are made available under the terms of the GNU GPL v3.0
 #### which accompanies this distribution.
-
-
-# Convert a TRONCO object in a Bnlearn network.
-# @title as.bnlearn.network
-#
-# @examples
-# data(test_model)
-# as.bnlearn.network(test_model)
-#
-# @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
-# @param model The name of the selected regularization
-# @param makeValid Transform the bootstrapped data into a valid 2-categories input data
-# @export as.bnlearn.network
-# @importFrom bnlearn empty.graph set.arc
-#
-as.bnlearn.network <- function(x, 
-                               model = names(as.models(x))[1], 
-                               makeValid = TRUE) {
-
-    ## Check if there is a reconstructed model.
-
-    if(!has.model(x)) {
-        stop('Input doesn\'t have a TRONCO object inside.')
-    }
-
-    ## Check if the selected regularization is used in the model.
-
-    if (!model %in% names(as.models(x))) {
-        stop(paste(model, " was not used to build the input TRONCO model!"))
-    }
-
-    ## Get genotypes and data.
-
-    genotypes = as.genotypes(x)
-    genotypes = as.matrix(genotypes)
-    genotypes = keysToNames(x, genotypes)
-    names(colnames(genotypes)) = NULL
-
-    if (makeValid) {
-        for (i in 1:ncol(genotypes)) {
-            if (sum(genotypes[, i]) == 0) {
-                genotypes[sample(1:nrow(genotypes), size=1), i] = 1;
-            } else if (sum(genotypes[, i]) == nrow(genotypes)) {
-                genotypes[sample(1:nrow(genotypes), size=1), i] = 0;
-            }
-        }
-    }
-
-    adj.matrix = get(model, as.adj.matrix(x, models = model))
-    adj.matrix = keysToNames(x, adj.matrix)
-    names(colnames(adj.matrix)) = NULL
-    names(rownames(adj.matrix)) = NULL
-    
-    bayes.net = NULL
-            
-    ## Create a categorical data frame from the dataset.
-    df = array("missing",c(nrow(genotypes),ncol(genotypes)))
-    for (i in 1:nrow(genotypes)) {
-        for (j in 1:ncol(genotypes)) {
-            if(genotypes[i,j]==1) {
-                df[i,j] = "observed"
-            }
-        }
-    }
-    df = as.data.frame(df)
-    my.names = names(df)
-    
-    for (i in 1:length(my.names)) {
-        my.names[i] = toString(i)
-    }
-    colnames(df) = colnames(genotypes)
-    bayes.net$data = df
-        
-    ## Create the Bayesian Network of the fitted model.
-    bayes.net$net = empty.graph(colnames(genotypes))
-    for (i in 1:nrow(adj.matrix)) {
-        for(j in 1:ncol(adj.matrix)) {
-            if(adj.matrix[i,j]==1) {
-                bayes.net$net = set.arc(
-                    bayes.net$net, 
-                    from=colnames(genotypes)[i], 
-                    to=colnames(genotypes)[j])
-            }
-        }
-    }
-    
-    return(bayes.net) 
-}
 
 
 #' Perform a k-fold cross-validation using the function bn.cv
@@ -297,8 +208,7 @@ tronco.kfold.prederr <- function(x,
             res = NULL
             for(i in 1:runs) {
                 res = c(res, attributes(comp[[i]])$mean)
-            }
-            cat('\t\t node:', event, 'mean:', mean(res), '(', sd(res), ')\n')
+            }            
             res  
         }
         if (!silent) {
@@ -426,7 +336,6 @@ tronco.kfold.posterr <- function(x,
                     for(i in 1:runs) {
                         res = c(res, attributes(comp[[i]])$mean)
                     }
-                    cat('\t\tedge: ', pre, '->', event, 'mean: ', mean(res), ' (', sd(res), ')\n')
                     posterr.adj.col[[pre,event]] = res  
                 }
             }
@@ -441,3 +350,5 @@ tronco.kfold.posterr <- function(x,
     stopCluster(cl)
     return(x)
 }
+
+#### end of file -- statistics.R

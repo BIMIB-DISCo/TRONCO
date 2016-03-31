@@ -1,8 +1,7 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
 #### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
-#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
-#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
 #### are made available under the terms of the GNU GPL v3.0
@@ -477,13 +476,16 @@ delete.event <- function(x, gene, type) {
 #' @export delete.hypothesis
 #' 
 delete.hypothesis <- function(x, event = NA, cause = NA, effect = NA) {
+
+    is.compliant(x)
     if (has.model(x)) {
         stop("There's a reconstructed model, hypotheses cannot be deleted now.\nUse delete.model()")
     }
 
     hypo_map = as.hypotheses(x)
     to_remove = c()
-    if (!is.na(event)) {
+
+    if (!any(is.na(event))) {
         if (length(event) == 1 && event %in% as.events(x)[ , 'event']) {
             cause_del = which(hypo_map[ , 'cause event'] == event)
             effect_del = which(hypo_map[ , 'effect event'] == event)
@@ -493,8 +495,8 @@ delete.hypothesis <- function(x, event = NA, cause = NA, effect = NA) {
         }
     }
 
-    if (! is.na(cause)) {
-        if (cause %in% as.events(x)[ , 'event']) {
+    if (! any(is.na(cause))) {
+        if (all(cause %in% as.events(x)[ , 'event'])) {
             cause_del = which(hypo_map[ , 'cause event'] == cause)
             to_remove = unique(c(to_remove, cause_del))
         } else {
@@ -502,13 +504,18 @@ delete.hypothesis <- function(x, event = NA, cause = NA, effect = NA) {
         }
     }
 
-    if (! is.na(effect)) {
-        if ( effect %in% as.events(x)[ , 'event']) {
+    if (! any(is.na(effect))) {
+        if (all(effect %in% as.events(x)[ , 'event'])) {
             effect_del = which(hypo_map[ , 'effect event'] == effect)
             to_remove = unique(c(to_remove, effect_del))
         } else {
             stop('Wrong effect, select only events present in as.events')
         }
+    }
+
+    if (length(to_remove) == 0) {
+        warning("Nothing to remove")
+        return(x)
     }
 
     x$hypotheses$num.hypotheses = x$hypotheses$num.hypotheses - 1
@@ -533,6 +540,7 @@ delete.hypothesis <- function(x, event = NA, cause = NA, effect = NA) {
 #' @export delete.pattern
 #' 
 delete.pattern <- function(x, pattern) {
+    is.compliant(x)
     if (has.model(x)) {
         stop("There's a reconstructed model, a pattern cannot be deleted now. \nUse delete.model()")
     }
@@ -553,7 +561,7 @@ delete.pattern <- function(x, pattern) {
         }
     }
 
-    rm(list = pattern, envir = x$hypotheses$hstructure)
+    x$hypotheses$hstructure[pattern] = NULL
 
     if (! 'Pattern' %in% unique(x$annotations[,'type'])) {
         x$types = x$types[-which(rownames(x$types) == 'Pattern'),,drop=FALSE]
@@ -579,6 +587,7 @@ delete.pattern <- function(x, pattern) {
 #' @export delete.model
 #' 
 delete.model <- function(x) {
+    is.compliant(x)
     if (! has.model(x)) {
         stop("No model to delete in dataset")
     }
@@ -610,23 +619,24 @@ delete.model <- function(x) {
 #' 
 delete.samples <- function(x, samples) {
     is.compliant(x, 'delete.samples input')
-    stages = has.stages(x)
-    del = list()
-    actual.samples = as.samples(x)
+
+    if (has.model(x)) {
+        stop("There's a reconstructed model, a sample cannot be deleted now. \nUse delete.model()")
+    }
+
     samples = unique(samples)
-    for (sample in samples) {
-        if (!sample %in% actual.samples) {
-            warning('Sample: ', sample, ' not in as.samples(x)')
-        } else {
-            del = append(del, sample)
-        }
+    if (!all(samples %in% as.samples(x))) {
+        stop("Not all sample in as.samples(x)")
     }
 
-    x$genotypes = x$genotypes[!rownames(x$genotypes) %in% del, , drop = FALSE]
+    genotypes = x$genotypes[!rownames(x$genotypes) %in% samples, , drop = FALSE]
 
-    if (stages) {
-        x$stages = x$stages[!rownames(x$stages) %in% del, , drop = FALSE]
+    if (has.stages(x)) {
+        stages = x$stages[!rownames(x$stages) %in% samples, , drop = FALSE]
+        x$stages = stages
     }
+
+    x$genotypes = genotypes
 
     is.compliant(x, 'delete.samples output')
 
@@ -828,7 +838,6 @@ sbind <- function(...) {
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant dataset.
 #' @export join.types
-# @importFrom utils txtProgressBar flush.console setTxtProgressBar
 #' 
 join.types <- function(x,
                        ...,
@@ -915,11 +924,17 @@ join.types <- function(x,
         #if (!silent) {
         #    setTxtProgressBar(pb, i)
         #}
+        if (!silent) {
+            cat('.')
+        }
 
         geno = as.matrix(rowSums(as.gene(x, genes[i], types = input)))
         geno[geno > 1] = 1
 
         geno.matrix[, i] = geno
+    }
+    if (!silent) {
+        cat('\n')
     }
 
     rownames(geno.matrix) = as.samples(x)
@@ -1127,6 +1142,43 @@ join.events <- function(x, ..., new.event, new.type, event.color) {
     y = ebind(y, genos)
 
     return(y)
+}
+
+
+# rename field of reconstruction
+rename.reconstruction.fields <- function(reconstruction, genotypes){
+    rownames(reconstruction$confidence) =
+        c("temporal priority",
+          "probability raising",
+          "hypergeometric test")
+    colnames(reconstruction$confidence) = "confidence"
+    rownames(reconstruction$confidence[[1,1]]) = colnames(genotypes)
+    colnames(reconstruction$confidence[[1,1]]) = colnames(genotypes)
+    rownames(reconstruction$confidence[[2,1]]) = colnames(genotypes)
+    colnames(reconstruction$confidence[[2,1]]) = colnames(genotypes)
+    rownames(reconstruction$confidence[[3,1]]) = colnames(genotypes)
+    colnames(reconstruction$confidence[[3,1]]) = colnames(genotypes)
+
+    for (i in 1:length(reconstruction$model)) {
+
+        ## Set rownames and colnames to the probabilities.
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(genotypes)
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability"
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(genotypes)
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(genotypes)
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(genotypes)
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability"
+
+        ## Set rownames and colnames to the parents positions.
+        rownames(reconstruction$model[[i]]$parents.pos) = colnames(genotypes)
+        colnames(reconstruction$model[[i]]$parents.pos) = "parents"
+
+        ## Set rownames and colnames to the adjacency matrices.
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(genotypes)
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(genotypes)
+
+    }
+    return(reconstruction)
 }
 
 

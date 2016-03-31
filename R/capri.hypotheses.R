@@ -1,8 +1,7 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
 #### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
-#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
-#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
 #### are made available under the terms of the GNU GPL v3.0
@@ -524,9 +523,13 @@ hypothesis.add <- function(data,
     ## Create the list of hypotheses' structures.
     
     if (length(hypotheses$hstructure) == 0) {
-        hypotheses$hstructure = new.env(hash = TRUE, parent = emptyenv());
+        #hypotheses$hstructure = new.env(hash = TRUE, parent = emptyenv());
+        hypotheses$hstructure = list()
     }
-    hypotheses$hstructure[[pattern.label]] = get.lifted.pattern(hstructure);
+    hypotheses$hstructure[pattern.label] = list(get.lifted.pattern(hstructure))
+
+    #print(get.lifted.pattern(hstructure))
+    #print(hypotheses$hstructure[pattern.label])
 
     ## Add the atoms of the hypothesis.
     
@@ -787,7 +790,6 @@ hypothesis.add.group <- function(x,
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with the added hypotheses
 #' @export hypothesis.add.homologous
-# @importFrom utils flush.console txtProgressBar setTxtProgressBar
 #' 
 hypothesis.add.homologous <- function(x, 
                                       pattern.cause = '*',
@@ -849,6 +851,10 @@ hypothesis.add.homologous <- function(x,
         ## Start the progress bar.
         
         #setTxtProgressBar(pb, i)
+
+        if (!silent) {
+            cat('.')
+        }
                 
         ## Check if the joint probability of homologous events is > 0,
         ## if yes the event will be added as 'OR', otherwise 'XOR'.

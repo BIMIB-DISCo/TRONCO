@@ -1,8 +1,7 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
 #### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
-#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
-#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
 #### are made available under the terms of the GNU GPL v3.0
@@ -24,7 +23,6 @@
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant dataset.
 #' @export events.selection
-# @importFrom utils flush.console txtProgressBar setTxtProgressBar
 #' 
 events.selection <- function(x,
                              filter.freq = NA,
@@ -75,12 +73,15 @@ events.selection <- function(x,
             #setTxtProgressBar(pb, i)
             mut.freq = sum(x$genotypes[,i])/nsamples(x)
             valid[i] = mut.freq > filter.freq
+            if (!silent) {
+                cat('.')
+            }
         }
         
         #close(pb)
 
         if (!silent) {
-            cat('Selected ',
+            cat('\nSelected ',
                 nrow(as.events(x)[valid, ]),
                 ' events.\n')
         }

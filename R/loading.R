@@ -1,8 +1,7 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
 #### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
-#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
-#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
 #### are made available under the terms of the GNU GPL v3.0
@@ -113,6 +112,7 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 #' @param filter.genes A list of genes
 #' @param filter.samples A list of samples
 #' @param silent A parameter to disable/enable verbose messages.
+#' @param trim Remove the events without occurrence
 #' @return A TRONCO compliant representation of the input CNAs.
 #' @export import.GISTIC
 #' @importFrom utils read.table
@@ -120,7 +120,8 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 import.GISTIC <- function(x,
                           filter.genes = NULL,
                           filter.samples = NULL,
-                          silent = FALSE) {
+                          silent = FALSE,
+                          trim = TRUE) {
 
     if (!(is.data.frame(x) || is.matrix(x)) && is.character(x)) {
         if (!silent) {
@@ -244,12 +245,16 @@ import.GISTIC <- function(x,
     if (!silent) {
         cat("Transforming events in TRONCO data types ..... \n")
     }
-    d.homo = trim(import.genotypes(d.homo, event.type = "Homozygous Loss", color = "dodgerblue4"))
-    d.het = trim(import.genotypes(d.het, event.type = "Heterozygous Loss", color = "dodgerblue1"))
-    d.low = trim(import.genotypes(d.low, event.type = "Low-level Gain", color = "firebrick1"))
-    d.high = trim(import.genotypes(d.high, event.type = "High-level Gain", color = "firebrick4"))
+    d.homo = import.genotypes(d.homo, event.type = "Homozygous Loss", color = "dodgerblue4")
+    d.het = import.genotypes(d.het, event.type = "Heterozygous Loss", color = "dodgerblue1")
+    d.low = import.genotypes(d.low, event.type = "Low-level Gain", color = "firebrick1")
+    d.high = import.genotypes(d.high, event.type = "High-level Gain", color = "firebrick4")
 
     d.cnv.all = ebind(d.homo, d.het, d.low, d.high, silent = silent)
+
+    if (trim) {
+        d.cnv.all = trim(d.cnv.all)
+    }
 
     if (!silent) {
         cat("*** Data extracted, returning only events observed in at least one sample \n",
@@ -289,8 +294,7 @@ import.GISTIC <- function(x,
 #' @return A TRONCO compliant representation of the input MAF
 #' @export import.MAF
 #' @importFrom utils read.table read.delim count.fields flush.console
-#' @importFrom utils txtProgressBar setTxtProgressBar
-# @importFrom grDevices colorRampPalette
+#' @importFrom grDevices colorRampPalette
 #' 
 import.MAF <- function(file,
                        sep = '\t',
@@ -512,17 +516,21 @@ import.MAF <- function(file,
             #if (!silent) {
             #    setTxtProgressBar(pb, i)
             #}
+            if (!silent) {
+                cat('.')
+            }
             binary.mutations[maf$Tumor_Sample_Barcode[i], maf$Hugo_Symbol[i]] = 1
         }
+
         if (!silent) {
             #close(pb)
-            cat("Starting conversion from MAF to TRONCO data type.\n")
+            cat("\nStarting conversion from MAF to TRONCO data type.\n")
         }
         tronco.data = import.genotypes(binary.mutations, event.type = "Mutation")
         is.compliant(tronco.data)
     } else {
         if (!silent) {
-            cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :")
+            cat("Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :\n")
             #flush.console()
             #pb <- txtProgressBar(1, nrow(maf), style = 3)
         }
@@ -548,7 +556,9 @@ import.MAF <- function(file,
             #if (!silent) {
             #    setTxtProgressBar(pb, i)
             #}
-            
+            if (!silent) {
+                cat('.')
+            }
             ev = intersect(
                 which(tronco.data$annotations[, 'event'] == maf$Hugo_Symbol[i]), 
                 which(tronco.data$annotations[, 'type']  == maf$Variant_Classification[i])
@@ -560,6 +570,9 @@ import.MAF <- function(file,
         #if (!silent) {
         #    close(pb)
         #}
+        if (!silent) {
+            cat('\n')
+        }
         
         
         colors = colorRampPalette(brewer.pal(8, 'Accent'))(length(MAF.variants))
@@ -616,13 +629,18 @@ extract.MAF.HuGO.Entrez.map <- function(file, sep = "\t") {
 #' @param cbio.dataset Cbio dataset ID
 #' @param cbio.profile Cbio genetic profile ID
 #' @param genes A list of < 900 genes to query
+#' @param file String containing filename for RData output. If NA no output will be provided
 #' @return A list with two dataframe: the gentic profile required and clinical data for the Cbio study.
 #' @export cbio.query
 #' @importFrom cgdsr CGDS getCancerStudies getCaseLists 
 #' @importFrom cgdsr getGeneticProfiles getProfileData getClinicalData
 #' @importFrom utils write.table
 #' 
-cbio.query <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, genes) {
+cbio.query <- function(cbio.study = NA,
+                       cbio.dataset = NA,
+                       cbio.profile = NA,
+                       genes,
+                       file = NA) {
     cat("*** CGDS plugin for Cbio query.\n")
     ## require("cgdsr")
 
@@ -759,16 +777,13 @@ cbio.query <- function(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA, ge
     clinicaldata = getClinicalData(mycgds, cbio.dataset)
     rownames(clinicaldata) = gsub('\\.', '-', rownames(clinicaldata))
 
-    ofile <- paste(cbio.study, cbio.dataset, samples.name, "Rdata", sep = ".")
-
     ret = NULL
     ret$profile = data
     ret$clinical = clinicaldata
 
-    save(ret, file=ofile)
-
-    cat(paste("\nData exported to file: ", ofile, sep = ""))
-    write.table(data, file = ofile)
+    if (!is.na(file)) {
+        save(ret, file=file)
+    }
 
     return(ret)
 }

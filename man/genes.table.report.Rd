@@ -5,7 +5,7 @@
 \title{genes.table.report}
 \usage{
 genes.table.report(x, name, dir = getwd(), maxrow = 33, font = 10,
-  height = 11, width = 8.5, fill = "lightblue")
+  height = 11, width = 8.5, fill = "lightblue", silent = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}
@@ -23,6 +23,8 @@ genes.table.report(x, name, dir = getwd(), maxrow = 33, font = 10,
 \item{width}{table width}
 
 \item{fill}{fill color}
+
+\item{silent}{A parameter to disable/enable verbose messages.}
 }
 \value{
 LaTEX code

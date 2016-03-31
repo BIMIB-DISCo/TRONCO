@@ -17,7 +17,7 @@ BiocStyle::latex()
 
 \begin{document}
 
-\title{Using the TRONCO package}
+\title{Using the \Biocpkg{TRONCO} package}
 
 \author{
 Marco Antoniotti\footnote{Dipartimento di Informatica Sistemistica e Comunicazione, Università degli Studi Milano Bicocca
@@ -35,12 +35,12 @@ Daniele Ramazzotti$^\ast$
 \maketitle
 
 
-\begin{tcolorbox}{\bf Overview.} The TRONCO ({\sc TR}{\em anslational} {\sc ONCO}{\em logy})  \textsc{R} package  collects algorithms to infer  progression models via the approach of Suppes-Bayes Causal Network, both from an ensemble of tumors (cross-sectional samples) and within an individual patient (multi-region or single-cell samples). The package provides parallel implementation of algorithms that process binary matrices where each row represents a tumor sample and each column a single-nucleotide or a structural variant driving the  progression; a 0/1 value models the absence/presence of that alteration in the sample. The tool can import data from plain,  MAF or GISTIC format files, and can fetch it from the cBioPortal for cancer genomics. Functions for  data manipulation and visualization are provided, as well as functions to import/export such data to other bioinformatics  tools for, e.g,  clustering or detection of mutually exclusive alterations. Inferred models can be visualized and tested for their confidence via bootstrap and cross-validation. TRONCO is used for  the implementation of the Pipeline for Cancer Inference. \\
+\begin{tcolorbox}{\bf Overview.} The \Biocpkg{TRONCO} ({\sc TR}{\em anslational} {\sc ONCO}{\em logy})  \R{} package  collects algorithms to infer  progression models via the approach of Suppes-Bayes Causal Network, both from an ensemble of tumors (cross-sectional samples) and within an individual patient (multi-region or single-cell samples). The package provides parallel implementation of algorithms that process binary matrices where each row represents a tumor sample and each column a single-nucleotide or a structural variant driving the  progression; a 0/1 value models the absence/presence of that alteration in the sample. The tool can import data from plain,  MAF or GISTIC format files, and can fetch it from the cBioPortal for cancer genomics. Functions for  data manipulation and visualization are provided, as well as functions to import/export such data to other bioinformatics  tools for, e.g,  clustering or detection of mutually exclusive alterations. Inferred models can be visualized and tested for their confidence via bootstrap and cross-validation. \Biocpkg{TRONCO} is used for  the implementation of the Pipeline for Cancer Inference. \\
 
 \vspace{1.0cm}
 
 
-{\em In this vignette, we will  give an overview of the package by presenting some of the functions that could be most commonly used to arrange a data-analysis pipeline, along with their parameters to customize TRONCO's functioning. Advanced example case studies  are available at the tool webpage}
+{\em In this vignette, we will  give an overview of the package by presenting some of the functions that could be most commonly used to arrange a data-analysis pipeline, along with their parameters to customize \Biocpkg{TRONCO}'s functioning. Advanced example case studies  are available at the tool webpage}
 
 \vspace{1.0cm}
 
@@ -78,8 +78,8 @@ background = "#f3f3ff"
 
 \begin{itemize}
 \item[2.4] Current version. New statistics available for model confidence via cross-validation routines. New algorithms based on Minimum Spanning Tree extraction.
-\item[2.0] Released in summer 2015 on our GitHUB,  replaced the Bioconductor version in autumn 2015.  This version is parallel, includes also the CAPRI algorithm, supports common   GISTIC and  MAF input formats, supports TCGA samples editing and queries to the cBio portal. This version has new plotting capabilities, and a general from-scratch design. It is not compatible with previous releases.
-\item[1.0] released in mid 2014 includes CAPRESE algorithm. It is now outdated and no more maintained;
+\item[2.0] Released in summer 2015 on our GitHUB, replaced the \Bioconductor{} version in autumn 2015. This version is parallel, includes also the CAPRI algorithm, supports common GISTIC and  MAF input formats, supports TCGA samples editing and queries to the cBio portal. This version has new plotting capabilities, and a general from-scratch design. It is not compatible with previous releases.
+\item[1.0] released in mid 2014, includes CAPRESE algorithm. It is now outdated and no more maintained;
 \end{itemize}
 
 
@@ -134,7 +134,7 @@ data(crc_plain)
 @
 
 
-TRONCO transforms input data in a sort of database-alike format, where three main fields are presente: {\tt genotypes} which contains the genomic signatures of the input samples, {\tt annotations} which provides an index to the events present in the data and {\tt types}, a field mapping type of events (e.g., mutations, CNAs, etc.) to colors for display visualization. Other annotations are generated when a dataset is augmented with some metadata.  A TRONCO object shall be edited by using TRONCO functions,  to avoid to create inconsistencies in its internal representation. Function {\tt is.compliant} can be used to test if a TRONCO object is consistent; the function is called by any TRONCO function before returning  a modified object, so to ensure that consistency is preserved -- {\tt is.compliant}  will raise an error if this is not the case.
+TRONCO transforms input data in a sort of database-alike format, where three main fields are presente: {\tt genotypes} which contains the genomic signatures of the input samples, {\tt annotations} which provides an index to the events present in the data and {\tt types}, a field mapping type of events (e.g., mutations, CNAs, etc.) to colors for display visualization. Other annotations are generated when a dataset is augmented with some metadata.  A TRONCO object shall be edited by using TRONCO functions,  to avoid to create inconsistencies in its internal representation. Function \Rfunction{is.compliant} can be used to test if a TRONCO object is consistent; the function is called by any TRONCO function before returning  a modified object, so to ensure that consistency is preserved -- \Rfunction{is.compliant}  will raise an error if this is not the case.
 
 TRONCO supports the import of data from 3 formats. The Mutation Annotation Format (\textit{MAF}) is a tab-delimited file containing somatic and/or germline mutation annotations; the \textit{GISTIC} format for copy number alterations as defined by TCGA and a custom boolean matrix format where the user can directly specify the mutational profiles to be importend.   Through some data included in the package we will show how to load your datasets in TRONCO.  
  \begin{itemize}
@@ -148,7 +148,7 @@ TRONCO supports the import of data from 3 formats. The Mutation Annotation Forma
 
  
 Whatever is dataset created as explained in the next sections, it can be annotated by adding a mnemonic description of the data, which will be used as plot titles when possible.
-Function {\tt annotate.description} raises a warning if the dataset was previously annotated.
+Function \Rfunction{annotate.description} raises a warning if the dataset was previously annotated.
 
 
 aCML = annotate.description(aCML, 'aCML data (Bioinf.)')
@@ -174,7 +174,7 @@ dataset_maf = import.MAF(crc_maf)
 
 See \S \ref{sec:view} to understand how to visualize a TRONCO dataset. In the above case -- where we see that mutations are annotated as {\tt Missense\_Mutation} or {\tt Nonsense\_Mutation}, if a gene in a sample has both, these will be merged to a unique {\tt Mutation} type. In this case a pair gene name with {\tt Mutation} will be what we call an ``event'' in our dataset -- e.g.,  APC {\tt Mutation}.
 
-If one would like  to have two distinct events in the dataset, i.e., APC {\tt Missense\_Mutation} and APC {\tt Nonsense\_Mutation}, parameter {\tt merge.mutation.types} should be set to false in the call to {\tt import.MAF}. 
+If one would like  to have two distinct events in the dataset, i.e., APC {\tt Missense\_Mutation} and APC {\tt Nonsense\_Mutation}, parameter {\tt merge.mutation.types} should be set to false in the call to \Rfunction{import.MAF}. 
 
 
 <<import.MAF.real>>=
@@ -204,7 +204,7 @@ TRONCO supports custom  MAF files, where possibly not all the standard annotatio
 
 
 \subsection{Copy Number Variants annotated in the GISTIC format}
-We use the function \texttt{import.GISTIC} to import a dataset in GISTIC format, in this case from
+We use the function \Rfunction{import.GISTIC} to import a dataset in GISTIC format, in this case from
 
 <<>>=
 crc_gistic
@@ -231,7 +231,7 @@ One can annotate its custom type of alterations in a boolean matrix such as {\tt
 crc_plain
 @
 
-In this case,  function \texttt{import.genotypes} will convert the matrix to a TRONCO  object where events' names and samples codes will be set from column and row names of the matrix. If this is not possible, these will be generated from templates. By default, the {\tt event.type} is set to {\tt variant} but one can specify a custom name for the alteration that is reported in the matrix
+In this case,  function \Rfunction{import.genotypes} will convert the matrix to a TRONCO  object where events' names and samples codes will be set from column and row names of the matrix. If this is not possible, these will be generated from templates. By default, the {\tt event.type} is set to {\tt variant} but one can specify a custom name for the alteration that is reported in the matrix
 
 <<import.genotypes>>=
 dataset_plain = import.genotypes(crc_plain, event.type='myVariant')
@@ -243,7 +243,7 @@ dataset_plain = import.genotypes(crc_plain, event.type='myVariant')
 
 TRONCO uses the R interface to cBio to query data from the portal. All type of data can be downloaded from the portal, which includes MAF/GISTIC data for a lot of different cancer studies. An example of interaction with the portal is archived at the tool's webpage. 
 
-Here, we  show how to download lung cancer data somatic mutations for genes TP53, KRAS and PIK3CA,  from the lung cancer project run by TCGA, which is archived as  {\tt luad\_tcga\_pub} at cBio. If some of the parameters to {\tt cbio.query} are missing the function will become interactive by showing a list of possible data available at the portal.
+Here, we  show how to download lung cancer data somatic mutations for genes TP53, KRAS and PIK3CA,  from the lung cancer project run by TCGA, which is archived as  {\tt luad\_tcga\_pub} at cBio. If some of the parameters to \Rfunction{cbio.query} are missing the function will become interactive by showing a list of possible data available at the portal.
 
 <<results='hide', eval=FALSE>>=
 data = cbio.query(
@@ -368,7 +368,7 @@ npatterns(aCML)
 
 Oncoprints are the most effective  data-visualization functions in TRONCO. These are heatmaps where rows represent variants, and columns samples ({\em the reverse} of the input format required by TRONCO), and are annotated and displayed/sorted to enhance which samples have which mutations etc. 
 
-By default {\tt oncoprint}  will try to  sort samples and events to enhance exclusivity patterns among the events.
+By default \Rfunction{oncoprint}  will try to  sort samples and events to enhance exclusivity patterns among the events.
 
 
 <<onco, fig.show='hide', fig.width=6, fig.height=5>>=
@@ -412,7 +412,7 @@ head(as.stages(dataset))
 @
 
 
-The {\tt as.stages} function can now be used to create a view over stages.
+The \Rfunction{as.stages} function can now be used to create a view over stages.
 
 <<>>=
 head(as.stages(dataset))
@@ -420,7 +420,7 @@ head(as.stages(dataset))
 
 
 
-After that the data is annotated via {\tt annotate.stages} function, we can again plot an oncoprint -- which this time will detect that the dataset has also stages associated, and will diplay those 
+After that the data is annotated via \Rfunction{annotate.stages} function, we can again plot an oncoprint -- which this time will detect that the dataset has also stages associated, and will diplay those 
 
 
 <<onco-stages, fig.show='hide', fig.width=6, fig.height=5, results='hide'>>=
@@ -429,7 +429,7 @@ oncoprint(dataset, legend = FALSE)
 
 
 
-If one is willing to display samples grouped according to some variable, for instance after a sample clustering task, he can use {\tt group.samples} parameter of {\tt oncoprint} and that will override the mutual exclusivity ordering. Here, we make the trick of using the stages as if they were such clustering result.
+If one is willing to display samples grouped according to some variable, for instance after a sample clustering task, he can use {\tt group.samples} parameter of \Rfunction{oncoprint} and that will override the mutual exclusivity ordering. Here, we make the trick of using the stages as if they were such clustering result.
 
 
 <<onco-clus2, fig.show='hide', fig.width=6, fig.height=5, results='hide'>>=
@@ -456,7 +456,7 @@ oncoprint(dataset, group.samples = as.stages(dataset))
     
 \subsection{Groups visualization (e.g., pathways)}
 
-TRONCO provides functions to visualize groups of events, which in this case are called pathways -- though this could be any group that one would like to define. Aggregation happens with the same rational as the {\tt as.alterations} function, namely by merging the events in the group.
+TRONCO provides functions to visualize groups of events, which in this case are called pathways -- though this could be any group that one would like to define. Aggregation happens with the same rational as the \Rfunction{as.alterations} function, namely by merging the events in the group.
 
 We make an example of a pathway called {\tt MyPATHWAY} involving genes SETBP1, EZH2 and WT1; we want it to be colored in red, and we want to have the genotype of each event to be maintened in the dataset. We proceed as follows  (R's output is omitted).
 
@@ -518,8 +518,9 @@ pathway.visualization(aCML,
 \vspace*{.05in}
 \caption{\texttt{oncoprint} output of a custom pair of pathways, with events shown in top and hidden in bottom.}
 \end{figure*}
-    
-    
+
+\FloatBarrier
+
 \section{Data manipulation} \label{sec:datamanip}
 
 All examples in this section will be done with the the aCML dataset as reference.
@@ -553,10 +554,8 @@ where in this case we also created a new event type, with its own color.
 
 In a similar way we can decide to join all the events of two distinct types, in this case if a gene $x$ has signatures for both type of events, he will get a unique signature with an alteration present if it is either of the second {\em or} the second type 
 
-<<join2, results='hide'>>=
+<<join2>>=
 dataset = join.types(dataset, 'Nonsense point', 'Nonsense Ins/Del')
-@
-<<join3>>=
 as.types(dataset)
 @
 
@@ -602,8 +601,8 @@ as.events(dataset)
 @
 
 
-An example visualization of the data before and after the selection process can be obtained by combining the {\tt gtable} objects returned by {\tt oncoprint}. We here use 
-{\tt gtable = T} to get access to have a  GROB table returned, and {\tt silent = T} to avoid that the calls to the function display on the device; the call to {\tt grid.arrange} displays the captured {\tt gtable} objects.
+An example visualization of the data before and after the selection process can be obtained by combining the {\tt gtable} objects returned by \Rfunction{oncoprint}. We here use 
+{\tt gtable = T} to get access to have a  GROB table returned, and {\tt silent = T} to avoid that the calls to the function display on the device; the call to \Rfunction{grid.arrange} displays the captured {\tt gtable} objects.
 
 
 <<onco-ex-sel, fig.show='hide', fig.width=7, fig.height=5.5, results='hide'>>=
@@ -617,14 +616,14 @@ grid.arrange(
     ncol = 1)
 @
 
-
 \begin{figure*}[ht]
 \begin{center}
 \includegraphics[width=0.9\textwidth]{figure/onco-ex-sel-1}
 \end{center}
-\caption{Multiple output from \texttt{oncoprint} can be captured as a {\tt gtable} and composed via {\tt grid.arrange} (package {\tt gridExtra}). In this case we show  aCML data on top -- displayed after the {\tt as.alterations} transformation -- versus a selected subdataset of events with a minimum frequency of 5\%, force exclusion of SETBP1 (all events associated), and inclusion of EZH1 and EZH2.}
+\caption{Multiple output from \Rfunction{oncoprint} can be captured as a {\tt gtable} and composed via {\tt grid.arrange} (package \CRANpkg{ gridExtra}). In this case we show  aCML data on top -- displayed after the \Rfunction{as.alterations} transformation -- versus a selected subdataset of events with a minimum frequency of 5\%, force exclusion of SETBP1 (all events associated), and inclusion of EZH1 and EZH2.}
 \end{figure*}
 
+\FloatBarrier
 
 \section{Model inference}
 
@@ -653,7 +652,7 @@ The aCML data has none of the above issues (the call returns empty lists); if th
 
 \subsection{CAPRI}
 
- In what follows, we show CAPRI's functioning by replicating the aCML case study presented in CAPRI's original paper. Regardless from which types of mutations we include, we select only the genes  mutated at least in the $5\%$ of the patients -- thus   we first use {\tt as.alterations} to have gene-level frequencies, and then we apply there a frequency filter (R's output is omitted). 
+ In what follows, we show CAPRI's functioning by replicating the aCML case study presented in CAPRI's original paper. Regardless from which types of mutations we include, we select only the genes  mutated at least in the $5\%$ of the patients -- thus   we first use \Rfunction{as.alterations} to have gene-level frequencies, and then we apply there a frequency filter (R's output is omitted). 
 
 
 <<other-alterations>>=
@@ -690,7 +689,6 @@ oncoprint(aCML.clean, gene.annot = list(priors = gene.hypotheses), sample.id = T
 \end{figure*}
 
 \FloatBarrier
-
 
 \subsubsection{Testable hypotheses via logical formulas (i.e., patterns)}
 
@@ -768,7 +766,7 @@ Which is the following pattern
 \begin{center}
 (TET2:Ins/Del) XOR (TET2:Missense point) XOR (TET2:Nonsense point) XOR (IDH2:Missense point)
 \end{center}
-which we can visualize via {\tt an oncoprint}.
+which we can visualize via an{\tt  oncoprint}.
 
 
 <<onco-tet2-idh2, fig.show='hide', fig.width=7, fig.height=2, results='hide'>>=
@@ -788,10 +786,9 @@ oncoprint(events.selection(aCML.hypo,
 \caption{\texttt{oncoprint} output to show the perfect (hard) exclusivity among NRAS/KRAS mutations in aCML on top, and the sofy-one among  TET2 and IDH2 alterations.}
 \end{figure*}
 
-
 \FloatBarrier
 
-\paragraph{Adding (automatically) hypotheses for homologous events.} We consider homologous events those having the same mnemonic name -- as of function {\tt as.genes} -- but events of different type. For instance, mutations and deletions of the same gene would be considered such (e.g., in the aCML dataset ASXL1 Ins/Del and Nonsense point).
+\paragraph{Adding (automatically) hypotheses for homologous events.} We consider homologous events those having the same mnemonic name -- as of function \Rfunction{as.genes} -- but events of different type. For instance, mutations and deletions of the same gene would be considered such (e.g., in the aCML dataset ASXL1 Ins/Del and Nonsense point).
 It could be a good idea to test such events, in terms of progression fitness, to test is they might be equivalent; we can do that by building a pattern of exclusivity among them. TRONCO has a function to make this automatically which, by default, adds a soft exclusivity OR pattern among them. 
 
 
@@ -810,9 +807,9 @@ was created with a XOR function, as TET2 appears in perfect exclusivity.
 
 \paragraph{Adding (automatically) hypotheses for a group of genes.}
 
-The idea behind the previous function is generalized by {\tt hypothesis.add.group}, that add a set of hypotheses that can be combinatorially created out of a  group of genes. As such, this function can create an exponential number of hypotheses and should be used with caution as too many hypotheses, with respect to sample size, should not be included. 
+The idea behind the previous function is generalized by \Rfunction{hypothesis.add.group}, that add a set of hypotheses that can be combinatorially created out of a  group of genes. As such, this function can create an exponential number of hypotheses and should be used with caution as too many hypotheses, with respect to sample size, should not be included. 
 
-This function takes, among its inputs, the top-level logical connective, AND/OR/XOR, a minimum/maximum pattern size -- to restrict the combinatorial sampling of subgroups --, plus a parameter that can be used to constrain the minimum event frequency. If, among the events included some of them have homologous, these are put automatically nested with the same logic of the {\tt hypothesis.add.group} function.
+This function takes, among its inputs, the top-level logical connective, AND/OR/XOR, a minimum/maximum pattern size -- to restrict the combinatorial sampling of subgroups --, plus a parameter that can be used to constrain the minimum event frequency. If, among the events included some of them have homologous, these are put automatically nested with the same logic of the \Rfunction{hypothesis.add.group} function.
 
 
 <<hypo-add-hom>>=
@@ -821,9 +818,6 @@ dataset = hypothesis.add.group(aCML.clean, OR, group = c('SETBP1', 'ASXL1', 'CBL
 
 
 \FloatBarrier
-
-
-
 
 
 The final dataset that will be given as input to CAPRI is  finally shown. Notice the signatures of  all the lifted patterns.
@@ -842,10 +836,9 @@ oncoprint(aCML.hypo, gene.annot = list(priors = gene.hypotheses), sample.id = TR
 \caption{\texttt{oncoprint} output of the a dataset that has patterns that could be given as input to CAPRI to retrieve a progression model.}
 \end{figure*}
 
-
+\FloatBarrier
 
 \paragraph{Querying, visualizing and manipulating CAPRI's patterns.}
-
 
 
 We also provide functions to get the number of hypotheses and patterns present in the data.
@@ -913,8 +906,6 @@ tronco.pattern.plot(aCML,
 @
 
 
-
-
 \begin{figure*}[ht]
 \begin{center}
 \includegraphics[width=0.8\textwidth]{figure/pattern-plot-circos-1}
@@ -936,7 +927,7 @@ aCML.clean = annotate.description(aCML.clean, '')
 @
 
 <<model-capri>>=
-model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot = 1)
+model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot = 5)
 model.capri = annotate.description(model.capri, 'CAPRI - aCML')
 @
 
@@ -963,7 +954,7 @@ formulation of the  problem in terms of minimum spamming trees and exploits resu
 
 
 <<edmonds-plot>>=
-model.edmonds = tronco.mst.edmonds(aCML.clean, nboot = 10, boot.seed = 12345)
+model.edmonds = tronco.mst.edmonds(aCML.clean, nboot = 5, boot.seed = 12345)
 model.edmonds = annotate.description(model.edmonds, 'MST Edmonds - aCML')
 @
 
@@ -980,7 +971,7 @@ formulation of the  problem in terms of minimum spamming trees and exploits resu
 
 
 <<chow-liu-plot>>=
-model.chowliu = tronco.mst.chowliu(aCML.clean, nboot = 10, boot.seed = 12345)
+model.chowliu = tronco.mst.chowliu(aCML.clean, nboot = 5, boot.seed = 12345)
 model.chowliu = annotate.description(model.chowliu, 'MST Chow Liu - aCML')
 @
 
@@ -994,7 +985,7 @@ This algorithm is meant   to extract a progression  from data of an individual p
 
 
 <<prim-plot>>=
-model.prim = tronco.mst.prim(aCML.clean, nboot = 10, boot.seed = 12345)
+model.prim = tronco.mst.prim(aCML.clean, nboot = 5, boot.seed = 12345)
 model.prim = annotate.description(model.prim, 'MST Prim - aCML data')
 @
 
@@ -1006,7 +997,7 @@ model.prim = annotate.description(model.prim, 'MST Prim - aCML data')
 
 TRONCO provides functions to plot a model, access information about the probabilities used to extract it from data, and two types of confidence measures: those used to infer the model, and those computed a posteriori from it.
 
-Function {\tt view} provides updated information about a model if this is available. 
+Function \Rfunction{view} provides updated information about a model if this is available. 
 
 <<>>=
 view(model.capri)
@@ -1015,7 +1006,7 @@ view(model.capri)
 
 \subsection{Visualizing a reconstructed model}
 
-We can plot a model by using function {\tt tronco.plot}. Here, we plot the aCML model inferred by CAPRI with BIC and AIC as a regolarizator. We set some parameters to get a nice plot (scaling etc.), and distinguish the edges detected by the two regularization techniques. The confidence of each edge is shown  in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input). Events are annotated as in the oncoprint, edge p-values above a minium threshold (default 0.05) are red.
+We can plot a model by using function \Rfunction{tronco.plot}. Here, we plot the aCML model inferred by CAPRI with BIC and AIC as a regolarizator. We set some parameters to get a nice plot (scaling etc.), and distinguish the edges detected by the two regularization techniques. The confidence of each edge is shown  in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input). Events are annotated as in the oncoprint, edge p-values above a minium threshold (default 0.05) are red.
 
 
 <<capri-plot,fig.show='hide',fig.width=4,fig.height=4>>=
@@ -1073,7 +1064,7 @@ dataset = delete.model(model.capri)
 
 
 \paragraph{Model structure.}
-A set of functions can be used to visualize the content of object which contains the reconstructed model. For instance, we can access the adjacency matrix of a model by using {\tt as.adj.matrix} which will return a matrix for each one of the regularizators used -- in this case because CAPRI was run with both BIC/AIC.
+A set of functions can be used to visualize the content of object which contains the reconstructed model. For instance, we can access the adjacency matrix of a model by using \Rfunction{as.adj.matrix} which will return a matrix for each one of the regularizators used -- in this case because CAPRI was run with both BIC/AIC.
 
 
 <<>>=
@@ -1086,7 +1077,7 @@ str(as.adj.matrix(model.capri))
 
 \paragraph{Empirical probabilities.}
 
-Every model is inferred by estimating the empirical marginal, joint and conditional probabilities for all the events, from input data. These in some cases are estimated by a bootstrap procedure (see the algorithms implemented). TRONCO has functions to extract such table, that could be in turn printed by using external  functions for, e.g., heatmap visualization (see below for an example via the {\tt pheatmap} package). We show these functions working with the CAPRI model; in this case the tables are the same for both BIC/AIC structures as they are computed before performing penalized likelihood-fit. The marginal  $P(x)$ for $x$ an event in the dataset are obtained by {\tt as.marginal.probs}. 
+Every model is inferred by estimating the empirical marginal, joint and conditional probabilities for all the events, from input data. These in some cases are estimated by a bootstrap procedure (see the algorithms implemented). TRONCO has functions to extract such table, that could be in turn printed by using external  functions for, e.g., heatmap visualization (see below for an example via the \CRANpkg{pheatmap} package). We show these functions working with the CAPRI model; in this case the tables are the same for both BIC/AIC structures as they are computed before performing penalized likelihood-fit. The marginal  $P(x)$ for $x$ an event in the dataset are obtained by \Rfunction{as.marginal.probs}. 
 
 <<>>=
 marginal.prob = as.marginal.probs(model.capri)
@@ -1094,7 +1085,7 @@ head(marginal.prob$capri_bic)
 @
 
 
-Similarly,   the joint $P(x,y)$ for every pair of events in the dataset is given by {\tt as.joint.probs}.
+Similarly,   the joint $P(x,y)$ for every pair of events in the dataset is given by \Rfunction{as.joint.probs}.
 
 <<>>=
 joint.prob = as.joint.probs(model.capri, models='capri_bic')
@@ -1102,7 +1093,7 @@ joint.prob$capri_bic[1:3, 1:3]
 @
 
 
-And {\tt as.conditional.probs} finally gives the conditional $P(x\mid y)$ for every edge in the dataset.
+And \Rfunction{as.conditional.probs} finally gives the conditional $P(x\mid y)$ for every edge in the dataset.
 
 <<>>=
 conditional.prob = as.conditional.probs(model.capri, models='capri_bic')
@@ -1112,7 +1103,7 @@ head(conditional.prob$capri_bic)
 
 \paragraph{Confidence measures.}
 
-Confidence scores  can be accessed by function {\tt as.confidence}, which takes as parameter the type of confidence measure that one wants to access to. This will work for either confidence measures assessed before reconstructing the model -- if available --, or afterwards.
+Confidence scores  can be accessed by function \Rfunction{as.confidence}, which takes as parameter the type of confidence measure that one wants to access to. This will work for either confidence measures assessed before reconstructing the model -- if available --, or afterwards.
 
 <<>>=
 str(as.confidence(model.capri, conf = c('tp', 'pr', 'hg')))
@@ -1121,7 +1112,7 @@ str(as.confidence(model.capri, conf = c('tp', 'pr', 'hg')))
 
 
 
-Other functions  visualize  tables summarizing the  statistics for each edge in the model, For instance, if one uses function {\tt as.selective.advantage.relations}  the  p-values for temporal priority, probability raising and hypergeometric testing, as well as other information about each edge  can be accessed, e.g., the number of observations for the upstream and the downstream events.
+Other functions  visualize  tables summarizing the  statistics for each edge in the model, For instance, if one uses function \Rfunction{as.selective.advantage.relations}  the  p-values for temporal priority, probability raising and hypergeometric testing, as well as other information about each edge  can be accessed, e.g., the number of observations for the upstream and the downstream events.
 
 
 <<selective-advantage>>=
@@ -1132,20 +1123,20 @@ as.selective.advantage.relations(model.capri)
 
 
 
-\subsection{Confidence via non-parametric, parametric and statistical bootstrap}
+\subsection{Confidence via non-parametric and statistical bootstrap}
 
-TRONCO provides three different strategies to perform  bootstrap and assess confidence of each edge in terms of a score in the range [0, 100] (100 is the highest confidence). Non-parametric (default), parametric and statistical bootstrap strategies are available, and can be executed by calling function {\tt tronco.bootstrap} with {\tt type} parameter set appropriately. This function is parallel, and parameter {\tt cores.ratio} (default 1) can be used to percentage of available cores that shall be used to compute the scores.
+TRONCO provides three different strategies to perform  bootstrap and assess confidence of each edge in terms of a score in the range [0, 100] (100 is the highest confidence). Non-parametric (default) and statistical bootstrap strategies are available, and can be executed by calling function \Rfunction{tronco.bootstrap} with {\tt type} parameter set appropriately. This function is parallel, and parameter {\tt cores.ratio} (default 1) can be used to percentage of available cores that shall be used to compute the scores.
 Parameter {\tt nboot} controls the number of bootstrap iterations.
 
 
 <<>>=
-model.boot = tronco.bootstrap(model.capri, nboot = 1)
-model.boot = tronco.bootstrap(model.boot, nboot = 1, type = 'statistical')
+model.boot = tronco.bootstrap(model.capri, nboot = 3)
+model.boot = tronco.bootstrap(model.boot, nboot = 3, type = 'statistical')
 @
 
 
 
-Bootstrap scores can be annotated to the {\tt tronco.plot} output by setting them via the confidence parameter {\tt confidence=c('npb', 'sb')}. In this case edge thickness will be proportional to the non-parametric ({\tt npb}) scores -- the last to appear in the {\tt confidence} parameter.
+Bootstrap scores can be annotated to the \Rfunction{tronco.plot} output by setting them via the confidence parameter {\tt confidence=c('npb', 'sb')}. In this case edge thickness will be proportional to the non-parametric ({\tt npb}) scores -- the last to appear in the {\tt confidence} parameter.
 
 <<figplotboot,fig.show='hide',fig.width=4,fig.height=4>>=
 tronco.plot(model.boot, 
@@ -1154,9 +1145,8 @@ tronco.plot(model.boot,
     confidence=c('sb', 'npb'), 
     height.logic = 0.25, 
     legend.cex = .35, 
-        pathways = list(priors= gene.hypotheses), 
-    label.edge.size=10, 
-    legend.pos = 'top')
+    pathways = list(priors= gene.hypotheses), 
+    label.edge.size=10)
 @
 
 
@@ -1172,7 +1162,7 @@ Edge thickness is proportional to   the non-parametric  scores.}
 \FloatBarrier
 
 
-Bootstrap scores can extracted or visualized even with other TRONCO functions. For instance, we can accessall scores via {\tt as.bootstrap.scores}, which resembles  function{\tt as.selective.advantage.relations} and will display the scores per edge. Notice that even function {\tt view} gives an update output by mentioning the available bootstrap scores.
+Bootstrap scores can extracted or visualized even with other TRONCO functions. For instance, we can accessall scores via \Rfunction{as.bootstrap.scores}, which resembles  function \Rfunction{as.selective.advantage.relations} and will display the scores per edge. Notice that even function \Rfunction{view} gives an update output by mentioning the available bootstrap scores.
 
 
 <<bootstrap-table>>=
@@ -1181,7 +1171,7 @@ view(model.boot)
 @
 
 
-If we want to access a matrix with the scores and visualize that in a heatmap we can use for instance the {\tt pheatmap} function of TRONCO. In this case we need to use also function {\tt keysToNames} to translate internal TRONCO keys to mnemonic names in the plot 
+If we want to access a matrix with the scores and visualize that in a heatmap we can use for instance the \Rfunction{pheatmap} function of TRONCO. In this case we need to use also function \Rfunction{keysToNames} to translate internal TRONCO keys to mnemonic names in the plot 
 
 
 <<hboot,fig.show='hide',fig.width=7,fig.height=7>>=
@@ -1204,14 +1194,15 @@ pheatmap(keysToNames(model.boot, as.confidence(model.boot, conf = 'sb')$sb$capri
 \caption{Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization).}
 \end{figure*}
 
+\FloatBarrier
 
 \subsection{Confidence via cross-validation (entropy loss, prediction and posterior classification errors)}
 
-TRONCO implements $k$-fold cross-validation routines (from the {\tt bnlearn} package) to provide estimates of the following statistics:
+TRONCO implements $k$-fold cross-validation routines (from the \CRANpkg{bnlearn} package) to provide estimates of the following statistics:
 \begin{itemize}
-\item  the {\em negative entropy} (via {\tt tronco.kfold.eloss}) of a whole model ? i.e., the negated expected log-likelihood of the test set for the Bayesian network fitted from the training set.
-\item the {\em prediction error} (via {\tt tronco.kfold.prederr}) for a single node $x$ and its parents set $X$ -- i.e.,  how precisely we can predict the values of $x$ by using only the information present in its local distribution, via $X$.
-\item the {\em posterior classification error} (via {\tt tronco.kfold.posterr})  for a single node $x$ and one of its parent node $y \in X$ -- i.e., the values of $x$ are predicted using only the information present in $y$ by likelihood weighting and Bayesian posterior estimates.
+\item  the {\em negative entropy} (via \Rfunction{tronco.kfold.eloss}) of a whole model ? i.e., the negated expected log-likelihood of the test set for the Bayesian network fitted from the training set.
+\item the {\em prediction error} (via \Rfunction{tronco.kfold.prederr}) for a single node $x$ and its parents set $X$ -- i.e.,  how precisely we can predict the values of $x$ by using only the information present in its local distribution, via $X$.
+\item the {\em posterior classification error} (via \Rfunction{tronco.kfold.posterr})  for a single node $x$ and one of its parent node $y \in X$ -- i.e., the values of $x$ are predicted using only the information present in $y$ by likelihood weighting and Bayesian posterior estimates.
 \end{itemize}
 
 By default, a 10 repetitions from  10-fold cross-validation experiment are perfomed, for all the models which are found inside a TRONCO object -- in this case 2, one for CAPRI with BIC and one for CAPRI with AIC.
@@ -1280,8 +1271,10 @@ tronco.plot(model.boot,
 \caption{aCML model reconstructed by CAPRI with  AIC/BIC as regolarizators and annotated with  non-parametric, as well as with entropy loss, prediction and posterior classification errors computed via cross-validation. Edge thickness is proportional to   the non-parametric  scores.}
 \end{figure*}
 
+\FloatBarrier
 
-\section{Import/export with other tools}
+
+\section{Import/export to other tools}
 
 We implemented the interface of TRONCO with other tools to support the {\bf Pipeline for Cancer Inference PiCnIc}, our attempt at devise an effective pipeline to extract ensemble-level cancer progression models from cross-sectional data (see \ref{sec:stuff}). 
 
@@ -1294,13 +1287,85 @@ PiCnIc is versatile, modular and customizable and exploits state-of-the-art data
 \item infer progression models from groups and such data, and annotate them with associated statistical confidence.
 \end{enumerate}
 
-The algorithms for cancer progression inference exploited by PicNiC are implemented within TRONCO, the other steps of the pipeline rely on dedicated tools (for clustering, drivers selection and exclusiviyt groups detection). The tools that PicNiC can exploit are of different nature, and we plan to interface them with TRONCO   as far as our case studies are developed.
+The algorithms for cancer progression inference exploited by PicNiC are implemented within TRONCO, the other steps of the pipeline rely on dedicated tools (for clustering, drivers selection and exclusiviyt groups detection). The tools that PicNiC can exploit are of different nature, and we plan to interface them with TRONCO as far as our case studies are developed.
 
 The current version of TRONCO supports input/output towards these tools:
 \begin{enumerate}
-\item \href{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3866081/}{Network Based Stratification (NBS)},  a method for stratification (clustering) of patients in a cancer cohort based on genome scale somatic mutations measurements and a gene interaction network. You can export a TRONCO object in the NBS input format with  function {\tt export.nbs.input}, clustering outputs can be handled with standard TRONCO functions.
-\item \href{http://www.ncbi.nlm.nih.gov/pubmed/25887147}{MUTEX}, a method for the identification of sets of mutually exclusive gene alterations in a given set of genomic profiles by scanning the groups of genes with a common downstream effect on the signaling network. You can export a TRONCO object in the MUTEX input format with  function {\tt export.mutex}, and output results can be imported with function {\tt import.mutex.groups}.
+\item \href{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3866081/}{Network Based Stratification (NBS)},  a method for stratification (clustering) of patients in a cancer cohort based on genome scale somatic mutations measurements and a gene interaction network. You can export a TRONCO object in the NBS input format with  function \Rfunction{export.nbs.input}, clustering outputs can be handled with standard TRONCO functions.
+\item \href{http://www.ncbi.nlm.nih.gov/pubmed/25887147}{MUTEX}, a method for the identification of sets of mutually exclusive gene alterations in a given set of genomic profiles by scanning the groups of genes with a common downstream effect on the signaling network. You can export a TRONCO object in the MUTEX input format with  function \Rfunction{export.mutex}, and output results can be imported with function \Rfunction{import.mutex.groups}.
 \end{enumerate}
+
+Finally we also privede the possibility of exporting the inferred model to {\tt graphML} format, which can be subsequently imported to \software{Cytoscape}. We now provide an example of such function.
+
+<<graphml, fig.show='hide'>>=
+export.graphml(model.boot,
+	file = 'graph.gml',
+    fontsize = 12, 
+    scale.nodes = .6, 
+    height.logic = 0.25)
+@
+
+Follows an example of file generated by such function. Futhermore on the TRONCO website a \software{Cytoscape} style to visualize the progressions is available.
+
+\begin{verbatim}
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+         http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <!-- Created by igraph -->
+  <key id="g_name" for="graph" attr.name="name" attr.type="string"/>
+  <key id="g_models" for="graph" attr.name="models" attr.type="string"/>
+  <key id="g_informations" for="graph" attr.name="informations" attr.type="string"/>
+  <key id="v_name" for="node" attr.name="name" attr.type="string"/>
+  <key id="v_label" for="node" attr.name="label" attr.type="string"/>
+  <key id="v_type" for="node" attr.name="type" attr.type="string"/>
+  <key id="v_fillcolor" for="node" attr.name="fillcolor" attr.type="string"/>
+  <key id="v_fontcolor" for="node" attr.name="fontcolor" attr.type="string"/>
+  <key id="v_bordercolor" for="node" attr.name="bordercolor" attr.type="string"/>
+  <key id="v_shape" for="node" attr.name="shape" attr.type="string"/>
+  <key id="v_width" for="node" attr.name="width" attr.type="double"/>
+  <key id="v_height" for="node" attr.name="height" attr.type="double"/>
+  <key id="v_fontsize" for="node" attr.name="fontsize" attr.type="double"/>
+  <key id="v_borderwidth" for="node" attr.name="borderwidth" attr.type="double"/>
+  <key id="e_weight" for="edge" attr.name="weight" attr.type="double"/>
+  <key id="e_line" for="edge" attr.name="line" attr.type="string"/>
+  <key id="e_arrow" for="edge" attr.name="arrow" attr.type="string"/>
+  <key id="e_color" for="edge" attr.name="color" attr.type="string"/>
+  <graph id="G" edgedefault="directed">
+    <data key="g_name">CAPRI - aCML</data>
+    <data key="g_models">CAPRI capri_bic - CAPRI capri_aic</data>
+    <data key="g_informations">Generated with TRONCO v2.3.0</data>
+    <node id="n0">
+      <data key="v_name">CSF3R</data>
+      <data key="v_label">CSF3R 4% (3)</data>
+      <data key="v_type">Nonsense point</data>
+      <data key="v_fillcolor">#FAB3D8</data>
+      <data key="v_fontcolor">#000000</data>
+      <data key="v_bordercolor">#000000</data>
+      <data key="v_shape">ellipse</data>
+      <data key="v_width">109.2</data>
+      <data key="v_height">72.8</data>
+      <data key="v_fontsize">18</data>
+      <data key="v_borderwidth">1</data>
+    </node>
+    [...]
+    <edge source="n1" target="n0">
+      <data key="e_weight">1</data>
+      <data key="e_line">Solid</data>
+      <data key="e_arrow">True</data>
+      <data key="e_color">#A9A9A9</data>
+    </edge>
+    [...]
+  </graph>
+</graphml>
+\end{verbatim}
+
+\section{\Rcode{sessionInfo()}}
+
+<<sessioninfo, results='asis'>>=
+toLatex(sessionInfo())
+@
 
 
 \end{document}
