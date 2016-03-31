@@ -1,8 +1,7 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
 #### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
-#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
-#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
 #### are made available under the terms of the GNU GPL v3.0
@@ -1143,6 +1142,43 @@ join.events <- function(x, ..., new.event, new.type, event.color) {
     y = ebind(y, genos)
 
     return(y)
+}
+
+
+# rename field of reconstruction
+rename.reconstruction.fields <- function(reconstruction, genotypes){
+    rownames(reconstruction$confidence) =
+        c("temporal priority",
+          "probability raising",
+          "hypergeometric test")
+    colnames(reconstruction$confidence) = "confidence"
+    rownames(reconstruction$confidence[[1,1]]) = colnames(genotypes)
+    colnames(reconstruction$confidence[[1,1]]) = colnames(genotypes)
+    rownames(reconstruction$confidence[[2,1]]) = colnames(genotypes)
+    colnames(reconstruction$confidence[[2,1]]) = colnames(genotypes)
+    rownames(reconstruction$confidence[[3,1]]) = colnames(genotypes)
+    colnames(reconstruction$confidence[[3,1]]) = colnames(genotypes)
+
+    for (i in 1:length(reconstruction$model)) {
+
+        ## Set rownames and colnames to the probabilities.
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(genotypes)
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability"
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(genotypes)
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(genotypes)
+        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(genotypes)
+        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability"
+
+        ## Set rownames and colnames to the parents positions.
+        rownames(reconstruction$model[[i]]$parents.pos) = colnames(genotypes)
+        colnames(reconstruction$model[[i]]$parents.pos) = "parents"
+
+        ## Set rownames and colnames to the adjacency matrices.
+        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(genotypes)
+        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(genotypes)
+
+    }
+    return(reconstruction)
 }
 
 

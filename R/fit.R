@@ -1,3 +1,13 @@
+#### TRONCO: a tool for TRanslational ONCOlogy
+####
+#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+####
+#### All rights reserved. This program and the accompanying materials
+#### are made available under the terms of the GNU GPL v3.0
+#### which accompanies this distribution.
+
+
 # perform the likelihood fit
 lregfit <- function(data,
                     adj.matrix,
@@ -34,8 +44,9 @@ lregfit <- function(data,
         }
     }
 
-    # perform the reconstruction by likelihood fit with regularization
-    # either the hill climbing or the tabu search is used as the mathematical optimization technique
+    ## perform the reconstruction by likelihood fit with regularization
+    ## either the hill climbing or the tabu search is used as the 
+    ## mathematical optimization technique
     if (cont > 0) {
         blacklist = data.frame(from = parent,to = child)
         if (command == "hc") {
@@ -52,7 +63,7 @@ lregfit <- function(data,
     }
     my.arcs = my.net$arcs
     
-    # build the adjacency matrix of the reconstructed topology
+    ## build the adjacency matrix of the reconstructed topology
     if (length(nrow(my.arcs)) > 0 && nrow(my.arcs) > 0) {
         for (i in 1:nrow(my.arcs)) {
             # [i,j] refers to causation i --> j
@@ -62,3 +73,5 @@ lregfit <- function(data,
 
     return(adj.matrix.fit)
 }
+
+#### end of file -- fit.R

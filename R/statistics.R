@@ -1,75 +1,11 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
 #### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
-#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
-#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
 #### are made available under the terms of the GNU GPL v3.0
 #### which accompanies this distribution.
-
-
-# Convert a TRONCO object in a Bnlearn network.
-# @title as.bnlearn.network
-#
-# @examples
-# data(test_model)
-# as.bnlearn.network(test_model)
-#
-# @param x A reconstructed model (the output of tronco.capri or tronco.caprese)
-# @param model The name of the selected regularization
-# @param makeValid Transform the bootstrapped data into a valid 2-categories input data
-# @export as.bnlearn.network
-# @importFrom bnlearn empty.graph set.arc
-#
-as.bnlearn.network <- function(x, 
-                               model = names(as.models(x))[1], 
-                               make.valid = TRUE) {
-
-    ## Check if there is a reconstructed model.
-
-    if(!has.model(x)) {
-        stop('Input doesn\'t have a TRONCO object inside.')
-    }
-
-    ## Check if the selected regularization is used in the model.
-
-    if (!model %in% names(as.models(x))) {
-        stop(paste(model, " was not used to build the input TRONCO model!"))
-    }
-
-    ## Get genotypes and data.
-
-    genotypes = as.genotypes(x)
-    genotypes = as.matrix(genotypes)
-    genotypes = keysToNames(x, genotypes)
-    names(colnames(genotypes)) = NULL
-
-    df = as.categorical.dataset(genotypes, make.valid = make.valid)
-
-    adj.matrix = get(model, as.adj.matrix(x, models = model))
-    adj.matrix = keysToNames(x, adj.matrix)
-    names(colnames(adj.matrix)) = NULL
-    names(rownames(adj.matrix)) = NULL
-    
-    bayes.net = NULL
-    bayes.net$data = df
-        
-    ## Create the Bayesian Network of the fitted model.
-    bayes.net$net = empty.graph(colnames(genotypes))
-    for (i in 1:nrow(adj.matrix)) {
-        for(j in 1:ncol(adj.matrix)) {
-            if(adj.matrix[i,j] == 1) {
-                bayes.net$net = set.arc(
-                    bayes.net$net, 
-                    from = colnames(genotypes)[i], 
-                    to = colnames(genotypes)[j])
-            }
-        }
-    }
-    
-    return(bayes.net) 
-}
 
 
 #' Perform a k-fold cross-validation using the function bn.cv
@@ -414,3 +350,5 @@ tronco.kfold.posterr <- function(x,
     stopCluster(cl)
     return(x)
 }
+
+#### end of file -- statistics.R

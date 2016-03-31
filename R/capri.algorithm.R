@@ -1,8 +1,7 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
 #### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
-#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
-#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
 #### are made available under the terms of the GNU GPL v3.0
@@ -200,9 +199,9 @@ capri.fit <- function(dataset,
              confidence = prima.facie.parents$pf.confidence,
              model = model,
              parameters = parameters,
-             execution.time = (proc.time() - ptm));
-
-    return(topology);
+             execution.time = (proc.time() - ptm))
+    topology = rename.reconstruction.fields(topology, dataset)
+    return(topology)
 }
 
 

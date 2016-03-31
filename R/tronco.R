@@ -1,12 +1,11 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
 #### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
-#### Alex Graudenzi, Ilya Korsunsky, Mattia Longoni, Loes Olde Loohuis,
-#### Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
 #### are made available under the terms of the GNU GPL v3.0
-#### which accompanies this distribution
+#### which accompanies this distribution.
 
 
 #' Reconstruct a progression model using CAPRESE algorithm
@@ -65,41 +64,6 @@ tronco.caprese <- function(data,
     reconstruction = caprese.fit(dataset = data$genotypes,
                                  lambda = lambda,
                                  silent = silent);
-
-    rownames(reconstruction$confidence) =
-        c("temporal priority",
-          "probability raising",
-          "hypergeometric test");
-    colnames(reconstruction$confidence) = "confidence";
-    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
-    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
-    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
-
-    for (i in 1:length(reconstruction$model)) {
-
-        ## Set rownames and colnames to the probabilities.
-        
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
-
-        ## Set rownames and colnames to the parents positions.
-        
-        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
-
-        ## Set rownames and colnames to the adjacency matrices.
-        
-        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-
-    }
 
     ## Structure to save the results.
     
@@ -248,43 +212,6 @@ tronco.capri <- function(data,
                   min.stat = min.stat,
                   boot.seed = boot.seed,
                   silent = silent);
-
-    rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
-    colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
-
-    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
-    colnames(reconstruction$confidence) = "confidence";
-    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
-    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
-    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
-
-    for (i in 1:length(reconstruction$model)) {
-
-        ## Set rownames and colnames to the probabilities.
-        
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
-
-        ## Set rownames and colnames to the parents positions.
-        
-        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
-
-        ## Set rownames and colnames to the adjacency matrices.
-        
-        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-
-    }
 
     ## Structure to save the results.
     
@@ -462,45 +389,7 @@ tronco.mst.edmonds <- function(data,
                     boot.seed = boot.seed,
                     silent = silent)
 
-    rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes)
-    colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes)
-
-    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test")
-    colnames(reconstruction$confidence) = "confidence"
-    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes)
-    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes)
-    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes)
-    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes)
-    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes)
-    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes)
-
-    for (i in 1:length(reconstruction$model)) {
-
-        ## Set rownames and colnames to the probabilities.
-        
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes)
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability"
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes)
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes)
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes)
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability"
-
-        ## Set rownames and colnames to the parents positions.
-        
-        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes)
-        colnames(reconstruction$model[[i]]$parents.pos) = "parents"
-
-        ## Set rownames and colnames to the adjacency matrices.
-        
-        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes)
-        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes)
-        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes)
-        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes)
-
-    }
-
     ## Structure to save the results.
-    
     results = data
     results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
     results$confidence = reconstruction$confidence
@@ -686,43 +575,6 @@ tronco.mst.chowliu <- function(data,
                   boot.seed = boot.seed,
                   silent = silent);
 
-    rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
-    colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
-
-    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
-    colnames(reconstruction$confidence) = "confidence";
-    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
-    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
-    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
-
-    for (i in 1:length(reconstruction$model)) {
-
-        ## Set rownames and colnames to the probabilities.
-        
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
-
-        ## Set rownames and colnames to the parents positions.
-        
-        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
-
-        ## Set rownames and colnames to the adjacency matrices.
-        
-        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-
-    }
-
     ## Structure to save the results.
     
     results = data;
@@ -898,43 +750,6 @@ tronco.mst.prim <- function(data,
                  min.stat = min.stat,
                  boot.seed = boot.seed,
                  silent = silent);
-
-    rownames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
-    colnames(reconstruction$adj.matrix.prima.facie) = colnames(data$genotypes);
-
-    rownames(reconstruction$confidence) = c("temporal priority","probability raising","hypergeometric test");
-    colnames(reconstruction$confidence) = "confidence";
-    rownames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[1,1]]) = colnames(data$genotypes);
-    rownames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[2,1]]) = colnames(data$genotypes);
-    rownames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
-    colnames(reconstruction$confidence[[3,1]]) = colnames(data$genotypes);
-
-    for (i in 1:length(reconstruction$model)) {
-
-        ## Set rownames and colnames to the probabilities.
-        
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$marginal.probs) = "marginal probability";
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$joint.probs) = colnames(data$genotypes);
-        rownames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$probabilities$probabilities.observed$conditional.probs) = "conditional probability";
-
-        ## Set rownames and colnames to the parents positions.
-        
-        rownames(reconstruction$model[[i]]$parents.pos) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$parents.pos) = "parents";
-
-        ## Set rownames and colnames to the adjacency matrices.
-        
-        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.pf) = colnames(data$genotypes);
-        rownames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-        colnames(reconstruction$model[[i]]$adj.matrix$adj.matrix.fit) = colnames(data$genotypes);
-
-    }
 
     ## Structure to save the results.
     
