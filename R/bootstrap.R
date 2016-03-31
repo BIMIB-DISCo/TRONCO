@@ -129,11 +129,13 @@ bootstrap <- function(reconstruction,
             samples = sample(1:nrow(dataset), 
                              size = nrow(dataset),
                              replace = TRUE)
-            curr.reconstruction$genotypes = dataset[samples,]
+            resampled.dataset = dataset[samples,]
+            rownames(resampled.dataset) = 1:nrow(resampled.dataset)
+            curr.reconstruction$genotypes = resampled.dataset
 
 
         } else if (command == "statistical") {
-            curr.reconstruction$genotypes = reconstruction$genotypes;
+            curr.reconstruction$genotypes = dataset
         }
 
         curr.reconstruction$annotations = reconstruction$annotations

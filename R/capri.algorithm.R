@@ -1004,7 +1004,7 @@ perform.likelihood.fit.capri <- function(dataset,
     ## Create a categorical data frame from the dataset.
     data = as.categorical.dataset(dataset)
 
-    ## Perform the likelihood fit
+    # Perform the likelihood fit
     adj.matrix.fit = lregfit(data,
         adj.matrix,
         adj.matrix.fit,

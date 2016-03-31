@@ -59,7 +59,7 @@ as.bnlearn.network <- function(x,
     bayes.net$net = empty.graph(colnames(genotypes))
     for (i in 1:nrow(adj.matrix)) {
         for(j in 1:ncol(adj.matrix)) {
-            if(adj.matrix[i,j]==1) {
+            if(adj.matrix[i,j] == 1) {
                 bayes.net$net = set.arc(
                     bayes.net$net, 
                     from = colnames(genotypes)[i], 

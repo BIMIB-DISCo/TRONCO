@@ -1448,12 +1448,10 @@ tronco.plot <- function(x,
 
     ## Set fontsize.
 
-    if (is.na(fontsize)) {
-        fontsize = 44 - 3 * log(nrow(hypo_mat))
-        cat('Set automatic fontsize scaling for node labels: ', fontsize, '\n')
+    if (!is.na(fontsize)) {
+        nAttrs$fontsize = rep(fontsize, length(node_names))
+        names(nAttrs$fontsize) = node_names 
     }
-    nAttrs$fontsize = rep(fontsize, length(node_names))
-    names(nAttrs$fontsize) = node_names
 
     ## Set node shape.
     

@@ -927,7 +927,7 @@ aCML.clean = annotate.description(aCML.clean, '')
 @
 
 <<model-capri>>=
-model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot = 1)
+model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot = 5)
 model.capri = annotate.description(model.capri, 'CAPRI - aCML')
 @
 
@@ -954,7 +954,7 @@ formulation of the  problem in terms of minimum spamming trees and exploits resu
 
 
 <<edmonds-plot>>=
-model.edmonds = tronco.mst.edmonds(aCML.clean, nboot = 10, boot.seed = 12345)
+model.edmonds = tronco.mst.edmonds(aCML.clean, nboot = 5, boot.seed = 12345)
 model.edmonds = annotate.description(model.edmonds, 'MST Edmonds - aCML')
 @
 
@@ -971,7 +971,7 @@ formulation of the  problem in terms of minimum spamming trees and exploits resu
 
 
 <<chow-liu-plot>>=
-model.chowliu = tronco.mst.chowliu(aCML.clean, nboot = 10, boot.seed = 12345)
+model.chowliu = tronco.mst.chowliu(aCML.clean, nboot = 5, boot.seed = 12345)
 model.chowliu = annotate.description(model.chowliu, 'MST Chow Liu - aCML')
 @
 
@@ -985,7 +985,7 @@ This algorithm is meant   to extract a progression  from data of an individual p
 
 
 <<prim-plot>>=
-model.prim = tronco.mst.prim(aCML.clean, nboot = 10, boot.seed = 12345)
+model.prim = tronco.mst.prim(aCML.clean, nboot = 5, boot.seed = 12345)
 model.prim = annotate.description(model.prim, 'MST Prim - aCML data')
 @
 
@@ -1123,15 +1123,15 @@ as.selective.advantage.relations(model.capri)
 
 
 
-\subsection{Confidence via non-parametric, parametric and statistical bootstrap}
+\subsection{Confidence via non-parametric and statistical bootstrap}
 
-TRONCO provides three different strategies to perform  bootstrap and assess confidence of each edge in terms of a score in the range [0, 100] (100 is the highest confidence). Non-parametric (default), parametric and statistical bootstrap strategies are available, and can be executed by calling function {\tt tronco.bootstrap} with {\tt type} parameter set appropriately. This function is parallel, and parameter {\tt cores.ratio} (default 1) can be used to percentage of available cores that shall be used to compute the scores.
+TRONCO provides three different strategies to perform  bootstrap and assess confidence of each edge in terms of a score in the range [0, 100] (100 is the highest confidence). Non-parametric (default) and statistical bootstrap strategies are available, and can be executed by calling function {\tt tronco.bootstrap} with {\tt type} parameter set appropriately. This function is parallel, and parameter {\tt cores.ratio} (default 1) can be used to percentage of available cores that shall be used to compute the scores.
 Parameter {\tt nboot} controls the number of bootstrap iterations.
 
 
 <<>>=
-model.boot = tronco.bootstrap(model.capri, nboot = 1)
-model.boot = tronco.bootstrap(model.boot, nboot = 1, type = 'statistical')
+model.boot = tronco.bootstrap(model.capri, nboot = 3)
+model.boot = tronco.bootstrap(model.boot, nboot = 3, type = 'statistical')
 @
 
 
@@ -1145,9 +1145,8 @@ tronco.plot(model.boot,
     confidence=c('sb', 'npb'), 
     height.logic = 0.25, 
     legend.cex = .35, 
-        pathways = list(priors= gene.hypotheses), 
-    label.edge.size=10, 
-    legend.pos = 'top')
+    pathways = list(priors= gene.hypotheses), 
+    label.edge.size=10)
 @
 
 
