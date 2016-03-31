@@ -827,6 +827,8 @@ tronco.lregfit <- function(x,
         stop("The inference can be performed either by hill climbing or tabu search!", call. = FALSE)
     }
 
+    
+
     is.compliant(x)
     return(x)
 }

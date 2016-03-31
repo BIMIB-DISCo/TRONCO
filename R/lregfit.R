@@ -74,4 +74,4 @@ lregfit <- function(data,
     return(adj.matrix.fit)
 }
 
-#### end of file -- fit.R
+#### end of file -- lregfit.R
