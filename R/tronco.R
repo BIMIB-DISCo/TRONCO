@@ -1045,7 +1045,7 @@ tronco.plot <- function(x,
             nopatt.data = x
         }
 
-        sample.events = Reduce(rbind, as.events.in.sample(nopatt.data, samples.annotation))
+        sample.events = as.events.in.sample(nopatt.data, samples.annotation)
         sample.events = unique(sample.events[, 'event'])
 
         cat('Annotating sample',

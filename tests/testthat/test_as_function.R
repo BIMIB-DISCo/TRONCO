@@ -111,7 +111,7 @@ test_that("as.hypotheses return a list of hypotheses", {
     expect_error(as.hypotheses(hypo, effect = 'X'))
 })
 
-context("as.events.in.sample")
+context("as.events.in.patterns")
 
 test_that("as.events.in.patterns return the right amount of genes", {
     expect_equal(length(as.events.in.patterns(hypo)), 4)

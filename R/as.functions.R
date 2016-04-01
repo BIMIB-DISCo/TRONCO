@@ -399,7 +399,9 @@ as.events.in.sample <- function(x, sample) {
         return(as.events(x)[colnames(sub.geno), , drop = FALSE])
     }
 
-    return(sapply(sample, FUN = aux, simplify = FALSE))
+    events = sapply(sample, FUN = aux, simplify = FALSE)
+    merge = unique(Reduce(rbind, events))
+    return(merge)
 }
 
 
