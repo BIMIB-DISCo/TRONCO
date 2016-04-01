@@ -1017,9 +1017,7 @@ tronco.plot(model.capri,
     height.logic = 0.25, 
     legend.cex = 0.35, 
     pathways = list(priors = gene.hypotheses), 
-    label.edge.size = 10,
-    legend.pos='top'
-    )
+    label.edge.size = 10)
 @
 
 
@@ -1258,8 +1256,7 @@ tronco.plot(model.boot,
     height.logic = 0.25, 
     legend.cex = .35, 
     pathways = list(priors= gene.hypotheses), 
-    label.edge.size=10,
-    legend.pos = 'top')
+    label.edge.size=10)
 @
 
 
