@@ -919,13 +919,11 @@ hypothesis.add.homologous <- function(x,
 # @title hypotheses.expansion
 # @param input_matrix A TRONCO adjacency matrix
 # @param map hypothesis name - hypothesis adjacency matrix map
-# @param hidden_and Should I visualize hidden and?
 # @param expand Should I expand the hypotheses?
 # @param skip.disconnected Hide disconnected node
 #
 hypotheses.expansion <- function(input_matrix, 
                                  map = list(),
-                                 hidden_and = TRUE,
                                  expand = TRUE,
                                  skip.disconnected = TRUE
                                  ) {
@@ -1070,90 +1068,11 @@ hypotheses.expansion <- function(input_matrix,
         }
         min_matrix = get.adjacency(min_graph, sparse = FALSE)
     }
-
-    ## Now expand the hidden AND.
-    if (hidden_and == FALSE) {
-        
-        ## Sort col and row (igraph wants the same order).
-        
-        min_matrix = min_matrix[,order(colnames(min_matrix))]
-        min_matrix = min_matrix[order(rownames(min_matrix)),]
-        return(list(min_matrix, hypos_new_name))
-        ## So, if we return here, we are done?
-    }
-
-    cat('\n*** Expand hidden and:')
-
-    and_matrix = NULL
-    to_reconnect = list()
-    logical_op = list("AND", "OR", "NOT", "XOR", "UPAND", 'UPOR', 'UPXOR')
-
-    ## foreach AND column...
-    
-    for (col in colnames(min_matrix)) {
-        prefix = gsub("_.*$", "", col)
-        if ( !(prefix %in% logical_op) && sum(min_matrix[,col]) > 1 ) {
-            ## not logical operator and colsum > 1 there is a hidden
-            ## AND and something has to be done...
-            
-            ## Remember to reconnect the fake and to this node.
-            to_reconnect = append(to_reconnect, col)
-            
-            ## Append a column from the old matrix...
-            
-            and_matrix = cbind(and_matrix, min_matrix[,col])
-            pos = ncol(and_matrix)
-            
-            ## ... and give her a new name based on the old one.
-            
-            new_col_name = paste("*", col, sep="_")
-            colnames(and_matrix)[pos] = new_col_name
-
-            ## Append a 0 columl to the matrix...
-            
-            and_matrix = cbind(and_matrix, matrix(0,nrow = nrow(and_matrix), ncol = 1))
-            pos = ncol(and_matrix)
-
-            ## ...and give her the old name.
-            
-            colnames(and_matrix)[pos] = col
-
-            ## Now do the same to conf_matrix.
-            
-            if (!is.null(conf_matrix)) {
-                conf_matrix = cbind(conf_matrix, conf_matrix[, col])
-                pos = ncol(conf_matrix)
-                colnames(conf_matrix)[pos] = new_col_name
-            }
-
-        } else {
-            ## ... else add the row taken from the old matrix and set
-            ## the correct colname.
-            
-            and_matrix = cbind(and_matrix, min_matrix[,col])
-            pos = ncol(and_matrix)
-            colnames(and_matrix)[pos] = col
-        }
-    }
-
-    ## Now reconnect AND node to his gene (AND_Gene7 -> Gene7).
-    
-    for (row in to_reconnect) {
-        and_matrix = rbind(and_matrix, matrix(0, ncol = ncol(and_matrix), nrow = 1))
-        pos = nrow(and_matrix)
-        rownames(and_matrix)[pos] = paste0("*_", row)
-        and_matrix[paste0("*_", row), row] = 1
-    }
-
     ## Sort col and row (igraph wants the same order).
     
-    and_matrix = and_matrix[, order(colnames(and_matrix))]
-    and_matrix = and_matrix[order(rownames(and_matrix)), ]
-
-    if (!is.null(conf_matrix)) {
-        return(list(and_matrix, hypos_new_name, conf_matrix))
-    }
-    return(list(and_matrix, hypos_new_name))
+    min_matrix = min_matrix[,order(colnames(min_matrix))]
+    min_matrix = min_matrix[order(rownames(min_matrix)),]
+    return(list(min_matrix, hypos_new_name))
 }
 
 # Utility function to add the hypotheses

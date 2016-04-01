@@ -813,29 +813,6 @@ tronco.mst.prim <- function(data,
 }
 
 
-#
-tronco.lregfit <- function(x,
-                           models = names(x$models),
-                           command = 'hc') {
-    is.compliant(x)
-
-    if (!all(models %in% names(x$model))) {
-        stop('not all "models" are reconstructed model.', call. = FALSE) 
-    }
-
-    if (!command %in% c("hc", "tabu")) {
-        stop("The inference can be performed either by hill climbing or tabu search!", call. = FALSE)
-    }
-
-    
-
-    is.compliant(x)
-    return(x)
-}
-
-
-
-
 #' Bootstrap a reconstructed progression model
 #'
 #' @examples
@@ -865,17 +842,14 @@ tronco.bootstrap <- function(reconstruction,
                              cores.ratio = 1,
                              silent = FALSE) {
     
-    ## Check for the inputs to be given.
     
-    if (is.null(reconstruction)) {
-        stop("A valid reconstruction has to be provided in order to estimate its confidence.",
-             call. = FALSE)
-    }
-
     ## Check for the input to be compliant.
-    
     is.compliant(reconstruction)
-    
+
+    ## Check for the inputs to be given.
+    is.model(reconstruction)
+
+
     if (type == "statistical"
         && !((reconstruction$parameters$algorithm == "CAPRI"
              || reconstruction$parameters$algorithm == "PRIM"
@@ -1035,15 +1009,11 @@ tronco.plot <- function(x,
                         samples.annotation = NA,
                         export.igraph = FALSE,
                         ...) {
-    hidden.and = FALSE
+    is.compliant(x)
+    is.model(x)
 
     ## Checks if reconstruction exists.
     
-    if (missing(x)) {
-        stop("reconstruction missing, usage: hypo.plot(reconstruction, ...",
-             call. = FALSE);
-    }
-
     logical_op = list("AND", "OR", "NOT", "XOR", "*", "UPAND", "UPOR", "UPXOR")
 
 
@@ -1210,7 +1180,6 @@ tronco.plot <- function(x,
     expansion =
         hypotheses.expansion(c_matrix, 
                              hstruct, 
-                             hidden.and, 
                              expand,
                              events)
     hypo_mat = expansion[[1]]
@@ -1269,6 +1238,7 @@ tronco.plot <- function(x,
         nAttrs$fontsize = rep(fontsize, length(node_names))
         names(nAttrs$fontsize) = node_names 
     }
+
 
     ## Set node shape.
     
@@ -1487,12 +1457,15 @@ tronco.plot <- function(x,
     
     ## Set fontsize to label.edge.size (default)
     
-    if (is.na(label.edge.size)) {
-        label.edge.size = fontsize/2      
-        cat(paste0('Set automatic fontsize for edge labels: ', label.edge.size, '\n'))    
+    if (!is.na(label.edge.size)) {
+        eAttrs$fontsize = rep(label.edge.size, length(edge_names))
+        names(eAttrs$fontsize) = edge_names  
+    } else if (!is.na(fontsize)) {
+        label.edge.size = fontsize / 2
+        cat('Set automatic fontsize for edge labels: ', label.edge.size, '\n')
+        eAttrs$fontsize = rep(label.edge.size, length(edge_names))
+        names(eAttrs$fontsize) = edge_names
     }
-    eAttrs$fontsize = rep(label.edge.size, length(edge_names))
-    names(eAttrs$fontsize) = edge_names
 
     ## Set edge color to black (default).
     
@@ -1635,7 +1608,7 @@ tronco.plot <- function(x,
     }
     cat('RGraphviz object prepared.\n')
 
-    ## Remove arrows from logic node (hidden and).
+    ## Remove arrows from logic node.
     
     for (e in edge_names) {
         edge = unlist(strsplit(e, '~'))
