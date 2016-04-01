@@ -133,6 +133,9 @@ test_that("tronco bootstrap is working", {
     expect_output(tronco.bootstrap(edmonds, nboot = 1, type = 'statistical'), 'statistical')
     expect_output(tronco.bootstrap(chowliu, nboot = 1), 'non-parametric')
     expect_output(tronco.bootstrap(chowliu, nboot = 1, type = 'statistical'), 'statistical')
+    expect_error(tronco.bootstrap(test_dataset, nboot = 1))
+    expect_error(tronco.bootstrap(capri, type = 'supergiovane'))
+    expect_error(tronco.bootstrap(caprese, type = 'statistical'))
 })
 
 context("confidences")

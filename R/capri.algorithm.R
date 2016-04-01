@@ -1086,7 +1086,6 @@ remove.cycles <- function(adj.matrix,
         expansion =
             hypotheses.expansion(input_matrix = adj.matrix,
                                  map=hypotheses$hstructure,
-                                 hidden_and = FALSE,
                                  expand = TRUE,
                                  skip.disconnected = FALSE);
 
