@@ -528,9 +528,6 @@ hypothesis.add <- function(data,
     }
     hypotheses$hstructure[pattern.label] = list(get.lifted.pattern(hstructure))
 
-    #print(get.lifted.pattern(hstructure))
-    #print(hypotheses$hstructure[pattern.label])
-
     ## Add the atoms of the hypothesis.
     
     if (length(hypotheses$patterns) == 0) {

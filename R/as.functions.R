@@ -1978,25 +1978,22 @@ as.bnlearn.network <- function(x,
 
     adj.matrix = get(model, as.adj.matrix(x, models = model))
     adj.matrix = keysToNames(x, adj.matrix)
-    names(colnames(adj.matrix)) = NULL
-    names(rownames(adj.matrix)) = NULL
+
     
     bayes.net = NULL
     bayes.net$data = df
         
-    ## Create the Bayesian Network of the fitted model.
-    bayes.net$net = empty.graph(colnames(genotypes))
-    for (i in 1:nrow(adj.matrix)) {
-        for(j in 1:ncol(adj.matrix)) {
-            if(adj.matrix[i,j] == 1) {
-                bayes.net$net = set.arc(
-                    bayes.net$net, 
-                    from = colnames(genotypes)[i], 
-                    to = colnames(genotypes)[j])
+    net = empty.graph(colnames(genotypes))
+    for (from in rownames(adj.matrix)) {
+        for (to in colnames(adj.matrix)) {
+            if (adj.matrix[from, to] == 1) {
+                print(paste(from, '->', to))
+                net = set.arc(net, from, to)
             }
         }
     }
     
+    bayes.net$net = net
     return(bayes.net) 
 }
 
