@@ -97,7 +97,7 @@ capri.fit <- function(dataset,
         }
     }
     adj.matrix.prima.facie =
-        prima.facie.parents$adj.matrix$adj.matrix.cyclic
+        prima.facie.parents$adj.matrix$adj.matrix.acyclic
 
     ## Perform the likelihood fit with the required regularization
     ## scores.
@@ -988,11 +988,12 @@ remove.cycles <- function(adj.matrix,
                           hypotheses = NA,
                           silent) {
 
+    
     total.edges = length(which(adj.matrix == 1))
     removed = 0
 
     ## Evaluate the possible cycles involving atomic events.
-    
+
     if (length(not.ordered) > 0) {
 
         ## Consider only the edges that were not ordered by temporal

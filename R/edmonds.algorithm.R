@@ -89,7 +89,7 @@ edmonds.fit <- function(dataset,
         }
     }
     adj.matrix.prima.facie =
-        prima.facie.parents$adj.matrix$adj.matrix.cyclic
+        prima.facie.parents$adj.matrix$adj.matrix.acyclic
 
     ## Perform the likelihood fit with the required strategy.
     
