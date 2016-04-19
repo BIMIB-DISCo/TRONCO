@@ -1987,7 +1987,6 @@ as.bnlearn.network <- function(x,
     for (from in rownames(adj.matrix)) {
         for (to in colnames(adj.matrix)) {
             if (adj.matrix[from, to] == 1) {
-                print(paste(from, '->', to))
                 net = set.arc(net, from, to)
             }
         }

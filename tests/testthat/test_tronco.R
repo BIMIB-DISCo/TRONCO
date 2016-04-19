@@ -55,11 +55,11 @@ test_that("tronco edmonds is working", {
     expect_output(tronco.mst.edmonds(test_dataset_no_hypos,
         nboot = 1,
         regularization = c('no_reg', 'loglik', 'bic', 'aic')),
-    "EDMONDS")
+    "Edmonds")
     expect_output(tronco.mst.edmonds(test_dataset_no_hypos,
         nboot = 1,
         boot.seed = 1),
-    "EDMONDS")
+    "Edmonds")
     expect_warning(tronco.mst.edmonds(test_dataset,
         nboot = 1))
     expect_error(tronco.mst.edmonds(NULL))
@@ -103,11 +103,11 @@ test_that("tronco prim is working", {
     expect_output(tronco.mst.prim(test_dataset_no_hypos,
         nboot = 1,
         regularization = c('no_reg', 'loglik', 'bic', 'aic')),
-    "PRIM")
+    "Prim")
     expect_output(tronco.mst.prim(test_dataset_no_hypos,
         nboot = 1,
         boot.seed = 1),
-    "PRIM")
+    "Prim")
     expect_warning(tronco.mst.prim(test_dataset,
         nboot = 1))
     expect_error(tronco.mst.prim(NULL))
