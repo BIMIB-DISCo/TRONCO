@@ -211,7 +211,7 @@ test_that("npatterns return the right amount of pattern", {
 context("view")
 
 test_that("view return output", {
-    expect_output(view(gistic_model_capri), regexp=NA)
+    expect_output(view(gistic_model_capri), regexp=NULL)
 })
 
 context("order.frequency")
