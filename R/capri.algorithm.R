@@ -92,7 +92,7 @@ capri.fit <- function(dataset,
     
     if (length(invalid.events) > 0) {
         for (i in 1:nrow(invalid.events)) {
-            # prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
+            prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
             prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
         }
     }
@@ -222,10 +222,12 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
                         ## the potential child is always missing
                         adj.matrix[i, j] = 0;
                     } else if ((joint.probs[i,j] / marginal.probs[i]) == 1
+                                && (joint.probs[i,j] / marginal.probs[j]) == 1) {
                         ## the two events are equals
-                             && (joint.probs[i,j] / marginal.probs[j]) == 1) {
-                        adj.matrix[i, j] = 0;
-                        invalid.events = rbind(invalid.events,t(c(i,j)));
+                        adj.matrix[i, j] = 0;                        
+                        if (i > j) {
+                            invalid.events = rbind(invalid.events,t(c(i,j)));
+                        }
                     }
                 }
             }
