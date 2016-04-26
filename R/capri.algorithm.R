@@ -92,7 +92,7 @@ capri.fit <- function(dataset,
     
     if (length(invalid.events) > 0) {
         for (i in 1:nrow(invalid.events)) {
-            prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
+            # prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
             prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
         }
     }
@@ -208,35 +208,21 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
                 ## if i --> j is valid
                 if (i != j && adj.matrix[i, j] == 1) {
                     
-                    ## the potential cause is always present
                     
                     if (marginal.probs[i] == 1) {
-                        
-                        ## the potential child is not always missing
-                        
-                        if (marginal.probs[i] > 0) {
-                            adj.matrix[i, j] = 0;
-                            ## invalid.events = rbind(invalid.events,t(c(i,j)));
-                        }
+                        ## the potential cause is always present
+                        adj.matrix[i, j] = 0;
+                    } else if (marginal.probs[i] == 0) {
+                        ## the potential cause is always missing
+                        adj.matrix[i, j] = 0;
+                    } else if (marginal.probs[j] == 1) {
+                        ## the potential child is always present
+                        adj.matrix[i, j] = 0;
+                    } else if (marginal.probs[j] == 0) {
                         ## the potential child is always missing
-                        else if (marginal.probs[i] == 0) {
-                            adj.matrix[i, j] = 0;
-                        }
-                    }
-                    ## the potential cause is always missing
-                    else if (marginal.probs[i] == 0) {
                         adj.matrix[i, j] = 0;
-                    }
-                    ## the potential child is always present
-                    else if (marginal.probs[j] == 1) {
-                        adj.matrix[i, j] = 0;
-                    }
-                    ## the potential child is always missing
-                    else if (marginal.probs[j] == 0) {
-                        adj.matrix[i, j] = 0;
-                    }
-                    ## the two events are equals
-                    else if ((joint.probs[i,j] / marginal.probs[i]) == 1
+                    } else if ((joint.probs[i,j] / marginal.probs[i]) == 1
+                        ## the two events are equals
                              && (joint.probs[i,j] / marginal.probs[j]) == 1) {
                         adj.matrix[i, j] = 0;
                         invalid.events = rbind(invalid.events,t(c(i,j)));
@@ -246,6 +232,7 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
         }
         
         if (length(invalid.events) > 0) {
+            warning("The dataset contains indistinguishable events that are left disconnected in the progression model.\n")
             colnames(invalid.events) = c("cause","effect");
         }
         valid.dataset =
