@@ -187,16 +187,37 @@ perform.likelihood.fit.prim = function(dataset,
         all_edges = get.edgelist(curr.graph)
         # set the weights to the edges
         new_weights = NULL
+        
+        # if the event is valid
+        if(joint.probs[i,j]>=0) {
+        	new_score = log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
+        }
+        # else, if the two events are indistinguishable
+        else if(joint.probs[i,j]<0) {
+        	new_score = Inf
+        }
+        
+        
         if (cont == 1) {
-            new_weights = mutinformation(data[ ,all_edges[1,1]], data[ ,all_edges[1,2]])
+            new_weights = new_score # mutinformation(data[ ,all_edges[1,1]], data[ ,all_edges[1,2]])
         } else {
             for (i in 1:nrow(all_edges)) {
-                new_weights = c(new_weights, 
-                    mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
+                new_weights = c(new_weights,new_score) # mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
             }
         }
+        
         # set the weights to the graph
-        E(curr.graph)$weight = max(new_weights) - new_weights
+        if(length(new_weights[new_weights!=Inf])>0) {
+        	    max_score = max(new_weights[new_weights!=Inf])
+        	E(curr.graph)$weight = max_score - new_weights
+        }
+        else {
+        	    E(curr.graph)$weight = new_weights
+        }
+        
+        # # set the weights to the graph
+        # E(curr.graph)$weight = max(new_weights) - new_weights
+        
         # get the minimum spanning tree by Prim algorithm
         curr.valid.adj.matrix = as.matrix(get.adjacency(minimum.spanning.tree(curr.graph, 
                                                                               algorithm="prim")))

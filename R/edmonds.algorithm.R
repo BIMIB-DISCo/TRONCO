@@ -179,7 +179,18 @@ perform.likelihood.fit.edmonds = function(dataset,
             curr_best_parent = -1
             curr_best_score = -1
             for (j in curr_parents) {
-                new_score = mutinformation(data[,i], data[,j])
+                
+                # new_score = mutinformation(data[,i], data[,j])
+                
+                # if the event is valid
+                if(joint.probs[i,j]>=0) {
+                	    new_score = log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
+                }
+                # else, if the two events are indistinguishable
+                else if(joint.probs[i,j]<0) {
+                	    new_score = Inf
+                }
+                
                 if (new_score > curr_best_score) {
                     curr_best_parent = j
                     curr_best_score = new_score
