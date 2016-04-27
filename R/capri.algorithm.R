@@ -225,9 +225,7 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
                                 && (joint.probs[i,j] / marginal.probs[j]) == 1) {
                         ## the two events are equals
                         adj.matrix[i, j] = 0;                        
-                        if (i > j) {
-                            invalid.events = rbind(invalid.events,t(c(i,j)));
-                        }
+                        invalid.events = rbind(invalid.events,t(c(i,j)));
                     }
                 }
             }
