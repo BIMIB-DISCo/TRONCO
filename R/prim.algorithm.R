@@ -106,7 +106,9 @@ prim.fit <- function(dataset,
         best.parents =
             perform.likelihood.fit.prim(dataset,
                 adj.matrix.prima.facie,
-                regularization = reg)
+                regularization = reg,
+                marginal.probs = prima.facie.parents$marginal.probs,
+                joint.probs = prima.facie.parents$joint.probs)
 
         ## Set the structure to save the conditional probabilities of
         ## the reconstructed topology.
@@ -158,7 +160,9 @@ prim.fit <- function(dataset,
 perform.likelihood.fit.prim = function(dataset,
                                        adj.matrix,
                                        regularization,
-                                       command = "hc"){
+                                       command = "hc",
+                                       marginal.probs,
+                                       joint.probs){
 
     data = as.categorical.dataset(dataset)
     adj.matrix.prima.facie = adj.matrix
