@@ -1352,13 +1352,16 @@ as.kfold.posterr <- function(x,
 
         rownames(df) = c(1:nrow(df))
         df = data.frame(df, stringsAsFactors = FALSE) 
-
+        
         colnames(df) = 
             c('SELECTS',
               'SELECTED',
               'MEAN.POSTERR',
               'SD.POSTERR',
               'POSTERR Values (rounded, 3 digits)')
+
+        df$MEAN.POSTERR = as.numeric(df$MEAN.POSTERR)
+        df$SD.POSTERR = as.numeric(df$SD.POSTERR)
 
         if(!values) df = df[, 1:4]
         
@@ -1368,6 +1371,7 @@ as.kfold.posterr <- function(x,
 
     res = lapply(models, matrix.to.df)
     names(res) = names(matrix)
+
 
     return(res)
 }
