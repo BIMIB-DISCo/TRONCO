@@ -104,7 +104,9 @@ edmonds.fit <- function(dataset,
         best.parents =
             perform.likelihood.fit.edmonds(dataset,
                                    adj.matrix.prima.facie,
-                                   regularization = reg)
+                                   regularization = reg,
+                                   marginal.probs = prima.facie.parents$marginal.probs,
+                                   joint.probs = prima.facie.parents$joint.probs)
 
         ## Set the structure to save the conditional probabilities of
         ## the reconstructed topology.
@@ -156,7 +158,9 @@ edmonds.fit <- function(dataset,
 perform.likelihood.fit.edmonds = function(dataset,
                                           adj.matrix,
                                           regularization,
-                                          command = "hc"){
+                                          command = "hc",
+                                          marginal.probs,
+                                          joint.probs){
 
     data = as.categorical.dataset(dataset)
     adj.matrix.prima.facie = adj.matrix
@@ -179,7 +183,18 @@ perform.likelihood.fit.edmonds = function(dataset,
             curr_best_parent = -1
             curr_best_score = -1
             for (j in curr_parents) {
-                new_score = mutinformation(data[,i], data[,j])
+                
+                # new_score = mutinformation(data[,i], data[,j])
+                
+                # if the event is valid
+                if(joint.probs[i,j]>=0) {
+                	    new_score = log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
+                }
+                # else, if the two events are indistinguishable
+                else if(joint.probs[i,j]<0) {
+                	    new_score = Inf
+                }
+                
                 if (new_score > curr_best_score) {
                     curr_best_parent = j
                     curr_best_score = new_score
