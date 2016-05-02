@@ -194,11 +194,11 @@ perform.likelihood.fit.prim = function(dataset,
         
         # if the event is valid
         if(joint.probs[i,j]>=0) {
-        	new_score = log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
+        		new_score = log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
         }
         # else, if the two events are indistinguishable
         else if(joint.probs[i,j]<0) {
-        	new_score = Inf
+        		new_score = Inf
         }
         
         
@@ -212,11 +212,14 @@ perform.likelihood.fit.prim = function(dataset,
         
         # set the weights to the graph
         if(length(new_weights[new_weights!=Inf])>0) {
+        		inf.scores = which(new_weights==Inf)
         	    max_score = max(new_weights[new_weights!=Inf])
-        	E(curr.graph)$weight = max_score - new_weights
+        	    prim_scores = max_score - new_weights
+        		prim_scores[inf.scores] = 0
+        		E(curr.graph)$weight = prim_scores
         }
         else {
-        	    E(curr.graph)$weight = new_weights
+        		E(curr.graph)$weight = new_weights
         }
         
         # # set the weights to the graph
