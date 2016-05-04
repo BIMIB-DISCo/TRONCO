@@ -223,9 +223,19 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
                         adj.matrix[i, j] = 0;
                     } else if ((joint.probs[i,j] / marginal.probs[i]) == 1
                                 && (joint.probs[i,j] / marginal.probs[j]) == 1) {
+                        
                         ## the two events are equals
                         adj.matrix[i, j] = 0;                        
-                        invalid.events = rbind(invalid.events,t(c(i,j)));
+                        
+                        #invalid.events = rbind(invalid.events,t(c(i,j)));
+                        
+                        # if we have 2 indistinguishable events both connected to create a cycle
+                        # I choose one direction randomly
+                        # by keeping only the edge from the lower to the higher positioned node
+                        if(i<j) {
+                        	invalid.events = rbind(invalid.events,t(c(i,j)))
+                        }
+                        
                     }
                 }
             }
