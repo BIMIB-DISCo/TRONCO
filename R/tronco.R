@@ -296,7 +296,7 @@ tronco.capri <- function(data,
 #' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
-#' @importFrom infotheo mutinformation
+#### @importFrom infotheo mutinformation
 #' @importFrom stats phyper AIC BIC
 #' 
 tronco.mst.edmonds <- function(data,
@@ -658,7 +658,7 @@ tronco.mst.chowliu <- function(data,
 #' @importFrom igraph get.edgelist E E<-
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths minimum.spanning.tree
-#' @importFrom infotheo mutinformation
+#### @importFrom infotheo mutinformation
 #' @importFrom stats phyper AIC BIC
 #' 
 tronco.mst.prim <- function(data,
