@@ -177,6 +177,8 @@ perform.likelihood.fit.prim = function(dataset,
     cont = 0
     for (i in 1:nrow(curr.valid.adj.matrix)) {
         for (j in i:nrow(curr.valid.adj.matrix)) {
+        	# we want an undirected prima facie graph, 
+        	# so we consider all the edges where there is a directed arc
             if (!(adj.matrix[i,j] == 0 && adj.matrix[j,i] == 0)) {
                 cont = cont + 1
                 curr.valid.adj.matrix[i,j] = 1
@@ -192,34 +194,46 @@ perform.likelihood.fit.prim = function(dataset,
         # set the weights to the edges
         new_weights = NULL
         
-        # if the event is valid
-        if(joint.probs[i,j]>=0) {
-        		new_score = log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
-        }
-        # else, if the two events are indistinguishable
-        else if(joint.probs[i,j]<0) {
-        		new_score = Inf
-        }
-        
-        
         if (cont == 1) {
+        	# consider the current arc
+        	i = all_edges[1,1]
+        	j = all_edges[1,2]
+	        # if the event is valid
+	        if(joint.probs[i,j]>=0) {
+	            new_score = log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
+	        }
+	        # else, if the two events are indistinguishable
+	        else if(joint.probs[i,j]<0) {
+	            new_score = Inf
+	        }
             new_weights = new_score # mutinformation(data[ ,all_edges[1,1]], data[ ,all_edges[1,2]])
         } else {
             for (i in 1:nrow(all_edges)) {
+            	# consider the current arc
+        	    curr_i = all_edges[i,1]
+        	    curr_j = all_edges[i,2]
+		        # if the event is valid
+		        if(joint.probs[curr_i,curr_j]>=0) {
+		            new_score = log(joint.probs[curr_i,curr_j]/(marginal.probs[curr_i]*marginal.probs[curr_j]))
+		        }
+		        # else, if the two events are indistinguishable
+		        else if(joint.probs[curr_i,curr_j]<0) {
+		            new_score = Inf
+		        }
                 new_weights = c(new_weights,new_score) # mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
             }
         }
         
         # set the weights to the graph
         if(length(new_weights[new_weights!=Inf])>0) {
-        		inf.scores = which(new_weights==Inf)
-        	    max_score = max(new_weights[new_weights!=Inf])
-        	    prim_scores = max_score - new_weights
-        		prim_scores[inf.scores] = 0
-        		E(curr.graph)$weight = prim_scores
+            inf.scores = which(new_weights==Inf)
+            max_score = max(new_weights[new_weights!=Inf])
+            prim_scores = max_score - new_weights
+            prim_scores[inf.scores] = 0
+            E(curr.graph)$weight = prim_scores
         }
         else {
-        		E(curr.graph)$weight = new_weights
+            E(curr.graph)$weight = new_weights
         }
         
         # # set the weights to the graph
