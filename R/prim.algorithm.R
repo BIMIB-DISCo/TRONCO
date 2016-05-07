@@ -228,11 +228,13 @@ perform.likelihood.fit.prim = function(dataset,
         if(length(new_weights[new_weights!=Inf])>0) {
             inf.scores = which(new_weights==Inf)
             max_score = max(new_weights[new_weights!=Inf])
-            prim_scores = max_score - new_weights
+            prim_scores = (max_score - new_weights) / max_score
             prim_scores[inf.scores] = 0
             E(curr.graph)$weight = prim_scores
         }
         else {
+        	inf.scores = which(new_weights==Inf)
+        	new_weights[inf.scores] = 0
             E(curr.graph)$weight = new_weights
         }
         
