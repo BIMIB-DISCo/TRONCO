@@ -1001,9 +1001,9 @@ remove.cycles <- function(adj.matrix,
 
             ## Consider the events i and j.
             
-            curr.edge = not.ordered[[i]];
-            curr.edge.i = curr.edge[1, 1];
-            curr.edge.j = curr.edge[2, 1];
+            curr.edge = not.ordered[[i]]
+            curr.edge.i = curr.edge[1, 1]
+            curr.edge.j = curr.edge[2, 1]
 
             ## check if i and j still create a cycle.
             
@@ -1013,9 +1013,9 @@ remove.cycles <- function(adj.matrix,
                 ## Get the scores of the two edges.
                 
                 curr.score.i.j =
-                    weights.temporal.priority[curr.edge.i, curr.edge.j];
+                    weights.temporal.priority[curr.edge.i, curr.edge.j]
                 curr.score.j.i =
-                    weights.temporal.priority[curr.edge.j, curr.edge.i];
+                    weights.temporal.priority[curr.edge.j, curr.edge.i]
 
                 ## Choose an edge based on the score.
                 
@@ -1025,13 +1025,11 @@ remove.cycles <- function(adj.matrix,
                     ## j --> i
                     
                     removed = removed + 1
-                    ## cat("Removing edge ",colnames(adj.matrix)[curr.edge.j]," to ",colnames(adj.matrix)[curr.edge.i],"\n");
-                    adj.matrix[curr.edge.j, curr.edge.i] = 0;
+                    adj.matrix[curr.edge.j, curr.edge.i] = 0
                 } else {
                     ## otherwise
                     removed = removed + 1
-                    ## cat("Removing edge ",colnames(adj.matrix)[curr.edge.i]," to ",colnames(adj.matrix)[curr.edge.j],"\n");
-                    adj.matrix[curr.edge.i, curr.edge.j] = 0;
+                    adj.matrix[curr.edge.i, curr.edge.j] = 0
                 }
             }
         }
@@ -1043,86 +1041,92 @@ remove.cycles <- function(adj.matrix,
     ordered.weights <- vector();
     ordered.edges <- list();
 
-    ## Consider the patterns related the hypotheses.
-    
-    if (!is.na(hypotheses[1])) {
-
-        ## If I have hypotheses, add the edges to be evaluated during
-        ## the loop removal.
+    ## Select the edges to be evaluated during
+    ## the loop removal.
         
-        curr.edge.pos = 0;
-        for (i in 1:nrow(adj.matrix)) {
-            for (j in 1:nrow(adj.matrix)) {
-                if (adj.matrix[i, j] == 1) {
-                    ordered.weights =
-                        rbind(ordered.weights, weights.matrix[i, j]);
-                    curr.edge.pos = curr.edge.pos + 1;
-                    new.edge <- array(0, c(2, 1));
-                    new.edge[1, 1] = i;
-                    new.edge[2, 1] = j;
-                    ordered.edges[curr.edge.pos] = list(new.edge);
-                }
+    curr.edge.pos = 0;
+    for (i in 1:nrow(adj.matrix)) {
+        for (j in 1:nrow(adj.matrix)) {
+            if (adj.matrix[i, j] == 1) {
+                ordered.weights =
+                    rbind(ordered.weights, weights.matrix[i, j]);
+                curr.edge.pos = curr.edge.pos + 1;
+                new.edge <- array(0, c(2, 1));
+                new.edge[1, 1] = i;
+                new.edge[2, 1] = j;
+                ordered.edges[curr.edge.pos] = list(new.edge);
             }
         }
-
-        ## Sort the edges in increasing order of confidence (i.e. the
-        ## edges with lower pvalue are the most confident).
-        
-        ordered.edges =
-            ordered.edges[sort(unlist(ordered.weights),
-                               decreasing = TRUE,
-                               index.return = TRUE)$ix];
     }
+
+    ## Sort the edges in increasing order of confidence (i.e. the
+    ## edges with lower pvalue are the most confident).
+    ordered.weights = sort(unlist(ordered.weights), 
+        decreasing = TRUE,
+        index.return = TRUE)
+    ordered.edges = ordered.edges[ordered.weights$ix]
+
+    ## Consider the patterns related the hypotheses.
+
+    consider.hypotheses = FALSE
+    if (!is.na(hypotheses[1])) {
+        consider.hypotheses = TRUE
+    }
+
 
     ## Visit the ordered edges and remove the ones that are causing
     ## any cycle.
     
     if (length(ordered.edges) > 0) {
 
-        ## Expanded matrix to be considered in removing the loops.
-        
-        expansion =
-            hypotheses.expansion(input_matrix = adj.matrix,
-                                 map=hypotheses$hstructure,
-                                 expand = TRUE,
-                                 skip.disconnected = FALSE);
+        ## Expanded matrix to be considered in removing the loops
+        ## if hypotheses are present.
+       
+        if (consider.hypotheses) {
+            expansion = hypotheses.expansion(input_matrix = adj.matrix,
+                map=hypotheses$hstructure,
+                expand = TRUE,
+                skip.disconnected = FALSE)
+            curr.adj.matrix = expansion[[1]]
+            hypos.new.name = expansion[[2]]
+        } else {
+            curr.adj.matrix = adj.matrix
+        }
 
 
         for (i in 1:length(ordered.edges)) {
 
             ## Consider the edge i-->j
-            curr.edge = ordered.edges[[i]];
-            curr.edge.i = curr.edge[1,1];
-            curr.edge.j = curr.edge[2,1];
+            curr.edge = ordered.edges[[i]]
+            curr.edge.i = curr.edge[1,1]
+            curr.edge.j = curr.edge[2,1]
 
             ## Resolve the mapping from the adj.matrix to the expanded
             ## one both for curr.edge.i and curr.edge.j
             
-            if (colnames(adj.matrix)[curr.edge.i] %in% expansion[[2]]) {
-                curr.edge.i.exp =
-                    which(colnames(expansion[[1]]) %in%
-                          names(expansion[[2]])[which(expansion[[2]] %in%
-                                                      colnames(adj.matrix)[curr.edge.i])]);
+            if (consider.hypotheses && colnames(adj.matrix)[curr.edge.i] %in% hypos.new.name) {
+                curr.edge.i.exp = which(colnames(curr.adj.matrix) %in% names(hypos.new.name)[
+                    which(hypos.new.name %in% colnames(adj.matrix)[curr.edge.i])
+                ])
             } else {
-                curr.edge.i.exp =
-                    which(colnames(expansion[[1]]) %in%
-                          colnames(adj.matrix)[curr.edge.i]);
+                curr.edge.i.exp = which(
+                    colnames(curr.adj.matrix) %in% colnames(adj.matrix)[curr.edge.i]
+                )
             }
             
-            if (colnames(adj.matrix)[curr.edge.j] %in% expansion[[2]]) {
-                curr.edge.j.exp =
-                    which(colnames(expansion[[1]]) %in%
-                          names(expansion[[2]])[which(expansion[[2]] %in%
-                                                      colnames(adj.matrix)[curr.edge.j])]);
+            if (consider.hypotheses && colnames(adj.matrix)[curr.edge.j] %in% hypos.new.name) {
+                curr.edge.j.exp = which(colnames(curr.adj.matrix) %in% names(hypos.new.name)[
+                    which(hypos.new.name %in% colnames(adj.matrix)[curr.edge.j])
+                ])
             } else {
-                curr.edge.j.exp =
-                    which(colnames(expansion[[1]]) %in%
-                          colnames(adj.matrix)[curr.edge.j]);
+                curr.edge.j.exp = which(
+                    colnames(curr.adj.matrix) %in% colnames(adj.matrix)[curr.edge.j]
+                )
             }
 
             ## Search for loops between curr.edge.i and curr.edge.j
             
-            curr.graph = graph.adjacency(expansion[[1]], mode = "directed")
+            curr.graph = graph.adjacency(curr.adj.matrix, mode = "directed")
 
             is.path = suppressWarnings(get.shortest.paths(curr.graph,
                                        curr.edge.j.exp,
@@ -1137,8 +1141,8 @@ remove.cycles <- function(adj.matrix,
 
                 ## cat("Removing edge ",colnames(adj.matrix)[curr.edge.i]," to ",colnames(adj.matrix)[curr.edge.j],"\n");
 
-                expansion[[1]][curr.edge.i.exp, curr.edge.j.exp] = 0;
-                adj.matrix[curr.edge.i, curr.edge.j] = 0;
+                curr.adj.matrix[curr.edge.i.exp, curr.edge.j.exp] = 0
+                adj.matrix[curr.edge.i, curr.edge.j] = 0
             }
         }
 
@@ -1154,8 +1158,8 @@ remove.cycles <- function(adj.matrix,
 
     ## Save the results and return them.
     
-    acyclic.topology = list(adj.matrix = adj.matrix);
-    return(acyclic.topology);
+    acyclic.topology = list(adj.matrix = adj.matrix)
+    return(acyclic.topology)
 }
 
 

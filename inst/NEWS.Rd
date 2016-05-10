@@ -2,6 +2,12 @@
 \title{News for the package \pkg{TRONCO}}
 \encoding{UTF-8}
 
+\section{Changes in Version 2.4.1}{
+    \itemize{
+        \item A better implementation of remove.cycles
+    }
+}
+
 \section{Changes in Version 2.4.0}{
     \itemize{
         \item New statistics available for model confidence via
