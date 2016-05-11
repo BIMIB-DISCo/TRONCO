@@ -200,11 +200,12 @@ perform.likelihood.fit.prim = function(dataset,
         	j = all_edges[1,2]
 	        # if the event is valid
 	        if(joint.probs[i,j]>=0) {
-	            new_score = log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
+	            new_score = compute.prim.score(joint.probs[i,j],marginal.probs[i],marginal.probs[j]) # log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
 	        }
 	        # else, if the two events are indistinguishable
+	        # put the higher score
 	        else if(joint.probs[i,j]<0) {
-	            new_score = Inf
+	            new_score = 1 # Inf
 	        }
             new_weights = new_score # mutinformation(data[ ,all_edges[1,1]], data[ ,all_edges[1,2]])
         } else {
@@ -214,32 +215,33 @@ perform.likelihood.fit.prim = function(dataset,
         	    curr_j = all_edges[i,2]
 		        # if the event is valid
 		        if(joint.probs[curr_i,curr_j]>=0) {
-		            new_score = log(joint.probs[curr_i,curr_j]/(marginal.probs[curr_i]*marginal.probs[curr_j]))
+		            new_score = compute.prim.score(joint.probs[curr_i,curr_j],marginal.probs[curr_i],marginal.probs[curr_j]) # log(joint.probs[curr_i,curr_j]/(marginal.probs[curr_i]*marginal.probs[curr_j]))
 		        }
 		        # else, if the two events are indistinguishable
+		        # put the higher score
 		        else if(joint.probs[curr_i,curr_j]<0) {
-		            new_score = Inf
+		            new_score = 1 # Inf
 		        }
                 new_weights = c(new_weights,new_score) # mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
             }
         }
         
-        # set the weights to the graph
-        if(length(new_weights[new_weights!=Inf])>0) {
-            inf.scores = which(new_weights==Inf)
-            max_score = max(new_weights[new_weights!=Inf])
-            prim_scores = (max_score - new_weights) / max_score
-            prim_scores[inf.scores] = 0
-            E(curr.graph)$weight = prim_scores
-        }
-        else {
-        	inf.scores = which(new_weights==Inf)
-        	new_weights[inf.scores] = 0
-            E(curr.graph)$weight = new_weights
-        }
-        
         # # set the weights to the graph
-        # E(curr.graph)$weight = max(new_weights) - new_weights
+        # if(length(new_weights[new_weights!=Inf])>0) {
+            # inf.scores = which(new_weights==Inf)
+            # max_score = max(new_weights[new_weights!=Inf])
+            # prim_scores = (max_score - new_weights) / max_score
+            # prim_scores[inf.scores] = 0
+            # E(curr.graph)$weight = prim_scores
+        # }
+        # else {
+        	# inf.scores = which(new_weights==Inf)
+        	# new_weights[inf.scores] = 0
+            # E(curr.graph)$weight = new_weights
+        # }
+        
+        # set the weights to the graph
+        E(curr.graph)$weight = 1 - new_weights # max(new_weights) - new_weights
         
         # get the minimum spanning tree by Prim algorithm
         curr.valid.adj.matrix = as.matrix(get.adjacency(minimum.spanning.tree(curr.graph, 
@@ -277,6 +279,46 @@ perform.likelihood.fit.prim = function(dataset,
         adj.matrix.fit = adj.matrix.fit)
     topology = list(adj.matrix = adj.matrix)
     return(topology)
+}
+
+# compute the mutual information score for the prim algorithm
+"compute.prim.score" = function ( p_i_j, p_i, p_j ) {
+	
+	# compute the needed measures
+	p_i_not_j = p_i - p_i_j
+	p_not_i_j = p_j - p_i_j
+	p_not_i_not_j = 1 - p_i - p_j + p_i_j
+	
+	# compute the 4 terms of mutual information
+	m_i_j = p_i_j * log(p_i_j/(p_i*p_j))
+	m_i_not_j = p_i_not_j * log(p_i_not_j/(p_i*(1-p_j)))
+	m_not_i_j = p_not_i_j * log(p_not_i_j/((1-p_i)*p_j))
+	m_not_i_not_j = p_not_i_not_j * log(p_not_i_not_j/((1-p_i)*(1-p_j)))
+	
+	# NOTE: in our case p_i and p_j are positive numbers in (0,1) with intervals excluded, 
+	# hence, the denominator of the scores cannot be 0. 
+	# the numerators are numbers in [0,1). So the fraction is a number between [0,Inf). 
+	# specifically the log of the fraction is a number in [-Inf,Inf) with Inf excluded and 
+	# -Inf when any numerator is 0. 
+	# BUT: when numerator is 0, the multiplier of the logarithm is 0 hence givine 0*(-Inf) = NA
+	# SO: we will replace any NA with 0 (multiplier wins over logarithm)
+	if(is.na(m_i_j)) {
+		m_i_j = 0
+	}
+	if(is.na(m_i_not_j)) {
+		m_i_not_j = 0
+	}
+	if(is.na(m_not_i_j)) {
+		m_not_i_j = 0
+	}
+	if(is.na(m_not_i_not_j)) {
+		m_not_i_not_j = 0
+	}
+	
+	# compute the complete mutual information
+	mutual_information = m_i_j + m_i_not_j + m_not_i_j + m_not_i_not_j
+	
+	return(mutual_information)
 }
 
 
