@@ -188,11 +188,14 @@ perform.likelihood.fit.edmonds = function(dataset,
                 
                 # if the event is valid
                 if(joint.probs[i,j]>=0) {
-                	    new_score = log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
+                	new_score = log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
+                	if(is.na(new_score)) {
+                		new_score = 0
+                	}
                 }
                 # else, if the two events are indistinguishable
                 else if(joint.probs[i,j]<0) {
-                	    new_score = Inf
+                	new_score = Inf
                 }
                 
                 if (new_score > curr_best_score) {
