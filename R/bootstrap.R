@@ -51,7 +51,7 @@ bootstrap <- function(reconstruction,
 
     ## Get other parameters.
 
-    if (type %in% c('CAPRI', 'EDMONDS', 'CHOW_LIU', 'PRIM')) {
+    if (type %in% c('CAPRI', 'EDMONDS', 'MLE', 'CHOW_LIU', 'PRIM')) {
         regularization = parameters$regularization
         do.boot = parameters$do.boot
         nboot.algorithm = parameters$nboot
@@ -183,6 +183,17 @@ bootstrap <- function(reconstruction,
         } else if (type == 'EDMONDS') {
             bootstrapped.topology =
                 tronco.mst.edmonds(curr.reconstruction,
+                                   regularization,
+                                   do.boot,
+                                   nboot.algorithm,
+                                   pvalue,
+                                   min.boot,
+                                   min.stat,
+                                   boot.seed,
+                                   silent = TRUE)
+        } else if (type == 'MLE') {
+            bootstrapped.topology =
+                tronco.mst.mle(curr.reconstruction,
                                    regularization,
                                    do.boot,
                                    nboot.algorithm,
