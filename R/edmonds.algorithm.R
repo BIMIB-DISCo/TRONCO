@@ -188,10 +188,39 @@ perform.likelihood.fit.edmonds = function(dataset,
                 
                 # if the event is valid
                 if(joint.probs[i,j]>=0) {
+                	
+                	# compute the first part of the score, 
+                	# i.e., the pairwise mutual information for i and j
+                	# that is log(P(i,j)/[P(i)*P(j)])
                 	new_score = log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
                 	if(is.na(new_score)) {
                 		new_score = 0
                 	}
+                	
+                	# now compute the second part, 
+                	# i.e., the normalized pairwise mutual information for i and not j
+                	if(new_score>0) {
+                		
+                		# compute first the pointwise mutual information for i and not j
+                	    # that is log(P(i,not j)/[P(i)*P(not j)])
+                		pmi_i_not_j = log((marginal.probs[i]-joint.probs[i,j])/(marginal.probs[i]*(1-marginal.probs[j])))
+                		
+                		# compute the normalization factor for pmi_i_not_j,
+                		# that is -log(P(i,not j))
+                		norm_pmi_i_not_j = - log(marginal.probs[i]-joint.probs[i,j])
+                		
+                		# compute the normalized pairwise mutual information for i and not j
+                		npmi_i_not_j = pmi_i_not_j/norm_pmi_i_not_j
+                		# now I correct for any NA (e.g., -Inf/Inf)
+                		if(is.na(npmi_i_not_j)) {
+                			npmi_i_not_j = -1
+                		}
+                		
+                		# now I can correct new_score for npmi_i_not_j
+                		new_score = new_score * (- npmi_i_not_j)
+                		
+                	}
+                	
                 }
                 # else, if the two events are indistinguishable
                 else if(joint.probs[i,j]<0) {
