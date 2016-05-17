@@ -6,6 +6,7 @@ capri = tronco.capri(test_dataset, nboot = 1, silent = TRUE)
 caprese = tronco.caprese(test_dataset_no_hypos, silent = TRUE)
 chowliu = tronco.mst.chowliu(test_dataset_no_hypos, nboot = 1, silent = TRUE)
 edmonds = tronco.mst.edmonds(test_dataset_no_hypos, nboot = 1, silent = TRUE)
+mle = tronco.mst.mle(test_dataset_no_hypos, nboot = 1, silent = TRUE)
 prim = tronco.mst.prim(test_dataset_no_hypos, nboot = 1, silent = TRUE)
 npb = tronco.bootstrap(capri, nboot = 1, silent = TRUE)
 sb = tronco.bootstrap(capri, nboot = 1, type = 'statistical', silent = TRUE)
@@ -70,6 +71,30 @@ test_that("tronco edmonds is working", {
     expect_error(tronco.mst.edmonds(test_dataset_no_hypos,
         pvalue = 2))
     expect_error(tronco.mst.edmonds(test_dataset_no_hypos,
+        regularization = 'banana'))
+})
+
+context("MLE")
+
+test_that("tronco mle is working", {
+    expect_output(tronco.mst.mle(test_dataset_no_hypos,
+        nboot = 1,
+        regularization = c('no_reg', 'loglik', 'bic', 'aic')),
+    "Mle")
+    expect_output(tronco.mst.mle(test_dataset_no_hypos,
+        nboot = 1,
+        boot.seed = 1),
+    "Mle")
+    expect_warning(tronco.mst.mle(test_dataset,
+        nboot = 1))
+    expect_error(tronco.mst.mle(NULL))
+    expect_error(tronco.mst.mle(test_dataset_no_hypos,
+        command = 'banana'))
+    expect_error(tronco.mst.mle(test_dataset_no_hypos,
+        pvalue = -1))
+    expect_error(tronco.mst.mle(test_dataset_no_hypos,
+        pvalue = 2))
+    expect_error(tronco.mst.mle(test_dataset_no_hypos,
         regularization = 'banana'))
 })
 
