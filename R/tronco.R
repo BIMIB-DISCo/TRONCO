@@ -480,7 +480,7 @@ tronco.mst.edmonds <- function(data,
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
 #### @importFrom infotheo mutinformation
-#' @importFrom stats phyper AIC BIC
+#' @importFrom stats phyper AIC BIC logLik
 #' 
 tronco.mst.mle <- function(data,
                                regularization = "no_reg", 
