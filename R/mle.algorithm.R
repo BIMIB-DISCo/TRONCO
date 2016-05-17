@@ -209,7 +209,7 @@ perform.likelihood.fit.mle = function(dataset,
                     curr.bayes.net$net = net
                     
                     # evaluate any candidate parent in terms of likelihood
-                    new_score = logLik(bayes.net$net, data = bayes.net$data)
+                    new_score = logLik(curr.bayes.net$net, data = curr.bayes.net$data)
                 
                     # compare the likelihood of the current candidate parent 
                     # with the current best one
