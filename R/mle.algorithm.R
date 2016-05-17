@@ -186,14 +186,15 @@ perform.likelihood.fit.mle = function(dataset,
             	
             	# find the best parent
                 curr_best_parent = -1
-                curr_best_score = -1
+                curr_best_score = -Inf
+                
                 for (j in curr_parents) {
                 	
                 	# consider the network augmenting the current one with the edge j --> i
                 	tmp_adj.matrix.fit =  curr_adj.matrix.fit
                 	tmp_adj.matrix.fit[j,i] = 1
-                	colnames(tmp_adj.matrix.fit) = 1:ncol(tmp_adj.matrix.fit)
-                	rownames(tmp_adj.matrix.fit) = 1:nrow(tmp_adj.matrix.fit)
+                	colnames(tmp_adj.matrix.fit) = colnames(data)
+                	rownames(tmp_adj.matrix.fit) = colnames(data)
                 	
                 	# create a bnlearn object from tmp_adj.matrix.fit
                 	curr.bayes.net = NULL
@@ -221,7 +222,7 @@ perform.likelihood.fit.mle = function(dataset,
                 }
                 
                 # set the best parent in the inferred matrix
-                curr_adj.matrix.fit[curr_best_score,i] = 1
+                curr_adj.matrix.fit[curr_best_parent,i] = 1
                 
                 # set the current best parent in the new list of curr nodes
                 new_curr_nodes = c(new_curr_nodes,curr_best_parent)
