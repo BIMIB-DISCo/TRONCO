@@ -80,11 +80,11 @@ test_that("tronco mle is working", {
     expect_output(tronco.mst.mle(test_dataset_no_hypos,
         nboot = 1,
         regularization = c('no_reg', 'loglik', 'bic', 'aic')),
-    "Mle")
+    "MLE")
     expect_output(tronco.mst.mle(test_dataset_no_hypos,
         nboot = 1,
         boot.seed = 1),
-    "Mle")
+    "MLE")
     expect_warning(tronco.mst.mle(test_dataset,
         nboot = 1))
     expect_error(tronco.mst.mle(NULL))
