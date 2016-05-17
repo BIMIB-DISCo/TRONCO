@@ -171,6 +171,7 @@ perform.likelihood.fit.mle = function(dataset,
     # start from the leaves of the tree
     curr_nodes = which(apply(adj.matrix,1,sum)==0)
     curr_adj.matrix.fit = adj.matrix.fit
+    visited_nodes = curr_nodes
     while(length(curr_nodes)>0) {
     	
     	new_curr_nodes = NULL
@@ -231,7 +232,20 @@ perform.likelihood.fit.mle = function(dataset,
             
     	}
     	
+    	# find out the nodes to still be visited within new_curr_nodes
+    	new_idx = which(!new_curr_nodes%in%visited_nodes)
+    	if(length(new_idx)>0) {
+    		new_curr_nodes = new_curr_nodes[new_idx]
+    	}
+    	else {
+    		new_curr_nodes = NULL
+    	}
+    	
+    	# set the list of the next curr_nodes
     	curr_nodes = new_curr_nodes
+    	
+    	# update the list of visited nodes
+    	visited_nodes = c(visited_nodes,curr_nodes)
     	
     }
     
