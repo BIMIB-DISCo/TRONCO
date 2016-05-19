@@ -197,24 +197,28 @@ compute.mltree = function(dataset,
     MAXRESULTS = 10 # output results -- full posterior by setting it to NUMTESTS
     NUMTESTS = length(candidates)
 
-    # empty networks
-    net = empty.graph(colnames(dataset), num = NUMTESTS)
+    if (NUMTESTS > 1) {
+        # empty networks
+        net = empty.graph(colnames(dataset), num = NUMTESTS)
 
-    # set edges/compute score
-    scores = rep(0, NUMTESTS)
-    # make this parallel
+        # set edges/compute score
+        scores = rep(0, NUMTESTS)
+        # make this parallel
 
-    for(i in 1:NUMTESTS) {
-        amat(net[[i]]) = candidates[[i]]
-        scores[i] = score(net[[i]], data, type = "loglik")
+        for(i in 1:NUMTESTS) {
+            amat(net[[i]]) = candidates[[i]]
+            scores[i] = score(net[[i]], data, type = "loglik")
+        }
+
+        # sort and trim results
+        net = net[order(scores)]
+        net = net[1: min(MAXRESULTS, length(net))]
+
+        best.net = net[[1]]
+        adj.matrix.fit = amat(best.net)
+    } else {
+        adj.matrix.fit = candidates[[1]]
     }
-
-    # sort and trim results
-    net = net[order(scores)]
-    net = net[1: min(MAXRESULTS, length(net))]
-
-    best.net = net[[1]]
-    adj.matrix.fit = amat(best.net)
     
     ## Save the results and return them.
     adj.matrix =
