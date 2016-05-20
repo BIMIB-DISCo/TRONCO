@@ -332,6 +332,10 @@ tronco.mst.edmonds <- function(data,
     if (! all(regularization %in% c('no_reg', 'loglik', 'bic', 'aic'))) {
         stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
     }
+    
+    if (! all(score %in% c('entropy', 'pmi', 'cpmi'))) {
+        stop("Possible scores are entropy, pmi, cpmi",call. = FALSE);
+    }
 
     ## Check for the input to be compliant.
     
