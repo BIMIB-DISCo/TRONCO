@@ -211,7 +211,7 @@ compute.mltree = function(dataset,
         }
 
         # sort and trim results
-        net = net[order(scores)]
+        net = net[order(scores, decreasing = TRUE)]
         net = net[1: min(MAXRESULTS, length(net))]
 
         best.net = net[[1]]
@@ -229,4 +229,4 @@ compute.mltree = function(dataset,
     return(topology)
 }
 
-#### end of file -- mle.algorithm.R
+#### end of file -- mltree.algorithm.R
