@@ -59,6 +59,9 @@ bootstrap <- function(reconstruction,
         min.boot = parameters$min.boot
         min.stat = parameters$min.stat
         boot.seed = parameters$boot.seed
+        if(type == 'EDMONDS') {
+        	score.edmonds = parameters$score
+        }
     }
 
     ## Start the clock to measure the execution time
@@ -184,6 +187,7 @@ bootstrap <- function(reconstruction,
             bootstrapped.topology =
                 tronco.mst.edmonds(curr.reconstruction,
                                    regularization,
+                                   score.edmonds,
                                    do.boot,
                                    nboot.algorithm,
                                    pvalue,
