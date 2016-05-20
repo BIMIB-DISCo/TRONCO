@@ -303,7 +303,7 @@ tronco.capri <- function(data,
 #' 
 tronco.mst.edmonds <- function(data,
                                regularization = "no_reg", 
-                               score = "pmi", 
+                               score = "entropy", 
                                do.boot = TRUE, 
                                nboot = 100, 
                                pvalue = 0.05, 

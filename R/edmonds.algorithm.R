@@ -23,7 +23,7 @@
 #
 edmonds.fit <- function(dataset,
                         regularization = "no_reg",
-                        score = "pmi",
+                        score = "entropy",
                         do.boot = TRUE,
                         nboot = 100,
                         pvalue = 0.05,
@@ -252,7 +252,7 @@ compute.edmonds.score = function( joint.prob.i.j, marginal.prob.i, marginal.prob
         
     }
     # this is the conditional entropy of i given j
-    else if(score=="pmi") {
+    else if(score=="entropy") {
         
         # compute the 4 components of the conditional entropy
         h.i.j = joint.prob.i.j * 
