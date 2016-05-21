@@ -246,7 +246,7 @@ compute.edmonds.score = function( joint.prob.i.j, marginal.prob.i, marginal.prob
         # compute the pointwise mutual information for i and j
         # that is log(P(i,j)/[P(i)*P(j)])
         new_score = log(joint.prob.i.j/(marginal.prob.i*marginal.prob.j))
-        if(n(new_score)) {
+        if(is.nan(new_score)) {
             new_score = 0
         }
         
@@ -262,17 +262,17 @@ compute.edmonds.score = function( joint.prob.i.j, marginal.prob.i, marginal.prob
         }
         h.i.not.j = (marginal.prob.i - joint.prob.i.j)  * 
                     log((1-marginal.prob.j)/(marginal.prob.i - joint.prob.i.j))
-        if(is.nan(h.i.j)) {
+        if(is.nan(h.i.not.j)) {
             h.i.not.j = 0
         }
         h.not.i.j = (marginal.prob.j - joint.prob.i.j) * 
                     log(marginal.prob.j/(marginal.prob.j - joint.prob.i.j))
-        if(is.nan(h.i.j)) {
+        if(is.nan(h.not.i.j)) {
             h.not.i.j = 0
         }
         h.not.i.not.j = (1 - marginal.prob.i - marginal.prob.j + joint.prob.i.j) * 
                     log((1-marginal.prob.j)/(1 - marginal.prob.i - marginal.prob.j + joint.prob.i.j))
-        if(is.nan(h.i.j)) {
+        if(is.nan(h.not.i.not.j)) {
             h.not.i.not.j = 0
         }
         
