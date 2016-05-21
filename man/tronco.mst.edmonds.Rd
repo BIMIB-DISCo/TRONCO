@@ -4,7 +4,7 @@
 \alias{tronco.mst.edmonds}
 \title{tronco mst edmonds}
 \usage{
-tronco.mst.edmonds(data, regularization = "no_reg", score = "pmi",
+tronco.mst.edmonds(data, regularization = "no_reg", score = "entropy",
   do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3,
   min.stat = TRUE, boot.seed = NULL, silent = FALSE)
 }
@@ -15,7 +15,7 @@ tronco.mst.edmonds(data, regularization = "no_reg", score = "pmi",
 likelihood estimation, e.g., BIC, AIC.}
 
 \item{score}{Select the score for the estimation of 
-the best tree, e.g., pointwise mutual information (pmi), conditional entropy (mle).}
+the best tree, e.g., pointwise mutual information (pmi), conditional entropy (entropy).}
 
 \item{do.boot}{A parameter to disable/enable the estimation 
 of the error rates give the reconstructed model.}
