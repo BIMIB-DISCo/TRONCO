@@ -279,7 +279,7 @@ tronco.capri <- function(data,
 #' @param regularization Select the regularization for the 
 #' likelihood estimation, e.g., BIC, AIC. 
 #' @param score Select the score for the estimation of 
-#' the best tree, e.g., pointwise mutual information (pmi), conditional entropy (mle). 
+#' the best tree, e.g., pointwise mutual information (pmi), conditional entropy (entropy). 
 #' @param do.boot A parameter to disable/enable the estimation 
 #' of the error rates give the reconstructed model.
 #' @param nboot Number of bootstrap sampling (with rejection) 
@@ -414,43 +414,43 @@ tronco.mst.edmonds <- function(data,
     search_scores = score
 
     if ("no_reg" %in% regularization) {
-    	for (my_s in search_scores) {
-	        bayes.net = as.bnlearn.network(results, model = paste('edmonds_no_reg', my_s,sep="_"))
-	        score = logLik(bayes.net$net, data = bayes.net$data)
-	        logLik = score
-	        results$model[[paste('edmonds_no_reg', my_s,sep="_")]]$score = score
-	        results$model[[paste('edmonds_no_reg', my_s,sep="_")]]$logLik = logLik
-	    }
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model = paste('edmonds_no_reg', my_s,sep="_"))
+            score = logLik(bayes.net$net, data = bayes.net$data)
+            logLik = score
+            results$model[[paste('edmonds_no_reg', my_s,sep="_")]]$score = score
+            results$model[[paste('edmonds_no_reg', my_s,sep="_")]]$logLik = logLik
+        }
     }
     
     if ("loglik" %in% regularization) {
-    	for (my_s in search_scores) {
-	        bayes.net = as.bnlearn.network(results, model  = paste('edmonds_loglik', my_s,sep="_"))
-	        score = logLik(bayes.net$net, data = bayes.net$data)
-	        logLik = score
-	        results$model[[paste('edmonds_loglik', my_s,sep="_")]]$score = score
-	        results$model[[paste('edmonds_loglik', my_s,sep="_")]]$logLik = logLik
-	    }
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model  = paste('edmonds_loglik', my_s,sep="_"))
+            score = logLik(bayes.net$net, data = bayes.net$data)
+            logLik = score
+            results$model[[paste('edmonds_loglik', my_s,sep="_")]]$score = score
+            results$model[[paste('edmonds_loglik', my_s,sep="_")]]$logLik = logLik
+        }
     }
 
     if ("bic" %in% regularization) {
-    	for (my_s in search_scores) {
-	        bayes.net = as.bnlearn.network(results, model  = paste('edmonds_bic', my_s,sep="_"))
-	        score = BIC(bayes.net$net, data = bayes.net$data)
-	        logLik = logLik(bayes.net$net, data = bayes.net$data)
-	        results$model[[paste('edmonds_bic', my_s,sep="_")]]$score = score
-	        results$model[[paste('edmonds_bic', my_s,sep="_")]]$logLik = logLik
-	    }
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model  = paste('edmonds_bic', my_s,sep="_"))
+            score = BIC(bayes.net$net, data = bayes.net$data)
+            logLik = logLik(bayes.net$net, data = bayes.net$data)
+            results$model[[paste('edmonds_bic', my_s,sep="_")]]$score = score
+            results$model[[paste('edmonds_bic', my_s,sep="_")]]$logLik = logLik
+        }
     }
 
     if ("aic" %in% regularization) {
-    	for (my_s in search_scores) {
-	        bayes.net = as.bnlearn.network(results, model = paste('edmonds_aic', my_s,sep="_"))
-	        score = AIC(bayes.net$net, data = bayes.net$data)
-	        logLik = logLik(bayes.net$net, data = bayes.net$data)
-	        results$model[[paste('edmonds_aic', my_s,sep="_")]]$score = score
-	        results$model[[paste('edmonds_aic', my_s,sep="_")]]$logLik = logLik
-	    }
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model = paste('edmonds_aic', my_s,sep="_"))
+            score = AIC(bayes.net$net, data = bayes.net$data)
+            logLik = logLik(bayes.net$net, data = bayes.net$data)
+            results$model[[paste('edmonds_aic', my_s,sep="_")]]$score = score
+            results$model[[paste('edmonds_aic', my_s,sep="_")]]$logLik = logLik
+        }
     }
 
     ## the reconstruction has been completed.

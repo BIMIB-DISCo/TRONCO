@@ -11,7 +11,7 @@
 # @title edmonds.fit
 # @param dataset a dataset describing a progressive phenomenon
 # @param regularization regularizators to be used for the likelihood fit
-# @param score the score to be used, could be either pointwise mutual information (pmi) or conditional entropy (mle)
+# @param score the score to be used, could be either pointwise mutual information (pmi) or conditional entropy (entropy)
 # @param do.boot should I perform bootstrap? Yes if TRUE, no otherwise
 # @param nboot integer number (greater than 0) of bootstrap sampling to be performed
 # @param pvalue pvalue for the tests (value between 0 and 1)
@@ -158,7 +158,7 @@ edmonds.fit <- function(dataset,
 # @param dataset a valid dataset
 # @param adj.matrix the adjacency matrix of the prima facie causes
 # @param regularization regularization term to be used in the likelihood fit
-# @param score the score to be used by edmonds algorithm. Could be either pointwise mutual information (pmi) or conditional entropy (mle)
+# @param score the score to be used by edmonds algorithm. Could be either pointwise mutual information (pmi) or conditional entropy (entropy)
 # @param command type of search, either hill climbing (hc) or tabu (tabu)
 # @return topology: the adjacency matrix of both the prima facie and causal topologies
 #
@@ -246,7 +246,7 @@ compute.edmonds.score = function( joint.prob.i.j, marginal.prob.i, marginal.prob
         # compute the pointwise mutual information for i and j
         # that is log(P(i,j)/[P(i)*P(j)])
         new_score = log(joint.prob.i.j/(marginal.prob.i*marginal.prob.j))
-        if(is.na(new_score)) {
+        if(n(new_score)) {
             new_score = 0
         }
         
@@ -257,22 +257,22 @@ compute.edmonds.score = function( joint.prob.i.j, marginal.prob.i, marginal.prob
         # compute the 4 components of the conditional entropy
         h.i.j = joint.prob.i.j * 
                     log(marginal.prob.j/joint.prob.i.j)
-        if(is.na(h.i.j)) {
+        if(is.nan(h.i.j)) {
             h.i.j = 0
         }
         h.i.not.j = (marginal.prob.i - joint.prob.i.j)  * 
                     log((1-marginal.prob.j)/(marginal.prob.i - joint.prob.i.j))
-        if(is.na(h.i.j)) {
+        if(is.nan(h.i.j)) {
             h.i.not.j = 0
         }
         h.not.i.j = (marginal.prob.j - joint.prob.i.j) * 
                     log(marginal.prob.j/(marginal.prob.j - joint.prob.i.j))
-        if(is.na(h.i.j)) {
+        if(is.nan(h.i.j)) {
             h.not.i.j = 0
         }
         h.not.i.not.j = (1 - marginal.prob.i - marginal.prob.j + joint.prob.i.j) * 
                     log((1-marginal.prob.j)/(1 - marginal.prob.i - marginal.prob.j + joint.prob.i.j))
-        if(is.na(h.i.j)) {
+        if(is.nan(h.i.j)) {
             h.not.i.not.j = 0
         }
         
@@ -291,7 +291,7 @@ compute.edmonds.score = function( joint.prob.i.j, marginal.prob.i, marginal.prob
         # i.e., the pointwise mutual information for i and j
         # that is log(P(i,j)/[P(i)*P(j)])
         new_score = log(joint.prob.i.j/(marginal.prob.i*marginal.prob.j))
-        if(is.na(new_score)) {
+        if(is.nan(new_score)) {
             new_score = 0
         }
         
@@ -310,7 +310,7 @@ compute.edmonds.score = function( joint.prob.i.j, marginal.prob.i, marginal.prob
             # compute the normalized pointwise mutual information for i and not j
             npmi_i_not_j = pmi_i_not_j/norm_pmi_i_not_j
             # now I correct for any NA (e.g., -Inf/Inf)
-            if(is.na(npmi_i_not_j)) {
+            if(is.nan(npmi_i_not_j)) {
                 npmi_i_not_j = -1
             }
             

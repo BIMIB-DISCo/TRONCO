@@ -177,8 +177,8 @@ perform.likelihood.fit.prim = function(dataset,
     cont = 0
     for (i in 1:nrow(curr.valid.adj.matrix)) {
         for (j in i:nrow(curr.valid.adj.matrix)) {
-        	# we want an undirected prima facie graph, 
-        	# so we consider all the edges where there is a directed arc
+            # we want an undirected prima facie graph, 
+            # so we consider all the edges where there is a directed arc
             if (!(adj.matrix[i,j] == 0 && adj.matrix[j,i] == 0)) {
                 cont = cont + 1
                 curr.valid.adj.matrix[i,j] = 1
@@ -195,33 +195,33 @@ perform.likelihood.fit.prim = function(dataset,
         new_weights = NULL
         
         if (cont == 1) {
-        	# consider the current arc
-        	i = all_edges[1,1]
-        	j = all_edges[1,2]
-	        # if the event is valid
-	        if(joint.probs[i,j]>=0) {
-	            new_score = compute.mi.score(joint.probs[i,j],marginal.probs[i],marginal.probs[j]) # log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
-	        }
-	        # else, if the two events are indistinguishable
-	        # put the higher score
-	        else if(joint.probs[i,j]<0) {
-	            new_score = 1 # Inf
-	        }
+            # consider the current arc
+            i = all_edges[1,1]
+            j = all_edges[1,2]
+            # if the event is valid
+            if(joint.probs[i,j]>=0) {
+                new_score = compute.mi.score(joint.probs[i,j],marginal.probs[i],marginal.probs[j]) # log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
+            }
+            # else, if the two events are indistinguishable
+            # put the higher score
+            else if(joint.probs[i,j]<0) {
+                new_score = 1 # Inf
+            }
             new_weights = new_score # mutinformation(data[ ,all_edges[1,1]], data[ ,all_edges[1,2]])
         } else {
             for (i in 1:nrow(all_edges)) {
-            	# consider the current arc
-        	    curr_i = all_edges[i,1]
-        	    curr_j = all_edges[i,2]
-		        # if the event is valid
-		        if(joint.probs[curr_i,curr_j]>=0) {
-		            new_score = compute.mi.score(joint.probs[curr_i,curr_j],marginal.probs[curr_i],marginal.probs[curr_j]) # log(joint.probs[curr_i,curr_j]/(marginal.probs[curr_i]*marginal.probs[curr_j]))
-		        }
-		        # else, if the two events are indistinguishable
-		        # put the higher score
-		        else if(joint.probs[curr_i,curr_j]<0) {
-		            new_score = 1 # Inf
-		        }
+                # consider the current arc
+                curr_i = all_edges[i,1]
+                curr_j = all_edges[i,2]
+                # if the event is valid
+                if(joint.probs[curr_i,curr_j]>=0) {
+                    new_score = compute.mi.score(joint.probs[curr_i,curr_j],marginal.probs[curr_i],marginal.probs[curr_j]) # log(joint.probs[curr_i,curr_j]/(marginal.probs[curr_i]*marginal.probs[curr_j]))
+                }
+                # else, if the two events are indistinguishable
+                # put the higher score
+                else if(joint.probs[curr_i,curr_j]<0) {
+                    new_score = 1 # Inf
+                }
                 new_weights = c(new_weights,new_score) # mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
             }
         }
@@ -235,8 +235,8 @@ perform.likelihood.fit.prim = function(dataset,
             # E(curr.graph)$weight = prim_scores
         # }
         # else {
-        	# inf.scores = which(new_weights==Inf)
-        	# new_weights[inf.scores] = 0
+            # inf.scores = which(new_weights==Inf)
+            # new_weights[inf.scores] = 0
             # E(curr.graph)$weight = new_weights
         # }
         
@@ -283,42 +283,42 @@ perform.likelihood.fit.prim = function(dataset,
 
 # compute the mutual information score for the prim algorithm
 compute.mi.score = function ( p_i_j, p_i, p_j ) {
-	
-	# compute the needed measures
-	p_i_not_j = p_i - p_i_j
-	p_not_i_j = p_j - p_i_j
-	p_not_i_not_j = 1 - p_i - p_j + p_i_j
-	
-	# compute the 4 terms of mutual information
-	m_i_j = p_i_j * log(p_i_j/(p_i*p_j))
-	m_i_not_j = p_i_not_j * log(p_i_not_j/(p_i*(1-p_j)))
-	m_not_i_j = p_not_i_j * log(p_not_i_j/((1-p_i)*p_j))
-	m_not_i_not_j = p_not_i_not_j * log(p_not_i_not_j/((1-p_i)*(1-p_j)))
-	
-	# NOTE: in our case p_i and p_j are positive numbers in (0,1) with intervals excluded, 
-	# hence, the denominator of the scores cannot be 0. 
-	# the numerators are numbers in [0,1). So the fraction is a number between [0,Inf). 
-	# specifically the log of the fraction is a number in [-Inf,Inf) with Inf excluded and 
-	# -Inf when any numerator is 0. 
-	# BUT: when numerator is 0, the multiplier of the logarithm is 0 hence givine 0*(-Inf) = NA
-	# SO: we will replace any NA with 0 (multiplier wins over logarithm)
-	if(is.na(m_i_j)) {
-		m_i_j = 0
-	}
-	if(is.na(m_i_not_j)) {
-		m_i_not_j = 0
-	}
-	if(is.na(m_not_i_j)) {
-		m_not_i_j = 0
-	}
-	if(is.na(m_not_i_not_j)) {
-		m_not_i_not_j = 0
-	}
-	
-	# compute the complete mutual information
-	mutual_information = m_i_j + m_i_not_j + m_not_i_j + m_not_i_not_j
-	
-	return(mutual_information)
+    
+    # compute the needed measures
+    p_i_not_j = p_i - p_i_j
+    p_not_i_j = p_j - p_i_j
+    p_not_i_not_j = 1 - p_i - p_j + p_i_j
+    
+    # compute the 4 terms of mutual information
+    m_i_j = p_i_j * log(p_i_j/(p_i*p_j))
+    m_i_not_j = p_i_not_j * log(p_i_not_j/(p_i*(1-p_j)))
+    m_not_i_j = p_not_i_j * log(p_not_i_j/((1-p_i)*p_j))
+    m_not_i_not_j = p_not_i_not_j * log(p_not_i_not_j/((1-p_i)*(1-p_j)))
+    
+    # NOTE: in our case p_i and p_j are positive numbers in (0,1) with intervals excluded, 
+    # hence, the denominator of the scores cannot be 0. 
+    # the numerators are numbers in [0,1). So the fraction is a number between [0,Inf). 
+    # specifically the log of the fraction is a number in [-Inf,Inf) with Inf excluded and 
+    # -Inf when any numerator is 0. 
+    # BUT: when numerator is 0, the multiplier of the logarithm is 0 hence givine 0*(-Inf) = NA
+    # SO: we will replace any NA with 0 (multiplier wins over logarithm)
+    if(is.nan(m_i_j)) {
+        m_i_j = 0
+    }
+    if(is.nan(m_i_not_j)) {
+        m_i_not_j = 0
+    }
+    if(is.nan(m_not_i_j)) {
+        m_not_i_j = 0
+    }
+    if(is.nan(m_not_i_not_j)) {
+        m_not_i_not_j = 0
+    }
+    
+    # compute the complete mutual information
+    mutual_information = m_i_j + m_i_not_j + m_not_i_j + m_not_i_not_j
+    
+    return(mutual_information)
 }
 
 

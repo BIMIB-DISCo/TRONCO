@@ -60,7 +60,7 @@ bootstrap <- function(reconstruction,
         min.stat = parameters$min.stat
         boot.seed = parameters$boot.seed
         if(type == 'EDMONDS') {
-        	score.edmonds = parameters$score
+            score.edmonds = parameters$score
         }
     }
 

@@ -233,7 +233,7 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
                         # I choose one direction randomly
                         # by keeping only the edge from the lower to the higher positioned node
                         if(i<j) {
-                        	invalid.events = rbind(invalid.events,t(c(i,j)))
+                            invalid.events = rbind(invalid.events,t(c(i,j)))
                         }
                         
                     }

@@ -173,34 +173,34 @@ perform.likelihood.fit.mle = function(dataset,
     curr_adj.matrix.fit = adj.matrix.fit
     visited_nodes = as.vector(curr_nodes)
     while(length(curr_nodes)>0) {
-    	
-    	new_curr_nodes = NULL
-    	
-    	# visit the curr_nodes
-    	for (i in curr_nodes) {
-    		
-    		# get the candidate parents of i
-    		curr_parents = as.vector(which(adj.matrix[,i] == 1))
-    		
-    		# if I have more then one valid parent
+        
+        new_curr_nodes = NULL
+        
+        # visit the curr_nodes
+        for (i in curr_nodes) {
+            
+            # get the candidate parents of i
+            curr_parents = as.vector(which(adj.matrix[,i] == 1))
+            
+            # if I have more then one valid parent
             if (length(curr_parents) > 0) {
-            	
-            	# find the best parent
+                
+                # find the best parent
                 curr_best_parent = -1
                 curr_best_score = NA
                 
                 for (j in curr_parents) {
-                	
-                	# consider the network augmenting the current one with the edge j --> i
-                	tmp_adj.matrix.fit =  curr_adj.matrix.fit
-                	tmp_adj.matrix.fit[j,i] = 1
-                	colnames(tmp_adj.matrix.fit) = colnames(data)
-                	rownames(tmp_adj.matrix.fit) = colnames(data)
-                	
-                	# create a bnlearn object from tmp_adj.matrix.fit
-                	curr.bayes.net = NULL
-                	curr.bayes.net$data = data
-                	net = empty.graph(colnames(tmp_adj.matrix.fit))
+                    
+                    # consider the network augmenting the current one with the edge j --> i
+                    tmp_adj.matrix.fit =  curr_adj.matrix.fit
+                    tmp_adj.matrix.fit[j,i] = 1
+                    colnames(tmp_adj.matrix.fit) = colnames(data)
+                    rownames(tmp_adj.matrix.fit) = colnames(data)
+                    
+                    # create a bnlearn object from tmp_adj.matrix.fit
+                    curr.bayes.net = NULL
+                    curr.bayes.net$data = data
+                    net = empty.graph(colnames(tmp_adj.matrix.fit))
                     for (from in rownames(tmp_adj.matrix.fit)) {
                         for (to in colnames(tmp_adj.matrix.fit)) {
                             if (tmp_adj.matrix.fit[from, to] == 1) {
@@ -227,58 +227,58 @@ perform.likelihood.fit.mle = function(dataset,
                 
                 # set the current best parent in the new list of curr nodes
                 new_curr_nodes = c(new_curr_nodes,curr_best_parent)
-            	
+                
             }
             
-    	}
-    	
-    	# find out the nodes to still be visited within new_curr_nodes
-    	new_curr_nodes = unique(new_curr_nodes)
-    	new_idx = which(!(new_curr_nodes%in%visited_nodes))
-    	if(length(new_idx)>0) {
-    		new_curr_nodes = new_curr_nodes[new_idx]
-    	}
-    	else {
-    		new_curr_nodes = NULL
-    	}
-    	
-    	# set the list of the next curr_nodes
-    	curr_nodes = new_curr_nodes
-    	
-    	# update the list of visited nodes
-    	visited_nodes = c(visited_nodes,curr_nodes)
-    	
+        }
+        
+        # find out the nodes to still be visited within new_curr_nodes
+        new_curr_nodes = unique(new_curr_nodes)
+        new_idx = which(!(new_curr_nodes%in%visited_nodes))
+        if(length(new_idx)>0) {
+            new_curr_nodes = new_curr_nodes[new_idx]
+        }
+        else {
+            new_curr_nodes = NULL
+        }
+        
+        # set the list of the next curr_nodes
+        curr_nodes = new_curr_nodes
+        
+        # update the list of visited nodes
+        visited_nodes = c(visited_nodes,curr_nodes)
+        
     }
     
     # consider any not visited node
     not_visited = which(!((1:nrow(adj.matrix))%in%visited_nodes))
     
     if(length(not_visited)>0) {
-    	
-    	for (i in not_visited) {
-    		
-    		# get the candidate parents of i
-    		curr_parents = as.vector(which(adj.matrix[,i] == 1))
-    		
-    		# if I have more then one valid parent
+        
+        for (i in not_visited) {
+            
+            # get the candidate parents of i
+            curr_parents = as.vector(which(adj.matrix[,i] == 1))
+            
+            # if I have more then one valid parent
             if (length(curr_parents) > 0) {
-            	
-            	# find the best parent
+                
+                # find the best parent
                 curr_best_parent = -1
                 curr_best_score = NA
                 
                 for (j in curr_parents) {
-                	
-                	# consider the network augmenting the current one with the edge j --> i
-                	tmp_adj.matrix.fit =  curr_adj.matrix.fit
-                	tmp_adj.matrix.fit[j,i] = 1
-                	colnames(tmp_adj.matrix.fit) = colnames(data)
-                	rownames(tmp_adj.matrix.fit) = colnames(data)
-                	
-                	# create a bnlearn object from tmp_adj.matrix.fit
-                	curr.bayes.net = NULL
-                	curr.bayes.net$data = data
-                	net = empty.graph(colnames(tmp_adj.matrix.fit))
+                    
+                    # consider the network augmenting the current one with the edge j --> i
+                    tmp_adj.matrix.fit =  curr_adj.matrix.fit
+                    tmp_adj.matrix.fit[j,i] = 1
+                    colnames(tmp_adj.matrix.fit) = colnames(data)
+                    rownames(tmp_adj.matrix.fit) = colnames(data)
+                    
+                    # create a bnlearn object from tmp_adj.matrix.fit
+                    curr.bayes.net = NULL
+                    curr.bayes.net$data = data
+                    net = empty.graph(colnames(tmp_adj.matrix.fit))
                     for (from in rownames(tmp_adj.matrix.fit)) {
                         for (to in colnames(tmp_adj.matrix.fit)) {
                             if (tmp_adj.matrix.fit[from, to] == 1) {
@@ -302,11 +302,11 @@ perform.likelihood.fit.mle = function(dataset,
                 
                 # set the best parent in the inferred matrix
                 curr_adj.matrix.fit[curr_best_parent,i] = 1
-            	
+                
             }
             
-    	}
-    	
+        }
+        
     }
     
     # perform the likelihood fit if requested
