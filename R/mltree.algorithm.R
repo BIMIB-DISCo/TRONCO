@@ -60,15 +60,15 @@ mltree.fit <- function(dataset,
         if (!silent)
             cat('*** Bootstraping selective advantage scores (prima facie).\n')
         prima.facie.parents =
-            get.prima.facie.parents.do.boot(dataset,
-                                            NA,
-                                            nboot,
-                                            pvalue,
-                                            adj.matrix,
-                                            min.boot,
-                                            min.stat,
-                                            boot.seed,
-                                            silent);
+            madonna.troia.wrapper(dataset,
+                            NA,
+                            nboot,
+                            pvalue,
+                            adj.matrix,
+                            min.boot,
+                            min.stat,
+                            boot.seed,
+                            silent);
     } else {
         if (!silent)
             cat('*** Computing selective advantage scores (prima facie).\n')
@@ -90,6 +90,15 @@ mltree.fit <- function(dataset,
     }
     adj.matrix.prima.facie =
         prima.facie.parents$adj.matrix$adj.matrix.acyclic
+
+    matriciona = adj.matrix.prima.facie
+    for (i in 1:nrow(matriciona)) {
+        for (j in 1:ncol(matriciona)) {
+            if (i != j) {
+                matriciona[[i,j]] = 1
+            }
+        }
+    }
 
     ## Perform the likelihood fit with the required strategy.
     
@@ -138,6 +147,7 @@ mltree.fit <- function(dataset,
              adj.matrix.prima.facie = adj.matrix.prima.facie,
              confidence = prima.facie.parents$pf.confidence,
              model = model,
+             tree.list = best.parents$tree.list,
              parameters = parameters,
              execution.time = (proc.time() - ptm))
     topology = rename.reconstruction.fields(topology, dataset)
@@ -179,23 +189,34 @@ compute.mltree = function(dataset,
     indexes = eval(parse(text=com))
 
 
+    #print(indexes)
+
     # Generate all matrices - amazing
     candidates = Reduce(
         append,
         apply(indexes, 1, function(x) {
-            M = matrix(0L, nrow=ncol(adj.matrix.prima.facie), ncol = ncol(adj.matrix.prima.facie))
+            M = matrix(0, nrow=ncol(adj.matrix.prima.facie), ncol = ncol(adj.matrix.prima.facie))
             rownames(M) = colnames(dataset)
             colnames(M) = colnames(dataset)
             for(i in 1:nrow(M)) {
-                M[x[i], i] = 1L
+                M[x[i], i] = 1
             }
-            return(list(M))
+            #print(M)
+            M.graph = graph.adjacency(M)
+            #print(is.dag(M.graph))
+            if (is.dag(M.graph)) {
+                return(list(M))
+            } else {
+                return(list())
+            }
         })
     )
     cat("Total number of prima facie trees: ", length(candidates), '\n')
 
-    MAXRESULTS = 10 # output results -- full posterior by setting it to NUMTESTS
+    MAXRESULTS = 50 # output results -- full posterior by setting it to NUMTESTS
     NUMTESTS = length(candidates)
+
+    tree.list = NULL
 
     if (NUMTESTS > 1) {
         # empty networks
@@ -216,17 +237,226 @@ compute.mltree = function(dataset,
 
         best.net = net[[1]]
         adj.matrix.fit = amat(best.net)
+        for (i in 1:length(net)) {
+            tree.list[[i]] = amat(net[[i]])
+        }
+
+
     } else {
         adj.matrix.fit = candidates[[1]]
+        tree.list[[1]] = candidates[[1]]
     }
     
     ## Save the results and return them.
     adj.matrix =
         list(adj.matrix.pf = adj.matrix.prima.facie,
              adj.matrix.fit = adj.matrix.fit)
-    topology = list(adj.matrix = adj.matrix)
+    topology = list(adj.matrix = adj.matrix, tree.list = tree.list)
 
     return(topology)
 }
 
 #### end of file -- mltree.algorithm.R
+
+
+
+madonna.troia.wrapper <- function(dataset,
+                                            hypotheses,
+                                            nboot,
+                                            pvalue,
+                                            adj.matrix,
+                                            min.boot,
+                                            min.stat,
+                                            boot.seed,
+                                            silent ) {
+
+    ## Perform a robust estimation of the scores using rejection
+    ## sampling bootstrap.
+    
+    scores =
+        get.bootstapped.scores(dataset,
+                               nboot,adj.matrix,
+                               min.boot,
+                               min.stat,
+                               boot.seed,
+                               silent);
+
+    ## Compute the observed and joint probabilities as the mean of the
+    ## bootstrapped values.
+    
+    marginal.probs = array(-1, dim = c(ncol(dataset), 1));
+    joint.probs = array(-1, dim = c(ncol(dataset), ncol(dataset)));
+    for (i in 1:ncol(dataset)) {
+        marginal.probs[i, 1] =
+            mean(unlist(scores$marginal.probs.distributions[i, 1]));
+        for (j in i:ncol(dataset)) {
+            joint.probs[i,j] =
+                mean(unlist(scores$joint.probs.distributions[i, j]));
+            if (i != j) {
+                joint.probs[j, i] = joint.probs[i, j];
+            }
+        }
+    }
+
+    ## Remove all the edges not representing a prima facie cause.
+    
+    prima.facie.topology =
+        madonna.troia(adj.matrix,
+                                       hypotheses,
+                                       scores$marginal.probs.distributions,
+                                       scores$prima.facie.model.distributions,
+                                       scores$prima.facie.null.distributions,
+                                       pvalue,
+                                       dataset,
+                                       marginal.probs,joint.probs,
+                                       silent);
+
+    ## Save the results and return them.
+    
+    prima.facie.parents <-
+        list(marginal.probs = marginal.probs,
+             joint.probs = joint.probs,
+             adj.matrix = prima.facie.topology$adj.matrix,
+             pf.confidence = prima.facie.topology$edge.confidence.matrix);
+    return(prima.facie.parents);
+}
+
+
+
+
+
+
+# select the best set of prima facie causes per node
+# @title get.prima.facie.causes.do.boot
+# @param adj.matrix adjacency matrix of the initially valid edges
+# @param hypotheses hypotheses to be considered
+# @param marginal.probs.distributions distributions of the bootstrapped marginal probabilities
+# @param prima.facie.model.distributions distributions of the prima facie model
+# @param prima.facie.null.distributions distributions of the prima facie null
+# @param pvalue minimum pvalue for the Mann-Whitney U tests to be significant
+# @param dataset a valid dataset
+# @param marginal.probs observed marginal probabilities
+# @param joint.probs observed joint probabilities
+# @param silent Should I be verbose?
+# @return prima.facie.topology: list describing the topology of the prima facie causes
+#
+madonna.troia <- function(adj.matrix,
+                                           hypotheses,
+                                           marginal.probs.distributions,
+                                           prima.facie.model.distributions,
+                                           prima.facie.null.distributions,
+                                           pvalue,
+                                           dataset,
+                                           marginal.probs,
+                                           joint.probs,
+                                           silent = FALSE) {
+
+    ## Structure to save the confidence of the edges.
+    
+    edge.confidence.matrix <- array(list(), c(3, 1));
+    edge.confidence.matrix[[1,1]] =
+        array(NA, c(ncol(prima.facie.model.distributions),
+                    ncol(prima.facie.model.distributions)));
+    edge.confidence.matrix[[2,1]] =
+        array(NA, c(ncol(prima.facie.model.distributions),
+                    ncol(prima.facie.model.distributions)));
+    edge.confidence.matrix[[3,1]] =
+        array(NA, c(ncol(prima.facie.model.distributions),
+                    ncol(prima.facie.model.distributions)));
+
+    ## Verify Suppes' conditions for prima facie causes;
+    ## i.e., i --> j implies P(i)>P(j) (temporal priority) and
+    ## P(j|i)>P(j|not i) (probability raising).
+    
+    ## Verify the temporal priority condition.
+    
+    if (!silent)
+        cat(paste0('\tEvaluating \"temporal priority\" (Wilcoxon, p-value ',
+                   pvalue,
+                   ')\n'));
+    temporal.priority =
+        verify.temporal.priority.do.boot(marginal.probs.distributions,
+                                         pvalue,adj.matrix,
+                                         edge.confidence.matrix);
+
+    ## Verify the probability raising condition.
+    
+    if (!silent)
+        cat(paste0('\tEvaluating \"probability raising\" (Wilcoxon, p-value ',
+                   pvalue,
+                   ')\n'));
+    probability.raising =
+        verify.probability.raising.do.boot(prima.facie.model.distributions,
+                                           prima.facie.null.distributions,
+                                           pvalue,temporal.priority$adj.matrix,temporal.priority$edge.confidence.matrix);
+
+    ## Perform the hypergeometric test for each pair of events.
+    
+    for (i in 1:ncol(adj.matrix)) {
+        for (j in i:nrow(adj.matrix)) {
+
+            ## The diagonal (self cause) and the other invalid edges
+            ## have not to be considered.
+            
+            if (adj.matrix[i, j] != 0 || adj.matrix[j, i] != 0) {
+                
+                ## Compute the confidence by hypergeometric test for
+                ## both j --> i and i --> j.
+                
+                probability.raising$edge.confidence.matrix[[3, 1]][i, j] =
+                    phyper(joint.probs[i, j] * nrow(dataset),
+                           marginal.probs[i] * nrow(dataset),
+                           nrow(dataset) - marginal.probs[i] * nrow(dataset),
+                           marginal.probs[j] * nrow(dataset),
+                           lower.tail = FALSE);
+                probability.raising$edge.confidence.matrix[[3, 1]][j, i] =
+                    probability.raising$edge.confidence.matrix[[3, 1]][i, j];
+            } else {
+                probability.raising$edge.confidence.matrix[[3, 1]][i, j] = 1;
+                probability.raising$edge.confidence.matrix[[3, 1]][j, i] = 1;
+            }
+        }
+    }
+
+    ## Remove any cycle.
+    
+    #adj.matrix.cyclic = probability.raising$adj.matrix
+    adj.matrix.cyclic = temporal.priority$adj.matrix
+#    if (length(temporal.priority$not.ordered) > 0
+#        || !is.na(hypotheses[1])) {
+#
+#        if (!silent)
+#            cat('*** Loop detection found loops to break.\n')
+#
+#        weights.temporal.priority =
+#            probability.raising$edge.confidence.matrix[[1, 1]] +
+#                probability.raising$edge.confidence.matrix[[2, 1]];
+#        weights.matrix =
+#            probability.raising$edge.confidence.matrix[[2, 1]] +
+#                probability.raising$edge.confidence.matrix[[3, 1]];
+#        acyclic.topology =
+#            remove.cycles(probability.raising$adj.matrix,
+#                          weights.temporal.priority,
+#                          weights.matrix,
+#                          temporal.priority$not.ordered,
+#                          hypotheses,
+#                          silent);
+#        adj.matrix.acyclic = acyclic.topology$adj.matrix;
+#
+#    } else {
+#        adj.matrix.acyclic = probability.raising$adj.matrix;
+#    }
+
+    adj.matrix.acyclic = temporal.priority$adj.matrix
+
+    adj.matrix =
+        list(adj.matrix.cyclic = adj.matrix.cyclic,
+             adj.matrix.acyclic = adj.matrix.acyclic)
+
+    ## Save the results and return them.
+    
+    prima.facie.topology =
+        list(adj.matrix = adj.matrix,
+             edge.confidence.matrix = probability.raising$edge.confidence.matrix);
+    return(prima.facie.topology);
+}

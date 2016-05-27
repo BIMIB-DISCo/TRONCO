@@ -400,6 +400,7 @@ tronco.mst.edmonds <- function(data,
     ## Structure to save the results.
     results = data
     results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
+    results$adj.matrix.prima.facie.cyclic = reconstruction$adj.matrix.prima.facie.cyclic
     results$confidence = reconstruction$confidence
     results$model = reconstruction$model
     results$parameters = reconstruction$parameters
@@ -781,6 +782,7 @@ tronco.mltree <- function(data,
     results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
     results$confidence = reconstruction$confidence
     results$model = reconstruction$model
+    results$tree.list = reconstruction$tree.list
     results$parameters = reconstruction$parameters
     results$execution.time = reconstruction$execution.time
 

@@ -467,6 +467,20 @@ get.bootstapped.scores <- function(dataset,
         cat('\n')
     }
 
+    dev.new()
+    print('prima.facie.model.distributions')
+    print(prima.facie.model.distributions)
+    print(prima.facie.model.distributions[[2,1]])
+    hist(prima.facie.model.distributions[[2,1]])
+    
+    dev.new()
+    print('prima.facie.null.distributions')
+    print(prima.facie.null.distributions)
+    print(prima.facie.null.distributions[[2,1]])
+    hist(prima.facie.null.distributions[[2,1]])
+
+    stop()
+
     ## Save the results and return them.
     scores =
         list(marginal.probs.distributions = marginal.probs.distributions,
@@ -1348,6 +1362,7 @@ verify.temporal.priority.do.boot <- function(marginal.probs.distributions,
                 ## Temporal priority condition: if P(i) > P(j) the edge
                 ## i --> j is valid for temporal priority.
                 
+            
                 ## Test i --> j
                 first.pvalue.i.j = suppressWarnings(
                     wilcox.test(unlist(marginal.probs.distributions[i, 1]),
