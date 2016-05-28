@@ -520,15 +520,32 @@ get.dag.scores <- function( dataset, adj.matrix, epos, eneg ) {
         }
     }
     
+    # minimum probability to be represented in the dataset
+    minimum.prob = max(.Machine$double.eps,(1/nrow(dataset))/2)
+    
     ## marginal.probs is an array with the marginal probabilities.
     
     marginal.probs <-
         array(as.matrix(diag(pair.count) / nrow(dataset)),
-              dim = c(ncol(dataset), 1));
-    
+              dim = c(ncol(dataset), 1))
+              
     ## joint.probs is an array with the joint observed probabilities.
     
-    joint.probs <- as.matrix(pair.count / nrow(dataset));
+    joint.probs <- as.matrix(pair.count / nrow(dataset))
+    
+    # apply the noise model to estimate the theoretical joint.probs
+    for (p1 in 1:nrow(joint.probs)) {
+        for (p2 in p1:ncol(joint.probs)) {
+            estimated.prob = estimate.theoretical.probs(x,type="joint",prob1=marginal.probs[p1],prob2=marginal.probs[p2],
+                                                        min.prob=minimum.prob,epos=epos,eneg=eneg)
+            joint.probs[p1,p2] = estimated.prob
+            joint.probs[p2,p1] = estimated.prob
+        }
+    }
+    
+    # apply the noise model to estimate the theoretical marginal.probs
+    marginal.probs = sapply(marginal.probs,FUN=function(x) { return(estimate.theoretical.probs(x,type="marginal",min.prob=minimum.prob,
+                                                                                               epos=epos,eneg=eneg)) })
 
     ## Compute the prima facie scores based on the probability raising
     ## model.
@@ -576,6 +593,31 @@ get.dag.scores <- function( dataset, adj.matrix, epos, eneg ) {
              prima.facie.model = prima.facie.model,
              prima.facie.null = prima.facie.null);
     return(scores);
+}
+
+# apply the noise model to estimate the either the theoretical marginal or joint probability
+estimate.theoretical.probs = function( observed.prob, type, prob1 = NA, prob2 = NA, min.prob, epos, eneg ) {
+    
+    estimated.prob = NA
+    
+    # estimate the probability
+    if(type=="marginal") {
+        estimated.prob = (observed.prob - epos) / (1 - epos - eneg)
+    }
+    else if(type=="joint") {
+        estimated.prob = (observed.prob - epos * (prob1 + prob2 - epos)) / ((1 - epos - eneg)^2)
+    }
+    
+    # set a minimum/maximum value for the probability
+    if(estimated.prob<min.prob) {
+        estimated.prob = min.prob
+    }
+    else if(estimated.prob>(1-min.prob)) {
+        estimated.prob = (1-min.prob)
+    }
+    
+    return(estimated.prob)
+    
 }
 
 
