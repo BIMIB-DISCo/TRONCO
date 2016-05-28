@@ -51,7 +51,7 @@ bootstrap <- function(reconstruction,
 
     ## Get other parameters.
 
-    if (type %in% c('CAPRI', 'EDMONDS', 'MLE', 'CHOW_LIU', 'PRIM')) {
+    if (type %in% c('CAPRI', 'EDMONDS', 'GABOW', 'CHOW_LIU', 'PRIM')) {
         regularization = parameters$regularization
         do.boot = parameters$do.boot
         nboot.algorithm = parameters$nboot
@@ -62,6 +62,8 @@ bootstrap <- function(reconstruction,
         if(type == 'EDMONDS') {
             score.edmonds = parameters$score
         }
+        epos = parameters$error.rates$epos
+        eneg = parameters$error.rates$eneg
     }
 
     ## Start the clock to measure the execution time
@@ -155,7 +157,9 @@ bootstrap <- function(reconstruction,
                              min.boot,
                              min.stat,
                              boot.seed,
-                             silent = TRUE)
+                             silent = TRUE,
+                             epos = epos,
+                             eneg = eneg)
         } else if (type == 'CAPRESE') {
             bootstrapped.topology =
                 tronco.caprese(curr.reconstruction,
@@ -171,7 +175,9 @@ bootstrap <- function(reconstruction,
                                    min.boot,
                                    min.stat,
                                    boot.seed,
-                                   silent = TRUE)
+                                   silent = TRUE,
+                                   epos = epos,
+                                   eneg = eneg)
         } else if (type == 'PRIM') {
             bootstrapped.topology =
                 tronco.mst.prim(curr.reconstruction,
@@ -182,7 +188,9 @@ bootstrap <- function(reconstruction,
                                 min.boot,
                                 min.stat,
                                 boot.seed,
-                                silent = TRUE)
+                                silent = TRUE,
+                                epos = epos,
+                                eneg = eneg)
         } else if (type == 'EDMONDS') {
             bootstrapped.topology =
                 tronco.mst.edmonds(curr.reconstruction,
@@ -194,10 +202,12 @@ bootstrap <- function(reconstruction,
                                    min.boot,
                                    min.stat,
                                    boot.seed,
-                                   silent = TRUE)
-        } else if (type == 'MLE') {
+                                   silent = TRUE,
+                                   epos = epos,
+                                   eneg = eneg)
+        } else if (type == 'GABOW') {
             bootstrapped.topology =
-                tronco.mst.mle(curr.reconstruction,
+                tronco.mst.gabow(curr.reconstruction,
                                    regularization,
                                    do.boot,
                                    nboot.algorithm,
@@ -205,7 +215,9 @@ bootstrap <- function(reconstruction,
                                    min.boot,
                                    min.stat,
                                    boot.seed,
-                                   silent = TRUE)
+                                   silent = TRUE,
+                                   epos = epos,
+                                   eneg = eneg)
         }
             
         curr.reconstruction = bootstrapped.topology

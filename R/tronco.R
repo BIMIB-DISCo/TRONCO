@@ -113,6 +113,8 @@ tronco.caprese <- function(data,
 #' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
 #' @param silent A parameter to disable/enable verbose messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
 #' @importFrom bnlearn hc tabu empty.graph set.arc
@@ -129,7 +131,9 @@ tronco.capri <- function(data,
                          min.boot = 3, 
                          min.stat = TRUE, 
                          boot.seed = NULL, 
-                         silent = FALSE ) {
+                         silent = FALSE,
+                         epos = 0.0,
+                         eneg = 0.0 ) {
 
     ## Check for the inputs to be correct.
     
@@ -211,7 +215,9 @@ tronco.capri <- function(data,
                   min.boot = min.boot,
                   min.stat = min.stat,
                   boot.seed = boot.seed,
-                  silent = silent);
+                  silent = silent,
+                  epos = epos,
+                  eneg = eneg)
 
     ## Structure to save the results.
     
@@ -293,6 +299,8 @@ tronco.capri <- function(data,
 #' is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
 #' @param silent A parameter to disable/enable verbose messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.mst.edmonds
 #' @importFrom bnlearn hc tabu empty.graph set.arc
@@ -310,7 +318,9 @@ tronco.mst.edmonds <- function(data,
                                min.boot = 3, 
                                min.stat = TRUE, 
                                boot.seed = NULL, 
-                               silent = FALSE ) {
+                               silent = FALSE,
+                               epos = 0.0,
+                               eneg = 0.0 ) {
 
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
@@ -395,12 +405,13 @@ tronco.mst.edmonds <- function(data,
                     min.boot = min.boot,
                     min.stat = min.stat,
                     boot.seed = boot.seed,
-                    silent = silent)
+                    silent = silent,
+                    epos = epos,
+                    eneg = eneg)
 
     ## Structure to save the results.
     results = data
     results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
-    results$adj.matrix.prima.facie.cyclic = reconstruction$adj.matrix.prima.facie.cyclic
     results$confidence = reconstruction$confidence
     results$model = reconstruction$model
     results$parameters = reconstruction$parameters
@@ -469,14 +480,14 @@ tronco.mst.edmonds <- function(data,
 }
 
 
-#' Reconstruct a progression model using MLE algorithm combined 
+#' Reconstruct a progression model using Gabow algorithm combined 
 #' with probabilistic causation
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.mle(test_dataset_no_hypos, nboot = 1)
+#' recon = tronco.mst.gabow(test_dataset_no_hypos, nboot = 1)
 #'
-#' @title tronco mst mle
+#' @title tronco mst gabow
 #' @param data A TRONCO compliant dataset.
 #' @param regularization Select the regularization for the 
 #' likelihood estimation, e.g., BIC, AIC. 
@@ -493,6 +504,8 @@ tronco.mst.edmonds <- function(data,
 #' is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
 #' @param silent A parameter to disable/enable verbose messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.mst.mle
 #' @importFrom bnlearn hc tabu empty.graph set.arc
@@ -501,7 +514,7 @@ tronco.mst.edmonds <- function(data,
 #### @importFrom infotheo mutinformation
 #' @importFrom stats phyper AIC BIC logLik
 #' 
-tronco.mst.mle <- function(data,
+tronco.mst.gabow <- function(data,
                                regularization = "no_reg", 
                                do.boot = TRUE, 
                                nboot = 100, 
@@ -509,7 +522,9 @@ tronco.mst.mle <- function(data,
                                min.boot = 3, 
                                min.stat = TRUE, 
                                boot.seed = NULL, 
-                               silent = FALSE ) {
+                               silent = FALSE,
+                               epos = 0.0,
+                               eneg = 0.0 ) {
 
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
@@ -539,7 +554,7 @@ tronco.mst.mle <- function(data,
     ## check if there are hypotheses
 
     if (npatterns(data) > 0) {
-        warning("Patters found in input for tronco.mst.mle\n")
+        warning("Patters found in input for tronco.mst.gabow\n")
     }
 
     ## Reconstruct the reconstruction with MLE.
@@ -563,7 +578,7 @@ tronco.mst.mle <- function(data,
             nsamples(data),
             ', m = ',
             nevents(data), '.\n',
-            '\tAlgorithm: MLE with \"',
+            '\tAlgorithm: Gabow with \"',
             paste0(regularization, collapse = ", "),
             '\" regularization',
             '\tRandom seed: ',
@@ -581,7 +596,7 @@ tronco.mst.mle <- function(data,
     }
 
     reconstruction =
-        mle.fit(data$genotypes,
+        gabow.fit(data$genotypes,
                     regularization = regularization,
                     do.boot = do.boot,
                     nboot = nboot,
@@ -589,7 +604,9 @@ tronco.mst.mle <- function(data,
                     min.boot = min.boot,
                     min.stat = min.stat,
                     boot.seed = boot.seed,
-                    silent = silent)
+                    silent = silent,
+                    epos = epos,
+                    eneg = eneg)
 
     ## Structure to save the results.
     results = data
@@ -604,37 +621,47 @@ tronco.mst.mle <- function(data,
     if (!silent) {
         cat('*** Evaluating BIC / AIC / LogLik informations.\n')
     }
+    
+    search_scores = score
 
     if ("no_reg" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'mle_no_reg')
-        score = logLik(bayes.net$net, data = bayes.net$data)
-        logLik = score
-        results$model$mle_no_reg$score = score
-        results$model$mle_no_reg$logLik = logLik
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model = paste('gabow_no_reg', my_s,sep="_"))
+            score = logLik(bayes.net$net, data = bayes.net$data)
+            logLik = score
+            results$model[[paste('gabow_no_reg', my_s,sep="_")]]$score = score
+            results$model[[paste('gabow_no_reg', my_s,sep="_")]]$logLik = logLik
+        }
     }
     
     if ("loglik" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'mle_loglik')
-        score = logLik(bayes.net$net, data = bayes.net$data)
-        logLik = score
-        results$model$mle_loglik$score = score
-        results$model$mle_loglik$logLik = logLik
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model  = paste('gabow_loglik', my_s,sep="_"))
+            score = logLik(bayes.net$net, data = bayes.net$data)
+            logLik = score
+            results$model[[paste('gabow_loglik', my_s,sep="_")]]$score = score
+            results$model[[paste('gabow_loglik', my_s,sep="_")]]$logLik = logLik
+        }
     }
 
     if ("bic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'mle_bic')
-        score = BIC(bayes.net$net, data = bayes.net$data)
-        logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$mle_bic$score = score
-        results$model$mle_bic$logLik = logLik
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model  = paste('gabow_bic', my_s,sep="_"))
+            score = BIC(bayes.net$net, data = bayes.net$data)
+            logLik = logLik(bayes.net$net, data = bayes.net$data)
+            results$model[[paste('gabow_bic', my_s,sep="_")]]$score = score
+            results$model[[paste('gabow_bic', my_s,sep="_")]]$logLik = logLik
+        }
     }
 
     if ("aic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'mle_aic')
-        score = AIC(bayes.net$net, data = bayes.net$data)
-        logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$mle_aic$score = score
-        results$model$mle_aic$logLik = logLik
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model = paste('gabow_aic', my_s,sep="_"))
+            score = AIC(bayes.net$net, data = bayes.net$data)
+            logLik = logLik(bayes.net$net, data = bayes.net$data)
+            results$model[[paste('gabow_aic', my_s,sep="_")]]$score = score
+            results$model[[paste('gabow_aic', my_s,sep="_")]]$logLik = logLik
+        }
     }
 
     ## the reconstruction has been completed.
@@ -841,6 +868,8 @@ tronco.mltree <- function(data,
 #' sampling.
 #' @param silent A parameter to disable/enable verbose 
 #' messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed 
 #' model
 #' @export tronco.mst.chowliu
@@ -858,7 +887,9 @@ tronco.mst.chowliu <- function(data,
                                min.boot = 3, 
                                min.stat = TRUE, 
                                boot.seed = NULL, 
-                               silent = FALSE ) {
+                               silent = FALSE,
+                               epos = 0.0,
+                               eneg = 0.0 ) {
 
     ## Check for the inputs to be correct.
     
@@ -938,7 +969,9 @@ tronco.mst.chowliu <- function(data,
                   min.boot = min.boot,
                   min.stat = min.stat,
                   boot.seed = boot.seed,
-                  silent = silent);
+                  silent = silent,
+                  epos = epos,
+                  eneg = eneg)
 
     ## Structure to save the results.
     
@@ -1017,6 +1050,8 @@ tronco.mst.chowliu <- function(data,
 #' any sampling is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
 #' @param silent A parameter to disable/enable verbose messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.mst.prim
 #' @importFrom bnlearn hc tabu empty.graph set.arc
@@ -1034,7 +1069,9 @@ tronco.mst.prim <- function(data,
                             min.boot = 3, 
                             min.stat = TRUE, 
                             boot.seed = NULL, 
-                            silent = FALSE ) {
+                            silent = FALSE,
+                            epos = 0.0,
+                            eneg = 0.0 ) {
 
     ## Check for the inputs to be correct.
     
@@ -1114,7 +1151,9 @@ tronco.mst.prim <- function(data,
                  min.boot = min.boot,
                  min.stat = min.stat,
                  boot.seed = boot.seed,
-                 silent = silent);
+                 silent = silent,
+                 epos = epos,
+                 eneg = eneg)
 
     ## Structure to save the results.
     

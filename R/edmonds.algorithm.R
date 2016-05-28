@@ -19,11 +19,13 @@
 # @param min.stat should I keep bootstrapping untill I have nboot valid values?
 # @param boot.seed seed to be used for the sampling
 # @param silent should I be verbose?
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
 # @return topology: the reconstructed tree topology
 #
 edmonds.fit <- function(dataset,
                         regularization = "no_reg",
-                        score = "entropy",
+                        score = "pmi",
                         do.boot = TRUE,
                         nboot = 100,
                         pvalue = 0.05,
@@ -70,7 +72,9 @@ edmonds.fit <- function(dataset,
                                             min.boot,
                                             min.stat,
                                             boot.seed,
-                                            silent);
+                                            silent,
+                                            epos,
+                                            eneg);
     } else {
         if (!silent)
             cat('*** Computing selective advantage scores (prima facie).\n')
@@ -78,7 +82,9 @@ edmonds.fit <- function(dataset,
             get.prima.facie.parents.no.boot(dataset,
                                             NA,
                                             adj.matrix,
-                                            silent);
+                                            silent,
+                                            epos,
+                                            eneg);
     }
 
     ## Add back in any connection invalid for the probability raising
@@ -136,7 +142,8 @@ edmonds.fit <- function(dataset,
              min.boot = min.boot,
              min.stat = min.stat,
              boot.seed = boot.seed,
-             silent = silent);
+             silent = silent,
+             error.rates = list(epos=epos,eneg=eneg));
 
     ## Return the results.
     
@@ -144,7 +151,6 @@ edmonds.fit <- function(dataset,
         list(dataset = dataset,
              hypotheses = NA,
              adj.matrix.prima.facie = adj.matrix.prima.facie,
-             adj.matrix.prima.facie.cyclic = prima.facie.parents$adj.matrix$adj.matrix.cyclic,
              confidence = prima.facie.parents$pf.confidence,
              model = model,
              parameters = parameters,

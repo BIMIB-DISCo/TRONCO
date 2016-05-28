@@ -8,7 +8,7 @@
 #### which accompanies this distribution.
 
 # reconstruct the best topology based on probabilistic causation and maximum likelihood estimation
-# @title mle.fit
+# @title gabow.fit
 # @param dataset a dataset describing a progressive phenomenon
 # @param regularization regularizators to be used for the likelihood fit
 # @param do.boot should I perform bootstrap? Yes if TRUE, no otherwise
@@ -18,9 +18,11 @@
 # @param min.stat should I keep bootstrapping untill I have nboot valid values?
 # @param boot.seed seed to be used for the sampling
 # @param silent should I be verbose?
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
 # @return topology: the reconstructed tree topology
 #
-mle.fit <- function(dataset,
+gabow.fit <- function(dataset,
                         regularization = "no_reg",
                         do.boot = TRUE,
                         nboot = 100,
@@ -28,7 +30,9 @@ mle.fit <- function(dataset,
                         min.boot = 3,
                         min.stat = TRUE,
                         boot.seed = NULL,
-                        silent = FALSE ) {
+                        silent = FALSE,
+                        epos = 0.0,
+                        eneg = 0.0 ) {
 
     ## Start the clock to measure the execution time.
     
@@ -68,7 +72,9 @@ mle.fit <- function(dataset,
                                             min.boot,
                                             min.stat,
                                             boot.seed,
-                                            silent);
+                                            silent,
+                                            epos,
+                                            eneg);
     } else {
         if (!silent)
             cat('*** Computing selective advantage scores (prima facie).\n')
@@ -76,7 +82,9 @@ mle.fit <- function(dataset,
             get.prima.facie.parents.no.boot(dataset,
                                             NA,
                                             adj.matrix,
-                                            silent);
+                                            silent,
+                                            epos,
+                                            eneg);
     }
 
     ## Add back in any connection invalid for the probability raising
@@ -102,7 +110,7 @@ mle.fit <- function(dataset,
         if (!silent)
             cat('*** Performing likelihood-fit with regularization:', reg, '.\n')
         best.parents =
-            perform.likelihood.fit.mle(dataset,
+            perform.likelihood.fit.gabow(dataset,
                                    adj.matrix.prima.facie,
                                    regularization = reg)
 
@@ -113,14 +121,14 @@ mle.fit <- function(dataset,
             best.parents,
             prima.facie.parents)
 
-        model.name = paste('mle', reg, sep='_')
+        model.name = paste('gabow', reg, sep='_')
         model[[model.name]] = reconstructed.model
     }
 
     ## Set the execution parameters.
     
     parameters =
-        list(algorithm = "MLE",
+        list(algorithm = "GABOW",
              regularization = regularization,
              do.boot = do.boot,
              nboot = nboot,
@@ -128,7 +136,8 @@ mle.fit <- function(dataset,
              min.boot = min.boot,
              min.stat = min.stat,
              boot.seed = boot.seed,
-             silent = silent);
+             silent = silent,
+             error.rates = list(epos=epos,eneg=eneg))
 
     ## Return the results.
     
@@ -146,14 +155,14 @@ mle.fit <- function(dataset,
 
 
 # reconstruct the best causal topology by maximum likelihood estimation combined with probabilistic causation
-# @title perform.likelihood.fit.mle
+# @title perform.likelihood.fit.gabow
 # @param dataset a valid dataset
 # @param adj.matrix the adjacency matrix of the prima facie causes
 # @param regularization regularization term to be used in the likelihood fit
 # @param command type of search, either hill climbing (hc) or tabu (tabu)
 # @return topology: the adjacency matrix of both the prima facie and causal topologies
 #
-perform.likelihood.fit.mle = function(dataset,
+perform.likelihood.fit.gabow = function(dataset,
                                           adj.matrix,
                                           regularization,
                                           command = "hc") {
@@ -327,4 +336,4 @@ perform.likelihood.fit.mle = function(dataset,
 }
 
 
-#### end of file -- mle.algorithm.R
+#### end of file -- gabow.algorithm.R
