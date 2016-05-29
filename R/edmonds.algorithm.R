@@ -32,7 +32,9 @@ edmonds.fit <- function(dataset,
                         min.boot = 3,
                         min.stat = TRUE,
                         boot.seed = NULL,
-                        silent = FALSE ) {
+                        silent = FALSE,
+                        epos,
+                        eneg ) {
 
     ## Start the clock to measure the execution time.
     
@@ -127,6 +129,7 @@ edmonds.fit <- function(dataset,
     
             model.name = paste('edmonds', reg, my_score, sep='_')
             model[[model.name]] = reconstructed.model
+            
         }
     }
 

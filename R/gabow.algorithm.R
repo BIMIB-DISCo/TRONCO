@@ -11,6 +11,7 @@
 # @title gabow.fit
 # @param dataset a dataset describing a progressive phenomenon
 # @param regularization regularizators to be used for the likelihood fit
+# @param score the score to be used, could be either pointwise mutual information (pmi) or conditional entropy (entropy)
 # @param do.boot should I perform bootstrap? Yes if TRUE, no otherwise
 # @param nboot integer number (greater than 0) of bootstrap sampling to be performed
 # @param pvalue pvalue for the tests (value between 0 and 1)
@@ -24,6 +25,7 @@
 #
 gabow.fit <- function(dataset,
                         regularization = "no_reg",
+                        score = "pmi",
                         do.boot = TRUE,
                         nboot = 100,
                         pvalue = 0.05,
@@ -103,26 +105,29 @@ gabow.fit <- function(dataset,
     
     model = list();
     for (reg in regularization) {
+        for(my_score in score) {
 
-        ## Perform the likelihood fit with the chosen regularization
-        ## score on the prima facie topology.
-        
-        if (!silent)
-            cat('*** Performing likelihood-fit with regularization:', reg, '.\n')
-        best.parents =
-            perform.likelihood.fit.gabow(dataset,
-                                   adj.matrix.prima.facie,
-                                   regularization = reg)
-
-        ## Set the structure to save the conditional probabilities of
-        ## the reconstructed topology.
-
-        reconstructed.model = create.model(dataset,
-            best.parents,
-            prima.facie.parents)
-
-        model.name = paste('gabow', reg, sep='_')
-        model[[model.name]] = reconstructed.model
+            ## Perform the likelihood fit with the chosen regularization
+            ## score on the prima facie topology.
+            
+            if (!silent)
+                cat('*** Performing likelihood-fit with regularization:', reg, '.\n')
+            best.parents =
+                perform.likelihood.fit.gabow(dataset,
+                                       adj.matrix.prima.facie,
+                                       regularization = reg)
+    
+            ## Set the structure to save the conditional probabilities of
+            ## the reconstructed topology.
+    
+            reconstructed.model = create.model(dataset,
+                best.parents,
+                prima.facie.parents)
+    
+            model.name = paste('gabow', reg, my_score, sep='_')
+            model[[model.name]] = reconstructed.model
+            
+        }
     }
 
     ## Set the execution parameters.
@@ -130,6 +135,7 @@ gabow.fit <- function(dataset,
     parameters =
         list(algorithm = "GABOW",
              regularization = regularization,
+             score = score,
              do.boot = do.boot,
              nboot = nboot,
              pvalue = pvalue,

@@ -316,7 +316,7 @@ tronco.capri <- function(data,
 #' 
 tronco.mst.edmonds <- function(data,
                                regularization = "no_reg", 
-                               score = "entropy", 
+                               score = "pmi", 
                                do.boot = TRUE, 
                                nboot = 100, 
                                pvalue = 0.05, 
@@ -348,8 +348,8 @@ tronco.mst.edmonds <- function(data,
         stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
     }
     
-    if (! all(score %in% c('entropy', 'pmi', 'cpmi'))) {
-        stop("Possible scores are entropy, pmi, cpmi",call. = FALSE);
+    if (! all(score %in% c('pmi', 'entropy', 'cpmi'))) {
+        stop("Possible scores are pmi, entropy or cpmi",call. = FALSE);
     }
     
     if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
@@ -501,6 +501,8 @@ tronco.mst.edmonds <- function(data,
 #' @param data A TRONCO compliant dataset.
 #' @param regularization Select the regularization for the 
 #' likelihood estimation, e.g., BIC, AIC. 
+#' @param score Select the score for the estimation of 
+#' the best tree, e.g., pointwise mutual information (pmi), conditional entropy (entropy). 
 #' @param do.boot A parameter to disable/enable the estimation 
 #' of the error rates give the reconstructed model.
 #' @param nboot Number of bootstrap sampling (with rejection) 
@@ -525,16 +527,17 @@ tronco.mst.edmonds <- function(data,
 #' @importFrom stats phyper AIC BIC logLik
 #' 
 tronco.mst.gabow <- function(data,
-                               regularization = "no_reg", 
-                               do.boot = TRUE, 
-                               nboot = 100, 
-                               pvalue = 0.05, 
-                               min.boot = 3, 
-                               min.stat = TRUE, 
-                               boot.seed = NULL, 
-                               silent = FALSE,
-                               epos = 0.0,
-                               eneg = 0.0 ) {
+                             regularization = "no_reg", 
+                             score = "pmi", 
+                             do.boot = TRUE, 
+                             nboot = 100, 
+                             pvalue = 0.05, 
+                             min.boot = 3, 
+                             min.stat = TRUE, 
+                             boot.seed = NULL, 
+                             silent = FALSE,
+                             epos = 0.0,
+                             eneg = 0.0 ) {
 
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
@@ -555,6 +558,10 @@ tronco.mst.gabow <- function(data,
 
     if (! all(regularization %in% c('no_reg', 'loglik', 'bic', 'aic'))) {
         stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
+    }
+    
+    if (! all(score %in% c('pmi', 'entropy', 'cpmi'))) {
+        stop("Possible scores are pmi, entropy or cpmi",call. = FALSE);
     }
     
     if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
@@ -613,6 +620,7 @@ tronco.mst.gabow <- function(data,
     reconstruction =
         gabow.fit(data$genotypes,
                     regularization = regularization,
+                    score = score,
                     do.boot = do.boot,
                     nboot = nboot,
                     pvalue = pvalue,

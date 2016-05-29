@@ -4,15 +4,19 @@
 \alias{tronco.mst.gabow}
 \title{tronco mst gabow}
 \usage{
-tronco.mst.gabow(data, regularization = "no_reg", do.boot = TRUE,
-  nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE,
-  boot.seed = NULL, silent = FALSE, epos = 0, eneg = 0)
+tronco.mst.gabow(data, regularization = "no_reg", score = "pmi",
+  do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3,
+  min.stat = TRUE, boot.seed = NULL, silent = FALSE, epos = 0,
+  eneg = 0)
 }
 \arguments{
 \item{data}{A TRONCO compliant dataset.}
 
 \item{regularization}{Select the regularization for the 
 likelihood estimation, e.g., BIC, AIC.}
+
+\item{score}{Select the score for the estimation of 
+the best tree, e.g., pointwise mutual information (pmi), conditional entropy (entropy).}
 
 \item{do.boot}{A parameter to disable/enable the estimation 
 of the error rates give the reconstructed model.}
