@@ -517,7 +517,7 @@ tronco.mst.edmonds <- function(data,
 #' @param epos Error rate of false positive errors.
 #' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
-#' @export tronco.mst.mle
+#' @export tronco.mst.gabow
 #' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
