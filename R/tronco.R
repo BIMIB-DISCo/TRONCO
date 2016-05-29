@@ -159,6 +159,11 @@ tronco.capri <- function(data,
     if (! all(regularization %in% c('loglik', 'bic', 'aic'))) {
         stop("Possible regularization are loglik, bic or aic",call. = FALSE);
     }
+    
+    if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
+        stop("The values of the error rates have to be in [0:0.5)!",
+             call. = FALSE)
+    }
 
     ## Check for the input to be compliant.
     
@@ -345,6 +350,11 @@ tronco.mst.edmonds <- function(data,
     
     if (! all(score %in% c('entropy', 'pmi', 'cpmi'))) {
         stop("Possible scores are entropy, pmi, cpmi",call. = FALSE);
+    }
+    
+    if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
+        stop("The values of the error rates have to be in [0:0.5)!",
+             call. = FALSE)
     }
 
     ## Check for the input to be compliant.
@@ -545,6 +555,11 @@ tronco.mst.gabow <- function(data,
 
     if (! all(regularization %in% c('no_reg', 'loglik', 'bic', 'aic'))) {
         stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
+    }
+    
+    if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
+        stop("The values of the error rates have to be in [0:0.5)!",
+             call. = FALSE)
     }
 
     ## Check for the input to be compliant.
@@ -911,6 +926,11 @@ tronco.mst.chowliu <- function(data,
     if (! all(regularization %in% c('loglik','bic', 'aic'))) {
         stop("Possible regularization are loglik, bic or aic",call. = FALSE);
     }
+    
+    if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
+        stop("The values of the error rates have to be in [0:0.5)!",
+             call. = FALSE)
+    }
 
     ## Check for the input to be compliant.
     
@@ -1092,6 +1112,11 @@ tronco.mst.prim <- function(data,
 
     if (! all(regularization %in% c('no_reg','loglik', 'bic', 'aic'))) {
         stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
+    }
+    
+    if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
+        stop("The values of the error rates have to be in [0:0.5)!",
+             call. = FALSE)
     }
 
     ## Check for the input to be compliant.
