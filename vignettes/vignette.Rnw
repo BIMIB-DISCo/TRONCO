@@ -1296,7 +1296,7 @@ Finally we also privede the possibility of exporting the inferred model to {\tt 
 
 <<graphml, fig.show='hide'>>=
 export.graphml(model.boot,
-	file = 'graph.gml',
+    file = 'graph.gml',
     fontsize = 12, 
     scale.nodes = .6, 
     height.logic = 0.25)

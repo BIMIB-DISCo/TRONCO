@@ -225,4 +225,3 @@ context("enforce.string")
 test_that("enforce.string return a string genotypes", {
     expect_equal(length(enforce.string(gistic_model_capri)), 9)
 })
-
