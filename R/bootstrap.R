@@ -208,17 +208,17 @@ bootstrap <- function(reconstruction,
         } else if (type == 'GABOW') {
             bootstrapped.topology =
                 tronco.mst.gabow(curr.reconstruction,
-                                   regularization,
-                                   score.param,
-                                   do.boot,
-                                   nboot.algorithm,
-                                   pvalue,
-                                   min.boot,
-                                   min.stat,
-                                   boot.seed,
-                                   silent = TRUE,
-                                   epos,
-                                   eneg)
+                                 regularization,
+                                 score.param,
+                                 do.boot,
+                                 nboot.algorithm,
+                                 pvalue,
+                                 min.boot,
+                                 min.stat,
+                                 boot.seed,
+                                 silent = TRUE,
+                                 epos,
+                                 eneg)
         }
             
         curr.reconstruction = bootstrapped.topology

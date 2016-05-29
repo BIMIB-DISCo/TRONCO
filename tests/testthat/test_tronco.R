@@ -1,4 +1,3 @@
-
 data(test_dataset)
 data(test_dataset_no_hypos)
 
@@ -80,11 +79,11 @@ test_that("tronco gabow is working", {
     expect_output(tronco.mst.gabow(test_dataset_no_hypos,
         nboot = 1,
         regularization = c('no_reg', 'loglik', 'bic', 'aic')),
-    "GABOW")
+    "Gabow")
     expect_output(tronco.mst.gabow(test_dataset_no_hypos,
         nboot = 1,
         boot.seed = 1),
-    "GABOW")
+    "Gabow")
     expect_warning(tronco.mst.gabow(test_dataset,
         nboot = 1))
     expect_error(tronco.mst.gabow(NULL))
