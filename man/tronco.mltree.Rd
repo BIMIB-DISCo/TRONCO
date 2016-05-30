@@ -41,10 +41,4 @@ A TRONCO compliant object with reconstructed model
 Reconstruct a progression model using MLTREE algorithm combined 
 with probabilistic causation
 }
-\examples{
-data = matrix(sample(0:1, 333*6, replace=TRUE),333,6)
-data = import.genotypes(data)
-recon = tronco.mltree(data)
-
-}
 
