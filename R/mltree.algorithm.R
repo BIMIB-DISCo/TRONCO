@@ -274,12 +274,14 @@ madonna.troia.wrapper <- function(dataset,
     ## sampling bootstrap.
     
     scores =
-        get.bootstapped.scores(dataset,
+        get.bootstrapped.scores(dataset,
                                nboot,adj.matrix,
                                min.boot,
                                min.stat,
                                boot.seed,
-                               silent);
+                               silent,
+                               0.0,
+                               0.0);
 
     ## Compute the observed and joint probabilities as the mean of the
     ## bootstrapped values.

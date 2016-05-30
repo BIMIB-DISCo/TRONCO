@@ -734,6 +734,7 @@ tronco.mst.gabow <- function(data,
 #' @importFrom bnlearn hc tabu empty.graph set.arc score amat<- amat
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths
+#' @importFrom igraph is.dag
 #### @importFrom infotheo mutinformation
 #' @importFrom stats phyper AIC BIC logLik
 #' 
