@@ -538,7 +538,8 @@ tronco.mst.gabow <- function(data,
                              boot.seed = NULL, 
                              silent = FALSE,
                              epos = 0.0,
-                             eneg = 0.0 ) {
+                             eneg = 0.0,
+                             do.raising = FALSE ) {
 
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
@@ -630,7 +631,8 @@ tronco.mst.gabow <- function(data,
                     boot.seed = boot.seed,
                     silent = silent,
                     epos = epos,
-                    eneg = eneg)
+                    eneg = eneg,
+                    do.raising = do.raising)
 
     ## Structure to save the results.
     results = data

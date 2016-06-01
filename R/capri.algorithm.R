@@ -758,7 +758,8 @@ get.prima.facie.causes.do.boot <- function(adj.matrix,
         adj.matrix.acyclic = probability.raising$adj.matrix;
     }
     adj.matrix =
-        list(adj.matrix.cyclic = adj.matrix.cyclic,
+        list(adj.matrix.cyclic.tp = temporal.priority$adj.matrix,
+             adj.matrix.cyclic = adj.matrix.cyclic,
              adj.matrix.acyclic = adj.matrix.acyclic)
 
     ## Save the results and return them.
@@ -875,8 +876,9 @@ get.prima.facie.causes.no.boot <- function(adj.matrix,
         adj.matrix.acyclic = probability.raising$adj.matrix;
     }
     adj.matrix =
-        list(adj.matrix.cyclic = adj.matrix.cyclic,
-             adj.matrix.acyclic=adj.matrix.acyclic)
+        list(adj.matrix.cyclic.tp = temporal.priority$adj.matrix,
+             adj.matrix.cyclic = adj.matrix.cyclic,
+             adj.matrix.acyclic = adj.matrix.acyclic)
 
     ## Save the results and return them.
     

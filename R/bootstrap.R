@@ -62,6 +62,9 @@ bootstrap <- function(reconstruction,
         if(type %in% c('EDMONDS', 'GABOW')) {
             score.param = parameters$score
         }
+        if(type=='GABOW') {
+            do.raising = parameters$do.raising
+        }
         epos = parameters$error.rates$epos
         eneg = parameters$error.rates$eneg
     }
@@ -218,7 +221,8 @@ bootstrap <- function(reconstruction,
                                  boot.seed,
                                  silent = TRUE,
                                  epos,
-                                 eneg)
+                                 eneg,
+                                 do.raising)
         }
             
         curr.reconstruction = bootstrapped.topology

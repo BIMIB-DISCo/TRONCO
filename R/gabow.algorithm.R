@@ -34,7 +34,8 @@ gabow.fit <- function(dataset,
                         boot.seed = NULL,
                         silent = FALSE,
                         epos = 0.0,
-                        eneg = 0.0 ) {
+                        eneg = 0.0,
+                        do.raising = FALSE ) {
 
     ## Start the clock to measure the execution time.
     
@@ -100,6 +101,14 @@ gabow.fit <- function(dataset,
     }
     adj.matrix.prima.facie =
         prima.facie.parents$adj.matrix$adj.matrix.acyclic
+        
+    # set the input prior matrix for Gabow
+    if(do.raising==TRUE) {
+        adj.matrix.gabow = prima.facie.parents$adj.matrix$adj.matrix.cyclic
+    }
+    else {
+        adj.matrix.gabow = prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp
+    }
 
     ## Perform the likelihood fit with the required strategy.
     
@@ -114,8 +123,11 @@ gabow.fit <- function(dataset,
                 cat('*** Performing likelihood-fit with regularization:', reg, '.\n')
             best.parents =
                 perform.likelihood.fit.gabow(dataset,
-                                       adj.matrix.prima.facie,
-                                       regularization = reg)
+                                       adj.matrix.gabow,
+                                       regularization = reg,
+                                       score = my_score,
+                                       marginal.probs = prima.facie.parents$marginal.probs,
+                                       joint.probs = prima.facie.parents$joint.probs)
     
             ## Set the structure to save the conditional probabilities of
             ## the reconstructed topology.
@@ -143,7 +155,8 @@ gabow.fit <- function(dataset,
              min.stat = min.stat,
              boot.seed = boot.seed,
              silent = silent,
-             error.rates = list(epos=epos,eneg=eneg))
+             error.rates = list(epos=epos,eneg=eneg),
+             do.raising = do.raising)
 
     ## Return the results.
     
@@ -169,9 +182,11 @@ gabow.fit <- function(dataset,
 # @return topology: the adjacency matrix of both the prima facie and causal topologies
 #
 perform.likelihood.fit.gabow = function(dataset,
-                                          adj.matrix,
-                                          regularization,
-                                          command = "hc") {
+                                        adj.matrix,
+                                        regularization,
+                                        command = "hc",
+                                        marginal.probs,
+                                        joint.probs) {
 
     data = as.categorical.dataset(dataset)
     adj.matrix.prima.facie = adj.matrix
@@ -181,9 +196,9 @@ perform.likelihood.fit.gabow = function(dataset,
     rownames(adj.matrix.fit) = colnames(dataset)
     colnames(adj.matrix.fit) = colnames(dataset)
     
-    # set at most one parent per node based on maximum likelihood
+    # set at most one parent per node based on the given score and Gabow search
     
-    # start from the leaves of the tree
+    # 
     curr_nodes = which(apply(adj.matrix,1,sum)==0)
     curr_adj.matrix.fit = adj.matrix.fit
     visited_nodes = as.vector(curr_nodes)
