@@ -38,8 +38,8 @@ caprese.fit <- function(dataset,
     
     ## Check if the dataset is valid.
     
-    valid.dataset = check.dataset(dataset,adj.matrix,FALSE);
-    adj.matrix = valid.dataset$adj.matrix;
+    valid.dataset = check.dataset(dataset,adj.matrix,FALSE, epos, eneg)
+    adj.matrix = valid.dataset$adj.matrix
     
     ## marginal.probs is an array of the observed marginal
     ## probabilities.
@@ -55,7 +55,8 @@ caprese.fit <- function(dataset,
     best.parents =
         get.tree.parents(adj.matrix,
                          marginal.probs,
-                         joint.probs,lambda);
+                         joint.probs,
+                         lambda)
     
     ## Create the structures where to save the results.
     

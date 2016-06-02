@@ -54,7 +54,7 @@ chow.liu.fit <- function(dataset,
 
     ## Check if the dataset is valid.
     
-    valid.dataset = check.dataset(dataset, adj.matrix, FALSE);
+    valid.dataset = check.dataset(dataset, adj.matrix, FALSE, epos, eneg)
     adj.matrix = valid.dataset$adj.matrix;
     invalid.events = valid.dataset$invalid.events;
 

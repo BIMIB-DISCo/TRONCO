@@ -61,7 +61,7 @@ capri.fit <- function(dataset,
 
     ## Check if the dataset is valid.
     
-    valid.dataset = check.dataset(dataset, adj.matrix, FALSE);
+    valid.dataset = check.dataset(dataset, adj.matrix, FALSE, epos, eneg)
     adj.matrix = valid.dataset$adj.matrix;
     invalid.events = valid.dataset$invalid.events;
 
@@ -170,8 +170,10 @@ capri.fit <- function(dataset,
 # @param dataset a dataset describing a progressive phenomenon
 # @param adj.matrix adjacency matrix of the topology
 # @param verbose should I print the warnings? Yes if TRUE, no otherwise
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
 # @return valid.dataset: a dataset valid accordingly to the probability raising
-check.dataset <- function(dataset, adj.matrix, verbose ) {
+check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
 
     ## Perform the preprocessing only if I have at least two binary
     ## events and two samples.
@@ -196,18 +198,38 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
                 pair.count[i,j] = (t(val1) %*% val2);
             }
         }
-        ## Marginal.probs is an array of the observed marginal
-        ## probabilities.
         
-        marginal.probs =
+        # minimum probability to be represented in the dataset
+        minimum.prob = max(.Machine$double.eps,(1/nrow(dataset))/2)
+        
+        ## marginal.probs is an array with the marginal probabilities.
+        
+        marginal.probs <-
             array(as.matrix(diag(pair.count) / nrow(dataset)),
-                  dim = c(ncol(dataset),1));
+                  dim = c(ncol(dataset), 1))
+                  
+        ## joint.probs is an array with the joint observed probabilities.
         
-        ## joint.probs is an array of the observed joint
-        ## probabilities.
+        joint.probs <- as.matrix(pair.count / nrow(dataset))
         
-        joint.probs = as.matrix(pair.count/nrow(dataset));
-
+        # apply the noise model to estimate the theoretical joint.probs
+        for (p1 in 1:nrow(joint.probs)) {
+            for (p2 in p1:ncol(joint.probs)) {
+                estimated.prob = estimate.theoretical.probs(joint.probs[p1,p2],type="joint",prob1=marginal.probs[p1],
+                                                            prob2=marginal.probs[p2],
+                                                            min.prob=minimum.prob,epos=epos,eneg=eneg)
+                joint.probs[p1,p2] = estimated.prob
+                joint.probs[p2,p1] = estimated.prob
+            }
+        }
+        
+        
+        # apply the noise model to estimate the theoretical marginal.probs
+        marginal.probs = sapply(marginal.probs,FUN=function(x) { return(estimate.theoretical.probs(x,
+                                                                         type="marginal",min.prob=minimum.prob,
+                                                                         epos=epos,eneg=eneg)) })
+    
+        
         ## Evaluate the connections.
         
         invalid.events = vector();
