@@ -228,6 +228,8 @@ check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
         marginal.probs = sapply(marginal.probs,FUN=function(x) { return(estimate.theoretical.probs(x,
                                                                          type="marginal",min.prob=minimum.prob,
                                                                          epos=epos,eneg=eneg)) })
+                                                                         
+       marginal.probs = as.matrix(marginal.probs,nrow=length(marginal.probs),ncol=1)
     
         
         ## Evaluate the connections.

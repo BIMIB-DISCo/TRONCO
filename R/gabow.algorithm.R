@@ -180,6 +180,7 @@ gabow.fit <- function(dataset,
 # @param regularization regularization term to be used in the likelihood fit
 # @param command type of search, either hill climbing (hc) or tabu (tabu)
 # @return topology: the adjacency matrix of both the prima facie and causal topologies
+# @importFrom igraph graph_from_adjacency_matrix clusters unfold.tree
 #
 perform.likelihood.fit.gabow = function(dataset,
                                         adj.matrix,

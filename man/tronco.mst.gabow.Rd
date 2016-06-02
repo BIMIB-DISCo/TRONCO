@@ -7,7 +7,7 @@
 tronco.mst.gabow(data, regularization = "no_reg", score = "pmi",
   do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3,
   min.stat = TRUE, boot.seed = NULL, silent = FALSE, epos = 0,
-  eneg = 0)
+  eneg = 0, do.raising = FALSE)
 }
 \arguments{
 \item{data}{A TRONCO compliant dataset.}

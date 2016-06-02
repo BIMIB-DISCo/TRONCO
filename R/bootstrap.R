@@ -47,6 +47,8 @@ bootstrap <- function(reconstruction,
 
     if (type == 'CAPRESE') {
         lambda = parameters$lambda
+        epos = parameters$error.rates$epos
+        eneg = parameters$error.rates$eneg
     }
 
     ## Get other parameters.
@@ -167,7 +169,9 @@ bootstrap <- function(reconstruction,
             bootstrapped.topology =
                 tronco.caprese(curr.reconstruction,
                                lambda, 
-                               silent = TRUE)
+                               silent = TRUE,
+                               epos,
+                               eneg)
         } else if (type == 'CHOW_LIU') {
             bootstrapped.topology = 
                 tronco.mst.chowliu(curr.reconstruction,

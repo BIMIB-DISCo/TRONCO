@@ -17,7 +17,9 @@
 #
 caprese.fit <- function(dataset,
                         lambda = 0.5,
-                        silent = FALSE) {
+                        silent = FALSE,
+                        epos = 0.0,
+                        eneg = 0.0) {
     
     ## Start the clock to measure the execution time.
     
@@ -184,7 +186,8 @@ caprese.fit <- function(dataset,
     parameters =
         list(algorithm = "CAPRESE",
              lambda = lambda,
-             silent = silent);
+             silent = silent,
+             error.rates = list(epos=epos,eneg=eneg))
     
     ## Return the results.
     
@@ -316,7 +319,7 @@ get.tree.scores <- function(adj.matrix,
     ## Structure where to save the probability raising scores.
     
     pr.score =
-        array(-1, dim = c(nrow(marginal.probs), nrow(marginal.probs)));
+        array(-1, dim = c(nrow(marginal.probs), nrow(marginal.probs)))
     
     ## Compute the probability raising based scores.
     

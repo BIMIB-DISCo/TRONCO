@@ -25,7 +25,9 @@
 #' 
 tronco.caprese <- function(data,
                            lambda = 0.5,
-                           silent = FALSE ) {
+                           silent = FALSE,
+                           epos = 0.0,
+                           eneg = 0.0 ) {
 
     ## Check for the inputs to be correct.
     
@@ -63,7 +65,9 @@ tronco.caprese <- function(data,
     }
     reconstruction = caprese.fit(dataset = data$genotypes,
                                  lambda = lambda,
-                                 silent = silent);
+                                 silent = silent,
+                                 epos = epos,
+                                 eneg = eneg)
 
     ## Structure to save the results.
     
