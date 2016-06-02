@@ -527,7 +527,7 @@ tronco.mst.edmonds <- function(data,
 #' @export tronco.mst.gabow
 #' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
-#' @importFrom igraph get.shortest.paths
+#' @importFrom igraph get.shortest.paths graph_from_adjacency_matrix clusters unfold.tree
 #### @importFrom infotheo mutinformation
 #' @importFrom stats phyper AIC BIC logLik
 #' 
