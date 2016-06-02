@@ -173,7 +173,7 @@ gabow.fit <- function(dataset,
 }
 
 
-# reconstruct the best causal topology by maximum likelihood estimation combined with probabilistic causation
+# reconstruct the best causal topology by Gabow algorithm combined with probabilistic causation
 # @title perform.likelihood.fit.gabow
 # @param dataset a valid dataset
 # @param adj.matrix the adjacency matrix of the prima facie causes
@@ -184,6 +184,7 @@ gabow.fit <- function(dataset,
 perform.likelihood.fit.gabow = function(dataset,
                                         adj.matrix,
                                         regularization,
+                                        score,
                                         command = "hc",
                                         marginal.probs,
                                         joint.probs) {
@@ -196,152 +197,68 @@ perform.likelihood.fit.gabow = function(dataset,
     rownames(adj.matrix.fit) = colnames(dataset)
     colnames(adj.matrix.fit) = colnames(dataset)
     
-    # set at most one parent per node based on the given score and Gabow search
-    
-    # 
-    curr_nodes = which(apply(adj.matrix,1,sum)==0)
-    curr_adj.matrix.fit = adj.matrix.fit
-    visited_nodes = as.vector(curr_nodes)
-    while(length(curr_nodes)>0) {
-        
-        new_curr_nodes = NULL
-        
-        # visit the curr_nodes
-        for (i in curr_nodes) {
-            
-            # get the candidate parents of i
-            curr_parents = as.vector(which(adj.matrix[,i] == 1))
-            
-            # if I have more then one valid parent
-            if (length(curr_parents) > 0) {
-                
-                # find the best parent
-                curr_best_parent = -1
-                curr_best_score = NA
-                
-                for (j in curr_parents) {
-                    
-                    # consider the network augmenting the current one with the edge j --> i
-                    tmp_adj.matrix.fit =  curr_adj.matrix.fit
-                    tmp_adj.matrix.fit[j,i] = 1
-                    colnames(tmp_adj.matrix.fit) = colnames(data)
-                    rownames(tmp_adj.matrix.fit) = colnames(data)
-                    
-                    # create a bnlearn object from tmp_adj.matrix.fit
-                    curr.bayes.net = NULL
-                    curr.bayes.net$data = data
-                    net = empty.graph(colnames(tmp_adj.matrix.fit))
-                    for (from in rownames(tmp_adj.matrix.fit)) {
-                        for (to in colnames(tmp_adj.matrix.fit)) {
-                            if (tmp_adj.matrix.fit[from, to] == 1) {
-                                net = set.arc(net, from, to)
-                            }
-                        }
-                    }
-                    curr.bayes.net$net = net
-                    
-                    # evaluate any candidate parent in terms of likelihood
-                    new_score = logLik(curr.bayes.net$net, data = curr.bayes.net$data)
-                    
-                    # compare the likelihood of the current candidate parent 
-                    # with the current best one
-                    if (is.na(curr_best_score) || (new_score > curr_best_score)) {
-                        curr_best_parent = j
-                        curr_best_score = new_score
-                    }
-                
-                }
-                
-                # set the best parent in the inferred matrix
-                curr_adj.matrix.fit[curr_best_parent,i] = 1
-                
-                # set the current best parent in the new list of curr nodes
-                new_curr_nodes = c(new_curr_nodes,curr_best_parent)
-                
-            }
-            
+    # detect the acyclic parts of the graph,
+    # being the strongly connected components of degree 1
+    my_graph = graph_from_adjacency_matrix(adj.matrix)
+    strongly_connected = clusters(my_graph,mode="strong")
+    valid_nodes = c()
+    for(i in 1:strongly_connected$no) {
+        if(length(which(strongly_connected$membership==i))==1) {
+            valid_nodes = c(valid_nodes,which(strongly_connected$membership==i))
         }
-        
-        # find out the nodes to still be visited within new_curr_nodes
-        new_curr_nodes = unique(new_curr_nodes)
-        new_idx = which(!(new_curr_nodes%in%visited_nodes))
-        if(length(new_idx)>0) {
-            new_curr_nodes = new_curr_nodes[new_idx]
-        }
-        else {
-            new_curr_nodes = NULL
-        }
-        
-        # set the list of the next curr_nodes
-        curr_nodes = new_curr_nodes
-        
-        # update the list of visited nodes
-        visited_nodes = c(visited_nodes,curr_nodes)
-        
     }
-    
-    # consider any not visited node
-    not_visited = which(!((1:nrow(adj.matrix))%in%visited_nodes))
-    
-    if(length(not_visited)>0) {
-        
-        for (i in not_visited) {
-            
-            # get the candidate parents of i
-            curr_parents = as.vector(which(adj.matrix[,i] == 1))
+       
+    # set at most one parent per node based on mutual information
+    # only for the acyclic parts of the graph
+    if(length(valid_nodes)>0) {
+        for (i in valid_nodes) {
+                
+            # consider the parents of i
+            curr_parents = which(adj.matrix[,i] == 1)
             
             # if I have more then one valid parent
-            if (length(curr_parents) > 0) {
+            if (length(curr_parents) > 1) {
                 
                 # find the best parent
                 curr_best_parent = -1
-                curr_best_score = NA
-                
+                curr_best_score = -1
                 for (j in curr_parents) {
                     
-                    # consider the network augmenting the current one with the edge j --> i
-                    tmp_adj.matrix.fit =  curr_adj.matrix.fit
-                    tmp_adj.matrix.fit[j,i] = 1
-                    colnames(tmp_adj.matrix.fit) = colnames(data)
-                    rownames(tmp_adj.matrix.fit) = colnames(data)
-                    
-                    # create a bnlearn object from tmp_adj.matrix.fit
-                    curr.bayes.net = NULL
-                    curr.bayes.net$data = data
-                    net = empty.graph(colnames(tmp_adj.matrix.fit))
-                    for (from in rownames(tmp_adj.matrix.fit)) {
-                        for (to in colnames(tmp_adj.matrix.fit)) {
-                            if (tmp_adj.matrix.fit[from, to] == 1) {
-                                net = set.arc(net, from, to)
-                            }
-                        }
+                    # if the event is valid
+                    if(joint.probs[i,j]>=0) {
+                        # compute the chosen score
+                        new_score = compute.edmonds.score(joint.probs[i,j],marginal.probs[i],marginal.probs[j],score)
                     }
-                    curr.bayes.net$net = net
+                    # else, if the two events are indistinguishable
+                    else if(joint.probs[i,j]<0) {
+                        new_score = Inf
+                    }
                     
-                    # evaluate any candidate parent in terms of likelihood
-                    new_score = logLik(curr.bayes.net$net, data = curr.bayes.net$data)
-                    
-                    # compare the likelihood of the current candidate parent 
-                    # with the current best one
-                    if (is.na(curr_best_score) || (new_score > curr_best_score)) {
+                    if (new_score > curr_best_score) {
                         curr_best_parent = j
                         curr_best_score = new_score
                     }
-                
                 }
                 
-                # set the best parent in the inferred matrix
-                curr_adj.matrix.fit[curr_best_parent,i] = 1
-                
+                # set the best parent
+                for (j in curr_parents) {
+                    if (j != curr_best_parent) {
+                        adj.matrix[j,i] = 0
+                    }
+                }
             }
-            
         }
-        
+    }
+       
+    # now consider the acyclic parts of the graph
+    if(length(valid_nodes)<nrow(adj.matrix)) {
+        my_graph = graph_from_adjacency_matrix(adj.matrix)
+        unfolded_tree = unfold.tree(my_graph,roots=(1:nrow(adj.matrix)))
     }
     
     # perform the likelihood fit if requested
     adj.matrix.fit = lregfit(data,
-        curr_adj.matrix.fit,
+        adj.matrix,
         adj.matrix.fit,
         regularization,
         command)
