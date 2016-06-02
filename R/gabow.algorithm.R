@@ -254,6 +254,9 @@ perform.likelihood.fit.gabow = function(dataset,
     if(length(valid_nodes)<nrow(adj.matrix)) {
         my_graph = graph_from_adjacency_matrix(adj.matrix)
         unfolded_tree = unfold.tree(my_graph,roots=(1:nrow(adj.matrix)))
+        #### TMP
+        adj.matrix = array(0,c(nrow(adj.matrix),ncol(adj.matrix)))
+        #### TMP
     }
     
     # perform the likelihood fit if requested

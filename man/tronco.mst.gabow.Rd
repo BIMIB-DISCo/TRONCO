@@ -41,6 +41,8 @@ is rejected.}
 \item{epos}{Error rate of false positive errors.}
 
 \item{eneg}{Error rate of false negative errors.}
+
+\item{do.raising}{Whether to use or not the raising condition as a prior.}
 }
 \value{
 A TRONCO compliant object with reconstructed model

@@ -18,6 +18,8 @@
 #' @param data A TRONCO compliant dataset.
 #' @param lambda Coefficient to combine the raw estimate with a correction factor into a shrinkage estimator. 
 #' @param silent A parameter to disable/enable verbose messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.caprese
 #' @importFrom stats phyper
@@ -523,6 +525,7 @@ tronco.mst.edmonds <- function(data,
 #' @param silent A parameter to disable/enable verbose messages.
 #' @param epos Error rate of false positive errors.
 #' @param eneg Error rate of false negative errors.
+#' @param do.raising Whether to use or not the raising condition as a prior.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.mst.gabow
 #' @importFrom bnlearn hc tabu empty.graph set.arc
