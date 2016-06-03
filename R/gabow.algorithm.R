@@ -252,8 +252,12 @@ perform.likelihood.fit.gabow = function(dataset,
        
     # now consider the acyclic parts of the graph
     if(length(valid_nodes)<nrow(adj.matrix)) {
-        my_graph = graph_from_adjacency_matrix(adj.matrix)
-        unfolded_tree = unfold.tree(my_graph,roots=(1:nrow(adj.matrix)))
+        # now I consider each strongly connected componet with size greater then 1
+        for(i in 1:strongly_connected$no) {
+            if(length(which(strongly_connected$membership==i))>1) {
+                adj.matrix = find.best.subtree(adj.matrix,which(strongly_connected$membership==i))
+            }
+        }
         #### TMP
         adj.matrix = array(0,c(nrow(adj.matrix),ncol(adj.matrix)))
         #### TMP
@@ -274,6 +278,14 @@ perform.likelihood.fit.gabow = function(dataset,
     topology = list(adj.matrix = adj.matrix)
     return(topology)
 
+}
+
+find.best.subtree = function( adj.matrix, subtree.nodes ) {
+    
+    # consider all the possible trees of subtree.nodes
+    #
+    
+    return(adj.matrix)
 }
 
 
