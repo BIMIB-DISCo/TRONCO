@@ -200,7 +200,7 @@ check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
         }
         
         # minimum probability to be represented in the dataset
-        minimum.prob = max(.Machine$double.eps,(1/nrow(dataset))/2)
+        minimum.prob = 0 #max(.Machine$double.eps,(1/nrow(dataset))/2)
         
         ## marginal.probs is an array with the marginal probabilities.
         
