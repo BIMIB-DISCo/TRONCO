@@ -24,18 +24,18 @@
 # @return topology: the reconstructed tree topology
 #
 gabow.fit <- function(dataset,
-                        regularization = "no_reg",
-                        score = "pmi",
-                        do.boot = TRUE,
-                        nboot = 100,
-                        pvalue = 0.05,
-                        min.boot = 3,
-                        min.stat = TRUE,
-                        boot.seed = NULL,
-                        silent = FALSE,
-                        epos = 0.0,
-                        eneg = 0.0,
-                        do.raising = FALSE ) {
+                      regularization = "no_reg",
+                      score = "pmi",
+                      do.boot = TRUE,
+                      nboot = 100,
+                      pvalue = 0.05,
+                      min.boot = 3,
+                      min.stat = TRUE,
+                      boot.seed = NULL,
+                      silent = FALSE,
+                      epos = 0.0,
+                      eneg = 0.0,
+                      do.raising = TRUE ) {
 
     ## Start the clock to measure the execution time.
     
@@ -255,12 +255,9 @@ perform.likelihood.fit.gabow = function(dataset,
         # now I consider each strongly connected componet with size greater then 1
         for(i in 1:strongly_connected$no) {
             if(length(which(strongly_connected$membership==i))>1) {
-                adj.matrix = find.best.subtree(adj.matrix,which(strongly_connected$membership==i))
+                adj.matrix = find.best.subtree(adj.matrix,which(strongly_connected$membership==i),marginal.probs,joint.probs,score)
             }
         }
-        #### TMP
-        adj.matrix = array(0,c(nrow(adj.matrix),ncol(adj.matrix)))
-        #### TMP
     }
     
     # perform the likelihood fit if requested
@@ -280,12 +277,90 @@ perform.likelihood.fit.gabow = function(dataset,
 
 }
 
-find.best.subtree = function( adj.matrix, subtree.nodes ) {
+find.best.subtree = function( adj.matrix, subtree.nodes, marginal.probs, joint.probs, score ) {
     
-    # consider all the possible trees of subtree.nodes
-    #
+    # enumerate the possible orderings within subtree.nodes
+    possible.orderings = permutations(length(subtree.nodes),length(subtree.nodes))
     
-    return(adj.matrix)
+    # consider all the possible trees within subtree.nodes
+    all_tree_scores = sapply(1:nrow(possible.orderings),FUN=function(x) {
+        curr.ordering = subtree.nodes[possible.orderings[x,]]
+        curr.adj.matrix = adj.matrix
+        # remove any loop accordingly to this ordering
+        for(j in 2:length(curr.ordering)) {
+            curr_invalid = curr.ordering[1:(j-1)]
+            curr.adj.matrix[curr.ordering[j],curr_invalid] = 0
+        }
+        # compute the score of curr.adj.matrix
+        curr_score = get.best.scored.tree(curr.adj.matrix,subtree.nodes,marginal.probs,joint.probs,score)$score
+        return(curr_score)
+    })
+    
+    # pick the best scored tree
+    best.ordering = subtree.nodes[possible.orderings[which(all_tree_scores==max(all_tree_scores))[1],]]
+    
+    # remove any loop accordingly to this ordering
+    best_adj.matrix = adj.matrix
+    for(j in 2:length(best.ordering)) {
+        curr_invalid = best.ordering[1:(j-1)]
+        best_adj.matrix[best.ordering[j],curr_invalid] = 0
+    }
+    
+    # compute the score of curr.adj.matrix
+    best_adj.matrix = get.best.scored.tree(best_adj.matrix,subtree.nodes,marginal.probs,joint.probs,score)$adj.matrix
+    
+    return(best_adj.matrix)
+}
+
+get.best.scored.tree = function( adj.matrix, subtree.nodes, marginal.probs, joint.probs, score_type ) {
+    
+    score = 0
+    
+    # set at most one parent per node based on mutual information
+    for (i in subtree.nodes) {
+        
+        # consider the parents of i
+        curr_parents = which(adj.matrix[,i] == 1)
+        
+        # if I have more then one valid parent
+        if (length(curr_parents) > 1) {
+            
+            # find the best parent
+            curr_best_parent = -1
+            curr_best_score = -1
+            for (j in curr_parents) {
+                
+                # if the event is valid
+                if(joint.probs[i,j]>=0) {
+                    # compute the chosen score
+                    new_score = compute.edmonds.score(joint.probs[i,j],marginal.probs[i],marginal.probs[j],score_type)
+                }
+                # else, if the two events are indistinguishable
+                else if(joint.probs[i,j]<0) {
+                    new_score = Inf
+                }
+                
+                if (new_score > curr_best_score) {
+                    curr_best_parent = j
+                    curr_best_score = new_score
+                }
+            }
+            
+            score = score + curr_best_score
+            
+            # set the best parent
+            for (j in curr_parents) {
+                if (j != curr_best_parent) {
+                    adj.matrix[j,i] = 0
+                }
+            }
+        }
+    }
+    
+    res = list(adj.matrix=adj.matrix,score=score)
+    
+    return(res)
+    
 }
 
 

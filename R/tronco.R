@@ -531,6 +531,7 @@ tronco.mst.edmonds <- function(data,
 #' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths graph_from_adjacency_matrix clusters unfold.tree
+#' @importFrom gtools permutations
 #### @importFrom infotheo mutinformation
 #' @importFrom stats phyper AIC BIC logLik
 #' 
@@ -546,7 +547,7 @@ tronco.mst.gabow <- function(data,
                              silent = FALSE,
                              epos = 0.0,
                              eneg = 0.0,
-                             do.raising = FALSE ) {
+                             do.raising = TRUE ) {
 
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
