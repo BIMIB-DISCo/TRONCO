@@ -221,7 +221,7 @@ perform.likelihood.fit.gabow = function(dataset,
                 
                 # find the best parent
                 curr_best_parent = -1
-                curr_best_score = -1
+                curr_best_score = NA
                 for (j in curr_parents) {
                     
                     # if the event is valid
@@ -234,7 +234,7 @@ perform.likelihood.fit.gabow = function(dataset,
                         new_score = Inf
                     }
                     
-                    if (new_score > curr_best_score) {
+                    if (is.na(curr_best_score) || new_score > curr_best_score) {
                         curr_best_parent = j
                         curr_best_score = new_score
                     }
@@ -327,7 +327,7 @@ get.best.scored.tree = function( adj.matrix, subtree.nodes, marginal.probs, join
             
             # find the best parent
             curr_best_parent = -1
-            curr_best_score = -1
+            curr_best_score = NA
             for (j in curr_parents) {
                 
                 # if the event is valid
@@ -340,7 +340,7 @@ get.best.scored.tree = function( adj.matrix, subtree.nodes, marginal.probs, join
                     new_score = Inf
                 }
                 
-                if (new_score > curr_best_score) {
+                if (is.na(curr_best_score) || new_score > curr_best_score) {
                     curr_best_parent = j
                     curr_best_score = new_score
                 }
