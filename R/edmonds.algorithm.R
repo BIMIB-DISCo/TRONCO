@@ -262,6 +262,13 @@ compute.edmonds.score = function( joint.prob.i.j, marginal.prob.i, marginal.prob
         }
         
     }
+    # this is the mutual information
+    else if(score=="mi") {
+        
+        # compute the mutual information for i and j
+        new_score = compute.mi.score(joint.prob.i.j,marginal.prob.i,marginal.prob.j)
+        
+    }
     # this is the conditional entropy of i given j
     else if(score=="entropy") {
         

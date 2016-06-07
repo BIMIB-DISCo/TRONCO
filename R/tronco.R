@@ -354,8 +354,8 @@ tronco.mst.edmonds <- function(data,
         stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
     }
     
-    if (! all(score %in% c('pmi', 'entropy', 'cpmi'))) {
-        stop("Possible scores are pmi, entropy or cpmi",call. = FALSE);
+    if (! all(score %in% c('pmi', 'mi', 'entropy', 'cpmi'))) {
+        stop("Possible scores are pmi, mi, entropy or cpmi",call. = FALSE);
     }
     
     if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
@@ -570,8 +570,8 @@ tronco.mst.gabow <- function(data,
         stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
     }
     
-    if (! all(score %in% c('pmi', 'entropy', 'cpmi'))) {
-        stop("Possible scores are pmi, entropy or cpmi",call. = FALSE);
+    if (! all(score %in% c('pmi', 'mi', 'entropy', 'cpmi'))) {
+        stop("Possible scores are pmi, mi, entropy or cpmi",call. = FALSE)
     }
     
     if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
