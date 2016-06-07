@@ -34,7 +34,7 @@ tronco.caprese <- function(data,
     ## Check for the inputs to be correct.
     
     if (is.null(data) || is.null(data$genotypes)) {
-        stop("The dataset given as input is not valid.");
+        stop("The dataset given as input is not valid.")
     }
     if (lambda < 0 || lambda > 1) {
         stop("The value of the shrinkage parameter lambda has to be in [0:1]!",
