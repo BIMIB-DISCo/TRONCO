@@ -947,7 +947,8 @@ get.prima.facie.parents.do.boot <- function(dataset,
     
     scores =
         get.bootstrapped.scores(dataset,
-                               nboot,adj.matrix,
+                               nboot,
+                               adj.matrix,
                                min.boot,
                                min.stat,
                                boot.seed,
