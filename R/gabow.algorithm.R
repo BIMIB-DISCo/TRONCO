@@ -137,12 +137,12 @@ gabow.fit <- function(dataset,
                 
             
             # adjacency matrix of the topology reconstructed by likelihood fit
-            curr_adj.matrix.fit = array(0,c(nrow(best.parents$adj.matrix.fit),ncol(best.parents$adj.matrix.fit)))
+            curr_adj.matrix.fit = array(0,c(nrow(best.parents$adj.matrix$adj.matrix.fit),ncol(best.parents$adj.matrix$adj.matrix.fit)))
             rownames(curr_adj.matrix.fit) = colnames(dataset)
             colnames(curr_adj.matrix.fit) = colnames(dataset)
             
             curr_adj.matrix.fit = lregfit(as.categorical.dataset(dataset),
-                                    best.parents$adj.matrix.fit,
+                                    best.parents$adj.matrix$adj.matrix.fit,
                                     curr_adj.matrix.fit,
                                     reg,
                                     command = "hc")
