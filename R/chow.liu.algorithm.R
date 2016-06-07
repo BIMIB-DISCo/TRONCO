@@ -93,8 +93,9 @@ chow.liu.fit <- function(dataset,
     
     if (length(invalid.events) > 0) {
         for (i in 1:nrow(invalid.events)) {
-            prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
-            prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
+            prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
+            prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
+            prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
         }
     }
     adj.matrix.prima.facie =
