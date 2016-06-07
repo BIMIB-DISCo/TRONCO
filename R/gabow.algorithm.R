@@ -380,7 +380,7 @@ get.best.scored.tree = function( adj.matrix, subtree.nodes, marginal.probs, join
             
             # set the best parent
             invalid.curr.parents = which(curr_parents!=curr_best_parent)
-            if(invalid.curr.parents>0) {
+            if(length(invalid.curr.parents)>0) {
                 adj.matrix[invalid.curr.parents,i] = 0
             }
             
