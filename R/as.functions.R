@@ -1905,25 +1905,11 @@ is.logic.node <- function(node) {
 }
 
 
-as.categorical.dataset <- function(dataset, make.valid = TRUE){
-
-    ## Each variable should at least have 2 values: I'm ignoring
-    ## connection to invalid events but, still, need to make the
-    ## dataset valid for bnlearn.
-
-    if (make.valid) {
-        for (i in 1:ncol(dataset)) {
-            if (sum(dataset[, i]) == 0) {
-                dataset[sample(1:nrow(dataset), size = 1), i] = 1
-            } else if (sum(dataset[, i]) == nrow(dataset)) {
-                dataset[sample(1:nrow(dataset), size = 1), i] = 0
-            }
-        }
-    }
+as.categorical.dataset <- function(dataset){
 
     ## Create a categorical data frame from the dataset
-
     data = array("missing", c(nrow(dataset), ncol(dataset)))
+
     for (i in 1:nrow(dataset)) {
         for (j in 1:ncol(dataset)) {
             if (dataset[i,j] == 1) {
@@ -1932,14 +1918,17 @@ as.categorical.dataset <- function(dataset, make.valid = TRUE){
         }
     }
 
-    ## Renaming
+    data = data.frame(data)
+    for (n in names(data)) {
+        levels(data[[n]]) = c('missing', 'observed')
+    }
 
-    data = as.data.frame(data)
+    ## Renaming
     colnames(data) = colnames(dataset)
     rownames(data) = rownames(dataset)
-    
     return(data)
 }
+
 
 
 # Convert a TRONCO object in a Bnlearn network.
@@ -1951,13 +1940,11 @@ as.categorical.dataset <- function(dataset, make.valid = TRUE){
 #
 # param x A reconstructed model (the output of tronco.capri or tronco.caprese)
 # param model The name of the selected regularization
-# param makeValid Transform the bootstrapped data into a valid 2-categories input data
 # export as.bnlearn.network
 # importFrom bnlearn empty.graph set.arc
 #
 as.bnlearn.network <- function(x, 
-                               model = names(as.models(x))[1], 
-                               make.valid = TRUE) {
+                               model = names(as.models(x))[1]) {
 
     ## Check if there is a reconstructed model.
 
@@ -1978,7 +1965,7 @@ as.bnlearn.network <- function(x,
     genotypes = keysToNames(x, genotypes)
     names(colnames(genotypes)) = NULL
 
-    df = as.categorical.dataset(genotypes, make.valid = make.valid)
+    df = as.categorical.dataset(genotypes)
 
     adj.matrix = get(model, as.adj.matrix(x, models = model))
     adj.matrix = keysToNames(x, adj.matrix)
