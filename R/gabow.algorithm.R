@@ -114,33 +114,57 @@ gabow.fit <- function(dataset,
     ## Perform the likelihood fit with the required strategy.
     
     model = list();
-    for (reg in regularization) {
-        for(my_score in score) {
+    for(my_score in score) {
+        
+        # as Gabow algorithm is computationally expensive,
+        # I first reconstruct with "no_reg" for each score
+        best.parents =
+                perform.likelihood.fit.gabow(dataset,
+                                       adj.matrix.gabow,
+                                       regularization = "no_reg",
+                                       score = my_score,
+                                       marginal.probs = prima.facie.parents$marginal.probs,
+                                       joint.probs = prima.facie.parents$joint.probs)
+                                       
+        # now I perform the likelihood fit with each regularizator
+        for (reg in regularization) {
 
             ## Perform the likelihood fit with the chosen regularization
             ## score on the prima facie topology.
             
             if (!silent)
                 cat('*** Performing likelihood-fit with regularization:', reg, '.\n')
-            best.parents =
-                perform.likelihood.fit.gabow(dataset,
-                                       adj.matrix.gabow,
-                                       regularization = reg,
-                                       score = my_score,
-                                       marginal.probs = prima.facie.parents$marginal.probs,
-                                       joint.probs = prima.facie.parents$joint.probs)
-    
+                
+            
+            # adjacency matrix of the topology reconstructed by likelihood fit
+            curr_adj.matrix.fit = array(0,c(nrow(best.parents$adj.matrix$adj.matrix.fit),ncol(best.parents$adj.matrix$adj.matrix.fit)))
+            rownames(curr_adj.matrix.fit) = colnames(dataset)
+            colnames(curr_adj.matrix.fit) = colnames(dataset)
+            
+            curr_adj.matrix.fit = lregfit(as.categorical.dataset(dataset),
+                                    best.parents$adj.matrix$adj.matrix.fit,
+                                    curr_adj.matrix.fit,
+                                    reg,
+                                    command = "hc")
+                                    
+                                    
+            ## Save the results and return them.
+            adj.matrix_reg = list(adj.matrix.pf = adj.matrix.gabow,
+                                  adj.matrix.fit = curr_adj.matrix.fit)
+            curr_best.parents = list(adj.matrix = adj.matrix_reg)
+            
             ## Set the structure to save the conditional probabilities of
             ## the reconstructed topology.
     
             reconstructed.model = create.model(dataset,
-                best.parents,
+                curr_best.parents,
                 prima.facie.parents)
     
             model.name = paste('gabow', reg, my_score, sep='_')
             model[[model.name]] = reconstructed.model
             
         }
+        
     }
 
     ## Set the execution parameters.
@@ -316,6 +340,8 @@ find.best.subtree = function( adj.matrix, subtree.nodes, marginal.probs, joint.p
 get.best.scored.tree = function( adj.matrix, subtree.nodes, marginal.probs, joint.probs, score_type ) {
     
     score = 0
+    total.arcs = 0
+    attached.arcs = 0
     
     # set at most one parent per node based on mutual information
     for (i in subtree.nodes) {
@@ -347,15 +373,35 @@ get.best.scored.tree = function( adj.matrix, subtree.nodes, marginal.probs, join
                 }
             }
             
-            score = score + curr_best_score
+            if(curr_best_score!=Inf) {
+                score = score + curr_best_score
+                total.arcs = total.arcs + 1
+            }
             
             # set the best parent
-            for (j in curr_parents) {
-                if (j != curr_best_parent) {
-                    adj.matrix[j,i] = 0
-                }
+            invalid.curr.parents = which(curr_parents!=curr_best_parent)
+            if(length(invalid.curr.parents)>0) {
+                adj.matrix[curr_parents[invalid.curr.parents],i] = 0
             }
+            
+            attached.arcs = attached.arcs + 1
+            
         }
+    }
+    
+    # if I have an empty topology, it has the worst score
+    if(attached.arcs==0) {
+        score = -Inf
+    }
+    # if I have only arcs between indistinguishable events
+    else if(attached.arcs>0 && total.arcs==0) {
+        score = Inf
+    }
+    # if I have a valid topology which I want to weight
+    # for the number of arcs
+    else {
+        mean_score = score / total.arcs
+        score = score + mean_score * (attached.arcs-total.arcs)
     }
     
     res = list(adj.matrix=adj.matrix,score=score)

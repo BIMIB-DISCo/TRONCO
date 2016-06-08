@@ -230,7 +230,7 @@ check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
                                                                          type="marginal",min.prob=minimum.prob,
                                                                          epos=epos,eneg=eneg)) })
                                                                          
-       marginal.probs = as.matrix(marginal.probs,nrow=length(marginal.probs),ncol=1)
+        marginal.probs = as.matrix(marginal.probs,nrow=length(marginal.probs),ncol=1)
     
         
         ## Evaluate the connections.
@@ -546,7 +546,7 @@ get.dag.scores <- function( dataset, adj.matrix, epos, eneg ) {
     }
     
     # minimum probability to be represented in the dataset
-    minimum.prob = max(.Machine$double.eps,(1/nrow(dataset))/2)
+    minimum.prob = 0 #max(.Machine$double.eps,(1/nrow(dataset))/2)
     
     ## marginal.probs is an array with the marginal probabilities.
     
@@ -626,7 +626,7 @@ get.dag.scores <- function( dataset, adj.matrix, epos, eneg ) {
 }
 
 # apply the noise model to estimate the either the theoretical marginal or joint probability
-estimate.theoretical.probs = function( observed.prob, type, prob1 = NA, prob2 = NA, min.prob, epos, eneg ) {
+estimate.theoretical.probs = function( observed.prob, type, prob1 = NA, prob2 = NA, min.prob = 0, epos, eneg ) {
     
     estimated.prob = NA
     
@@ -639,7 +639,7 @@ estimate.theoretical.probs = function( observed.prob, type, prob1 = NA, prob2 = 
         if(estimated.prob<min.prob) {
             estimated.prob = min.prob
         }
-        else if(estimated.prob>(1-min.prob)) {
+        if(estimated.prob>(1-min.prob)) {
             estimated.prob = (1-min.prob)
         }
     
@@ -652,7 +652,7 @@ estimate.theoretical.probs = function( observed.prob, type, prob1 = NA, prob2 = 
         if(estimated.prob<0) {
             estimated.prob = 0
         }
-        else if(estimated.prob>(1-min.prob)) {
+        if(estimated.prob>(1-min.prob)) {
             estimated.prob = (1-min.prob)
         }
         
@@ -947,7 +947,8 @@ get.prima.facie.parents.do.boot <- function(dataset,
     
     scores =
         get.bootstrapped.scores(dataset,
-                               nboot,adj.matrix,
+                               nboot,
+                               adj.matrix,
                                min.boot,
                                min.stat,
                                boot.seed,
