@@ -232,6 +232,11 @@ check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
                                                                          
         marginal.probs = as.matrix(marginal.probs,nrow=length(marginal.probs),ncol=1)
     
+        # verify the probabilities to be corret
+        res.probs = verify.constraints.probs(marginal.probs,joint.probs)
+        marginal.probs = res.probs$marginal.probs
+        joint.probs = res.probs$joint.probs
+    
         
         ## Evaluate the connections.
         
@@ -300,6 +305,25 @@ check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
                  joint.probs = NA);
     }
     return(valid.dataset);
+}
+
+# verify the constraints over the probabilities after noise is applied
+verify.constraints.probs = function( marginal.probs, joint.probs ) {
+    
+    for (i in 1:nrow(joint.probs)) {
+        for (j in i:ncol(joint.probs)) {
+            if(i!=j) {
+                max.joint.prob = min(marginal.probs[i,1],marginal.probs[j,1])
+                if(joint.probs[i,j]>max.joint.prob) {
+                    joint.probs[i,j] = max.joint.prob
+                    joint.probs[j,i] = joint.probs[i,j]
+                }
+            }
+        }
+    }
+    
+    res.probs = list(marginal.probs=marginal.probs,joint.probs=joint.probs)
+    
 }
 
 
@@ -576,6 +600,11 @@ get.dag.scores <- function( dataset, adj.matrix, epos, eneg ) {
                                                                      epos=epos,eneg=eneg)) })
 
     marginal.probs = matrix(marginal.probs,nrow=length(marginal.probs),ncol=1)
+    
+    # verify the probabilities to be corret
+    res.probs = verify.constraints.probs(marginal.probs,joint.probs)
+    marginal.probs = res.probs$marginal.probs
+    joint.probs = res.probs$joint.probs
     
     ## Compute the prima facie scores based on the probability raising
     ## model.

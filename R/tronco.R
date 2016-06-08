@@ -55,7 +55,7 @@ tronco.caprese <- function(data,
     
     if (silent == FALSE) {
         cat('*** Checking input events.\n')
-        invalid = consolidate.data(data, TRUE)      
+        invalid = consolidate.data(data, TRUE)
         if (length(unlist(invalid)) > 0)
             warning("Input events should be consolidated - see consolidate.data.");
 
