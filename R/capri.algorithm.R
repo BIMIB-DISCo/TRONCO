@@ -230,7 +230,7 @@ check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
                                                                          type="marginal",min.prob=minimum.prob,
                                                                          epos=epos,eneg=eneg)) })
                                                                          
-        marginal.probs = as.matrix(marginal.probs,nrow=length(marginal.probs),ncol=1)
+        marginal.probs = array(marginal.probs, dim = c(length(marginal.probs), 1))
     
         # verify the probabilities to be corret
         res.probs = verify.constraints.probs(marginal.probs,joint.probs)
@@ -248,16 +248,16 @@ check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
                 if (i != j && adj.matrix[i, j] == 1) {
                     
                     
-                    if (marginal.probs[i] == 1) {
+                    if (marginal.probs[i,1] == 1) {
                         ## the potential cause is always present
                         adj.matrix[i, j] = 0;
-                    } else if (marginal.probs[i] == 0) {
+                    } else if (marginal.probs[i,1] == 0) {
                         ## the potential cause is always missing
                         adj.matrix[i, j] = 0;
-                    } else if (marginal.probs[j] == 1) {
+                    } else if (marginal.probs[j,1] == 1) {
                         ## the potential child is always present
                         adj.matrix[i, j] = 0;
-                    } else if (marginal.probs[j] == 0) {
+                    } else if (marginal.probs[j,1] == 0) {
                         ## the potential child is always missing
                         adj.matrix[i, j] = 0;
                     } else if ((joint.probs[i,j] / marginal.probs[i]) == 1
@@ -599,7 +599,7 @@ get.dag.scores <- function( dataset, adj.matrix, epos, eneg ) {
                                                                      type="marginal",min.prob=minimum.prob,
                                                                      epos=epos,eneg=eneg)) })
 
-    marginal.probs = matrix(marginal.probs,nrow=length(marginal.probs),ncol=1)
+    marginal.probs = array(marginal.probs, dim = c(length(marginal.probs), 1))
     
     # verify the probabilities to be corret
     res.probs = verify.constraints.probs(marginal.probs,joint.probs)
@@ -622,23 +622,23 @@ get.dag.scores <- function( dataset, adj.matrix, epos, eneg ) {
                 ## Check if the connections from j to i and from i to
                 ## j can be evaluated on this dataset.
                 
-                if (marginal.probs[i] > 0
-                    && marginal.probs[i] < 1
-                    && marginal.probs[j] > 0
-                    && marginal.probs[j] < 1) {
+                if (marginal.probs[i,1] > 0
+                    && marginal.probs[i,1] < 1
+                    && marginal.probs[j,1] > 0
+                    && marginal.probs[j,1] < 1) {
                     
                     ## Check if the two events i and j are
                     ## distinguishable.
                     
-                    if ((joint.probs[i, j] / marginal.probs[j]) < 1
-                        || (joint.probs[i, j] / marginal.probs[i]) < 1) {
+                    if ((joint.probs[i, j] / marginal.probs[j,1]) < 1
+                        || (joint.probs[i, j] / marginal.probs[i,1]) < 1) {
                         
                         ## prima facie scores of i --> j
                         
                         prima.facie.model[i, j] =
-                            joint.probs[j, i] / marginal.probs[i];
+                            joint.probs[j, i] / marginal.probs[i,1];
                         prima.facie.null[i, j] =
-                            (marginal.probs[j] - joint.probs[j, i]) / (1 - marginal.probs[i]);
+                            (marginal.probs[j,1] - joint.probs[j, i]) / (1 - marginal.probs[i,1]);
                     }
                 }
             }
@@ -1015,6 +1015,16 @@ get.prima.facie.parents.do.boot <- function(dataset,
                                        marginal.probs,joint.probs,
                                        silent);
 
+    # remove from adj.matrix.cyclic.tp any edge between events where P(i,j) = 0
+    for (i in 1:nrow(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp)) {
+        for (j in i:ncol(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp)) {
+            if(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[i,j] == 1 && joint.probs[i,j] == 0) {
+                prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[i,j] = 0
+                prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[j,i] = 0
+            }
+        }
+    }
+
     ## Save the results and return them.
     
     prima.facie.parents <-
@@ -1058,6 +1068,16 @@ get.prima.facie.parents.no.boot <- function(dataset,
                                        dataset,
                                        scores$joint.probs,
                                        silent);
+
+    # remove from adj.matrix.cyclic.tp any edge between events where P(i,j) = 0
+    for (i in 1:nrow(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp)) {
+        for (j in i:ncol(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp)) {
+            if(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[i,j] == 1 && joint.probs[i,j] == 0) {
+                prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[i,j] = 0
+                prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[j,i] = 0
+            }
+        }
+    }
 
     ## Save the results return them.
     

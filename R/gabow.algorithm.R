@@ -401,7 +401,7 @@ get.best.scored.tree = function( adj.matrix, subtree.nodes, marginal.probs, join
     # for the number of arcs
     else {
         mean_score = score / total.arcs
-        score = score + mean_score * (attached.arcs-total.arcs)
+        score = score + (mean_score * (attached.arcs-total.arcs))
     }
     
     res = list(adj.matrix=adj.matrix,score=score)
