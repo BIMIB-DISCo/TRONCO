@@ -1963,6 +1963,7 @@ as.bnlearn.network <- function(x,
     genotypes = as.genotypes(x)
     genotypes = as.matrix(genotypes)
     genotypes = keysToNames(x, genotypes)
+    names(colnames(genotypes)) = NULL
 
     df = as.categorical.dataset(genotypes)
 
