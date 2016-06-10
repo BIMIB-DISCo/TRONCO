@@ -1072,7 +1072,7 @@ get.prima.facie.parents.no.boot <- function(dataset,
     # remove from adj.matrix.cyclic.tp any edge between events where P(i,j) = 0
     for (i in 1:nrow(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp)) {
         for (j in i:ncol(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp)) {
-            if(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[i,j] == 1 && joint.probs[i,j] == 0) {
+            if(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[i,j] == 1 && scores$joint.probs[i,j] == 0) {    
                 prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[i,j] = 0
                 prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[j,i] = 0
             }
