@@ -1918,7 +1918,7 @@ as.categorical.dataset <- function(dataset){
         }
     }
 
-    data = data.frame(data)
+    data = data.frame(data, stringsAsFactors = TRUE)
     for (n in names(data)) {
         levels(data[[n]]) = c('missing', 'observed')
     }
@@ -1963,7 +1963,6 @@ as.bnlearn.network <- function(x,
     genotypes = as.genotypes(x)
     genotypes = as.matrix(genotypes)
     genotypes = keysToNames(x, genotypes)
-    names(colnames(genotypes)) = NULL
 
     df = as.categorical.dataset(genotypes)
 
