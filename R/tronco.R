@@ -660,6 +660,8 @@ tronco.mst.gabow <- function(data,
     
     search_scores = score
 
+    is.acyclic = TRUE
+
     models.adj.matrix = as.adj.matrix(results)
 
     if ("no_reg" %in% regularization) {
@@ -673,6 +675,7 @@ tronco.mst.gabow <- function(data,
             } else {
                 score = -1
                 logLik = -1
+                is.acyclic = FALSE
             }
             results$model[[paste('gabow_no_reg', my_s,sep="_")]]$score = score
             results$model[[paste('gabow_no_reg', my_s,sep="_")]]$logLik = logLik
@@ -690,6 +693,7 @@ tronco.mst.gabow <- function(data,
             } else {
                 score = -1
                 logLik = -1
+                is.acyclic = FALSE
             }
             results$model[[paste('gabow_loglik', my_s,sep="_")]]$score = score
             results$model[[paste('gabow_loglik', my_s,sep="_")]]$logLik = logLik
@@ -707,6 +711,7 @@ tronco.mst.gabow <- function(data,
             } else {
                 score = -1
                 logLik = -1
+                is.acyclic = FALSE
             }
             results$model[[paste('gabow_bic', my_s,sep="_")]]$score = score
             results$model[[paste('gabow_bic', my_s,sep="_")]]$logLik = logLik
@@ -725,6 +730,7 @@ tronco.mst.gabow <- function(data,
             } else {
                 score = -1
                 logLik = -1
+                is.acyclic = FALSE
             }
             results$model[[paste('gabow_aic', my_s,sep="_")]]$score = score
             results$model[[paste('gabow_aic', my_s,sep="_")]]$logLik = logLik
@@ -732,6 +738,12 @@ tronco.mst.gabow <- function(data,
     }
 
     ## the reconstruction has been completed.
+
+    if (!is.acyclic) {
+        save(results, file = paste0('result_',  
+            as.character(as.integer(runif(1) * 10000)),
+            '.RData'))
+    }
     
     if (!silent)
         cat(paste(
@@ -742,7 +754,7 @@ tronco.mst.gabow <- function(data,
                    "%Hh:%Mm:%Ss"), 
             "\n"));
 
-    return(results);
+    return(results)
 }
 
 
