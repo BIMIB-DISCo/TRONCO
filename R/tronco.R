@@ -84,6 +84,8 @@ tronco.caprese <- function(data,
 
     }
 
+    
+
     bayes.net = as.bnlearn.network(results, model = 'caprese')
     logLik = logLik(bayes.net$net, data = bayes.net$data)
     results$model$caprese$logLik = logLik
@@ -658,11 +660,20 @@ tronco.mst.gabow <- function(data,
     
     search_scores = score
 
+    models.adj.matrix = as.adj.matrix(results)
+
     if ("no_reg" %in% regularization) {
         for (my_s in search_scores) {
-            bayes.net = as.bnlearn.network(results, model = paste('gabow_no_reg', my_s,sep="_"))
-            score = logLik(bayes.net$net, data = bayes.net$data)
-            logLik = score
+            mod.name = paste('gabow_no_reg', my_s,sep="_")
+            this.matrix = models.adj.matrix[[mod.name]]
+            if (is.dag(graph.adjacency(this.matrix))) {
+                bayes.net = as.bnlearn.network(results, model = mod.name)
+                score = logLik(bayes.net$net, data = bayes.net$data)
+                logLik = score
+            } else {
+                score = -1
+                logLik = -1
+            }
             results$model[[paste('gabow_no_reg', my_s,sep="_")]]$score = score
             results$model[[paste('gabow_no_reg', my_s,sep="_")]]$logLik = logLik
         }
@@ -670,9 +681,16 @@ tronco.mst.gabow <- function(data,
     
     if ("loglik" %in% regularization) {
         for (my_s in search_scores) {
-            bayes.net = as.bnlearn.network(results, model  = paste('gabow_loglik', my_s,sep="_"))
-            score = logLik(bayes.net$net, data = bayes.net$data)
-            logLik = score
+            mod.name = paste('gabow_loglik', my_s,sep="_")
+            this.matrix = models.adj.matrix[[mod.name]]
+            if (is.dag(graph.adjacency(this.matrix))) {
+                bayes.net = as.bnlearn.network(results, model = mod.name)
+                score = logLik(bayes.net$net, data = bayes.net$data)
+                logLik = score
+            } else {
+                score = -1
+                logLik = -1
+            }
             results$model[[paste('gabow_loglik', my_s,sep="_")]]$score = score
             results$model[[paste('gabow_loglik', my_s,sep="_")]]$logLik = logLik
         }
@@ -680,9 +698,16 @@ tronco.mst.gabow <- function(data,
 
     if ("bic" %in% regularization) {
         for (my_s in search_scores) {
-            bayes.net = as.bnlearn.network(results, model  = paste('gabow_bic', my_s,sep="_"))
-            score = BIC(bayes.net$net, data = bayes.net$data)
-            logLik = logLik(bayes.net$net, data = bayes.net$data)
+            mod.name = paste('gabow_bic', my_s,sep="_")
+            this.matrix = models.adj.matrix[[mod.name]]
+            if (is.dag(graph.adjacency(this.matrix))) {
+                bayes.net = as.bnlearn.network(results, model = mod.name)
+                score = BIC(bayes.net$net, data = bayes.net$data)
+                logLik = logLik(bayes.net$net, data = bayes.net$data)
+            } else {
+                score = -1
+                logLik = -1
+            }
             results$model[[paste('gabow_bic', my_s,sep="_")]]$score = score
             results$model[[paste('gabow_bic', my_s,sep="_")]]$logLik = logLik
         }
@@ -690,9 +715,17 @@ tronco.mst.gabow <- function(data,
 
     if ("aic" %in% regularization) {
         for (my_s in search_scores) {
-            bayes.net = as.bnlearn.network(results, model = paste('gabow_aic', my_s,sep="_"))
-            score = AIC(bayes.net$net, data = bayes.net$data)
-            logLik = logLik(bayes.net$net, data = bayes.net$data)
+            mod.name = paste('gabow_aic', my_s,sep="_")
+            this.matrix = models.adj.matrix[[mod.name]]
+
+            if (is.dag(graph.adjacency(this.matrix))) {
+                bayes.net = as.bnlearn.network(results, model = mod.name)
+                score = AIC(bayes.net$net, data = bayes.net$data)
+                logLik = logLik(bayes.net$net, data = bayes.net$data)
+            } else {
+                score = -1
+                logLik = -1
+            }
             results$model[[paste('gabow_aic', my_s,sep="_")]]$score = score
             results$model[[paste('gabow_aic', my_s,sep="_")]]$logLik = logLik
         }
