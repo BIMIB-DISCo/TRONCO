@@ -1,9 +1,6 @@
 language: r
-bioc_required: true
-bioc_use_devel: true
+r: bioc-release
 
-r:
-  - devel
 cache: packages
 
 before_install:    
