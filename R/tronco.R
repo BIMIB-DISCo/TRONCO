@@ -530,11 +530,11 @@ tronco.mst.edmonds <- function(data,
 #' @param do.raising Whether to use or not the raising condition as a prior.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.mst.gabow
-#' @importFrom bnlearn hc tabu empty.graph set.arc
+#' @importFrom bnlearn hc tabu empty.graph set.arc score amat<- amat
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths graph_from_adjacency_matrix clusters unfold.tree
+#' @importFrom igraph is.dag
 #' @importFrom gtools permutations
-#### @importFrom infotheo mutinformation
 #' @importFrom stats phyper AIC BIC logLik
 #' 
 tronco.mst.gabow <- function(data,
@@ -755,170 +755,6 @@ tronco.mst.gabow <- function(data,
             "\n"));
 
     return(results)
-}
-
-
-
-
-#' Reconstruct a progression model using MLTREE algorithm combined 
-#' with probabilistic causation
-#'
-### @examples
-### data = matrix(sample(0:1, 333*6, replace=TRUE),333,6)
-### data = import.genotypes(data)
-### recon = tronco.mltree(data)
-#'
-#' @title tronco mltree
-#' @param data A TRONCO compliant dataset.
-#' @param regularization Select the regularization for the 
-#' likelihood estimation, e.g., BIC, AIC. 
-#' @param do.boot A parameter to disable/enable the estimation 
-#' of the error rates give the reconstructed model.
-#' @param nboot Number of bootstrap sampling (with rejection) 
-#' to be performed when estimating the selective advantage scores. 
-#' @param pvalue Pvalue to accept/reject the valid selective 
-#' advantage relations. 
-#' @param min.boot Minimum number of bootstrap sampling to be 
-#' performed. 
-#' @param min.stat A parameter to disable/enable the minimum number
-#' of bootstrap sampling required besides nboot if any sampling 
-#' is rejected. 
-#' @param boot.seed Initial seed for the bootstrap random sampling.
-#' @param silent A parameter to disable/enable verbose messages.
-#' @return A TRONCO compliant object with reconstructed model
-#' @export tronco.mltree
-#' @importFrom bnlearn hc tabu empty.graph set.arc score amat<- amat
-#' @importFrom igraph graph.adjacency get.adjacency graph.union edge
-#' @importFrom igraph get.shortest.paths
-#' @importFrom igraph is.dag
-#### @importFrom infotheo mutinformation
-#' @importFrom stats phyper AIC BIC logLik
-#' 
-tronco.mltree <- function(data,
-                          regularization = "no_reg", 
-                          do.boot = TRUE, 
-                          nboot = 100, 
-                          pvalue = 0.05, 
-                          min.boot = 3, 
-                          min.stat = TRUE, 
-                          boot.seed = NULL, 
-                          silent = FALSE ) {
-
-    if (is.null(data) || is.null(data$genotypes)) {
-        stop("The dataset given as input is not valid.");
-    }
-
-    ## Enforce data to be numeric
-    data = enforce.numeric(data)
-    
-    ## Check for the inputs to be correct.
-    
-    if (is.null(data$hypotheses)) {
-        data$hypotheses = NA;
-    }
-    
-    if (pvalue < 0 || pvalue > 1) {
-        stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
-    }
-
-    if (! all(regularization %in% c('no_reg'))) {
-        stop("Possible regularization is no-reg",call. = FALSE);
-    }
-
-    ## Check for the input to be compliant.
-    
-    is.compliant(data)
-
-    ## check if there are hypotheses
-
-    if (npatterns(data) > 0) {
-        warning("Patters found in input for tronco.mltree \n")
-    }
-
-    ## Reconstruct the reconstruction with MLTREE.
-    
-    if (is.null(boot.seed)) {
-        my.seed = "NULL"    
-    }
-    else {
-        my.seed = boot.seed;
-    }
-    if (silent == FALSE) {
-        cat('*** Checking input events.\n')
-        invalid = consolidate.data(data, TRUE)
-        if (length(unlist(invalid)) > 0) warning(
-            "Input events should be consolidated - see consolidate.data."
-        );
-
-        cat(paste0(
-            '*** Inferring a progression model with the following settings.\n',
-            '\tDataset size: n = ',
-            nsamples(data),
-            ', m = ',
-            nevents(data), '.\n',
-            '\tAlgorithm: MLTREE with \"',
-            paste0(regularization, collapse = ", "),
-            '\" regularization',
-            '\tRandom seed: ',
-            my.seed, '.\n',
-            '\tBootstrap iterations (Wilcoxon): ',
-            ifelse(do.boot, nboot, 'disabled'), '.\n',
-            ifelse(do.boot, 
-                   paste0('\t\texhaustive bootstrap: ',
-                          min.stat,
-                          '.\n\t\tp-value: ',
-                          pvalue,
-                          '.\n\t\tminimum bootstrapped scores: ',
-                          min.boot, '.\n'), '')        
-        ))
-    }
-
-    reconstruction =
-        mltree.fit(data$genotypes,
-                   regularization = regularization,
-                   do.boot = do.boot,
-                   nboot = nboot,
-                   pvalue = pvalue,
-                   min.boot = min.boot,
-                   min.stat = min.stat,
-                   boot.seed = boot.seed,
-                   silent = silent)
-
-    ## Structure to save the results.
-    results = data
-    results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
-    results$confidence = reconstruction$confidence
-    results$model = reconstruction$model
-    results$tree.list = reconstruction$tree.list
-    results$parameters = reconstruction$parameters
-    results$execution.time = reconstruction$execution.time
-
-    ## Add BIC/AIC/LogLik informations
-
-    if (!silent) {
-        cat('*** Evaluating BIC / AIC / LogLik informations.\n')
-    }
-
-    if ("no_reg" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'mltree_no_reg')
-        score = logLik(bayes.net$net, data = bayes.net$data)
-        logLik = score
-        results$model$mltree_no_reg$score = score
-        results$model$mltree_no_reg$logLik = logLik
-    }
-
-    ## the reconstruction has been completed.
-    
-    if (!silent)
-        cat(paste(
-            "The reconstruction has been successfully completed in", 
-            format(.POSIXct(round(reconstruction$execution.time[3],
-                                  digits = 0),
-                            tz = "GMT"),
-                   "%Hh:%Mm:%Ss"), 
-            "\n"));
-
-    return(results);
 }
 
 
