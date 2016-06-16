@@ -535,7 +535,7 @@ tronco.mst.edmonds <- function(data,
 #' @importFrom igraph get.shortest.paths graph_from_adjacency_matrix clusters unfold.tree
 #' @importFrom igraph is.dag
 #' @importFrom gtools permutations
-#' @importFrom stats phyper AIC BIC logLik
+#' @importFrom stats phyper AIC BIC logLik runif
 #' 
 tronco.mst.gabow <- function(data,
                              regularization = "no_reg", 
