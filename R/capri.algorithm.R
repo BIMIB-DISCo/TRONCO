@@ -20,6 +20,8 @@
 # @param min.stat should I keep bootstrapping untill I have nboot valid values?
 # @param boot.seed seed to be used for the sampling
 # @param silent should I be verbose?
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
 # @return topology: the reconstructed tree topology
 #
 capri.fit <- function(dataset,
@@ -32,7 +34,9 @@ capri.fit <- function(dataset,
                       min.boot = 3,
                       min.stat = TRUE,
                       boot.seed = NULL,
-                      silent = FALSE ) {
+                      silent = FALSE,
+                      epos = 0.0,
+                      eneg = 0.0 ) {
 
     ## Start the clock to measure the execution time.
     
@@ -57,7 +61,7 @@ capri.fit <- function(dataset,
 
     ## Check if the dataset is valid.
     
-    valid.dataset = check.dataset(dataset, adj.matrix, FALSE);
+    valid.dataset = check.dataset(dataset, adj.matrix, FALSE, epos, eneg)
     adj.matrix = valid.dataset$adj.matrix;
     invalid.events = valid.dataset$invalid.events;
 
@@ -76,7 +80,9 @@ capri.fit <- function(dataset,
                                             min.boot,
                                             min.stat,
                                             boot.seed,
-                                            silent);
+                                            silent,
+                                            epos,
+                                            eneg);
     } else {
         if (!silent)
             cat('*** Computing selective advantage scores (prima facie).\n')
@@ -84,7 +90,9 @@ capri.fit <- function(dataset,
             get.prima.facie.parents.no.boot(dataset,
                                             hypotheses,
                                             adj.matrix,
-                                            silent);
+                                            silent,
+                                            epos,
+                                            eneg);
     }
 
     ## Add back in any connection invalid for the probability raising
@@ -92,8 +100,9 @@ capri.fit <- function(dataset,
     
     if (length(invalid.events) > 0) {
         for (i in 1:nrow(invalid.events)) {
-            prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
-            prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
+            prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
+            prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
+            prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
         }
     }
     adj.matrix.prima.facie =
@@ -139,7 +148,8 @@ capri.fit <- function(dataset,
              min.boot = min.boot,
              min.stat = min.stat,
              boot.seed = boot.seed,
-             silent = silent);
+             silent = silent,
+             error.rates = list(epos=epos,eneg=eneg))
 
     ## Return the results.
     
@@ -161,8 +171,10 @@ capri.fit <- function(dataset,
 # @param dataset a dataset describing a progressive phenomenon
 # @param adj.matrix adjacency matrix of the topology
 # @param verbose should I print the warnings? Yes if TRUE, no otherwise
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
 # @return valid.dataset: a dataset valid accordingly to the probability raising
-check.dataset <- function(dataset, adj.matrix, verbose ) {
+check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
 
     ## Perform the preprocessing only if I have at least two binary
     ## events and two samples.
@@ -187,18 +199,45 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
                 pair.count[i,j] = (t(val1) %*% val2);
             }
         }
-        ## Marginal.probs is an array of the observed marginal
-        ## probabilities.
         
-        marginal.probs =
+        # minimum probability to be represented in the dataset
+        minimum.prob = 0 #max(.Machine$double.eps,(1/nrow(dataset))/2)
+        
+        ## marginal.probs is an array with the marginal probabilities.
+        
+        marginal.probs <-
             array(as.matrix(diag(pair.count) / nrow(dataset)),
-                  dim = c(ncol(dataset),1));
+                  dim = c(ncol(dataset), 1))
+                  
+        ## joint.probs is an array with the joint observed probabilities.
         
-        ## joint.probs is an array of the observed joint
-        ## probabilities.
+        joint.probs <- as.matrix(pair.count / nrow(dataset))
         
-        joint.probs = as.matrix(pair.count/nrow(dataset));
-
+        # apply the noise model to estimate the theoretical joint.probs
+        for (p1 in 1:nrow(joint.probs)) {
+            for (p2 in p1:ncol(joint.probs)) {
+                estimated.prob = estimate.theoretical.probs(joint.probs[p1,p2],type="joint",prob1=marginal.probs[p1],
+                                                            prob2=marginal.probs[p2],
+                                                            min.prob=minimum.prob,epos=epos,eneg=eneg)
+                joint.probs[p1,p2] = estimated.prob
+                joint.probs[p2,p1] = estimated.prob
+            }
+        }
+        
+        
+        # apply the noise model to estimate the theoretical marginal.probs
+        marginal.probs = sapply(marginal.probs,FUN=function(x) { return(estimate.theoretical.probs(x,
+                                                                         type="marginal",min.prob=minimum.prob,
+                                                                         epos=epos,eneg=eneg)) })
+                                                                         
+        marginal.probs = array(marginal.probs, dim = c(length(marginal.probs), 1))
+    
+        # verify the probabilities to be corret
+        res.probs = verify.constraints.probs(marginal.probs,joint.probs)
+        marginal.probs = res.probs$marginal.probs
+        joint.probs = res.probs$joint.probs
+    
+        
         ## Evaluate the connections.
         
         invalid.events = vector();
@@ -209,16 +248,16 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
                 if (i != j && adj.matrix[i, j] == 1) {
                     
                     
-                    if (marginal.probs[i] == 1) {
+                    if (marginal.probs[i,1] == 1) {
                         ## the potential cause is always present
                         adj.matrix[i, j] = 0;
-                    } else if (marginal.probs[i] == 0) {
+                    } else if (marginal.probs[i,1] == 0) {
                         ## the potential cause is always missing
                         adj.matrix[i, j] = 0;
-                    } else if (marginal.probs[j] == 1) {
+                    } else if (marginal.probs[j,1] == 1) {
                         ## the potential child is always present
                         adj.matrix[i, j] = 0;
-                    } else if (marginal.probs[j] == 0) {
+                    } else if (marginal.probs[j,1] == 0) {
                         ## the potential child is always missing
                         adj.matrix[i, j] = 0;
                     } else if ((joint.probs[i,j] / marginal.probs[i]) == 1
@@ -233,7 +272,7 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
                         # I choose one direction randomly
                         # by keeping only the edge from the lower to the higher positioned node
                         if(i<j) {
-                        	invalid.events = rbind(invalid.events,t(c(i,j)))
+                            invalid.events = rbind(invalid.events,t(c(i,j)))
                         }
                         
                     }
@@ -268,9 +307,28 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
     return(valid.dataset);
 }
 
+# verify the constraints over the probabilities after noise is applied
+verify.constraints.probs = function( marginal.probs, joint.probs ) {
+    
+    for (i in 1:nrow(joint.probs)) {
+        for (j in i:ncol(joint.probs)) {
+            if(i!=j) {
+                max.joint.prob = min(marginal.probs[i,1],marginal.probs[j,1])
+                if(joint.probs[i,j]>max.joint.prob) {
+                    joint.probs[i,j] = max.joint.prob
+                    joint.probs[j,i] = joint.probs[i,j]
+                }
+            }
+        }
+    }
+    
+    res.probs = list(marginal.probs=marginal.probs,joint.probs=joint.probs)
+    
+}
+
 
 # compute a robust estimation of the scores using rejection sampling bootstrap
-# @title get.bootstapped.scores
+# @title get.bootstrapped.scores
 # @param dataset a valid dataset
 # @param nboot number of bootstrap resampling to be performed
 # @param adj.matrix adjacency matrix of the initially valid edges
@@ -278,15 +336,19 @@ check.dataset <- function(dataset, adj.matrix, verbose ) {
 # @param min.stat should I keep bootstrapping untill I have nboot valid values?
 # @param boot.seed seed to be used for the sampling
 # @param silent Should I be verbose?
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
 # @return scores: list structure with the scores and the data generated by bootstrap
 #
-get.bootstapped.scores <- function(dataset,
+get.bootstrapped.scores <- function(dataset,
                                    nboot,
                                    adj.matrix,
                                    min.boot = 3,
                                    min.stat = TRUE,
                                    boot.seed = NULL,
-                                   silent = FALSE) {
+                                   silent = FALSE,
+                                   epos,
+                                   eneg) {
 
     ## Structures to save the distributions generated by the
     ## bootstrapped datasets.
@@ -360,7 +422,7 @@ get.bootstapped.scores <- function(dataset,
 
         ## Compute the scores on the sampled data.
         
-        curr.scores = get.dag.scores(sampled.data,adj.matrix);
+        curr.scores = get.dag.scores(sampled.data,adj.matrix,epos,eneg);
         curr.marginal.probs = curr.scores$marginal.probs;
         curr.joint.probs = curr.scores$joint.probs;
         curr.prima.facie.model = curr.scores$prima.facie.model;
@@ -481,9 +543,11 @@ get.bootstapped.scores <- function(dataset,
 # @title get.dag.scores
 # @param dataset a valid dataset
 # @param adj.matrix adjacency matrix of the initially valid edges
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
 # @return scores: observed probabilities and prima facie scores
 #
-get.dag.scores <- function( dataset, adj.matrix ) {
+get.dag.scores <- function( dataset, adj.matrix, epos, eneg ) {
 
     ## Structure to save the prima facie scores.
     
@@ -505,16 +569,43 @@ get.dag.scores <- function( dataset, adj.matrix ) {
         }
     }
     
+    # minimum probability to be represented in the dataset
+    minimum.prob = 0 #max(.Machine$double.eps,(1/nrow(dataset))/2)
+    
     ## marginal.probs is an array with the marginal probabilities.
     
     marginal.probs <-
         array(as.matrix(diag(pair.count) / nrow(dataset)),
-              dim = c(ncol(dataset), 1));
-    
+              dim = c(ncol(dataset), 1))
+              
     ## joint.probs is an array with the joint observed probabilities.
     
-    joint.probs <- as.matrix(pair.count / nrow(dataset));
+    joint.probs <- as.matrix(pair.count / nrow(dataset))
+    
+    # apply the noise model to estimate the theoretical joint.probs
+    for (p1 in 1:nrow(joint.probs)) {
+        for (p2 in p1:ncol(joint.probs)) {
+            estimated.prob = estimate.theoretical.probs(joint.probs[p1,p2],type="joint",prob1=marginal.probs[p1],
+                                                        prob2=marginal.probs[p2],
+                                                        min.prob=minimum.prob,epos=epos,eneg=eneg)
+            joint.probs[p1,p2] = estimated.prob
+            joint.probs[p2,p1] = estimated.prob
+        }
+    }
+    
+    
+    # apply the noise model to estimate the theoretical marginal.probs
+    marginal.probs = sapply(marginal.probs,FUN=function(x) { return(estimate.theoretical.probs(x,
+                                                                     type="marginal",min.prob=minimum.prob,
+                                                                     epos=epos,eneg=eneg)) })
 
+    marginal.probs = array(marginal.probs, dim = c(length(marginal.probs), 1))
+    
+    # verify the probabilities to be corret
+    res.probs = verify.constraints.probs(marginal.probs,joint.probs)
+    marginal.probs = res.probs$marginal.probs
+    joint.probs = res.probs$joint.probs
+    
     ## Compute the prima facie scores based on the probability raising
     ## model.
     
@@ -531,23 +622,23 @@ get.dag.scores <- function( dataset, adj.matrix ) {
                 ## Check if the connections from j to i and from i to
                 ## j can be evaluated on this dataset.
                 
-                if (marginal.probs[i] > 0
-                    && marginal.probs[i] < 1
-                    && marginal.probs[j] > 0
-                    && marginal.probs[j] < 1) {
+                if (marginal.probs[i,1] > 0
+                    && marginal.probs[i,1] < 1
+                    && marginal.probs[j,1] > 0
+                    && marginal.probs[j,1] < 1) {
                     
                     ## Check if the two events i and j are
                     ## distinguishable.
                     
-                    if ((joint.probs[i, j] / marginal.probs[j]) < 1
-                        || (joint.probs[i, j] / marginal.probs[i]) < 1) {
+                    if ((joint.probs[i, j] / marginal.probs[j,1]) < 1
+                        || (joint.probs[i, j] / marginal.probs[i,1]) < 1) {
                         
                         ## prima facie scores of i --> j
                         
                         prima.facie.model[i, j] =
-                            joint.probs[j, i] / marginal.probs[i];
+                            joint.probs[j, i] / marginal.probs[i,1];
                         prima.facie.null[i, j] =
-                            (marginal.probs[j] - joint.probs[j, i]) / (1 - marginal.probs[i]);
+                            (marginal.probs[j,1] - joint.probs[j, i]) / (1 - marginal.probs[i,1]);
                     }
                 }
             }
@@ -561,6 +652,43 @@ get.dag.scores <- function( dataset, adj.matrix ) {
              prima.facie.model = prima.facie.model,
              prima.facie.null = prima.facie.null);
     return(scores);
+}
+
+# apply the noise model to estimate the either the theoretical marginal or joint probability
+estimate.theoretical.probs = function( observed.prob, type, prob1 = NA, prob2 = NA, min.prob = 0, epos, eneg ) {
+    
+    estimated.prob = NA
+    
+    # estimate the probability
+    if(type=="marginal") {
+        
+        estimated.prob = (observed.prob - epos) / (1 - epos - eneg)
+    
+        # set a minimum/maximum value for the marginal probabilities in [min.prob,(1-min.prob)]
+        if(estimated.prob<min.prob) {
+            estimated.prob = min.prob
+        }
+        if(estimated.prob>(1-min.prob)) {
+            estimated.prob = (1-min.prob)
+        }
+    
+    }
+    else if(type=="joint") {
+        
+        estimated.prob = (observed.prob - epos * (prob1 + prob2 - epos)) / ((1 - epos - eneg)^2)
+    
+        # set a minimum/maximum value for the joint probabilities in [0,(1-min.prob)]
+        if(estimated.prob<0) {
+            estimated.prob = 0
+        }
+        if(estimated.prob>(1-min.prob)) {
+            estimated.prob = (1-min.prob)
+        }
+        
+    }
+    
+    return(estimated.prob)
+    
 }
 
 
@@ -684,7 +812,8 @@ get.prima.facie.causes.do.boot <- function(adj.matrix,
         adj.matrix.acyclic = probability.raising$adj.matrix;
     }
     adj.matrix =
-        list(adj.matrix.cyclic = adj.matrix.cyclic,
+        list(adj.matrix.cyclic.tp = temporal.priority$adj.matrix,
+             adj.matrix.cyclic = adj.matrix.cyclic,
              adj.matrix.acyclic = adj.matrix.acyclic)
 
     ## Save the results and return them.
@@ -801,8 +930,9 @@ get.prima.facie.causes.no.boot <- function(adj.matrix,
         adj.matrix.acyclic = probability.raising$adj.matrix;
     }
     adj.matrix =
-        list(adj.matrix.cyclic = adj.matrix.cyclic,
-             adj.matrix.acyclic=adj.matrix.acyclic)
+        list(adj.matrix.cyclic.tp = temporal.priority$adj.matrix,
+             adj.matrix.cyclic = adj.matrix.cyclic,
+             adj.matrix.acyclic = adj.matrix.acyclic)
 
     ## Save the results and return them.
     
@@ -825,6 +955,8 @@ get.prima.facie.causes.no.boot <- function(adj.matrix,
 # @param min.stat should I keep bootstrapping untill I have nboot valid values?
 # @param boot.seed seed to be used for the sampling
 # @param silent Should I be verbose?
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
 # @return prima.facie.parents list of the set (if any) of prima facie parents for each node
 #
 get.prima.facie.parents.do.boot <- function(dataset,
@@ -835,18 +967,23 @@ get.prima.facie.parents.do.boot <- function(dataset,
                                             min.boot,
                                             min.stat,
                                             boot.seed,
-                                            silent ) {
+                                            silent,
+                                            epos,
+                                            eneg ) {
 
     ## Perform a robust estimation of the scores using rejection
     ## sampling bootstrap.
     
     scores =
-        get.bootstapped.scores(dataset,
-                               nboot,adj.matrix,
+        get.bootstrapped.scores(dataset,
+                               nboot,
+                               adj.matrix,
                                min.boot,
                                min.stat,
                                boot.seed,
-                               silent);
+                               silent,
+                               epos,
+                               eneg);
 
     ## Compute the observed and joint probabilities as the mean of the
     ## bootstrapped values.
@@ -878,6 +1015,16 @@ get.prima.facie.parents.do.boot <- function(dataset,
                                        marginal.probs,joint.probs,
                                        silent);
 
+    # remove from adj.matrix.cyclic.tp any edge between events where P(i,j) = 0
+    for (i in 1:nrow(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp)) {
+        for (j in i:ncol(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp)) {
+            if(joint.probs[i,j] == 0) {
+                prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[i,j] = 0
+                prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[j,i] = 0
+            }
+        }
+    }
+
     ## Save the results and return them.
     
     prima.facie.parents <-
@@ -895,16 +1042,20 @@ get.prima.facie.parents.do.boot <- function(dataset,
 # @param hypotheses hypotheses object associated to dataset
 # @param adj.matrix adjacency matrix of the initially valid edges
 # @param silent Should I be verbose?
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
 # @return prima.facie.parents: list of the set (if any) of prima facie parents for each node
 #
 get.prima.facie.parents.no.boot <- function(dataset,
                                             hypotheses,
                                             adj.matrix,
-                                            silent) {
+                                            silent,
+                                            epos,
+                                            eneg) {
 
     ## Compute the scores from the dataset.
     
-    scores = get.dag.scores(dataset,adj.matrix);
+    scores = get.dag.scores(dataset,adj.matrix,epos,eneg);
 
     ## Remove all the edges not representing a prima facie causes.
     
@@ -917,6 +1068,16 @@ get.prima.facie.parents.no.boot <- function(dataset,
                                        dataset,
                                        scores$joint.probs,
                                        silent);
+
+    # remove from adj.matrix.cyclic.tp any edge between events where P(i,j) = 0
+    for (i in 1:nrow(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp)) {
+        for (j in i:ncol(prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp)) {
+            if(scores$joint.probs[i,j] == 0) {
+                prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[i,j] = 0
+                prima.facie.topology$adj.matrix$adj.matrix.cyclic.tp[j,i] = 0
+            }
+        }
+    }
 
     ## Save the results return them.
     
@@ -1348,6 +1509,7 @@ verify.temporal.priority.do.boot <- function(marginal.probs.distributions,
                 ## Temporal priority condition: if P(i) > P(j) the edge
                 ## i --> j is valid for temporal priority.
                 
+            
                 ## Test i --> j
                 first.pvalue.i.j = suppressWarnings(
                     wilcox.test(unlist(marginal.probs.distributions[i, 1]),

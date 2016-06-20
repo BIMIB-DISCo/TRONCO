@@ -47,7 +47,7 @@ Daniele Ramazzotti$^\ast$
 \renewcommand{\arraystretch}{1.5}
 
 \begin{tabular}{ll}
-{\bf Version.}& {2.4.0} (April 2016) \\
+{\bf Version.}& {2.4.2} (June 2016) \\
 {\bf Contact.}& \email{tronco@disco.unimib.it} \\
 {\bf Bugs report.} & \url{https://github.com/BIMIB-DISCo/TRONCO} \\
 {\bf Website.} & \url{https://sites.google.com/site/troncopackage}
@@ -64,20 +64,16 @@ background = "#f3f3ff"
 @
 
 
-
-
-
 \newpage
 
 \tableofcontents
 
 
-
-
 \section{Changelog} 
 
 \begin{itemize}
-\item[2.4] Current version. New statistics available for model confidence via cross-validation routines. New algorithms based on Minimum Spanning Tree extraction.
+\item[2.4.2] Latest development version. Implements a noise model and finalizes a series of algorithms reconstructing Suppes-Bayes Causal Network as maximum spanning trees.
+\item[2.4] Current stable version. New statistics available for model confidence via cross-validation routines. New algorithms based on Minimum Spanning Tree extraction.
 \item[2.0] Released in summer 2015 on our GitHUB, replaced the \Bioconductor{} version in autumn 2015. This version is parallel, includes also the CAPRI algorithm, supports common GISTIC and  MAF input formats, supports TCGA samples editing and queries to the cBio portal. This version has new plotting capabilities, and a general from-scratch design. It is not compatible with previous releases.
 \item[1.0] released in mid 2014, includes CAPRESE algorithm. It is now outdated and no more maintained;
 \end{itemize}
@@ -97,6 +93,7 @@ CAPRESE &  Cancer Progression Extraction with Single Edges &  Ind &  \href{http:
 CAPRI &  Cancer Progression Inference &  Ens & \href{http://www.ncbi.nlm.nih.gov/pubmed/25971740}{Bioinformatics 31(18), 3016-3016, 2015.}\\ \hline
 
 MST (Edmond) & Directed Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
+MST (Gabow) & Partially Directed Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
 MST (Chow Liu) & Undirected Minimum Spanning Tree with Likelihood-Fit & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
 MST (Prim) & Undirected Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
  \end{tabular}
@@ -961,6 +958,19 @@ model.edmonds = annotate.description(model.edmonds, 'MST Edmonds - aCML')
 
 \FloatBarrier
 
+\subsection{Partially Directed Minimum Spanning Tree with Mutual Information}
+
+This algorithm extends the previous one in situations where it is not possible to fully assess a confident time ordering among the nodes, hence leading to a partially directed input. This algorithm adopts Gabow search strategy to evaluate the best directed minimum spanning tree among such undirected components. We test it to infer a model from aCML data as all the other algorithms.
+
+
+<<gabow-plot>>=
+model.gabow = tronco.mst.gabow(aCML.clean, nboot = 5, boot.seed = 12345)
+model.gabow = annotate.description(model.gabow, 'MST Gabow - aCML')
+@
+
+
+\FloatBarrier
+
 
 \subsection{Undirected Minimum Spanning Tree with Likelihood-Fit }
 
@@ -1296,7 +1306,7 @@ Finally we also privede the possibility of exporting the inferred model to {\tt 
 
 <<graphml, fig.show='hide'>>=
 export.graphml(model.boot,
-	file = 'graph.gml',
+    file = 'graph.gml',
     fontsize = 12, 
     scale.nodes = .6, 
     height.logic = 0.25)

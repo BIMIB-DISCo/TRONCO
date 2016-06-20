@@ -17,7 +17,9 @@
 #
 caprese.fit <- function(dataset,
                         lambda = 0.5,
-                        silent = FALSE) {
+                        silent = FALSE,
+                        epos = 0.0,
+                        eneg = 0.0) {
     
     ## Start the clock to measure the execution time.
     
@@ -38,8 +40,8 @@ caprese.fit <- function(dataset,
     
     ## Check if the dataset is valid.
     
-    valid.dataset = check.dataset(dataset,adj.matrix,FALSE);
-    adj.matrix = valid.dataset$adj.matrix;
+    valid.dataset = check.dataset(dataset,adj.matrix,FALSE, epos, eneg)
+    adj.matrix = valid.dataset$adj.matrix
     
     ## marginal.probs is an array of the observed marginal
     ## probabilities.
@@ -55,7 +57,8 @@ caprese.fit <- function(dataset,
     best.parents =
         get.tree.parents(adj.matrix,
                          marginal.probs,
-                         joint.probs,lambda);
+                         joint.probs,
+                         lambda)
     
     ## Create the structures where to save the results.
     
@@ -183,7 +186,8 @@ caprese.fit <- function(dataset,
     parameters =
         list(algorithm = "CAPRESE",
              lambda = lambda,
-             silent = silent);
+             silent = silent,
+             error.rates = list(epos=epos,eneg=eneg))
     
     ## Return the results.
     
@@ -315,7 +319,7 @@ get.tree.scores <- function(adj.matrix,
     ## Structure where to save the probability raising scores.
     
     pr.score =
-        array(-1, dim = c(nrow(marginal.probs), nrow(marginal.probs)));
+        array(-1, dim = c(nrow(marginal.probs), nrow(marginal.probs)))
     
     ## Compute the probability raising based scores.
     

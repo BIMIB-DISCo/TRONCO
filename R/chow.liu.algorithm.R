@@ -19,6 +19,8 @@
 # @param min.stat should I keep bootstrapping untill I have nboot valid values?
 # @param boot.seed seed to be used for the sampling
 # @param silent should I be verbose?
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
 # @return topology: the reconstructed tree topology
 #
 chow.liu.fit <- function(dataset,
@@ -29,7 +31,9 @@ chow.liu.fit <- function(dataset,
                          min.boot = 3,
                          min.stat = TRUE,
                          boot.seed = NULL,
-                         silent = FALSE ) {
+                         silent = FALSE,
+                         epos = 0.0,
+                         eneg = 0.0 ) {
 
     ## Start the clock to measure the execution time.
     
@@ -50,7 +54,7 @@ chow.liu.fit <- function(dataset,
 
     ## Check if the dataset is valid.
     
-    valid.dataset = check.dataset(dataset, adj.matrix, FALSE);
+    valid.dataset = check.dataset(dataset, adj.matrix, FALSE, epos, eneg)
     adj.matrix = valid.dataset$adj.matrix;
     invalid.events = valid.dataset$invalid.events;
 
@@ -69,7 +73,9 @@ chow.liu.fit <- function(dataset,
                                             min.boot,
                                             min.stat,
                                             boot.seed,
-                                            silent);
+                                            silent,
+                                            epos,
+                                            eneg);
     } else {
         if (!silent)
             cat('*** Computing selective advantage scores (prima facie).\n')
@@ -77,7 +83,9 @@ chow.liu.fit <- function(dataset,
             get.prima.facie.parents.no.boot(dataset,
                                             NA,
                                             adj.matrix,
-                                            silent);
+                                            silent,
+                                            epos,
+                                            eneg);
     }
 
     ## Add back in any connection invalid for the probability raising
@@ -85,8 +93,9 @@ chow.liu.fit <- function(dataset,
     
     if (length(invalid.events) > 0) {
         for (i in 1:nrow(invalid.events)) {
-            prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
-            prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
+            prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
+            prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
+            prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
         }
     }
     adj.matrix.prima.facie =
@@ -129,7 +138,8 @@ chow.liu.fit <- function(dataset,
              min.boot = min.boot,
              min.stat = min.stat,
              boot.seed = boot.seed,
-             silent = silent);
+             silent = silent,
+             error.rates = list(epos=epos,eneg=eneg));
 
     ## Return the results.
     

@@ -18,6 +18,8 @@
 #' @param data A TRONCO compliant dataset.
 #' @param lambda Coefficient to combine the raw estimate with a correction factor into a shrinkage estimator. 
 #' @param silent A parameter to disable/enable verbose messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.caprese
 #' @importFrom stats phyper
@@ -25,12 +27,14 @@
 #' 
 tronco.caprese <- function(data,
                            lambda = 0.5,
-                           silent = FALSE ) {
+                           silent = FALSE,
+                           epos = 0.0,
+                           eneg = 0.0 ) {
 
     ## Check for the inputs to be correct.
     
     if (is.null(data) || is.null(data$genotypes)) {
-        stop("The dataset given as input is not valid.");
+        stop("The dataset given as input is not valid.")
     }
     if (lambda < 0 || lambda > 1) {
         stop("The value of the shrinkage parameter lambda has to be in [0:1]!",
@@ -51,7 +55,7 @@ tronco.caprese <- function(data,
     
     if (silent == FALSE) {
         cat('*** Checking input events.\n')
-        invalid = consolidate.data(data, TRUE)      
+        invalid = consolidate.data(data, TRUE)
         if (length(unlist(invalid)) > 0)
             warning("Input events should be consolidated - see consolidate.data.");
 
@@ -63,7 +67,9 @@ tronco.caprese <- function(data,
     }
     reconstruction = caprese.fit(dataset = data$genotypes,
                                  lambda = lambda,
-                                 silent = silent);
+                                 silent = silent,
+                                 epos = epos,
+                                 eneg = eneg)
 
     ## Structure to save the results.
     
@@ -77,6 +83,8 @@ tronco.caprese <- function(data,
         cat('*** Evaluating LogLik informations.\n')
 
     }
+
+    
 
     bayes.net = as.bnlearn.network(results, model = 'caprese')
     logLik = logLik(bayes.net$net, data = bayes.net$data)
@@ -113,6 +121,8 @@ tronco.caprese <- function(data,
 #' @param min.stat A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
 #' @param silent A parameter to disable/enable verbose messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
 #' @importFrom bnlearn hc tabu empty.graph set.arc
@@ -129,7 +139,9 @@ tronco.capri <- function(data,
                          min.boot = 3, 
                          min.stat = TRUE, 
                          boot.seed = NULL, 
-                         silent = FALSE ) {
+                         silent = FALSE,
+                         epos = 0.0,
+                         eneg = 0.0 ) {
 
     ## Check for the inputs to be correct.
     
@@ -154,6 +166,11 @@ tronco.capri <- function(data,
 
     if (! all(regularization %in% c('loglik', 'bic', 'aic'))) {
         stop("Possible regularization are loglik, bic or aic",call. = FALSE);
+    }
+    
+    if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
+        stop("The values of the error rates have to be in [0:0.5)!",
+             call. = FALSE)
     }
 
     ## Check for the input to be compliant.
@@ -211,7 +228,9 @@ tronco.capri <- function(data,
                   min.boot = min.boot,
                   min.stat = min.stat,
                   boot.seed = boot.seed,
-                  silent = silent);
+                  silent = silent,
+                  epos = epos,
+                  eneg = eneg)
 
     ## Structure to save the results.
     
@@ -278,6 +297,8 @@ tronco.capri <- function(data,
 #' @param data A TRONCO compliant dataset.
 #' @param regularization Select the regularization for the 
 #' likelihood estimation, e.g., BIC, AIC. 
+#' @param score Select the score for the estimation of 
+#' the best tree, e.g., pointwise mutual information (pmi), conditional entropy (entropy). 
 #' @param do.boot A parameter to disable/enable the estimation 
 #' of the error rates give the reconstructed model.
 #' @param nboot Number of bootstrap sampling (with rejection) 
@@ -291,6 +312,8 @@ tronco.capri <- function(data,
 #' is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
 #' @param silent A parameter to disable/enable verbose messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.mst.edmonds
 #' @importFrom bnlearn hc tabu empty.graph set.arc
@@ -301,13 +324,16 @@ tronco.capri <- function(data,
 #' 
 tronco.mst.edmonds <- function(data,
                                regularization = "no_reg", 
+                               score = "pmi", 
                                do.boot = TRUE, 
                                nboot = 100, 
                                pvalue = 0.05, 
                                min.boot = 3, 
                                min.stat = TRUE, 
                                boot.seed = NULL, 
-                               silent = FALSE ) {
+                               silent = FALSE,
+                               epos = 0.0,
+                               eneg = 0.0 ) {
 
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
@@ -328,6 +354,15 @@ tronco.mst.edmonds <- function(data,
 
     if (! all(regularization %in% c('no_reg', 'loglik', 'bic', 'aic'))) {
         stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
+    }
+    
+    if (! all(score %in% c('pmi', 'mi', 'entropy', 'cpmi'))) {
+        stop("Possible scores are pmi, mi, entropy or cpmi",call. = FALSE);
+    }
+    
+    if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
+        stop("The values of the error rates have to be in [0:0.5)!",
+             call. = FALSE)
     }
 
     ## Check for the input to be compliant.
@@ -381,17 +416,21 @@ tronco.mst.edmonds <- function(data,
     reconstruction =
         edmonds.fit(data$genotypes,
                     regularization = regularization,
+                    score = score,
                     do.boot = do.boot,
                     nboot = nboot,
                     pvalue = pvalue,
                     min.boot = min.boot,
                     min.stat = min.stat,
                     boot.seed = boot.seed,
-                    silent = silent)
+                    silent = silent,
+                    epos = epos,
+                    eneg = eneg)
 
     ## Structure to save the results.
     results = data
     results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
+    results$adj.matrix.prima.facie.cyclic = reconstruction$adj.matrix.prima.facie.cyclic       
     results$confidence = reconstruction$confidence
     results$model = reconstruction$model
     results$parameters = reconstruction$parameters
@@ -402,37 +441,47 @@ tronco.mst.edmonds <- function(data,
     if (!silent) {
         cat('*** Evaluating BIC / AIC / LogLik informations.\n')
     }
+    
+    search_scores = score
 
     if ("no_reg" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'edmonds_no_reg')
-        score = logLik(bayes.net$net, data = bayes.net$data)
-        logLik = score
-        results$model$edmonds_no_reg$score = score
-        results$model$edmonds_no_reg$logLik = logLik
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model = paste('edmonds_no_reg', my_s,sep="_"))
+            score = logLik(bayes.net$net, data = bayes.net$data)
+            logLik = score
+            results$model[[paste('edmonds_no_reg', my_s,sep="_")]]$score = score
+            results$model[[paste('edmonds_no_reg', my_s,sep="_")]]$logLik = logLik
+        }
     }
     
     if ("loglik" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'edmonds_loglik')
-        score = logLik(bayes.net$net, data = bayes.net$data)
-        logLik = score
-        results$model$edmonds_loglik$score = score
-        results$model$edmonds_loglik$logLik = logLik
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model  = paste('edmonds_loglik', my_s,sep="_"))
+            score = logLik(bayes.net$net, data = bayes.net$data)
+            logLik = score
+            results$model[[paste('edmonds_loglik', my_s,sep="_")]]$score = score
+            results$model[[paste('edmonds_loglik', my_s,sep="_")]]$logLik = logLik
+        }
     }
 
     if ("bic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'edmonds_bic')
-        score = BIC(bayes.net$net, data = bayes.net$data)
-        logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$edmonds_bic$score = score
-        results$model$edmonds_bic$logLik = logLik
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model  = paste('edmonds_bic', my_s,sep="_"))
+            score = BIC(bayes.net$net, data = bayes.net$data)
+            logLik = logLik(bayes.net$net, data = bayes.net$data)
+            results$model[[paste('edmonds_bic', my_s,sep="_")]]$score = score
+            results$model[[paste('edmonds_bic', my_s,sep="_")]]$logLik = logLik
+        }
     }
 
     if ("aic" %in% regularization) {
-        bayes.net = as.bnlearn.network(results, model = 'edmonds_aic')
-        score = AIC(bayes.net$net, data = bayes.net$data)
-        logLik = logLik(bayes.net$net, data = bayes.net$data)
-        results$model$edmonds_aic$score = score
-        results$model$edmonds_aic$logLik = logLik
+        for (my_s in search_scores) {
+            bayes.net = as.bnlearn.network(results, model = paste('edmonds_aic', my_s,sep="_"))
+            score = AIC(bayes.net$net, data = bayes.net$data)
+            logLik = logLik(bayes.net$net, data = bayes.net$data)
+            results$model[[paste('edmonds_aic', my_s,sep="_")]]$score = score
+            results$model[[paste('edmonds_aic', my_s,sep="_")]]$logLik = logLik
+        }
     }
 
     ## the reconstruction has been completed.
@@ -447,6 +496,265 @@ tronco.mst.edmonds <- function(data,
             "\n"));
 
     return(results);
+}
+
+
+#' Reconstruct a progression model using Gabow algorithm combined 
+#' with probabilistic causation
+#'
+#' @examples
+#' data(test_dataset_no_hypos)
+#' recon = tronco.mst.gabow(test_dataset_no_hypos, nboot = 1)
+#'
+#' @title tronco mst gabow
+#' @param data A TRONCO compliant dataset.
+#' @param regularization Select the regularization for the 
+#' likelihood estimation, e.g., BIC, AIC. 
+#' @param score Select the score for the estimation of 
+#' the best tree, e.g., pointwise mutual information (pmi), conditional entropy (entropy). 
+#' @param do.boot A parameter to disable/enable the estimation 
+#' of the error rates give the reconstructed model.
+#' @param nboot Number of bootstrap sampling (with rejection) 
+#' to be performed when estimating the selective advantage scores. 
+#' @param pvalue Pvalue to accept/reject the valid selective 
+#' advantage relations. 
+#' @param min.boot Minimum number of bootstrap sampling to be 
+#' performed. 
+#' @param min.stat A parameter to disable/enable the minimum number
+#' of bootstrap sampling required besides nboot if any sampling 
+#' is rejected. 
+#' @param boot.seed Initial seed for the bootstrap random sampling.
+#' @param silent A parameter to disable/enable verbose messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
+#' @param do.raising Whether to use or not the raising condition as a prior.
+#' @return A TRONCO compliant object with reconstructed model
+#' @export tronco.mst.gabow
+#' @importFrom bnlearn hc tabu empty.graph set.arc score amat<- amat
+#' @importFrom igraph graph.adjacency get.adjacency graph.union edge
+#' @importFrom igraph get.shortest.paths graph_from_adjacency_matrix clusters unfold.tree
+#' @importFrom igraph is.dag
+#' @importFrom gtools permutations
+#' @importFrom stats phyper AIC BIC logLik runif
+#' 
+tronco.mst.gabow <- function(data,
+                             regularization = "no_reg", 
+                             score = "pmi", 
+                             do.boot = TRUE, 
+                             nboot = 100, 
+                             pvalue = 0.05, 
+                             min.boot = 3, 
+                             min.stat = TRUE, 
+                             boot.seed = NULL, 
+                             silent = FALSE,
+                             epos = 0.0,
+                             eneg = 0.0,
+                             do.raising = TRUE ) {
+
+    if (is.null(data) || is.null(data$genotypes)) {
+        stop("The dataset given as input is not valid.");
+    }
+
+    ## Enforce data to be numeric
+    data = enforce.numeric(data)
+    
+    ## Check for the inputs to be correct.
+    
+    if (is.null(data$hypotheses)) {
+        data$hypotheses = NA;
+    }
+    
+    if (pvalue < 0 || pvalue > 1) {
+        stop("The value of the pvalue has to be in [0:1]!",call. = FALSE);
+    }
+
+    if (! all(regularization %in% c('no_reg', 'loglik', 'bic', 'aic'))) {
+        stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
+    }
+    
+    if (! all(score %in% c('pmi', 'mi', 'entropy', 'cpmi'))) {
+        stop("Possible scores are pmi, mi, entropy or cpmi",call. = FALSE)
+    }
+    
+    if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
+        stop("The values of the error rates have to be in [0:0.5)!",
+             call. = FALSE)
+    }
+
+    ## Check for the input to be compliant.
+    
+    is.compliant(data)
+
+    ## check if there are hypotheses
+
+    if (npatterns(data) > 0) {
+        warning("Patters found in input for tronco.mst.gabow\n")
+    }
+
+    ## Reconstruct the reconstruction with MLE.
+    
+    if (is.null(boot.seed)) {
+        my.seed = "NULL"    
+    }
+    else {
+        my.seed = boot.seed;
+    }
+    if (silent == FALSE) {
+        cat('*** Checking input events.\n')
+        invalid = consolidate.data(data, TRUE)
+        if (length(unlist(invalid)) > 0) warning(
+            "Input events should be consolidated - see consolidate.data."
+        );
+
+        cat(paste0(
+            '*** Inferring a progression model with the following settings.\n',
+            '\tDataset size: n = ',
+            nsamples(data),
+            ', m = ',
+            nevents(data), '.\n',
+            '\tAlgorithm: Gabow with \"',
+            paste0(regularization, collapse = ", "),
+            '\" regularization',
+            '\tRandom seed: ',
+            my.seed, '.\n',
+            '\tBootstrap iterations (Wilcoxon): ',
+            ifelse(do.boot, nboot, 'disabled'), '.\n',
+            ifelse(do.boot, 
+                   paste0('\t\texhaustive bootstrap: ',
+                          min.stat,
+                          '.\n\t\tp-value: ',
+                          pvalue,
+                          '.\n\t\tminimum bootstrapped scores: ',
+                          min.boot, '.\n'), '')        
+        ))
+    }
+
+    reconstruction =
+        gabow.fit(data$genotypes,
+                    regularization = regularization,
+                    score = score,
+                    do.boot = do.boot,
+                    nboot = nboot,
+                    pvalue = pvalue,
+                    min.boot = min.boot,
+                    min.stat = min.stat,
+                    boot.seed = boot.seed,
+                    silent = silent,
+                    epos = epos,
+                    eneg = eneg,
+                    do.raising = do.raising)
+
+    ## Structure to save the results.
+    results = data
+    results$adj.matrix.prima.facie = reconstruction$adj.matrix.prima.facie
+    results$confidence = reconstruction$confidence
+    results$model = reconstruction$model
+    results$parameters = reconstruction$parameters
+    results$execution.time = reconstruction$execution.time
+
+    ## Add BIC/AIC/LogLik informations
+
+    if (!silent) {
+        cat('*** Evaluating BIC / AIC / LogLik informations.\n')
+    }
+    
+    search_scores = score
+
+    is.acyclic = TRUE
+
+    models.adj.matrix = as.adj.matrix(results)
+
+    if ("no_reg" %in% regularization) {
+        for (my_s in search_scores) {
+            mod.name = paste('gabow_no_reg', my_s,sep="_")
+            this.matrix = models.adj.matrix[[mod.name]]
+            if (is.dag(graph.adjacency(this.matrix))) {
+                bayes.net = as.bnlearn.network(results, model = mod.name)
+                score = logLik(bayes.net$net, data = bayes.net$data)
+                logLik = score
+            } else {
+                score = -1
+                logLik = -1
+                is.acyclic = FALSE
+            }
+            results$model[[paste('gabow_no_reg', my_s,sep="_")]]$score = score
+            results$model[[paste('gabow_no_reg', my_s,sep="_")]]$logLik = logLik
+        }
+    }
+    
+    if ("loglik" %in% regularization) {
+        for (my_s in search_scores) {
+            mod.name = paste('gabow_loglik', my_s,sep="_")
+            this.matrix = models.adj.matrix[[mod.name]]
+            if (is.dag(graph.adjacency(this.matrix))) {
+                bayes.net = as.bnlearn.network(results, model = mod.name)
+                score = logLik(bayes.net$net, data = bayes.net$data)
+                logLik = score
+            } else {
+                score = -1
+                logLik = -1
+                is.acyclic = FALSE
+            }
+            results$model[[paste('gabow_loglik', my_s,sep="_")]]$score = score
+            results$model[[paste('gabow_loglik', my_s,sep="_")]]$logLik = logLik
+        }
+    }
+
+    if ("bic" %in% regularization) {
+        for (my_s in search_scores) {
+            mod.name = paste('gabow_bic', my_s,sep="_")
+            this.matrix = models.adj.matrix[[mod.name]]
+            if (is.dag(graph.adjacency(this.matrix))) {
+                bayes.net = as.bnlearn.network(results, model = mod.name)
+                score = BIC(bayes.net$net, data = bayes.net$data)
+                logLik = logLik(bayes.net$net, data = bayes.net$data)
+            } else {
+                score = -1
+                logLik = -1
+                is.acyclic = FALSE
+            }
+            results$model[[paste('gabow_bic', my_s,sep="_")]]$score = score
+            results$model[[paste('gabow_bic', my_s,sep="_")]]$logLik = logLik
+        }
+    }
+
+    if ("aic" %in% regularization) {
+        for (my_s in search_scores) {
+            mod.name = paste('gabow_aic', my_s,sep="_")
+            this.matrix = models.adj.matrix[[mod.name]]
+
+            if (is.dag(graph.adjacency(this.matrix))) {
+                bayes.net = as.bnlearn.network(results, model = mod.name)
+                score = AIC(bayes.net$net, data = bayes.net$data)
+                logLik = logLik(bayes.net$net, data = bayes.net$data)
+            } else {
+                score = -1
+                logLik = -1
+                is.acyclic = FALSE
+            }
+            results$model[[paste('gabow_aic', my_s,sep="_")]]$score = score
+            results$model[[paste('gabow_aic', my_s,sep="_")]]$logLik = logLik
+        }
+    }
+
+    ## the reconstruction has been completed.
+
+    if (!is.acyclic) {
+        save(results, file = paste0('result_',  
+            as.character(as.integer(runif(1) * 10000)),
+            '.RData'))
+    }
+    
+    if (!silent)
+        cat(paste(
+            "The reconstruction has been successfully completed in", 
+            format(.POSIXct(round(reconstruction$execution.time[3],
+                                  digits = 0),
+                            tz = "GMT"),
+                   "%Hh:%Mm:%Ss"), 
+            "\n"));
+
+    return(results)
 }
 
 
@@ -476,6 +784,8 @@ tronco.mst.edmonds <- function(data,
 #' sampling.
 #' @param silent A parameter to disable/enable verbose 
 #' messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed 
 #' model
 #' @export tronco.mst.chowliu
@@ -493,7 +803,9 @@ tronco.mst.chowliu <- function(data,
                                min.boot = 3, 
                                min.stat = TRUE, 
                                boot.seed = NULL, 
-                               silent = FALSE ) {
+                               silent = FALSE,
+                               epos = 0.0,
+                               eneg = 0.0 ) {
 
     ## Check for the inputs to be correct.
     
@@ -514,6 +826,11 @@ tronco.mst.chowliu <- function(data,
 
     if (! all(regularization %in% c('loglik','bic', 'aic'))) {
         stop("Possible regularization are loglik, bic or aic",call. = FALSE);
+    }
+    
+    if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
+        stop("The values of the error rates have to be in [0:0.5)!",
+             call. = FALSE)
     }
 
     ## Check for the input to be compliant.
@@ -573,7 +890,9 @@ tronco.mst.chowliu <- function(data,
                   min.boot = min.boot,
                   min.stat = min.stat,
                   boot.seed = boot.seed,
-                  silent = silent);
+                  silent = silent,
+                  epos = epos,
+                  eneg = eneg)
 
     ## Structure to save the results.
     
@@ -652,6 +971,8 @@ tronco.mst.chowliu <- function(data,
 #' any sampling is rejected. 
 #' @param boot.seed Initial seed for the bootstrap random sampling.
 #' @param silent A parameter to disable/enable verbose messages.
+#' @param epos Error rate of false positive errors.
+#' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.mst.prim
 #' @importFrom bnlearn hc tabu empty.graph set.arc
@@ -669,7 +990,9 @@ tronco.mst.prim <- function(data,
                             min.boot = 3, 
                             min.stat = TRUE, 
                             boot.seed = NULL, 
-                            silent = FALSE ) {
+                            silent = FALSE,
+                            epos = 0.0,
+                            eneg = 0.0 ) {
 
     ## Check for the inputs to be correct.
     
@@ -690,6 +1013,11 @@ tronco.mst.prim <- function(data,
 
     if (! all(regularization %in% c('no_reg','loglik', 'bic', 'aic'))) {
         stop("Possible regularization are no-reg, loglik, bic or aic",call. = FALSE);
+    }
+    
+    if (epos < 0 || epos >= 0.5 || eneg < 0 || eneg >= 0.5) {
+        stop("The values of the error rates have to be in [0:0.5)!",
+             call. = FALSE)
     }
 
     ## Check for the input to be compliant.
@@ -749,7 +1077,9 @@ tronco.mst.prim <- function(data,
                  min.boot = min.boot,
                  min.stat = min.stat,
                  boot.seed = boot.seed,
-                 silent = silent);
+                 silent = silent,
+                 epos = epos,
+                 eneg = eneg)
 
     ## Structure to save the results.
     
