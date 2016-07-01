@@ -99,12 +99,19 @@ capri.fit <- function(dataset,
     ## theory.
     
     if (length(invalid.events) > 0) {
+        # save the correct acyclic matrix
+        adj.matrix.acyclic.valid = prima.facie.parents$adj.matrix$adj.matrix.acyclic
         for (i in 1:nrow(invalid.events)) {
             prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
             prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
             prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
         }
+        # if the new acyclic contains cycles use the previously computed matrix
+        if (!is.dag(graph.adjacency(prima.facie.parents$adj.matrix$adj.matrix.acyclic))) {
+            prima.facie.parents$adj.matrix$adj.matrix.acyclic = adj.matrix.acyclic.valid
+        }
     }
+
     adj.matrix.prima.facie =
         prima.facie.parents$adj.matrix$adj.matrix.acyclic
 
@@ -236,7 +243,6 @@ check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
         res.probs = verify.constraints.probs(marginal.probs,joint.probs)
         marginal.probs = res.probs$marginal.probs
         joint.probs = res.probs$joint.probs
-    
         
         ## Evaluate the connections.
         
@@ -246,8 +252,7 @@ check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
 
                 ## if i --> j is valid
                 if (i != j && adj.matrix[i, j] == 1) {
-                    
-                    
+                                        
                     if (marginal.probs[i,1] == 1) {
                         ## the potential cause is always present
                         adj.matrix[i, j] = 0;
@@ -271,10 +276,9 @@ check.dataset <- function(dataset, adj.matrix, verbose, epos, eneg ) {
                         # if we have 2 indistinguishable events both connected to create a cycle
                         # I choose one direction randomly
                         # by keeping only the edge from the lower to the higher positioned node
-                        if(i<j) {
+                        if (i<j) {
                             invalid.events = rbind(invalid.events,t(c(i,j)))
                         }
-                        
                     }
                 }
             }
@@ -807,7 +811,6 @@ get.prima.facie.causes.do.boot <- function(adj.matrix,
                           hypotheses,
                           silent);
         adj.matrix.acyclic = acyclic.topology$adj.matrix;
-
     } else {
         adj.matrix.acyclic = probability.raising$adj.matrix;
     }
@@ -817,6 +820,7 @@ get.prima.facie.causes.do.boot <- function(adj.matrix,
              adj.matrix.acyclic = adj.matrix.acyclic)
 
     ## Save the results and return them.
+
     
     prima.facie.topology =
         list(adj.matrix = adj.matrix,

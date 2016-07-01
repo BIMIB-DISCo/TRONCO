@@ -127,7 +127,7 @@ tronco.caprese <- function(data,
 #' @export tronco.capri
 #' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
-#' @importFrom igraph get.shortest.paths
+#' @importFrom igraph get.shortest.paths is.dag
 #' @importFrom stats phyper AIC BIC wilcox.test
 #' 
 tronco.capri <- function(data,
@@ -318,7 +318,7 @@ tronco.capri <- function(data,
 #' @export tronco.mst.edmonds
 #' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
-#' @importFrom igraph get.shortest.paths
+#' @importFrom igraph get.shortest.paths is.dag
 #### @importFrom infotheo mutinformation
 #' @importFrom stats phyper AIC BIC
 #' 
@@ -791,7 +791,7 @@ tronco.mst.gabow <- function(data,
 #' @export tronco.mst.chowliu
 #' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
-#' @importFrom igraph get.shortest.paths
+#' @importFrom igraph get.shortest.paths is.dag
 #' @importFrom gRapHD minForest
 #' @importFrom stats phyper AIC BIC
 #' 
@@ -978,7 +978,7 @@ tronco.mst.chowliu <- function(data,
 #' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph get.edgelist E E<-
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
-#' @importFrom igraph get.shortest.paths minimum.spanning.tree
+#' @importFrom igraph get.shortest.paths minimum.spanning.tree is.dag
 #### @importFrom infotheo mutinformation
 #' @importFrom stats phyper AIC BIC
 #' 

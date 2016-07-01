@@ -94,12 +94,19 @@ gabow.fit <- function(dataset,
     ## theory.
     
     if (length(invalid.events) > 0) {
+        # save the correct acyclic matrix
+        adj.matrix.acyclic.valid = prima.facie.parents$adj.matrix$adj.matrix.acyclic
         for (i in 1:nrow(invalid.events)) {
             prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
             prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
             prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
         }
+        # if the new acyclic contains cycles use the previously computed matrix
+        if (!is.dag(graph.adjacency(prima.facie.parents$adj.matrix$adj.matrix.acyclic))) {
+            prima.facie.parents$adj.matrix$adj.matrix.acyclic = adj.matrix.acyclic.valid
+        }
     }
+    
     adj.matrix.prima.facie =
         prima.facie.parents$adj.matrix$adj.matrix.acyclic
         
