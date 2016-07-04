@@ -110,7 +110,7 @@ capri.fit <- function(dataset,
         }
         # if the new cyclic.tp contains cycles use the previously computed matrix
         if (!is.dag(graph.adjacency(prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp))) {
-            prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp = adj.matrix.acyclic.tp.valid
+            prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp = adj.matrix.cyclic.tp.valid
         }
         # if the new cyclic contains cycles use the previously computed matrix
         if (!is.dag(graph.adjacency(prima.facie.parents$adj.matrix$adj.matrix.cyclic))) {
