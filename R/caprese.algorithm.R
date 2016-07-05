@@ -296,7 +296,6 @@ get.tree.parents <- function(adj.matrix,
             list.of.scores = c(list.of.scores,pr.score[best.parents[nodes,1],nodes])
         }
     }
-    print(list.of.arcs)
     best.parents = remove.caprese.loops(best.parents,caprese.adj.matrix,list.of.arcs,list.of.scores)
     
     ## Check for spurious causes by the independent progression filter
@@ -322,11 +321,11 @@ remove.caprese.loops <- function( best.parents, adj.matrix, edges, scores ) {
     # if I have at least one edge
     if(length(edges)>0) {
         
+        ordered.scores = sort(scores,decreasing=FALSE,index.return=TRUE)
+        ordered.edges = edges[ordered.scores$ix]
+        
         # go through the edges in decreasing order of confidence
         for (i in 1:length(edges)) {
-            
-            ordered.scores = sort(scores,decreasing=FALSE,index.return=TRUE)
-            ordered.edges = edges[ordered.scores$ix]
             
             # consider any edge i --> j
             curr.edge = ordered.edges[[i]]
@@ -343,7 +342,7 @@ remove.caprese.loops <- function( best.parents, adj.matrix, edges, scores ) {
             # if there is a path between the two nodes, remove edge i --> j
             if (is.path > 0) {
                 adj.matrix[curr.edge.i,curr.edge.j] = 0
-                best.parents[curr.edge.i,1] = -1
+                best.parents[curr.edge.j,1] = -1
             }
             
         }
