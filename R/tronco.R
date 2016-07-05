@@ -24,6 +24,7 @@
 #' @export tronco.caprese
 #' @importFrom stats phyper
 #' @importFrom bnlearn empty.graph set.arc
+#' @importFrom igraph graph.adjacency get.shortest.paths
 #' 
 tronco.caprese <- function(data,
                            lambda = 0.5,
