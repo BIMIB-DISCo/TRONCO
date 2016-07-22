@@ -142,6 +142,18 @@ gabow.fit <- function(dataset,
                                        score = my_score,
                                        marginal.probs = prima.facie.parents$marginal.probs,
                                        joint.probs = prima.facie.parents$joint.probs)
+        
+        # if Gabow was not performed due to memory issues,
+        # use Edmonds instead
+        if(is.null(best.parents)) {
+            best.parents =
+                perform.likelihood.fit.edmonds(dataset,
+                                       adj.matrix.prima.facie,
+                                       regularization = reg,
+                                       score = my_score,
+                                       marginal.probs = prima.facie.parents$marginal.probs,
+                                       joint.probs = prima.facie.parents$joint.probs)
+        }
                                        
         # now I perform the likelihood fit with each regularizator
         for (reg in regularization) {
@@ -243,78 +255,96 @@ perform.likelihood.fit.gabow = function(dataset,
     # being the strongly connected components of degree 1
     my_graph = graph_from_adjacency_matrix(adj.matrix)
     strongly_connected = clusters(my_graph,mode="strong")
-    valid_nodes = c()
-    for(i in 1:strongly_connected$no) {
-        if(length(which(strongly_connected$membership==i))==1) {
-            valid_nodes = c(valid_nodes,which(strongly_connected$membership==i))
-        }
-    }
-       
-    # set at most one parent per node based on mutual information
-    # only for the acyclic parts of the graph
-    if(length(valid_nodes)>0) {
-        for (i in valid_nodes) {
-                
-            # consider the parents of i
-            curr_parents = which(adj.matrix[,i] == 1)
-            
-            # if I have more then one valid parent
-            if (length(curr_parents) > 1) {
-                
-                # find the best parent
-                curr_best_parent = -1
-                curr_best_score = NA
-                for (j in curr_parents) {
-                    
-                    # if the event is valid
-                    if(joint.probs[i,j]>=0) {
-                        # compute the chosen score
-                        new_score = compute.edmonds.score(joint.probs[i,j],marginal.probs[i],marginal.probs[j],score)
-                    }
-                    # else, if the two events are indistinguishable
-                    else if(joint.probs[i,j]<0) {
-                        new_score = Inf
-                    }
-                    
-                    if (is.na(curr_best_score) || new_score > curr_best_score) {
-                        curr_best_parent = j
-                        curr_best_score = new_score
-                    }
-                }
-                
-                # set the best parent
-                for (j in curr_parents) {
-                    if (j != curr_best_parent) {
-                        adj.matrix[j,i] = 0
-                    }
-                }
-            }
-        }
-    }
-       
-    # now consider the acyclic parts of the graph
-    if(length(valid_nodes)<nrow(adj.matrix)) {
-        # now I consider each strongly connected componet with size greater then 1
+
+    # estimate the size required to save the permutations for the 
+    # bigger strongly connected component
+    max_component = max(strongly_connected$csize)
+    max_rows = factorial(max_component)
+    max_columns = max_component
+    max_num_entries = max_rows * max_columns
+    max_memory_size = (max_num_entries)*4/1024^3
+    
+    # perform Gabow only if the maximum strongly connected component 
+    # requires allocation of at most 10 GBs of memory
+    if(max_memory_size<=5) {
+        valid_nodes = c()
         for(i in 1:strongly_connected$no) {
-            if(length(which(strongly_connected$membership==i))>1) {
-                adj.matrix = find.best.subtree(adj.matrix,which(strongly_connected$membership==i),marginal.probs,joint.probs,score)
+            if(length(which(strongly_connected$membership==i))==1) {
+                valid_nodes = c(valid_nodes,which(strongly_connected$membership==i))
             }
         }
+           
+        # set at most one parent per node based on mutual information
+        # only for the acyclic parts of the graph
+        if(length(valid_nodes)>0) {
+            for (i in valid_nodes) {
+                    
+                # consider the parents of i
+                curr_parents = which(adj.matrix[,i] == 1)
+                
+                # if I have more then one valid parent
+                if (length(curr_parents) > 1) {
+                    
+                    # find the best parent
+                    curr_best_parent = -1
+                    curr_best_score = NA
+                    for (j in curr_parents) {
+                        
+                        # if the event is valid
+                        if(joint.probs[i,j]>=0) {
+                            # compute the chosen score
+                            new_score = compute.edmonds.score(joint.probs[i,j],marginal.probs[i],marginal.probs[j],score)
+                        }
+                        # else, if the two events are indistinguishable
+                        else if(joint.probs[i,j]<0) {
+                            new_score = Inf
+                        }
+                        
+                        if (is.na(curr_best_score) || new_score > curr_best_score) {
+                            curr_best_parent = j
+                            curr_best_score = new_score
+                        }
+                    }
+                    
+                    # set the best parent
+                    for (j in curr_parents) {
+                        if (j != curr_best_parent) {
+                            adj.matrix[j,i] = 0
+                        }
+                    }
+                }
+            }
+        }
+           
+        # now consider the acyclic parts of the graph
+        if(length(valid_nodes)<nrow(adj.matrix)) {
+            # now I consider each strongly connected componet with size greater then 1
+            for(i in 1:strongly_connected$no) {
+                if(length(which(strongly_connected$membership==i))>1) {
+                    adj.matrix = find.best.subtree(adj.matrix,which(strongly_connected$membership==i),marginal.probs,joint.probs,score)
+                }
+            }
+        }
+        
+        # perform the likelihood fit if requested
+        adj.matrix.fit = lregfit(data,
+            adj.matrix,
+            adj.matrix.fit,
+            regularization,
+            command)
+        
+        ## Save the results and return them.
+        
+        adj.matrix =
+            list(adj.matrix.pf = adj.matrix.prima.facie,
+                 adj.matrix.fit = adj.matrix.fit)
+        topology = list(adj.matrix = adj.matrix)
     }
-    
-    # perform the likelihood fit if requested
-    adj.matrix.fit = lregfit(data,
-        adj.matrix,
-        adj.matrix.fit,
-        regularization,
-        command)
-    
-    ## Save the results and return them.
-    
-    adj.matrix =
-        list(adj.matrix.pf = adj.matrix.prima.facie,
-             adj.matrix.fit = adj.matrix.fit)
-    topology = list(adj.matrix = adj.matrix)
+    else {
+        warning("Too big strongly connected components: Gabow can not be performed, using Edmonds instead.")
+        topology = NULL
+    }
+        
     return(topology)
 
 }

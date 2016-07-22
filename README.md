@@ -14,4 +14,4 @@ The package provides parallel implementation of algorithms that process binary m
 The tool can import data from plain, *MAF* or *GISTIC* format files, and can fetch it from the cBioPortal for cancer genomics. Functions for  data manipulation and visualization are provided, as well as functions to import/export such data to other bioinformatics  tools for, e.g, 
 clustering or detection of mutually exclusive alterations. Inferred models can be visualized and tested for their confidence via bootstrap and cross-validation. 
 
-TRONCO is used for  the implementation of the Pipeline for Cancer Inference. 
+TRONCO is used for the implementation of the Pipeline for Cancer Inference. 
