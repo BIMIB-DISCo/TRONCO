@@ -149,7 +149,7 @@ gabow.fit <- function(dataset,
             best.parents =
                 perform.likelihood.fit.edmonds(dataset,
                                        adj.matrix.prima.facie,
-                                       regularization = reg,
+                                       regularization = "no_reg",
                                        score = my_score,
                                        marginal.probs = prima.facie.parents$marginal.probs,
                                        joint.probs = prima.facie.parents$joint.probs)
