@@ -256,17 +256,17 @@ perform.likelihood.fit.gabow = function(dataset,
     my_graph = graph_from_adjacency_matrix(adj.matrix)
     strongly_connected = clusters(my_graph,mode="strong")
 
-    # estimate the size required to save the permutations for the 
-    # bigger strongly connected component
-    max_component = max(strongly_connected$csize)
-    max_rows = factorial(max_component)
-    max_columns = max_component
-    max_num_entries = max_rows * max_columns
-    max_memory_size = (max_num_entries)*4/1024^3
+    # # estimate the size required to save the permutations for the 
+    # # bigger strongly connected component
+    # max_component = max(strongly_connected$csize)
+    # max_rows = factorial(max_component)
+    # max_columns = max_component
+    # max_num_entries = max_rows * max_columns
+    # max_memory_size = (max_num_entries)*4/1024^3
     
     # perform Gabow only if the maximum strongly connected component 
-    # requires allocation of at most 10 GBs of memory
-    if(max_memory_size<=5) {
+    # has size less than 9
+    if(max(strongly_connected$csize)<9) {
         valid_nodes = c()
         for(i in 1:strongly_connected$no) {
             if(length(which(strongly_connected$membership==i))==1) {
