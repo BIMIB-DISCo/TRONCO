@@ -145,7 +145,9 @@ gabow.fit <- function(dataset,
         
         # if Gabow was not performed due to memory issues,
         # use Edmonds instead
+        fallback.edmonds = FALSE
         if(is.null(best.parents)) {
+            fallback.edmonds = TRUE
             best.parents =
                 perform.likelihood.fit.edmonds(dataset,
                                        adj.matrix.prima.facie,
@@ -210,7 +212,8 @@ gabow.fit <- function(dataset,
              boot.seed = boot.seed,
              silent = silent,
              error.rates = list(epos=epos,eneg=eneg),
-             do.raising = do.raising)
+             do.raising = do.raising,
+             fallback.edmonds = fallback.edmonds)
 
     ## Return the results.
     
