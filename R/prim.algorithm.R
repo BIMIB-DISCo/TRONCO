@@ -19,6 +19,8 @@
 # @param min.stat should I keep bootstrapping untill I have nboot valid values?
 # @param boot.seed seed to be used for the sampling
 # @param silent should I be verbose?
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
 # @return topology: the reconstructed tree topology
 #
 prim.fit <- function(dataset,
@@ -29,7 +31,9 @@ prim.fit <- function(dataset,
                       min.boot = 3,
                       min.stat = TRUE,
                       boot.seed = NULL,
-                      silent = FALSE ) {
+                      silent = FALSE,
+                      epos = 0.0,
+                      eneg = 0.0 ) {
 
     ## Start the clock to measure the execution time.
     
@@ -50,7 +54,7 @@ prim.fit <- function(dataset,
 
     ## Check if the dataset is valid.
     
-    valid.dataset = check.dataset(dataset, adj.matrix, FALSE);
+    valid.dataset = check.dataset(dataset, adj.matrix, FALSE, epos, eneg)
     adj.matrix = valid.dataset$adj.matrix;
     invalid.events = valid.dataset$invalid.events;
 
@@ -69,7 +73,9 @@ prim.fit <- function(dataset,
                                             min.boot,
                                             min.stat,
                                             boot.seed,
-                                            silent);
+                                            silent,
+                                            epos,
+                                            eneg);
     } else {
         if (!silent)
             cat('*** Computing selective advantage scores (prima facie).\n')
@@ -77,18 +83,38 @@ prim.fit <- function(dataset,
             get.prima.facie.parents.no.boot(dataset,
                                             NA,
                                             adj.matrix,
-                                            silent);
+                                            silent,
+                                            epos,
+                                            eneg);
     }
 
     ## Add back in any connection invalid for the probability raising
     ## theory.
     
     if (length(invalid.events) > 0) {
+        # save the correct acyclic matrix
+        adj.matrix.cyclic.tp.valid = prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp
+        adj.matrix.cyclic.valid = prima.facie.parents$adj.matrix$adj.matrix.cyclic
+        adj.matrix.acyclic.valid = prima.facie.parents$adj.matrix$adj.matrix.acyclic
         for (i in 1:nrow(invalid.events)) {
-            prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
-            prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1;
+            prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
+            prima.facie.parents$adj.matrix$adj.matrix.cyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
+            prima.facie.parents$adj.matrix$adj.matrix.acyclic[invalid.events[i, "cause"],invalid.events[i, "effect"]] = 1
+        }
+        # if the new cyclic.tp contains cycles use the previously computed matrix
+        if (!is.dag(graph.adjacency(prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp))) {
+            prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp = adj.matrix.cyclic.tp.valid
+        }
+        # if the new cyclic contains cycles use the previously computed matrix
+        if (!is.dag(graph.adjacency(prima.facie.parents$adj.matrix$adj.matrix.cyclic))) {
+            prima.facie.parents$adj.matrix$adj.matrix.cyclic = adj.matrix.cyclic.valid
+        }
+        # if the new acyclic contains cycles use the previously computed matrix
+        if (!is.dag(graph.adjacency(prima.facie.parents$adj.matrix$adj.matrix.acyclic))) {
+            prima.facie.parents$adj.matrix$adj.matrix.acyclic = adj.matrix.acyclic.valid
         }
     }
+    
     adj.matrix.prima.facie =
         prima.facie.parents$adj.matrix$adj.matrix.acyclic
 
@@ -106,7 +132,9 @@ prim.fit <- function(dataset,
         best.parents =
             perform.likelihood.fit.prim(dataset,
                 adj.matrix.prima.facie,
-                regularization = reg)
+                regularization = reg,
+                marginal.probs = prima.facie.parents$marginal.probs,
+                joint.probs = prima.facie.parents$joint.probs)
 
         ## Set the structure to save the conditional probabilities of
         ## the reconstructed topology.
@@ -130,7 +158,8 @@ prim.fit <- function(dataset,
              min.boot = min.boot,
              min.stat = min.stat,
              boot.seed = boot.seed,
-             silent = silent)
+             silent = silent,
+             error.rates = list(epos=epos,eneg=eneg))
 
     ## Return the results.
     
@@ -158,7 +187,9 @@ prim.fit <- function(dataset,
 perform.likelihood.fit.prim = function(dataset,
                                        adj.matrix,
                                        regularization,
-                                       command = "hc"){
+                                       command = "hc",
+                                       marginal.probs,
+                                       joint.probs){
 
     data = as.categorical.dataset(dataset)
     adj.matrix.prima.facie = adj.matrix
@@ -173,6 +204,8 @@ perform.likelihood.fit.prim = function(dataset,
     cont = 0
     for (i in 1:nrow(curr.valid.adj.matrix)) {
         for (j in i:nrow(curr.valid.adj.matrix)) {
+            # we want an undirected prima facie graph, 
+            # so we consider all the edges where there is a directed arc
             if (!(adj.matrix[i,j] == 0 && adj.matrix[j,i] == 0)) {
                 cont = cont + 1
                 curr.valid.adj.matrix[i,j] = 1
@@ -187,16 +220,56 @@ perform.likelihood.fit.prim = function(dataset,
         all_edges = get.edgelist(curr.graph)
         # set the weights to the edges
         new_weights = NULL
+        
         if (cont == 1) {
-            new_weights = mutinformation(data[ ,all_edges[1,1]], data[ ,all_edges[1,2]])
+            # consider the current arc
+            i = all_edges[1,1]
+            j = all_edges[1,2]
+            # if the event is valid
+            if(joint.probs[i,j]>=0) {
+                new_score = compute.mi.score(joint.probs[i,j],marginal.probs[i],marginal.probs[j]) # log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
+            }
+            # else, if the two events are indistinguishable
+            # put the higher score
+            else if(joint.probs[i,j]<0) {
+                new_score = 1 # Inf
+            }
+            new_weights = new_score # mutinformation(data[ ,all_edges[1,1]], data[ ,all_edges[1,2]])
         } else {
             for (i in 1:nrow(all_edges)) {
-                new_weights = c(new_weights, 
-                    mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
+                # consider the current arc
+                curr_i = all_edges[i,1]
+                curr_j = all_edges[i,2]
+                # if the event is valid
+                if(joint.probs[curr_i,curr_j]>=0) {
+                    new_score = compute.mi.score(joint.probs[curr_i,curr_j],marginal.probs[curr_i],marginal.probs[curr_j]) # log(joint.probs[curr_i,curr_j]/(marginal.probs[curr_i]*marginal.probs[curr_j]))
+                }
+                # else, if the two events are indistinguishable
+                # put the higher score
+                else if(joint.probs[curr_i,curr_j]<0) {
+                    new_score = 1 # Inf
+                }
+                new_weights = c(new_weights,new_score) # mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
             }
         }
+        
+        # # set the weights to the graph
+        # if(length(new_weights[new_weights!=Inf])>0) {
+            # inf.scores = which(new_weights==Inf)
+            # max_score = max(new_weights[new_weights!=Inf])
+            # prim_scores = (max_score - new_weights) / max_score
+            # prim_scores[inf.scores] = 0
+            # E(curr.graph)$weight = prim_scores
+        # }
+        # else {
+            # inf.scores = which(new_weights==Inf)
+            # new_weights[inf.scores] = 0
+            # E(curr.graph)$weight = new_weights
+        # }
+        
         # set the weights to the graph
-        E(curr.graph)$weight = max(new_weights) - new_weights
+        E(curr.graph)$weight = 1 - new_weights # max(new_weights) - new_weights
+        
         # get the minimum spanning tree by Prim algorithm
         curr.valid.adj.matrix = as.matrix(get.adjacency(minimum.spanning.tree(curr.graph, 
                                                                               algorithm="prim")))
@@ -233,6 +306,46 @@ perform.likelihood.fit.prim = function(dataset,
         adj.matrix.fit = adj.matrix.fit)
     topology = list(adj.matrix = adj.matrix)
     return(topology)
+}
+
+# compute the mutual information score for the prim algorithm
+compute.mi.score = function ( p_i_j, p_i, p_j ) {
+    
+    # compute the needed measures
+    p_i_not_j = p_i - p_i_j
+    p_not_i_j = p_j - p_i_j
+    p_not_i_not_j = 1 - p_i - p_j + p_i_j
+    
+    # compute the 4 terms of mutual information
+    m_i_j = p_i_j * log(p_i_j/(p_i*p_j))
+    m_i_not_j = p_i_not_j * log(p_i_not_j/(p_i*(1-p_j)))
+    m_not_i_j = p_not_i_j * log(p_not_i_j/((1-p_i)*p_j))
+    m_not_i_not_j = p_not_i_not_j * log(p_not_i_not_j/((1-p_i)*(1-p_j)))
+    
+    # NOTE: in our case p_i and p_j are positive numbers in (0,1) with intervals excluded, 
+    # hence, the denominator of the scores cannot be 0. 
+    # the numerators are numbers in [0,1). So the fraction is a number between [0,Inf). 
+    # specifically the log of the fraction is a number in [-Inf,Inf) with Inf excluded and 
+    # -Inf when any numerator is 0. 
+    # BUT: when numerator is 0, the multiplier of the logarithm is 0 hence givine 0*(-Inf) = NA
+    # SO: we will replace any NA with 0 (multiplier wins over logarithm)
+    if(is.nan(m_i_j)) {
+        m_i_j = 0
+    }
+    if(is.nan(m_i_not_j)) {
+        m_i_not_j = 0
+    }
+    if(is.nan(m_not_i_j)) {
+        m_not_i_j = 0
+    }
+    if(is.nan(m_not_i_not_j)) {
+        m_not_i_not_j = 0
+    }
+    
+    # compute the complete mutual information
+    mutual_information = m_i_j + m_i_not_j + m_not_i_j + m_not_i_not_j
+    
+    return(mutual_information)
 }
 
 

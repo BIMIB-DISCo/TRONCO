@@ -17,7 +17,9 @@
 #
 caprese.fit <- function(dataset,
                         lambda = 0.5,
-                        silent = FALSE) {
+                        silent = FALSE,
+                        epos = 0.0,
+                        eneg = 0.0) {
     
     ## Start the clock to measure the execution time.
     
@@ -38,8 +40,8 @@ caprese.fit <- function(dataset,
     
     ## Check if the dataset is valid.
     
-    valid.dataset = check.dataset(dataset,adj.matrix,FALSE);
-    adj.matrix = valid.dataset$adj.matrix;
+    valid.dataset = check.dataset(dataset,adj.matrix,FALSE, epos, eneg)
+    adj.matrix = valid.dataset$adj.matrix
     
     ## marginal.probs is an array of the observed marginal
     ## probabilities.
@@ -55,7 +57,8 @@ caprese.fit <- function(dataset,
     best.parents =
         get.tree.parents(adj.matrix,
                          marginal.probs,
-                         joint.probs,lambda);
+                         joint.probs,
+                         lambda)
     
     ## Create the structures where to save the results.
     
@@ -183,7 +186,8 @@ caprese.fit <- function(dataset,
     parameters =
         list(algorithm = "CAPRESE",
              lambda = lambda,
-             silent = silent);
+             silent = silent,
+             error.rates = list(epos=epos,eneg=eneg))
     
     ## Return the results.
     
@@ -281,6 +285,19 @@ get.tree.parents <- function(adj.matrix,
         best.parents[i,1] = curr.best;
     }
     
+    # remove any loop in the reconstruction
+    caprese.adj.matrix = array(0,c(nrow(best.parents),nrow(best.parents)))
+    list.of.arcs = list()
+    list.of.scores = NULL
+    for(nodes in 1:nrow(best.parents)) {
+        if(best.parents[nodes,1]!=-1) {
+            caprese.adj.matrix[best.parents[nodes,1],nodes] = 1
+            list.of.arcs[[(length(list.of.arcs)+1)]] = list(parent=best.parents[nodes,1],child=nodes)
+            list.of.scores = c(list.of.scores,pr.score[best.parents[nodes,1],nodes])
+        }
+    }
+    best.parents = remove.caprese.loops(best.parents,caprese.adj.matrix,list.of.arcs,list.of.scores)
+    
     ## Check for spurious causes by the independent progression filter
     ## and complete the parents list.
     
@@ -296,6 +313,44 @@ get.tree.parents <- function(adj.matrix,
              joint.probs = joint.probs,
              pr.score = scores$pr.score);
     return(best.parents);
+}
+
+
+remove.caprese.loops <- function( best.parents, adj.matrix, edges, scores ) {
+    
+    # if I have at least one edge
+    if(length(edges)>0) {
+        
+        ordered.scores = sort(scores,decreasing=FALSE,index.return=TRUE)
+        ordered.edges = edges[ordered.scores$ix]
+        
+        # go through the edges in decreasing order of confidence
+        for (i in 1:length(edges)) {
+            
+            # consider any edge i --> j
+            curr.edge = ordered.edges[[i]]
+            curr.edge.i = as.numeric(curr.edge$parent)
+            curr.edge.j = as.numeric(curr.edge$child)
+            
+            # search for loops between curr.edge.i and curr.edge.j
+            curr.graph = graph.adjacency(adj.matrix,mode="directed")
+            is.path = suppressWarnings(get.shortest.paths(curr.graph,
+                                       curr.edge.j,
+                                       curr.edge.i)$vpath)
+            is.path = length(unlist(is.path))
+
+            # if there is a path between the two nodes, remove edge i --> j
+            if (is.path > 0) {
+                adj.matrix[curr.edge.i,curr.edge.j] = 0
+                best.parents[curr.edge.j,1] = -1
+            }
+            
+        }
+        
+    }
+    
+    return(best.parents)
+    
 }
 
 
@@ -315,7 +370,7 @@ get.tree.scores <- function(adj.matrix,
     ## Structure where to save the probability raising scores.
     
     pr.score =
-        array(-1, dim = c(nrow(marginal.probs), nrow(marginal.probs)));
+        array(-1, dim = c(nrow(marginal.probs), nrow(marginal.probs)))
     
     ## Compute the probability raising based scores.
     

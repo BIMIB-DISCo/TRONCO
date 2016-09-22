@@ -47,11 +47,13 @@ bootstrap <- function(reconstruction,
 
     if (type == 'CAPRESE') {
         lambda = parameters$lambda
+        epos = parameters$error.rates$epos
+        eneg = parameters$error.rates$eneg
     }
 
     ## Get other parameters.
 
-    if (type %in% c('CAPRI', 'EDMONDS', 'CHOW_LIU', 'PRIM')) {
+    if (type %in% c('CAPRI', 'EDMONDS', 'GABOW', 'CHOW_LIU', 'PRIM')) {
         regularization = parameters$regularization
         do.boot = parameters$do.boot
         nboot.algorithm = parameters$nboot
@@ -59,6 +61,14 @@ bootstrap <- function(reconstruction,
         min.boot = parameters$min.boot
         min.stat = parameters$min.stat
         boot.seed = parameters$boot.seed
+        if(type %in% c('EDMONDS', 'GABOW')) {
+            score.param = parameters$score
+        }
+        if(type=='GABOW') {
+            do.raising = parameters$do.raising
+        }
+        epos = parameters$error.rates$epos
+        eneg = parameters$error.rates$eneg
     }
 
     ## Start the clock to measure the execution time
@@ -152,15 +162,19 @@ bootstrap <- function(reconstruction,
                              min.boot,
                              min.stat,
                              boot.seed,
-                             silent = TRUE)
+                             silent = TRUE,
+                             epos,
+                             eneg)
         } else if (type == 'CAPRESE') {
             bootstrapped.topology =
                 tronco.caprese(curr.reconstruction,
                                lambda, 
-                               silent = TRUE)
+                               silent = TRUE,
+                               epos,
+                               eneg)
         } else if (type == 'CHOW_LIU') {
             bootstrapped.topology = 
-                tronco.mst.chowliu(curr.reconstruction,
+                tronco.chowliu(curr.reconstruction,
                                    regularization,
                                    do.boot,
                                    nboot.algorithm,
@@ -168,10 +182,12 @@ bootstrap <- function(reconstruction,
                                    min.boot,
                                    min.stat,
                                    boot.seed,
-                                   silent = TRUE)
+                                   silent = TRUE,
+                                   epos,
+                                   eneg)
         } else if (type == 'PRIM') {
             bootstrapped.topology =
-                tronco.mst.prim(curr.reconstruction,
+                tronco.prim(curr.reconstruction,
                                 regularization,
                                 do.boot,
                                 nboot.algorithm,
@@ -179,18 +195,38 @@ bootstrap <- function(reconstruction,
                                 min.boot,
                                 min.stat,
                                 boot.seed,
-                                silent = TRUE)
+                                silent = TRUE,
+                                epos,
+                                eneg)
         } else if (type == 'EDMONDS') {
             bootstrapped.topology =
-                tronco.mst.edmonds(curr.reconstruction,
+                tronco.edmonds(curr.reconstruction,
                                    regularization,
+                                   score.param,
                                    do.boot,
                                    nboot.algorithm,
                                    pvalue,
                                    min.boot,
                                    min.stat,
                                    boot.seed,
-                                   silent = TRUE)
+                                   silent = TRUE,
+                                   epos,
+                                   eneg)
+        } else if (type == 'GABOW') {
+            bootstrapped.topology =
+                tronco.gabow(curr.reconstruction,
+                                 regularization,
+                                 score.param,
+                                 do.boot,
+                                 nboot.algorithm,
+                                 pvalue,
+                                 min.boot,
+                                 min.stat,
+                                 boot.seed,
+                                 silent = TRUE,
+                                 epos,
+                                 eneg,
+                                 do.raising)
         }
             
         curr.reconstruction = bootstrapped.topology
@@ -226,6 +262,7 @@ bootstrap <- function(reconstruction,
     }
 
     stopCluster(cl)
+    
     if (!silent) {
         cat("\tReducing results\n")
     }

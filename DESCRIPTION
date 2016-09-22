@@ -1,6 +1,6 @@
 Package: TRONCO
-Version: 2.3.0
-Date: 2016-03-23
+Version: 2.4.3
+Date: 2016-09-22
 Title: TRONCO, an R package for TRanslational ONCOlogy
 Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")), 
     person("Giulio", "Caravagna", role=c("aut", "cre"), email="giulio.caravagna@disco.unimib.it"),
@@ -15,6 +15,7 @@ Depends:
 Imports:
     bnlearn,
     Rgraphviz,
+    gtools,
     parallel,
     foreach,
     doParallel,
@@ -30,7 +31,6 @@ Imports:
     scales,
     R.matlab,
     gRapHD,
-    infotheo,
     grDevices,
     graphics,
     stats,
@@ -41,7 +41,7 @@ Suggests:
     testthat,
     knitr,
 Name: 
-    An R package for the inference of cancer progression models from heterogeneous genomic data
+    An R package for the inference of cancer progression models from heterogeneous genomic data 
 Description:
     The TRONCO (TRanslational ONCOlogy) R package collects algorithms to infer
     progression models via the approach of Suppes-Bayes Causal Network, both 
@@ -56,7 +56,7 @@ Description:
     functions to import/export such data to other bioinformatics  tools for, e.g, 
     clustering or detection of mutually exclusive alterations. Inferred models can be 
     visualized and tested for their confidence via bootstrap and cross-validation.
-    TRONCO is used for  the implementation of the Pipeline for Cancer Inference.
+    TRONCO is used for  the implementation of the Pipeline for Cancer Inference. 
 Encoding: UTF-8
 LazyData: TRUE
 License: file LICENSE

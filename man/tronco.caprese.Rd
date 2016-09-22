@@ -4,7 +4,7 @@
 \alias{tronco.caprese}
 \title{tronco caprese}
 \usage{
-tronco.caprese(data, lambda = 0.5, silent = FALSE)
+tronco.caprese(data, lambda = 0.5, silent = FALSE, epos = 0, eneg = 0)
 }
 \arguments{
 \item{data}{A TRONCO compliant dataset.}
@@ -12,6 +12,10 @@ tronco.caprese(data, lambda = 0.5, silent = FALSE)
 \item{lambda}{Coefficient to combine the raw estimate with a correction factor into a shrinkage estimator.}
 
 \item{silent}{A parameter to disable/enable verbose messages.}
+
+\item{epos}{Error rate of false positive errors.}
+
+\item{eneg}{Error rate of false negative errors.}
 }
 \value{
 A TRONCO compliant object with reconstructed model
