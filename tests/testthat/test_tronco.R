@@ -3,10 +3,10 @@ data(test_dataset_no_hypos)
 
 capri = tronco.capri(test_dataset, nboot = 1, silent = TRUE)
 caprese = tronco.caprese(test_dataset_no_hypos, silent = TRUE)
-chowliu = tronco.mst.chowliu(test_dataset_no_hypos, nboot = 1, silent = TRUE)
-edmonds = tronco.mst.edmonds(test_dataset_no_hypos, nboot = 1, silent = TRUE)
-gabow = tronco.mst.gabow(test_dataset_no_hypos, nboot = 1, silent = TRUE)
-prim = tronco.mst.prim(test_dataset_no_hypos, nboot = 1, silent = TRUE)
+chowliu = tronco.chowliu(test_dataset_no_hypos, nboot = 1, silent = TRUE)
+edmonds = tronco.edmonds(test_dataset_no_hypos, nboot = 1, silent = TRUE)
+gabow = tronco.gabow(test_dataset_no_hypos, nboot = 1, silent = TRUE)
+prim = tronco.prim(test_dataset_no_hypos, nboot = 1, silent = TRUE)
 npb = tronco.bootstrap(capri, nboot = 1, silent = TRUE)
 sb = tronco.bootstrap(capri, nboot = 1, type = 'statistical', silent = TRUE)
 
@@ -52,96 +52,96 @@ test_that("tronco capri is working", {
 context("EDMONDS")
 
 test_that("tronco edmonds is working", {
-    expect_output(tronco.mst.edmonds(test_dataset_no_hypos,
+    expect_output(tronco.edmonds(test_dataset_no_hypos,
         nboot = 1,
         regularization = c('no_reg', 'loglik', 'bic', 'aic')),
     "Edmonds")
-    expect_output(tronco.mst.edmonds(test_dataset_no_hypos,
+    expect_output(tronco.edmonds(test_dataset_no_hypos,
         nboot = 1,
         boot.seed = 1),
     "Edmonds")
-    expect_warning(tronco.mst.edmonds(test_dataset,
+    expect_warning(tronco.edmonds(test_dataset,
         nboot = 1))
-    expect_error(tronco.mst.edmonds(NULL))
-    expect_error(tronco.mst.edmonds(test_dataset_no_hypos,
+    expect_error(tronco.edmonds(NULL))
+    expect_error(tronco.edmonds(test_dataset_no_hypos,
         command = 'banana'))
-    expect_error(tronco.mst.edmonds(test_dataset_no_hypos,
+    expect_error(tronco.edmonds(test_dataset_no_hypos,
         pvalue = -1))
-    expect_error(tronco.mst.edmonds(test_dataset_no_hypos,
+    expect_error(tronco.edmonds(test_dataset_no_hypos,
         pvalue = 2))
-    expect_error(tronco.mst.edmonds(test_dataset_no_hypos,
+    expect_error(tronco.edmonds(test_dataset_no_hypos,
         regularization = 'banana'))
 })
 
 context("GABOW")
 
 test_that("tronco gabow is working", {
-    expect_output(tronco.mst.gabow(test_dataset_no_hypos,
+    expect_output(tronco.gabow(test_dataset_no_hypos,
         nboot = 1,
         regularization = c('no_reg', 'loglik', 'bic', 'aic')),
     "Gabow")
-    expect_output(tronco.mst.gabow(test_dataset_no_hypos,
+    expect_output(tronco.gabow(test_dataset_no_hypos,
         nboot = 1,
         boot.seed = 1),
     "Gabow")
-    expect_warning(tronco.mst.gabow(test_dataset,
+    expect_warning(tronco.gabow(test_dataset,
         nboot = 1))
-    expect_error(tronco.mst.gabow(NULL))
-    expect_error(tronco.mst.gabow(test_dataset_no_hypos,
+    expect_error(tronco.gabow(NULL))
+    expect_error(tronco.gabow(test_dataset_no_hypos,
         command = 'banana'))
-    expect_error(tronco.mst.gabow(test_dataset_no_hypos,
+    expect_error(tronco.gabow(test_dataset_no_hypos,
         pvalue = -1))
-    expect_error(tronco.mst.gabow(test_dataset_no_hypos,
+    expect_error(tronco.gabow(test_dataset_no_hypos,
         pvalue = 2))
-    expect_error(tronco.mst.gabow(test_dataset_no_hypos,
+    expect_error(tronco.gabow(test_dataset_no_hypos,
         regularization = 'banana'))
 })
 
 context("CHOW LIU")
 
 test_that("tronco chow liu is working", {
-    expect_output(tronco.mst.chowliu(test_dataset_no_hypos,
+    expect_output(tronco.chowliu(test_dataset_no_hypos,
         nboot = 1,
         regularization = c('loglik', 'bic', 'aic')),
     "Chow")
-    expect_output(tronco.mst.chowliu(test_dataset_no_hypos,
+    expect_output(tronco.chowliu(test_dataset_no_hypos,
         nboot = 1,
         boot.seed = 1),
     "Chow")
-    expect_warning(tronco.mst.chowliu(test_dataset,
+    expect_warning(tronco.chowliu(test_dataset,
         nboot = 1))
-    expect_error(tronco.mst.chowliu(NULL))
-    expect_error(tronco.mst.chowliu(test_dataset_no_hypos,
+    expect_error(tronco.chowliu(NULL))
+    expect_error(tronco.chowliu(test_dataset_no_hypos,
         command = 'banana'))
-    expect_error(tronco.mst.chowliu(test_dataset_no_hypos,
+    expect_error(tronco.chowliu(test_dataset_no_hypos,
         pvalue = -1))
-    expect_error(tronco.mst.chowliu(test_dataset_no_hypos,
+    expect_error(tronco.chowliu(test_dataset_no_hypos,
         pvalue = 2))
-    expect_error(tronco.mst.chowliu(test_dataset_no_hypos,
+    expect_error(tronco.chowliu(test_dataset_no_hypos,
         regularization = 'banana'))
 })
 
 context("PRIM")
 
 test_that("tronco prim is working", {
-    expect_output(tronco.mst.prim(test_dataset_no_hypos,
+    expect_output(tronco.prim(test_dataset_no_hypos,
         nboot = 1,
         regularization = c('no_reg', 'loglik', 'bic', 'aic')),
     "Prim")
-    expect_output(tronco.mst.prim(test_dataset_no_hypos,
+    expect_output(tronco.prim(test_dataset_no_hypos,
         nboot = 1,
         boot.seed = 1),
     "Prim")
-    expect_warning(tronco.mst.prim(test_dataset,
+    expect_warning(tronco.prim(test_dataset,
         nboot = 1))
-    expect_error(tronco.mst.prim(NULL))
-    expect_error(tronco.mst.prim(test_dataset_no_hypos,
+    expect_error(tronco.prim(NULL))
+    expect_error(tronco.prim(test_dataset_no_hypos,
         command = 'banana'))
-    expect_error(tronco.mst.prim(test_dataset_no_hypos,
+    expect_error(tronco.prim(test_dataset_no_hypos,
         pvalue = -1))
-    expect_error(tronco.mst.prim(test_dataset_no_hypos,
+    expect_error(tronco.prim(test_dataset_no_hypos,
         pvalue = 2))
-    expect_error(tronco.mst.prim(test_dataset_no_hypos,
+    expect_error(tronco.prim(test_dataset_no_hypos,
         regularization = 'banana'))
 })
 

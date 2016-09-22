@@ -174,7 +174,7 @@ bootstrap <- function(reconstruction,
                                eneg)
         } else if (type == 'CHOW_LIU') {
             bootstrapped.topology = 
-                tronco.mst.chowliu(curr.reconstruction,
+                tronco.chowliu(curr.reconstruction,
                                    regularization,
                                    do.boot,
                                    nboot.algorithm,
@@ -187,7 +187,7 @@ bootstrap <- function(reconstruction,
                                    eneg)
         } else if (type == 'PRIM') {
             bootstrapped.topology =
-                tronco.mst.prim(curr.reconstruction,
+                tronco.prim(curr.reconstruction,
                                 regularization,
                                 do.boot,
                                 nboot.algorithm,
@@ -200,7 +200,7 @@ bootstrap <- function(reconstruction,
                                 eneg)
         } else if (type == 'EDMONDS') {
             bootstrapped.topology =
-                tronco.mst.edmonds(curr.reconstruction,
+                tronco.edmonds(curr.reconstruction,
                                    regularization,
                                    score.param,
                                    do.boot,
@@ -214,7 +214,7 @@ bootstrap <- function(reconstruction,
                                    eneg)
         } else if (type == 'GABOW') {
             bootstrapped.topology =
-                tronco.mst.gabow(curr.reconstruction,
+                tronco.gabow(curr.reconstruction,
                                  regularization,
                                  score.param,
                                  do.boot,

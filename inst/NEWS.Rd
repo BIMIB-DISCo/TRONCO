@@ -2,6 +2,14 @@
 \title{News for the package \pkg{TRONCO}}
 \encoding{UTF-8}
 
+\section{Changes in Version 2.4.3}{
+    \itemize{
+        \item New algorithms: Prim, Chow-Liu, Prim and Edmonds.
+        \item New scores: PMI, CPMI, MI
+        \item A better bootstrap implementation
+    }
+}
+
 \section{Changes in Version 2.4.2}{
     \itemize{
         \item Implementation of a noise model plus maximum spanning tree algorithms.

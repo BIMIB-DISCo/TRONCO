@@ -951,7 +951,7 @@ formulation of the  problem in terms of minimum spamming trees and exploits resu
 
 
 <<edmonds-plot>>=
-model.edmonds = tronco.mst.edmonds(aCML.clean, nboot = 5, boot.seed = 12345)
+model.edmonds = tronco.edmonds(aCML.clean, nboot = 5, boot.seed = 12345)
 model.edmonds = annotate.description(model.edmonds, 'MST Edmonds - aCML')
 @
 
@@ -964,7 +964,7 @@ This algorithm extends the previous one in situations where it is not possible t
 
 
 <<gabow-plot>>=
-model.gabow = tronco.mst.gabow(aCML.clean, nboot = 5, boot.seed = 12345)
+model.gabow = tronco.gabow(aCML.clean, nboot = 5, boot.seed = 12345)
 model.gabow = annotate.description(model.gabow, 'MST Gabow - aCML')
 @
 
@@ -981,7 +981,7 @@ formulation of the  problem in terms of minimum spamming trees and exploits resu
 
 
 <<chow-liu-plot>>=
-model.chowliu = tronco.mst.chowliu(aCML.clean, nboot = 5, boot.seed = 12345)
+model.chowliu = tronco.chowliu(aCML.clean, nboot = 5, boot.seed = 12345)
 model.chowliu = annotate.description(model.chowliu, 'MST Chow Liu - aCML')
 @
 
@@ -995,7 +995,7 @@ This algorithm is meant   to extract a progression  from data of an individual p
 
 
 <<prim-plot>>=
-model.prim = tronco.mst.prim(aCML.clean, nboot = 5, boot.seed = 12345)
+model.prim = tronco.prim(aCML.clean, nboot = 5, boot.seed = 12345)
 model.prim = annotate.description(model.prim, 'MST Prim - aCML data')
 @
 

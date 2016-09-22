@@ -292,9 +292,9 @@ tronco.capri <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.edmonds(test_dataset_no_hypos, nboot = 1)
+#' recon = tronco.edmonds(test_dataset_no_hypos, nboot = 1)
 #'
-#' @title tronco mst edmonds
+#' @title Tronco Edmonds
 #' @param data A TRONCO compliant dataset.
 #' @param regularization Select the regularization for the 
 #' likelihood estimation, e.g., BIC, AIC. 
@@ -316,14 +316,14 @@ tronco.capri <- function(data,
 #' @param epos Error rate of false positive errors.
 #' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
-#' @export tronco.mst.edmonds
+#' @export tronco.edmonds
 #' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths is.dag
 #### @importFrom infotheo mutinformation
 #' @importFrom stats phyper AIC BIC
 #' 
-tronco.mst.edmonds <- function(data,
+tronco.edmonds <- function(data,
                                regularization = "no_reg", 
                                score = "pmi", 
                                do.boot = TRUE, 
@@ -373,7 +373,7 @@ tronco.mst.edmonds <- function(data,
     ## check if there are hypotheses
 
     if (npatterns(data) > 0) {
-        warning("Patters found in input for tronco.mst.edmonds\n")
+        warning("Patters found in input for tronco.edmonds\n")
     }
 
     ## Reconstruct the reconstruction with Edmonds.
@@ -505,9 +505,9 @@ tronco.mst.edmonds <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.gabow(test_dataset_no_hypos, nboot = 1)
+#' recon = tronco.gabow(test_dataset_no_hypos, nboot = 1)
 #'
-#' @title tronco mst gabow
+#' @title Tronco Gabow
 #' @param data A TRONCO compliant dataset.
 #' @param regularization Select the regularization for the 
 #' likelihood estimation, e.g., BIC, AIC. 
@@ -530,7 +530,7 @@ tronco.mst.edmonds <- function(data,
 #' @param eneg Error rate of false negative errors.
 #' @param do.raising Whether to use or not the raising condition as a prior.
 #' @return A TRONCO compliant object with reconstructed model
-#' @export tronco.mst.gabow
+#' @export tronco.gabow
 #' @importFrom bnlearn hc tabu empty.graph set.arc score amat<- amat
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths graph_from_adjacency_matrix clusters unfold.tree
@@ -538,7 +538,7 @@ tronco.mst.edmonds <- function(data,
 #' @importFrom gtools permutations
 #' @importFrom stats phyper AIC BIC logLik runif
 #' 
-tronco.mst.gabow <- function(data,
+tronco.gabow <- function(data,
                              regularization = "no_reg", 
                              score = "pmi", 
                              do.boot = TRUE, 
@@ -589,7 +589,7 @@ tronco.mst.gabow <- function(data,
     ## check if there are hypotheses
 
     if (npatterns(data) > 0) {
-        warning("Patters found in input for tronco.mst.gabow\n")
+        warning("Patters found in input for tronco.gabow\n")
     }
 
     ## Reconstruct the reconstruction with MLE.
@@ -764,9 +764,9 @@ tronco.mst.gabow <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.chowliu(test_dataset_no_hypos, nboot = 1)
+#' recon = tronco.chowliu(test_dataset_no_hypos, nboot = 1)
 #'
-#' @title tronco mst chow liu
+#' @title Tronco Chow Liu
 #' @param data A TRONCO compliant dataset.
 #' @param regularization Select the regularization for the
 #' likelihood estimation, e.g., BIC, AIC. 
@@ -789,14 +789,14 @@ tronco.mst.gabow <- function(data,
 #' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed 
 #' model
-#' @export tronco.mst.chowliu
+#' @export tronco.chowliu
 #' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths is.dag
 #' @importFrom gRapHD minForest
 #' @importFrom stats phyper AIC BIC
 #' 
-tronco.mst.chowliu <- function(data,
+tronco.chowliu <- function(data,
                                regularization = c("bic","aic"), 
                                do.boot = TRUE, 
                                nboot = 100, 
@@ -953,9 +953,9 @@ tronco.mst.chowliu <- function(data,
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
-#' recon = tronco.mst.prim(test_dataset_no_hypos, nboot = 1)
+#' recon = tronco.prim(test_dataset_no_hypos, nboot = 1)
 #'
-#' @title tronco mst prim
+#' @title Tronco Prim
 #' @param data A TRONCO compliant dataset.
 #' @param regularization Select the regularization for the 
 #' likelihood estimation, e.g., BIC, AIC. 
@@ -975,7 +975,7 @@ tronco.mst.chowliu <- function(data,
 #' @param epos Error rate of false positive errors.
 #' @param eneg Error rate of false negative errors.
 #' @return A TRONCO compliant object with reconstructed model
-#' @export tronco.mst.prim
+#' @export tronco.prim
 #' @importFrom bnlearn hc tabu empty.graph set.arc
 #' @importFrom igraph get.edgelist E E<-
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
@@ -983,7 +983,7 @@ tronco.mst.chowliu <- function(data,
 #### @importFrom infotheo mutinformation
 #' @importFrom stats phyper AIC BIC
 #' 
-tronco.mst.prim <- function(data,
+tronco.prim <- function(data,
                             regularization = "no_reg", 
                             do.boot = TRUE, 
                             nboot = 100, 
