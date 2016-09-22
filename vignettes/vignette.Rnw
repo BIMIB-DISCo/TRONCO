@@ -23,8 +23,8 @@ BiocStyle::latex()
 Marco Antoniotti\footnote{Dipartimento di Informatica Sistemistica e Comunicazione, Università degli Studi Milano Bicocca
 Milano, Italy.} \and
 Giulio Caravagna\footnote{School of Informatics, Edinburgh University, Edinburgh, UK.} \and
-Luca De Sano$^\ast$ \and
-Alex Graudenzi$^\ast$ \and
+Luca De Sano$^\ast$ \footnote{Institute of Biomembranes and Bioenergetics of the Italian National Research Council (IBBE-CNR), Bari, Italy}\and
+Alex Graudenzi$^\ast$ \footnote{Institute of Molecular Bioimaging and Physiology of the Italian National Research Council (IBFM-CNR), Milano, Italy}\and
 Giancarlo Mauri$^\ast$ \and
 Bud Mishra\footnote{Courant Institute of Mathematical Sciences, New York University, New York, USA.} \and
 Daniele Ramazzotti\footnote{Department of Pathology, Stanford University, Stanford, CA, USA.} 
