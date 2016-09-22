@@ -22,13 +22,12 @@ BiocStyle::latex()
 \author{
 Marco Antoniotti\footnote{Dipartimento di Informatica Sistemistica e Comunicazione, Università degli Studi Milano Bicocca
 Milano, Italy.} \and
-Giulio Caravagna$^\ast$ \and
+Giulio Caravagna\footnote{School of Informatics, Edinburgh University, Edinburgh, UK.} \and
 Luca De Sano$^\ast$ \and
 Alex Graudenzi$^\ast$ \and
-%Mattia Longoni$^\ast$ \and
 Giancarlo Mauri$^\ast$ \and
 Bud Mishra\footnote{Courant Institute of Mathematical Sciences, New York University, New York, USA.} \and
-Daniele Ramazzotti$^\ast$ 
+Daniele Ramazzotti\footnote{Department of Pathology, Stanford University, Stanford, CA, USA.} 
 }
 
 \date{\today}
@@ -47,7 +46,8 @@ Daniele Ramazzotti$^\ast$
 \renewcommand{\arraystretch}{1.5}
 
 \begin{tabular}{ll}
-{\bf Version.}& {2.4.2} (June 2016) \\
+{\bf Version.}& {2.5.3} (October 2016) \\
+{\bf Codename.} & Coconut crub \\
 {\bf Contact.}& \email{tronco@disco.unimib.it} \\
 {\bf Bugs report.} & \url{https://github.com/BIMIB-DISCo/TRONCO} \\
 {\bf Website.} & \url{https://sites.google.com/site/troncopackage}
@@ -72,8 +72,10 @@ background = "#f3f3ff"
 \section{Changelog} 
 
 \begin{itemize}
-\item[2.4.2] Latest development version. Implements a noise model and finalizes a series of algorithms reconstructing Suppes-Bayes Causal Network as maximum spanning trees.
-\item[2.4] Current stable version. New statistics available for model confidence via cross-validation routines. New algorithms based on Minimum Spanning Tree extraction.
+\item[2.5.3] Latest development version. New algorithms: Prim, Chow-Liu, Prim and Edmonds. New scores: PMI, CPMI, MI. 
+\item[2.4.3] Current stable version. Bugfix
+\item[2.4.2] Implements a noise model and finalizes a series of algorithms reconstructing Suppes-Bayes Causal Network as maximum spanning trees.
+\item[2.4] New statistics available for model confidence via cross-validation routines. New algorithms based on Minimum Spanning Tree extraction.
 \item[2.0] Released in summer 2015 on our GitHUB, replaced the \Bioconductor{} version in autumn 2015. This version is parallel, includes also the CAPRI algorithm, supports common GISTIC and  MAF input formats, supports TCGA samples editing and queries to the cBio portal. This version has new plotting capabilities, and a general from-scratch design. It is not compatible with previous releases.
 \item[1.0] released in mid 2014, includes CAPRESE algorithm. It is now outdated and no more maintained;
 \end{itemize}
@@ -92,10 +94,10 @@ CAPRESE &  Cancer Progression Extraction with Single Edges &  Ind &  \href{http:
 
 CAPRI &  Cancer Progression Inference &  Ens & \href{http://www.ncbi.nlm.nih.gov/pubmed/25971740}{Bioinformatics 31(18), 3016-3016, 2015.}\\ \hline
 
-MST (Edmond) & Directed Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
-MST (Gabow) & Partially Directed Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
-MST (Chow Liu) & Undirected Minimum Spanning Tree with Likelihood-Fit & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
-MST (Prim) & Undirected Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
+Edmond & Directed Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
+Gabow & Partially Directed Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
+Chow Liu & Undirected Minimum Spanning Tree with Likelihood-Fit & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
+Prim & Undirected Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
  \end{tabular}
 \end{center}
 {\small {\bf Legend.} Ens.: ensemble-level with cross-sectional data; Ind.: individual-level with single-cell or multi-region data.}
@@ -1019,7 +1021,7 @@ view(model.capri)
 We can plot a model by using function \Rfunction{tronco.plot}. Here, we plot the aCML model inferred by CAPRI with BIC and AIC as a regolarizator. We set some parameters to get a nice plot (scaling etc.), and distinguish the edges detected by the two regularization techniques. The confidence of each edge is shown  in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input). Events are annotated as in the oncoprint, edge p-values above a minium threshold (default 0.05) are red.
 
 
-<<capri-plot,fig.show='hide',fig.width=4,fig.height=4>>=
+<<capri-plot,fig.show='hide',fig.width=4,fig.height=4,warning=FALSE>>=
 tronco.plot(model.capri, 
     fontsize = 12, 
     scale.nodes = 0.6, 
@@ -1043,7 +1045,7 @@ tronco.plot(model.capri,
 We can also make a multiplot with this function,  which in this case we do by showing the models inferred by the other algorithms based on Minimum Spanning Trees.
 
 
-<<mst-plot,fig.show='hide',results='hide',fig.width=7,fig.height=7>>=
+<<mst-plot,fig.show='hide',results='hide',fig.width=7,fig.height=7,warning=FALSE>>=
 par(mfrow = c(2,2))
 tronco.plot(model.caprese, fontsize = 22, scale.nodes = 0.6, legend = FALSE)
 tronco.plot(model.edmonds, fontsize = 22, scale.nodes = 0.6, legend = FALSE)
@@ -1146,7 +1148,7 @@ model.boot = tronco.bootstrap(model.boot, nboot = 3, type = 'statistical')
 
 Bootstrap scores can be annotated to the \Rfunction{tronco.plot} output by setting them via the confidence parameter {\tt confidence=c('npb', 'sb')}. In this case edge thickness will be proportional to the non-parametric ({\tt npb}) scores -- the last to appear in the {\tt confidence} parameter.
 
-<<figplotboot,fig.show='hide',fig.width=4,fig.height=4>>=
+<<figplotboot,fig.show='hide',fig.width=4,fig.height=4,warning=FALSE>>=
 tronco.plot(model.boot, 
     fontsize = 12, 
     scale.nodes = .6,   
@@ -1258,7 +1260,7 @@ head(tabular(model.boot, 'capri_bic'))
 We finally show the plot of the model with the confidences by cross-validation.
 
 
-<<plot-conf,fig.show='hide',fig.width=4,fig.height=4>>=
+<<plot-conf,fig.show='hide',fig.width=4,fig.height=4,warning=FALSE>>=
 tronco.plot(model.boot, 
     fontsize = 12, 
     scale.nodes = .6, 
@@ -1304,7 +1306,7 @@ The current version of TRONCO supports input/output towards these tools:
 
 Finally we also privede the possibility of exporting the inferred model to {\tt graphML} format, which can be subsequently imported to \software{Cytoscape}. We now provide an example of such function.
 
-<<graphml, fig.show='hide'>>=
+<<graphml, fig.show='hide',warning=FALSE>>=
 export.graphml(model.boot,
     file = 'graph.gml',
     fontsize = 12, 
