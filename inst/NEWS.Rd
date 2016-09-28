@@ -12,7 +12,8 @@
 
 \section{Changes in Version 2.4.2}{
     \itemize{
-        \item Implementation of a noise model plus maximum spanning tree algorithms.
+        \item Implementation of maximum spanning tree algorithms.
+        \item Implementation of a noise model for cumulative phenomena.
     }
 }
 
