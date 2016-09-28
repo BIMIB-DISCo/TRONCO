@@ -93,7 +93,9 @@ plot function}
 Information about the reconstructed model
 }
 \description{
-Plots a progression model from a recostructed dataset
+Plots a progression model from a recostructed dataset. For details and examples 
+regarding the visualization of an inferred model, 
+we refer to the Vignette Section 7.
 }
 \examples{
 data(test_model)

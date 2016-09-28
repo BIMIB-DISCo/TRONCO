@@ -2,7 +2,9 @@
 % Please edit documentation in R/statistics.R
 \name{tronco.kfold.posterr}
 \alias{tronco.kfold.posterr}
-\title{tronco.kfold.posterr}
+\title{tronco.kfold.posterr. For details and examples 
+regarding the statistical assesment of an inferred model, 
+we refer to the Vignette Section 7.}
 \usage{
 tronco.kfold.posterr(x, models = names(as.models(x)), events = as.events(x),
   runs = 10, k = 10, cores.ratio = 1, silent = FALSE)

@@ -36,7 +36,8 @@ unique event type labeled "Mutation" and assigned a color according to the defau
 \code{import.genotypes}. If this is a TCGA MAF file check for multiple samples per patient is performed
 and a warning is raised if these occurr. Customized MAF files can be imported as well provided that 
 they have columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification. 
-Custom filters are possible (via filter.fun) to avoid loading the full MAF data
+Custom filters are possible (via filter.fun) to avoid loading the full MAF data. For details and examples 
+regarding the loading functions provided by the package we refer to the Vignette Section 3.
 }
 \examples{
 data(maf)

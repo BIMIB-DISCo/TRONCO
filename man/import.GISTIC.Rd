@@ -28,7 +28,8 @@ is a character an attempt to load a table from file is performed. In this case t
 should be constitent with TCGA data for focal CNA; there should hence be: one column for each sample,
 one row for each gene, a column Hugo_Symbol with every gene name and a column Entrez_Gene_Id with every
  gene\'s Entrez ID. A valid GISTIC score should be any value of: "Homozygous Loss" (-2), "Heterozygous
- Loss" (-1), "Low-level Gain" (+1), "High-level Gain" (+2).
+ Loss" (-1), "Low-level Gain" (+1), "High-level Gain" (+2). For details and examples 
+regarding the loading functions provided by the package we refer to the Vignette Section 3.
 }
 \examples{
 gistic = import.GISTIC(crc_gistic)
