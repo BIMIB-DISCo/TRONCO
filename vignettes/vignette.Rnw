@@ -46,7 +46,7 @@ Daniele Ramazzotti\footnote{Department of Pathology, Stanford University, Stanfo
 \renewcommand{\arraystretch}{1.5}
 
 \begin{tabular}{ll}
-{\bf Version.}& {2.5.5} (October 2016) \\
+{\bf Version.}& {2.6.1} (October 2016) \\
 {\bf Codename.} & Coconut crub \\
 {\bf Contact.}& \email{tronco@disco.unimib.it} \\
 {\bf Bugs report.} & \url{https://github.com/BIMIB-DISCo/TRONCO} \\
@@ -72,9 +72,9 @@ background = "#f3f3ff"
 \section{Changelog} 
 
 \begin{itemize}
-\item[2.5.5] Current stable version.
-\item[2.5.3] Latest development version. New algorithms: Edmonds, Gabow, Chow-Liu and Prim. New scores: PMI, CPMI, MI. 
-\item[2.4.3] Current stable version. Bugfix
+\item[2.6.1] Current stable version.
+\item[2.5.3] New algorithms: Edmonds, Gabow, Chow-Liu and Prim. New scores: PMI, CPMI, MI. 
+\item[2.4.3] Bugfix. 
 \item[2.4.2] Implements a noise model and finalizes a series of algorithms reconstructing Suppes-Bayes Causal Network as maximum spanning trees.
 \item[2.4] New statistics available for model confidence via cross-validation routines. New algorithms based on Minimum Spanning Tree extraction.
 \item[2.0] Released in summer 2015 on our GitHUB, replaced the \Bioconductor{} version in autumn 2015. This version is parallel, includes also the CAPRI algorithm, supports common GISTIC and  MAF input formats, supports TCGA samples editing and queries to the cBio portal. This version has new plotting capabilities, and a general from-scratch design. It is not compatible with previous releases.
