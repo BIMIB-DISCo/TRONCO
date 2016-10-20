@@ -4,7 +4,7 @@
 
 \section{Changes in Version 2.4.3}{
     \itemize{
-        \item New algorithms: Prim, Chow-Liu, Prim and Edmonds.
+        \item New algorithms: Edmonds, Gabow, Chow-Liu and Prim.
         \item New scores: PMI, CPMI, MI
         \item A better bootstrap implementation
     }
