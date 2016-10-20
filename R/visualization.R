@@ -8,7 +8,8 @@
 #### which accompanies this distribution.
 
 
-#' oncoPrint : plot a genotype
+#' oncoPrint : plot a genotype. For details and examples 
+#' regarding the visualization through oncoprints, we refer to the Vignette Section 4.4. 
 #' 
 #' @title oncoprint
 #' @param x A TRONCO compliant dataset

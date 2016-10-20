@@ -8,7 +8,9 @@
 #### which accompanies this distribution.
 
 
-#' Reconstruct a progression model using CAPRESE algorithm
+#' Reconstruct a progression model using CAPRESE algorithm. For details and examples 
+#' regarding the inference process and on the algorithm implemented in the package, 
+#' we refer to the Vignette Section 6. 
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
@@ -105,7 +107,9 @@ tronco.caprese <- function(data,
 }
 
 
-#' Reconstruct a progression model using CAPRI algorithm
+#' Reconstruct a progression model using CAPRI algorithm. For details and examples 
+#' regarding the inference process and on the algorithm implemented in the package, 
+#' we refer to the Vignette Section 6. 
 #'
 #' @examples
 #' data(test_dataset)
@@ -288,7 +292,9 @@ tronco.capri <- function(data,
 
 
 #' Reconstruct a progression model using Edmonds algorithm combined 
-#' with probabilistic causation
+#' with probabilistic causation. For details and examples 
+#' regarding the inference process and on the algorithm implemented in the package, 
+#' we refer to the Vignette Section 6. 
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
@@ -501,7 +507,9 @@ tronco.edmonds <- function(data,
 
 
 #' Reconstruct a progression model using Gabow algorithm combined 
-#' with probabilistic causation
+#' with probabilistic causation. For details and examples 
+#' regarding the inference process and on the algorithm implemented in the package, 
+#' we refer to the Vignette Section 6. 
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
@@ -760,7 +768,9 @@ tronco.gabow <- function(data,
 
 
 #' Reconstruct a progression model using Chow Liu 
-#' algorithm combined with probabilistic causation
+#' algorithm combined with probabilistic causation. For details and examples 
+#' regarding the inference process and on the algorithm implemented in the package, 
+#' we refer to the Vignette Section 6. 
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
@@ -949,7 +959,9 @@ tronco.chowliu <- function(data,
 }
 
 
-#' Reconstruct a progression model using Prim algorithm combined with probabilistic causation
+#' Reconstruct a progression model using Prim algorithm combined with probabilistic causation. For details and examples 
+#' regarding the inference process and on the algorithm implemented in the package, 
+#' we refer to the Vignette Section 6. 
 #'
 #' @examples
 #' data(test_dataset_no_hypos)
@@ -1144,7 +1156,9 @@ tronco.prim <- function(data,
 }
 
 
-#' Bootstrap a reconstructed progression model
+#' Bootstrap a reconstructed progression model. For details and examples 
+#' regarding the statistical assesment of an inferred model, 
+#' we refer to the Vignette Section 7. 
 #'
 #' @examples
 #' data(test_model)
@@ -1249,7 +1263,10 @@ tronco.bootstrap <- function(reconstruction,
 }
 
 
-#' Plots a progression model from a recostructed dataset
+#' Plots a progression model from a recostructed dataset. For details and examples 
+#' regarding the visualization of an inferred model, 
+#' we refer to the Vignette Section 7. 
+#' 
 #' @title tronco.plot
 #'
 #' @examples

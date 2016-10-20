@@ -38,7 +38,9 @@ tronco.capri(data, command = "hc", regularization = c("bic", "aic"),
 A TRONCO compliant object with reconstructed model
 }
 \description{
-Reconstruct a progression model using CAPRI algorithm
+Reconstruct a progression model using CAPRI algorithm. For details and examples 
+regarding the inference process and on the algorithm implemented in the package, 
+we refer to the Vignette Section 6.
 }
 \examples{
 data(test_dataset)

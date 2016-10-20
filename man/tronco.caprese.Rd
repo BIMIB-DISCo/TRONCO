@@ -21,7 +21,9 @@ tronco.caprese(data, lambda = 0.5, silent = FALSE, epos = 0, eneg = 0)
 A TRONCO compliant object with reconstructed model
 }
 \description{
-Reconstruct a progression model using CAPRESE algorithm
+Reconstruct a progression model using CAPRESE algorithm. For details and examples 
+regarding the inference process and on the algorithm implemented in the package, 
+we refer to the Vignette Section 6.
 }
 \examples{
 data(test_dataset_no_hypos)

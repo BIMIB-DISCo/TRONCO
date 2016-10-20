@@ -4,7 +4,7 @@
 
 \section{Changes in Version 2.4.3}{
     \itemize{
-        \item New algorithms: Prim, Chow-Liu, Prim and Edmonds.
+        \item New algorithms: Edmonds, Gabow, Chow-Liu and Prim.
         \item New scores: PMI, CPMI, MI
         \item A better bootstrap implementation
     }
@@ -12,7 +12,8 @@
 
 \section{Changes in Version 2.4.2}{
     \itemize{
-        \item Implementation of a noise model plus maximum spanning tree algorithms.
+        \item Implementation of maximum spanning tree algorithms.
+        \item Implementation of a noise model for cumulative phenomena.
     }
 }
 

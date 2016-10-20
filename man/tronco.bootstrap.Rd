@@ -26,7 +26,9 @@ coresRate * (numCores - 1)}
 A TRONCO compliant object with reconstructed model
 }
 \description{
-Bootstrap a reconstructed progression model
+Bootstrap a reconstructed progression model. For details and examples 
+regarding the statistical assesment of an inferred model, 
+we refer to the Vignette Section 7.
 }
 \examples{
 data(test_model)

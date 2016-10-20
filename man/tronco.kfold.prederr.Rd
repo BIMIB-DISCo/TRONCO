@@ -24,7 +24,9 @@ tronco.kfold.prederr(x, models = names(as.models(x)), events = as.events(x),
 }
 \description{
 Perform a k-fold cross-validation using the function bn.cv
-and scan every node to estimate its prediction error.
+and scan every node to estimate its prediction error. For details and examples 
+regarding the statistical assesment of an inferred model, 
+we refer to the Vignette Section 7.
 }
 \examples{
 data(test_model)

@@ -20,7 +20,9 @@ tronco.kfold.eloss(x, models = names(as.models(x)), runs = 10, k = 10,
 }
 \description{
 Perform a k-fold cross-validation using the function bn.cv
-to estimate the entropy loss.
+to estimate the entropy loss. For details and examples 
+regarding the statistical assesment of an inferred model, 
+we refer to the Vignette Section 7.
 }
 \examples{
 data(test_model)

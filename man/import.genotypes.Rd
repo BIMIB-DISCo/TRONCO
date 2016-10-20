@@ -20,6 +20,7 @@ A TRONCO compliant dataset
 Import a matrix of 0/1 alterations as a TRONCO compliant dataset. Input "geno" can be either a dataframe or
 a file name. In any case the dataframe or the table stored in the file must have a column for each altered
 gene and a rows for each sample. Colnames will be used to determine gene names, if data is loaded from
-file the first column will be assigned as rownames.
+file the first column will be assigned as rownames. For details and examples 
+regarding the loading functions provided by the package we refer to the Vignette Section 3.
 }
 
