@@ -2,6 +2,18 @@
 \title{News for the package \pkg{TRONCO}}
 \encoding{UTF-8}
 
+\section{Changes in Version 2.7.2}{
+    \itemize{
+        \item Assignment to .GlobalEnv removed
+    }
+}
+
+\section{Changes in Version 2.6.1}{
+    \itemize{
+        \item Last stable releade with bugfix
+    }
+}
+
 \section{Changes in Version 2.4.3}{
     \itemize{
         \item New algorithms: Edmonds, Gabow, Chow-Liu and Prim.

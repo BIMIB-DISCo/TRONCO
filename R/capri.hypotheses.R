@@ -59,10 +59,10 @@ hypothesis.add <- function(data,
     ## lifting.genotypes, make the backup of it.
     
     if (exists("lifting.genotypes")) {
-        roll.back.lifting.genotypes = get('lifting.genotypes', envir = .GlobalEnv)
+        roll.back.lifting.genotypes = get('lifting.genotypes', envir = .hypotheses.env)
         do.roll.back.lifting.genotypes = TRUE;
     }
-    assign("lifting.genotypes", genotypes, envir = .GlobalEnv);
+    assign("lifting.genotypes", genotypes, envir = .hypotheses.env);
 
     ## I need a global variable to save the annotations of the
     ## lifted pattern.
@@ -71,10 +71,10 @@ hypothesis.add <- function(data,
     ## lifting.annotations, make the backup of it.
     
     if (exists("lifting.annotations")) {
-        roll.back.lifting.annotations = get('lifting.annotations', envir = .GlobalEnv)
+        roll.back.lifting.annotations = get('lifting.annotations', envir = .hypotheses.env)
         do.roll.back.lifting.annotations = TRUE;
     }
-    assign("lifting.annotations", annotations, envir = .GlobalEnv);
+    assign("lifting.annotations", annotations, envir = .hypotheses.env);
 
     ## I need a global variable to save the edges of the lifted
     ## pattern.
@@ -83,10 +83,10 @@ hypothesis.add <- function(data,
     ## make the backup of it.
     
     if (exists("lifting.edges")) {
-        roll.back.lifting.edges = get('lifting.edges', envir = .GlobalEnv)
+        roll.back.lifting.edges = get('lifting.edges', envir = .hypotheses.env)
         do.roll.back.lifting.edges = TRUE
     }
-    assign("lifting.edges", NULL, envir = .GlobalEnv);
+    assign("lifting.edges", NULL, envir = .hypotheses.env);
 
     ## I need a global variable to save the pvalues of the lifted
     ## pattern.
@@ -95,21 +95,21 @@ hypothesis.add <- function(data,
     ## make the backup of it.
     
     if (exists("fisher.pvalues")) {
-        roll.back.fisher.pvalues = get('fisher.pvalues', envir = .GlobalEnv)
+        roll.back.fisher.pvalues = get('fisher.pvalues', envir = .hypotheses.env)
         do.roll.back.fisher.pvalues = TRUE;
     }
-    assign("fisher.pvalues", NULL, envir = .GlobalEnv);
+    assign("fisher.pvalues", NULL, envir = .hypotheses.env);
 
     ## Save the lifted genotypes and its hypotheses for the
     ## current pattern.
     
     curr_pattern = lifted.pattern$pattern;
     curr_hypotheses = lifted.pattern$hypotheses;
-    curr_pvalues = get('fisher.pvalues', envir = .GlobalEnv)
+    curr_pvalues = get('fisher.pvalues', envir = .hypotheses.env)
 
     ## Save the edges of the lifted pattern.
     
-    hstructure = get('lifting.edges', envir = .GlobalEnv)
+    hstructure = get('lifting.edges', envir = .hypotheses.env)
 
     ## Roll back to the previous value of the global variable
     ## lifting.genotypes if any or remove it.
@@ -117,9 +117,9 @@ hypothesis.add <- function(data,
     if (do.roll.back.lifting.genotypes) {
         assign("lifting.genotypes",
                roll.back.lifting.genotypes,
-               envir = .GlobalEnv);
+               envir = .hypotheses.env);
     } else {
-        rm('lifting.genotypes', pos = ".GlobalEnv");
+        rm('lifting.genotypes', pos = .hypotheses.env);
     }
 
     ## Roll back to the previous value of the global variable
@@ -128,9 +128,9 @@ hypothesis.add <- function(data,
     if (do.roll.back.lifting.annotations) {
         assign("lifting.annotations",
                roll.back.lifting.annotations,
-               envir = .GlobalEnv);
+               envir = .hypotheses.env);
     } else {
-        rm('lifting.annotations', pos = ".GlobalEnv")
+        rm('lifting.annotations', pos = .hypotheses.env)
     }
 
     ## Roll back to the previous value of the global variable
@@ -139,9 +139,9 @@ hypothesis.add <- function(data,
     if (do.roll.back.lifting.edges) {
         assign("lifting.edges",
                roll.back.lifting.edges,
-               envir = .GlobalEnv)
+               envir = .hypotheses.env)
     } else {
-        rm('lifting.edges', pos = ".GlobalEnv")
+        rm('lifting.edges', pos = .hypotheses.env)
     }
 
     ## Roll back to the previous value of the global variable
@@ -150,9 +150,9 @@ hypothesis.add <- function(data,
     if (do.roll.back.fisher.pvalues) {
         assign("fisher.pvalues",
                roll.back.fisher.pvalues,
-               envir = .GlobalEnv)
+               envir = .hypotheses.env)
     } else {
-        rm('fisher.pvalues', pos = ".GlobalEnv")
+        rm('fisher.pvalues', pos = .hypotheses.env)
     }
 
     ## Set the hypotheses number.
@@ -1160,9 +1160,9 @@ aux.log <- function( genotypes, annotations, function.name, ... ) {
         
         for (k in 1:length(result$function.inputs)) {
             lifting.edges.temp =
-                rbind(get('lifting.edges', envir = .GlobalEnv),
+                rbind(get('lifting.edges', envir = .hypotheses.env),
                       c(result$function.inputs[[k]], result$function.name))
-            assign("lifting.edges", lifting.edges.temp, envir = .GlobalEnv)
+            assign("lifting.edges", lifting.edges.temp, envir = .hypotheses.env)
         }
         return(result)
     } else {
@@ -1183,9 +1183,9 @@ AND <- function( ... ) {
     ## Look for the global variables named lifting.genotypes and
     ## lifting.annotations.
     
-    genotypes = get('lifting.genotypes', envir = .GlobalEnv)
-    annotations = get('lifting.annotations', envir = .GlobalEnv)
-    fisher.pvalues.temp = get('fisher.pvalues', envir = .GlobalEnv)
+    genotypes = get('lifting.genotypes', envir = .hypotheses.env)
+    annotations = get('lifting.annotations', envir = .hypotheses.env)
+    fisher.pvalues.temp = get('fisher.pvalues', envir = .hypotheses.env)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1212,7 +1212,7 @@ AND <- function( ... ) {
 
                 fisher.pvalues.temp = append(fisher.pvalues.temp, curr.pvalue)
             }
-            assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
+            assign("fisher.pvalues", fisher.pvalues.temp, envir = .hypotheses.env)
         }
 
         ## Evaluate the AND operator.
@@ -1251,9 +1251,9 @@ OR <- function( ... ) {
     ## Look for the global variables named lifting.genotypes and
     ## lifting.annotations.
     
-    genotypes = get('lifting.genotypes', envir = .GlobalEnv)
-    annotations = get('lifting.annotations', envir = .GlobalEnv)
-    fisher.pvalues.temp = get('fisher.pvalues', envir = .GlobalEnv)
+    genotypes = get('lifting.genotypes', envir = .hypotheses.env)
+    annotations = get('lifting.annotations', envir = .hypotheses.env)
+    fisher.pvalues.temp = get('fisher.pvalues', envir = .hypotheses.env)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1276,7 +1276,7 @@ OR <- function( ... ) {
 
                 fisher.pvalues.temp = append(fisher.pvalues.temp, curr.p.value)
             }
-            assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
+            assign("fisher.pvalues", fisher.pvalues.temp, envir = .hypotheses.env)
         }
 
         ## Evaluate the OR operator.
@@ -1312,9 +1312,9 @@ XOR <- function( ... ) {
     ## Look for the global variables named lifting.genotypes and
     ## lifting.annotations.
     
-    genotypes = get('lifting.genotypes', envir = .GlobalEnv)
-    annotations = get('lifting.annotations', envir = .GlobalEnv)
-    fisher.pvalues.temp = get('fisher.pvalues', envir = .GlobalEnv)
+    genotypes = get('lifting.genotypes', envir = .hypotheses.env)
+    annotations = get('lifting.annotations', envir = .hypotheses.env)
+    fisher.pvalues.temp = get('fisher.pvalues', envir = .hypotheses.env)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1343,7 +1343,7 @@ XOR <- function( ... ) {
                 }
                 fisher.pvalues.temp = append(fisher.pvalues.temp, curr.pvalue)
             }
-            assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
+            assign("fisher.pvalues", fisher.pvalues.temp, envir = .hypotheses.env)
         }
 
         ## Evaluate the XOR operator.

@@ -46,8 +46,8 @@ Daniele Ramazzotti\footnote{Department of Pathology, Stanford University, Stanfo
 \renewcommand{\arraystretch}{1.5}
 
 \begin{tabular}{ll}
-{\bf Version.}& {2.6.1} (October 2016) \\
-{\bf Codename.} & Coconut crub \\
+{\bf Version.}& {2.7.2} (November 2016) \\
+{\bf Codename.} & Glaucus Atlanticus (development) \\
 {\bf Contact.}& \email{tronco@disco.unimib.it} \\
 {\bf Bugs report.} & \url{https://github.com/BIMIB-DISCo/TRONCO} \\
 {\bf Website.} & \url{https://sites.google.com/site/troncopackage}
@@ -72,6 +72,7 @@ background = "#f3f3ff"
 \section{Changelog} 
 
 \begin{itemize}
+\item[2.7.2] Development version. Assignment to .GlobalEnv removed.
 \item[2.6.1] Current stable version.
 \item[2.5.3] New algorithms: Edmonds, Gabow, Chow-Liu and Prim. New scores: PMI, CPMI, MI. 
 \item[2.4.3] Bugfix. 
