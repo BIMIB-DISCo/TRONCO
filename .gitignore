@@ -2,6 +2,7 @@
 /inst/doc/vignette.Rnw
 /vignettes/vignette.R
 /cfg.R
+
 # History files
 .Rhistory
 .Rapp
@@ -30,8 +31,12 @@
 # Configuration file
 cfg.R
 
+# Other file
 *.log
-
 *.out
-
 *.toc
+
+# C++ file
+*.o
+*.so
+*.dll

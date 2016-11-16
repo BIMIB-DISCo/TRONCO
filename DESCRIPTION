@@ -36,12 +36,13 @@ Imports:
     stats,
     utils,
     methods,
+    Rcpp
 Suggests:
     BiocGenerics,
     BiocStyle,
     testthat,
     knitr,
-Name: 
+Name:
     An R package for the inference of cancer progression models from heterogeneous genomic data 
 Description:
     The TRONCO (TRanslational ONCOlogy) R package collects algorithms to infer
@@ -74,3 +75,4 @@ biocViews: BiomedicalInformatics,
            SingleCell
 RoxygenNote: 5.0.1
 VignetteBuilder: knitr
+LinkingTo: Rcpp
