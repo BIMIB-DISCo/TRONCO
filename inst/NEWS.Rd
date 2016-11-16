@@ -2,7 +2,7 @@
 \title{News for the package \pkg{TRONCO}}
 \encoding{UTF-8}
 
-\section{Changes in Version 2.7.2}{
+\section{Changes in Version 2.7.3}{
     \itemize{
         \item Assignment to .GlobalEnv removed
     }
