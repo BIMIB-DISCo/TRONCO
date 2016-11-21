@@ -6,13 +6,28 @@
 using namespace Rcpp;
 
 // C_bootstrap
-int C_bootstrap(int x);
-RcppExport SEXP TRONCO_C_bootstrap(SEXP xSEXP) {
+int C_bootstrap(NumericMatrix A, int x);
+RcppExport SEXP TRONCO_C_bootstrap(SEXP ASEXP, SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type A(ASEXP);
     Rcpp::traits::input_parameter< int >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(C_bootstrap(x));
+    rcpp_result_gen = Rcpp::wrap(C_bootstrap(A, x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// C_get_dag_scores
+Rcpp::List C_get_dag_scores(Rcpp::NumericMatrix dataset, Rcpp::NumericMatrix adj_matrix, double epos, double eneg);
+RcppExport SEXP TRONCO_C_get_dag_scores(SEXP datasetSEXP, SEXP adj_matrixSEXP, SEXP eposSEXP, SEXP enegSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type dataset(datasetSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type adj_matrix(adj_matrixSEXP);
+    Rcpp::traits::input_parameter< double >::type epos(eposSEXP);
+    Rcpp::traits::input_parameter< double >::type eneg(enegSEXP);
+    rcpp_result_gen = Rcpp::wrap(C_get_dag_scores(dataset, adj_matrix, epos, eneg));
     return rcpp_result_gen;
 END_RCPP
 }

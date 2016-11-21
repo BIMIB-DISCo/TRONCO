@@ -4,7 +4,11 @@
 #' execute the bootstrap procedure
 #' 
 #' @param x A single integer.
-C_bootstrap <- function(x) {
-    .Call('TRONCO_C_bootstrap', PACKAGE = 'TRONCO', x)
+C_bootstrap <- function(A, x) {
+    .Call('TRONCO_C_bootstrap', PACKAGE = 'TRONCO', A, x)
+}
+
+C_get_dag_scores <- function(dataset, adj_matrix, epos, eneg) {
+    .Call('TRONCO_C_get_dag_scores', PACKAGE = 'TRONCO', dataset, adj_matrix, epos, eneg)
 }
 

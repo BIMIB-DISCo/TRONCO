@@ -403,6 +403,11 @@ get.bootstrapped.scores <- function(dataset,
 
     ## Perform bootstrap estimation based on a number of bootstrapped
     ## (>= nboot) datasets.
+
+    ###
+    ### START BOOTSTRAP HERE
+    ###
+
     
     curr.iteration = min(sampled.prima.facie.distributions);
     boot.counter = 0;

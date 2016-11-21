@@ -4,7 +4,7 @@
 \alias{C_bootstrap}
 \title{execute the bootstrap procedure}
 \usage{
-C_bootstrap(x)
+C_bootstrap(A, x)
 }
 \arguments{
 \item{x}{A single integer.}
