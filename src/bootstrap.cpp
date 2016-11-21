@@ -2,20 +2,12 @@
 using namespace Rcpp;
 
 
-//' execute the bootstrap procedure
+//' execute the get.dag.scores procedures
 //' 
-//' @param x A single integer.
-// [[Rcpp::export]]
-int C_bootstrap(NumericMatrix A, int x) {
-    //Rcout << A.size();
-    //Rcout << '\n';
-    Rcout << A[0,0];
-    Rcout << '\n';
-    Rcout << x;
-    Rcout << '\n';
-    return x * 2;
-}
-
+//' @param dataset A TRONCO dataset
+//' @param adj_matrix An adj matrix
+//' @param epos false positive rates
+//' @param eneg false negative rates
 // [[Rcpp::export]]
 Rcpp::List C_get_dag_scores(Rcpp::NumericMatrix dataset,
                     Rcpp::NumericMatrix adj_matrix, 
