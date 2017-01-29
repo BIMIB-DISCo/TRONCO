@@ -41,6 +41,7 @@ bootstrap <- function(reconstruction,
         if (nhypotheses(reconstruction) > 0) {
             hypotheses = reconstruction$hypotheses
         }
+        restart = parameters$restart
     }
 
     ## Get CAPRESE parameters.
@@ -164,7 +165,8 @@ bootstrap <- function(reconstruction,
                              boot.seed,
                              silent = TRUE,
                              epos,
-                             eneg)
+                             eneg,
+                             restart)
         } else if (type == 'CAPRESE') {
             bootstrapped.topology =
                 tronco.caprese(curr.reconstruction,

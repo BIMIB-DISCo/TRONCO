@@ -13,7 +13,8 @@ lregfit <- function(data,
                     adj.matrix,
                     adj.matrix.fit,
                     regularization,
-                    command){
+                    command,
+                    restart = 0){
 
     if (regularization == "no_reg") {
         return(adj.matrix)
@@ -50,13 +51,13 @@ lregfit <- function(data,
     if (cont > 0) {
         blacklist = data.frame(from = parent,to = child)
         if (command == "hc") {
-            my.net = hc(data,score = regularization, blacklist = blacklist)
+            my.net = hc(data,score = regularization, blacklist = blacklist, restart = restart)
         } else if (command == "tabu") {
             my.net = tabu(data,score = regularization, blacklist = blacklist)
         }
     } else {
         if (command == "hc") {
-            my.net = hc(data, score = regularization)
+            my.net = hc(data, score = regularization, restart = restart)
         } else if (command == "tabu") {
             my.net = tabu(data, score = regularization)
         }
