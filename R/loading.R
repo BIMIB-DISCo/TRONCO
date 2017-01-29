@@ -115,6 +115,9 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 #' @param filter.samples A list of samples
 #' @param silent A parameter to disable/enable verbose messages.
 #' @param trim Remove the events without occurrence
+#' @param rna.seq.data Either a dataframe or a filename
+#' @param rna.seq.up TODO
+#' @param rna.seq.down TODO
 #' @return A TRONCO compliant representation of the input CNAs.
 #' @export import.GISTIC
 #' @importFrom utils read.table
@@ -123,7 +126,10 @@ import.GISTIC <- function(x,
                           filter.genes = NULL,
                           filter.samples = NULL,
                           silent = FALSE,
-                          trim = TRUE) {
+                          trim = TRUE,
+                          rna.seq.data = NULL,
+                          rna.seq.up = NULL,
+                          rna.seq.down = NULL) {
 
     if (!(is.data.frame(x) || is.matrix(x)) && is.character(x)) {
         if (!silent) {
@@ -158,6 +164,48 @@ import.GISTIC <- function(x,
         x = t(data)
     }
 
+    # Import RNASeq data
+    if (!is.null(rna.seq.data) && !(is.data.frame(rna.seq.data) || is.matrix(rna.seq.data)) && is.character(rna.seq.data)) {
+
+        if (!silent) {
+            cat('*** Input "rna.seq.data" is a character, interpreting it as a filename to load a table.
+                Required table format constitent with TCGA data for focal CNAs:
+                \t- one column for each sample, one row for each gene;
+                \t- a column Hugo_Symbol with every gene name;
+                \t- a column Entrez_Gene_Id with every gene\'s Entrez ID.\n')
+        }
+
+        rna.seq.data.raw = 
+            read.table(rna.seq.data,
+                       header = TRUE,
+                       check.names = FALSE,
+                       stringsAsFactors = FALSE,
+                       sep = ';')
+
+        if (!silent) {
+            cat('Data loaded.\n')
+        }
+        if (any(is.null(colnames(rna.seq.data.raw)))) {
+            stop('Input table should have column names.')
+        }
+        if (!'Hugo_Symbol' %in% colnames(rna.seq.data.raw)) {
+            stop('Missing Hugo_Symbol column!')
+        }
+        if (!'Entrez_Gene_Id' %in% colnames(rna.seq.data.raw)) {
+            stop('Missing Hugo_Symbol column!')
+        }
+        rna.seq.data.raw$Entrez_Gene_Id = NULL
+        rownames(rna.seq.data.raw) = rna.seq.data.raw$Hugo_Symbol
+        rna.seq.data.raw$Hugo_Symbol = NULL
+        rna.seq.data = t(rna.seq.data.raw)
+
+        samples.intersection = intersect(rownames(x), rownames(rna.seq.data))
+        rna.seq.data = rna.seq.data[samples.intersection, , drop = FALSE]
+
+        gene.intersection = intersect(colnames(rna.seq.data), colnames(x))
+        rna.seq.data = rna.seq.data[, gene.intersection, drop = FALSE]
+    }
+
     if (!silent && is.null(filter.genes) && is.null(filter.samples)) {
         cat('*** Using full GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' )
     } else if (!silent) {
@@ -172,6 +220,46 @@ import.GISTIC <- function(x,
 
         if (!silent) {
             cat('*** Using reduced GISTIC: #dim ', nrow(x), ' x ', ncol(x), '\n' ) 
+        }
+    }
+
+    if (!is.null(rna.seq.up) && !is.null(rna.seq.data)) {
+        if (!silent) {
+            cat('*** Checking expression information again positive GISTIC score\n' ) 
+        }
+        for (sample in rownames(x)) {
+            for (gene in colnames(x)) {
+
+                if (x[[sample, gene]] > 0 &&
+                    gene %in% colnames(rna.seq.data) &&
+                    sample %in% rownames(rna.seq.data) &&
+                    !is.na(rna.seq.data[[sample, gene]])) {
+
+                    if (rna.seq.data[[sample, gene]] < rna.seq.up) {
+                        x[[sample, gene]] = 0
+                    }
+                }
+            }
+        }
+    }
+
+    if (!is.null(rna.seq.down) && !is.null(rna.seq.data)) {
+        if (!silent) {
+            cat('*** Checking expression information again negative GISTIC score\n' ) 
+        }
+        for (sample in rownames(x)) {
+            for (gene in colnames(x)) {
+
+                if (x[[sample, gene]] < 0 &&
+                    gene %in% colnames(rna.seq.data) &&
+                    sample %in% rownames(rna.seq.data) &&
+                    !is.na(rna.seq.data[[sample, gene]])) {
+
+                    if (rna.seq.data[[sample, gene]] > rna.seq.down) {
+                        x[[sample, gene]] = 0
+                    }
+                }
+            }
         }
     }
 
