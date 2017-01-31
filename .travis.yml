@@ -7,6 +7,12 @@ cache: packages
 before_install:    
   - tlmgr install tcolorbox
 
+# safelist
+branches:
+  only:
+  - master
+  - development
+
 r_packages:
   - covr
 
