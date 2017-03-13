@@ -74,4 +74,3 @@ biocViews: BiomedicalInformatics,
            SingleCell
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
-LinkingTo: Rcpp
