@@ -55,4 +55,3 @@ data(test_dataset_no_hypos)
 recon = tronco.chowliu(test_dataset_no_hypos, nboot = 1)
 
 }
-

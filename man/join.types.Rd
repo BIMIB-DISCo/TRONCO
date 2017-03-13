@@ -33,4 +33,3 @@ join.types(test_dataset_no_hypos, 'ins_del',
      'missense_point_mutations', new.type='mut', new.color='green')
 
 }
-

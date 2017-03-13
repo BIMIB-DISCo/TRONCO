@@ -87,4 +87,3 @@ and sorted according to the number of mutations per sample - usefull when \code{
 oncoPrint : plot a genotype. For details and examples 
 regarding the visualization through oncoprints, we refer to the Vignette Section 4.4.
 }
-

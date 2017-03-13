@@ -24,4 +24,3 @@ data(test_dataset)
 test_dataset = rename.gene(test_dataset, 'TET2', 'gene x')
 
 }
-

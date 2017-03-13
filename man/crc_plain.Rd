@@ -17,4 +17,3 @@ This dataset contains an example of plain input of a crc cohort of patients
 \author{
 Daniele Ramazzotti
 }
-

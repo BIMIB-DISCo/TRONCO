@@ -22,4 +22,3 @@ data(test_dataset)
 test_dataset = delete.gene(test_dataset, 'TET2')
 
 }
-

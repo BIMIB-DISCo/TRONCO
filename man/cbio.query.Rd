@@ -28,4 +28,3 @@ list of genes to query with less than 900 entries should be provided. This funct
 with two dataframe: the gentic profile required and clinical data for the Cbio study. Output is also
 saved to disk as Rdata file. See also http://www.cbioportal.org.
 }
-

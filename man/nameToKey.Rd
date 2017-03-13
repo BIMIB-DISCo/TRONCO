@@ -23,4 +23,3 @@ data(test_model)
 adj_matrix = as.adj.matrix(test_model, events=as.events(test_model)[5:15,])$bic
 
 }
-

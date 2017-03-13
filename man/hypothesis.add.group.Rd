@@ -33,4 +33,3 @@ A TRONCO compliant object with the added hypotheses
 \description{
 Add all the hypotheses related to a group of events
 }
-

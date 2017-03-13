@@ -17,4 +17,3 @@ A simple mutation dataset without hypotheses
 \author{
 Luca De Sano
 }
-

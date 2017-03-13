@@ -32,4 +32,3 @@ as.kfold.prederr(test_model_kfold)
 as.kfold.prederr(test_model_kfold, models='capri_aic')
 
 }
-

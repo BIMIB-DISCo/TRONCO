@@ -19,4 +19,3 @@ A TRONCO compliant dataset.
 \description{
 Split cohort (samples) into groups, return either all groups or a specific group.
 }
-

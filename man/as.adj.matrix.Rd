@@ -32,4 +32,3 @@ as.adj.matrix(test_model, events=as.events(test_model)[5:15,])
 as.adj.matrix(test_model, events=as.events(test_model)[5:15,], type='pf')
 
 }
-

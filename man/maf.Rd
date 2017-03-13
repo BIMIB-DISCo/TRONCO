@@ -17,4 +17,3 @@ This dataset contains a standard MAF input for TRONCO
 \author{
 Luca De Sano
 }
-

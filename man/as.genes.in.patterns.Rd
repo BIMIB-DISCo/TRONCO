@@ -23,4 +23,3 @@ as.genes.in.patterns(test_dataset)
 as.genes.in.patterns(test_dataset, patterns='XOR_EZH2')
 
 }
-

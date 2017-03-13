@@ -32,4 +32,3 @@ as.kfold.posterr(test_model_kfold)
 as.kfold.posterr(test_model_kfold, events=as.events(test_model)[5:15,])
 
 }
-

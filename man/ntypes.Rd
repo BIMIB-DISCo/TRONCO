@@ -20,4 +20,3 @@ data(test_dataset)
 ntypes(test_dataset)
 
 }
-

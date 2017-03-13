@@ -56,4 +56,3 @@ data(test_dataset_no_hypos)
 recon = tronco.edmonds(test_dataset_no_hypos, nboot = 1)
 
 }
-

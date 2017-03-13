@@ -27,4 +27,3 @@ as.kfold.eloss(test_model_kfold)
 as.kfold.eloss(test_model_kfold, models='capri_aic')
 
 }
-

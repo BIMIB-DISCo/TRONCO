@@ -29,4 +29,3 @@ data(test_model)
 tronco.kfold.eloss(test_model, k = 2, runs = 2)
 
 }
-

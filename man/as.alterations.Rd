@@ -29,4 +29,3 @@ data(muts)
 as.alterations(muts)
 
 }
-

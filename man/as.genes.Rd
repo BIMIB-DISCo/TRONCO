@@ -23,4 +23,3 @@ data(test_dataset)
 as.genes(test_dataset)
 
 }
-

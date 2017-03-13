@@ -22,4 +22,3 @@ data(test_dataset)
 dataset = rank.recurrents(test_dataset, 10)
 
 }
-

@@ -31,4 +31,3 @@ as.joint.probs(test_model)
 as.joint.probs(test_model, events=as.events(test_model)[5:15,])
 
 }
-

@@ -2,7 +2,7 @@
 \title{News for the package \pkg{TRONCO}}
 \encoding{UTF-8}
 
-\section{Changes in Version 2.7.4}{
+\section{Changes in Version 2.7.5}{
     \itemize{
         \item RNA Seq validation
         \item Random restart on Hill Climbing added to CAPRI algorithm

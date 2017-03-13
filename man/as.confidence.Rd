@@ -31,4 +31,3 @@ as.confidence(test_model, conf='tp')
 as.confidence(test_model, conf=c('tp', 'hg'))
 
 }
-

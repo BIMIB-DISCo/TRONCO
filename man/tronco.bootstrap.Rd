@@ -35,4 +35,3 @@ data(test_model)
 boot = tronco.bootstrap(test_model, nboot = 1)
 
 }
-

@@ -33,4 +33,3 @@ data(test_dataset)
 p = as.pathway(test_dataset, c('ASXL1', 'TET2'), 'test_pathway')
 
 }
-

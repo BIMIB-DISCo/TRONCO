@@ -24,4 +24,3 @@ as.types(test_dataset)
 as.types(test_dataset, genes='TET2')
 
 }
-

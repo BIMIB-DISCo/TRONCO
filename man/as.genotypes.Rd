@@ -22,4 +22,3 @@ data(test_dataset)
 as.genotypes(test_dataset)
 
 }
-

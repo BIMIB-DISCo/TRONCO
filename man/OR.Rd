@@ -15,4 +15,3 @@ Vector to be added to the lifted genotype resolving the soft exclusive pattern
 \description{
 OR hypothesis
 }
-

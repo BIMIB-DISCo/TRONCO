@@ -23,4 +23,3 @@ as.events.in.patterns(test_dataset)
 as.events.in.patterns(test_dataset, patterns='XOR_EZH2')
 
 }
-

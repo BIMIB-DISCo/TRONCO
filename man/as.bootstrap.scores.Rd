@@ -27,4 +27,3 @@ as.bootstrap.scores(test_model)
 as.bootstrap.scores(test_model, events=as.events(test_model)[5:15,])
 
 }
-

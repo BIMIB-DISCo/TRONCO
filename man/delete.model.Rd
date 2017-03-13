@@ -21,4 +21,3 @@ model = delete.model(test_model)
 has.model(model)
 
 }
-

@@ -26,4 +26,3 @@ data(test_dataset)
 as.gene(test_dataset, genes = c('EZH2', 'ASXL1'))
 
 }
-

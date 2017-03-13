@@ -22,4 +22,3 @@ data(test_dataset)
 as.events.in.sample(test_dataset, c('patient 1', 'patient 7'))
 
 }
-

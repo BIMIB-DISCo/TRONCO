@@ -28,4 +28,3 @@ tronco.pattern.plot(x, group = as.events(x), to, gap.cex = 1,
 \description{
 tronco.pattern.plot : plot a genotype
 }
-

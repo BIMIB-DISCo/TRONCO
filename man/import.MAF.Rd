@@ -47,4 +47,3 @@ mutations = TCGA.shorten.barcodes(mutations)
 oncoprint(mutations)
 
 }
-

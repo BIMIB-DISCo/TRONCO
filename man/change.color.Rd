@@ -24,4 +24,3 @@ data(test_dataset)
 dataset = change.color(test_dataset, 'ins_del', 'red')
 
 }
-

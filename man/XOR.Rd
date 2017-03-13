@@ -15,4 +15,3 @@ Vector to be added to the lifted genotype resolving the hard exclusive pattern
 \description{
 XOR hypothesis
 }
-

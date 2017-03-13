@@ -32,4 +32,3 @@ as.selective.advantage.relations(test_model, events=as.events(test_model)[5:15,]
 as.selective.advantage.relations(test_model, events=as.events(test_model)[5:15,], type='pf')
 
 }
-
