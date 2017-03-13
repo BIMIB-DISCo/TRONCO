@@ -23,4 +23,3 @@ gene and a rows for each sample. Colnames will be used to determine gene names, 
 file the first column will be assigned as rownames. For details and examples 
 regarding the loading functions provided by the package we refer to the Vignette Section 3.
 }
-

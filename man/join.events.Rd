@@ -28,4 +28,3 @@ data(muts)
 dataset = join.events(muts, 'G1', 'G2', new.event='test', new.type='banana', event.color='yellow')
 
 }
-

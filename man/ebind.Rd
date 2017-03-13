@@ -17,4 +17,3 @@ A TRONCO complian dataset.
 \description{
 Binds events from one or more datasets, which must be defined over the same set of samples.
 }
-

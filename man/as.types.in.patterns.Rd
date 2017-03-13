@@ -23,4 +23,3 @@ as.types.in.patterns(test_dataset)
 as.types.in.patterns(test_dataset, patterns='XOR_EZH2')
 
 }
-

@@ -25,4 +25,3 @@ test_dataset = annotate.stages(test_dataset, stage)
 has.stages(test_dataset)
 
 }
-

@@ -33,4 +33,3 @@ gistic = import.GISTIC(crc_gistic)
 oncoprint.cbio(gistic)
 
 }
-

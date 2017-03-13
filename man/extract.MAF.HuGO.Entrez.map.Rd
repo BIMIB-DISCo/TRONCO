@@ -18,4 +18,3 @@ A mapHugo_Symbol -> Entrez_Gene_Id.
 Extract a map Hugo_Symbol -> Entrez_Gene_Id from a MAF input file. If some genes map to ID 0
 a warning is raised.
 }
-

@@ -29,4 +29,3 @@ plot information
 \description{
 Visualise pathways informations
 }
-

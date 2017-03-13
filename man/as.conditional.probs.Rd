@@ -31,4 +31,3 @@ data(test_model)
 as.conditional.probs(test_model)
 as.conditional.probs(test_model, events=as.events(test_model)[5:15,])
 }
-

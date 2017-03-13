@@ -15,4 +15,3 @@ Vector to be added to the lifted genotype resolving the co-occurance pattern
 \description{
 AND hypothesis
 }
-

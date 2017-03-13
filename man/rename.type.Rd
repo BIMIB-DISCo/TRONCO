@@ -24,4 +24,3 @@ data(test_dataset)
 test_dataset = rename.type(test_dataset, 'ins_del', 'deletion')
 
 }
-

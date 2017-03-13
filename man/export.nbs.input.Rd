@@ -17,4 +17,3 @@ export.nbs.input(x, map_hugo_entrez, file = "tronco_to_nbs.mat")
 Create a .mat file which can be used with NBS clustering
 (ref: http://chianti.ucsd.edu/~mhofree/wordpress/?page_id=26)
 }
-

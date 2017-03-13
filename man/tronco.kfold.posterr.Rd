@@ -33,4 +33,3 @@ data(test_model)
 tronco.kfold.posterr(test_model, k = 2, runs = 2)
 
 }
-

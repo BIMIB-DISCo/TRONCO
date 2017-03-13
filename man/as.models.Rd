@@ -22,4 +22,3 @@ data(test_model)
 as.models(test_model)
 
 }
-

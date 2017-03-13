@@ -17,4 +17,3 @@ This file contains a TRONCO compliant dataset
 \author{
 Luca De Sano
 }
-

@@ -20,4 +20,3 @@ data(test_dataset)
 nsamples(test_dataset)
 
 }
-

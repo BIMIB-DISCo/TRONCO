@@ -193,4 +193,3 @@ pheatmap(test)
 \author{
 Raivo Kolde <rkolde@gmail.com>
 }
-

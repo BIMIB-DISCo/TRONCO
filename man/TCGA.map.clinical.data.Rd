@@ -21,4 +21,3 @@ a map
 \description{
 Map clinical data from the TCGA format
 }
-

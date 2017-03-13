@@ -18,4 +18,3 @@ Create a list of unique Mutex groups for a given fdr cutoff
 current Mutex version is Jan 8, 2015
 (ref: https://code.google.com/p/mutex/ )
 }
-

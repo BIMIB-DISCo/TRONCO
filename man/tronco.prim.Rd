@@ -51,4 +51,3 @@ data(test_dataset_no_hypos)
 recon = tronco.prim(test_dataset_no_hypos, nboot = 1)
 
 }
-

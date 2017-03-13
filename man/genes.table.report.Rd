@@ -32,4 +32,3 @@ LaTEX code
 \description{
 Generate PDF and laex tables
 }
-

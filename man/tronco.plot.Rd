@@ -102,4 +102,3 @@ data(test_model)
 tronco.plot(test_model)
 
 }
-

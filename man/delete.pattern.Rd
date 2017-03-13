@@ -22,4 +22,3 @@ data(test_dataset)
 delete.pattern(test_dataset, pattern='XOR_EZH2')
 
 }
-

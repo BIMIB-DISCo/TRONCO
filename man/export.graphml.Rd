@@ -22,4 +22,3 @@ data(test_model)
 export.graphml(test_model, file='text.xml', scale.nodes=0.3)
 
 }
-

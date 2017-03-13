@@ -20,4 +20,3 @@ data(test_dataset)
 as.patterns(test_dataset)
 
 }
-

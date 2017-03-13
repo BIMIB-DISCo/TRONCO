@@ -17,4 +17,3 @@ This dataset contains stage information for patient in test_dataset
 \author{
 Luca De Sano
 }
-

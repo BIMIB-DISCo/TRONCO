@@ -35,4 +35,3 @@ regarding the loading functions provided by the package we refer to the Vignette
 gistic = import.GISTIC(crc_gistic)
 
 }
-

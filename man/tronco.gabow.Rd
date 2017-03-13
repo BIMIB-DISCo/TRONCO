@@ -58,4 +58,3 @@ data(test_dataset_no_hypos)
 recon = tronco.gabow(test_dataset_no_hypos, nboot = 1)
 
 }
-

@@ -22,4 +22,3 @@ data(test_dataset)
 dataset = delete.samples(test_dataset, c('patient 1', 'patient 4'))
 
 }
-

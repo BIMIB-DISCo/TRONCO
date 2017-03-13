@@ -21,4 +21,3 @@ data(test_dataset)
 as.colors(test_dataset)
 
 }
-

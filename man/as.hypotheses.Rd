@@ -24,4 +24,3 @@ data(test_dataset)
 as.hypotheses(test_dataset)
 
 }
-

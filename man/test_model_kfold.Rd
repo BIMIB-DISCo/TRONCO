@@ -17,4 +17,3 @@ This dataset contains a model reconstructed with CAPRI
 \author{
 Luca De Sano
 }
-
