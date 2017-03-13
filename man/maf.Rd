@@ -11,6 +11,9 @@ fake data
 \usage{
 data(maf)
 }
+\value{
+A standard TRONCO object
+}
 \description{
 This dataset contains a standard MAF input for TRONCO
 }

@@ -11,6 +11,9 @@ fake data
 \usage{
 data(stage)
 }
+\value{
+A list of stages
+}
 \description{
 This dataset contains stage information for patient in test_dataset
 }

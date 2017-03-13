@@ -11,6 +11,9 @@ fake data
 \usage{
 data(muts)
 }
+\value{
+A standard TRONCO object
+}
 \description{
 A simple mutation dataset without hypotheses
 }
