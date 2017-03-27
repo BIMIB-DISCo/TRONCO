@@ -49,8 +49,7 @@ create.model <- function(dataset,
              joint.probs = NA,
              conditional.probs = NA)
 
-    ## Set results for the current regolarizator.
-    
+    ## Set results for the current regolarizator
     probabilities.observed =
         list(marginal.probs = prima.facie.parents$marginal.probs,
              joint.probs = prima.facie.parents$joint.probs,

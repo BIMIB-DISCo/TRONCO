@@ -307,8 +307,6 @@ tronco.kfold.posterr <- function(x,
         adj.matrix = keysToNames(x, adj.matrix)
         names(colnames(adj.matrix)) = NULL
         names(rownames(adj.matrix)) = NULL
-        
-
 
         ## Perform the estimation of the prediction error. 
         

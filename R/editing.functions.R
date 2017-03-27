@@ -34,7 +34,6 @@ consolidate.data <- function(x, print = FALSE) {
     ones = list()
 
     ## Get the list of indistinguishible events for each entry.
-
     duplicated.names =
         unlist(lapply(colnames(x$genotypes),
                       function(gene)
@@ -44,8 +43,7 @@ consolidate.data <- function(x, print = FALSE) {
                                                           all(y == as.vector(x$genotypes[ , gene]))))),
                                 collapse = "-")))
 
-    ## Get the unique set of indistinguishible events.
-
+    ## Get the unique set of indistinguishible events
     duplicated.events =
         unique(duplicated.names[which(unlist(lapply(duplicated.names,
                                                     ## The next
@@ -115,7 +113,6 @@ consolidate.data <- function(x, print = FALSE) {
 
     return(ret)
 }
-
 
 #' Annotate a description on the selected dataset
 #' @title annotate.description

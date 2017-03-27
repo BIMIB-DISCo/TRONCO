@@ -113,7 +113,6 @@ is.compliant <- function(x,
     }
 }
 
-
 # Check if x is a valid TRONCO model
 # @title is.model
 # @param x A TRONCO compliant dataset.
@@ -122,7 +121,6 @@ is.model <- function(x) {
     if (!'model' %in% names(x))
         stop('Input object is not a TRONCO model.')
 }
-
 
 # Check if y is a valid event list for x
 # @title is.events.list
