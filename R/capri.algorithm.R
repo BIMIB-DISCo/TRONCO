@@ -1025,7 +1025,6 @@ get.prima.facie.parents.do.boot <- function(dataset,
     }
 
     ## Remove all the edges not representing a prima facie cause.
-    
     prima.facie.topology =
         get.prima.facie.causes.do.boot(adj.matrix,
                                        hypotheses,
@@ -1222,13 +1221,11 @@ remove.cycles <- function(adj.matrix,
 
     ## Create the structures where to save the weights in increasing
     ## order of confidence.
-    
     ordered.weights <- vector();
     ordered.edges <- list();
 
     ## Select the edges to be evaluated during
-    ## the loop removal.
-        
+    ## the loop removal.   
     curr.edge.pos = 0;
     for (i in 1:nrow(adj.matrix)) {
         for (j in 1:nrow(adj.matrix)) {

@@ -380,7 +380,6 @@ bootstrap <- function(reconstruction,
         bootstrap.edge.confidence[[m]] = curr.edge.confidence
         
         ## Save the frequency of the bootstrap adj.matrix.
-        
         curr.bootstrap.matrix = bootstrap.adj.matrix[[m]];
         curr.adj.matrix.frequency =
             array(0, c(ncol(curr.bootstrap.matrix), nrow(curr.bootstrap.matrix)))
@@ -399,7 +398,6 @@ bootstrap <- function(reconstruction,
     }
     
     ## Save the statistics of the bootstrap.
-    
     for (m in names(as.models(reconstruction))) {
         if (command == "non-parametric") {
             

@@ -916,7 +916,6 @@ hypothesis.add.homologous <- function(x,
     return(x)
 }
 
-
 # Internal function for hypotheses expansion
 # @title hypotheses.expansion
 # @param input_matrix A TRONCO adjacency matrix

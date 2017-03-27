@@ -1,6 +1,6 @@
 Package: TRONCO
-Version: 2.7.6
-Date: 2017-03-13
+Version: 2.7.7
+Date: 2017-03-27
 Title: TRONCO, an R package for TRanslational ONCOlogy
 Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")), 
     person("Giulio", "Caravagna", role=c("aut", "cre"), email="giulio.caravagna@disco.unimib.it"),
@@ -57,7 +57,7 @@ Description:
     functions to import/export such data to other bioinformatics  tools for, e.g, 
     clustering or detection of mutually exclusive alterations. Inferred models can be 
     visualized and tested for their confidence via bootstrap and cross-validation.
-    TRONCO is used for  the implementation of the Pipeline for Cancer Inference. 
+    TRONCO is used for  the implementation of the Pipeline for Cancer Inference (PICNIC). 
 Encoding: UTF-8
 LazyData: TRUE
 License: file LICENSE

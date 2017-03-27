@@ -223,7 +223,6 @@ rank.recurrents <- function(x, n) {
     return(as.vector(genes))
 }
 
-
 #' Filter a dataset based on selected samples id
 #' @title samples.selection
 #'
