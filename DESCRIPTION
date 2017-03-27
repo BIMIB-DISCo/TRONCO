@@ -1,6 +1,6 @@
 Package: TRONCO
-Version: 2.6.1
-Date: 2016-10-20
+Version: 2.7.7
+Date: 2017-03-27
 Title: TRONCO, an R package for TRanslational ONCOlogy
 Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")), 
     person("Giulio", "Caravagna", role=c("aut", "cre"), email="giulio.caravagna@disco.unimib.it"),
@@ -11,7 +11,7 @@ Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")),
     person("Daniele", "Ramazzotti", role=c("aut"), email="daniele.ramazzotti@disco.unimib.it"))
 Maintainer: BIMIB Group <tronco@disco.unimib.it>
 Depends:
-    R (>= 3.3),
+    R (>= 3.4),
 Imports:
     bnlearn,
     Rgraphviz,
@@ -35,12 +35,13 @@ Imports:
     graphics,
     stats,
     utils,
+    methods
 Suggests:
     BiocGenerics,
     BiocStyle,
     testthat,
     knitr,
-Name: 
+Name:
     An R package for the inference of cancer progression models from heterogeneous genomic data 
 Description:
     The TRONCO (TRanslational ONCOlogy) R package collects algorithms to infer
@@ -56,7 +57,7 @@ Description:
     functions to import/export such data to other bioinformatics  tools for, e.g, 
     clustering or detection of mutually exclusive alterations. Inferred models can be 
     visualized and tested for their confidence via bootstrap and cross-validation.
-    TRONCO is used for  the implementation of the Pipeline for Cancer Inference. 
+    TRONCO is used for  the implementation of the Pipeline for Cancer Inference (PICNIC). 
 Encoding: UTF-8
 LazyData: TRUE
 License: file LICENSE
@@ -69,6 +70,7 @@ biocViews: BiomedicalInformatics,
            NetworkInference,
            Network,
            Clustering,
-           DataImport
+           DataImport,
+           SingleCell
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr

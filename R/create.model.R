@@ -1,6 +1,6 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
-#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Copyright (c) 2015-2017, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
 #### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
@@ -49,8 +49,7 @@ create.model <- function(dataset,
              joint.probs = NA,
              conditional.probs = NA)
 
-    ## Set results for the current regolarizator.
-    
+    ## Set results for the current regolarizator
     probabilities.observed =
         list(marginal.probs = prima.facie.parents$marginal.probs,
              joint.probs = prima.facie.parents$joint.probs,

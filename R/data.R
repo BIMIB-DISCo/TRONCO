@@ -1,6 +1,6 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
-#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Copyright (c) 2015-2017, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
 #### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
@@ -16,6 +16,7 @@
 #' @format Manual Annotated Format
 #' @source fake data
 #' @author Luca De Sano
+#' @return A standard TRONCO object
 NULL
 
 #' @name muts
@@ -26,6 +27,7 @@ NULL
 #' @format TRONCO compliant dataset
 #' @source fake data
 #' @author Luca De Sano
+#' @return A standard TRONCO object
 NULL
 
 #' @name test_dataset_no_hypos
@@ -36,6 +38,7 @@ NULL
 #' @format TRONCO compliant dataset
 #' @source fake data
 #' @author Luca De Sano
+#' @return A standard TRONCO object
 NULL
 
 #' @name test_dataset
@@ -46,6 +49,7 @@ NULL
 #' @format TRONCO compliant dataset
 #' @source fake data
 #' @author Luca De Sano
+#' @return A standard TRONCO object
 NULL
 
 #' @name stage
@@ -56,6 +60,7 @@ NULL
 #' @format Vector of stages
 #' @source fake data
 #' @author Luca De Sano
+#' @return A list of stages
 NULL
 
 #' @name test_model
@@ -66,6 +71,7 @@ NULL
 #' @format TRONCO compliant dataset
 #' @source fake data
 #' @author Luca De Sano
+#' @return A standard TRONCO object
 NULL
 
 #' @name test_model_kfold
@@ -76,6 +82,7 @@ NULL
 #' @format TRONCO compliant dataset
 #' @source fake data
 #' @author Luca De Sano
+#' @return A standard TRONCO object
 NULL
 
 #' @name aCML
@@ -86,6 +93,7 @@ NULL
 #' @format TRONCO compliant dataset
 #' @source data from http://www.nature.com/ng/journal/v45/n1/full/ng.2495.html
 #' @author Luca De Sano
+#' @return A standard TRONCO object
 NULL
 
 #' @name crc_maf
@@ -96,6 +104,7 @@ NULL
 #' @format Manual Annotated Format
 #' @source data from http://www.nature.com/nature/journal/v487/n7407/full/nature11252.html
 #' @author Daniele Ramazzotti
+#' @return A MAF file
 NULL
 
 #' @name crc_gistic
@@ -106,6 +115,7 @@ NULL
 #' @format GISTIC score
 #' @source data from http://www.nature.com/nature/journal/v487/n7407/full/nature11252.html
 #' @author Daniele Ramazzotti
+#' @return A gistic file
 NULL
 
 #' @name crc_plain
@@ -116,4 +126,5 @@ NULL
 #' @format plain data
 #' @source data from http://www.nature.com/nature/journal/v487/n7407/full/nature11252.html
 #' @author Daniele Ramazzotti
+#' @return A plain input
 NULL

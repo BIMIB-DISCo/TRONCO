@@ -1,6 +1,6 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
-#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Copyright (c) 2015-2017, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
 #### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
@@ -298,7 +298,6 @@ as.hypotheses <- function(x, cause = NA, effect = NA) {
     return(filtered_list)
 }
 
-
 #' Return the list of events present in selected patterns
 #'
 #' @examples
@@ -453,9 +452,6 @@ as.confidence <- function(x, conf, models = names(x$model)) {
         || is.na(x$model))
         stop('Input \'x\' does not contain a TRONCO model. No confidence to show.\n')
 
-#     if (is.null(x$bootstrap))
-#       stop('No bootstrap executed in this TRONCO object.')
-#         
     has.npb.bootstrap = is.null(x$bootstrap[[models[1]]]$npb)
     has.sb.bootstrap = is.null(x$bootstrap[[models[1]]]$sb)
 

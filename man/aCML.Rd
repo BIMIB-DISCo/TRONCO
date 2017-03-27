@@ -11,6 +11,9 @@ data from http://www.nature.com/ng/journal/v45/n1/full/ng.2495.html
 \usage{
 data(aCML)
 }
+\value{
+A standard TRONCO object
+}
 \description{
 This file contains a TRONCO compliant dataset
 }

@@ -2,6 +2,26 @@
 \title{News for the package \pkg{TRONCO}}
 \encoding{UTF-8}
 
+\section{Changes in Version 2.7.7}{
+    \itemize{
+        \item RNA Seq validation
+        \item Random restart on Hill Climbing added to CAPRI algorithm
+        \item Minor fixes to algorithms and error model
+    }
+}
+
+\section{Changes in Version 2.7.3}{
+    \itemize{
+        \item Assignment to .GlobalEnv removed
+    }
+}
+
+\section{Changes in Version 2.6.1}{
+    \itemize{
+        \item Last stable releade with bugfix
+    }
+}
+
 \section{Changes in Version 2.4.3}{
     \itemize{
         \item New algorithms: Edmonds, Gabow, Chow-Liu and Prim.

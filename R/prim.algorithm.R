@@ -1,6 +1,6 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
-#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Copyright (c) 2015-2017, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
 #### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
@@ -252,20 +252,6 @@ perform.likelihood.fit.prim = function(dataset,
                 new_weights = c(new_weights,new_score) # mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
             }
         }
-        
-        # # set the weights to the graph
-        # if(length(new_weights[new_weights!=Inf])>0) {
-            # inf.scores = which(new_weights==Inf)
-            # max_score = max(new_weights[new_weights!=Inf])
-            # prim_scores = (max_score - new_weights) / max_score
-            # prim_scores[inf.scores] = 0
-            # E(curr.graph)$weight = prim_scores
-        # }
-        # else {
-            # inf.scores = which(new_weights==Inf)
-            # new_weights[inf.scores] = 0
-            # E(curr.graph)$weight = new_weights
-        # }
         
         # set the weights to the graph
         E(curr.graph)$weight = 1 - new_weights # max(new_weights) - new_weights

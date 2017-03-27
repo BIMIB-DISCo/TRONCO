@@ -1,6 +1,6 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
-#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Copyright (c) 2015-2017, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
 #### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
@@ -41,6 +41,7 @@ bootstrap <- function(reconstruction,
         if (nhypotheses(reconstruction) > 0) {
             hypotheses = reconstruction$hypotheses
         }
+        restart = parameters$restart
     }
 
     ## Get CAPRESE parameters.
@@ -164,7 +165,8 @@ bootstrap <- function(reconstruction,
                              boot.seed,
                              silent = TRUE,
                              epos,
-                             eneg)
+                             eneg,
+                             restart)
         } else if (type == 'CAPRESE') {
             bootstrapped.topology =
                 tronco.caprese(curr.reconstruction,
@@ -378,7 +380,6 @@ bootstrap <- function(reconstruction,
         bootstrap.edge.confidence[[m]] = curr.edge.confidence
         
         ## Save the frequency of the bootstrap adj.matrix.
-        
         curr.bootstrap.matrix = bootstrap.adj.matrix[[m]];
         curr.adj.matrix.frequency =
             array(0, c(ncol(curr.bootstrap.matrix), nrow(curr.bootstrap.matrix)))
@@ -397,7 +398,6 @@ bootstrap <- function(reconstruction,
     }
     
     ## Save the statistics of the bootstrap.
-    
     for (m in names(as.models(reconstruction))) {
         if (command == "non-parametric") {
             

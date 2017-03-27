@@ -1,6 +1,6 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
-#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Copyright (c) 2015-2017, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
 #### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
@@ -34,7 +34,6 @@ consolidate.data <- function(x, print = FALSE) {
     ones = list()
 
     ## Get the list of indistinguishible events for each entry.
-
     duplicated.names =
         unlist(lapply(colnames(x$genotypes),
                       function(gene)
@@ -44,8 +43,7 @@ consolidate.data <- function(x, print = FALSE) {
                                                           all(y == as.vector(x$genotypes[ , gene]))))),
                                 collapse = "-")))
 
-    ## Get the unique set of indistinguishible events.
-
+    ## Get the unique set of indistinguishible events
     duplicated.events =
         unique(duplicated.names[which(unlist(lapply(duplicated.names,
                                                     ## The next
@@ -115,7 +113,6 @@ consolidate.data <- function(x, print = FALSE) {
 
     return(ret)
 }
-
 
 #' Annotate a description on the selected dataset
 #' @title annotate.description

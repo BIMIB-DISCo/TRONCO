@@ -1,6 +1,6 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
-#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Copyright (c) 2015-2017, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
 #### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
@@ -113,7 +113,6 @@ is.compliant <- function(x,
     }
 }
 
-
 # Check if x is a valid TRONCO model
 # @title is.model
 # @param x A TRONCO compliant dataset.
@@ -122,7 +121,6 @@ is.model <- function(x) {
     if (!'model' %in% names(x))
         stop('Input object is not a TRONCO model.')
 }
-
 
 # Check if y is a valid event list for x
 # @title is.events.list

@@ -1,6 +1,6 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
-#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Copyright (c) 2015-2017, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
 #### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
@@ -259,14 +259,6 @@ perform.likelihood.fit.gabow = function(dataset,
     my_graph = graph_from_adjacency_matrix(adj.matrix)
     strongly_connected = clusters(my_graph,mode="strong")
 
-    # # estimate the size required to save the permutations for the 
-    # # bigger strongly connected component
-    # max_component = max(strongly_connected$csize)
-    # max_rows = factorial(max_component)
-    # max_columns = max_component
-    # max_num_entries = max_rows * max_columns
-    # max_memory_size = (max_num_entries)*4/1024^3
-    
     # perform Gabow only if the maximum strongly connected component 
     # has size less than 9
     if(max(strongly_connected$csize)<9) {

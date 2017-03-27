@@ -1,6 +1,6 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
-#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Copyright (c) 2015-2017, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
 #### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
@@ -128,6 +128,7 @@ tronco.caprese <- function(data,
 #' @param silent A parameter to disable/enable verbose messages.
 #' @param epos Error rate of false positive errors.
 #' @param eneg Error rate of false negative errors.
+#' @param restart An integer, the number of random restarts.
 #' @return A TRONCO compliant object with reconstructed model
 #' @export tronco.capri
 #' @importFrom bnlearn hc tabu empty.graph set.arc
@@ -146,7 +147,8 @@ tronco.capri <- function(data,
                          boot.seed = NULL, 
                          silent = FALSE,
                          epos = 0.0,
-                         eneg = 0.0 ) {
+                         eneg = 0.0,
+                         restart = 100) {
 
     ## Check for the inputs to be correct.
     
@@ -235,7 +237,8 @@ tronco.capri <- function(data,
                   boot.seed = boot.seed,
                   silent = silent,
                   epos = epos,
-                  eneg = eneg)
+                  eneg = eneg,
+                  restart = restart)
 
     ## Structure to save the results.
     

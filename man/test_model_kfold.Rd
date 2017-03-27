@@ -11,6 +11,9 @@ fake data
 \usage{
 data(test_model_kfold)
 }
+\value{
+A standard TRONCO object
+}
 \description{
 This dataset contains a model reconstructed with CAPRI
 }

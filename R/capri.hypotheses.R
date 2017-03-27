@@ -1,6 +1,6 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
-#### Copyright (c) 2015-2016, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
+#### Copyright (c) 2015-2017, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
 #### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
 ####
 #### All rights reserved. This program and the accompanying materials
@@ -17,6 +17,7 @@
 #' @return A TRONCO compliant object with the added hypothesis
 #' @export hypothesis.add
 #' @importFrom stats fisher.test
+#' @importFrom methods getPackageName
 #'
 hypothesis.add <- function(data,
                            pattern.label,
@@ -26,6 +27,8 @@ hypothesis.add <- function(data,
 
 
     pattern.label = gsub('[[:space:]]+', '_', pattern.label)
+
+    
 
     is.compliant(data)
 
@@ -43,8 +46,8 @@ hypothesis.add <- function(data,
         hypotheses = NA;
     }
     
-    ## The Boolean functions look for a set of global variables.
-    ## If there are already global variables named as the ones
+    ## The Boolean functions look for a set of variables.
+    ## If there are already variables named as the ones
     ## used here, make the backup of them.
     
     do.roll.back.lifting.genotypes = FALSE;
@@ -52,107 +55,109 @@ hypothesis.add <- function(data,
     do.roll.back.lifting.edges = FALSE;
     do.roll.back.fisher.pvalues = FALSE;
 
-    ## I need a global variable to save the genotypes of the
+    ## I need a variable to save the genotypes of the
     ## lifted pattern.
     
-    ## If there is already a global variable named
+    ## If there is already a variable named
     ## lifting.genotypes, make the backup of it.
+
+    hypotheses.env = get('hypotheses.env', asNamespace(getPackageName()))
     
-    if (exists("lifting.genotypes")) {
-        roll.back.lifting.genotypes = get('lifting.genotypes', envir = .GlobalEnv)
+    if (exists("lifting.genotypes", hypotheses.env)) {
+        roll.back.lifting.genotypes = get('lifting.genotypes', envir = hypotheses.env)
         do.roll.back.lifting.genotypes = TRUE;
     }
-    assign("lifting.genotypes", genotypes, envir = .GlobalEnv);
+    assign("lifting.genotypes", genotypes, envir = hypotheses.env);
 
-    ## I need a global variable to save the annotations of the
+    ## I need a variable to save the annotations of the
     ## lifted pattern.
     
-    ## if there is already a global variable named
+    ## if there is already a variable named
     ## lifting.annotations, make the backup of it.
     
-    if (exists("lifting.annotations")) {
-        roll.back.lifting.annotations = get('lifting.annotations', envir = .GlobalEnv)
+    if (exists("lifting.annotations", hypotheses.env)) {
+        roll.back.lifting.annotations = get('lifting.annotations', envir = hypotheses.env)
         do.roll.back.lifting.annotations = TRUE;
     }
-    assign("lifting.annotations", annotations, envir = .GlobalEnv);
+    assign("lifting.annotations", annotations, envir = hypotheses.env);
 
-    ## I need a global variable to save the edges of the lifted
+    ## I need a variable to save the edges of the lifted
     ## pattern.
     
-    ## If there is already a global variable named lifting.edges,
+    ## If there is already a variable named lifting.edges,
     ## make the backup of it.
     
-    if (exists("lifting.edges")) {
-        roll.back.lifting.edges = get('lifting.edges', envir = .GlobalEnv)
+    if (exists("lifting.edges", hypotheses.env)) {
+        roll.back.lifting.edges = get('lifting.edges', envir = hypotheses.env)
         do.roll.back.lifting.edges = TRUE
     }
-    assign("lifting.edges", NULL, envir = .GlobalEnv);
+    assign("lifting.edges", NULL, envir = hypotheses.env);
 
-    ## I need a global variable to save the pvalues of the lifted
+    ## I need a variable to save the pvalues of the lifted
     ## pattern.
     
-    ## If there is already a global variable named fisher.pvalues,
+    ## If there is already a variable named fisher.pvalues,
     ## make the backup of it.
     
-    if (exists("fisher.pvalues")) {
-        roll.back.fisher.pvalues = get('fisher.pvalues', envir = .GlobalEnv)
+    if (exists("fisher.pvalues", hypotheses.env)) {
+        roll.back.fisher.pvalues = get('fisher.pvalues', envir = hypotheses.env)
         do.roll.back.fisher.pvalues = TRUE;
     }
-    assign("fisher.pvalues", NULL, envir = .GlobalEnv);
+    assign("fisher.pvalues", NULL, envir = hypotheses.env);
 
     ## Save the lifted genotypes and its hypotheses for the
     ## current pattern.
     
     curr_pattern = lifted.pattern$pattern;
     curr_hypotheses = lifted.pattern$hypotheses;
-    curr_pvalues = get('fisher.pvalues', envir = .GlobalEnv)
+    curr_pvalues = get('fisher.pvalues', envir = hypotheses.env)
 
     ## Save the edges of the lifted pattern.
     
-    hstructure = get('lifting.edges', envir = .GlobalEnv)
+    hstructure = get('lifting.edges', envir = hypotheses.env)
 
-    ## Roll back to the previous value of the global variable
+    ## Roll back to the previous value of the variable
     ## lifting.genotypes if any or remove it.
     
     if (do.roll.back.lifting.genotypes) {
         assign("lifting.genotypes",
                roll.back.lifting.genotypes,
-               envir = .GlobalEnv);
+               envir = hypotheses.env);
     } else {
-        rm('lifting.genotypes', pos = ".GlobalEnv");
+        rm('lifting.genotypes', pos = hypotheses.env);
     }
 
-    ## Roll back to the previous value of the global variable
+    ## Roll back to the previous value of the variable
     ## lifting.annotations if any or remove it.
     
     if (do.roll.back.lifting.annotations) {
         assign("lifting.annotations",
                roll.back.lifting.annotations,
-               envir = .GlobalEnv);
+               envir = hypotheses.env);
     } else {
-        rm('lifting.annotations', pos = ".GlobalEnv")
+        rm('lifting.annotations', pos = hypotheses.env)
     }
 
-    ## Roll back to the previous value of the global variable
+    ## Roll back to the previous value of the variable
     ## lifting.edges if any or remove it.
     
     if (do.roll.back.lifting.edges) {
         assign("lifting.edges",
                roll.back.lifting.edges,
-               envir = .GlobalEnv)
+               envir = hypotheses.env)
     } else {
-        rm('lifting.edges', pos = ".GlobalEnv")
+        rm('lifting.edges', pos = hypotheses.env)
     }
 
-    ## Roll back to the previous value of the global variable
+    ## Roll back to the previous value of the variable
     ## fisher.pvalues if any or remove it.
     
     if (do.roll.back.fisher.pvalues) {
         assign("fisher.pvalues",
                roll.back.fisher.pvalues,
-               envir = .GlobalEnv)
+               envir = hypotheses.env)
     } else {
-        rm('fisher.pvalues', pos = ".GlobalEnv")
+        rm('fisher.pvalues', pos = hypotheses.env)
     }
 
     ## Set the hypotheses number.
@@ -911,7 +916,6 @@ hypothesis.add.homologous <- function(x,
     return(x)
 }
 
-
 # Internal function for hypotheses expansion
 # @title hypotheses.expansion
 # @param input_matrix A TRONCO adjacency matrix
@@ -1075,6 +1079,8 @@ hypotheses.expansion <- function(input_matrix,
 # Utility function to add the hypotheses
 aux.log <- function( genotypes, annotations, function.name, ... ) {
 
+    hypotheses.env = get('hypotheses.env', asNamespace(getPackageName()))
+
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1160,9 +1166,9 @@ aux.log <- function( genotypes, annotations, function.name, ... ) {
         
         for (k in 1:length(result$function.inputs)) {
             lifting.edges.temp =
-                rbind(get('lifting.edges', envir = .GlobalEnv),
+                rbind(get('lifting.edges', envir = hypotheses.env),
                       c(result$function.inputs[[k]], result$function.name))
-            assign("lifting.edges", lifting.edges.temp, envir = .GlobalEnv)
+            assign("lifting.edges", lifting.edges.temp, envir = hypotheses.env)
         }
         return(result)
     } else {
@@ -1180,12 +1186,14 @@ aux.log <- function( genotypes, annotations, function.name, ... ) {
 #
 AND <- function( ... ) {
     
-    ## Look for the global variables named lifting.genotypes and
+    ## Look for the variables named lifting.genotypes and
     ## lifting.annotations.
+
+    hypotheses.env = get('hypotheses.env', asNamespace(getPackageName()))
     
-    genotypes = get('lifting.genotypes', envir = .GlobalEnv)
-    annotations = get('lifting.annotations', envir = .GlobalEnv)
-    fisher.pvalues.temp = get('fisher.pvalues', envir = .GlobalEnv)
+    genotypes = get('lifting.genotypes', envir = hypotheses.env)
+    annotations = get('lifting.annotations', envir = hypotheses.env)
+    fisher.pvalues.temp = get('fisher.pvalues', envir = hypotheses.env)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1212,7 +1220,7 @@ AND <- function( ... ) {
 
                 fisher.pvalues.temp = append(fisher.pvalues.temp, curr.pvalue)
             }
-            assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
+            assign("fisher.pvalues", fisher.pvalues.temp, envir = hypotheses.env)
         }
 
         ## Evaluate the AND operator.
@@ -1248,12 +1256,14 @@ AND <- function( ... ) {
 #' @export OR
 #
 OR <- function( ... ) {
-    ## Look for the global variables named lifting.genotypes and
+    ## Look for the variables named lifting.genotypes and
     ## lifting.annotations.
+
+    hypotheses.env = get('hypotheses.env', asNamespace(getPackageName()))
     
-    genotypes = get('lifting.genotypes', envir = .GlobalEnv)
-    annotations = get('lifting.annotations', envir = .GlobalEnv)
-    fisher.pvalues.temp = get('fisher.pvalues', envir = .GlobalEnv)
+    genotypes = get('lifting.genotypes', envir = hypotheses.env)
+    annotations = get('lifting.annotations', envir = hypotheses.env)
+    fisher.pvalues.temp = get('fisher.pvalues', envir = hypotheses.env)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1276,7 +1286,7 @@ OR <- function( ... ) {
 
                 fisher.pvalues.temp = append(fisher.pvalues.temp, curr.p.value)
             }
-            assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
+            assign("fisher.pvalues", fisher.pvalues.temp, envir = hypotheses.env)
         }
 
         ## Evaluate the OR operator.
@@ -1309,12 +1319,14 @@ OR <- function( ... ) {
 #' @export XOR
 #' 
 XOR <- function( ... ) {
-    ## Look for the global variables named lifting.genotypes and
+    ## Look for the variables named lifting.genotypes and
     ## lifting.annotations.
     
-    genotypes = get('lifting.genotypes', envir = .GlobalEnv)
-    annotations = get('lifting.annotations', envir = .GlobalEnv)
-    fisher.pvalues.temp = get('fisher.pvalues', envir = .GlobalEnv)
+    hypotheses.env = get('hypotheses.env', asNamespace(getPackageName()))
+
+    genotypes = get('lifting.genotypes', envir = hypotheses.env)
+    annotations = get('lifting.annotations', envir = hypotheses.env)
+    fisher.pvalues.temp = get('fisher.pvalues', envir = hypotheses.env)
     if (!is.null(genotypes)
         && !is.null(annotations)
         && length(list(...)) > 0) {
@@ -1343,7 +1355,7 @@ XOR <- function( ... ) {
                 }
                 fisher.pvalues.temp = append(fisher.pvalues.temp, curr.pvalue)
             }
-            assign("fisher.pvalues", fisher.pvalues.temp, envir = .GlobalEnv)
+            assign("fisher.pvalues", fisher.pvalues.temp, envir = hypotheses.env)
         }
 
         ## Evaluate the XOR operator.

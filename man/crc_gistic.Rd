@@ -11,6 +11,9 @@ data from http://www.nature.com/nature/journal/v487/n7407/full/nature11252.html
 \usage{
 data(crc_gistic)
 }
+\value{
+A gistic file
+}
 \description{
 This dataset contains an example of GISTIC input of a crc cohort of patients
 }

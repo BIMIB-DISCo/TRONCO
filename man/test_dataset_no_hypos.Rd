@@ -11,6 +11,9 @@ fake data
 \usage{
 data(test_dataset_no_hypos)
 }
+\value{
+A standard TRONCO object
+}
 \description{
 This dataset contains a complete test dataset
 }
