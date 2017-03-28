@@ -100,8 +100,7 @@ oncoprint <- function(x,
     exclusivity.sort <- function(M) {
         geneOrder <- sort(rowSums(M),
                           decreasing = TRUE,
-                          index.return = TRUE)$ix;
-        
+                          index.return = TRUE)$ix
         scoreCol <- function(x) {
             score <- 0;
             for (i in 1:length(x)) {
@@ -112,8 +111,7 @@ oncoprint <- function(x,
             return(score);
         }
         scores <- apply(M[geneOrder, , drop = FALSE ], 2, scoreCol);
-        sampleOrder <- sort(scores, decreasing=TRUE, index.return=TRUE)$ix;
-
+        sampleOrder <- sort(scores, decreasing=TRUE, index.return=TRUE)$ix
         res = list()
         res$geneOrder = geneOrder
         res$sampleOrder = sampleOrder
@@ -158,8 +156,7 @@ oncoprint <- function(x,
         if (excl.sort && (hasGroups || group.by.stage)) 
             stop('Disable sorting for mutual exclusivity (excl.sort=FALSE) or avoid using grouped samples.')
 
-    ## Exclusivity sort.
-    
+    ## Exclusivity sort
     if (excl.sort && nevents(x) > 1) {
         cat(paste('Sorting samples ordering to enhance exclusivity patterns.\n',
                   sep = ''))
@@ -191,8 +188,7 @@ oncoprint <- function(x,
         data = data[order(rowSums(data), decreasing = TRUE), , drop = FALSE ]
     }
 
-    ## Samples grouping via hasGroups.
-    
+    ## Samples grouping via hasGroups
     if (hasGroups) {
         group.samples[, 1] = as.character(group.samples[,1])
         grn = rownames(group.samples)
@@ -207,8 +203,7 @@ oncoprint <- function(x,
                               collapse=', '),
                         '.'))
 
-        ## Order groups by label, and then data (by column).
-        
+        ## Order groups by label, and then data (by column)
         order = order(group.samples)
         group.samples = group.samples[order, , drop = FALSE]
 
@@ -224,8 +219,7 @@ oncoprint <- function(x,
         }
     } 
 
-    ## If group.by.label group events involving the gene symbol.
-    
+    ## If group.by.label group events involving the gene symbol
     if (group.by.label) {
         cat(paste('Grouping events by gene label, samples will not be sorted.\n',
                   sep = ''))
@@ -236,9 +230,7 @@ oncoprint <- function(x,
     cn = colnames(data)
     rn = rownames(data)
 
-    ## SAMPLES annotations: hits (total 1s per sample), stage or
-    ## groups.
-    
+    ## SAMPLES annotations: hits (total 1s per sample), stage or groups
     samples.annotation = data.frame(row.names = cn,  stringsAsFactors = FALSE)
     nmut = colSums(data)
 
@@ -246,19 +238,16 @@ oncoprint <- function(x,
     if (ann.stage) samples.annotation$stage = as.stages(x)[cn, 1]
     if (hasGroups) samples.annotation$cluster = group.samples[cn, 1]
 
-    ## Color samples annotation.
-    
+    ## Color samples annotation
     annotation_colors = NULL
 
-    ## Color hits.
-    
+    ## Color hits
     if (ann.hits) {
         hits.gradient = (colorRampPalette(brewer.pal(6, hits.color))) (max(nmut))
         annotation_colors = append(annotation_colors, list(hits=hits.gradient))
     }
 
-    ## Color stage.
-    
+    ## Color stage
     if (ann.stage) { 
         cat('Annotating stages with RColorBrewer color palette',
             stage.color,
@@ -274,8 +263,7 @@ oncoprint <- function(x,
         annotation_colors = append(annotation_colors, list(stage=stage.color.attr))
     }
 
-    ## Color groups.
-    
+    ## Color groups
     if (hasGroups) {
         ngroups = length(unique(group.samples[,1]))
         cat('Grouping labels:', paste(unique(group.samples[,1]), collapse=', '), '\n')
@@ -324,8 +312,7 @@ oncoprint <- function(x,
         annotation_colors = append(annotation_colors, list(group=gene.annot.color))
     }   
 
-    ## Annotate events to consolidate.
-    
+    ## Annotate events to consolidate
     if (annotate.consolidate.events) {
         cat('Annotating events to consolidate - see consolidate.data\n')
         invalid = consolidate.data(x, print = FALSE)
@@ -363,8 +350,7 @@ oncoprint <- function(x,
                    )
     }
 
-    ## Augment gene names with frequencies.
-    
+    ## Augment gene names with frequencies
     genes.freq = rowSums(data) / nsamples(x)
     gene.names = x$annotations[rownames(data), 2]
     gene.names =
@@ -440,7 +426,6 @@ oncoprint <- function(x,
     }
 
     ## Finalizing legends etc.
-    
     legend.labels = c('none', unique(x$annotations[, 1]))    
     legend.labels = legend.labels[1:(max(data) + 1)]
 

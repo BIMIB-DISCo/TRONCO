@@ -58,7 +58,6 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
         cn = colnames(geno)
 
     ## Gather col/row names
-
     if (is.null(rownames(geno))) {
         rn = paste0("Sample", 1:nrow(geno))
         warning("Missing row names to identify samples. Will use labels \"Sample1\", \"Sample2\",  .....")
@@ -67,7 +66,6 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
     x = list()
 
     ## Access keys - G1, G2, ...
-
     keys = paste0("G", 1:ncol(geno))
 
     ## Genotype matrix
@@ -77,7 +75,6 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
     rownames(x$genotypes) = rn
 
     ## Create attributes
-
     x$annotations = matrix(0, nrow = nc, ncol = 2)
     colnames(x$annotations) = c("type", "event")
     rownames(x$annotations) = keys
@@ -86,7 +83,6 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
     x$annotations[, "event"] = cn
 
     ## We create a map from types to colors
-
     x$types = matrix(color, nrow = 1, ncol = 1)
     rownames(x$types) = event.type
     colnames(x$types) = c("color")

@@ -49,19 +49,15 @@ edmonds.fit <- function(dataset,
     rownames(adj.matrix) = colnames(dataset);
 
     ## The diagonal of the adjacency matrix should not be considered,
-    ## i.e., no self cause is allowed.
-    
+    ## i.e., no self cause is allowed
     diag(adj.matrix) = 0;
 
-    ## Check if the dataset is valid.
-    
+    ## Check if the dataset is valid
     valid.dataset = check.dataset(dataset, adj.matrix, FALSE, epos, eneg)
     adj.matrix = valid.dataset$adj.matrix;
     invalid.events = valid.dataset$invalid.events;
 
-    ## Reconstruct the prima facie topology
-    ## Should I perform bootstrap? Yes if TRUE, no otherwise.
-    
+    ## Should I perform bootstrap? Yes if TRUE, no otherwise
     if (do.boot == TRUE) {
         if (!silent)
             cat('*** Bootstraping selective advantage scores (prima facie).\n')
@@ -89,9 +85,7 @@ edmonds.fit <- function(dataset,
                                             eneg);
     }
 
-    ## Add back in any connection invalid for the probability raising
-    ## theory.
-    
+    ## Add back in any connection invalid for the probability raising theory
     if (length(invalid.events) > 0) {
         # save the correct acyclic matrix
         adj.matrix.cyclic.tp.valid = prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp
