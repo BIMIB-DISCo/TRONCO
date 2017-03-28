@@ -41,26 +41,22 @@ prim.fit <- function(dataset,
 
     ## Structure with the set of valid edges
     ## I start from the complete graph, i.e., I have no prior and all
-    ## the connections are possibly causal.
-    
+    ## the connections are possibly causal
     adj.matrix = array(1, c(ncol(dataset), ncol(dataset)));
     colnames(adj.matrix) = colnames(dataset);
     rownames(adj.matrix) = colnames(dataset);
 
     ## The diagonal of the adjacency matrix should not be considered,
-    ## i.e., no self cause is allowed.
-    
+    ## i.e., no self cause is allowed
     diag(adj.matrix) = 0;
 
-    ## Check if the dataset is valid.
-    
+    ## Check if the dataset is valid
     valid.dataset = check.dataset(dataset, adj.matrix, FALSE, epos, eneg)
     adj.matrix = valid.dataset$adj.matrix;
     invalid.events = valid.dataset$invalid.events;
 
     ## Reconstruct the prima facie topology
-    ## Should I perform bootstrap? Yes if TRUE, no otherwise.
-    
+    ## Should I perform bootstrap? Yes if TRUE, no otherwise
     if (do.boot == TRUE) {
         if (!silent)
             cat('*** Bootstraping selective advantage scores (prima facie).\n')
@@ -227,14 +223,13 @@ perform.likelihood.fit.prim = function(dataset,
             j = all_edges[1,2]
             # if the event is valid
             if(joint.probs[i,j]>=0) {
-                new_score = compute.mi.score(joint.probs[i,j],marginal.probs[i],marginal.probs[j]) # log(joint.probs[i,j]/(marginal.probs[i]*marginal.probs[j]))
+                new_score = compute.mi.score(joint.probs[i,j],marginal.probs[i],marginal.probs[j])
             }
-            # else, if the two events are indistinguishable
-            # put the higher score
+            # else, if the two events are indistinguishable put the higher score
             else if(joint.probs[i,j]<0) {
-                new_score = 1 # Inf
+                new_score = 1
             }
-            new_weights = new_score # mutinformation(data[ ,all_edges[1,1]], data[ ,all_edges[1,2]])
+            new_weights = new_score
         } else {
             for (i in 1:nrow(all_edges)) {
                 # consider the current arc
@@ -242,23 +237,21 @@ perform.likelihood.fit.prim = function(dataset,
                 curr_j = all_edges[i,2]
                 # if the event is valid
                 if(joint.probs[curr_i,curr_j]>=0) {
-                    new_score = compute.mi.score(joint.probs[curr_i,curr_j],marginal.probs[curr_i],marginal.probs[curr_j]) # log(joint.probs[curr_i,curr_j]/(marginal.probs[curr_i]*marginal.probs[curr_j]))
+                    new_score = compute.mi.score(joint.probs[curr_i,curr_j],marginal.probs[curr_i],marginal.probs[curr_j])
                 }
-                # else, if the two events are indistinguishable
-                # put the higher score
+                # else, if the two events are indistinguishable put the higher score
                 else if(joint.probs[curr_i,curr_j]<0) {
                     new_score = 1 # Inf
                 }
-                new_weights = c(new_weights,new_score) # mutinformation(data[ ,all_edges[i,1]], data[ ,all_edges[i,2]]))
+                new_weights = c(new_weights,new_score)
             }
         }
         
         # set the weights to the graph
-        E(curr.graph)$weight = 1 - new_weights # max(new_weights) - new_weights
+        E(curr.graph)$weight = 1 - new_weights
         
         # get the minimum spanning tree by Prim algorithm
-        curr.valid.adj.matrix = as.matrix(get.adjacency(minimum.spanning.tree(curr.graph, 
-                                                                              algorithm="prim")))
+        curr.valid.adj.matrix = as.matrix(get.adjacency(minimum.spanning.tree(curr.graph,algorithm="prim")))
 
         # build the matrix of the priors
         new_prior_matrix = array(0, c(nrow(adj.matrix), ncol(adj.matrix)))

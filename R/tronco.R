@@ -34,8 +34,7 @@ tronco.caprese <- function(data,
                            epos = 0.0,
                            eneg = 0.0 ) {
 
-    ## Check for the inputs to be correct.
-    
+    ## Check for the inputs to be correct
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.")
     }
@@ -44,18 +43,15 @@ tronco.caprese <- function(data,
              call. = FALSE);
     }
 
-    ## check for the input to be compliant.
-    
+    ## check for the input to be compliant
     is.compliant(data)
 
     ## check if there are hypotheses
-
     if (npatterns(data) > 0) {
         warning("Patters found in input for tronco.caprese\n")
     }
 
-    ## Reconstruct the reconstruction with CAPRESE.
-    
+    ## Reconstruct the reconstruction with CAPRESE
     if (silent == FALSE) {
         cat('*** Checking input events.\n')
         invalid = consolidate.data(data, TRUE)
@@ -74,8 +70,7 @@ tronco.caprese <- function(data,
                                  epos = epos,
                                  eneg = eneg)
 
-    ## Structure to save the results.
-    
+    ## Structure to save the results
     results = data;
     results$confidence = reconstruction$confidence;
     results$model = reconstruction$model;
@@ -150,8 +145,7 @@ tronco.capri <- function(data,
                          eneg = 0.0,
                          restart = 100) {
 
-    ## Check for the inputs to be correct.
-    
+    ## Check for the inputs to be correct
     if (is.null(data) || is.null(data$genotypes)) {
         stop("The dataset given as input is not valid.");
     }
@@ -180,12 +174,10 @@ tronco.capri <- function(data,
              call. = FALSE)
     }
 
-    ## Check for the input to be compliant.
-    
+    ## Check for the input to be compliant
     is.compliant(data)
 
-    ## Reconstruct the reconstruction with CAPRI.
-    
+    ## Reconstruct the reconstruction with CAPRI
     if (is.null(boot.seed)) {
         my.seed = "NULL"    
     }
@@ -494,8 +486,7 @@ tronco.edmonds <- function(data,
         }
     }
 
-    ## the reconstruction has been completed.
-    
+    ## the reconstruction has been completed
     if (!silent)
         cat(paste(
             "The reconstruction has been successfully completed in", 
@@ -1144,8 +1135,7 @@ tronco.prim <- function(data,
         results$model$prim_aic$logLik = logLik
     }
 
-    ## the reconstruction has been completed.
-    
+    ## the reconstruction has been completed
     if (!silent)
         cat(paste(
             "The reconstruction has been successfully completed in", 
@@ -1210,17 +1200,14 @@ tronco.bootstrap <- function(reconstruction,
              call. = FALSE)
     }
 
-    ## Set all the needed parameters to perform the bootstrap
-    ## estimation.
-
+    ## Set all the needed parameters to perform the bootstrap estimation
     if (!type %in% c("non-parametric", "statistical")) {
         stop(paste("The types of bootstrap that can be performed are:",
                    "non-parametric or statistical."),
              call. = FALSE)
     }
     
-    ## Perform the selected bootstrap procedure.
-    
+    ## Perform the selected bootstrap procedure
     if (!silent) {
         cat("*** Executing now the bootstrap procedure, this may take a long time...\n")
     }
@@ -1451,7 +1438,6 @@ tronco.plot <- function(x,
             function(z) {
                 ## Apply can not be used - implicit coercion to char is crap
                 ## z[ apply(z, 1, relations.filter), ]
-
                 mask = rep(TRUE, nrow(z))
                 for(i in 1:nrow(z))
                     mask[i] = relations.filter(z[i, ]) 

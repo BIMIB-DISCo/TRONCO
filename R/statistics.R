@@ -40,8 +40,7 @@ tronco.kfold.eloss = function(x,
         stop('The input TRONCO object does not contain a model, you should first do that -- won\'t perform cross-validation!')
     }
 
-    ## Check if the selected regularization is used in the model.
-
+    ## Check if the selected regularization is used in the model
     if (!"kfold" %in% names(x)) {
         x$kfold = NULL
     }
@@ -134,8 +133,7 @@ tronco.kfold.prederr <- function(x,
                                  cores.ratio = 1,
                                  silent = FALSE) {
 
-    ## Check if there is a reconstructed model.
-
+    ## Check if there is a reconstructed model
     if(!has.model(x)) {
         stop('This object does not have a model.')
     }
@@ -326,8 +324,6 @@ tronco.kfold.posterr <- function(x,
                         
             for (pre in rownames(posterr.adj.col)) {
                 if (adj.matrix[pre,event] == 1) {
-
-                    ## Scutari fix
 
                     comp = bn.cv(bndata,
                                  bnnet, 

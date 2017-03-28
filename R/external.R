@@ -127,15 +127,12 @@ export.mutex <- function(x,
     ## 5: 1+4 d+m
 
     ## Move a+m to 10
-    
     mutex.matrix[which(mutex.matrix == 3)] = 10
 
     ## move deletion to 3
-    
     mutex.matrix[which(mutex.matrix == 4)] = 3
 
     ## move a+m to 4
-    
     mutex.matrix[which(mutex.matrix == 10)] = 4
 
     mutex.header = append("Symbol", samples)
