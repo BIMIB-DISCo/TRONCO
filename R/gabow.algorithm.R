@@ -128,13 +128,11 @@ gabow.fit <- function(dataset,
         adj.matrix.gabow = prima.facie.parents$adj.matrix$adj.matrix.cyclic.tp
     }
 
-    ## Perform the likelihood fit with the required strategy.
-    
+    ## Perform the likelihood fit with the required strategy
     model = list();
     for(my_score in score) {
         
-        # as Gabow algorithm is computationally expensive,
-        # I first reconstruct with "no_reg" for each score
+        # as Gabow algorithm is computationally expensive, I first reconstruct with "no_reg" for each score
         best.parents =
                 perform.likelihood.fit.gabow(dataset,
                                        adj.matrix.gabow,
@@ -143,8 +141,7 @@ gabow.fit <- function(dataset,
                                        marginal.probs = prima.facie.parents$marginal.probs,
                                        joint.probs = prima.facie.parents$joint.probs)
         
-        # if Gabow was not performed due to memory issues,
-        # use Edmonds instead
+        # if Gabow was not performed due to memory issues, use Edmonds instead
         fallback.edmonds = FALSE
         if(is.null(best.parents)) {
             fallback.edmonds = TRUE
@@ -161,8 +158,7 @@ gabow.fit <- function(dataset,
         for (reg in regularization) {
 
             ## Perform the likelihood fit with the chosen regularization
-            ## score on the prima facie topology.
-            
+            ## score on the prima facie topology
             if (!silent)
                 cat('*** Performing likelihood-fit with regularization:', reg, '.\n')
                 
@@ -184,9 +180,7 @@ gabow.fit <- function(dataset,
                                   adj.matrix.fit = curr_adj.matrix.fit)
             curr_best.parents = list(adj.matrix = adj.matrix_reg)
             
-            ## Set the structure to save the conditional probabilities of
-            ## the reconstructed topology.
-    
+            ## Set the structure to save the conditional probabilities of the reconstructed topology
             reconstructed.model = create.model(dataset,
                 curr_best.parents,
                 prima.facie.parents)
@@ -198,8 +192,7 @@ gabow.fit <- function(dataset,
         
     }
 
-    ## Set the execution parameters.
-    
+    ## Set the execution parameters
     parameters =
         list(algorithm = "GABOW",
              regularization = regularization,
@@ -215,8 +208,7 @@ gabow.fit <- function(dataset,
              do.raising = do.raising,
              fallback.edmonds = fallback.edmonds)
 
-    ## Return the results.
-    
+    ## Return the results
     topology =
         list(dataset = dataset,
              hypotheses = NA,

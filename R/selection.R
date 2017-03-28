@@ -174,20 +174,14 @@ rank.recurrents <- function(x, n) {
         stop('Rank value (n) should be positive.')
     }
 
-    ## Sum columns.
-    
+    ## Sum columns
     sums = colSums(x$genotypes)
 
-    ## Get the names of the first n ranked.
-    
+    ## Get the names of the first n ranked
     sorted = sort(sums, decreasing = TRUE)
-
-    ## print(sorted[1:20])
 
     scores = unique(sorted)
     
-    ## print(scores) 
-
     l = length(scores)
     if(n >l) {
         warning(paste0('Rank contains ',
