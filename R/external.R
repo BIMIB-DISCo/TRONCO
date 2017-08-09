@@ -664,7 +664,7 @@ export.graphml <- function(x, file, ...) {
                                     currmodel,
                                     currvalue)
       }
-    }
+    })
 
     write.graph(graph, file=file, format='graphml')
 }
