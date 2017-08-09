@@ -625,8 +625,7 @@ export.graphml <- function(x, file, ...) {
     
     ## Save edge label
     
-    curr_edge_labels = gsub('\\\n', '\\n', edges$label)
-    graph = set.edge.attribute(graph, 'edgelabel', value = curr_edge_labels)
+    graph = set.edge.attribute(graph, 'edgelabel', value = edges$label)
     
     ## Prepare and save label color
     
