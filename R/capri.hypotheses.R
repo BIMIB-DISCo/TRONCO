@@ -1036,6 +1036,17 @@ hypotheses.expansion <- function(input_matrix,
                 h_edge = input_matrix[, h]
                 initial_node_up = names(h_edge)[which(h_edge == 1)]
 
+                ### Expand any hipothesis within final nodes.
+                # 
+                # if (length(map) > 0) {
+                #   initial_node_up_hyp = which(initial_node_up%in%names(map))
+                #   if (length(initial_node_up_hyp) > 0) {
+                #     final_node_hyp_expanded = colnames(map[[initial_node_up[initial_node_up_hyp]]])[1:(length(colnames(map[[initial_node_up[initial_node_up_hyp]]]))-1)]
+                #     initial_node_up = initial_node_up[-initial_node_up_hyp]
+                #     initial_node_up = c(initial_node_up, final_node_hyp_expanded)
+                #   }
+                # }
+                
                 ## Add this graph to main graph.
                 
                 min_graph = graph.union(min_graph, hypo_graph_pre)
@@ -1055,7 +1066,18 @@ hypotheses.expansion <- function(input_matrix,
                 
                 h_edge <- input_matrix[h,]
                 final_node <- names(h_edge)[which(h_edge == 1)]
-
+                
+                ### Expand any hipothesis within final nodes.
+                # 
+                # if (length(map) > 0) {
+                #   final_node_hyp = which(final_node%in%names(map))
+                #   if (length(final_node_hyp) > 0) {
+                #     final_node_hyp_expanded = colnames(map[[final_node[final_node_hyp]]])[1:(length(colnames(map[[final_node[final_node_hyp]]]))-1)]
+                #     final_node = final_node[-final_node_hyp]
+                #     final_node = c(final_node, final_node_hyp_expanded)
+                #   }
+                # }
+                
                 ## Add this graph to main graph.
                 
                 min_graph = graph.union(min_graph, hypo_graph)
@@ -1065,6 +1087,7 @@ hypotheses.expansion <- function(input_matrix,
                 for (node in final_node) {
                     min_graph = min_graph + edge(initial_node, node)
                 }
+                
             }
         }
         min_matrix = get.adjacency(min_graph, sparse = FALSE)

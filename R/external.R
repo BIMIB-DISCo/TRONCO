@@ -569,15 +569,39 @@ export.graphml <- function(x, file, ...) {
         return(nodes$lwd[node])
     })
     graph = set.vertex.attribute(graph, 'borderwidth', value=vertex.borderwidth)
+    
+    ## Prepare and save the attribute cases
+    
+    vertex.cases = sapply(node.names, function(node) {
+      if (is.logic.node(node)) {
+        return(0)
+      }else{
+        return(nodes$cases[node])
+      }
+      
+    })
+    
+    graph = set.vertex.attribute(graph, 'cases', value = vertex.cases)
+    
+    ## Prepare and save the attribute sumGenotypes
+    
+    vertex.sum.genotypes = sapply(node.names, function(node) {
+      if (is.logic.node(node)) {
+        return(0)
+      }
+      return(nodes$sum.genotypes[node])
+      
+    })
+    graph = set.vertex.attribute(graph, 'sum genotypes', value = vertex.sum.genotypes)
 
     ## Prepare and save vertex shape
 
     edge.line = sapply(edge.names, function(edge){
         line = edges$lty[edge]
         if (line == 'dashed') {
-            return('Dash')
+            return('dash')
         }
-        return('Solid')
+        return('solid')
     })
     graph = set.edge.attribute(graph, 'line', value=edge.line)
 
@@ -598,6 +622,29 @@ export.graphml <- function(x, file, ...) {
         rgb(t(col2rgb(edges$color[edge])), maxColorValue = 255)
     })
     graph = set.edge.attribute(graph, 'color', value=edge.color)
+    
+    ## Save edge label
+    
+    graph = set.edge.attribute(graph, 'edgelabel', value = edges$label)
+    
+    ## Prepare and save label color
+    
+    edge.fontcolor = sapply(edge.names, function(edge){
+      rgb(t(col2rgb(edges$fontcolor[edge])), maxColorValue = 255)
+    })
+    graph = set.edge.attribute(graph, 'labelcolor', value = edge.fontcolor)
+    
+    ## Save edge width
+    
+    graph = set.edge.attribute(graph, 'width', value = edges$lwd)
+    
+    ## Check if cofidence are given and prepare a column for each confidence
+    
+    if (length(edges$confidences) > 0) {
+      for (c in colnames(edges$confidences)) {
+        graph = set.edge.attribute(graph, c, value = edges$confidences[, c])
+      }
+    }
 
     ## Prepare and save graph attributes
 
@@ -608,7 +655,16 @@ export.graphml <- function(x, file, ...) {
     graph = set.graph.attribute(graph,
                                 'informations',
                                 paste0('Generated with TRONCO v', packageVersion('TRONCO')))
-
+    eloss_output = tryCatch({
+      eloss = as.kfold.eloss(x)
+      for(i in 1:nrow(eloss)) {
+        currmodel = paste0('eloss ', row.names(eloss)[i])
+        currvalue = round(eloss[i,'Mean'], digits = 4)
+        graph = set.graph.attribute(graph,
+                                    currmodel,
+                                    currvalue)
+      }
+    }, error = function(e) {})
 
     write.graph(graph, file=file, format='graphml')
 }
