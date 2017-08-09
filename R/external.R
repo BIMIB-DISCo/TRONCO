@@ -659,12 +659,12 @@ export.graphml <- function(x, file, ...) {
       eloss = as.kfold.eloss(x)
       for(i in 1:nrow(eloss)) {
         currmodel = paste0('eloss ', row.names(eloss)[i])
-        currvalue = eloss[i,'Mean']
+        currvalue = round(eloss[i,'Mean'], digits = 4)
         graph = set.graph.attribute(graph,
                                     currmodel,
                                     currvalue)
       }
-    })
+    }, error = function(e) {})
 
     write.graph(graph, file=file, format='graphml')
 }
