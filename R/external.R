@@ -655,7 +655,16 @@ export.graphml <- function(x, file, ...) {
     graph = set.graph.attribute(graph,
                                 'informations',
                                 paste0('Generated with TRONCO v', packageVersion('TRONCO')))
-
+    eloss_output = tryCatch({
+      eloss = as.kfold.eloss(x)
+      for(i in 1:nrow(eloss)) {
+        currmodel = paste0('eloss ', row.names(eloss)[i])
+        currvalue = eloss[i,'Mean']
+        graph = set.graph.attribute(graph,
+                                    currmodel,
+                                    currvalue)
+      }
+    }
 
     write.graph(graph, file=file, format='graphml')
 }
