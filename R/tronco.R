@@ -2274,7 +2274,7 @@ tronco.plot <- function(x,
     }
   }
   
-  if (!export.igraph) {
+  #if (!export.igraph) {
     cat('Plotting graph and adding legends.\n')
     plot(
       graph,
@@ -2475,7 +2475,7 @@ tronco.plot <- function(x,
       dev.copy2pdf(file = file)
     }
     cat('\n')
-  }
+  #}
   
   
   if (export.igraph) {
