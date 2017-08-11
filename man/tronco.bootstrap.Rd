@@ -8,13 +8,13 @@ tronco.bootstrap(reconstruction, type = "non-parametric", nboot = 100,
   cores.ratio = 1, silent = FALSE)
 }
 \arguments{
-\item{reconstruction}{The output of tronco.capri or 
+\item{reconstruction}{The output of tronco.capri or
 tronco.caprese}
 
-\item{type}{Parameter to define the type of sampling 
+\item{type}{Parameter to define the type of sampling
 to be performed, e.g., non-parametric for uniform sampling.}
 
-\item{nboot}{Number of bootstrap sampling to be performed 
+\item{nboot}{Number of bootstrap sampling to be performed
 when estimating the model confidence.}
 
 \item{cores.ratio}{Percentage of cores to use
@@ -26,8 +26,8 @@ coresRate * (numCores - 1)}
 A TRONCO compliant object with reconstructed model
 }
 \description{
-Bootstrap a reconstructed progression model. For details and examples 
-regarding the statistical assesment of an inferred model, 
+Bootstrap a reconstructed progression model. For details and examples
+regarding the statistical assesment of an inferred model,
 we refer to the Vignette Section 7.
 }
 \examples{
