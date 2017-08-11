@@ -788,7 +788,6 @@ hypothesis.add.group <- function(x,
 #' @param pattern.cause Possibile causes for the pattern. 
 #' @param pattern.effect Possibile effects for the pattern. 
 #' @param genes List of genes to be considered as possible homologous. For these genes, all the types of mutations will be considered functionally equivalent.
-#' @param FUN Type of pattern to be added, e.g., co-occurance, soft or hard exclusivity.
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with the added hypotheses
 #' @export hypothesis.add.homologous
@@ -797,7 +796,6 @@ hypothesis.add.homologous <- function(x,
                                       pattern.cause = '*',
                                       pattern.effect = '*',
                                       genes = as.genes(x),
-                                      FUN = OR,
                                       silent = FALSE) {
 
     is.compliant(x)
@@ -805,8 +803,6 @@ hypothesis.add.homologous <- function(x,
     if(has.model(x)) {
         stop('This dataset has a reconstructed model and no more hypothesis can be added.')
     }
-
-    op = deparse(substitute(FUN))
 
     hom.group =
         lapply(genes,
@@ -829,7 +825,6 @@ hypothesis.add.homologous <- function(x,
     if (!silent) {
         cat("*** Adding hypotheses for Homologous Patterns\n")
         cat(' Genes:', paste(hom.group, collapse = ", ", sep = ""), '\n')
-        cat(' Function:', op, '\n')
         cat(' Cause:', paste(pattern.cause, collapse=", "), '\n')
         cat(' Effect:', paste(pattern.effect, collapse=", "), '\n')
     }
