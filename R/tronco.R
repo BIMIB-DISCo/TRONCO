@@ -1474,8 +1474,12 @@ tronco.bootstrap <- function(reconstruction,
 #' @param lwd Edge base lwd. Default 3
 #' @param samples.annotation = List of samples to search
 #' for events in model
-#' @param export.igraph If TRUE export the igraph
-#' object generated
+#' @param export.igraph If TRUE export the generated igraph
+#' object
+#' @param create.new.dev If TRUE create a new graphical device 
+#' when calling trono.plot. Set this to FALSE, e.g., if you do not 
+#' wish to create a new device when executing the command with 
+#' export.igraph = TRUE
 #' @param ... Additional arguments for RGraphviz
 #' plot function
 #' @return Information about the reconstructed model
@@ -1515,6 +1519,7 @@ tronco.plot <- function(x,
                         lwd = 3,
                         samples.annotation = NA,
                         export.igraph = FALSE,
+                        create.new.dev = TRUE,
                         ...) {
   is.compliant(x)
   is.model(x)
@@ -2274,7 +2279,7 @@ tronco.plot <- function(x,
     }
   }
   
-  #if (!export.igraph) {
+  if(create.new.dev) {
     cat('Plotting graph and adding legends.\n')
     plot(
       graph,
@@ -2475,7 +2480,7 @@ tronco.plot <- function(x,
       dev.copy2pdf(file = file)
     }
     cat('\n')
-  #}
+  }
   
   
   if (export.igraph) {

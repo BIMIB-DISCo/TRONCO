@@ -480,7 +480,7 @@ export.graphml <- function(x, file, ...) {
     is.compliant(x)
     is.model(x)
 
-    plot.output = tronco.plot(x, export.igraph = TRUE, ...)
+    plot.output = tronco.plot(x, export.igraph = TRUE, create.new.plot = FALSE, ...)
     graph = plot.output$graph
     nodes = plot.output$nodes
     edges = plot.output$edges
