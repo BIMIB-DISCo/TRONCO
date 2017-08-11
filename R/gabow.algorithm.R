@@ -21,6 +21,7 @@
 # @param silent should I be verbose?
 # @param epos error rate of false positive errors
 # @param eneg error rate of false negative errors
+# @param hypotheses hypotheses to be considered in the reconstruction. This should be NA for this algorithms. 
 # @return topology: the reconstructed tree topology
 #
 gabow.fit <- function(dataset,
@@ -35,7 +36,8 @@ gabow.fit <- function(dataset,
                       silent = FALSE,
                       epos = 0.0,
                       eneg = 0.0,
-                      do.raising = TRUE ) {
+                      do.raising = TRUE,
+                      hypotheses = NA) {
 
     ## Start the clock to measure the execution time.
     
@@ -72,7 +74,7 @@ gabow.fit <- function(dataset,
             cat('*** Bootstraping selective advantage scores (prima facie).\n')
         prima.facie.parents =
             get.prima.facie.parents.do.boot(dataset,
-                                            NA,
+                                            hypotheses,
                                             nboot,
                                             pvalue,
                                             adj.matrix,
@@ -87,7 +89,7 @@ gabow.fit <- function(dataset,
             cat('*** Computing selective advantage scores (prima facie).\n')
         prima.facie.parents =
             get.prima.facie.parents.no.boot(dataset,
-                                            NA,
+                                            hypotheses,
                                             adj.matrix,
                                             silent,
                                             epos,
@@ -215,7 +217,7 @@ gabow.fit <- function(dataset,
     ## Return the results
     topology =
         list(dataset = dataset,
-             hypotheses = NA,
+             hypotheses = hypotheses,
              adj.matrix.prima.facie = adj.matrix.prima.facie,
              confidence = prima.facie.parents$pf.confidence,
              model = model,

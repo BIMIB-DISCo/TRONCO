@@ -78,7 +78,8 @@ tronco.caprese <- function(data,
     lambda = lambda,
     silent = silent,
     epos = epos,
-    eneg = eneg
+    eneg = eneg,
+    hypotheses = data$hypotheses
   )
   
   ## Structure to save the results
@@ -494,7 +495,8 @@ tronco.edmonds <- function(data,
       boot.seed = boot.seed,
       silent = silent,
       epos = epos,
-      eneg = eneg
+      eneg = eneg,
+      hypotheses = data$hypotheses
     )
   
   ## Structure to save the results.
@@ -739,7 +741,8 @@ tronco.gabow <- function(data,
       silent = silent,
       epos = epos,
       eneg = eneg,
-      do.raising = do.raising
+      do.raising = do.raising,
+      hypotheses = data$hypotheses
     )
   
   ## Structure to save the results.
@@ -1014,7 +1017,8 @@ tronco.chowliu <- function(data,
       boot.seed = boot.seed,
       silent = silent,
       epos = epos,
-      eneg = eneg
+      eneg = eneg,
+      hypotheses = data$hypotheses
     )
   
   ## Structure to save the results.
@@ -1231,7 +1235,8 @@ tronco.prim <- function(data,
       boot.seed = boot.seed,
       silent = silent,
       epos = epos,
-      eneg = eneg
+      eneg = eneg,
+      hypotheses = data$hypotheses
     )
   
   ## Structure to save the results.

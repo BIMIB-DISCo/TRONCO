@@ -21,6 +21,7 @@
 # @param silent should I be verbose?
 # @param epos error rate of false positive errors
 # @param eneg error rate of false negative errors
+# @param hypotheses hypotheses to be considered in the reconstruction. This should be NA for this algorithms. 
 # @return topology: the reconstructed tree topology
 #
 prim.fit <- function(dataset,
@@ -33,7 +34,8 @@ prim.fit <- function(dataset,
                       boot.seed = NULL,
                       silent = FALSE,
                       epos = 0.0,
-                      eneg = 0.0 ) {
+                      eneg = 0.0,
+                      hypotheses = NA) {
 
     ## Start the clock to measure the execution time.
     
@@ -66,7 +68,7 @@ prim.fit <- function(dataset,
             cat('*** Bootstraping selective advantage scores (prima facie).\n')
         prima.facie.parents =
             get.prima.facie.parents.do.boot(dataset,
-                                            NA,
+                                            hypotheses,
                                             nboot,
                                             pvalue,
                                             adj.matrix,
@@ -81,7 +83,7 @@ prim.fit <- function(dataset,
             cat('*** Computing selective advantage scores (prima facie).\n')
         prima.facie.parents =
             get.prima.facie.parents.no.boot(dataset,
-                                            NA,
+                                            hypotheses,
                                             adj.matrix,
                                             silent,
                                             epos,
@@ -165,7 +167,7 @@ prim.fit <- function(dataset,
     
     topology =
         list(dataset = dataset,
-             hypotheses = NA,
+             hypotheses = hypotheses,
              adj.matrix.prima.facie = adj.matrix.prima.facie,
              confidence = prima.facie.parents$pf.confidence,
              model = model,
