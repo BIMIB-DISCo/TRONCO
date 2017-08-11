@@ -50,6 +50,11 @@ tronco.caprese <- function(data,
   if (npatterns(data) > 0) {
     warning("Patters found in input for tronco.caprese\n")
   }
+
+  if (is.null(data$hypotheses)) {
+    data$hypotheses = NA
+    
+  }
   
   ## Reconstruct the reconstruction with CAPRESE
   if (silent == FALSE) {
