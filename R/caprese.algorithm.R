@@ -37,6 +37,10 @@ caprese.fit <- function(dataset,
     ## i.e., no self cause is allowed.
     
     diag(adj.matrix) = 0;
+
+    ## Consider any hypothesis.
+    
+    adj.matrix = hypothesis.adj.matrix(hypotheses, adj.matrix);
     
     ## Check if the dataset is valid.
     

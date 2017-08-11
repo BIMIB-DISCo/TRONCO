@@ -50,6 +50,10 @@ prim.fit <- function(dataset,
     ## i.e., no self cause is allowed
     diag(adj.matrix) = 0;
 
+    ## Consider any hypothesis.
+    
+    adj.matrix = hypothesis.adj.matrix(hypotheses, adj.matrix);
+
     ## Check if the dataset is valid
     valid.dataset = check.dataset(dataset, adj.matrix, FALSE, epos, eneg)
     adj.matrix = valid.dataset$adj.matrix;
