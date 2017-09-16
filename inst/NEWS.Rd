@@ -2,6 +2,12 @@
 \title{News for the package \pkg{TRONCO}}
 \encoding{UTF-8}
 
+\section{Changes in Version 2.8.1}{
+    \itemize{
+        \item Minor fix on documentation
+    }
+}
+
 \section{Changes in Version 2.7.7}{
     \itemize{
         \item RNA Seq validation
