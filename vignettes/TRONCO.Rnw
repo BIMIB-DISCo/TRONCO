@@ -19,20 +19,16 @@ BiocStyle::latex()
 
 \title{Using the \Biocpkg{TRONCO} package}
 
-\author[1]{Marco Antoniotti}
-\author[2]{Giulio Caravagna}
-\author[1,3]{Luca De Sano}
-\author[1,4]{Alex Graudenzi}
-\author[1]{Giancarlo Mauri}
-\author[5]{Bud Mishra}
-\author[6]{Daniele Ramazzotti}
-
-\affil[1]{Dipartimento di Informatica Sistemistica e Comunicazione, Università degli Studi Milano Bicocca Milano, Italy.}
-\affil[2]{School of Informatics, Edinburgh University, Edinburgh, UK.}
-\affil[3]{Institute of Biomembranes and Bioenergetics of the Italian National Research Council (IBBE-CNR), Bari, Italy}
-\affil[4]{Institute of Molecular Bioimaging and Physiology of the Italian National Research Council (IBFM-CNR), Milano, Italy}
-\affil[5]{Courant Institute of Mathematical Sciences, New York University, New York, USA.}
-\affil[6]{Department of Pathology, Stanford University, Stanford, CA, USA.}
+\author{
+Marco Antoniotti\footnote{Dipartimento di Informatica Sistemistica e Comunicazione, Università degli Studi Milano Bicocca
+Milano, Italy.} \and
+Giulio Caravagna\footnote{School of Informatics, Edinburgh University, Edinburgh, UK.} \and
+Luca De Sano$^\ast$ \footnote{Institute of Biomembranes and Bioenergetics of the Italian National Research Council (IBBE-CNR), Bari, Italy}\and
+Alex Graudenzi$^\ast$ \footnote{Institute of Molecular Bioimaging and Physiology of the Italian National Research Council (IBFM-CNR), Milano, Italy}\and
+Giancarlo Mauri$^\ast$ \and
+Bud Mishra\footnote{Courant Institute of Mathematical Sciences, New York University, New York, USA.} \and
+Daniele Ramazzotti\footnote{Department of Pathology, Stanford University, Stanford, CA, USA.} 
+}
 
 \date{\today}
 \maketitle
