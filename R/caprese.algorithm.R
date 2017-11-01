@@ -13,13 +13,17 @@
 # @param dataset a dataset describing a progressive phenomenon
 # @param lambda shrinkage parameter (value in [0,1])
 # @param silent execute the algorithm in silent mode
+# @param epos error rate of false positive errors
+# @param eneg error rate of false negative errors
+# @param hypotheses hypotheses to be considered in the reconstruction. This should be NA for this algorithms. 
 # @return topology: the reconstructed tree-like topology
 #
 caprese.fit <- function(dataset,
                         lambda = 0.5,
                         silent = FALSE,
                         epos = 0.0,
-                        eneg = 0.0) {
+                        eneg = 0.0,
+                        hypotheses = NA) {
     
     ## Start the clock to measure the execution time.
     
@@ -37,6 +41,10 @@ caprese.fit <- function(dataset,
     ## i.e., no self cause is allowed.
     
     diag(adj.matrix) = 0;
+
+    ## Consider any hypothesis.
+    
+    adj.matrix = hypothesis.adj.matrix(hypotheses, adj.matrix);
     
     ## Check if the dataset is valid.
     
@@ -193,6 +201,7 @@ caprese.fit <- function(dataset,
     
     topology =
         list(dataset = dataset,
+             hypotheses = hypotheses,
              confidence = confidence,
              model = model,
              parameters = parameters,

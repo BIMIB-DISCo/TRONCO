@@ -14,26 +14,26 @@ tronco.chowliu(data, regularization = c("bic", "aic"), do.boot = TRUE,
 \item{regularization}{Select the regularization for the
 likelihood estimation, e.g., BIC, AIC.}
 
-\item{do.boot}{A parameter to disable/enable the estimation 
+\item{do.boot}{A parameter to disable/enable the estimation
 of the error rates give the reconstructed model.}
 
-\item{nboot}{Number of bootstrap sampling (with rejection) 
+\item{nboot}{Number of bootstrap sampling (with rejection)
 to be performed when estimating the selective advantage scores.}
 
 \item{pvalue}{Pvalue to accept/reject the valid selective
 advantage relations.}
 
-\item{min.boot}{Minimum number of bootstrap sampling 
+\item{min.boot}{Minimum number of bootstrap sampling
 to be performed.}
 
-\item{min.stat}{A parameter to disable/enable the minimum 
-number of bootstrap sampling required besides nboot if 
+\item{min.stat}{A parameter to disable/enable the minimum
+number of bootstrap sampling required besides nboot if
 any sampling is rejected.}
 
-\item{boot.seed}{Initial seed for the bootstrap random 
+\item{boot.seed}{Initial seed for the bootstrap random
 sampling.}
 
-\item{silent}{A parameter to disable/enable verbose 
+\item{silent}{A parameter to disable/enable verbose
 messages.}
 
 \item{epos}{Error rate of false positive errors.}
@@ -41,13 +41,13 @@ messages.}
 \item{eneg}{Error rate of false negative errors.}
 }
 \value{
-A TRONCO compliant object with reconstructed 
+A TRONCO compliant object with reconstructed
 model
 }
 \description{
-Reconstruct a progression model using Chow Liu 
-algorithm combined with probabilistic causation. For details and examples 
-regarding the inference process and on the algorithm implemented in the package, 
+Reconstruct a progression model using Chow Liu
+algorithm combined with probabilistic causation. For details and examples
+regarding the inference process and on the algorithm implemented in the package,
 we refer to the Vignette Section 6.
 }
 \examples{

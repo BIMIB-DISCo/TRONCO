@@ -11,39 +11,40 @@ tronco.plot(x, models = names(x$model), fontsize = NA, height = 2,
   label.edge.size = NA, expand = TRUE, genes = NULL,
   relations.filter = NA, edge.color = "black", pathways.color = "Set1",
   file = NA, legend.pos = "bottom", pathways = NULL, lwd = 3,
-  samples.annotation = NA, export.igraph = FALSE, ...)
+  samples.annotation = NA, export.igraph = FALSE, create.new.dev = TRUE,
+  ...)
 }
 \arguments{
-\item{x}{A reconstructed model (the output of the inference 
+\item{x}{A reconstructed model (the output of the inference
 by a tronco function)}
 
-\item{models}{A vector containing the names of the 
+\item{models}{A vector containing the names of the
 algorithms used (caprese, capri_bic, etc)}
 
-\item{fontsize}{For node names. Default NA for 
+\item{fontsize}{For node names. Default NA for
 automatic rescaling}
 
-\item{height}{Proportion node height - node width. 
+\item{height}{Proportion node height - node width.
 Default height 2}
 
-\item{width}{Proportion node height - node width. 
+\item{width}{Proportion node height - node width.
 Default width 2}
 
-\item{height.logic}{Height of logical nodes. 
+\item{height.logic}{Height of logical nodes.
 Defaul 1}
 
-\item{pf}{Should I print Prima Facie? 
+\item{pf}{Should I print Prima Facie?
 Default False}
 
-\item{disconnected}{Should I print disconnected 
+\item{disconnected}{Should I print disconnected
 nodes? Default False}
 
-\item{scale.nodes}{Node scaling coefficient 
+\item{scale.nodes}{Node scaling coefficient
 (based on node frequency). Default NA (autoscale)}
 
 \item{title}{Title of the plot. Default as.description(x)}
 
-\item{confidence}{Should I add confidence 
+\item{confidence}{Should I add confidence
 informations? No if NA}
 
 \item{p.min}{p-value cutoff. Default automatic}
@@ -54,47 +55,52 @@ informations? No if NA}
 
 \item{edge.cex}{CEX value for edge labels. Default 1.0}
 
-\item{label.edge.size}{Size of edge labels. 
+\item{label.edge.size}{Size of edge labels.
 Default NA for automatic rescaling}
 
 \item{expand}{Should I expand hypotheses? Default TRUE}
 
-\item{genes}{Visualise only genes in this list. 
+\item{genes}{Visualise only genes in this list.
 Default NULL, visualise all.}
 
-\item{relations.filter}{Filter relations to dispaly 
+\item{relations.filter}{Filter relations to dispaly
 according to this functions. Default NA}
 
 \item{edge.color}{Edge color. Default 'black'}
 
-\item{pathways.color}{RColorBrewer colorser 
+\item{pathways.color}{RColorBrewer colorser
 for patways. Default 'Set1'.}
 
-\item{file}{String containing filename for PDF output. 
+\item{file}{String containing filename for PDF output.
 If NA no PDF output will be provided}
 
 \item{legend.pos}{Legend position. Default 'bottom',}
 
-\item{pathways}{A vector containing pathways information 
+\item{pathways}{A vector containing pathways information
 as described in as.patterns()}
 
 \item{lwd}{Edge base lwd. Default 3}
 
-\item{samples.annotation}{= List of samples to search 
+\item{samples.annotation}{= List of samples to search
 for events in model}
 
-\item{export.igraph}{If TRUE export the igraph 
-object generated}
+\item{export.igraph}{If TRUE export the generated igraph
+object}
 
-\item{...}{Additional arguments for RGraphviz 
+\item{create.new.dev}{If TRUE create a new graphical device 
+when calling trono.plot. Set this to FALSE, e.g., if you do not 
+wish to create a new device when executing the command with 
+export.igraph = TRUE}
+
+\item{...}{Additional arguments for RGraphviz
 plot function}
 }
 \value{
 Information about the reconstructed model
 }
 \description{
-Plots a progression model from a recostructed dataset. For details and examples 
-regarding the visualization of an inferred model, 
+Plots a progression model from a recostructed dataset. For details and examples
+regarding the visualization of an inferred model,
 we refer to the Vignette Section 7.
 }
 \examples{

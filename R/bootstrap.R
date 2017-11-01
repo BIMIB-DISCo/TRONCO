@@ -37,10 +37,6 @@ bootstrap <- function(reconstruction,
     
     if (type == 'CAPRI') {
         command.capri = parameters$command
-        hypotheses = NA
-        if (nhypotheses(reconstruction) > 0) {
-            hypotheses = reconstruction$hypotheses
-        }
         restart = parameters$restart
     }
 
@@ -50,6 +46,10 @@ bootstrap <- function(reconstruction,
         lambda = parameters$lambda
         epos = parameters$error.rates$epos
         eneg = parameters$error.rates$eneg
+        hypotheses = NA
+        if (nhypotheses(reconstruction) > 0) {
+            hypotheses = reconstruction$hypotheses
+        }
     }
 
     ## Get other parameters.
@@ -70,6 +70,10 @@ bootstrap <- function(reconstruction,
         }
         epos = parameters$error.rates$epos
         eneg = parameters$error.rates$eneg
+        hypotheses = NA
+        if (nhypotheses(reconstruction) > 0) {
+            hypotheses = reconstruction$hypotheses
+        }
     }
 
     ## Start the clock to measure the execution time
@@ -168,6 +172,7 @@ bootstrap <- function(reconstruction,
                              eneg,
                              restart)
         } else if (type == 'CAPRESE') {
+            curr.reconstruction$hypotheses = hypotheses
             bootstrapped.topology =
                 tronco.caprese(curr.reconstruction,
                                lambda, 
@@ -175,6 +180,7 @@ bootstrap <- function(reconstruction,
                                epos,
                                eneg)
         } else if (type == 'CHOW_LIU') {
+            curr.reconstruction$hypotheses = hypotheses
             bootstrapped.topology = 
                 tronco.chowliu(curr.reconstruction,
                                    regularization,
@@ -188,6 +194,7 @@ bootstrap <- function(reconstruction,
                                    epos,
                                    eneg)
         } else if (type == 'PRIM') {
+            curr.reconstruction$hypotheses = hypotheses
             bootstrapped.topology =
                 tronco.prim(curr.reconstruction,
                                 regularization,
@@ -201,6 +208,7 @@ bootstrap <- function(reconstruction,
                                 epos,
                                 eneg)
         } else if (type == 'EDMONDS') {
+            curr.reconstruction$hypotheses = hypotheses
             bootstrapped.topology =
                 tronco.edmonds(curr.reconstruction,
                                    regularization,
@@ -215,6 +223,7 @@ bootstrap <- function(reconstruction,
                                    epos,
                                    eneg)
         } else if (type == 'GABOW') {
+            curr.reconstruction$hypotheses = hypotheses
             bootstrapped.topology =
                 tronco.gabow(curr.reconstruction,
                                  regularization,

@@ -788,7 +788,6 @@ hypothesis.add.group <- function(x,
 #' @param pattern.cause Possibile causes for the pattern. 
 #' @param pattern.effect Possibile effects for the pattern. 
 #' @param genes List of genes to be considered as possible homologous. For these genes, all the types of mutations will be considered functionally equivalent.
-#' @param FUN Type of pattern to be added, e.g., co-occurance, soft or hard exclusivity.
 #' @param silent A parameter to disable/enable verbose messages.
 #' @return A TRONCO compliant object with the added hypotheses
 #' @export hypothesis.add.homologous
@@ -797,7 +796,6 @@ hypothesis.add.homologous <- function(x,
                                       pattern.cause = '*',
                                       pattern.effect = '*',
                                       genes = as.genes(x),
-                                      FUN = OR,
                                       silent = FALSE) {
 
     is.compliant(x)
@@ -805,8 +803,6 @@ hypothesis.add.homologous <- function(x,
     if(has.model(x)) {
         stop('This dataset has a reconstructed model and no more hypothesis can be added.')
     }
-
-    op = deparse(substitute(FUN))
 
     hom.group =
         lapply(genes,
@@ -829,7 +825,6 @@ hypothesis.add.homologous <- function(x,
     if (!silent) {
         cat("*** Adding hypotheses for Homologous Patterns\n")
         cat(' Genes:', paste(hom.group, collapse = ", ", sep = ""), '\n')
-        cat(' Function:', op, '\n')
         cat(' Cause:', paste(pattern.cause, collapse=", "), '\n')
         cat(' Effect:', paste(pattern.effect, collapse=", "), '\n')
     }
@@ -1036,6 +1031,17 @@ hypotheses.expansion <- function(input_matrix,
                 h_edge = input_matrix[, h]
                 initial_node_up = names(h_edge)[which(h_edge == 1)]
 
+                ### Expand any hipothesis within final nodes.
+                # 
+                # if (length(map) > 0) {
+                #   initial_node_up_hyp = which(initial_node_up%in%names(map))
+                #   if (length(initial_node_up_hyp) > 0) {
+                #     final_node_hyp_expanded = colnames(map[[initial_node_up[initial_node_up_hyp]]])[1:(length(colnames(map[[initial_node_up[initial_node_up_hyp]]]))-1)]
+                #     initial_node_up = initial_node_up[-initial_node_up_hyp]
+                #     initial_node_up = c(initial_node_up, final_node_hyp_expanded)
+                #   }
+                # }
+                
                 ## Add this graph to main graph.
                 
                 min_graph = graph.union(min_graph, hypo_graph_pre)
@@ -1055,7 +1061,18 @@ hypotheses.expansion <- function(input_matrix,
                 
                 h_edge <- input_matrix[h,]
                 final_node <- names(h_edge)[which(h_edge == 1)]
-
+                
+                ### Expand any hipothesis within final nodes.
+                # 
+                # if (length(map) > 0) {
+                #   final_node_hyp = which(final_node%in%names(map))
+                #   if (length(final_node_hyp) > 0) {
+                #     final_node_hyp_expanded = colnames(map[[final_node[final_node_hyp]]])[1:(length(colnames(map[[final_node[final_node_hyp]]]))-1)]
+                #     final_node = final_node[-final_node_hyp]
+                #     final_node = c(final_node, final_node_hyp_expanded)
+                #   }
+                # }
+                
                 ## Add this graph to main graph.
                 
                 min_graph = graph.union(min_graph, hypo_graph)
@@ -1065,6 +1082,7 @@ hypotheses.expansion <- function(input_matrix,
                 for (node in final_node) {
                     min_graph = min_graph + edge(initial_node, node)
                 }
+                
             }
         }
         min_matrix = get.adjacency(min_graph, sparse = FALSE)

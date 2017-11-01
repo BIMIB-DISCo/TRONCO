@@ -12,26 +12,26 @@ tronco.edmonds(data, regularization = "no_reg", score = "pmi",
 \arguments{
 \item{data}{A TRONCO compliant dataset.}
 
-\item{regularization}{Select the regularization for the 
+\item{regularization}{Select the regularization for the
 likelihood estimation, e.g., BIC, AIC.}
 
-\item{score}{Select the score for the estimation of 
+\item{score}{Select the score for the estimation of
 the best tree, e.g., pointwise mutual information (pmi), conditional entropy (entropy).}
 
-\item{do.boot}{A parameter to disable/enable the estimation 
+\item{do.boot}{A parameter to disable/enable the estimation
 of the error rates give the reconstructed model.}
 
-\item{nboot}{Number of bootstrap sampling (with rejection) 
+\item{nboot}{Number of bootstrap sampling (with rejection)
 to be performed when estimating the selective advantage scores.}
 
-\item{pvalue}{Pvalue to accept/reject the valid selective 
+\item{pvalue}{Pvalue to accept/reject the valid selective
 advantage relations.}
 
-\item{min.boot}{Minimum number of bootstrap sampling to be 
+\item{min.boot}{Minimum number of bootstrap sampling to be
 performed.}
 
 \item{min.stat}{A parameter to disable/enable the minimum number
-of bootstrap sampling required besides nboot if any sampling 
+of bootstrap sampling required besides nboot if any sampling
 is rejected.}
 
 \item{boot.seed}{Initial seed for the bootstrap random sampling.}
@@ -46,9 +46,9 @@ is rejected.}
 A TRONCO compliant object with reconstructed model
 }
 \description{
-Reconstruct a progression model using Edmonds algorithm combined 
-with probabilistic causation. For details and examples 
-regarding the inference process and on the algorithm implemented in the package, 
+Reconstruct a progression model using Edmonds algorithm combined
+with probabilistic causation. For details and examples
+regarding the inference process and on the algorithm implemented in the package,
 we refer to the Vignette Section 6.
 }
 \examples{
