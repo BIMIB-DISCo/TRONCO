@@ -1,6 +1,6 @@
 Package: TRONCO
-Version: 2.9.2
-Date: 2017-09-15
+Version: 2.8.3
+Date: 2017-11-01
 Title: TRONCO, an R package for TRanslational ONCOlogy
 Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")), 
     person("Giulio", "Caravagna", role=c("aut", "cre"), email="giulio.caravagna@disco.unimib.it"),
