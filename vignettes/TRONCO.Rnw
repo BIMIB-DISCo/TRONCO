@@ -19,16 +19,17 @@ BiocStyle::latex()
 
 \title{Using the \Biocpkg{TRONCO} package}
 
-\author{
-Marco Antoniotti\footnote{Dipartimento di Informatica Sistemistica e Comunicazione, Università degli Studi Milano Bicocca
-Milano, Italy.} \and
-Giulio Caravagna\footnote{School of Informatics, Edinburgh University, Edinburgh, UK.} \and
-Luca De Sano$^\ast$ \footnote{Institute of Biomembranes and Bioenergetics of the Italian National Research Council (IBBE-CNR), Bari, Italy}\and
-Alex Graudenzi$^\ast$ \footnote{Institute of Molecular Bioimaging and Physiology of the Italian National Research Council (IBFM-CNR), Milano, Italy}\and
-Giancarlo Mauri$^\ast$ \and
-Bud Mishra\footnote{Courant Institute of Mathematical Sciences, New York University, New York, USA.} \and
-Daniele Ramazzotti\footnote{Department of Pathology, Stanford University, Stanford, CA, USA.} 
-}
+\author[1]{Marco Antoniotti}
+\author[2]{Giulio Caravagna}
+\author[1]{Luca De Sano}
+\author[1]{Alex Graudenzi}
+\author[1]{Giancarlo Mauri}
+\author[3]{Bud Mishra}
+\author[4]{Daniele Ramazzotti}
+\affil[1]{Dipartimento di Informatica Sistemistica e Comunicazione, Università degli Studi Milano Bicocca Milano, Italy}
+\affil[2]{School of Informatics, Edinburgh University, Edinburgh, UK}
+\affil[3]{Courant Institute of Mathematical Sciences, New York University, New York, USA}
+\affil[4]{Department of Pathology, Stanford University, Stanford, CA, USA}
 
 \date{\today}
 \maketitle
