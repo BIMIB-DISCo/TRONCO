@@ -875,5 +875,49 @@ cbio.query <- function(cbio.study = NA,
     return(ret)
 }
 
+#' Add an adjacency matrix as a model to a TRONCO compliant object. Input "model" can be either a dataframe or
+#' a file name. 
+#' 
+#' @title import.model
+#' @param tronco_object A TRONCO compliant object
+#' @param model Either a dataframe or a filename
+#' @param model.name Name of the imported model
+#' @return A TRONCO compliant object
+#' @export import.model
+#' @importFrom utils read.table
+#'
+import.model <- function(tronco_object, model, model.name = "imported_model") {
+
+    if (!(is.data.frame(model) || is.matrix(model)) && is.character(model)) {
+        cat('*** Input "model" is a character, interpreting it as a filename to load a table.
+             Required table format:
+             \t- one column for each gene, one row for each gene, without header.\n')
+
+        model =
+            read.table(model,
+                       header = FALSE,
+                       check.names = FALSE,
+                       stringsAsFactors = FALSE)
+    }
+
+    ## Check for the input to be compliant
+    is.compliant(tronco_object)
+
+    ## Check for the model to be of the correct dimention
+    if(dim(model)[1]!=nevents(tronco_object)||dim(model)[2]!=nevents(tronco_object)) {
+        stop('The adjacency matrix of the model to be imported does not have the exact size.')
+    }
+
+    ## Add the model
+    results = tronco_object
+    results$model[[model.name]] = list()
+    rownames(model) = colnames(as.genotypes(results))
+    colnames(model) = colnames(as.genotypes(results))
+    results$model[[model.name]]$adj.matrix$adj.matrix.fit = model
+
+	return(results)
+
+}
+
 
 #### end of file -- loading.R
