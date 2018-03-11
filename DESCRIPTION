@@ -30,12 +30,12 @@ Imports:
     gtable,
     scales,
     R.matlab,
-    gRapHD,
     grDevices,
     graphics,
     stats,
     utils,
-    methods
+    methods,
+    gRapHD
 Suggests:
     BiocGenerics,
     BiocStyle,
@@ -74,3 +74,4 @@ biocViews: BiomedicalInformatics,
            SingleCell
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
+Remotes: danro9685/gRapHD
