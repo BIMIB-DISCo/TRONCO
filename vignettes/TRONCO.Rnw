@@ -47,7 +47,6 @@ BiocStyle::latex()
 \renewcommand{\arraystretch}{1.5}
 
 \begin{tabular}{ll}
-{\bf Version.}& {2.8.1} (September 2017) \\
 {\bf Contact.}& \email{tronco@disco.unimib.it} \\
 {\bf Bugs report.} & \url{https://github.com/BIMIB-DISCo/TRONCO} \\
 {\bf Website.} & \url{https://sites.google.com/site/troncopackage}
