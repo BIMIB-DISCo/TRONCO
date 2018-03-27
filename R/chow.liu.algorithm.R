@@ -184,11 +184,13 @@ chow.liu.fit <- function(dataset,
 # @param dataset a valid dataset
 # @param adj.matrix the adjacency matrix of the prima facie causes
 # @param regularization regularization term to be used in the likelihood fit
+# @param command type of search, either hill climbing (hc) or tabu (tabu)
 # @return topology: the adjacency matrix of both the prima facie and causal topologies
 #
 perform.likelihood.fit.chow.liu = function( dataset, 
                                             adj.matrix,
-                                            regularization ) {
+                                            regularization,
+                                            command = "hc") {
 
     ## Each variable should at least have 2 values: I'm ignoring
     ## connection to invalid events but, still, need to make the
@@ -206,44 +208,54 @@ perform.likelihood.fit.chow.liu = function( dataset,
     adj.matrix.fit = array(0,c(nrow(adj.matrix),ncol(adj.matrix)))
     rownames(adj.matrix.fit) = colnames(dataset)
     colnames(adj.matrix.fit) = colnames(dataset)
-    
-    # set the regularizator
-    if(regularization=="loglik") {
-        regularization = "LR"
-    } else if(regularization=="aic") {
-        regularization = "AIC"
-    } else if(regularization=="bic") {
-        regularization = "BIC"
-    }
-    
-    # set edges among disconnected nodes in the blacklist
-    blacklist = NULL
-    for (i in 1:nrow(adj.matrix)) {
-        for (j in i:ncol(adj.matrix)) {
-            if (i != j 
-                && adj.matrix[i, j] == 0 
-                && adj.matrix[j, i] == 0) {
-                new_edge = c(i,j)
-                blacklist = rbind(blacklist,new_edge)
+
+    ## Create the blacklist based on the prima facie topology
+    ## and the tree-structure assumption
+    cont = 0
+    parent = -1
+    child = -1
+
+    for (i in rownames(adj.matrix)) {
+        for (j in colnames(adj.matrix)) {
+            if(i != j && adj.matrix[i, j] == 0 && adj.matrix[j, i] == 0) {
+                cont = cont + 1
+                if (cont == 1) {
+                    parent = i
+                    child = j
+                } else {
+                    parent = c(parent, i)
+                    child = c(child, j)
+                }
             }
         }
     }
-    
+
     # compute the best Chow-Liu tree among the valid edges
-    best_chow_liu_tree = minForest(dataset,forbEdges=blacklist,stat=regularization)
+    if (cont > 0) {
+        blacklist = data.frame(from = parent,to = child)
+        best_chow_liu_tree = chow.liu(x=as.categorical.dataset(dataset),blacklist=blacklist)
+    } else {
+        best_chow_liu_tree = chow.liu(x=as.categorical.dataset(dataset))
+    }
 
 
     # get the best topology considering both the priors and the Chow-Liu tree
-    if(length(best_chow_liu_tree@edges)>0) {
-        for (i in 1:nrow(best_chow_liu_tree@edges)) {
-            if(adj.matrix[best_chow_liu_tree@edges[i,1],best_chow_liu_tree@edges[i,2]]==1) {
-                adj.matrix.fit[best_chow_liu_tree@edges[i,1],best_chow_liu_tree@edges[i,2]] = 1
-            }
-            else if(adj.matrix[best_chow_liu_tree@edges[i,2],best_chow_liu_tree@edges[i,1]]==1) {
-                adj.matrix.fit[best_chow_liu_tree@edges[i,2],best_chow_liu_tree@edges[i,1]] = 1
-            }
+    my.arcs = best_chow_liu_tree$arcs
+    
+    ## build the adjacency matrix of the reconstructed topology
+    if (length(nrow(my.arcs)) > 0 && nrow(my.arcs) > 0) {
+        for (i in 1:nrow(my.arcs)) {
+            # [i,j] refers to causation i --> j
+            adj.matrix.fit[my.arcs[i,1], my.arcs[i,2]] = 1
         }
     }
+
+    ## Perform the likelihood fit if requested
+    adj.matrix.fit = lregfit(as.categorical.dataset(dataset),
+        adj.matrix,
+        adj.matrix.fit,
+        regularization,
+        command)
     
     ## Save the results and return them.
     

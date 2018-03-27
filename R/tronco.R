@@ -903,10 +903,9 @@ tronco.gabow <- function(data,
 #' @return A TRONCO compliant object with reconstructed
 #' model
 #' @export tronco.chowliu
-#' @importFrom bnlearn hc tabu empty.graph set.arc
+#' @importFrom bnlearn hc tabu empty.graph set.arc chow.liu
 #' @importFrom igraph graph.adjacency get.adjacency graph.union edge
 #' @importFrom igraph get.shortest.paths is.dag
-#' @importFrom gRapHD minForest
 #' @importFrom stats phyper AIC BIC
 #'
 tronco.chowliu <- function(data,
