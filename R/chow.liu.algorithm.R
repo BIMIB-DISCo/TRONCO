@@ -250,19 +250,31 @@ perform.likelihood.fit.chow.liu = function( dataset,
             }
 
             if(dim(blacklist)[1]>0) {
-                best_chow_liu_tree = chow.liu(x=as.categorical.dataset(dataset[,valid_data_entries]),blacklist=blacklist)
+                best_chow_liu_tree = tryCatch({
+                            chow.liu(x=as.categorical.dataset(dataset[,valid_data_entries]),blacklist=blacklist)
+                        }, error = function(e) {
+                            NA
+                        })
             }
             else {
-                best_chow_liu_tree = chow.liu(x=as.categorical.dataset(dataset[,valid_data_entries]))
+                best_chow_liu_tree = tryCatch({
+                            chow.liu(x=as.categorical.dataset(dataset[,valid_data_entries]))
+                        }, error = function(e) {
+                            NA
+                        })
             }
 
         } else {
-            best_chow_liu_tree = chow.liu(x=as.categorical.dataset(dataset[,valid_data_entries]))
+            best_chow_liu_tree = tryCatch({
+                            chow.liu(x=as.categorical.dataset(dataset[,valid_data_entries]))
+                        }, error = function(e) {
+                            NA
+                        })
         }
 
     }
 
-    if(length(fully_disconnected)<ncol(dataset)) {
+    if(!any(is.na(best_chow_liu_tree)) && length(fully_disconnected)<ncol(dataset)) {
 
         # get the best topology considering both the priors and the Chow-Liu tree
         my.arcs = best_chow_liu_tree$arcs
@@ -279,12 +291,19 @@ perform.likelihood.fit.chow.liu = function( dataset,
 
     }
 
-    ## Perform the likelihood fit if requested
-    adj.matrix.fit = lregfit(as.categorical.dataset(dataset),
-        adj.matrix,
-        adj.matrix.fit,
-        regularization,
-        command)
+    if(!any(is.na(best_chow_liu_tree))) {
+
+        ## Perform the likelihood fit if requested
+        adj.matrix.fit = lregfit(as.categorical.dataset(dataset),
+            adj.matrix,
+            adj.matrix.fit,
+            regularization,
+            command)
+
+    }
+    else {
+        warning("A tree spanning all the node could not be obtained.")
+    }
     
     ## Save the results and return them.
     
