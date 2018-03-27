@@ -215,7 +215,11 @@ perform.likelihood.fit.chow.liu = function( dataset,
     parent = -1
     child = -1
 
+    fully_disconnected = NULL
     for (i in rownames(adj.matrix)) {
+        if((sum(adj.matrix[,i])+sum(adj.matrix[i,]))==0) {
+            fully_disconnected = c(fully_disconnected,i)
+        }
         for (j in colnames(adj.matrix)) {
             if(i != j && adj.matrix[i, j] == 0 && adj.matrix[j, i] == 0) {
                 cont = cont + 1
@@ -231,22 +235,37 @@ perform.likelihood.fit.chow.liu = function( dataset,
     }
 
     # compute the best Chow-Liu tree among the valid edges
-    if (cont > 0) {
-        blacklist = data.frame(from = parent,to = child)
-        best_chow_liu_tree = chow.liu(x=as.categorical.dataset(dataset),blacklist=blacklist)
-    } else {
-        best_chow_liu_tree = chow.liu(x=as.categorical.dataset(dataset))
+    if(length(fully_disconnected)<ncol(dataset)) {
+        valid_data_entries = colnames(dataset)
+        if(length(fully_disconnected)>0) {
+            valid_data_entries = colnames(dataset)[which(!colnames(dataset)%in%fully_disconnected)]
+        }
+        if (cont > 0) {
+            blacklist = data.frame(from = parent,to = child)
+            if(length(fully_disconnected)>0) {
+                blacklist = blacklist[which(blacklist$from%in%valid_data_entries&blacklist$to%in%valid_data_entries),]
+            }
+            if(dim(blacklist)[1]>0) {
+                best_chow_liu_tree = chow.liu(x=as.categorical.dataset(dataset[,valid_data_entries]),blacklist=blacklist)
+            }
+            else {
+                best_chow_liu_tree = chow.liu(x=as.categorical.dataset(dataset[,valid_data_entries]))
+            }
+        } else {
+            best_chow_liu_tree = chow.liu(x=as.categorical.dataset(dataset[,valid_data_entries]))
+        }
     }
 
-
-    # get the best topology considering both the priors and the Chow-Liu tree
-    my.arcs = best_chow_liu_tree$arcs
-    
-    ## build the adjacency matrix of the reconstructed topology
-    if (length(nrow(my.arcs)) > 0 && nrow(my.arcs) > 0) {
-        for (i in 1:nrow(my.arcs)) {
-            # [i,j] refers to causation i --> j
-            adj.matrix.fit[my.arcs[i,1], my.arcs[i,2]] = 1
+    if(length(fully_disconnected)<ncol(dataset)) {
+        # get the best topology considering both the priors and the Chow-Liu tree
+        my.arcs = best_chow_liu_tree$arcs
+        
+        ## build the adjacency matrix of the reconstructed topology
+        if (length(nrow(my.arcs)) > 0 && nrow(my.arcs) > 0) {
+            for (i in 1:nrow(my.arcs)) {
+                # [i,j] refers to causation i --> j
+                adj.matrix.fit[my.arcs[i,1], my.arcs[i,2]] = 1
+            }
         }
     }
 
