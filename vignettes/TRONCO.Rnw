@@ -110,7 +110,7 @@ Prim & Undirected Minimum Spanning Tree with Mutual Information & Ind & \href{ht
 
 \begin{itemize}
 \item  TRONCO was introduced in \href{http://www.ncbi.nlm.nih.gov/pubmed/26861821}{Bioinformatics. 2016 Feb 9. pii: btw035.} 
-\item  TRONCO since version {\bf 2.3} is used to implement the {\bf Pipeline For Cancer Inference (PiCnIc)} described in \href{http://dx.doi.org/10.1101/027359}{Caravagna et al., 2016, under review}. 
+\item  TRONCO since version {\bf 2.3} is used to implement the {\bf Pipeline For Cancer Inference (PiCnIc)} described in \href{https://doi.org/10.1101/027359}{Caravagna et al., 2016, under review}. 
 \item Case studies featuring Atypical Chronic Myeloid Leukemia,  Colorectal Cancer, Clear Cell Renal Cell Carcinoma  and others are available at the tool \href{https://sites.google.com/site/troncopackage/}{webpage}. Code for replication of each of those study is made available through  \href{https://github.com/BIMIB-DISCo}{Bioinformatics Milano-Bicocca's Github}.
 
 
