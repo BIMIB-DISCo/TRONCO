@@ -5,8 +5,8 @@
 \title{import.GISTIC}
 \usage{
 import.GISTIC(x, filter.genes = NULL, filter.samples = NULL,
-  silent = FALSE, trim = TRUE, rna.seq.data = NULL, rna.seq.up = NULL,
-  rna.seq.down = NULL)
+  silent = FALSE, trim = TRUE, rna.seq.data = NULL,
+  rna.seq.up = NULL, rna.seq.down = NULL)
 }
 \arguments{
 \item{x}{Either a dataframe or a filename}

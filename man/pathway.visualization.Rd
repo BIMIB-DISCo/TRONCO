@@ -4,9 +4,9 @@
 \alias{pathway.visualization}
 \title{pathway.visualization}
 \usage{
-pathway.visualization(x, title = paste("Pathways:", paste(names(pathways),
-  collapse = ", ", sep = "")), file = NA, pathways.color = "Set2",
-  aggregate.pathways, pathways, ...)
+pathway.visualization(x, title = paste("Pathways:",
+  paste(names(pathways), collapse = ", ", sep = "")), file = NA,
+  pathways.color = "Set2", aggregate.pathways, pathways, ...)
 }
 \arguments{
 \item{x}{A TRONCO complian dataset}

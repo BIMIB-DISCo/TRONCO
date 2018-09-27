@@ -6,8 +6,9 @@
 regarding the statistical assesment of an inferred model, 
 we refer to the Vignette Section 7.}
 \usage{
-tronco.kfold.posterr(x, models = names(as.models(x)), events = as.events(x),
-  runs = 10, k = 10, cores.ratio = 1, silent = FALSE)
+tronco.kfold.posterr(x, models = names(as.models(x)),
+  events = as.events(x), runs = 10, k = 10, cores.ratio = 1,
+  silent = FALSE)
 }
 \arguments{
 \item{x}{A reconstructed model (the output of tronco.capri)}

@@ -1838,7 +1838,7 @@ cluster_mat <- function(mat, distance, method) {
                              "canberra",
                              "binary",
                              "minkowski"))
-        & class(distance) != "dist") {
+        & is(distance, "dist")) {
         stop("distance has to be a dissimilarity structure as produced by dist ",
              "or one measure from the list: ",
              "'correlation', 'euclidean', 'maximum', 'manhattan', 'canberra', 'binary', 'minkowski'")
@@ -1846,7 +1846,7 @@ cluster_mat <- function(mat, distance, method) {
     if (distance[1] == "correlation") {
         d = as.dist(1 - cor(t(mat)))
     } else {
-        if (class(distance) == "dist") {
+        if (is(distance, "dist")) {
             d = distance
         } else {
             d = dist(mat, method = distance)

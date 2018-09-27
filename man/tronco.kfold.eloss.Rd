@@ -4,8 +4,8 @@
 \alias{tronco.kfold.eloss}
 \title{tronco.kfold.eloss}
 \usage{
-tronco.kfold.eloss(x, models = names(as.models(x)), runs = 10, k = 10,
-  silent = FALSE)
+tronco.kfold.eloss(x, models = names(as.models(x)), runs = 10,
+  k = 10, silent = FALSE)
 }
 \arguments{
 \item{x}{A reconstructed model (the output of tronco.capri or tronco.caprese)}

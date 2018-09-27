@@ -9,10 +9,10 @@ tronco.plot(x, models = names(x$model), fontsize = NA, height = 2,
   scale.nodes = NA, title = as.description(x), confidence = NA,
   p.min = 0.05, legend = TRUE, legend.cex = 1, edge.cex = 1,
   label.edge.size = NA, expand = TRUE, genes = NULL,
-  relations.filter = NA, edge.color = "black", pathways.color = "Set1",
-  file = NA, legend.pos = "bottom", pathways = NULL, lwd = 3,
-  samples.annotation = NA, export.igraph = FALSE, create.new.dev = TRUE,
-  ...)
+  relations.filter = NA, edge.color = "black",
+  pathways.color = "Set1", file = NA, legend.pos = "bottom",
+  pathways = NULL, lwd = 3, samples.annotation = NA,
+  export.igraph = FALSE, create.new.dev = TRUE, ...)
 }
 \arguments{
 \item{x}{A reconstructed model (the output of the inference
