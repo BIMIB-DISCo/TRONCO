@@ -17,7 +17,7 @@
 #' @return A TRONCO compliant object with the added hypothesis
 #' @export hypothesis.add
 #' @importFrom stats fisher.test
-#' @importFrom methods getPackageName
+#' @importFrom methods getPackageName is
 #'
 hypothesis.add <- function(data,
                            pattern.label,

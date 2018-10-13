@@ -5,11 +5,12 @@
 \title{A function to draw clustered heatmaps.}
 \usage{
 pheatmap(mat, color = colorRampPalette(rev(brewer.pal(n = 7, name =
-  "RdYlBu")))(100), kmeans_k = NA, breaks = NA, border_color = "grey60",
-  cellwidth = NA, cellheight = NA, scale = "none", cluster_rows = TRUE,
-  cluster_cols = TRUE, clustering_distance_rows = "euclidean",
-  clustering_distance_cols = "euclidean", clustering_method = "complete",
-  cutree_rows = NA, cutree_cols = NA,
+  "RdYlBu")))(100), kmeans_k = NA, breaks = NA,
+  border_color = "grey60", cellwidth = NA, cellheight = NA,
+  scale = "none", cluster_rows = TRUE, cluster_cols = TRUE,
+  clustering_distance_rows = "euclidean",
+  clustering_distance_cols = "euclidean",
+  clustering_method = "complete", cutree_rows = NA, cutree_cols = NA,
   treeheight_row = ifelse(cluster_rows, 50, 0),
   treeheight_col = ifelse(cluster_cols, 50, 0), legend = TRUE,
   legend_breaks = NA, legend_labels = NA, annotation_row = NA,

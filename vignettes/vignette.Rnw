@@ -97,10 +97,10 @@ CAPRESE &  Cancer Progression Extraction with Single Edges &  Ind &  \href{http:
 
 CAPRI &  Cancer Progression Inference &  Ens & \href{http://www.ncbi.nlm.nih.gov/pubmed/25971740}{Bioinformatics 31(18), 3016-3016, 2015.}\\ \hline
 
-Edmond & Directed Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
-Gabow & Partially Directed Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
-Chow Liu & Undirected Minimum Spanning Tree with Likelihood-Fit & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
-Prim & Undirected Minimum Spanning Tree with Mutual Information & Ind & \href{https://sites.google.com/site/troncopackage/}{In preparation.}\\ \hline
+Edmond & Directed Minimum Spanning Tree with Mutual Information & Ind & \href{https://www.biorxiv.org/content/early/2017/09/04/132183}{Publication.}\\ \hline
+Gabow & Partially Directed Minimum Spanning Tree with Mutual Information & Ind & \href{https://www.biorxiv.org/content/early/2017/09/04/132183}{Publication.}\\ \hline
+Chow Liu & Undirected Minimum Spanning Tree with Likelihood-Fit & Ind & \href{https://www.biorxiv.org/content/early/2017/09/04/132183}{Publication.}\\ \hline
+Prim & Undirected Minimum Spanning Tree with Mutual Information & Ind & \href{https://www.biorxiv.org/content/early/2017/09/04/132183}{Publication.}\\ \hline
  \end{tabular}
 \end{center}
 {\small {\bf Legend.} Ens.: ensemble-level with cross-sectional data; Ind.: individual-level with single-cell or multi-region data.}
@@ -109,15 +109,12 @@ Prim & Undirected Minimum Spanning Tree with Mutual Information & Ind & \href{ht
 \paragraph{External links to resources related to TRONCO.}
 
 \begin{itemize}
-\item  TRONCO was introduced in \href{http://www.ncbi.nlm.nih.gov/pubmed/26861821}{Bioinformatics. 2016 Feb 9. pii: btw035.} 
-\item  TRONCO since version {\bf 2.3} is used to implement the {\bf Pipeline For Cancer Inference (PiCnIc)} described in \href{http://dx.doi.org/10.1101/027359}{Caravagna et al., 2016, under review}. 
+\item  TRONCO was introduced in \href{https://academic.oup.com/bioinformatics/article/32/12/1911/1743307}{De Sano, Luca, et al. "TRONCO: an R package for the inference of cancer progression models from heterogeneous genomic data." Bioinformatics 32.12 (2016): 1911-1913}. 
+\item  TRONCO since version {\bf 2.3} is used to implement the {\bf Pipeline For Cancer Inference (PiCnIc)} described in \href{http://www.pnas.org/content/113/28/E4025}{Caravagna, Giulio, et al. "Algorithmic methods to infer the evolutionary trajectories in cancer progression." Proceedings of the National Academy of Sciences 113.28 (2016): E4025-E4034}. 
 \item Case studies featuring Atypical Chronic Myeloid Leukemia,  Colorectal Cancer, Clear Cell Renal Cell Carcinoma  and others are available at the tool \href{https://sites.google.com/site/troncopackage/}{webpage}. Code for replication of each of those study is made available through  \href{https://github.com/BIMIB-DISCo}{Bioinformatics Milano-Bicocca's Github}.
 
 
 \end{itemize}
-
-
-
 
 
 

@@ -14,8 +14,8 @@ oncoprint(x, excl.sort = TRUE, samples.cluster = FALSE,
   group.by.label = FALSE, group.by.stage = FALSE, group.samples = NA,
   gene.annot = NA, gene.annot.color = "Set1", show.patterns = FALSE,
   annotate.consolidate.events = FALSE, txt.stats = paste(nsamples(x),
-  " samples\\n", nevents(x), " events\\n", ngenes(x), " genes\\n", npatterns(x),
-  " patterns", sep = ""), gtable = FALSE, ...)
+  " samples\\n", nevents(x), " events\\n", ngenes(x), " genes\\n",
+  npatterns(x), " patterns", sep = ""), gtable = FALSE, ...)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset}
