@@ -457,25 +457,34 @@ oncoprint(dataset, group.samples = as.stages(dataset))
 
 TRONCO provides functions to visualize groups of events, which in this case are called pathways -- though this could be any group that one would like to define. Aggregation happens with the same rational as the \Rfunction{as.alterations} function, namely by merging the events in the group.
 
-We make an example of a pathway called {\tt MyPATHWAY} involving genes SETBP1, EZH2 and WT1; we want it to be colored in red, and we want to have the genotype of each event to be maintened in the dataset. We proceed as follows  (R's output is omitted).
-
+We make an example of human pathways from \href{https://wikipathways.org}{WikiPathways} involving genes SETBP1, EZH2, TET2, IRAK4, SETBP1 and KIT1. We can query WikiPathways and collect HGNC gene symbols and titles for pathways of interest as follows.  (R's output is omitted).
 
 <<pathway>>=
-pathway = as.pathway(aCML,
-    pathway.genes = c('SETBP1', 'EZH2', 'WT1'), 
-    pathway.name = 'MyPATHWAY',
-    pathway.color = 'red',
-    aggregate.pathway = FALSE)
+library(rWikiPathways)
+my.pathways <- findPathwaysByText('SETBP1 EZH2 TET2 IRAK4 SETBP1 KIT')  #quotes inside query to require both terms
+human.filter <- lapply(my.pathways, function(x) x$species == "Homo sapiens")
+my.hs.pathways <- my.pathways[unlist(human.filter)] 
+my.wpids <- sapply(my.hs.pathways, function(x) x$id) # collect pathways idenifiers
+
+pw.title<-my.hs.pathways[[1]]$name
+pw.genes<-getXrefList(my.wpids[1],"H") 
 @
 
-    
+Now we can use \Rfunction{as.pathway} to perform the analysis. We want the pathway to be colored in red, and we want to have the genotype of each event to be maintened in the dataset.
+
+<<pathway2>>=
+pathway = as.pathway(aCML,
+                     pathway.genes = pw.genes, 
+                     pathway.name = pw.title,
+                     pathway.color = 'red',
+                     aggregate.pathway = FALSE)
+@
+
 Which we then visualize with an oncoprint
 
-
 <<onco-pathway, fig.show='hide', fig.width=6.5, fig.height=2, results='hide'>>=
-oncoprint(pathway, title = 'Custom pathway',  font.row = 8, cellheight = 15, cellwidth = 4)
+oncoprint(pathway, title = pw.title,  font.row = 8, cellheight = 15, cellwidth = 4)
 @
-
 
 \begin{figure*}[ht]
 \begin{center}
@@ -485,27 +494,31 @@ oncoprint(pathway, title = 'Custom pathway',  font.row = 8, cellheight = 15, cel
 \caption{\texttt{oncoprint} output of a custom pathway called {\tt MyPATHWAY} involving genes SETBP1, EZH2 and WT1; the genotype of each event is shown.}
 \end{figure*}
 
-In TRONCO there is also a function which creates the pathway view and the corresponding oncoprint to  multiple pathways, when these are given as a list. We make here a simple example of two custom pathways.
-
+In TRONCO there is also a function which creates the pathway view and the corresponding oncoprint to  multiple pathways, when these are given as a list. We make here a simple example of the next two pathways in our search result from WikiPathways.
 
 <<onco-pathway-viz, fig.show='hide', fig.width=6.5, fig.height=1.8>>=
+pw2.title<-my.hs.pathways[[2]]$name
+pw2.genes<-getXrefList(my.wpids[2],"H")
+pw3.title<-my.hs.pathways[[3]]$name
+pw3.genes<-getXrefList(my.wpids[3],"H")
+
+pathway.list<-list()
+pathway.list[[pw2.title]]<-pw2.genes
+pathway.list[[pw3.title]]<-pw3.genes
+
 pathway.visualization(aCML, 
-    pathways=list(P1 = c('TET2', 'IRAK4'),  P2=c('SETBP1', 'KIT')),        
-    aggregate.pathways=FALSE,
-    font.row = 8)
+                      pathways=pathway.list,        
+                      aggregate.pathways=FALSE,
+                      font.row = 8)
 @
 
-    
-    
-    
 If we had to visualize just the signature of the pathway, we could set  {\tt aggregate.pathways=T}.
-
 
 <<onco-pathway-viz2, fig.show='hide', fig.width=6.5, fig.height=1, results='hide'>>=
 pathway.visualization(aCML, 
-    pathways=list(P1 = c('TET2', 'IRAK4'),  P2=c('SETBP1', 'KIT')),
-    aggregate.pathways = TRUE,
-    font.row = 8)
+                      pathways=pathway.list,
+                      aggregate.pathways = TRUE,
+                      font.row = 8)
 @
 
     
@@ -517,6 +530,16 @@ pathway.visualization(aCML,
 \vspace*{.05in}
 \caption{\texttt{oncoprint} output of a custom pair of pathways, with events shown in top and hidden in bottom.}
 \end{figure*}
+
+And you can view and edit these pathways at WikiPathways using these commands to open tabs in your default browser.
+
+<<wikipathways>>=
+browseURL(getPathwayInfo(my.wpids[1])[2])
+browseURL(getPathwayInfo(my.wpids[2])[2])
+browseURL(getPathwayInfo(my.wpids[3])[2])
+
+@
+    
 
 \FloatBarrier
 
