@@ -505,6 +505,7 @@ pw3.genes<-getXrefList(my.wpids[3],"H")
 pathway.list<-list()
 pathway.list[[pw2.title]]<-pw2.genes
 pathway.list[[pw3.title]]<-pw3.genes
+pathway.list
 
 pathway.visualization(aCML, 
                       pathways=pathway.list,        
