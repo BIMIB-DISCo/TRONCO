@@ -459,18 +459,15 @@ TRONCO provides functions to visualize groups of events, which in this case are 
 
 We make an example of a pathway called {\tt MyPATHWAY} involving genes SETBP1, EZH2 and WT1; we want it to be colored in red, and we want to have the genotype of each event to be maintened in the dataset. We proceed as follows  (R's output is omitted).
 
-
 <<pathway>>=
 pathway = as.pathway(aCML,
-    pathway.genes = c('SETBP1', 'EZH2', 'WT1'), 
+    pathway.genes = c('SETBP1', 'EZH2', 'WT1'),
     pathway.name = 'MyPATHWAY',
     pathway.color = 'red',
     aggregate.pathway = FALSE)
 @
 
-    
 Which we then visualize with an oncoprint
-
 
 <<onco-pathway, fig.show='hide', fig.width=6.5, fig.height=2, results='hide'>>=
 oncoprint(pathway, title = 'Custom pathway',  font.row = 8, cellheight = 15, cellwidth = 4)
@@ -495,11 +492,7 @@ pathway.visualization(aCML,
     font.row = 8)
 @
 
-    
-    
-    
 If we had to visualize just the signature of the pathway, we could set  {\tt aggregate.pathways=T}.
-
 
 <<onco-pathway-viz2, fig.show='hide', fig.width=6.5, fig.height=1, results='hide'>>=
 pathway.visualization(aCML, 
@@ -508,7 +501,6 @@ pathway.visualization(aCML,
     font.row = 8)
 @
 
-    
 \begin{figure*}[ht]
 \begin{center}
 \includegraphics[width=0.9\textwidth]{figure/onco-pathway-viz-1}
@@ -517,6 +509,32 @@ pathway.visualization(aCML,
 \vspace*{.05in}
 \caption{\texttt{oncoprint} output of a custom pair of pathways, with events shown in top and hidden in bottom.}
 \end{figure*}
+
+
+The same operation could have been done using \href{https://wikipathways.org}{WikiPathways}. We can query WikiPathways and collect HGNC gene symbols and titles for pathways of interest as follows. (R's output is omitted).
+
+<<pathway-alt, eval=FALSE>>=
+library(rWikiPathways)
+# quotes inside query to require both terms
+my.pathways <- findPathwaysByText('SETBP1 EZH2 TET2 IRAK4 SETBP1 KIT')
+human.filter <- lapply(my.pathways, function(x) x$species == "Homo sapiens")
+my.hs.pathways <- my.pathways[unlist(human.filter)] 
+# collect pathways idenifiers
+my.wpids <- sapply(my.hs.pathways, function(x) x$id)
+
+pw.title<-my.hs.pathways[[1]]$name
+pw.genes<-getXrefList(my.wpids[1],"H") 
+@
+
+Now {\tt pw.genes} and {\tt pw.title} can be used as input for the function {\tt as.pathway}.
+It is also possible to view and edit these pathways at WikiPathways using the following commands to open tabs in your default browser.
+
+<<wikipathways, eval=FALSE>>=
+browseURL(getPathwayInfo(my.wpids[1])[2])
+browseURL(getPathwayInfo(my.wpids[2])[2])
+browseURL(getPathwayInfo(my.wpids[3])[2])
+@
+    
 
 \FloatBarrier
 
