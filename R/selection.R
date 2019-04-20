@@ -46,7 +46,7 @@ events.selection <- function(x,
     }
 
 
-    if (is.na(filter.out.names) && is.na(filter.in.names) && is.na(filter.freq)) {
+    if (all(is.na(filter.out.names)) && all(is.na(filter.in.names)) && is.na(filter.freq)) {
         return(x)
     }
 
