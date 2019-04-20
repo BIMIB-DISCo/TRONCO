@@ -11,7 +11,7 @@ Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")),
     person("Daniele", "Ramazzotti", role=c("aut"), email="daniele.ramazzotti@yahoo.com"))
 Maintainer: Luca De Sano <luca.desano@gmail.com>
 Depends:
-    R (>= 3.5),
+    R (>= 3.7),
 Imports:
     bnlearn,
     Rgraphviz,
