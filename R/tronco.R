@@ -1552,7 +1552,7 @@ tronco.plot <- function(x,
     
   }
   
-  if (!is.na(samples.annotation) && !is.null(pathways))
+  if (!all(is.na(samples.annotation)) && !is.null(pathways))
     stop('Select either to annotate pathways or a sample.')
   
   ## Annotate samples.
@@ -1694,7 +1694,7 @@ tronco.plot <- function(x,
   
   hypotheses = x$hypotheses
   hstruct = NULL
-  if (!is.null(hypotheses) && !is.na(hypotheses)) {
+  if (!is.null(hypotheses) && !all(is.na(hypotheses))) {
     hstruct = hypotheses$hstructure
   }
   

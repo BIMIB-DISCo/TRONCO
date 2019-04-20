@@ -28,7 +28,7 @@ is.compliant <- function(x,
                          stage = !(all(is.null(x$stages)) || all(is.na(x$stages)))) {
     ## Check if x is defined.
     
-    if (is.null(x) || is.na(x))
+    if (is.null(x) || all(is.na(x)))
         stop(paste(err.fun, ': input \'x\' is null.'))
 
     ## Check then if x is a list.

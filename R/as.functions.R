@@ -447,9 +447,9 @@ as.confidence <- function(x, conf, models = names(x$model)) {
              )
 
     if (is.null(x$confidence)
-        || is.na(x$confidence)
+        || any(is.na(x$confidence))
         || is.null(x$model)
-        || is.na(x$model))
+        || all(is.na(x$model)))
         stop('Input \'x\' does not contain a TRONCO model. No confidence to show.\n')
 
     has.npb.bootstrap = is.null(x$bootstrap[[models[1]]]$npb)
