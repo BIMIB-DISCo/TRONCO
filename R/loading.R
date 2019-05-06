@@ -795,8 +795,7 @@ cbio.query <- function(cbio.study = NA,
     cat(paste("\nCancer Ref.: ", study[, 2], sep = ""))
     cat(paste("\nCancer Syn.: ", study[, 3], sep = ""))
 
-    cutdescr = function(x, n)
-    {
+    cutdescr = function(x, n) {
         x[, ncol(x)] = ifelse(
             nchar(x[, ncol(x)]) > n,
             paste0(substr(x[, ncol(x)], 1, n), '....'),
