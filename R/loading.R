@@ -1,18 +1,21 @@
 #### TRONCO: a tool for TRanslational ONCOlogy
 ####
-#### Copyright (c) 2015-2017, Marco Antoniotti, Giulio Caravagna, Luca De Sano,
-#### Alex Graudenzi, Giancarlo Mauri, Bud Mishra and Daniele Ramazzotti.
+#### Copyright (c) 2015-2019, The TRONCO Team (www.troncopackage.org)
+#### email: tronco@disco.unimib.it
 ####
 #### All rights reserved. This program and the accompanying materials
 #### are made available under the terms of the GNU GPL v3.0
 #### which accompanies this distribution.
 
 
-#' Import a matrix of 0/1 alterations as a TRONCO compliant dataset. Input "geno" can be either a dataframe or
-#' a file name. In any case the dataframe or the table stored in the file must have a column for each altered
-#' gene and a rows for each sample. Colnames will be used to determine gene names, if data is loaded from
-#' file the first column will be assigned as rownames. For details and examples 
-#' regarding the loading functions provided by the package we refer to the Vignette Section 3. 
+#' Import a matrix of 0/1 alterations as a TRONCO compliant
+#' dataset. Input "geno" can be either a dataframe or a file name. In
+#' any case the dataframe or the table stored in the file must have a
+#' column for each altered gene and a rows for each sample. Colnames
+#' will be used to determine gene names, if data is loaded from file
+#' the first column will be assigned as rownames. For details and
+#' examples regarding the loading functions provided by the package we
+#' refer to the Vignette Section 3.
 #' 
 #' @title import.genotypes
 #' @param geno Either a dataframe or a filename
@@ -705,11 +708,14 @@ extract.MAF.HuGO.Entrez.map <- function(file, sep = "\t") {
 }
 
 
-#' Wrapper for the CGDS package to query the Cbio portal. This can work either automatically, if one
-#' sets \code{cbio.study}, \code{cbio.dataset} or \code{cbio.profile}, or interactively otherwise. A
-#' list of genes to query with less than 900 entries should be provided. This function returns a list
-#' with two dataframe: the gentic profile required and clinical data for the Cbio study. Output is also
-#' saved to disk as Rdata file. See also http://www.cbioportal.org.
+#' Wrapper for the CGDS package to query the Cbio portal. This can
+#' work either automatically, if one sets \code{cbio.study},
+#' \code{cbio.dataset} or \code{cbio.profile}, or interactively
+#' otherwise. A list of genes to query with less than 900 entries should
+#' be provided. This function returns a list with two dataframe: the
+#' gentic profile required and clinical data for the Cbio study. Output
+#' is also saved to disk as Rdata file. See also
+#' http://www.cbioportal.org.
 #'
 #' @title cbio.query
 #' @param cbio.study  Cbio study ID
@@ -740,7 +746,7 @@ cbio.query <- function(cbio.study = NA,
 
     if (is.na(cbio.study)) {
         cat("\nAutomatic CBIO study assessment: off")
-    }else {
+    } else {
         cat(paste("\nAutomatic CBIO study index: ", cbio.study, sep = ""))
     }
 
@@ -749,13 +755,18 @@ cbio.query <- function(cbio.study = NA,
     } else {
         cat(paste("\nAutomatic CBIO dataset index: ", cbio.dataset, sep = ""))
     }
+    
     if (is.na(cbio.profile)) {
         cat("\nAutomatic CBIO profile assessment: off")
     } else {
         cat(paste("\nAutomatic CBIO profile index: ", cbio.profile, sep = ""))
     }
-    mycgds = CGDS("http://www.cbioportal.org/public-portal/")
-
+    
+    ## mycgds = CGDS("http://www.cbioportal.org/public-portal/")
+    ## New version of the CGDS-R library does not want the
+    ## "public-portal".
+    
+    mycgds = CGDS("http://www.cbioportal.org/")
 
     cs = getCancerStudies(mycgds)
     if (is.na(cbio.study)) {
@@ -785,13 +796,13 @@ cbio.query <- function(cbio.study = NA,
     cat(paste("\nCancer Syn.: ", study[, 3], sep = ""))
 
     cutdescr = function(x, n)
-        {
-            x[, ncol(x)] = ifelse(
-                 nchar(x[, ncol(x)]) > n,
-                 paste0(substr(x[, ncol(x)], 1, n), '....'),
-                 x[, ncol(x)])
-            return(x)
-        }
+    {
+        x[, ncol(x)] = ifelse(
+            nchar(x[, ncol(x)]) > n,
+            paste0(substr(x[, ncol(x)], 1, n), '....'),
+            x[, ncol(x)])
+        return(x)
+    }
 
     ## Get dataset for the study
 
@@ -875,8 +886,9 @@ cbio.query <- function(cbio.study = NA,
     return(ret)
 }
 
-#' Add an adjacency matrix as a model to a TRONCO compliant object. Input "model" can be either a dataframe or
-#' a file name. 
+
+#' Add an adjacency matrix as a model to a TRONCO compliant object.
+#' Input "model" can be either a dataframe or a file name. 
 #' 
 #' @title import.model
 #' @param tronco_object A TRONCO compliant object
