@@ -22,9 +22,12 @@ cbio.query(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA,
 A list with two dataframe: the gentic profile required and clinical data for the Cbio study.
 }
 \description{
-Wrapper for the CGDS package to query the Cbio portal. This can work either automatically, if one
-sets \code{cbio.study}, \code{cbio.dataset} or \code{cbio.profile}, or interactively otherwise. A
-list of genes to query with less than 900 entries should be provided. This function returns a list
-with two dataframe: the gentic profile required and clinical data for the Cbio study. Output is also
-saved to disk as Rdata file. See also http://www.cbioportal.org.
+Wrapper for the CGDS package to query the Cbio portal. This can
+work either automatically, if one sets \code{cbio.study},
+\code{cbio.dataset} or \code{cbio.profile}, or interactively
+otherwise. A list of genes to query with less than 900 entries should
+be provided. This function returns a list with two dataframe: the
+gentic profile required and clinical data for the Cbio study. Output
+is also saved to disk as Rdata file. See also
+http://www.cbioportal.org.
 }

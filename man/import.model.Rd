@@ -17,6 +17,6 @@ import.model(tronco_object, model, model.name = "imported_model")
 A TRONCO compliant object
 }
 \description{
-Add an adjacency matrix as a model to a TRONCO compliant object. Input "model" can be either a dataframe or
-a file name.
+Add an adjacency matrix as a model to a TRONCO compliant object.
+Input "model" can be either a dataframe or a file name.
 }
