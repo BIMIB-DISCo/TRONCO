@@ -1,6 +1,6 @@
 Package: TRONCO
-Version: 2.17.1
-Date: 2019-05-15
+Version: 2.17.2
+Date: 2019-06-29
 Title: TRONCO, an R package for TRanslational ONCOlogy
 Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")), 
     person("Giulio", "Caravagna", role=c("aut", "cre"), email="giulio.caravagna@disco.unimib.it"),
@@ -60,7 +60,7 @@ Description:
     TRONCO is used for  the implementation of the Pipeline for Cancer Inference (PICNIC). 
 Encoding: UTF-8
 LazyData: TRUE
-License: file LICENSE
+License: GPL-3
 URL: https://sites.google.com/site/troncopackage/
 BugReports: https://github.com/BIMIB-DISCo/TRONCO
 biocViews: BiomedicalInformatics, 
