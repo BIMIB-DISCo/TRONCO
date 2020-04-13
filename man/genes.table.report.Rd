@@ -4,8 +4,17 @@
 \alias{genes.table.report}
 \title{genes.table.report}
 \usage{
-genes.table.report(x, name, dir = getwd(), maxrow = 33, font = 10,
-  height = 11, width = 8.5, fill = "lightblue", silent = FALSE)
+genes.table.report(
+  x,
+  name,
+  dir = getwd(),
+  maxrow = 33,
+  font = 10,
+  height = 11,
+  width = 8.5,
+  fill = "lightblue",
+  silent = FALSE
+)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

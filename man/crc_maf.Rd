@@ -4,7 +4,9 @@
 \name{crc_maf}
 \alias{crc_maf}
 \title{MAF example data}
-\format{Manual Annotated Format}
+\format{
+Manual Annotated Format
+}
 \source{
 data from http://www.nature.com/nature/journal/v487/n7407/full/nature11252.html
 }

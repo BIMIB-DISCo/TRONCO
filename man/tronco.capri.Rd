@@ -4,10 +4,21 @@
 \alias{tronco.capri}
 \title{tronco capri}
 \usage{
-tronco.capri(data, command = "hc", regularization = c("bic", "aic"),
-  do.boot = TRUE, nboot = 100, pvalue = 0.05, min.boot = 3,
-  min.stat = TRUE, boot.seed = NULL, silent = FALSE, epos = 0,
-  eneg = 0, restart = 100)
+tronco.capri(
+  data,
+  command = "hc",
+  regularization = c("bic", "aic"),
+  do.boot = TRUE,
+  nboot = 100,
+  pvalue = 0.05,
+  min.boot = 3,
+  min.stat = TRUE,
+  boot.seed = NULL,
+  silent = FALSE,
+  epos = 0,
+  eneg = 0,
+  restart = 100
+)
 }
 \arguments{
 \item{data}{A TRONCO compliant dataset.}

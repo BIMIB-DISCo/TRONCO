@@ -4,8 +4,13 @@
 \alias{tronco.bootstrap}
 \title{tronco bootstrap}
 \usage{
-tronco.bootstrap(reconstruction, type = "non-parametric", nboot = 100,
-  cores.ratio = 1, silent = FALSE)
+tronco.bootstrap(
+  reconstruction,
+  type = "non-parametric",
+  nboot = 100,
+  cores.ratio = 1,
+  silent = FALSE
+)
 }
 \arguments{
 \item{reconstruction}{The output of tronco.capri or

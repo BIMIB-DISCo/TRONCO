@@ -4,8 +4,7 @@
 \alias{tronco.caprese}
 \title{tronco caprese}
 \usage{
-tronco.caprese(data, lambda = 0.5, silent = FALSE, epos = 0,
-  eneg = 0)
+tronco.caprese(data, lambda = 0.5, silent = FALSE, epos = 0, eneg = 0)
 }
 \arguments{
 \item{data}{A TRONCO compliant dataset.}

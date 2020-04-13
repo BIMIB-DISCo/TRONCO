@@ -4,9 +4,16 @@
 \alias{tronco.pattern.plot}
 \title{tronco.pattern.plot}
 \usage{
-tronco.pattern.plot(x, group = as.events(x), to, gap.cex = 1,
-  legend.cex = 1, label.cex = 1, title = paste(to[1], to[2]),
-  mode = "barplot")
+tronco.pattern.plot(
+  x,
+  group = as.events(x),
+  to,
+  gap.cex = 1,
+  legend.cex = 1,
+  label.cex = 1,
+  title = paste(to[1], to[2]),
+  mode = "barplot"
+)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset}

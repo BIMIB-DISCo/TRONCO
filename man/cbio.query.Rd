@@ -4,8 +4,13 @@
 \alias{cbio.query}
 \title{cbio.query}
 \usage{
-cbio.query(cbio.study = NA, cbio.dataset = NA, cbio.profile = NA,
-  genes, file = NA)
+cbio.query(
+  cbio.study = NA,
+  cbio.dataset = NA,
+  cbio.profile = NA,
+  genes,
+  file = NA
+)
 }
 \arguments{
 \item{cbio.study}{Cbio study ID}

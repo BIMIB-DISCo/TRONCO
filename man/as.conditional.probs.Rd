@@ -4,8 +4,12 @@
 \alias{as.conditional.probs}
 \title{as.conditional.probs}
 \usage{
-as.conditional.probs(x, events = as.events(x), models = names(x$model),
-  type = "observed")
+as.conditional.probs(
+  x,
+  events = as.events(x),
+  models = names(x$model),
+  type = "observed"
+)
 }
 \arguments{
 \item{x}{A TRONCO model.}

@@ -2,6 +2,12 @@
 \title{News for the package \pkg{TRONCO}}
 \encoding{UTF-8}
 
+\section{Changes in Version 2.9.1}{
+    \itemize{
+        \item Minor update to enhance compatibility with R 4.0.0
+    }
+}
+
 \section{Changes in Version 2.8.1}{
     \itemize{
         \item Minor fix on documentation

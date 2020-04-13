@@ -4,8 +4,13 @@
 \alias{events.selection}
 \title{events.selection}
 \usage{
-events.selection(x, filter.freq = NA, filter.in.names = NA,
-  filter.out.names = NA, silent = FALSE)
+events.selection(
+  x,
+  filter.freq = NA,
+  filter.in.names = NA,
+  filter.out.names = NA,
+  silent = FALSE
+)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

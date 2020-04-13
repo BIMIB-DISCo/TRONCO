@@ -4,7 +4,9 @@
 \name{aCML}
 \alias{aCML}
 \title{Atypical chronic myeloid leukemia dataset}
-\format{TRONCO compliant dataset}
+\format{
+TRONCO compliant dataset
+}
 \source{
 data from http://www.nature.com/ng/journal/v45/n1/full/ng.2495.html
 }

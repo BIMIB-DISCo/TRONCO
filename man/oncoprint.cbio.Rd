@@ -4,9 +4,14 @@
 \alias{oncoprint.cbio}
 \title{oncoprint.cbio}
 \usage{
-oncoprint.cbio(x, file = "oncoprint-cbio.txt",
-  hom.del = "Homozygous Loss", het.loss = "Heterozygous Loss",
-  gain = "Low-level Gain", amp = "High-level Gain")
+oncoprint.cbio(
+  x,
+  file = "oncoprint-cbio.txt",
+  hom.del = "Homozygous Loss",
+  het.loss = "Heterozygous Loss",
+  gain = "Low-level Gain",
+  amp = "High-level Gain"
+)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

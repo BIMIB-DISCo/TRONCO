@@ -4,8 +4,13 @@
 \alias{as.kfold.posterr}
 \title{as.kfold.posterr}
 \usage{
-as.kfold.posterr(x, events = as.events(x), models = names(x$model),
-  values = FALSE, table = FALSE)
+as.kfold.posterr(
+  x,
+  events = as.events(x),
+  models = names(x$model),
+  values = FALSE,
+  table = FALSE
+)
 }
 \arguments{
 \item{x}{A TRONCO model.}

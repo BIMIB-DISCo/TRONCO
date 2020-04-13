@@ -4,8 +4,11 @@
 \alias{is.compliant}
 \title{is.compliant}
 \usage{
-is.compliant(x, err.fun = "[ERR]", stage = !(all(is.null(x$stages)) ||
-  all(is.na(x$stages))))
+is.compliant(
+  x,
+  err.fun = "[ERR]",
+  stage = !(all(is.null(x$stages)) || all(is.na(x$stages)))
+)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

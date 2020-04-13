@@ -4,8 +4,12 @@
 \alias{as.joint.probs}
 \title{as.joint.probs}
 \usage{
-as.joint.probs(x, events = as.events(x), models = names(x$model),
-  type = "observed")
+as.joint.probs(
+  x,
+  events = as.events(x),
+  models = names(x$model),
+  type = "observed"
+)
 }
 \arguments{
 \item{x}{A TRONCO model.}

@@ -4,8 +4,14 @@
 \alias{as.pathway}
 \title{as.pathway}
 \usage{
-as.pathway(x, pathway.genes, pathway.name, pathway.color = "yellow",
-  aggregate.pathway = TRUE, silent = FALSE)
+as.pathway(
+  x,
+  pathway.genes,
+  pathway.name,
+  pathway.color = "yellow",
+  aggregate.pathway = TRUE,
+  silent = FALSE
+)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

@@ -4,7 +4,9 @@
 \name{test_model}
 \alias{test_model}
 \title{A complete dataset with a reconstructed model}
-\format{TRONCO compliant dataset}
+\format{
+TRONCO compliant dataset
+}
 \source{
 fake data
 }

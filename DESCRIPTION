@@ -1,6 +1,6 @@
 Package: TRONCO
-Version: 2.19.0
-Date: 2019-11-14
+Version: 2.19.1
+Date: 2020-04-13
 Title: TRONCO, an R package for TRanslational ONCOlogy
 Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")), 
     person("Giulio", "Caravagna", role=c("aut", "cre"), email="giulio.caravagna@disco.unimib.it"),
@@ -11,7 +11,7 @@ Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")),
     person("Daniele", "Ramazzotti", role=c("aut"), email="daniele.ramazzotti@yahoo.com"))
 Maintainer: Luca De Sano <luca.desano@gmail.com>
 Depends:
-    R (>= 3.6.0),
+    R (>= 4.0.0),
 Imports:
     bnlearn,
     Rgraphviz,
@@ -73,5 +73,5 @@ biocViews: BiomedicalInformatics,
            DataImport,
            SingleCell,
            ImmunoOncology
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr

@@ -4,8 +4,12 @@
 \alias{as.marginal.probs}
 \title{as.marginal.probs}
 \usage{
-as.marginal.probs(x, events = as.events(x), models = names(x$model),
-  type = "observed")
+as.marginal.probs(
+  x,
+  events = as.events(x),
+  models = names(x$model),
+  type = "observed"
+)
 }
 \arguments{
 \item{x}{A TRONCO model.}

@@ -4,7 +4,9 @@
 \name{maf}
 \alias{maf}
 \title{MAF example data}
-\format{Manual Annotated Format}
+\format{
+Manual Annotated Format
+}
 \source{
 fake data
 }

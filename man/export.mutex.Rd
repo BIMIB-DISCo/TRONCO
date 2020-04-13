@@ -4,10 +4,14 @@
 \alias{export.mutex}
 \title{export,mutex}
 \usage{
-export.mutex(x, filename = "tronco_to_mutex", filepath = "./",
+export.mutex(
+  x,
+  filename = "tronco_to_mutex",
+  filepath = "./",
   label.mutation = "SNV",
   label.amplification = list("High-level Gain"),
-  label.deletion = list("Homozygous Loss"))
+  label.deletion = list("Homozygous Loss")
+)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

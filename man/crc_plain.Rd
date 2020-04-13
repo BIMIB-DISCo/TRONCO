@@ -4,7 +4,9 @@
 \name{crc_plain}
 \alias{crc_plain}
 \title{Plain mutation dataset}
-\format{plain data}
+\format{
+plain data
+}
 \source{
 data from http://www.nature.com/nature/journal/v487/n7407/full/nature11252.html
 }

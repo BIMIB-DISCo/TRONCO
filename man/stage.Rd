@@ -4,7 +4,9 @@
 \name{stage}
 \alias{stage}
 \title{Stage information for test_dataset}
-\format{Vector of stages}
+\format{
+Vector of stages
+}
 \source{
 fake data
 }

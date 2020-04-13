@@ -4,7 +4,9 @@
 \name{test_dataset_no_hypos}
 \alias{test_dataset_no_hypos}
 \title{A complete dataset}
-\format{TRONCO compliant dataset}
+\format{
+TRONCO compliant dataset
+}
 \source{
 fake data
 }

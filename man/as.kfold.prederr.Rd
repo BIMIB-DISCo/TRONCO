@@ -4,8 +4,13 @@
 \alias{as.kfold.prederr}
 \title{as.kfold.prederr}
 \usage{
-as.kfold.prederr(x, events = as.events(x), models = names(x$model),
-  values = FALSE, table = FALSE)
+as.kfold.prederr(
+  x,
+  events = as.events(x),
+  models = names(x$model),
+  values = FALSE,
+  table = FALSE
+)
 }
 \arguments{
 \item{x}{A TRONCO model.}
