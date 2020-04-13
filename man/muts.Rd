@@ -4,7 +4,9 @@
 \name{muts}
 \alias{muts}
 \title{Simple mutation dataset}
-\format{TRONCO compliant dataset}
+\format{
+TRONCO compliant dataset
+}
 \source{
 fake data
 }

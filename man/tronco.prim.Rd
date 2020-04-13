@@ -4,9 +4,19 @@
 \alias{tronco.prim}
 \title{Tronco Prim}
 \usage{
-tronco.prim(data, regularization = "no_reg", do.boot = TRUE,
-  nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE,
-  boot.seed = NULL, silent = FALSE, epos = 0, eneg = 0)
+tronco.prim(
+  data,
+  regularization = "no_reg",
+  do.boot = TRUE,
+  nboot = 100,
+  pvalue = 0.05,
+  min.boot = 3,
+  min.stat = TRUE,
+  boot.seed = NULL,
+  silent = FALSE,
+  epos = 0,
+  eneg = 0
+)
 }
 \arguments{
 \item{data}{A TRONCO compliant dataset.}

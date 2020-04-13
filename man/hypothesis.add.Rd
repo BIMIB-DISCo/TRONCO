@@ -4,8 +4,13 @@
 \alias{hypothesis.add}
 \title{hypothesis add}
 \usage{
-hypothesis.add(data, pattern.label, lifted.pattern, pattern.effect = "*",
-  pattern.cause = "*")
+hypothesis.add(
+  data,
+  pattern.label,
+  lifted.pattern,
+  pattern.effect = "*",
+  pattern.cause = "*"
+)
 }
 \arguments{
 \item{data}{A TRONCO compliant dataset.}

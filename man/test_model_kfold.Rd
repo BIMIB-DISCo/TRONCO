@@ -4,7 +4,9 @@
 \name{test_model_kfold}
 \alias{test_model_kfold}
 \title{A complete dataset with a reconstructed model and crossvalidation informations}
-\format{TRONCO compliant dataset}
+\format{
+TRONCO compliant dataset
+}
 \source{
 fake data
 }

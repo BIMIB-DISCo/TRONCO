@@ -4,8 +4,7 @@
 \alias{as.alterations}
 \title{as.alterations}
 \usage{
-as.alterations(x, new.type = "Alteration", new.color = "khaki",
-  silent = FALSE)
+as.alterations(x, new.type = "Alteration", new.color = "khaki", silent = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

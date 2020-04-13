@@ -4,8 +4,7 @@
 \alias{join.types}
 \title{join.types}
 \usage{
-join.types(x, ..., new.type = "new.type", new.color = "khaki",
-  silent = FALSE)
+join.types(x, ..., new.type = "new.type", new.color = "khaki", silent = FALSE)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

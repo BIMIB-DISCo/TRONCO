@@ -4,9 +4,19 @@
 \alias{tronco.chowliu}
 \title{Tronco Chow Liu}
 \usage{
-tronco.chowliu(data, regularization = c("bic", "aic"), do.boot = TRUE,
-  nboot = 100, pvalue = 0.05, min.boot = 3, min.stat = TRUE,
-  boot.seed = NULL, silent = FALSE, epos = 0, eneg = 0)
+tronco.chowliu(
+  data,
+  regularization = c("bic", "aic"),
+  do.boot = TRUE,
+  nboot = 100,
+  pvalue = 0.05,
+  min.boot = 3,
+  min.stat = TRUE,
+  boot.seed = NULL,
+  silent = FALSE,
+  epos = 0,
+  eneg = 0
+)
 }
 \arguments{
 \item{data}{A TRONCO compliant dataset.}

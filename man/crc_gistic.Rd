@@ -4,7 +4,9 @@
 \name{crc_gistic}
 \alias{crc_gistic}
 \title{GISTIC example data}
-\format{GISTIC score}
+\format{
+GISTIC score
+}
 \source{
 data from http://www.nature.com/nature/journal/v487/n7407/full/nature11252.html
 }

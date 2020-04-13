@@ -4,18 +4,40 @@
 \alias{oncoprint}
 \title{oncoprint}
 \usage{
-oncoprint(x, excl.sort = TRUE, samples.cluster = FALSE,
-  genes.cluster = FALSE, file = NA, ann.stage = has.stages(x),
-  ann.hits = TRUE, stage.color = "YlOrRd", hits.color = "Purples",
-  null.color = "lightgray", border.color = "white", text.cex = 1,
-  font.column = NA, font.row = NA, title = as.description(x),
-  sample.id = FALSE, hide.zeroes = FALSE, legend = TRUE,
-  legend.cex = 0.5, cellwidth = NA, cellheight = NA,
-  group.by.label = FALSE, group.by.stage = FALSE, group.samples = NA,
-  gene.annot = NA, gene.annot.color = "Set1", show.patterns = FALSE,
-  annotate.consolidate.events = FALSE, txt.stats = paste(nsamples(x),
-  " samples\\n", nevents(x), " events\\n", ngenes(x), " genes\\n",
-  npatterns(x), " patterns", sep = ""), gtable = FALSE, ...)
+oncoprint(
+  x,
+  excl.sort = TRUE,
+  samples.cluster = FALSE,
+  genes.cluster = FALSE,
+  file = NA,
+  ann.stage = has.stages(x),
+  ann.hits = TRUE,
+  stage.color = "YlOrRd",
+  hits.color = "Purples",
+  null.color = "lightgray",
+  border.color = "white",
+  text.cex = 1,
+  font.column = NA,
+  font.row = NA,
+  title = as.description(x),
+  sample.id = FALSE,
+  hide.zeroes = FALSE,
+  legend = TRUE,
+  legend.cex = 0.5,
+  cellwidth = NA,
+  cellheight = NA,
+  group.by.label = FALSE,
+  group.by.stage = FALSE,
+  group.samples = NA,
+  gene.annot = NA,
+  gene.annot.color = "Set1",
+  show.patterns = FALSE,
+  annotate.consolidate.events = FALSE,
+  txt.stats = paste(nsamples(x), " samples\\n", nevents(x), " events\\n", ngenes(x),
+    " genes\\n", npatterns(x), " patterns", sep = ""),
+  gtable = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset}

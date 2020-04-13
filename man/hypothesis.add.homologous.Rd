@@ -4,8 +4,13 @@
 \alias{hypothesis.add.homologous}
 \title{hypothesis.add.homologous}
 \usage{
-hypothesis.add.homologous(x, pattern.cause = "*", pattern.effect = "*",
-  genes = as.genes(x), silent = FALSE)
+hypothesis.add.homologous(
+  x,
+  pattern.cause = "*",
+  pattern.effect = "*",
+  genes = as.genes(x),
+  silent = FALSE
+)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

@@ -4,9 +4,17 @@
 \alias{hypothesis.add.group}
 \title{hypothesis add group}
 \usage{
-hypothesis.add.group(x, FUN, group, pattern.cause = "*",
-  pattern.effect = "*", dim.min = 2, dim.max = length(group),
-  min.prob = 0, silent = FALSE)
+hypothesis.add.group(
+  x,
+  FUN,
+  group,
+  pattern.cause = "*",
+  pattern.effect = "*",
+  dim.min = 2,
+  dim.max = length(group),
+  min.prob = 0,
+  silent = FALSE
+)
 }
 \arguments{
 \item{x}{A TRONCO compliant dataset.}

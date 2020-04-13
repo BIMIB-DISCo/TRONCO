@@ -4,9 +4,17 @@
 \alias{import.MAF}
 \title{import.MAF}
 \usage{
-import.MAF(file, sep = "\\t", is.TCGA = TRUE, filter.fun = NULL,
-  to.TRONCO = TRUE, irregular = FALSE, paste.to.Hugo_Symbol = NULL,
-  merge.mutation.types = TRUE, silent = FALSE)
+import.MAF(
+  file,
+  sep = "\\t",
+  is.TCGA = TRUE,
+  filter.fun = NULL,
+  to.TRONCO = TRUE,
+  irregular = FALSE,
+  paste.to.Hugo_Symbol = NULL,
+  merge.mutation.types = TRUE,
+  silent = FALSE
+)
 }
 \arguments{
 \item{file}{MAF filename}

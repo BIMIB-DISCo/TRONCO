@@ -4,8 +4,7 @@
 \alias{as.adj.matrix}
 \title{as.adj.matrix}
 \usage{
-as.adj.matrix(x, events = as.events(x), models = names(x$model),
-  type = "fit")
+as.adj.matrix(x, events = as.events(x), models = names(x$model), type = "fit")
 }
 \arguments{
 \item{x}{A TRONCO model.}
