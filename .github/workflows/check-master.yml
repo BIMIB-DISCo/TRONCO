@@ -83,6 +83,8 @@ jobs:
           echo "GITHUB_SHA: ${GITHUB_SHA}"
           echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+          echo "##[set-output name=repository;]$(echo ${GITHUB_REPOSITORY})"
+          echo "::set-output name=repository::${GITHUB_REPOSITORY}"
           
       - name: Install BioConductor and BiocCheck
         run: |
@@ -93,7 +95,7 @@ jobs:
 
       - name: Build and install packages
         run: |
-          Rscript -e "remotes::install_github('${{ GITHUB_REPOSITORY }}', ref='${{ steps.vars.outputs.sha_short }}')"
+          Rscript -e "remotes::install_github('${{ steps.vars.outputs.repository }}', ref='${{ steps.vars.outputs.sha_short }}')"
 
       - name: Check
         env:
