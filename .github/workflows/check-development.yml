@@ -74,6 +74,8 @@ jobs:
           tlmgr install nowidow
           tlmgr install parnotes
           tlmgr install marginfix
+          tlmgr install texlive-latex-recommended
+          tlmgr install texlive-latex-extra
         
 
       - name: Shell GIT env
