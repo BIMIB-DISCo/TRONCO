@@ -30,6 +30,8 @@ jobs:
       - uses: r-lib/actions/setup-r@master
         with:
           r-version: ${{ matrix.config.r }}
+          
+      - uses: r-lib/actions/setup-tinytex@v1
 
       - uses: r-lib/actions/setup-pandoc@v1
         with:
