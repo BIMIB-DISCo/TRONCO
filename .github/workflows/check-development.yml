@@ -80,15 +80,26 @@ jobs:
           echo "GITHUB_SHA: ${GITHUB_SHA}"
           echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-
+      
+      - name: Install BioConductor and BiocCheck
+        run: |
+           install.packages("BiocManager")
+           BiocManager::install(version='devel')
+           BiocManager::install("BiocCheck")
+        shell: Rscript {0}
+        
       - name: Build and install packages
         run: |
-          Rscript -e "remotes::install_github('${GITHUB_REPOSITORY}', ref='${{ steps.vars.outputs.sha_short }}')"
+          Rscript -e "remotes::install_github('${{ GITHUB_REPOSITORY }}', ref='${{ steps.vars.outputs.sha_short }}')"
 
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual"), error_on = "error", check_dir = "check")
+        run: rcmdcheck::rcmdcheck(args = c("--as-cran"), error_on = c("error", "warning"), check_dir = "check")
+        shell: Rscript {0}
+        
+      - name: BiocCheck
+        run: BiocCheck::BiocCheck("check")
         shell: Rscript {0}
 
       - name: Upload check results
