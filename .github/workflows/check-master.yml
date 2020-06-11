@@ -73,7 +73,7 @@ jobs:
         shell: bash
         run: |
           tlmgr install tcolorbox bera nowidow parnotes marginfix titlesec \
-          fancyhdr enumitem parskip authblk
+          fancyhdr enumitem parskip preprint
 
       - name: Shell GIT env
         shell: bash
