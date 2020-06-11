@@ -74,7 +74,8 @@ jobs:
         run: |
           tlmgr install tcolorbox bera nowidow parnotes marginfix titlesec \
           fancyhdr enumitem parskip preprint soul placeins ragged2e ms \
-          footmisc changepage caption xstring mathtools pgf environ
+          footmisc changepage caption xstring mathtools pgf environ \
+          trimspaces
 
       - name: Shell GIT env
         shell: bash
