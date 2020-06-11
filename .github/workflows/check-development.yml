@@ -70,7 +70,7 @@ jobs:
         shell: bash
         run: |
           tlmgr install tcolorbox bera nowidow parnotes marginfix titlesec \
-          fancyhdr enumitem parskip preprint soul placeins
+          fancyhdr enumitem parskip preprint soul placeins ragged2e
 
       - name: Shell GIT env
         shell: bash
