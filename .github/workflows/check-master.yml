@@ -72,7 +72,7 @@ jobs:
       - name: Install latex packages
         shell: bash
         run: |
-          tlmgr install tcolorbox bera nowidow parnotes marginfix titlesec
+          tlmgr install tcolorbox bera nowidow parnotes marginfix titlesec fancyhdr
         
 
       - name: Shell GIT env
