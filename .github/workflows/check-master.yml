@@ -72,13 +72,7 @@ jobs:
       - name: Install latex packages
         shell: bash
         run: |
-          tlmgr install tcolorbox
-          tlmgr install bera
-          tlmgr install nowidow
-          tlmgr install parnotes
-          tlmgr install marginfix
-          tlmgr install texlive-latex-recommended
-          tlmgr install texlive-latex-extra
+          tlmgr install tcolorbox bera nowidow parnotes marginfix titlesec
         
 
       - name: Shell GIT env
