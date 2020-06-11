@@ -88,9 +88,10 @@ jobs:
           
       - name: Install BioConductor and BiocCheck
         run: |
-           install.packages("BiocManager")
-           BiocManager::install(version='devel')
-           BiocManager::install("BiocCheck")
+          if (!requireNamespace("BiocManager", quietly = TRUE))
+            install.packages("BiocManager")
+          BiocManager::install(version='devel', ask = FALSE)
+          BiocManager::install("BiocCheck", ask = FALSE)
         shell: Rscript {0}
 
       - name: Build and install packages
