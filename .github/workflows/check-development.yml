@@ -65,6 +65,16 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
+        
+      - name: Install latex packages
+        shell: bash
+        run: |
+          tlmgr install tcolorbox
+          tlmgr install bera
+          tlmgr install nowidow
+          tlmgr install parnotes
+          tlmgr install marginfix
+        
 
       - name: Shell GIT env
         shell: bash
@@ -75,6 +85,7 @@ jobs:
           echo "GITHUB_SHA = ${GITHUB_SHA}"
           echo "GITHUB_REF = ${GITHUB_REF}"
           echo "BRANCH = ${GITHUB_REF#refs/heads/}"
+          
       - name: Declare some vars to use on other actions
         id: vars
         shell: bash
