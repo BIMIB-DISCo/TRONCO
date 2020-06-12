@@ -71,6 +71,14 @@ jobs:
         
       - name: Install latex packages
         shell: bash
+        if: runner.os == 'windows'
+        run: |
+          call "%APPDATA%\TinyTeX\bin\win32\tlmgr" install tcolorbox bera \
+          nowidow parnotes marginfix titlesec \
+          fancyhdr enumitem parskip preprint soul placeins ragged2e ms \
+          footmisc changepage caption xstring mathtools pgf environ \
+          trimspaces
+        else:
         run: |
           tlmgr install tcolorbox bera nowidow parnotes marginfix titlesec \
           fancyhdr enumitem parskip preprint soul placeins ragged2e ms \
