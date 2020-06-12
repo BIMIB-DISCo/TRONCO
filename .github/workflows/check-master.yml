@@ -69,7 +69,7 @@ jobs:
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
         
-      - name: Install latex packages
+      - name: Install latex packages - win
         shell: bash
         if: runner.os == 'windows'
         run: |
@@ -78,6 +78,9 @@ jobs:
           fancyhdr enumitem parskip preprint soul placeins ragged2e ms \
           footmisc changepage caption xstring mathtools pgf environ \
           trimspaces
+      
+      - name: Install latex packages - non win
+        shell: bash
         if: runner.os != 'windows'
         run: |
           tlmgr install tcolorbox bera nowidow parnotes marginfix titlesec \
