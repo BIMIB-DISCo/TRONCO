@@ -66,9 +66,9 @@ jobs:
       - name: Install latex packages
         run: |
           install.packages('tinytex')
-          tinytex::tlmgr_install(c('tcolorbox', 'bera', 'nowidow', 'parnotes', \
-          'marginfix', 'titlesec', 'fancyhdr', 'enumitem', 'parskip', 'preprint' \
-          'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage', \
+          tinytex::tlmgr_install(c('tcolorbox', 'bera', 'nowidow', 'parnotes',
+          'marginfix', 'titlesec', 'fancyhdr', 'enumitem', 'parskip', 'preprint',
+          'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
           'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces'))
         shell: Rscript {0}
 
