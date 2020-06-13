@@ -67,11 +67,10 @@ jobs:
         shell: Rscript {0}
         
       - name: Install latex packages - win
-        shell: bash
+        shell: cmd
         if: runner.os == 'windows'
         run: |
-          %APPDATA%\TinyTeX\bin\win32\tlmgr install tcolorbox bera \
-          nowidow parnotes marginfix titlesec \
+          tlmgr install tcolorbox bera nowidow parnotes marginfix titlesec \
           fancyhdr enumitem parskip preprint soul placeins ragged2e ms \
           footmisc changepage caption xstring mathtools pgf environ \
           trimspaces
