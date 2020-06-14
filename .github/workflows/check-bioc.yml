@@ -56,7 +56,7 @@ jobs:
   ## This first job uses the GitHub repository branch name to infer what
   ## version of Bioconductor we will be working on.
   define-docker-info:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
     outputs:
       imagename: ${{ steps.findinfo.outputs.imagename }}
       biocversion: ${{ steps.findinfo.outputs.biocversion }}
