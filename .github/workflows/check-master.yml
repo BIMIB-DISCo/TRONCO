@@ -88,7 +88,7 @@ jobs:
     #needs: define-docker-info
 
     ## Name shown on the GHA log
-    name: ubuntu-latest (r-biocdocker bioc-${{ needs.define-docker-info.outputs.biocversion }})
+    name: ubuntu-latest
 
     ## Information used by the next job that will run on macOS and Windows
     outputs:
@@ -343,7 +343,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     needs: [define-docker-info, R-CMD-check-bioc]
 
-    name: ${{ matrix.config.os }} (r-${{ needs.R-CMD-check-bioc.outputs.rversion }} bioc-${{ needs.define-docker-info.outputs.biocversion }})
+    name: ${{ matrix.config.os }}
 
     strategy:
       fail-fast: false
