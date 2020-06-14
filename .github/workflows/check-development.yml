@@ -368,6 +368,18 @@ jobs:
       - name: Setup pandoc from r-lib
         uses: r-lib/actions/setup-pandoc@master
 
+      - name: Setup tinytex from r-lib
+        uses: r-lib/actions/setup-tinytex@master
+
+      - name: Install latex packages
+        run: |
+          install.packages('tinytex')
+          tinytex::tlmgr_install(c('tcolorbox', 'bera', 'nowidow', 'parnotes',
+          'marginfix', 'titlesec', 'fancyhdr', 'enumitem', 'parskip', 'preprint',
+          'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
+          'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces'))
+        shell: Rscript {0}
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
