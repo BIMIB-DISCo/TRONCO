@@ -138,6 +138,8 @@ jobs:
 
       - uses: r-lib/actions/setup-tinytex@master
 
+      - uses: r-lib/actions/setup-r@master
+
       - name: Install latex packages
         run: |
           install.packages('tinytex')
@@ -181,10 +183,6 @@ jobs:
           echo "::set-output name=biocversionnum::${biocversionnum}"
         shell:
           bash {0}
-
-      - uses: r-lib/actions/setup-r@master
-        with:
-          r-version: ${{ steps.findrversion.outputs.rversion }}
 
       - name: Cache R packages
         if: "!contains(github.event.head_commit.message, '/nocache')"
