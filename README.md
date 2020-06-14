@@ -1,8 +1,8 @@
 TRONCO (TRanslational ONCOlogy)
 ===============================
 
-[![Actions Status](https://github.com/BIMIB-DISCo/TRONCO/workflows/check-master/badge.svg?branch=master)](https://github.com/BIMIB-DISCo/TRONCO/actions?query=workflow%3Acheck-master)
-[![Actions Status](https://github.com/BIMIB-DISCo/TRONCO/workflows/check-development/badge.svg?branch=master)](https://github.com/BIMIB-DISCo/TRONCO/actions?query=workflow%3Acheck-development)
+[![Actions Status](https://github.com/BIMIB-DISCo/TRONCO/workflows/check-master/badge.svg)](https://github.com/BIMIB-DISCo/TRONCO/actions?query=workflow%3Acheck-master)
+[![Actions Status](https://github.com/BIMIB-DISCo/TRONCO/workflows/check-development/badge.svg)](https://github.com/BIMIB-DISCo/TRONCO/actions?query=workflow%3Acheck-development)
 
 
 The **TRONCO** (*TR*anslational *ONCO*logy) **R** package collects algorithms to infer *progression models* via the approach of Suppes-Bayes Causal Network, both from an ensemble of tumors (cross-sectional samples) and within an individual patient (multi-region or single-cell samples). 
