@@ -40,3 +40,4 @@ cfg.R
 *.o
 *.so
 *.dll
+docs
