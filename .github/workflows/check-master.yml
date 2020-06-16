@@ -153,7 +153,8 @@ jobs:
           tinytex::tlmgr_install(c('tcolorbox', 'bera', 'nowidow', 'parnotes',
           'marginfix', 'titlesec', 'fancyhdr', 'enumitem', 'parskip', 'preprint',
           'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
-          'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces'))
+          'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces',
+          'pdfcrop'))
         shell: Rscript {0}
 
       - name: Query dependencies
@@ -380,7 +381,8 @@ jobs:
           tinytex::tlmgr_install(c('tcolorbox', 'bera', 'nowidow', 'parnotes',
           'marginfix', 'titlesec', 'fancyhdr', 'enumitem', 'parskip', 'preprint',
           'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
-          'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces'))
+          'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces',
+          'pdfcrop'))
         shell: Rscript {0}
 
       - name: Query dependencies
