@@ -41,3 +41,5 @@ cfg.R
 *.so
 *.dll
 docs
+doc
+Meta

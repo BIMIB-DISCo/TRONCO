@@ -2503,7 +2503,7 @@ tronco.pattern.plot <- function(x,
 
         gaps = c(rep(2, length(keys) - 2), rep(15 * gap.cex, 4), rep(40 * gap.cex, 2))
 
-        circos.par(gap.degree = gaps)
+        circos.par(gap.degree = gaps, reduce = 0)
 
         chordDiagram(matrix, 
                      grid.col = sector.color,
