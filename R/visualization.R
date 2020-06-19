@@ -2512,7 +2512,8 @@ tronco.pattern.plot <- function(x,
                      row.col = link.color,
                      link.border = 'black',
                      link.lty = link.style,
-                     link.lwd = 0.3
+                     link.lwd = 0.3,
+                     reduce = 0
                      )
 
         circos.trackPlotRegion(track.index = 1, 
