@@ -2503,7 +2503,7 @@ tronco.pattern.plot <- function(x,
 
         gaps = c(rep(2, length(keys) - 2), rep(15 * gap.cex, 4), rep(40 * gap.cex, 2))
 
-        circos.par(gap.degree = gaps, reduce = 0)
+        circos.par(gap.degree = gaps)
 
         chordDiagram(matrix, 
                      grid.col = sector.color,
@@ -2512,7 +2512,8 @@ tronco.pattern.plot <- function(x,
                      row.col = link.color,
                      link.border = 'black',
                      link.lty = link.style,
-                     link.lwd = 0.3
+                     link.lwd = 0.3,
+                     reduce = 0
                      )
 
         circos.trackPlotRegion(track.index = 1, 
