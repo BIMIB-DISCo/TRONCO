@@ -90,6 +90,36 @@ we refer to the Vignette Section 7." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/1_introduction.html">Introduction</a>
+    </li>
+    <li>
+      <a href="../articles/2_loading_data.html">Loading Data</a>
+    </li>
+    <li>
+      <a href="../articles/3_data_visualization.html">Data visualization</a>
+    </li>
+    <li>
+      <a href="../articles/4_data_manipulation.html">Data manipulation</a>
+    </li>
+    <li>
+      <a href="../articles/5_model_inference.html">Model inference</a>
+    </li>
+    <li>
+      <a href="../articles/6_post_reconstruction.html">Post-reconstruction</a>
+    </li>
+    <li>
+      <a href="../articles/7_import_export.html">Import/export from other tools</a>
+    </li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -1878,16 +1908,16 @@ we refer to the Vignette Section 7.</p>
 #&gt; $kfold$capri_bic
 #&gt; $kfold$capri_bic$prederr
 #&gt; $kfold$capri_bic$prederr$`ins_del TET2`
-#&gt; [1] 0.075 0.075
+#&gt; [1] 0.150 0.075
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`ins_del EZH2`
-#&gt; [1] 0.025 0.075
+#&gt; [1] 0.05 0.05
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`ins_del ASXL1`
 #&gt; [1] 0.175 0.175
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations SETBP1`
-#&gt; [1] 0.350 0.525
+#&gt; [1] 0.35 0.35
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations NRAS_Ex2_3`
 #&gt; [1] 0.075 0.075
@@ -1902,7 +1932,7 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.15 0.15
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations CBL_Ex_8_9`
-#&gt; [1] 0.025 0.100
+#&gt; [1] 0.1 0.1
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations IDH2_R140`
 #&gt; [1] 0.025 0.025
@@ -1911,25 +1941,25 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations JARID_2_Ex1_18`
-#&gt; [1] 0.050 0.075
+#&gt; [1] 0.025 0.050
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations EED_Ex2_12`
 #&gt; [1] 0.05 0.05
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations CEBPA`
-#&gt; [1] 0.025 0.025
+#&gt; [1] 0.050 0.025
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations EPHB3`
-#&gt; [1] 0.025 0.100
+#&gt; [1] 0.025 0.075
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations ETNK1`
-#&gt; [1] 0.025 0.025
+#&gt; [1] 0.025 0.075
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations GATA2`
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations IRAK4`
-#&gt; [1] 0.025 0.025
+#&gt; [1] 0.075 0.025
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations MTA2`
 #&gt; [1] 0.025 0.025
@@ -1938,13 +1968,13 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.1 0.1
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations KIT`
-#&gt; [1] 0.050 0.075
-#&gt; 
-#&gt; $kfold$capri_bic$prederr$`nonsense_ins_del WT1`
 #&gt; [1] 0.05 0.05
 #&gt; 
-#&gt; $kfold$capri_bic$prederr$`nonsense_ins_del RUNX_1`
+#&gt; $kfold$capri_bic$prederr$`nonsense_ins_del WT1`
 #&gt; [1] 0.050 0.025
+#&gt; 
+#&gt; $kfold$capri_bic$prederr$`nonsense_ins_del RUNX_1`
+#&gt; [1] 0.05 0.05
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`nonsense_ins_del CEBPA`
 #&gt; [1] 0.05 0.05
@@ -1972,10 +2002,10 @@ we refer to the Vignette Section 7.</p>
 #&gt; $kfold$capri_aic
 #&gt; $kfold$capri_aic$prederr
 #&gt; $kfold$capri_aic$prederr$`ins_del TET2`
-#&gt; [1] 0.100 0.075
+#&gt; [1] 0.125 0.125
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`ins_del EZH2`
-#&gt; [1] 0.050 0.075
+#&gt; [1] 0.075 0.075
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`ins_del ASXL1`
 #&gt; [1] 0.175 0.175
@@ -1987,16 +2017,16 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.075 0.075
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations KRAS_Ex2_3`
-#&gt; [1] 0.050 0.025
+#&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations TET2`
-#&gt; [1] 0.075 0.075
+#&gt; [1] 0.175 0.100
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations EZH2`
 #&gt; [1] 0.15 0.15
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations CBL_Ex_8_9`
-#&gt; [1] 0.10 0.15
+#&gt; [1] 0.150 0.125
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations IDH2_R140`
 #&gt; [1] 0.025 0.025
@@ -2005,25 +2035,25 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations JARID_2_Ex1_18`
-#&gt; [1] 0.025 0.000
+#&gt; [1] 0.00 0.05
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations EED_Ex2_12`
-#&gt; [1] 0.05 0.00
+#&gt; [1] 0.050 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations CEBPA`
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations EPHB3`
-#&gt; [1] 0.025 0.025
+#&gt; [1] 0.05 0.05
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations ETNK1`
-#&gt; [1] 0.100 0.025
+#&gt; [1] 0.075 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations GATA2`
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations IRAK4`
-#&gt; [1] 0.05 0.05
+#&gt; [1] 0.050 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations MTA2`
 #&gt; [1] 0.025 0.025
@@ -2032,7 +2062,7 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.1 0.1
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations KIT`
-#&gt; [1] 0.075 0.075
+#&gt; [1] 0.050 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`nonsense_ins_del WT1`
 #&gt; [1] 0.05 0.05
@@ -2041,7 +2071,7 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.025 0.050
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`nonsense_ins_del CEBPA`
-#&gt; [1] 0.05 0.05
+#&gt; [1] 0.100 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`nonsense_point_mutations TET2`
 #&gt; [1] 0.125 0.125
@@ -2050,7 +2080,7 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`nonsense_point_mutations ASXL1`
-#&gt; [1] 0.1 0.1
+#&gt; [1] 0.2 0.1
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`nonsense_point_mutations CSF3R`
 #&gt; [1] 0.075 0.075
