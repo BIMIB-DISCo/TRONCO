@@ -1,0 +1,337 @@
+---
+title: Model inference
+output: html_document
+---
+
+```{r, include=FALSE}
+library(TRONCO)
+data(aCML)
+data(crc_maf)
+data(crc_gistic)
+data(crc_plain)
+```
+
+We make use of the most of the  functions described above to show how to perform  inference with various algorithms; the reader should read first those sections  of the vignette to have an explanation of how those functions work. The aCML dataset is used as a test-case for all algorithms, regardless it should be precessed by algorithms to infer ensemble-level progression models.
+
+To replicate the plots of the original  paper were the aCML dataset was first analyzed with CAPRI, we can change the colors assigned to each type of event with the function `change.color`. 
+
+
+```{r}
+dataset = change.color(aCML, 'Ins/Del', 'dodgerblue4')
+dataset = change.color(dataset, 'Missense point', '#7FC97F')
+as.colors(dataset)
+```
+
+
+#### Data consolidation.
+
+All TRONCO algorithms require an input dataset were events have non-zero/non-one probability, and are all distinguishable. The tool provides a function to  return lists of events which do not satisfy these constraint.
+
+```{r}
+consolidate.data(dataset)
+```
+
+
+The aCML data has none of the above issues (the call returns empty lists); if this were not the case data manipulation functions can be used to edit a TRONCO object.
+
+
+## CAPRI
+
+ In what follows, we show CAPRI's functioning by replicating the aCML case study presented in CAPRI's original paper. Regardless from which types of mutations we include, we select only the genes  mutated at least in the 5% of the patients -- thus   we first use `as.alterations` to have gene-level frequencies, and then we apply there a frequency filter (R's output is omitted). 
+
+
+```{r}
+alterations = events.selection(as.alterations(aCML), filter.freq = .05)
+```
+
+
+To proceed further with the example we  create the *dataset* to be used for the inference of the  model. From the original dataset  we select all the genes whose mutations are occurring at least the 5% of the times, and we get that by the alterations profiles; also we force inclusion of all the events for the  genes involved in an hypothesis (those included in variable `gene.hypotheses`, this list is based on the support  found in the literature of potential aCML patterns).
+
+
+```{r}
+gene.hypotheses = c('KRAS', 'NRAS', 'IDH1', 'IDH2', 'TET2', 'SF3B1', 'ASXL1')
+aCML.clean = events.selection(aCML,
+    filter.in.names=c(as.genes(alterations), gene.hypotheses))
+aCML.clean = annotate.description(aCML.clean, 
+    'CAPRI - Bionformatics aCML data (selected events)')
+```
+
+
+We show a new oncoprint of this latest dataset where we annotate the genes in `gene.hypotheses` in order to identify them. The sample names are also shown. 
+
+
+```{r fig.width=8, fig.height=5.5, fig.cap="Data selected for aCML reconstruction annotated with the events which are part of a pattern that we will input to CAPRI."}
+oncoprint(aCML.clean, gene.annot = list(priors = gene.hypotheses), sample.id = TRUE)
+```
+
+
+### Testable hypotheses via logical formulas (i.e., patterns)
+
+CAPRI is the only algorithm in TRONCO that supports hypotheses-testing of  causal structures expressed as logical formulas with AND, OR and XOR operators.  An example invented formula could be
+
+(APC:*Mutation* **XOR** APC:*Deletion*) **OR** CTNNB1:*Mutation*
+
+where APC mutations and deletions are in disjunctive relation with CTNNB1 mutations; this is done to  test if those events could confer equivalent fitness in terms of ensemble-level progression -- see the original CAPRI paper and the PiCnIc pipeline for detailed explanations.
+
+Every formula is transformed into a CAPRI  *pattern*. For every hypothesis it is possible  to specify against which possible target event it should be tested, e.g., one might test the above formula against PIK3CA mutations, but not ATM ones. If this is not done, a pattern is tested against all other events in the dataset but those which constitute itself. A pattern tested against one other event is called an hypothesis.
+
+#### Adding custom hypotheses.
+
+We add the hypotheses that are described in CAPRI's manuscript; we start with  hard exclusivity (XOR) for NRAS/KRAS mutation, 
+
+
+NRAS:*Missense point* **XOR** KRAS:*Missense point*
+
+
+tested against all the events in the dataset (default `pattern.effect = *`)
+ 
+
+```{r }
+aCML.hypo = hypothesis.add(aCML.clean, 'NRAS xor KRAS', XOR('NRAS', 'KRAS'))
+```
+
+When a pattern is included, a new column in the dataset is created -- whose signature is given by the evaluation of the formula constituting the pattern. We call this operation *lifting of a pattern*, and this shall create not inconsistency in the data -- i.e., it shall not duplicate any of the other columns. TRONCO check this; for instance when we try to include  a soft exclusivity (OR) pattern for the above genes we get an error (not shown).
+
+```{r eval=FALSE}
+aCML.hypo = hypothesis.add(aCML.hypo, 'NRAS or KRAS',  OR('NRAS', 'KRAS'))
+```
+
+
+Notice that TRONCO functions can be used to look at their alterations and understand why the OR signature is equivalent to the XOR one -- this happens as no samples harbour both mutations.
+
+
+```{r fig.width=6, fig.height=1, fig.cap="Oncoprint output to show the perfect (hard) exclusivity among NRAS/KRAS mutations in aCML"}
+oncoprint(events.selection(aCML.hypo,
+    filter.in.names = c('KRAS', 'NRAS')),
+    font.row = 8,
+    ann.hits = FALSE)
+```
+
+
+We repeated the same analysis as before for other hypotheses and for the same reasons, we will include only the hard exclusivity pattern. In this case we add a two-levels pattern
+
+
+SF3B1:*Missense point* **XOR** (ASXL1:*Ins/Del* **XOR** ASXL1:*Nonsense point*)
+
+
+since ASXL1 is mutated in two different ways, and no samples harbour both mutation types. 
+
+
+```{r }
+aCML.hypo = hypothesis.add(aCML.hypo, 'SF3B1 xor ASXL1', XOR('SF3B1', XOR('ASXL1')),
+    '*')
+```
+
+
+
+Finally, we now do the same for genes TET2 and IDH2. In this case 3 events for the gene TET2 are present, that is `Ins/Del`, `Missense point` and `Nonsense point`. For this reason, since we are not specifying any subset of such events to be considered, all TET2 alterations are used. Since the events present a perfect hard exclusivity, their patters will be included as a XOR. 
+
+
+```{r }
+as.events(aCML.hypo, genes = 'TET2') 
+aCML.hypo = hypothesis.add(aCML.hypo,
+    'TET2 xor IDH2',
+    XOR('TET2', 'IDH2'),
+    '*')
+aCML.hypo = hypothesis.add(aCML.hypo,
+    'TET2 or IDH2',
+    OR('TET2', 'IDH2'),
+    '*')
+```
+
+
+Which is the following pattern
+
+
+(TET2:*Ins/Del*) **XOR** (TET2:*Missense point*) **XOR** (TET2:*Nonsense point*) **XOR** (IDH2:*Missense point*)
+
+
+which we can visualize via an `oncoprint`.
+
+
+```{r fig.width=7, fig.height=2, fig.cap="{oncoprint} output to show the soft exclusivity among NRAS/KRAS mutations in aCML"}
+oncoprint(events.selection(aCML.hypo,
+    filter.in.names = c('TET2', 'IDH2')),
+    font.row = 8,
+    ann.hits = FALSE)
+```
+
+
+
+#### Adding (automatically) hypotheses for homologous events.
+
+We consider homologous events those having the same mnemonic name -- as of function `as.genes` -- but events of different type. For instance, mutations and deletions of the same gene would be considered such (e.g., in the aCML dataset ASXL1 Ins/Del and Nonsense point).
+It could be a good idea to test such events, in terms of progression fitness, to test is they might be equivalent; we can do that by building a pattern of exclusivity among them. TRONCO has a function to make this automatically which, by default, adds a soft exclusivity OR pattern among them. 
+
+
+
+```{r }
+aCML.hypo = hypothesis.add.homologous(aCML.hypo)
+```
+
+
+This function added one  pattern for each of TET2, EZH2, CBL, ASXL1, CSF3R (unless they created duplicated columns in the dataset), with a connective OR/XOR which is appropriate for the events considered; for instance the TET2 homologous pattern 
+
+
+(TET2:*Ins/Del*) **XOR** (TET2:*Missense point*) **XOR** (TET2:*Nonsense point*) 
+
+
+was created with a XOR function, as TET2 appears in perfect exclusivity.
+
+
+#### Adding (automatically) hypotheses for a group of genes.
+
+The idea behind the previous function is generalized by `hypothesis.add.group`, that add a set of hypotheses that can be combinatorially created out of a  group of genes. As such, this function can create an exponential number of hypotheses and should be used with caution as too many hypotheses, with respect to sample size, should not be included. 
+
+This function takes, among its inputs, the top-level logical connective, AND/OR/XOR, a minimum/maximum pattern size -- to restrict the combinatorial sampling of subgroups --, plus a parameter that can be used to constrain the minimum event frequency. If, among the events included some of them have homologous, these are put automatically nested with the same logic of the `hypothesis.add.group` function.
+
+
+```{r }
+dataset = hypothesis.add.group(aCML.clean, OR, group = c('SETBP1', 'ASXL1', 'CBL'))
+```
+
+The final dataset that will be given as input to CAPRI is  finally shown. Notice the signatures of  all the lifted patterns.
+
+```{r fig.width=8, fig.height=6.5, fig.cap="oncoprint} output of the a dataset that has patterns that could be given as input to CAPRI to retrieve a progression model."}
+oncoprint(aCML.hypo, gene.annot = list(priors = gene.hypotheses), sample.id = TRUE, 
+    font.row=10, font.column=5, cellheight=15, cellwidth=4)
+```
+
+
+#### Querying, visualizing and manipulating CAPRI's patterns.
+
+
+We also provide functions to get the number of hypotheses and patterns present in the data.
+
+```{r}
+npatterns(dataset)
+nhypotheses(dataset)
+```
+
+
+We can visualize any pattern or the elements involved in them with the following functions.
+
+```{r}
+as.patterns(dataset)
+as.events.in.patterns(dataset)
+as.genes.in.patterns(dataset)
+as.types.in.patterns(dataset)
+```
+
+
+Similarily, we can enumerate the  hypotheses with the function `as.hypotheses`, and delete certain patterns and hypotheses. Deleting a pattern consists in deleting all of its hypotheses.
+
+
+```{r}
+head(as.hypotheses(dataset))
+dataset = delete.hypothesis(dataset, event = 'TET2')
+dataset = delete.pattern(dataset, pattern = 'OR_ASXL1_CBL')
+```
+
+
+#### How to build a pattern.
+
+It is sometimes of help to plot some information about a certain combination of events, and a target -- especially to disentangle the proper logical connectives to use when building a pattern. Here, we test genes SETBP1 and ASXL1 versus Missense point mutations of  CSF3R, and observe that the majority of observations are mutually exclusive, but almost half of the  CSF3R mutated samples with Missense point mutations do not harbout any mutation in SETBP1 and ASXL1.
+
+
+```{r pattern-plot,fig.show='hide', fig.width=4, fig.height=2.2, fig.cap="Barplot to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missense point mutations of  CSF3R, which suggests that  that pattern does not 'capture' all the samples with  CSF3R mutations."}
+tronco.pattern.plot(aCML,
+    group = as.events(aCML, genes=c('SETBP1', 'ASXL1')),
+    to = c('CSF3R', 'Missense point'),
+    legend.cex=0.8,
+    label.cex=1.0)
+```
+
+It is also possible to create a circle plot where we can observe the contribution of genes SETBP1 and ASXL1 in every match with a Missense point mutations of  CSF3R.
+
+
+```{r pattern-plot-circos, fig.width=6, fig.height=6, fig.cap="Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missense point mutations of  CSF3R. The combination of this and the previous  plots should allow to understand which pattern we shall write in an attempt to capture a potential causality relation between the pattern and the event."}
+tronco.pattern.plot(aCML,
+    group = as.events(aCML, genes=c('TET2', 'ASXL1')),
+    to = c('CSF3R', 'Missense point'),
+    legend = 1.0,
+    label.cex = 0.8,
+    mode='circos')
+```
+
+
+
+
+### Model reconstruction
+
+We run the inference of the model by CAPRI algorithm with its default parameter: we use both AIC and BIC as regularizators, Hill-climbing as heuristic search of the solutions and exhaustive bootstrap (`nboot` replicates or more for Wilcoxon testing, i.e., more iterations can be performed if samples are rejected), p-value are set at 0.05. We set the seed for the sake of reproducibility. 
+
+```{r results='hide', include=FALSE}=
+aCML.hypo = annotate.description(aCML.hypo, '')
+aCML.clean = annotate.description(aCML.clean, '')
+```
+
+```{r}
+model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot = 5)
+model.capri = annotate.description(model.capri, 'CAPRI - aCML')
+```
+
+
+## CAPRESE
+
+The CAPRESE algorithm is one of a set of algorithms to reconstruct progression models from data of an individual patient. This algorithm uses a shrinkage-alike estimator combining correlation and probability raising among pair of events. This algorithm shall return a forest of trees, a special case of a Suppes-Bayes Causal Network.
+
+Despite this is derived to infer progression models from individual level data, we use it here to process aCML data (without patterns and with its default parameters). This algorithm has no bootstrap and, as such, is the quickest available in TRONCO.
+
+
+```{r}
+model.caprese = tronco.caprese(aCML.clean)
+model.caprese = annotate.description(model.caprese, 'CAPRESE - aCML')
+```
+
+
+
+
+## Directed Minimum Spanning Tree with Mutual Information
+
+This algorithm is meant to  extract a forest of trees of progression from data of an individual patient. This algorithm is based on a formulation of the  problem in terms of minimum spamming trees and exploits results from Edmonds. We test it to infer a model from aCML data as we did with CAPRESE.
+
+
+```{r}
+model.edmonds = tronco.edmonds(aCML.clean, nboot = 5, boot.seed = 12345)
+model.edmonds = annotate.description(model.edmonds, 'MST Edmonds - aCML')
+```
+
+
+## Partially Directed Minimum Spanning Tree with Mutual Information
+
+This algorithm extends the previous one in situations where it is not possible to fully assess a confident time ordering among the nodes, hence leading to a partially directed input. This algorithm adopts Gabow search strategy to evaluate the best directed minimum spanning tree among such undirected components. We test it to infer a model from aCML data as all the other algorithms.
+
+
+```{r}
+model.gabow = tronco.gabow(aCML.clean, nboot = 5, boot.seed = 12345)
+model.gabow = annotate.description(model.gabow, 'MST Gabow - aCML')
+```
+
+
+## Undirected Minimum Spanning Tree with Likelihood-Fit 
+
+This algorithm is meant   to extract a progression  from data of an individual patient, but it is not constrained to retrieve a tree/forest -- i.e., it could retrieve a direct acyclic graph -- according to the level of noise and heterogeneity of the input data. This algorithm is based on a 
+formulation of the  problem in terms of minimum spamming trees and exploits results from Chow Liu and other variants for likelihood-fit. Thus, this algorithm is executed with potentially multiple regularizator as CAPRI -- here we use BIC/AIC.
+
+ We test it to aCML data as all the other algorithms.
+
+
+```{r}
+model.chowliu = tronco.chowliu(aCML.clean, nboot = 5, boot.seed = 12345)
+model.chowliu = annotate.description(model.chowliu, 'MST Chow Liu - aCML')
+```
+
+
+
+## Undirected Minimum Spanning Tree with Mutual Information
+
+This algorithm is meant   to extract a progression  from data of an individual patient. As the Chow Liu algorithm, this  could retrieve a direct acyclic graph  according to the level of noise and heterogeneity of the input data. This algorithm formulatesf the  problem in terms of undirected minimum spamming trees and exploits results from Prim, which are a generalization of Edomonds' ones.  We test it to aCML data as all the other algorithms.
+
+
+
+```{r}
+model.prim = tronco.prim(aCML.clean, nboot = 5, boot.seed = 12345)
+model.prim = annotate.description(model.prim, 'MST Prim - aCML data')
+```
+

@@ -1,0 +1,261 @@
+---
+title: Post-reconstruction
+output: html_document
+---
+
+```{r, include=FALSE}
+library(TRONCO)
+data(aCML)
+data(crc_maf)
+data(crc_gistic)
+data(crc_plain)
+gene.hypotheses = c('KRAS', 'NRAS', 'IDH1', 'IDH2', 'TET2', 'SF3B1', 'ASXL1')
+alterations = events.selection(as.alterations(aCML), filter.freq = .05)
+aCML.clean = events.selection(aCML,
+    filter.in.names=c(as.genes(alterations), gene.hypotheses))
+aCML.clean = annotate.description(aCML.clean, 
+    'CAPRI - Bionformatics aCML data (selected events)')
+aCML.hypo = hypothesis.add(aCML.clean, 'NRAS xor KRAS', XOR('NRAS', 'KRAS'))
+aCML.hypo = hypothesis.add(aCML.hypo, 'SF3B1 xor ASXL1', XOR('SF3B1', XOR('ASXL1')),
+    '*')
+as.events(aCML.hypo, genes = 'TET2') 
+aCML.hypo = hypothesis.add(aCML.hypo,
+    'TET2 xor IDH2',
+    XOR('TET2', 'IDH2'),
+    '*')
+aCML.hypo = hypothesis.add(aCML.hypo,
+    'TET2 or IDH2',
+    OR('TET2', 'IDH2'),
+    '*')
+aCML.hypo = hypothesis.add.homologous(aCML.hypo)
+aCML.hypo = annotate.description(aCML.hypo, '')
+aCML.clean = annotate.description(aCML.clean, '')
+model.capri = tronco.capri(aCML.hypo, boot.seed = 12345, nboot = 5)
+model.capri = annotate.description(model.capri, 'CAPRI - aCML')
+model.caprese = tronco.caprese(aCML.clean)
+model.caprese = annotate.description(model.caprese, 'CAPRESE - aCML')
+model.edmonds = tronco.edmonds(aCML.clean, nboot = 5, boot.seed = 12345)
+model.edmonds = annotate.description(model.edmonds, 'MST Edmonds - aCML')
+model.gabow = tronco.gabow(aCML.clean, nboot = 5, boot.seed = 12345)
+model.gabow = annotate.description(model.gabow, 'MST Gabow - aCML')
+model.chowliu = tronco.chowliu(aCML.clean, nboot = 5, boot.seed = 12345)
+model.chowliu = annotate.description(model.chowliu, 'MST Chow Liu - aCML')
+model.prim = tronco.prim(aCML.clean, nboot = 5, boot.seed = 12345)
+model.prim = annotate.description(model.prim, 'MST Prim - aCML data')
+```
+
+
+TRONCO provides functions to plot a model, access information about the probabilities used to extract it from data, and two types of confidence measures: those used to infer the model, and those computed a posteriori from it.
+
+Function `view` provides updated information about a model if this is available. 
+
+```{r }
+view(model.capri)
+```
+
+
+## Visualizing a reconstructed model
+
+We can plot a model by using function \Rfunction{tronco.plot}. Here, we plot the aCML model inferred by CAPRI with BIC and AIC as a regolarizator. We set some parameters to get a nice plot (scaling etc.), and distinguish the edges detected by the two regularization techniques. The confidence of each edge is shown  in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input). Events are annotated as in the oncoprint, edge p-values above a minium threshold (default 0.05) are red.
+
+
+```{r,fig.width=4,fig.height=4,warning=FALSE}
+tronco.plot(model.capri, 
+    fontsize = 12, 
+    scale.nodes = 0.6, 
+    confidence = c('tp', 'pr', 'hg'), 
+    height.logic = 0.25, 
+    legend.cex = 0.35, 
+    pathways = list(priors = gene.hypotheses), 
+    label.edge.size = 10)
+```
+
+
+We can also make a multiplot with this function,  which in this case we do by showing the models inferred by the other algorithms based on Minimum Spanning Trees.
+
+
+```{r fig.width=7,fig.height=7,warning=FALSE, fig.cap="aCML data processed model by algorithms to extract models from individual patients, we show the otput of  CAPRESE,  and all algorithms based on Minimum Spanning Trees (Edmonds, Chow Liu and Prim). Only the  model retrieved by Chow Liu has two different edge colors as it was regularized with two different strategies: AIC and BIC."}
+par(mfrow = c(2,2))
+tronco.plot(model.caprese, fontsize = 22, scale.nodes = 0.6, legend = FALSE)
+tronco.plot(model.edmonds, fontsize = 22, scale.nodes = 0.6, legend = FALSE)
+tronco.plot(model.chowliu, fontsize = 22, scale.nodes = 0.6, legend.cex = .7)
+tronco.plot(model.prim, fontsize = 22, scale.nodes = 0.6, legend = FALSE)
+```
+
+
+## Accessing information within a model (e.g., confidence)
+
+We can visualize a summary of the parameters   used for the reconstruction, test if an object has a model or delete it (which shall be done to retrieve the original dataset).
+
+```{r }
+as.data.frame(as.parameters(model.capri))
+has.model(model.capri)
+dataset = delete.model(model.capri)
+```
+
+
+### Model structure
+A set of functions can be used to visualize the content of object which contains the reconstructed model. For instance, we can access the adjacency matrix of a model by using `as.adj.matrix` which will return a matrix for each one of the regularizators used -- in this case because CAPRI was run with both BIC/AIC.
+
+
+```{r}
+str(as.adj.matrix(model.capri))
+```
+
+### Empirical probabilities
+
+Every model is inferred by estimating the empirical marginal, joint and conditional probabilities for all the events, from input data. These in some cases are estimated by a bootstrap procedure (see the algorithms implemented). TRONCO has functions to extract such table, that could be in turn printed by using external  functions for, e.g., heatmap visualization (see below for an example via the `pheatmap` package). We show these functions working with the CAPRI model; in this case the tables are the same for both BIC/AIC structures as they are computed before performing penalized likelihood-fit. The marginal *P(x)* for *x* an event in the dataset are obtained by `as.marginal.probs`. 
+
+```{r}
+marginal.prob = as.marginal.probs(model.capri)
+head(marginal.prob$capri_bic)
+```
+
+Similarly, the joint *P(x,y)* for every pair of events in the dataset is given by `as.joint.probs`.
+
+```{r}
+joint.prob = as.joint.probs(model.capri, models='capri_bic')
+joint.prob$capri_bic[1:3, 1:3]
+```
+
+And `as.conditional.probs` finally gives the conditional *P(x|y)* for every edge in the dataset.
+
+```{r}
+conditional.prob = as.conditional.probs(model.capri, models='capri_bic')
+head(conditional.prob$capri_bic)
+```
+
+
+### Confidence measures
+
+Confidence scores  can be accessed by function \Rfunction{as.confidence}, which takes as parameter the type of confidence measure that one wants to access to. This will work for either confidence measures assessed before reconstructing the model -- if available --, or afterwards.
+
+```{r }
+str(as.confidence(model.capri, conf = c('tp', 'pr', 'hg')))
+```
+
+Other functions  visualize  tables summarizing the  statistics for each edge in the model, For instance, if one uses function `as.selective.advantage.relations`  the  p-values for temporal priority, probability raising and hypergeometric testing, as well as other information about each edge  can be accessed, e.g., the number of observations for the upstream and the downstream events.
+
+
+```{r selective-advantage}
+as.selective.advantage.relations(model.capri)
+```
+
+
+## Confidence via non-parametric and statistical bootstrap
+
+TRONCO provides three different strategies to perform  bootstrap and assess confidence of each edge in terms of a score in the range [0, 100], where 100 is the highest confidence). Non-parametric (default) and statistical bootstrap strategies are available, and can be executed by calling function `tronco.bootstrap` with `type` parameter set appropriately. This function is parallel, and parameter `cores.ratio` (default 1) can be used to percentage of available cores that shall be used to compute the scores.
+Parameter `nboot` controls the number of bootstrap iterations.
+
+
+```{r }
+model.boot = tronco.bootstrap(model.capri, nboot = 3)
+model.boot = tronco.bootstrap(model.boot, nboot = 3, type = 'statistical')
+```
+
+
+
+Bootstrap scores can be annotated to the `tronco.plot` output by setting them via the confidence parameter `confidence=c('npb', 'sb')`. In this case edge thickness will be proportional to the non-parametric `npb`) scores -- the last to appear in the `confidence` parameter.
+
+```{r fig.width=4, fig.height=4, warning=FALSE, fig.cap="aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and annotated with both non-parametric and statistical bootstrap scores. Edge thickness is proportional to the non-parametric scores."}
+
+tronco.plot(model.boot, 
+    fontsize = 12, 
+    scale.nodes = .6,   
+    confidence=c('sb', 'npb'), 
+    height.logic = 0.25, 
+    legend.cex = .35, 
+    pathways = list(priors= gene.hypotheses), 
+    label.edge.size=10)
+```
+
+
+Bootstrap scores can extracted or visualized even with other TRONCO functions. For instance, we can accessall scores via `as.bootstrap.scores`, which resembles  function `as.selective.advantage.relations` and will display the scores per edge. Notice that even function `view` gives an update output by mentioning the available bootstrap scores.
+
+
+```{r}
+as.bootstrap.scores(model.boot)
+view(model.boot)
+```
+
+
+If we want to access a matrix with the scores and visualize that in a heatmap we can use for instance the `pheatmap` function of TRONCO. In this case we need to use also function `keysToNames` to translate internal TRONCO keys to mnemonic names in the plot 
+
+
+```{r fig.width=7, fig.height=7, fig.cap="Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization)."}
+
+pheatmap(keysToNames(model.boot, as.confidence(model.boot, conf = 'sb')$sb$capri_aic) * 100, 
+           main =  'Statistical bootstrap scores for AIC model',
+           fontsize_row = 6,
+           fontsize_col = 6,
+           display_numbers = TRUE,
+           number_format = "%d"
+           )
+```
+
+
+
+## Confidence via cross-validation (entropy loss, prediction and posterior classification errors)
+
+TRONCO implements *k*-fold cross-validation routines (from the *bnlearn* package) to provide estimates of the following statistics:
+
+- the *negative entropy* (via `tronco.kfold.eloss`) of a whole model ? i.e., the negated expected log-likelihood of the test set for the Bayesian network fitted from the training set.
+- the *prediction error* (via `tronco.kfold.prederr`) for a single node *x* and its parents set *X* -- i.e.,  how precisely we can predict the values of *x* by using only the information present in its local distribution, via *X*.
+- the *posterior classification error* (via `tronco.kfold.posterr`)  for a single node *x* and one of its parent node *y in X* -- i.e., the values of *x* are predicted using only the information present in *y* by likelihood weighting and Bayesian posterior estimates.
+
+
+By default, a 10 repetitions from  10-fold cross-validation experiment are perfomed, for all the models which are found inside a TRONCO object -- in this case 2, one for CAPRI with BIC and one for CAPRI with AIC.
+ 
+
+```{r}
+model.boot = tronco.kfold.eloss(model.boot)
+model.boot = tronco.kfold.prederr(model.boot, runs = 2)
+model.boot = tronco.kfold.posterr(model.boot, runs = 2)
+```
+
+
+These results can be visualized in terms of summary tables, as for the other confidence scores.
+
+
+```{r}
+as.kfold.eloss(model.boot)
+as.kfold.prederr(model.boot)
+as.kfold.posterr(model.boot)
+```
+
+
+Notice that these can be combined to create a nice table with all these statistics  -- we make here the example of a table with all the BIC statistics. This format can be readily exported to external spreadsheets for further visualization.
+
+```{r}
+tabular = function(obj, M){
+    tab = Reduce(
+        function(...) merge(..., all = TRUE), 
+            list(as.selective.advantage.relations(obj, models = M),
+                as.bootstrap.scores(obj, models = M),
+                as.kfold.prederr(obj, models = M),
+                as.kfold.posterr(obj,models = M)))
+  
+    # merge reverses first with second column
+    tab = tab[, c(2,1,3:ncol(tab))]
+    tab = tab[order(tab[, paste(M, '.NONPAR.BOOT', sep='')], na.last = TRUE, decreasing = TRUE), ]
+    return(tab)
+}
+
+head(tabular(model.boot, 'capri_bic'))
+```
+
+
+
+We finally show the plot of the model with the confidences by cross-validation.
+
+
+```{r fig.width=4,fig.height=4, warning=FALSE, fig.cap="aCML model reconstructed by CAPRI with  AIC/BIC as regolarizators and annotated with  non-parametric, as well as with entropy loss, prediction and posterior classification errors computed via cross-validation. Edge thickness is proportional to the non-parametric  scores."}
+tronco.plot(model.boot, 
+    fontsize = 12, 
+    scale.nodes = .6, 
+    confidence=c('npb', 'eloss', 'prederr', 'posterr'), 
+    height.logic = 0.25, 
+    legend.cex = .35, 
+    pathways = list(priors= gene.hypotheses), 
+    label.edge.size=10)
+```
