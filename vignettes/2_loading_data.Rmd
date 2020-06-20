@@ -1,0 +1,134 @@
+---
+title: Loading Data
+output: html_document
+---
+
+
+```{r include=FALSE}
+library(knitr)
+opts_chunk$set(
+concordance = TRUE,
+background = "#f3f3ff"
+)
+```
+
+## Preliminaries
+
+
+
+```{r}
+library(TRONCO)
+data(aCML)
+data(crc_maf)
+data(crc_gistic)
+data(crc_plain)
+```
+
+
+
+
+TRONCO transforms input data in a sort of database-alike format, where three main fields are presente: *genotypes* which contains the genomic signatures of the input samples, *annotations* which provides an index to the events present in the data and *types*, a field mapping type of events (e.g., mutations, CNAs, etc.) to colors for display visualization. Other annotations are generated when a dataset is augmented with some metadata.  A TRONCO object shall be edited by using TRONCO functions,  to avoid to create inconsistencies in its internal representation. Function `is.compliant` can be used to test if a TRONCO object is consistent; the function is called by any TRONCO function before returning  a modified object, so to ensure that consistency is preserved -- `is.compliant`  will raise an error if this is not the case.
+
+TRONCO supports the import of data from 3 formats. The Mutation Annotation Format (*MAF*) is a tab-delimited file containing somatic and/or germline mutation annotations; the *GISTIC* format for copy number alterations as defined by TCGA and a custom boolean matrix format where the user can directly specify the mutational profiles to be importend. Through some data included in the package we will show how to load your datasets in TRONCO.  
+
+- **aCML** a TRONCO object that represents the *atypical Chronic Myeloid Leukemia* dataset by Piazza *et al.* (Nat. Gen. 2013 45(1):18-24).
+- **crc_maf**  a shortened version of the *colorectal cancer mutation data* made available by the TCGA consortium within the COADREAD. See [this link](https://tcga-data.nci.nih.gov/docs/publications/coadread\_2012/) and our PicNiC case study for the real analysis of such data.
+ - **crc_gistic** from the same TCGA  project, we also provide a shortened version of the focal CNAs in the GISTIC format where 1 represents a low level gain, 2 a high level gain, -1 a heterozygous loss of a gene and -2 its homozygous loss.
+- **crc_plain**  a custom boolean matrix where rows are samples, and columns represent events -- in this case alterations  in a certain gene. Notice with this format one could also custom types of alterations, for instance wider chromosomal aberrations or, in principle, epigenetic states (over-expression, methylated regions, etc.) that are persistent across tumor evolution. 
+
+Whatever is dataset created as explained in the next sections, it can be annotated by adding a mnemonic description of the data, which will be used as plot titles when possible.
+Function `annotate.description` raises a warning if the dataset was previously annotated.
+
+```{r, eval=FALSE}
+aCML = annotate.description(aCML, 'aCML data (Bioinf.)')
+```
+
+
+## Mutations annotated in a MAF format
+We use the function `import.MAF` to import a dataset in MAF format, in this case the following  TCGA dataset
+
+```{r}
+head(crc_maf[, 1:10])
+```
+
+
+A default importation is done  without adding parameters to `import.MAF`. In this case, all mutations per gene will be considered equivalent, regardless of the type that is annotated in the MAF.  Also, all genes will be imported, and all samples.
+
+
+```{r}
+dataset_maf = import.MAF(crc_maf)
+```
+
+
+In the above case -- where we see that mutations are annotated as `Missense_Mutation` or `Nonsense_Mutation`, if a gene in a sample has both, these will be merged to a unique `Mutation` type. In this case a pair gene name with `Mutation` will be what we call an *event* in our dataset -- e.g.,  APC Mutation.
+If one would like  to have two distinct events in the dataset, i.e., APC `Missense_Mutation` and APC `Nonsense_Mutation`, parameter `merge.mutation.types` should be set to false in the call to `import.MAF`. 
+
+
+```{r}
+dataset_maf = import.MAF(crc_maf, merge.mutation.types = FALSE)
+```
+
+Sometimes, we might want to filter out some of the entries in a MAF -- maybe restricting the type of genes, mutations or sample that we want to process. If one defines
+`filter.fun` as a function that returns `TRUE` only for those entries which shall be considered, he gets a filter process which is applied to each row of the MAF file prior to transforming that into a TRONCO dataset. In this example we select only mutations annotated to APC -- we access that through the *Hugo_Symbol* flag of a MAF. 
+
+```{r}
+dataset_maf = import.MAF(crc_maf, filter.fun = function(x){ x['Hugo_Symbol'] == 'APC'} )
+```
+
+
+It is also sometimes convenient -- especially when working with data collected from a single individual patient -- to distinguish the type of mutations and their position in a gene, or if they are somehow annotated to COSMIC or other databases. For instance, we might want to want to use the `MA.protein.change` annotation in the MAF file to get composite names such as TP53.R175H, TP53.R213, TP53.R267W etc. This can be done by setting {\tt paste.to.Hugo\_Symbol} to have the relevant name of the MAF annotation
+
+
+```{r}
+dataset_maf = import.MAF(crc_maf, 
+    merge.mutation.types = FALSE, 
+    paste.to.Hugo_Symbol = c('MA.protein.change'))
+```
+
+
+TRONCO supports custom  MAF files, where possibly not all the standard annotations are present, via `irregular = TRUE`.
+
+
+## Copy Number Variants annotated in the GISTIC format
+We use the function `import.GISTIC` to import a dataset in GISTIC format, in this case from
+
+```{r}
+crc_gistic
+```
+
+In its default execution all the data annotated in the file is imported. But in principle  it is possible to avoid to import some genes or samples; in this case it is sufficient to use parameters `filter.genes` and `filter.samples` for this function.
+
+
+```{r}
+dataset_gistic = import.GISTIC(crc_gistic)
+```
+
+## Custom alterations annotated in a boolean matrix
+One can annotate its custom type of alterations in a boolean matrix such as `crc_plain`
+
+```{r}
+crc_plain
+```
+
+In this case,  function `import.genotypes` will convert the matrix to a TRONCO  object where events' names and samples codes will be set from column and row names of the matrix. If this is not possible, these will be generated from templates. By default, the `event.type` is set to `variant` but one can specify a custom name for the alteration that is reported in the matrix
+
+```{r}
+dataset_plain = import.genotypes(crc_plain, event.type='myVariant')
+```
+
+
+
+## Downloading data from the cBio portal for cancer genomics
+
+TRONCO uses the R interface to cBio to query data from the portal. All type of data can be downloaded from the portal, which includes MAF/GISTIC data for a lot of different cancer studies. An example of interaction with the portal is archived at the tool's webpage. 
+
+Here, we  show how to download lung cancer data somatic mutations for genes TP53, KRAS and PIK3CA,  from the lung cancer project run by TCGA, which is archived as  *luad_tcga_pub* at cBio. If some of the parameters to `cbio.query` are missing the function will become interactive by showing a list of possible data available at the portal.
+
+```{r results='hide', eval=FALSE}
+data = cbio.query(
+    genes=c('TP53', 'KRAS', 'PIK3CA'), 
+    cbio.study = 'luad_tcga_pub',
+    cbio.dataset = 'luad_tcga_pub_cnaseq', 
+    cbio.profile = 'luad_tcga_pub_mutations')
+```
+

@@ -35,11 +35,15 @@ cfg.R
 *.log
 *.out
 *.toc
+*.gml
+
 
 # C++ file
 *.o
 *.so
 *.dll
+
+# pkgdown
 docs
 doc
 Meta
