@@ -37,7 +37,6 @@ cfg.R
 *.toc
 *.gml
 
-
 # C++ file
 *.o
 *.so
