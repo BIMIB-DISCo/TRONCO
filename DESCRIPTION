@@ -73,5 +73,5 @@ biocViews: BiomedicalInformatics,
            DataImport,
            SingleCell,
            ImmunoOncology
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
