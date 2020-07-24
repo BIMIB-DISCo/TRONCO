@@ -42,8 +42,3 @@ cfg.R
 *.o
 *.so
 *.dll
-
-# pkgdown
-docs
-doc
-Meta
