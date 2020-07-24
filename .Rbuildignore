@@ -5,9 +5,6 @@
 ^.git/.*$
 ^\.github$
 ^_pkgdown\.yml$
-^docs$
-^pkgdown$
-^doc$
 ^Meta$
 ^vignettes/.*Rmd$
 ^vignettes/.*gml$
