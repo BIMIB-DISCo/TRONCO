@@ -19,8 +19,6 @@
 ## with the information that will make it easier for others to help you.
 ## Thank you!
 
-
-
 ## Acronyms:
 ## * GHA: GitHub Action
 ## * OS: operating system
@@ -107,8 +105,6 @@ jobs:
     #  image: ${{ needs.define-docker-info.outputs.imagename }}
     #  volumes:
     #    - /home/runner/work/_temp/Library:/usr/local/lib/R/host-site-library
-
-    
 
     steps:
       - name: Install latest git
@@ -482,7 +478,6 @@ jobs:
       - name: Build and install packages
         run: |
           Rscript -e "remotes::install_github('${{ steps.vars.outputs.repository }}', ref='${{ steps.vars.outputs.sha_short }}')"
-
 
       - name: Session info
         run: |

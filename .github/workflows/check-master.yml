@@ -19,8 +19,6 @@
 ## with the information that will make it easier for others to help you.
 ## Thank you!
 
-
-
 ## Acronyms:
 ## * GHA: GitHub Action
 ## * OS: operating system
@@ -49,7 +47,7 @@ name: check-master
 env:
   has_testthat: 'true'
   run_covr: 'false'
-  run_pkgdown: 'false'
+  run_pkgdown: 'true'
   has_RUnit: 'false'
   cache-version: 'cache-v1'
 
@@ -67,7 +65,7 @@ jobs:
           ## Find what Bioconductor RELEASE branch we are working on
           ## otherwise, assume we are working on bioc-devel.
           ##if echo "$GITHUB_REF" | grep -q "RELEASE_"; then
-          ##    biocversion="$(basename -- $GITHUB_REF | tr '[:upper:]' '[:lower:]')"
+          ##biocversion="$(basename -- $GITHUB_REF | tr '[:upper:]' '[:lower:]')"
           ##else
           biocversion="devel"
           ##fi
@@ -110,8 +108,6 @@ jobs:
     #  image: ${{ needs.define-docker-info.outputs.imagename }}
     #  volumes:
     #    - /home/runner/work/_temp/Library:/usr/local/lib/R/host-site-library
-
-    
 
     steps:
       - name: Install latest git
@@ -172,10 +168,12 @@ jobs:
         run: |
           ### Find what branch we are working on
           #if echo "$GITHUB_REF" | grep -q "master"; then
+          ### biocversion="$(basename -- $GITHUB_REF | tr '[:upper:]' '[:lower:]')"
+          ### biocversion="devel"
+          ### elif echo "$GITHUB_REF" | grep -q "RELEASE_"; then
+          ###     biocversion="release"
+          ### fi
           biocversion="devel"
-          #elif echo "$GITHUB_REF" | grep -q "RELEASE_"; then
-          #    biocversion="release"
-          #fi
 
           ## Define the R and Bioconductor version numbers
           biocversionnum=$(Rscript -e "info <- BiocManager:::.version_map_get_online('https://bioconductor.org/config.yaml'); res <- subset(info, BiocStatus == '${biocversion}')[, 'Bioc']; cat(as.character(res))")
