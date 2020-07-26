@@ -315,6 +315,8 @@ jobs:
 
       - name: Deploy package
         if: github.ref == 'refs/heads/master' && env.run_pkgdown == 'true'
+        uses: r-lib/actions/setup-r@master
+        uses: r-lib/actions/setup-pandoc@master
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
