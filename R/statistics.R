@@ -63,7 +63,7 @@ tronco.kfold.eloss = function(x,
 
         ## Scutari fix
         
-        bn.kcv.list = bn.cv(bndata, 
+        bn.kcv.list = bnlearn::bn.cv(bndata, 
                             bnnet,
                             loss = 'logl',
                             runs = runs,
@@ -108,7 +108,7 @@ tronco.kfold.eloss = function(x,
 #'
 #' @examples
 #' data(test_model)
-#' tronco.kfold.prederr(test_model, k = 2, runs = 2)
+#' tronco.kfold.prederr(test_model, k = 2, runs = 2, cores.ratio = 0)
 #'
 #' @param x A reconstructed model (the output of tronco.capri)
 #' @param models The names of the selected regularizers (bic, aic or caprese)
@@ -200,7 +200,7 @@ tronco.kfold.prederr <- function(x,
 
             event = events[i]
 
-            comp = bn.cv(bndata,
+            comp = bnlearn::bn.cv(bndata,
                          bnnet, 
                          loss = 'pred', 
                          loss.args = list(target = event),
@@ -235,7 +235,7 @@ tronco.kfold.prederr <- function(x,
 #'
 #' @examples
 #' data(test_model)
-#' tronco.kfold.posterr(test_model, k = 2, runs = 2)
+#' tronco.kfold.posterr(test_model, k = 2, runs = 2, cores.ratio = 0)
 #'
 #' @param x A reconstructed model (the output of tronco.capri)
 #' @param models The names of the selected regularizers (bic, aic or caprese)
@@ -325,7 +325,7 @@ tronco.kfold.posterr <- function(x,
             for (pre in rownames(posterr.adj.col)) {
                 if (adj.matrix[pre,event] == 1) {
 
-                    comp = bn.cv(bndata,
+                    comp = bnlearn::bn.cv(bndata,
                                  bnnet, 
                                  loss = 'pred-lw', 
                                  loss.args = list(target = event, from = pre),
