@@ -37,6 +37,6 @@ we refer to the Vignette Section 7.
 }
 \examples{
 data(test_model)
-boot = tronco.bootstrap(test_model, nboot = 1)
+boot = tronco.bootstrap(test_model, nboot = 1, cores.ratio = 0)
 
 }

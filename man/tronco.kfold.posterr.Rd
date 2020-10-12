@@ -37,6 +37,6 @@ and scan every node to estimate its posterior classification error.
 }
 \examples{
 data(test_model)
-tronco.kfold.posterr(test_model, k = 2, runs = 2)
+tronco.kfold.posterr(test_model, k = 2, runs = 2, cores.ratio = 0)
 
 }

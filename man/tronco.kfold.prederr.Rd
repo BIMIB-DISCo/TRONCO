@@ -37,6 +37,6 @@ we refer to the Vignette Section 7.
 }
 \examples{
 data(test_model)
-tronco.kfold.prederr(test_model, k = 2, runs = 2)
+tronco.kfold.prederr(test_model, k = 2, runs = 2, cores.ratio = 0)
 
 }

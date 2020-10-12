@@ -1320,7 +1320,7 @@ tronco.prim <- function(data,
 #'
 #' @examples
 #' data(test_model)
-#' boot = tronco.bootstrap(test_model, nboot = 1)
+#' boot = tronco.bootstrap(test_model, nboot = 1, cores.ratio = 0)
 #'
 #' @title tronco bootstrap
 #' @param reconstruction The output of tronco.capri or

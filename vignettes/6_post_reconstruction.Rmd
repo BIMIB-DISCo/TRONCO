@@ -149,8 +149,8 @@ Parameter `nboot` controls the number of bootstrap iterations.
 
 
 ```{r }
-model.boot = tronco.bootstrap(model.capri, nboot = 3)
-model.boot = tronco.bootstrap(model.boot, nboot = 3, type = 'statistical')
+model.boot = tronco.bootstrap(model.capri, nboot = 3, cores.ratio = 0)
+model.boot = tronco.bootstrap(model.boot, nboot = 3, cores.ratio = 0, type = 'statistical')
 ```
 
 
@@ -209,8 +209,8 @@ By default, a 10 repetitions from  10-fold cross-validation experiment are perfo
 
 ```{r}
 model.boot = tronco.kfold.eloss(model.boot)
-model.boot = tronco.kfold.prederr(model.boot, runs = 2)
-model.boot = tronco.kfold.posterr(model.boot, runs = 2)
+model.boot = tronco.kfold.prederr(model.boot, runs = 2, cores.ratio = 0)
+model.boot = tronco.kfold.posterr(model.boot, runs = 2, cores.ratio = 0)
 ```
 
 
