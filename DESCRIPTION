@@ -9,7 +9,7 @@ Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")),
     person("Giancarlo", "Mauri", role=c("ctb")), 
     person("Bud", "Mishra", role=c("ctb")), 
     person("Daniele", "Ramazzotti", role=c("aut"),email="daniele.ramazzotti@yahoo.com",
-                comment = c(ORCID = "0000-0002-6087-2666"))
+                comment = c(ORCID = "0000-0002-6087-2666")))
 Maintainer: Luca De Sano <luca.desano@gmail.com>
 Depends:
     R (>= 4.0.0),
