@@ -65,7 +65,7 @@ jobs:
           ## Find what Bioconductor RELEASE branch we are working on
           ## otherwise, assume we are working on bioc-devel.
           ##if echo "$GITHUB_REF" | grep -q "RELEASE_"; then
-          ##biocversion="$(basename -- $GITHUB_REF | tr '[:upper:]' '[:lower:]')"
+          ##    biocversion="$(basename -- $GITHUB_REF | tr '[:upper:]' '[:lower:]')"
           ##else
           biocversion="devel"
           ##fi
@@ -73,7 +73,6 @@ jobs:
           imagename="bioconductor/bioconductor_docker:${biocversion}"
           echo $imagename
           echo $biocversion
-
           ## Save the information for the next job
           echo "::set-output name=imagename::${imagename}"
           echo "::set-output name=biocversion::${biocversion}"
@@ -142,6 +141,9 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get install libcurl4-openssl-dev
+          sudo apt-get install libgsl-dev
+          sudo apt-get install libharfbuzz-dev
+          sudo apt-get install libfribidi-dev
 
       - uses: r-lib/actions/setup-tinytex@master
 
@@ -172,12 +174,10 @@ jobs:
         run: |
           ### Find what branch we are working on
           #if echo "$GITHUB_REF" | grep -q "master"; then
-          ### biocversion="$(basename -- $GITHUB_REF | tr '[:upper:]' '[:lower:]')"
-          ### biocversion="devel"
-          ### elif echo "$GITHUB_REF" | grep -q "RELEASE_"; then
-          ###     biocversion="release"
-          ### fi
           biocversion="devel"
+          #elif echo "$GITHUB_REF" | grep -q "RELEASE_"; then
+          #    biocversion="release"
+          #fi
 
           ## Define the R and Bioconductor version numbers
           biocversionnum=$(Rscript -e "info <- BiocManager:::.version_map_get_online('https://bioconductor.org/config.yaml'); res <- subset(info, BiocStatus == '${biocversion}')[, 'Bioc']; cat(as.character(res))")
@@ -196,7 +196,7 @@ jobs:
 
       - name: Cache R packages
         if: "!contains(github.event.head_commit.message, '/nocache')"
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: /home/runner/work/_temp/Library
           key: ${{ env.cache-version }}-${{ runner.os }}-biocdocker-biocbranch-${{ needs.define-docker-info.outputs.biocversion }}-r-${{ steps.findrversion.outputs.rversion }}-bioc-${{ steps.findrversion.outputs.biocversionnum }}-${{ hashFiles('.github/depends.Rds') }}
