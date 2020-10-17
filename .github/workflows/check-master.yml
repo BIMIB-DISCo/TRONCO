@@ -76,7 +76,6 @@ jobs:
           ## Save the information for the next job
           echo "::set-output name=imagename::${imagename}"
           echo "::set-output name=biocversion::${biocversion}"
-
   R-CMD-check-bioc:
     ## This job then checks the R package using the Bioconductor docker that
     ## was defined by the previous job. This job will determine what version of
@@ -132,11 +131,7 @@ jobs:
       ## Most of these steps are the same as the ones in
       ## https://github.com/r-lib/actions/blob/master/examples/check-standard.yaml
       ## If they update their steps, we will also need to update ours.
-      - uses: actions/checkout@v2      
-
-      - uses: r-lib/actions/setup-r@master
-      
-      - uses: r-lib/actions/setup-pandoc@master
+      - uses: actions/checkout@v2
       
       - name: Install dependencies
         run: |
@@ -144,10 +139,11 @@ jobs:
           sudo apt-get install libgsl-dev
           sudo apt-get install libharfbuzz-dev
           sudo apt-get install libfribidi-dev
-
       - uses: r-lib/actions/setup-tinytex@master
 
-      - uses: r-lib/actions/setup-r@master        
+      - uses: r-lib/actions/setup-r@master
+      
+      - uses: r-lib/actions/setup-pandoc@master
 
       - name: Install latex packages
         run: |
@@ -157,6 +153,11 @@ jobs:
           'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
           'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces',
           'pdfcrop'))
+        shell: Rscript {0}        
+
+      - name: Install R packages
+        run: |
+          install.packages('Rfast')
         shell: Rscript {0}
 
       - name: Query dependencies
@@ -178,16 +179,13 @@ jobs:
           #elif echo "$GITHUB_REF" | grep -q "RELEASE_"; then
           #    biocversion="release"
           #fi
-
           ## Define the R and Bioconductor version numbers
           biocversionnum=$(Rscript -e "info <- BiocManager:::.version_map_get_online('https://bioconductor.org/config.yaml'); res <- subset(info, BiocStatus == '${biocversion}')[, 'Bioc']; cat(as.character(res))")
           rversion=$(Rscript -e "info <- BiocManager:::.version_map_get_online('https://bioconductor.org/config.yaml'); res <- subset(info, BiocStatus == '${biocversion}')[, 'R']; cat(as.character(res))")
-
           ## Print the results
           echo $biocversion
           echo $biocversionnum
           echo $rversion
-
           ## Save the info for the next job
           echo "::set-output name=rversion::${rversion}"
           echo "::set-output name=biocversionnum::${biocversionnum}"
@@ -210,18 +208,15 @@ jobs:
           ## https://stat.ethz.ch/pipermail/bioc-devel/2020-April/016675.html
           ## https://github.com/r-lib/remotes/issues/296
           ## Ideally, all dependencies should get installed in the first pass.
-
           ## Pass #1 at installing dependencies
           message(paste('****', Sys.time(), 'pass number 1 at installing dependencies: local dependencies ****'))
           local_deps <- remotes::local_package_deps(dependencies = TRUE)
           deps <- remotes::dev_package_deps(dependencies = TRUE, repos = BiocManager::repositories())
           BiocManager::install(local_deps[local_deps %in% deps$package[deps$diff != 0]])
-
           ## Pass #2 at installing dependencies
           message(paste('****', Sys.time(), 'pass number 2 at installing dependencies: any remaining dependencies ****'))
           deps <- remotes::dev_package_deps(dependencies = TRUE, repos = BiocManager::repositories())
           BiocManager::install(deps$package[deps$diff != 0])
-
           ## For running the checks
           message(paste('****', Sys.time(), 'installing rcmdcheck and BiocCheck ****'))
           remotes::install_cran("rcmdcheck")
@@ -247,11 +242,9 @@ jobs:
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
           echo "##[set-output name=repository;]$(echo ${GITHUB_REPOSITORY})"
           echo "::set-output name=repository::${GITHUB_REPOSITORY}"
-
       - name: Build and install packages
         run: |
           Rscript -e "remotes::install_github('${{ steps.vars.outputs.repository }}', ref='${{ steps.vars.outputs.sha_short }}')"
-
       - name: Session info
         run: |
           options(width = 100)
@@ -395,7 +388,7 @@ jobs:
 
       - name: Cache R packages
         if: "!contains(github.event.head_commit.message, '/nocache')"
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ env.cache-version }}-${{ runner.os }}-biocbranch-${{ needs.define-docker-info.outputs.biocversion }}-r-${{ needs.R-CMD-check-bioc.outputs.rversion }}-bioc-${{ needs.define-docker-info.outputs.biocversion }}-${{ hashFiles('.github/depends.Rds') }}
@@ -409,18 +402,15 @@ jobs:
           Rscript -e "remotes::install_github('r-hub/sysreqs')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
-
       - name: Install macOS system dependencies
         if: matrix.config.os == 'macOS-latest'
         run: |
           ## Enable installing XML from source if needed
           brew install libxml2
           echo "::set-env name=XML_CONFIG::/usr/local/opt/libxml2/bin/xml2-config"
-
           ## Required to install magick as noted at
           ## https://github.com/r-lib/usethis/commit/f1f1e0d10c1ebc75fd4c18fa7e2de4551fd9978f#diff-9bfee71065492f63457918efcd912cf2
           brew install imagemagick@6
-
       - name: Install Windows system dependencies
         if: runner.os == 'Windows'
         run: |
@@ -446,18 +436,15 @@ jobs:
           ## https://stat.ethz.ch/pipermail/bioc-devel/2020-April/016675.html
           ## https://github.com/r-lib/remotes/issues/296
           ## Ideally, all dependencies should get installed in the first pass.
-
           ## Pass #1 at installing dependencies
           message(paste('****', Sys.time(), 'pass number 1 at installing dependencies: local dependencies ****'))
           local_deps <- remotes::local_package_deps(dependencies = TRUE)
           deps <- remotes::dev_package_deps(dependencies = TRUE, repos = BiocManager::repositories())
           BiocManager::install(local_deps[local_deps %in% deps$package[deps$diff != 0]])
-
           ## Pass #2 at installing dependencies
           message(paste('****', Sys.time(), 'pass number 2 at installing dependencies: any remaining dependencies ****'))
           deps <- remotes::dev_package_deps(dependencies = TRUE, repos = BiocManager::repositories())
           BiocManager::install(deps$package[deps$diff != 0])
-
           ## For running the checks
           message(paste('****', Sys.time(), 'installing rcmdcheck and BiocCheck ****'))
           remotes::install_cran("rcmdcheck")
@@ -483,12 +470,9 @@ jobs:
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
           echo "##[set-output name=repository;]$(echo ${GITHUB_REPOSITORY})"
           echo "::set-output name=repository::${GITHUB_REPOSITORY}"
-
       - name: Build and install packages
         run: |
           Rscript -e "remotes::install_github('${{ steps.vars.outputs.repository }}', ref='${{ steps.vars.outputs.sha_short }}')"
-
-
       - name: Session info
         run: |
           options(width = 100)
