@@ -73,19 +73,13 @@ If a name is not found, an error is raised!" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -149,7 +143,7 @@ If a name is not found, an error is raised!" />
 If a name is not found, an error is raised!</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nameToKey</span>(<span class='kw'>x</span>, <span class='kw'>name</span>)</pre>
+    <pre class="usage"><span class='fu'>nameToKey</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -169,8 +163,9 @@ If a name is not found, an error is raised!</p>
     <p>A TRONCO dataset key name</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>test_model</span>)
-<span class='kw'>adj_matrix</span> <span class='op'>=</span> <span class='fu'><a href='as.adj.matrix.html'>as.adj.matrix</a></span>(<span class='kw'>test_model</span>, events=<span class='fu'><a href='as.events.html'>as.events</a></span>(<span class='kw'>test_model</span>)[<span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,])<span class='op'>$</span><span class='kw'>bic</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span>
+<span class='va'>adj_matrix</span> <span class='op'>=</span> <span class='fu'><a href='as.adj.matrix.html'>as.adj.matrix</a></span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span><span class='op'>)</span><span class='op'>$</span><span class='va'>bic</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -187,7 +182,7 @@ If a name is not found, an error is raised!</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

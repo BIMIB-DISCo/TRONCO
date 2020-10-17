@@ -75,19 +75,13 @@ we refer to the Vignette Section 7." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -153,13 +147,13 @@ regarding the statistical assesment of an inferred model,
 we refer to the Vignette Section 7.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tronco.kfold.eloss</span>(
-  <span class='kw'>x</span>,
-  models = <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='fu'><a href='as.models.html'>as.models</a></span>(<span class='kw'>x</span>)),
-  runs = <span class='fl'>10</span>,
-  k = <span class='fl'>10</span>,
-  silent = <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>tronco.kfold.eloss</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  models <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'><a href='as.models.html'>as.models</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>,
+  runs <span class='op'>=</span> <span class='fl'>10</span>,
+  k <span class='op'>=</span> <span class='fl'>10</span>,
+  silent <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -188,17 +182,18 @@ we refer to the Vignette Section 7.</p>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>test_model</span>)
-<span class='fu'>tronco.kfold.eloss</span>(<span class='kw'>test_model</span>, k = <span class='fl'>2</span>, runs = <span class='fl'>2</span>)</div><div class='output co'>#&gt; Calculating entropy loss with k-fold cross-validation 
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span>
+<span class='fu'>tronco.kfold.eloss</span><span class='op'>(</span><span class='va'>test_model</span>, k <span class='op'>=</span> <span class='fl'>2</span>, runs <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Calculating entropy loss with k-fold cross-validation 
 #&gt; 	[ k = 2 | runs = 2 | regularizer = capri_bic ] ...  DONE
 #&gt;   Model logLik = -235.8336 
-#&gt;   Mean   eloss = 7.468469  |  3.166839 % 
-#&gt;   Stdev  eloss =  0.1739431 
+#&gt;   Mean   eloss = 7.225819  |  3.063949 % 
+#&gt;   Stdev  eloss =  0.1972975 
 #&gt; Calculating entropy loss with k-fold cross-validation 
 #&gt; 	[ k = 2 | runs = 2 | regularizer = capri_aic ] ...  DONE
 #&gt;   Model logLik = -224.5718 
-#&gt;   Mean   eloss = 7.017468  |  3.124822 % 
-#&gt;   Stdev  eloss =  0.1188866 </div><div class='output co'>#&gt; $genotypes
+#&gt;   Mean   eloss = 6.996354  |  3.11542 % 
+#&gt;   Stdev  eloss =  0.08898829 </div><div class='output co'>#&gt; $genotypes
 #&gt;            gene 4 gene 5 gene 7 gene 29 gene 30 gene 31 gene 32 gene 33 gene 34
 #&gt; patient 1       0      0      0       1       0       0       0       0       0
 #&gt; patient 2       0      0      0       1       0       0       0       0       1
@@ -1929,12 +1924,12 @@ we refer to the Vignette Section 7.</p>
 #&gt;   number of folds:                       2 
 #&gt;   loss function:                         Log-Likelihood Loss (disc.) 
 #&gt;   number of runs:                        2 
-#&gt;   average loss over the runs:            7.468469 
-#&gt;   standard deviation of the loss:        0.1739431 
+#&gt;   average loss over the runs:            7.225819 
+#&gt;   standard deviation of the loss:        0.1972975 
 #&gt; 
 #&gt; 
 #&gt; $kfold$capri_bic$eloss
-#&gt; [1] 7.591466 7.345473
+#&gt; [1] 7.365329 7.086308
 #&gt; 
 #&gt; 
 #&gt; $kfold$capri_aic
@@ -1969,15 +1964,16 @@ we refer to the Vignette Section 7.</p>
 #&gt;   number of folds:                       2 
 #&gt;   loss function:                         Log-Likelihood Loss (disc.) 
 #&gt;   number of runs:                        2 
-#&gt;   average loss over the runs:            7.017468 
-#&gt;   standard deviation of the loss:        0.1188866 
+#&gt;   average loss over the runs:            6.996354 
+#&gt;   standard deviation of the loss:        0.08898829 
 #&gt; 
 #&gt; 
 #&gt; $kfold$capri_aic$eloss
-#&gt; [1] 6.933403 7.101534
+#&gt; [1] 6.933430 7.059278
 #&gt; 
 #&gt; 
-#&gt; </div><div class='input'></div></pre>
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -1993,7 +1989,7 @@ we refer to the Vignette Section 7.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

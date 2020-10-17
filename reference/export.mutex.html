@@ -73,19 +73,13 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -149,14 +143,14 @@
 (ref: https://code.google.com/p/mutex/ )</p>
     </div>
 
-    <pre class="usage"><span class='fu'>export.mutex</span>(
-  <span class='kw'>x</span>,
-  filename = <span class='st'>"tronco_to_mutex"</span>,
-  filepath = <span class='st'>"./"</span>,
-  label.mutation = <span class='st'>"SNV"</span>,
-  label.amplification = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"High-level Gain"</span>),
-  label.deletion = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"Homozygous Loss"</span>)
-)</pre>
+    <pre class="usage"><span class='fu'>export.mutex</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  filename <span class='op'>=</span> <span class='st'>"tronco_to_mutex"</span>,
+  filepath <span class='op'>=</span> <span class='st'>"./"</span>,
+  label.mutation <span class='op'>=</span> <span class='st'>"SNV"</span>,
+  label.amplification <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"High-level Gain"</span><span class='op'>)</span>,
+  label.deletion <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"Homozygous Loss"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -192,8 +186,9 @@
     <p>A MUTEX example matrix</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>crc_gistic</span>)
-<span class='kw'>dataset</span> <span class='op'>=</span> <span class='fu'><a href='import.GISTIC.html'>import.GISTIC</a></span>(<span class='kw'>crc_gistic</span>)</div><div class='output co'>#&gt; *** Using full GISTIC: #dim  9  x  6 
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>crc_gistic</span><span class='op'>)</span>
+<span class='va'>dataset</span> <span class='op'>=</span> <span class='fu'><a href='import.GISTIC.html'>import.GISTIC</a></span><span class='op'>(</span><span class='va'>crc_gistic</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; *** Using full GISTIC: #dim  9  x  6 
 #&gt; *** GISTIC input format conversion started.
 #&gt; Converting input data to character for import speedup.
 #&gt; Creating  24 events for 6 genes 
@@ -206,7 +201,8 @@
 #&gt; *** Data extracted, returning only events observed in at least one sample 
 #&gt;  Number of events: n = 7 
 #&gt;  Number of genes: |G| = 6 
-#&gt;  Number of samples: m = 9 </div><div class='input'><span class='fu'>export.mutex</span>(<span class='kw'>dataset</span>)</div><div class='output co'>#&gt;        TCGA-A6-2670 TCGA-A6-2672 TCGA-A6-2674 TCGA-A6-2676 TCGA-A6-2677
+#&gt;  Number of samples: m = 9 </div><div class='input'><span class='fu'>export.mutex</span><span class='op'>(</span><span class='va'>dataset</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;        TCGA-A6-2670 TCGA-A6-2672 TCGA-A6-2674 TCGA-A6-2676 TCGA-A6-2677
 #&gt; NRAS              0            0            0            0            0
 #&gt; CTNNB1            0            0            0            0            0
 #&gt; FBXW7             0            0            0            0            0
@@ -219,7 +215,8 @@
 #&gt; FBXW7             0            0            0            0
 #&gt; APC               0            0            0            0
 #&gt; KRAS              0            0            0            0
-#&gt; TP53              0            0            0            0</div><div class='input'></div></pre>
+#&gt; TP53              0            0            0            0</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -235,7 +232,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

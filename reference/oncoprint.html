@@ -73,19 +73,13 @@ regarding the visualization through oncoprints, we refer to the Vignette Section
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -149,40 +143,40 @@ regarding the visualization through oncoprints, we refer to the Vignette Section
 regarding the visualization through oncoprints, we refer to the Vignette Section 4.4.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>oncoprint</span>(
-  <span class='kw'>x</span>,
-  excl.sort = <span class='fl'>TRUE</span>,
-  samples.cluster = <span class='fl'>FALSE</span>,
-  genes.cluster = <span class='fl'>FALSE</span>,
-  file = <span class='fl'>NA</span>,
-  ann.stage = <span class='fu'><a href='has.stages.html'>has.stages</a></span>(<span class='kw'>x</span>),
-  ann.hits = <span class='fl'>TRUE</span>,
-  stage.color = <span class='st'>"YlOrRd"</span>,
-  hits.color = <span class='st'>"Purples"</span>,
-  null.color = <span class='st'>"lightgray"</span>,
-  border.color = <span class='st'>"white"</span>,
-  text.cex = <span class='fl'>1</span>,
-  font.column = <span class='fl'>NA</span>,
-  font.row = <span class='fl'>NA</span>,
-  title = <span class='fu'><a href='as.description.html'>as.description</a></span>(<span class='kw'>x</span>),
-  sample.id = <span class='fl'>FALSE</span>,
-  hide.zeroes = <span class='fl'>FALSE</span>,
-  legend = <span class='fl'>TRUE</span>,
-  legend.cex = <span class='fl'>0.5</span>,
-  cellwidth = <span class='fl'>NA</span>,
-  cellheight = <span class='fl'>NA</span>,
-  group.by.label = <span class='fl'>FALSE</span>,
-  group.by.stage = <span class='fl'>FALSE</span>,
-  group.samples = <span class='fl'>NA</span>,
-  gene.annot = <span class='fl'>NA</span>,
-  gene.annot.color = <span class='st'>"Set1"</span>,
-  show.patterns = <span class='fl'>FALSE</span>,
-  annotate.consolidate.events = <span class='fl'>FALSE</span>,
-  txt.stats = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='fu'><a href='nsamples.html'>nsamples</a></span>(<span class='kw'>x</span>), <span class='st'>" samples\n"</span>, <span class='fu'><a href='nevents.html'>nevents</a></span>(<span class='kw'>x</span>), <span class='st'>" events\n"</span>, <span class='fu'><a href='ngenes.html'>ngenes</a></span>(<span class='kw'>x</span>),
-    <span class='st'>" genes\n"</span>, <span class='fu'><a href='npatterns.html'>npatterns</a></span>(<span class='kw'>x</span>), <span class='st'>" patterns"</span>, sep = <span class='st'>""</span>),
-  gtable = <span class='fl'>FALSE</span>,
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>oncoprint</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  excl.sort <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  samples.cluster <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  genes.cluster <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  file <span class='op'>=</span> <span class='cn'>NA</span>,
+  ann.stage <span class='op'>=</span> <span class='fu'><a href='has.stages.html'>has.stages</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
+  ann.hits <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  stage.color <span class='op'>=</span> <span class='st'>"YlOrRd"</span>,
+  hits.color <span class='op'>=</span> <span class='st'>"Purples"</span>,
+  null.color <span class='op'>=</span> <span class='st'>"lightgray"</span>,
+  border.color <span class='op'>=</span> <span class='st'>"white"</span>,
+  text.cex <span class='op'>=</span> <span class='fl'>1</span>,
+  font.column <span class='op'>=</span> <span class='cn'>NA</span>,
+  font.row <span class='op'>=</span> <span class='cn'>NA</span>,
+  title <span class='op'>=</span> <span class='fu'><a href='as.description.html'>as.description</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
+  sample.id <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  hide.zeroes <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  legend <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  legend.cex <span class='op'>=</span> <span class='fl'>0.5</span>,
+  cellwidth <span class='op'>=</span> <span class='cn'>NA</span>,
+  cellheight <span class='op'>=</span> <span class='cn'>NA</span>,
+  group.by.label <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  group.by.stage <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  group.samples <span class='op'>=</span> <span class='cn'>NA</span>,
+  gene.annot <span class='op'>=</span> <span class='cn'>NA</span>,
+  gene.annot.color <span class='op'>=</span> <span class='st'>"Set1"</span>,
+  show.patterns <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  annotate.consolidate.events <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  txt.stats <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='fu'><a href='nsamples.html'>nsamples</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, <span class='st'>" samples\n"</span>, <span class='fu'><a href='nevents.html'>nevents</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, <span class='st'>" events\n"</span>, <span class='fu'><a href='ngenes.html'>ngenes</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
+    <span class='st'>" genes\n"</span>, <span class='fu'><a href='npatterns.html'>npatterns</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, <span class='st'>" patterns"</span>, sep <span class='op'>=</span> <span class='st'>""</span><span class='op'>)</span>,
+  gtable <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -332,7 +326,7 @@ and sorted according to the number of mutations per sample - usefull when <code>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

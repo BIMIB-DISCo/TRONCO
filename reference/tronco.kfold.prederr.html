@@ -75,19 +75,13 @@ we refer to the Vignette Section 7." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -153,15 +147,15 @@ regarding the statistical assesment of an inferred model,
 we refer to the Vignette Section 7.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tronco.kfold.prederr</span>(
-  <span class='kw'>x</span>,
-  models = <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='fu'><a href='as.models.html'>as.models</a></span>(<span class='kw'>x</span>)),
-  events = <span class='fu'><a href='as.events.html'>as.events</a></span>(<span class='kw'>x</span>),
-  runs = <span class='fl'>10</span>,
-  k = <span class='fl'>10</span>,
-  cores.ratio = <span class='fl'>1</span>,
-  silent = <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>tronco.kfold.prederr</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  models <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'><a href='as.models.html'>as.models</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>,
+  events <span class='op'>=</span> <span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
+  runs <span class='op'>=</span> <span class='fl'>10</span>,
+  k <span class='op'>=</span> <span class='fl'>10</span>,
+  cores.ratio <span class='op'>=</span> <span class='fl'>1</span>,
+  silent <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -198,8 +192,9 @@ we refer to the Vignette Section 7.</p>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>test_model</span>)
-<span class='fu'>tronco.kfold.prederr</span>(<span class='kw'>test_model</span>, k = <span class='fl'>2</span>, runs = <span class='fl'>2</span>)</div><div class='output co'>#&gt; *** Using 1 cores via "parallel" 
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span>
+<span class='fu'>tronco.kfold.prederr</span><span class='op'>(</span><span class='va'>test_model</span>, k <span class='op'>=</span> <span class='fl'>2</span>, runs <span class='op'>=</span> <span class='fl'>2</span>, cores.ratio <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; *** Using 1 cores via "parallel" 
 #&gt; 	Scanning 30 nodes for their prediction error (all parents). 
 #&gt; 	Regularizer:  capri_bic 
 #&gt; *** Reducing results
@@ -1908,10 +1903,10 @@ we refer to the Vignette Section 7.</p>
 #&gt; $kfold$capri_bic
 #&gt; $kfold$capri_bic$prederr
 #&gt; $kfold$capri_bic$prederr$`ins_del TET2`
-#&gt; [1] 0.125 0.075
+#&gt; [1] 0.125 0.150
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`ins_del EZH2`
-#&gt; [1] 0.050 0.075
+#&gt; [1] 0.075 0.025
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`ins_del ASXL1`
 #&gt; [1] 0.175 0.175
@@ -1926,7 +1921,7 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations TET2`
-#&gt; [1] 0.075 0.075
+#&gt; [1] 0.175 0.075
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations EZH2`
 #&gt; [1] 0.15 0.15
@@ -1941,16 +1936,16 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations JARID_2_Ex1_18`
-#&gt; [1] 0.050 0.075
+#&gt; [1] 0.050 0.025
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations EED_Ex2_12`
-#&gt; [1] 0.05 0.00
+#&gt; [1] 0.050 0.025
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations CEBPA`
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations EPHB3`
-#&gt; [1] 0.025 0.025
+#&gt; [1] 0.025 0.075
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations ETNK1`
 #&gt; [1] 0.025 0.025
@@ -1968,13 +1963,13 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.1 0.1
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`missense_point_mutations KIT`
-#&gt; [1] 0.050 0.025
+#&gt; [1] 0.075 0.050
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`nonsense_ins_del WT1`
-#&gt; [1] 0.00 0.05
+#&gt; [1] 0.05 0.05
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`nonsense_ins_del RUNX_1`
-#&gt; [1] 0.05 0.05
+#&gt; [1] 0.050 0.025
 #&gt; 
 #&gt; $kfold$capri_bic$prederr$`nonsense_ins_del CEBPA`
 #&gt; [1] 0.05 0.05
@@ -2002,10 +1997,10 @@ we refer to the Vignette Section 7.</p>
 #&gt; $kfold$capri_aic
 #&gt; $kfold$capri_aic$prederr
 #&gt; $kfold$capri_aic$prederr$`ins_del TET2`
-#&gt; [1] 0.075 0.100
+#&gt; [1] 0.125 0.075
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`ins_del EZH2`
-#&gt; [1] 0.025 0.075
+#&gt; [1] 0.05 0.00
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`ins_del ASXL1`
 #&gt; [1] 0.175 0.175
@@ -2017,16 +2012,16 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.075 0.075
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations KRAS_Ex2_3`
-#&gt; [1] 0.025 0.075
+#&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations TET2`
-#&gt; [1] 0.075 0.225
+#&gt; [1] 0.1 0.1
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations EZH2`
 #&gt; [1] 0.15 0.15
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations CBL_Ex_8_9`
-#&gt; [1] 0.125 0.075
+#&gt; [1] 0.15 0.15
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations IDH2_R140`
 #&gt; [1] 0.025 0.025
@@ -2038,22 +2033,22 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.05 0.05
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations EED_Ex2_12`
-#&gt; [1] 0.050 0.025
+#&gt; [1] 0.05 0.05
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations CEBPA`
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations EPHB3`
-#&gt; [1] 0.025 0.025
+#&gt; [1] 0.05 0.10
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations ETNK1`
-#&gt; [1] 0.025 0.025
+#&gt; [1] 0.075 0.100
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations GATA2`
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations IRAK4`
-#&gt; [1] 0.05 0.05
+#&gt; [1] 0.075 0.050
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`missense_point_mutations MTA2`
 #&gt; [1] 0.025 0.025
@@ -2071,7 +2066,7 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.05 0.05
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`nonsense_ins_del CEBPA`
-#&gt; [1] 0.025 0.050
+#&gt; [1] 0.10 0.05
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`nonsense_point_mutations TET2`
 #&gt; [1] 0.125 0.125
@@ -2080,7 +2075,7 @@ we refer to the Vignette Section 7.</p>
 #&gt; [1] 0.025 0.025
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`nonsense_point_mutations ASXL1`
-#&gt; [1] 0.1 0.1
+#&gt; [1] 0.100 0.125
 #&gt; 
 #&gt; $kfold$capri_aic$prederr$`nonsense_point_mutations CSF3R`
 #&gt; [1] 0.075 0.075
@@ -2093,7 +2088,8 @@ we refer to the Vignette Section 7.</p>
 #&gt; 
 #&gt; 
 #&gt; 
-#&gt; </div><div class='input'></div></pre>
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -2109,7 +2105,7 @@ we refer to the Vignette Section 7.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

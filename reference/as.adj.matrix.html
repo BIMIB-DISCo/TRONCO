@@ -75,19 +75,13 @@ been performed. Also, either the prima facie matrix or the post-regularization m
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -153,7 +147,7 @@ specify a subset of events to build the matrix, a subset of models if multiple r
 been performed. Also, either the prima facie matrix or the post-regularization matrix can be extracted.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.adj.matrix</span>(<span class='kw'>x</span>, events = <span class='fu'><a href='as.events.html'>as.events</a></span>(<span class='kw'>x</span>), models = <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>x</span><span class='op'>$</span><span class='kw'>model</span>), type = <span class='st'>"fit"</span>)</pre>
+    <pre class="usage"><span class='fu'>as.adj.matrix</span><span class='op'>(</span><span class='va'>x</span>, events <span class='op'>=</span> <span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, models <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>model</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='st'>"fit"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -181,8 +175,9 @@ been performed. Also, either the prima facie matrix or the post-regularization m
     <p>The adjacency matrix of a TRONCO model.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>test_model</span>)
-<span class='fu'>as.adj.matrix</span>(<span class='kw'>test_model</span>)</div><div class='output co'>#&gt; $capri_bic
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span>
+<span class='fu'>as.adj.matrix</span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $capri_bic
 #&gt;          gene 4 gene 5 gene 7 gene 29 gene 30 gene 31 gene 32 gene 33 gene 34
 #&gt; gene 4        0      0      0       0       0       0       0       0       0
 #&gt; gene 5        0      0      0       0       0       0       0       0       0
@@ -433,7 +428,8 @@ been performed. Also, either the prima facie matrix or the post-regularization m
 #&gt; gene 111       0       0        0        0        0
 #&gt; XOR_EZH2       0       0        0        0        0
 #&gt; OR_CSF3R       0       0        0        0        0
-#&gt; </div><div class='input'><span class='fu'>as.adj.matrix</span>(<span class='kw'>test_model</span>, events=<span class='fu'><a href='as.events.html'>as.events</a></span>(<span class='kw'>test_model</span>)[<span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,])</div><div class='output co'>#&gt; $capri_bic
+#&gt; </div><div class='input'><span class='fu'>as.adj.matrix</span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $capri_bic
 #&gt;         gene 30 gene 31 gene 32 gene 33 gene 34 gene 36 gene 40 gene 44 gene 47
 #&gt; gene 30       0       0       0       0       0       0       0       1       0
 #&gt; gene 31       0       0       0       0       0       0       0       0       0
@@ -484,7 +480,8 @@ been performed. Also, either the prima facie matrix or the post-regularization m
 #&gt; gene 47       0       0
 #&gt; gene 49       0       0
 #&gt; gene 50       0       0
-#&gt; </div><div class='input'><span class='fu'>as.adj.matrix</span>(<span class='kw'>test_model</span>, events=<span class='fu'><a href='as.events.html'>as.events</a></span>(<span class='kw'>test_model</span>)[<span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,], type=<span class='st'>'pf'</span>)</div><div class='output co'>#&gt; $capri_bic
+#&gt; </div><div class='input'><span class='fu'>as.adj.matrix</span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span>, type<span class='op'>=</span><span class='st'>'pf'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $capri_bic
 #&gt;         gene 30 gene 31 gene 32 gene 33 gene 34 gene 36 gene 40 gene 44 gene 47
 #&gt; gene 30       0       0       0       0       0       0       0       1       0
 #&gt; gene 31       0       0       0       0       0       0       0       0       0
@@ -535,7 +532,8 @@ been performed. Also, either the prima facie matrix or the post-regularization m
 #&gt; gene 47       0       0
 #&gt; gene 49       0       0
 #&gt; gene 50       0       0
-#&gt; </div><div class='input'></div></pre>
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -551,7 +549,7 @@ been performed. Also, either the prima facie matrix or the post-regularization m
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

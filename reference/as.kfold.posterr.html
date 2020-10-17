@@ -74,19 +74,13 @@ or models if multiple reconstruction have been performed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -151,13 +145,13 @@ score in a TRONCO model. It is possible to specify a subset of events
 or models if multiple reconstruction have been performed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.kfold.posterr</span>(
-  <span class='kw'>x</span>,
-  events = <span class='fu'><a href='as.events.html'>as.events</a></span>(<span class='kw'>x</span>),
-  models = <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>x</span><span class='op'>$</span><span class='kw'>model</span>),
-  values = <span class='fl'>FALSE</span>,
-  table = <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>as.kfold.posterr</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  events <span class='op'>=</span> <span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
+  models <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>model</span><span class='op'>)</span>,
+  values <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  table <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -189,8 +183,9 @@ or models if multiple reconstruction have been performed.</p>
     <p>All the posterior classification error scores in a TRONCO model</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>test_model_kfold</span>)
-<span class='fu'>as.kfold.posterr</span>(<span class='kw'>test_model_kfold</span>)</div><div class='output co'>#&gt; $capri_bic
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model_kfold</span><span class='op'>)</span>
+<span class='fu'>as.kfold.posterr</span><span class='op'>(</span><span class='va'>test_model_kfold</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $capri_bic
 #&gt;                                SELECTS                                SELECTED
 #&gt; 1                         ins_del TET2            missense_point_mutations KIT
 #&gt; 2                        ins_del ASXL1           missense_point_mutations TET2
@@ -263,7 +258,8 @@ or models if multiple reconstruction have been performed.</p>
 #&gt; 18       0.0300 0.010540926
 #&gt; 19       0.1900 0.033747428
 #&gt; 20       0.0500 0.000000000
-#&gt; </div><div class='input'><span class='fu'>as.kfold.posterr</span>(<span class='kw'>test_model_kfold</span>, events=<span class='fu'><a href='as.events.html'>as.events</a></span>(<span class='kw'>test_model</span>)[<span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,])</div><div class='output co'>#&gt; $capri_bic
+#&gt; </div><div class='input'><span class='fu'>as.kfold.posterr</span><span class='op'>(</span><span class='va'>test_model_kfold</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $capri_bic
 #&gt;                               SELECTS                                SELECTED
 #&gt; 1 missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18
 #&gt; 2       missense_point_mutations EZH2          missense_point_mutations CEBPA
@@ -278,7 +274,8 @@ or models if multiple reconstruction have been performed.</p>
 #&gt;   MEAN.POSTERR SD.POSTERR
 #&gt; 1        0.045 0.01054093
 #&gt; 2        0.025 0.00000000
-#&gt; </div><div class='input'></div></pre>
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -294,7 +291,7 @@ or models if multiple reconstruction have been performed.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

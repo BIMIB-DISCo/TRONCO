@@ -79,19 +79,13 @@ regarding the loading functions provided by the package we refer to the Vignette
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -161,16 +155,16 @@ one row for each gene, a column Hugo_Symbol with every gene name and a column En
 regarding the loading functions provided by the package we refer to the Vignette Section 3.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>import.GISTIC</span>(
-  <span class='kw'>x</span>,
-  filter.genes = <span class='kw'>NULL</span>,
-  filter.samples = <span class='kw'>NULL</span>,
-  silent = <span class='fl'>FALSE</span>,
-  trim = <span class='fl'>TRUE</span>,
-  rna.seq.data = <span class='kw'>NULL</span>,
-  rna.seq.up = <span class='kw'>NULL</span>,
-  rna.seq.down = <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>import.GISTIC</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  filter.genes <span class='op'>=</span> <span class='cn'>NULL</span>,
+  filter.samples <span class='op'>=</span> <span class='cn'>NULL</span>,
+  silent <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  trim <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  rna.seq.data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  rna.seq.up <span class='op'>=</span> <span class='cn'>NULL</span>,
+  rna.seq.down <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -214,7 +208,8 @@ regarding the loading functions provided by the package we refer to the Vignette
     <p>A TRONCO compliant representation of the input CNAs.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>gistic</span> <span class='op'>=</span> <span class='fu'>import.GISTIC</span>(<span class='kw'>crc_gistic</span>)</div><div class='output co'>#&gt; *** Using full GISTIC: #dim  9  x  6 
+    <pre class="examples"><div class='input'><span class='va'>gistic</span> <span class='op'>=</span> <span class='fu'>import.GISTIC</span><span class='op'>(</span><span class='va'>crc_gistic</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; *** Using full GISTIC: #dim  9  x  6 
 #&gt; *** GISTIC input format conversion started.
 #&gt; Converting input data to character for import speedup.
 #&gt; Creating  24 events for 6 genes 
@@ -227,7 +222,8 @@ regarding the loading functions provided by the package we refer to the Vignette
 #&gt; *** Data extracted, returning only events observed in at least one sample 
 #&gt;  Number of events: n = 7 
 #&gt;  Number of genes: |G| = 6 
-#&gt;  Number of samples: m = 9 </div><div class='input'></div></pre>
+#&gt;  Number of samples: m = 9 </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -243,7 +239,7 @@ regarding the loading functions provided by the package we refer to the Vignette
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
