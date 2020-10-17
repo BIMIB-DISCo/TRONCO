@@ -157,7 +157,7 @@ jobs:
 
       - name: Install R packages
         run: |
-          install.packages('Rfast')
+          ##install.packages('Rfast')
         shell: Rscript {0}
 
       - name: Query dependencies
