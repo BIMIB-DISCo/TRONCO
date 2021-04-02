@@ -135,6 +135,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get install libcurl4-openssl-dev
+          sudo apt-get install texlive-fonts-extra
 
       - uses: r-lib/actions/setup-tinytex@master
 
@@ -143,11 +144,12 @@ jobs:
       - name: Install latex packages
         run: |
           install.packages('tinytex')
+          tinytex::install_tinytex()
           tinytex::tlmgr_install(c('tcolorbox', 'bera', 'nowidow', 'parnotes',
           'marginfix', 'titlesec', 'fancyhdr', 'enumitem', 'parskip', 'preprint',
           'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
           'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces',
-          'pdfcrop'))
+          'pdfcrop', 'everysel', 'beramono'))
         shell: Rscript {0}
 
       - name: Query dependencies
@@ -360,7 +362,7 @@ jobs:
       - name: Setup R from r-lib
         uses: r-lib/actions/setup-r@master
         with:
-          r-version: 4.0.5 # ${{ needs.R-CMD-check-bioc.outputs.rversion }}
+          r-version: ${{ needs.R-CMD-check-bioc.outputs.rversion }}
 
       - name: Setup pandoc from r-lib
         uses: r-lib/actions/setup-pandoc@master
@@ -371,11 +373,12 @@ jobs:
       - name: Install latex packages
         run: |
           install.packages('tinytex')
+          tinytex::install_tinytex()
           tinytex::tlmgr_install(c('tcolorbox', 'bera', 'nowidow', 'parnotes',
           'marginfix', 'titlesec', 'fancyhdr', 'enumitem', 'parskip', 'preprint',
           'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
           'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces',
-          'pdfcrop'))
+          'pdfcrop', 'everysel', 'beramono'))
         shell: Rscript {0}
 
       - name: Query dependencies
