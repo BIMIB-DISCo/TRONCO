@@ -67,7 +67,7 @@ jobs:
           ##if echo "$GITHUB_REF" | grep -q "RELEASE_"; then
           ##    biocversion="$(basename -- $GITHUB_REF | tr '[:upper:]' '[:lower:]')"
           ##else
-          biocversion="release" # biocversion="devel"
+          biocversion="devel" # biocversion="release"
           ##fi
           ## Define the image name and print the information
           imagename="bioconductor/bioconductor_docker:${biocversion}"
@@ -155,7 +155,7 @@ jobs:
           'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
           'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces',
           'pdfcrop', 'everysel', 'beramono'))
-        shell: Rscript {0}        
+        shell: Rscript {0}
 
       - name: Install R packages
         run: |
@@ -177,7 +177,7 @@ jobs:
         run: |
           ### Find what branch we are working on
           #if echo "$GITHUB_REF" | grep -q "master"; then
-          biocversion="release" # biocversion="devel"
+          biocversion="devel" # biocversion="release"
           #elif echo "$GITHUB_REF" | grep -q "RELEASE_"; then
           #    biocversion="release"
           #fi
@@ -410,7 +410,8 @@ jobs:
         run: |
           ## Enable installing XML from source if needed
           brew install libxml2
-          echo "::set-env name=XML_CONFIG::/usr/local/opt/libxml2/bin/xml2-config"
+          ###echo "::set-env name=XML_CONFIG::/usr/local/opt/libxml2/bin/xml2-config"
+          echo "{XML_CONFIG}={/usr/local/opt/libxml2/bin/xml2-config}" >> $GITHUB_ENV
           ## Required to install magick as noted at
           ## https://github.com/r-lib/usethis/commit/f1f1e0d10c1ebc75fd4c18fa7e2de4551fd9978f#diff-9bfee71065492f63457918efcd912cf2
           brew install imagemagick@6
