@@ -372,11 +372,11 @@ aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and annotated
 ## 6     Pattern XOR_ASXL1   Missense point CBL          14            3
 ##   NONPAR.BOOT STAT.BOOT
 ## 1   100.00000       100
-## 2     0.00000       100
-## 3    66.66667       100
+## 2    66.66667       100
+## 3     0.00000       100
 ## 4     0.00000       100
-## 5    33.33333       100
-## 6     0.00000       100
+## 5   100.00000       100
+## 6    33.33333       100
 ## 
 ## $capri_aic
 ##                  SELECTS              SELECTED OBS.SELECTS OBS.SELECTED
@@ -391,16 +391,16 @@ aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and annotated
 ## 9  Pattern TET2_xor_IDH2         Ins/Del ASXL1          17            9
 ## 10     Pattern XOR_ASXL1    Missense point CBL          14            3
 ##    NONPAR.BOOT STAT.BOOT
-## 1     66.66667       100
+## 1     33.33333       100
 ## 2    100.00000       100
-## 3      0.00000       100
-## 4     66.66667       100
-## 5     33.33333       100
-## 6     66.66667       100
+## 3     66.66667       100
+## 4      0.00000       100
+## 5      0.00000       100
+## 6     33.33333       100
 ## 7     33.33333       100
-## 8     66.66667       100
-## 9      0.00000       100
-## 10     0.00000       100</code></pre>
+## 8    100.00000       100
+## 9     33.33333       100
+## 10    33.33333       100</code></pre>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/view.html">view</a></span><span class="op">(</span><span class="va">model.boot</span><span class="op">)</span></code></pre></div>
 <pre><code>## Description: CAPRI - aCML.
@@ -507,34 +507,34 @@ Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization
 ## 21    Pattern TET2_or_IDH2    0.2812500 0.00000000
 ## 22        Pattern XOR_TET2    0.2500000 0.00000000
 ## 23        Pattern XOR_EZH2    0.1562500 0.00000000
-## 24         Pattern XOR_CBL    0.0859375 0.03314563
+## 24         Pattern XOR_CBL    0.1015625 0.01104854
 ## 25       Pattern XOR_ASXL1    0.2187500 0.00000000
 ## 26        Pattern OR_CSF3R    0.1093750 0.00000000
 ## 
 ## $capri_aic
 ##                   SELECTED MEAN.PREDERR SD.PREDERR
-## 5    Missense point SETBP1     0.218750          0
-## 6      Missense point NRAS     0.078125          0
-## 7      Missense point KRAS     0.015625          0
-## 8      Missense point TET2     0.078125          0
-## 9      Missense point EZH2     0.109375          0
-## 10      Missense point CBL     0.046875          0
-## 11     Missense point IDH2     0.046875          0
-## 12    Missense point SF3B1     0.015625          0
-## 13    Missense point CSF3R     0.078125          0
-## 14     Nonsense point TET2     0.109375          0
-## 15     Nonsense point EZH2     0.031250          0
-## 16    Nonsense point ASXL1     0.078125          0
-## 17    Nonsense point CSF3R     0.046875          0
-## 18   Pattern NRAS_xor_KRAS     0.093750          0
-## 19 Pattern SF3B1_xor_ASXL1     0.234375          0
-## 20   Pattern TET2_xor_IDH2     0.265625          0
-## 21    Pattern TET2_or_IDH2     0.281250          0
-## 22        Pattern XOR_TET2     0.250000          0
-## 23        Pattern XOR_EZH2     0.156250          0
-## 24         Pattern XOR_CBL     0.078125          0
-## 25       Pattern XOR_ASXL1     0.218750          0
-## 26        Pattern OR_CSF3R     0.109375          0</code></pre>
+## 5    Missense point SETBP1     0.218750 0.00000000
+## 6      Missense point NRAS     0.078125 0.00000000
+## 7      Missense point KRAS     0.015625 0.00000000
+## 8      Missense point TET2     0.078125 0.00000000
+## 9      Missense point EZH2     0.109375 0.00000000
+## 10      Missense point CBL     0.046875 0.00000000
+## 11     Missense point IDH2     0.046875 0.00000000
+## 12    Missense point SF3B1     0.015625 0.00000000
+## 13    Missense point CSF3R     0.078125 0.00000000
+## 14     Nonsense point TET2     0.109375 0.00000000
+## 15     Nonsense point EZH2     0.031250 0.00000000
+## 16    Nonsense point ASXL1     0.078125 0.00000000
+## 17    Nonsense point CSF3R     0.046875 0.00000000
+## 18   Pattern NRAS_xor_KRAS     0.109375 0.02209709
+## 19 Pattern SF3B1_xor_ASXL1     0.234375 0.00000000
+## 20   Pattern TET2_xor_IDH2     0.265625 0.00000000
+## 21    Pattern TET2_or_IDH2     0.281250 0.00000000
+## 22        Pattern XOR_TET2     0.250000 0.00000000
+## 23        Pattern XOR_EZH2     0.156250 0.00000000
+## 24         Pattern XOR_CBL     0.093750 0.02209709
+## 25       Pattern XOR_ASXL1     0.218750 0.00000000
+## 26        Pattern OR_CSF3R     0.109375 0.00000000</code></pre>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/as.kfold.posterr.html">as.kfold.posterr</a></span><span class="op">(</span><span class="va">model.boot</span><span class="op">)</span></code></pre></div>
 <pre><code>## $capri_bic
@@ -554,7 +554,7 @@ Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization
 ## 4    Missense point TET2           Ins/Del CBL    0.0156250 0.00000000
 ## 5    Missense point EZH2          Ins/Del TET2    0.0625000 0.00000000
 ## 6    Nonsense point TET2   Missense point NRAS    0.0781250 0.00000000
-## 7    Nonsense point TET2 Pattern NRAS_xor_KRAS    0.1093750 0.02209709
+## 7    Nonsense point TET2 Pattern NRAS_xor_KRAS    0.0937500 0.00000000
 ## 8   Nonsense point ASXL1       Pattern XOR_CBL    0.0859375 0.01104854
 ## 9  Pattern TET2_xor_IDH2         Ins/Del ASXL1    0.1406250 0.00000000
 ## 10     Pattern XOR_ASXL1    Missense point CBL    0.0468750 0.00000000</code></pre>
@@ -577,39 +577,39 @@ Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">tabular</span><span class="op">(</span><span class="va">model.boot</span>, <span class="st">'capri_bic'</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##        capri_bic.SELECTS   capri_bic.SELECTED capri_bic.OBS.SELECTS
 ## 13 Missense point SETBP1 Nonsense point ASXL1                    14
-## 1    Missense point TET2          Ins/Del CBL                     5
 ## 23  Nonsense point ASXL1      Pattern XOR_CBL                     5
 ## 2    Missense point TET2         Ins/Del EZH2                     5
-## 3    Missense point EZH2         Ins/Del TET2                     7
 ## 4      Pattern XOR_ASXL1   Missense point CBL                    14
+## 1    Missense point TET2          Ins/Del CBL                     5
+## 3    Missense point EZH2         Ins/Del TET2                     7
 ##    capri_bic.OBS.SELECTED capri_bic.TEMPORAL.PRIORITY
 ## 13                      5                1.265401e-08
-## 1                       1                7.055746e-07
 ## 23                      4                1.253535e-02
 ## 2                       1                3.107997e-08
-## 3                       4                8.288203e-04
 ## 4                       3                1.181758e-08
+## 1                       1                7.055746e-07
+## 3                       4                8.288203e-04
 ##    capri_bic.PROBABILITY.RAISING capri_bic.HYPERGEOMETRIC capri_bic.NONPAR.BOOT
 ## 13                  6.653729e-09              0.002029387             100.00000
-## 1                   1.172650e-05              0.000000000              66.66667
-## 23                  1.262353e-05              0.040873436              33.33333
-## 2                   2.968162e-05              0.078125000               0.00000
+## 23                  1.262353e-05              0.040873436             100.00000
+## 2                   2.968162e-05              0.078125000              66.66667
+## 4                   3.952172e-09              0.008736559              33.33333
+## 1                   1.172650e-05              0.000000000               0.00000
 ## 3                   1.739852e-06              0.055944826               0.00000
-## 4                   3.952172e-09              0.008736559               0.00000
 ##    capri_bic.STAT.BOOT capri_bic.MEAN.PREDERR capri_bic.SD.PREDERR
 ## 13                 100              0.0781250           0.00000000
-## 1                  100                     NA                   NA
-## 23                 100              0.0859375           0.03314563
+## 23                 100              0.1015625           0.01104854
 ## 2                  100                     NA                   NA
-## 3                  100                     NA                   NA
 ## 4                  100              0.0468750           0.00000000
+## 1                  100                     NA                   NA
+## 3                  100                     NA                   NA
 ##    capri_bic.MEAN.POSTERR capri_bic.SD.POSTERR
 ## 13               0.078125                    0
-## 1                0.015625                    0
 ## 23               0.093750                    0
 ## 2                0.015625                    0
-## 3                0.062500                    0
-## 4                0.046875                    0</code></pre>
+## 4                0.046875                    0
+## 1                0.015625                    0
+## 3                0.062500                    0</code></pre>
 <p>We finally show the plot of the model with the confidences by cross-validation.</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/tronco.plot.html">tronco.plot</a></span><span class="op">(</span><span class="va">model.boot</span>, 
