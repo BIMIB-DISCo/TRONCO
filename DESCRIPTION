@@ -1,10 +1,11 @@
 Package: TRONCO
-Version: 2.25.0
-Date: 2021-04-19
+Version: 2.25.1
+Date: 2021-09-15
 Title: TRONCO, an R package for TRanslational ONCOlogy
 Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")), 
     person("Giulio", "Caravagna", role=c("aut", "cre"), email="giulio.caravagna@disco.unimib.it"),
-    person("Luca", "De Sano", role=c("aut"), email="luca.desano@gmail.com"), 
+    person("Luca", "De Sano", role=c("aut"), email="luca.desano@gmail.com",
+                comment = c(ORCID = "0000-0002-9618-3774")), 
     person("Alex", "Graudenzi", role=c("aut"), email="alex.graudenzi@disco.unimib.it"),
     person("Giancarlo", "Mauri", role=c("ctb")), 
     person("Bud", "Mishra", role=c("ctb")), 
@@ -12,7 +13,7 @@ Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")),
                 comment = c(ORCID = "0000-0002-6087-2666")))
 Maintainer: Luca De Sano <luca.desano@gmail.com>
 Depends:
-    R (>= 4.0.0),
+    R (>= 4.1.0),
 Imports:
     bnlearn,
     Rgraphviz,
@@ -60,7 +61,6 @@ Description:
     visualized and tested for their confidence via bootstrap and cross-validation.
     TRONCO is used for  the implementation of the Pipeline for Cancer Inference (PICNIC). 
 Encoding: UTF-8
-LazyData: TRUE
 License: GPL-3
 URL: https://sites.google.com/site/troncopackage/
 BugReports: https://github.com/BIMIB-DISCo/TRONCO
@@ -74,5 +74,5 @@ biocViews: BiomedicalInformatics,
            DataImport,
            SingleCell,
            ImmunoOncology
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr
