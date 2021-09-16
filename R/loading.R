@@ -106,6 +106,7 @@ import.genotypes <- function(geno, event.type = "variant", color = "Darkgreen") 
 #' regarding the loading functions provided by the package we refer to the Vignette Section 3. 
 #'
 #' @examples
+#' data(crc_gistic)
 #' gistic = import.GISTIC(crc_gistic)
 #' 
 #' @title import.GISTIC

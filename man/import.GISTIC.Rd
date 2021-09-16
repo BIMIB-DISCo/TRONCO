@@ -46,6 +46,7 @@ one row for each gene, a column Hugo_Symbol with every gene name and a column En
 regarding the loading functions provided by the package we refer to the Vignette Section 3.
 }
 \examples{
+data(crc_gistic)
 gistic = import.GISTIC(crc_gistic)
 
 }
