@@ -60,9 +60,6 @@ Function keysToNames can be used to translate colnames to events." />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -85,7 +82,7 @@ Function keysToNames can be used to translate colnames to events." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -156,7 +153,7 @@ see <code>is.compliant</code>.
 Function <code>keysToNames</code> can be used to translate colnames to events.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.genotypes</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>as.genotypes</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -172,173 +169,174 @@ Function <code>keysToNames</code> can be used to translate colnames to events.</
     <p>A TRONCO genotypes matrix.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-<span class='fu'>as.genotypes</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;            gene 4 gene 5 gene 7 gene 29 gene 30 gene 31 gene 32 gene 33 gene 34
-#&gt; patient 1       0      0      0       1       0       0       0       0       0
-#&gt; patient 2       0      0      0       1       0       0       0       0       1
-#&gt; patient 3       0      0      0       1       1       0       0       0       0
-#&gt; patient 4       0      0      0       1       0       0       0       0       1
-#&gt; patient 5       0      0      0       1       0       0       0       0       0
-#&gt; patient 6       0      0      0       1       0       0       0       0       0
-#&gt; patient 7       0      0      0       1       0       0       0       0       0
-#&gt; patient 8       0      0      0       1       0       0       0       0       0
-#&gt; patient 9       0      0      1       1       0       0       0       0       0
-#&gt; patient 10      0      0      0       1       0       0       0       0       0
-#&gt; patient 11      0      0      0       1       0       0       0       0       0
-#&gt; patient 12      0      0      0       1       1       0       0       0       0
-#&gt; patient 13      0      0      0       1       0       0       0       0       0
-#&gt; patient 14      0      0      0       1       0       0       0       0       0
-#&gt; patient 15      0      0      0       0       0       0       0       0       0
-#&gt; patient 16      0      0      0       0       0       0       0       0       0
-#&gt; patient 17      0      0      0       0       1       0       0       1       0
-#&gt; patient 18      0      0      0       0       0       0       0       0       0
-#&gt; patient 19      0      0      0       0       0       0       0       0       0
-#&gt; patient 20      0      0      0       0       0       0       0       1       0
-#&gt; patient 21      0      0      1       0       0       0       1       0       0
-#&gt; patient 22      0      0      0       0       0       0       0       0       0
-#&gt; patient 23      1      0      0       0       0       0       0       1       0
-#&gt; patient 24      1      0      1       0       0       0       0       1       1
-#&gt; patient 25      1      0      0       0       0       0       0       0       0
-#&gt; patient 26      0      0      0       0       0       0       0       0       0
-#&gt; patient 27      0      1      1       0       0       0       1       0       0
-#&gt; patient 28      0      0      0       0       0       0       0       0       0
-#&gt; patient 29      0      0      1       0       0       0       0       1       0
-#&gt; patient 30      0      0      0       0       0       0       0       0       0
-#&gt; patient 31      0      0      0       0       0       0       0       0       0
-#&gt; patient 32      0      0      1       0       0       1       0       0       0
-#&gt; patient 33      0      0      0       0       0       0       0       0       0
-#&gt; patient 34      0      0      0       0       0       0       1       0       0
-#&gt; patient 35      0      0      0       0       0       0       0       0       0
-#&gt; patient 36      0      0      0       0       0       0       0       0       0
-#&gt; patient 37      0      0      0       0       0       0       0       0       0
-#&gt; patient 38      0      0      0       0       0       0       0       1       0
-#&gt; patient 39      0      0      1       0       0       0       0       0       0
-#&gt; patient 40      0      0      0       0       0       0       0       0       0
-#&gt;            gene 36 gene 40 gene 44 gene 47 gene 49 gene 50 gene 51 gene 52
-#&gt; patient 1        0       0       0       0       0       0       0       0
-#&gt; patient 2        0       0       0       0       0       0       0       0
-#&gt; patient 3        0       0       0       0       0       0       0       0
-#&gt; patient 4        0       0       0       0       0       0       0       0
-#&gt; patient 5        0       0       0       0       0       0       0       0
-#&gt; patient 6        0       0       0       0       0       0       0       0
-#&gt; patient 7        0       0       0       0       0       1       0       0
-#&gt; patient 8        0       0       0       0       0       0       0       0
-#&gt; patient 9        0       0       0       0       0       0       0       0
-#&gt; patient 10       0       0       0       0       0       0       0       0
-#&gt; patient 11       0       0       0       0       0       0       0       0
-#&gt; patient 12       0       0       1       0       0       0       0       0
-#&gt; patient 13       0       0       0       0       0       0       0       0
-#&gt; patient 14       0       0       0       0       0       0       0       0
-#&gt; patient 15       1       0       0       0       0       0       0       0
-#&gt; patient 16       0       0       0       0       0       0       0       0
-#&gt; patient 17       0       0       0       0       0       0       0       0
-#&gt; patient 18       0       0       0       0       0       0       0       0
-#&gt; patient 19       0       0       0       0       0       0       0       1
-#&gt; patient 20       0       0       0       0       0       0       1       0
-#&gt; patient 21       0       0       0       0       0       0       0       0
-#&gt; patient 22       0       1       0       0       0       0       0       0
-#&gt; patient 23       0       0       0       0       0       0       0       0
-#&gt; patient 24       0       0       0       0       0       0       0       0
-#&gt; patient 25       0       0       0       0       0       0       0       0
-#&gt; patient 26       0       0       0       0       0       0       0       0
-#&gt; patient 27       0       0       0       0       0       0       0       0
-#&gt; patient 28       0       0       0       0       0       0       0       0
-#&gt; patient 29       0       0       0       0       0       0       0       0
-#&gt; patient 30       0       0       0       0       0       0       0       0
-#&gt; patient 31       0       0       0       1       0       0       0       0
-#&gt; patient 32       0       0       0       0       0       0       0       0
-#&gt; patient 33       0       0       0       0       0       0       0       0
-#&gt; patient 34       0       0       0       0       0       0       0       0
-#&gt; patient 35       0       0       0       0       0       0       0       0
-#&gt; patient 36       0       0       0       0       0       0       0       0
-#&gt; patient 37       0       0       0       0       0       0       0       0
-#&gt; patient 38       0       0       0       0       1       0       0       0
-#&gt; patient 39       0       0       0       0       0       0       0       0
-#&gt; patient 40       0       0       0       0       0       0       0       0
-#&gt;            gene 53 gene 54 gene 55 gene 56 gene 66 gene 69 gene 77 gene 88
-#&gt; patient 1        0       0       0       0       0       0       0       0
-#&gt; patient 2        0       0       0       0       0       0       0       0
-#&gt; patient 3        0       0       0       0       0       0       0       0
-#&gt; patient 4        0       0       0       0       0       0       0       0
-#&gt; patient 5        0       0       1       0       0       0       0       0
-#&gt; patient 6        0       0       0       0       0       0       0       0
-#&gt; patient 7        0       0       0       0       0       0       0       0
-#&gt; patient 8        0       0       0       0       0       0       0       0
-#&gt; patient 9        0       0       0       0       0       0       0       0
-#&gt; patient 10       0       0       0       0       0       0       0       0
-#&gt; patient 11       0       0       0       0       0       0       0       0
-#&gt; patient 12       0       0       0       0       0       0       0       1
-#&gt; patient 13       0       0       1       0       0       0       0       1
-#&gt; patient 14       0       0       0       0       0       0       0       0
-#&gt; patient 15       0       0       0       0       0       0       0       0
-#&gt; patient 16       0       1       0       0       0       0       0       0
-#&gt; patient 17       1       0       0       0       0       0       0       0
-#&gt; patient 18       0       0       0       0       0       0       0       0
-#&gt; patient 19       0       0       0       0       0       0       0       0
-#&gt; patient 20       0       0       0       0       0       0       0       0
-#&gt; patient 21       0       0       0       0       0       0       0       0
-#&gt; patient 22       0       0       0       0       0       0       0       0
-#&gt; patient 23       0       0       0       1       0       0       0       0
-#&gt; patient 24       0       0       0       0       0       0       0       0
-#&gt; patient 25       0       0       0       1       0       1       0       0
-#&gt; patient 26       0       0       0       0       0       0       0       1
-#&gt; patient 27       0       0       0       0       0       0       0       0
-#&gt; patient 28       0       0       0       0       0       0       0       0
-#&gt; patient 29       0       0       0       0       0       0       0       1
-#&gt; patient 30       0       0       1       0       0       0       0       0
-#&gt; patient 31       0       0       0       0       0       0       1       0
-#&gt; patient 32       0       0       0       0       0       0       0       0
-#&gt; patient 33       0       0       0       0       0       0       0       0
-#&gt; patient 34       0       0       1       0       1       0       1       0
-#&gt; patient 35       0       0       0       0       0       0       0       0
-#&gt; patient 36       0       0       0       0       0       0       0       0
-#&gt; patient 37       0       0       0       0       0       0       0       0
-#&gt; patient 38       0       0       0       0       0       0       0       0
-#&gt; patient 39       0       0       0       0       0       0       0       0
-#&gt; patient 40       0       0       0       0       0       0       0       1
-#&gt;            gene 89 gene 91 gene 111 XOR_EZH2 OR_CSF3R
-#&gt; patient 1        0       0        0        0        0
-#&gt; patient 2        0       1        0        0        0
-#&gt; patient 3        0       0        0        0        0
-#&gt; patient 4        0       1        0        0        0
-#&gt; patient 5        0       0        1        0        1
-#&gt; patient 6        1       0        0        1        0
-#&gt; patient 7        0       1        0        0        0
-#&gt; patient 8        0       1        0        0        0
-#&gt; patient 9        0       0        0        0        0
-#&gt; patient 10       0       0        0        0        0
-#&gt; patient 11       0       0        0        0        0
-#&gt; patient 12       0       0        0        0        0
-#&gt; patient 13       0       0        0        0        1
-#&gt; patient 14       0       0        1        0        1
-#&gt; patient 15       0       0        0        0        0
-#&gt; patient 16       0       0        0        0        0
-#&gt; patient 17       0       0        0        1        0
-#&gt; patient 18       0       0        0        0        0
-#&gt; patient 19       0       0        0        0        0
-#&gt; patient 20       0       0        0        1        0
-#&gt; patient 21       0       0        0        0        0
-#&gt; patient 22       0       0        0        0        0
-#&gt; patient 23       0       0        0        1        0
-#&gt; patient 24       0       0        0        1        0
-#&gt; patient 25       0       0        0        0        0
-#&gt; patient 26       0       0        0        0        0
-#&gt; patient 27       0       0        0        1        0
-#&gt; patient 28       0       0        0        0        0
-#&gt; patient 29       0       0        0        1        0
-#&gt; patient 30       0       0        0        0        1
-#&gt; patient 31       0       0        0        0        0
-#&gt; patient 32       0       0        0        0        0
-#&gt; patient 33       0       0        0        0        0
-#&gt; patient 34       0       0        0        0        1
-#&gt; patient 35       0       0        1        0        1
-#&gt; patient 36       0       0        0        0        0
-#&gt; patient 37       0       0        0        0        0
-#&gt; patient 38       0       0        0        1        0
-#&gt; patient 39       0       0        0        0        0
-#&gt; patient 40       0       0        0        0        0</div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>as.genotypes</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            gene 4 gene 5 gene 7 gene 29 gene 30 gene 31 gene 32 gene 33 gene 34</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1       0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2       0      0      0       1       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3       0      0      0       1       1       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4       0      0      0       1       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5       0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6       0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7       0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8       0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9       0      0      1       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10      0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11      0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12      0      0      0       1       1       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13      0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14      0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17      0      0      0       0       1       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20      0      0      0       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21      0      0      1       0       0       0       1       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23      1      0      0       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24      1      0      1       0       0       0       0       1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25      1      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27      0      1      1       0       0       0       1       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29      0      0      1       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32      0      0      1       0       0       1       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34      0      0      0       0       0       0       1       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38      0      0      0       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39      0      0      1       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            gene 36 gene 40 gene 44 gene 47 gene 49 gene 50 gene 51 gene 52</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7        0       0       0       0       0       1       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12       0       0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15       1       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19       0       0       0       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20       0       0       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22       0       1       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31       0       0       0       1       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38       0       0       0       0       1       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            gene 53 gene 54 gene 55 gene 56 gene 66 gene 69 gene 77 gene 88</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5        0       0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12       0       0       0       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13       0       0       1       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16       0       1       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17       1       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23       0       0       0       1       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25       0       0       0       1       0       1       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26       0       0       0       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29       0       0       0       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30       0       0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31       0       0       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34       0       0       1       0       1       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40       0       0       0       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            gene 89 gene 91 gene 111 XOR_EZH2 OR_CSF3R</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1        0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2        0       1        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3        0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4        0       1        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5        0       0        1        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6        1       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7        0       1        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8        0       1        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9        0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13       0       0        0        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14       0       0        1        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30       0       0        0        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34       0       0        0        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35       0       0        1        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40       0       0        0        0        0</span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

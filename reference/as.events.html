@@ -59,9 +59,6 @@ TRONCO compliant dataset - see is.compliant." />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -84,7 +81,7 @@ TRONCO compliant dataset - see is.compliant." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -154,7 +151,7 @@ TRONCO compliant dataset - see is.compliant." />
 TRONCO compliant dataset - see <code>is.compliant</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.events</span><span class='op'>(</span><span class='va'>x</span>, genes <span class='op'>=</span> <span class='cn'>NA</span>, types <span class='op'>=</span> <span class='cn'>NA</span>, keysToNames <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>as.events</span><span class='op'>(</span><span class='va'>x</span>, genes <span class='op'>=</span> <span class='cn'>NA</span>, types <span class='op'>=</span> <span class='cn'>NA</span>, keysToNames <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,49 +179,53 @@ TRONCO compliant dataset - see <code>is.compliant</code>.</p>
     <p>A matrix with 2 columns (event type, gene name) for the events found.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-<span class='fu'>as.events</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;          type                       event           
-#&gt; gene 4   "ins_del"                  "TET2"          
-#&gt; gene 5   "ins_del"                  "EZH2"          
-#&gt; gene 7   "ins_del"                  "ASXL1"         
-#&gt; gene 29  "missense_point_mutations" "SETBP1"        
-#&gt; gene 30  "missense_point_mutations" "NRAS_Ex2_3"    
-#&gt; gene 31  "missense_point_mutations" "KRAS_Ex2_3"    
-#&gt; gene 32  "missense_point_mutations" "TET2"          
-#&gt; gene 33  "missense_point_mutations" "EZH2"          
-#&gt; gene 34  "missense_point_mutations" "CBL_Ex_8_9"    
-#&gt; gene 36  "missense_point_mutations" "IDH2_R140"     
-#&gt; gene 40  "missense_point_mutations" "SF3B1_Ex_12_15"
-#&gt; gene 44  "missense_point_mutations" "JARID_2_Ex1_18"
-#&gt; gene 47  "missense_point_mutations" "EED_Ex2_12"    
-#&gt; gene 49  "missense_point_mutations" "CEBPA"         
-#&gt; gene 50  "missense_point_mutations" "EPHB3"         
-#&gt; gene 51  "missense_point_mutations" "ETNK1"         
-#&gt; gene 52  "missense_point_mutations" "GATA2"         
-#&gt; gene 53  "missense_point_mutations" "IRAK4"         
-#&gt; gene 54  "missense_point_mutations" "MTA2"          
-#&gt; gene 55  "missense_point_mutations" "CSF3R"         
-#&gt; gene 56  "missense_point_mutations" "KIT"           
-#&gt; gene 66  "nonsense_ins_del"         "WT1"           
-#&gt; gene 69  "nonsense_ins_del"         "RUNX_1"        
-#&gt; gene 77  "nonsense_ins_del"         "CEBPA"         
-#&gt; gene 88  "nonsense_point_mutations" "TET2"          
-#&gt; gene 89  "nonsense_point_mutations" "EZH2"          
-#&gt; gene 91  "nonsense_point_mutations" "ASXL1"         
-#&gt; gene 111 "nonsense_point_mutations" "CSF3R"         
-#&gt; XOR_EZH2 "Pattern"                  "XOR_EZH2"      
-#&gt; OR_CSF3R "Pattern"                  "OR_CSF3R"      </div><div class='input'><span class='fu'>as.events</span><span class='op'>(</span><span class='va'>test_dataset</span>, types<span class='op'>=</span><span class='st'>'ins_del'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;        type      event  
-#&gt; gene 4 "ins_del" "TET2" 
-#&gt; gene 5 "ins_del" "EZH2" 
-#&gt; gene 7 "ins_del" "ASXL1"</div><div class='input'><span class='fu'>as.events</span><span class='op'>(</span><span class='va'>test_dataset</span>, genes <span class='op'>=</span> <span class='st'>'TET2'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;         type                       event 
-#&gt; gene 4  "ins_del"                  "TET2"
-#&gt; gene 32 "missense_point_mutations" "TET2"
-#&gt; gene 88 "nonsense_point_mutations" "TET2"</div><div class='input'><span class='fu'>as.events</span><span class='op'>(</span><span class='va'>test_dataset</span>, types<span class='op'>=</span><span class='st'>'Missing'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;      type event</div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>as.events</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          type                       event           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 4   "ins_del"                  "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 5   "ins_del"                  "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 7   "ins_del"                  "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 29  "missense_point_mutations" "SETBP1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 30  "missense_point_mutations" "NRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 31  "missense_point_mutations" "KRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 32  "missense_point_mutations" "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 33  "missense_point_mutations" "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 34  "missense_point_mutations" "CBL_Ex_8_9"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 36  "missense_point_mutations" "IDH2_R140"     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 40  "missense_point_mutations" "SF3B1_Ex_12_15"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 44  "missense_point_mutations" "JARID_2_Ex1_18"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 47  "missense_point_mutations" "EED_Ex2_12"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 49  "missense_point_mutations" "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 50  "missense_point_mutations" "EPHB3"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 51  "missense_point_mutations" "ETNK1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 52  "missense_point_mutations" "GATA2"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 53  "missense_point_mutations" "IRAK4"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 54  "missense_point_mutations" "MTA2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 55  "missense_point_mutations" "CSF3R"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 56  "missense_point_mutations" "KIT"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 66  "nonsense_ins_del"         "WT1"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 69  "nonsense_ins_del"         "RUNX_1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 77  "nonsense_ins_del"         "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 88  "nonsense_point_mutations" "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 89  "nonsense_point_mutations" "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 91  "nonsense_point_mutations" "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 111 "nonsense_point_mutations" "CSF3R"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> XOR_EZH2 "Pattern"                  "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> OR_CSF3R "Pattern"                  "OR_CSF3R"      </span>
+<span class='r-in'><span class='fu'>as.events</span><span class='op'>(</span><span class='va'>test_dataset</span>, types<span class='op'>=</span><span class='st'>'ins_del'</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>        type      event  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 4 "ins_del" "TET2" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 5 "ins_del" "EZH2" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 7 "ins_del" "ASXL1"</span>
+<span class='r-in'><span class='fu'>as.events</span><span class='op'>(</span><span class='va'>test_dataset</span>, genes <span class='op'>=</span> <span class='st'>'TET2'</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         type                       event </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 4  "ins_del"                  "TET2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 32 "missense_point_mutations" "TET2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 88 "nonsense_point_mutations" "TET2"</span>
+<span class='r-in'><span class='fu'>as.events</span><span class='op'>(</span><span class='va'>test_dataset</span>, types<span class='op'>=</span><span class='st'>'Missing'</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      type event</span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -29,8 +29,22 @@
   <graph id="G" edgedefault="directed">
     <data key="g_name"></data>
     <data key="g_models">CAPRI capri_bic - CAPRI capri_aic</data>
-    <data key="g_informations">Generated with TRONCO v2.24.0</data>
+    <data key="g_informations">Generated with TRONCO v2.25.1</data>
     <node id="n0">
+      <data key="v_name">OR</data>
+      <data key="v_label"></data>
+      <data key="v_type"></data>
+      <data key="v_fillcolor">#FFA500</data>
+      <data key="v_fontcolor">#000000</data>
+      <data key="v_bordercolor">#000000</data>
+      <data key="v_shape">circle</data>
+      <data key="v_width">50</data>
+      <data key="v_height">50</data>
+      <data key="v_borderwidth">1</data>
+      <data key="v_cases">0</data>
+      <data key="v_sum genotypes">0</data>
+    </node>
+    <node id="n1">
       <data key="v_name">CSF3R</data>
       <data key="v_label">CSF3R
 8% (3)</data>
@@ -45,7 +59,7 @@
       <data key="v_cases">8</data>
       <data key="v_sum genotypes">3</data>
     </node>
-    <node id="n1">
+    <node id="n2">
       <data key="v_name">SETBP1</data>
       <data key="v_label">SETBP1
 35% (14)</data>
@@ -60,7 +74,7 @@
       <data key="v_cases">35</data>
       <data key="v_sum genotypes">14</data>
     </node>
-    <node id="n2">
+    <node id="n3">
       <data key="v_name">NRAS_Ex2_3</data>
       <data key="v_label">NRAS_Ex2_3
 8% (3)</data>
@@ -75,7 +89,7 @@
       <data key="v_cases">8</data>
       <data key="v_sum genotypes">3</data>
     </node>
-    <node id="n3">
+    <node id="n4">
       <data key="v_name">KRAS_Ex2_3</data>
       <data key="v_label">KRAS_Ex2_3
 3% (1)</data>
@@ -90,7 +104,7 @@
       <data key="v_cases">3</data>
       <data key="v_sum genotypes">1</data>
     </node>
-    <node id="n4">
+    <node id="n5">
       <data key="v_name">TET2</data>
       <data key="v_label">TET2
 7% (3)</data>
@@ -105,7 +119,7 @@
       <data key="v_cases">7</data>
       <data key="v_sum genotypes">3</data>
     </node>
-    <node id="n5">
+    <node id="n6">
       <data key="v_name">EZH2</data>
       <data key="v_label">EZH2
 15% (6)</data>
@@ -120,7 +134,7 @@
       <data key="v_cases">15</data>
       <data key="v_sum genotypes">6</data>
     </node>
-    <node id="n6">
+    <node id="n7">
       <data key="v_name">CBL_Ex_8_9</data>
       <data key="v_label">CBL_Ex_8_9
 7% (3)</data>
@@ -135,7 +149,7 @@
       <data key="v_cases">7</data>
       <data key="v_sum genotypes">3</data>
     </node>
-    <node id="n7">
+    <node id="n8">
       <data key="v_name">TET2</data>
       <data key="v_label">TET2
 7% (3)</data>
@@ -150,7 +164,7 @@
       <data key="v_cases">7</data>
       <data key="v_sum genotypes">3</data>
     </node>
-    <node id="n8">
+    <node id="n9">
       <data key="v_name">JARID_2_Ex1_18</data>
       <data key="v_label">JARID_2_Ex1_18
 3% (1)</data>
@@ -165,7 +179,7 @@
       <data key="v_cases">3</data>
       <data key="v_sum genotypes">1</data>
     </node>
-    <node id="n9">
+    <node id="n10">
       <data key="v_name">EED_Ex2_12</data>
       <data key="v_label">EED_Ex2_12
 3% (1)</data>
@@ -180,7 +194,7 @@
       <data key="v_cases">3</data>
       <data key="v_sum genotypes">1</data>
     </node>
-    <node id="n10">
+    <node id="n11">
       <data key="v_name">CEBPA</data>
       <data key="v_label">CEBPA
 3% (1)</data>
@@ -195,7 +209,7 @@
       <data key="v_cases">3</data>
       <data key="v_sum genotypes">1</data>
     </node>
-    <node id="n11">
+    <node id="n12">
       <data key="v_name">EZH2</data>
       <data key="v_label">EZH2
 3% (1)</data>
@@ -210,7 +224,7 @@
       <data key="v_cases">3</data>
       <data key="v_sum genotypes">1</data>
     </node>
-    <node id="n12">
+    <node id="n13">
       <data key="v_name">EPHB3</data>
       <data key="v_label">EPHB3
 3% (1)</data>
@@ -225,7 +239,7 @@
       <data key="v_cases">3</data>
       <data key="v_sum genotypes">1</data>
     </node>
-    <node id="n13">
+    <node id="n14">
       <data key="v_name">ETNK1</data>
       <data key="v_label">ETNK1
 3% (1)</data>
@@ -240,7 +254,7 @@
       <data key="v_cases">3</data>
       <data key="v_sum genotypes">1</data>
     </node>
-    <node id="n14">
+    <node id="n15">
       <data key="v_name">IRAK4</data>
       <data key="v_label">IRAK4
 3% (1)</data>
@@ -255,7 +269,7 @@
       <data key="v_cases">3</data>
       <data key="v_sum genotypes">1</data>
     </node>
-    <node id="n15">
+    <node id="n16">
       <data key="v_name">CSF3R</data>
       <data key="v_label">CSF3R
 11% (4)</data>
@@ -270,7 +284,7 @@
       <data key="v_cases">11</data>
       <data key="v_sum genotypes">4</data>
     </node>
-    <node id="n16">
+    <node id="n17">
       <data key="v_name">KIT</data>
       <data key="v_label">KIT
 5% (2)</data>
@@ -285,7 +299,7 @@
       <data key="v_cases">5</data>
       <data key="v_sum genotypes">2</data>
     </node>
-    <node id="n17">
+    <node id="n18">
       <data key="v_name">WT1</data>
       <data key="v_label">WT1
 3% (1)</data>
@@ -300,7 +314,7 @@
       <data key="v_cases">3</data>
       <data key="v_sum genotypes">1</data>
     </node>
-    <node id="n18">
+    <node id="n19">
       <data key="v_name">RUNX_1</data>
       <data key="v_label">RUNX_1
 3% (1)</data>
@@ -315,7 +329,7 @@
       <data key="v_cases">3</data>
       <data key="v_sum genotypes">1</data>
     </node>
-    <node id="n19">
+    <node id="n20">
       <data key="v_name">ASXL1</data>
       <data key="v_label">ASXL1
 17% (7)</data>
@@ -330,7 +344,7 @@
       <data key="v_cases">17</data>
       <data key="v_sum genotypes">7</data>
     </node>
-    <node id="n20">
+    <node id="n21">
       <data key="v_name">CEBPA</data>
       <data key="v_label">CEBPA
 5% (2)</data>
@@ -345,7 +359,7 @@
       <data key="v_cases">5</data>
       <data key="v_sum genotypes">2</data>
     </node>
-    <node id="n21">
+    <node id="n22">
       <data key="v_name">EZH2</data>
       <data key="v_label">EZH2
 3% (1)</data>
@@ -360,7 +374,7 @@
       <data key="v_cases">3</data>
       <data key="v_sum genotypes">1</data>
     </node>
-    <node id="n22">
+    <node id="n23">
       <data key="v_name">ASXL1</data>
       <data key="v_label">ASXL1
 10% (4)</data>
@@ -375,21 +389,16 @@
       <data key="v_cases">10</data>
       <data key="v_sum genotypes">4</data>
     </node>
-    <node id="n23">
-      <data key="v_name">OR</data>
-      <data key="v_label"></data>
-      <data key="v_type"></data>
-      <data key="v_fillcolor">#FFA500</data>
-      <data key="v_fontcolor">#000000</data>
-      <data key="v_bordercolor">#000000</data>
-      <data key="v_shape">circle</data>
-      <data key="v_width">50</data>
-      <data key="v_height">50</data>
-      <data key="v_borderwidth">1</data>
-      <data key="v_cases">0</data>
-      <data key="v_sum genotypes">0</data>
-    </node>
-    <edge source="n0" target="n23">
+    <edge source="n0" target="n21">
+      <data key="e_weight">1</data>
+      <data key="e_line">solid</data>
+      <data key="e_arrow">True</data>
+      <data key="e_color">#A9A9A9</data>
+      <data key="e_edgelabel"></data>
+      <data key="e_labelcolor">#00008B</data>
+      <data key="e_width">1</data>
+    </edge>
+    <edge source="n1" target="n0">
       <data key="e_weight">1</data>
       <data key="e_line">dash</data>
       <data key="e_arrow">False</data>
@@ -398,7 +407,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n1" target="n21">
+    <edge source="n2" target="n22">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -407,7 +416,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n1" target="n22">
+    <edge source="n2" target="n23">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -416,7 +425,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n2" target="n8">
+    <edge source="n3" target="n9">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -425,7 +434,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n2" target="n14">
+    <edge source="n3" target="n15">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -434,7 +443,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n4" target="n11">
+    <edge source="n5" target="n12">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -443,7 +452,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n4" target="n20">
+    <edge source="n5" target="n21">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -452,7 +461,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n5" target="n7">
+    <edge source="n6" target="n8">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -461,7 +470,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n5" target="n10">
+    <edge source="n6" target="n11">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -470,7 +479,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n5" target="n13">
+    <edge source="n6" target="n14">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -479,7 +488,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n7" target="n6">
+    <edge source="n8" target="n7">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -488,7 +497,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n7" target="n16">
+    <edge source="n8" target="n17">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -497,16 +506,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n15" target="n4">
-      <data key="e_weight">1</data>
-      <data key="e_line">solid</data>
-      <data key="e_arrow">True</data>
-      <data key="e_color">#A9A9A9</data>
-      <data key="e_edgelabel"></data>
-      <data key="e_labelcolor">#00008B</data>
-      <data key="e_width">1</data>
-    </edge>
-    <edge source="n15" target="n23">
+    <edge source="n16" target="n0">
       <data key="e_weight">1</data>
       <data key="e_line">dash</data>
       <data key="e_arrow">False</data>
@@ -515,16 +515,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n16" target="n18">
-      <data key="e_weight">1</data>
-      <data key="e_line">solid</data>
-      <data key="e_arrow">True</data>
-      <data key="e_color">#000000</data>
-      <data key="e_edgelabel"></data>
-      <data key="e_labelcolor">#00008B</data>
-      <data key="e_width">1</data>
-    </edge>
-    <edge source="n19" target="n3">
+    <edge source="n16" target="n5">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -533,7 +524,7 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n19" target="n4">
+    <edge source="n17" target="n19">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
@@ -542,47 +533,56 @@
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>
     </edge>
-    <edge source="n20" target="n9">
-      <data key="e_weight">1</data>
-      <data key="e_line">solid</data>
-      <data key="e_arrow">True</data>
-      <data key="e_color">#000000</data>
-      <data key="e_edgelabel"></data>
-      <data key="e_labelcolor">#00008B</data>
-      <data key="e_width">1</data>
-    </edge>
-    <edge source="n20" target="n17">
-      <data key="e_weight">1</data>
-      <data key="e_line">solid</data>
-      <data key="e_arrow">True</data>
-      <data key="e_color">#000000</data>
-      <data key="e_edgelabel"></data>
-      <data key="e_labelcolor">#00008B</data>
-      <data key="e_width">1</data>
-    </edge>
-    <edge source="n22" target="n6">
-      <data key="e_weight">1</data>
-      <data key="e_line">solid</data>
-      <data key="e_arrow">True</data>
-      <data key="e_color">#000000</data>
-      <data key="e_edgelabel"></data>
-      <data key="e_labelcolor">#00008B</data>
-      <data key="e_width">1</data>
-    </edge>
-    <edge source="n22" target="n12">
-      <data key="e_weight">1</data>
-      <data key="e_line">solid</data>
-      <data key="e_arrow">True</data>
-      <data key="e_color">#000000</data>
-      <data key="e_edgelabel"></data>
-      <data key="e_labelcolor">#00008B</data>
-      <data key="e_width">1</data>
-    </edge>
-    <edge source="n23" target="n20">
+    <edge source="n20" target="n4">
       <data key="e_weight">1</data>
       <data key="e_line">solid</data>
       <data key="e_arrow">True</data>
       <data key="e_color">#A9A9A9</data>
+      <data key="e_edgelabel"></data>
+      <data key="e_labelcolor">#00008B</data>
+      <data key="e_width">1</data>
+    </edge>
+    <edge source="n20" target="n5">
+      <data key="e_weight">1</data>
+      <data key="e_line">solid</data>
+      <data key="e_arrow">True</data>
+      <data key="e_color">#000000</data>
+      <data key="e_edgelabel"></data>
+      <data key="e_labelcolor">#00008B</data>
+      <data key="e_width">1</data>
+    </edge>
+    <edge source="n21" target="n10">
+      <data key="e_weight">1</data>
+      <data key="e_line">solid</data>
+      <data key="e_arrow">True</data>
+      <data key="e_color">#000000</data>
+      <data key="e_edgelabel"></data>
+      <data key="e_labelcolor">#00008B</data>
+      <data key="e_width">1</data>
+    </edge>
+    <edge source="n21" target="n18">
+      <data key="e_weight">1</data>
+      <data key="e_line">solid</data>
+      <data key="e_arrow">True</data>
+      <data key="e_color">#000000</data>
+      <data key="e_edgelabel"></data>
+      <data key="e_labelcolor">#00008B</data>
+      <data key="e_width">1</data>
+    </edge>
+    <edge source="n23" target="n7">
+      <data key="e_weight">1</data>
+      <data key="e_line">solid</data>
+      <data key="e_arrow">True</data>
+      <data key="e_color">#000000</data>
+      <data key="e_edgelabel"></data>
+      <data key="e_labelcolor">#00008B</data>
+      <data key="e_width">1</data>
+    </edge>
+    <edge source="n23" target="n13">
+      <data key="e_weight">1</data>
+      <data key="e_line">solid</data>
+      <data key="e_arrow">True</data>
+      <data key="e_color">#000000</data>
       <data key="e_edgelabel"></data>
       <data key="e_labelcolor">#00008B</data>
       <data key="e_width">1</data>

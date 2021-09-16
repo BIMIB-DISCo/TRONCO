@@ -61,9 +61,6 @@ been performed." />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -86,7 +83,7 @@ been performed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -158,12 +155,12 @@ specify a subset of events or models if multiple reconstruction have
 been performed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.selective.advantage.relations</span><span class='op'>(</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>as.selective.advantage.relations</span><span class='op'>(</span>
   <span class='va'>x</span>,
   events <span class='op'>=</span> <span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
   models <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>model</span><span class='op'>)</span>,
   type <span class='op'>=</span> <span class='st'>"fit"</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,7 +171,7 @@ been performed.</p>
     </tr>
     <tr>
       <th>events</th>
-      <td><p>A subset of events as of <code><a href='as.events.html'>as.events(x)</a></code>, all by default.</p></td>
+      <td><p>A subset of events as of <code>as.events(x)</code>, all by default.</p></td>
     </tr>
     <tr>
       <th>models</th>
@@ -191,289 +188,292 @@ been performed.</p>
     <p>All the selective advantage relations in a TRONCO model</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span>
-<span class='fu'>as.selective.advantage.relations</span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $capri_bic
-#&gt;                                SELECTS                                SELECTED
-#&gt; 1                         ins_del TET2            missense_point_mutations KIT
-#&gt; 2                        ins_del ASXL1           missense_point_mutations TET2
-#&gt; 3      missense_point_mutations SETBP1          nonsense_point_mutations ASXL1
-#&gt; 4  missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18
-#&gt; 5  missense_point_mutations NRAS_Ex2_3          missense_point_mutations IRAK4
-#&gt; 6        missense_point_mutations TET2                            ins_del EZH2
-#&gt; 7        missense_point_mutations EZH2                            ins_del TET2
-#&gt; 8        missense_point_mutations EZH2          missense_point_mutations CEBPA
-#&gt; 9        missense_point_mutations EZH2          missense_point_mutations ETNK1
-#&gt; 10        missense_point_mutations KIT                 nonsense_ins_del RUNX_1
-#&gt; 11              nonsense_ins_del CEBPA     missense_point_mutations EED_Ex2_12
-#&gt; 12              nonsense_ins_del CEBPA                    nonsense_ins_del WT1
-#&gt; 13      nonsense_point_mutations ASXL1     missense_point_mutations CBL_Ex_8_9
-#&gt; 14      nonsense_point_mutations ASXL1          missense_point_mutations EPHB3
-#&gt;    OBS.SELECTS OBS.SELECTED TEMPORAL.PRIORITY PROBABILITY.RAISING
-#&gt; 1            3            2      1.421229e-06        5.460128e-22
-#&gt; 2            7            3      2.278343e-38        6.442772e-35
-#&gt; 3           14            4      1.426321e-55        7.635188e-63
-#&gt; 4            3            1      1.056706e-31        2.612641e-09
-#&gt; 5            3            1      2.827924e-29        1.055365e-20
-#&gt; 6            3            1      1.282066e-25        1.177708e-10
-#&gt; 7            6            3      9.373014e-28        7.840153e-28
-#&gt; 8            6            1      1.677847e-53        1.835656e-14
-#&gt; 9            6            1      8.126240e-53        2.348033e-21
-#&gt; 10           2            1      2.540051e-13        3.228035e-03
-#&gt; 11           2            1      4.511947e-12        1.966262e-07
-#&gt; 12           2            1      2.157029e-13        9.434522e-05
-#&gt; 13           4            3      1.650994e-08        2.926887e-32
-#&gt; 14           4            1      1.661066e-39        6.448439e-17
-#&gt;    HYPERGEOMETRIC
-#&gt; 1      0.00000000
-#&gt; 2      0.07368421
-#&gt; 3      0.00000000
-#&gt; 4      0.07500000
-#&gt; 5      0.00000000
-#&gt; 6      0.07500000
-#&gt; 7      0.05364372
-#&gt; 8      0.15000000
-#&gt; 9      0.00000000
-#&gt; 10     0.05000000
-#&gt; 11     0.00000000
-#&gt; 12     0.05000000
-#&gt; 13     0.02226721
-#&gt; 14     0.00000000
-#&gt; 
-#&gt; $capri_aic
-#&gt;                                SELECTS                                SELECTED
-#&gt; 1                         ins_del TET2     missense_point_mutations CBL_Ex_8_9
-#&gt; 2                         ins_del TET2            missense_point_mutations KIT
-#&gt; 3                        ins_del ASXL1     missense_point_mutations KRAS_Ex2_3
-#&gt; 4                        ins_del ASXL1           missense_point_mutations TET2
-#&gt; 5      missense_point_mutations SETBP1           nonsense_point_mutations EZH2
-#&gt; 6      missense_point_mutations SETBP1          nonsense_point_mutations ASXL1
-#&gt; 7  missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18
-#&gt; 8  missense_point_mutations NRAS_Ex2_3          missense_point_mutations IRAK4
-#&gt; 9        missense_point_mutations TET2                            ins_del EZH2
-#&gt; 10       missense_point_mutations TET2                  nonsense_ins_del CEBPA
-#&gt; 11       missense_point_mutations EZH2                            ins_del TET2
-#&gt; 12       missense_point_mutations EZH2          missense_point_mutations CEBPA
-#&gt; 13       missense_point_mutations EZH2          missense_point_mutations ETNK1
-#&gt; 14      missense_point_mutations CSF3R           missense_point_mutations TET2
-#&gt; 15        missense_point_mutations KIT                 nonsense_ins_del RUNX_1
-#&gt; 16              nonsense_ins_del CEBPA     missense_point_mutations EED_Ex2_12
-#&gt; 17              nonsense_ins_del CEBPA                    nonsense_ins_del WT1
-#&gt; 18      nonsense_point_mutations ASXL1     missense_point_mutations CBL_Ex_8_9
-#&gt; 19      nonsense_point_mutations ASXL1          missense_point_mutations EPHB3
-#&gt; 20                    Pattern OR_CSF3R                  nonsense_ins_del CEBPA
-#&gt;    OBS.SELECTS OBS.SELECTED TEMPORAL.PRIORITY PROBABILITY.RAISING
-#&gt; 1            3            3      2.359743e-01        1.587286e-02
-#&gt; 2            3            2      1.421229e-06        5.460128e-22
-#&gt; 3            7            1      4.356112e-55        5.627097e-17
-#&gt; 4            7            3      2.278343e-38        6.442772e-35
-#&gt; 5           14            1      8.806722e-57        1.839890e-14
-#&gt; 6           14            4      1.426321e-55        7.635188e-63
-#&gt; 7            3            1      1.056706e-31        2.612641e-09
-#&gt; 8            3            1      2.827924e-29        1.055365e-20
-#&gt; 9            3            1      1.282066e-25        1.177708e-10
-#&gt; 10           3            2      5.985653e-07        1.056504e-05
-#&gt; 11           6            3      9.373014e-28        7.840153e-28
-#&gt; 12           6            1      1.677847e-53        1.835656e-14
-#&gt; 13           6            1      8.126240e-53        2.348033e-21
-#&gt; 14           4            3      5.618501e-11        6.632068e-05
-#&gt; 15           2            1      2.540051e-13        3.228035e-03
-#&gt; 16           2            1      4.511947e-12        1.966262e-07
-#&gt; 17           2            1      2.157029e-13        9.434522e-05
-#&gt; 18           4            3      1.650994e-08        2.926887e-32
-#&gt; 19           4            1      1.661066e-39        6.448439e-17
-#&gt; 20           6            2      7.398044e-44        2.822865e-06
-#&gt;    HYPERGEOMETRIC
-#&gt; 1      0.21356275
-#&gt; 2      0.00000000
-#&gt; 3      0.00000000
-#&gt; 4      0.07368421
-#&gt; 5      0.35000000
-#&gt; 6      0.00000000
-#&gt; 7      0.07500000
-#&gt; 8      0.00000000
-#&gt; 9      0.07500000
-#&gt; 10     0.14615385
-#&gt; 11     0.05364372
-#&gt; 12     0.15000000
-#&gt; 13     0.00000000
-#&gt; 14     0.27732794
-#&gt; 15     0.05000000
-#&gt; 16     0.00000000
-#&gt; 17     0.05000000
-#&gt; 18     0.02226721
-#&gt; 19     0.00000000
-#&gt; 20     0.28076923
-#&gt; </div><div class='input'><span class='fu'>as.selective.advantage.relations</span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $capri_bic
-#&gt;                               SELECTS                                SELECTED
-#&gt; 1 missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18
-#&gt; 2       missense_point_mutations EZH2          missense_point_mutations CEBPA
-#&gt;   OBS.SELECTS OBS.SELECTED TEMPORAL.PRIORITY PROBABILITY.RAISING HYPERGEOMETRIC
-#&gt; 1           3            1      1.056706e-31        2.612641e-09          0.075
-#&gt; 2           6            1      1.677847e-53        1.835656e-14          0.150
-#&gt; 
-#&gt; $capri_aic
-#&gt;                               SELECTS                                SELECTED
-#&gt; 1 missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18
-#&gt; 2       missense_point_mutations EZH2          missense_point_mutations CEBPA
-#&gt;   OBS.SELECTS OBS.SELECTED TEMPORAL.PRIORITY PROBABILITY.RAISING HYPERGEOMETRIC
-#&gt; 1           3            1      1.056706e-31        2.612641e-09          0.075
-#&gt; 2           6            1      1.677847e-53        1.835656e-14          0.150
-#&gt; </div><div class='input'><span class='fu'>as.selective.advantage.relations</span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span>, type<span class='op'>=</span><span class='st'>'pf'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $pf
-#&gt;                                SELECTS                                SELECTED
-#&gt; 1                         ins_del TET2     missense_point_mutations CBL_Ex_8_9
-#&gt; 2                         ins_del TET2            missense_point_mutations KIT
-#&gt; 3                         ins_del TET2                 nonsense_ins_del RUNX_1
-#&gt; 4                        ins_del ASXL1     missense_point_mutations KRAS_Ex2_3
-#&gt; 5                        ins_del ASXL1           missense_point_mutations TET2
-#&gt; 6                        ins_del ASXL1     missense_point_mutations CBL_Ex_8_9
-#&gt; 7      missense_point_mutations SETBP1     missense_point_mutations NRAS_Ex2_3
-#&gt; 8      missense_point_mutations SETBP1     missense_point_mutations CBL_Ex_8_9
-#&gt; 9      missense_point_mutations SETBP1 missense_point_mutations JARID_2_Ex1_18
-#&gt; 10     missense_point_mutations SETBP1          missense_point_mutations EPHB3
-#&gt; 11     missense_point_mutations SETBP1          missense_point_mutations CSF3R
-#&gt; 12     missense_point_mutations SETBP1           nonsense_point_mutations TET2
-#&gt; 13     missense_point_mutations SETBP1           nonsense_point_mutations EZH2
-#&gt; 14     missense_point_mutations SETBP1          nonsense_point_mutations ASXL1
-#&gt; 15     missense_point_mutations SETBP1          nonsense_point_mutations CSF3R
-#&gt; 16     missense_point_mutations SETBP1                        Pattern OR_CSF3R
-#&gt; 17 missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18
-#&gt; 18 missense_point_mutations NRAS_Ex2_3          missense_point_mutations IRAK4
-#&gt; 19       missense_point_mutations TET2                            ins_del EZH2
-#&gt; 20       missense_point_mutations TET2                    nonsense_ins_del WT1
-#&gt; 21       missense_point_mutations TET2                  nonsense_ins_del CEBPA
-#&gt; 22       missense_point_mutations EZH2                            ins_del TET2
-#&gt; 23       missense_point_mutations EZH2     missense_point_mutations NRAS_Ex2_3
-#&gt; 24       missense_point_mutations EZH2     missense_point_mutations CBL_Ex_8_9
-#&gt; 25       missense_point_mutations EZH2          missense_point_mutations CEBPA
-#&gt; 26       missense_point_mutations EZH2          missense_point_mutations ETNK1
-#&gt; 27       missense_point_mutations EZH2          missense_point_mutations IRAK4
-#&gt; 28       missense_point_mutations EZH2            missense_point_mutations KIT
-#&gt; 29      missense_point_mutations CSF3R           missense_point_mutations TET2
-#&gt; 30      missense_point_mutations CSF3R                    nonsense_ins_del WT1
-#&gt; 31      missense_point_mutations CSF3R                  nonsense_ins_del CEBPA
-#&gt; 32      missense_point_mutations CSF3R          nonsense_point_mutations CSF3R
-#&gt; 33        missense_point_mutations KIT                 nonsense_ins_del RUNX_1
-#&gt; 34              nonsense_ins_del CEBPA     missense_point_mutations EED_Ex2_12
-#&gt; 35              nonsense_ins_del CEBPA                    nonsense_ins_del WT1
-#&gt; 36       nonsense_point_mutations TET2     missense_point_mutations NRAS_Ex2_3
-#&gt; 37       nonsense_point_mutations TET2 missense_point_mutations JARID_2_Ex1_18
-#&gt; 38       nonsense_point_mutations TET2          missense_point_mutations CSF3R
-#&gt; 39      nonsense_point_mutations ASXL1     missense_point_mutations CBL_Ex_8_9
-#&gt; 40      nonsense_point_mutations ASXL1          missense_point_mutations EPHB3
-#&gt; 41                    Pattern XOR_EZH2                            ins_del TET2
-#&gt; 42                    Pattern XOR_EZH2     missense_point_mutations NRAS_Ex2_3
-#&gt; 43                    Pattern XOR_EZH2          missense_point_mutations CEBPA
-#&gt; 44                    Pattern XOR_EZH2          missense_point_mutations ETNK1
-#&gt; 45                    Pattern XOR_EZH2          missense_point_mutations IRAK4
-#&gt; 46                    Pattern XOR_EZH2            missense_point_mutations KIT
-#&gt; 47                    Pattern OR_CSF3R           missense_point_mutations TET2
-#&gt; 48                    Pattern OR_CSF3R                    nonsense_ins_del WT1
-#&gt; 49                    Pattern OR_CSF3R                  nonsense_ins_del CEBPA
-#&gt;    OBS.SELECTS OBS.SELECTED TEMPORAL.PRIORITY PROBABILITY.RAISING
-#&gt; 1            3            3      2.359743e-01        1.587286e-02
-#&gt; 2            3            2      1.421229e-06        5.460128e-22
-#&gt; 3            3            1      3.262925e-27        5.352680e-07
-#&gt; 4            7            1      4.356112e-55        5.627097e-17
-#&gt; 5            7            3      2.278343e-38        6.442772e-35
-#&gt; 6            7            3      4.899826e-40        4.004727e-02
-#&gt; 7           14            3      4.357290e-56        7.755853e-24
-#&gt; 8           14            3      4.145089e-56        7.691348e-28
-#&gt; 9           14            1      9.175701e-57        5.311779e-11
-#&gt; 10          14            1      1.287253e-56        2.607680e-20
-#&gt; 11          14            4      6.828657e-56        5.697137e-19
-#&gt; 12          14            5      5.185189e-55        3.729102e-03
-#&gt; 13          14            1      8.806722e-57        1.839890e-14
-#&gt; 14          14            4      1.426321e-55        7.635188e-63
-#&gt; 15          14            3      3.972375e-56        3.011047e-32
-#&gt; 16          14            6      5.477097e-53        8.260024e-23
-#&gt; 17           3            1      1.056706e-31        2.612641e-09
-#&gt; 18           3            1      2.827924e-29        1.055365e-20
-#&gt; 19           3            1      1.282066e-25        1.177708e-10
-#&gt; 20           3            1      1.806902e-26        3.254703e-10
-#&gt; 21           3            2      5.985653e-07        1.056504e-05
-#&gt; 22           6            3      9.373014e-28        7.840153e-28
-#&gt; 23           6            3      3.120373e-25        8.401800e-13
-#&gt; 24           6            3      3.690851e-30        2.969062e-02
-#&gt; 25           6            1      1.677847e-53        1.835656e-14
-#&gt; 26           6            1      8.126240e-53        2.348033e-21
-#&gt; 27           6            1      3.167398e-52        3.631082e-27
-#&gt; 28           6            2      5.489839e-41        8.185249e-09
-#&gt; 29           4            3      5.618501e-11        6.632068e-05
-#&gt; 30           4            1      3.309532e-45        1.348268e-12
-#&gt; 31           4            2      1.860213e-26        3.703793e-06
-#&gt; 32           4            3      9.416075e-09        6.601609e-13
-#&gt; 33           2            1      2.540051e-13        3.228035e-03
-#&gt; 34           2            1      4.511947e-12        1.966262e-07
-#&gt; 35           2            1      2.157029e-13        9.434522e-05
-#&gt; 36           5            3      9.388325e-16        8.545585e-03
-#&gt; 37           5            1      4.217177e-49        3.823050e-10
-#&gt; 38           5            4      5.771054e-04        1.704655e-06
-#&gt; 39           4            3      1.650994e-08        2.926887e-32
-#&gt; 40           4            1      1.661066e-39        6.448439e-17
-#&gt; 41           8            3      1.657722e-44        8.907302e-28
-#&gt; 42           8            3      1.100280e-43        3.527613e-10
-#&gt; 43           8            1      2.432208e-56        1.836811e-14
-#&gt; 44           8            1      3.987969e-56        1.051434e-21
-#&gt; 45           8            1      4.919078e-56        1.589068e-27
-#&gt; 46           8            2      4.242942e-52        8.546011e-09
-#&gt; 47           6            3      4.947292e-32        2.296749e-04
-#&gt; 48           6            1      1.058573e-52        1.598725e-13
-#&gt; 49           6            2      7.398044e-44        2.822865e-06
-#&gt;    HYPERGEOMETRIC
-#&gt; 1      0.21356275
-#&gt; 2      0.00000000
-#&gt; 3      0.07500000
-#&gt; 4      0.00000000
-#&gt; 5      0.07368421
-#&gt; 6      0.44777328
-#&gt; 7      0.03684211
-#&gt; 8      0.27631579
-#&gt; 9      0.35000000
-#&gt; 10     0.00000000
-#&gt; 11     0.11450925
-#&gt; 12     0.22238028
-#&gt; 13     0.35000000
-#&gt; 14     0.00000000
-#&gt; 15     0.03684211
-#&gt; 16     0.09909910
-#&gt; 17     0.07500000
-#&gt; 18     0.00000000
-#&gt; 19     0.07500000
-#&gt; 20     0.07500000
-#&gt; 21     0.14615385
-#&gt; 22     0.05364372
-#&gt; 23     0.05364372
-#&gt; 24     0.39433198
-#&gt; 25     0.15000000
-#&gt; 26     0.00000000
-#&gt; 27     0.00000000
-#&gt; 28     0.01923077
-#&gt; 29     0.27732794
-#&gt; 30     0.10000000
-#&gt; 31     0.19230769
-#&gt; 32     0.02226721
-#&gt; 33     0.05000000
-#&gt; 34     0.00000000
-#&gt; 35     0.05000000
-#&gt; 36     0.33755061
-#&gt; 37     0.12500000
-#&gt; 38     0.06899004
-#&gt; 39     0.02226721
-#&gt; 40     0.00000000
-#&gt; 41     0.09635628
-#&gt; 42     0.09635628
-#&gt; 43     0.20000000
-#&gt; 44     0.00000000
-#&gt; 45     0.00000000
-#&gt; 46     0.03589744
-#&gt; 47     0.39433198
-#&gt; 48     0.15000000
-#&gt; 49     0.28076923
-#&gt; </div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>as.selective.advantage.relations</span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $capri_bic</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                SELECTS                                SELECTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1                         ins_del TET2            missense_point_mutations KIT</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2                        ins_del ASXL1           missense_point_mutations TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3      missense_point_mutations SETBP1          nonsense_point_mutations ASXL1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4  missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5  missense_point_mutations NRAS_Ex2_3          missense_point_mutations IRAK4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6        missense_point_mutations TET2                            ins_del EZH2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7        missense_point_mutations EZH2                            ins_del TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8        missense_point_mutations EZH2          missense_point_mutations CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9        missense_point_mutations EZH2          missense_point_mutations ETNK1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10        missense_point_mutations KIT                 nonsense_ins_del RUNX_1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 11              nonsense_ins_del CEBPA     missense_point_mutations EED_Ex2_12</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 12              nonsense_ins_del CEBPA                    nonsense_ins_del WT1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 13      nonsense_point_mutations ASXL1     missense_point_mutations CBL_Ex_8_9</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 14      nonsense_point_mutations ASXL1          missense_point_mutations EPHB3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    OBS.SELECTS OBS.SELECTED TEMPORAL.PRIORITY PROBABILITY.RAISING</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1            3            2      1.421229e-06        5.460128e-22</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2            7            3      2.278343e-38        6.442772e-35</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3           14            4      1.426321e-55        7.635188e-63</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4            3            1      1.056706e-31        2.612641e-09</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5            3            1      2.827924e-29        1.055365e-20</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6            3            1      1.282066e-25        1.177708e-10</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7            6            3      9.373014e-28        7.840153e-28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8            6            1      1.677847e-53        1.835656e-14</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9            6            1      8.126240e-53        2.348033e-21</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10           2            1      2.540051e-13        3.228035e-03</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 11           2            1      4.511947e-12        1.966262e-07</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 12           2            1      2.157029e-13        9.434522e-05</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 13           4            3      1.650994e-08        2.926887e-32</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 14           4            1      1.661066e-39        6.448439e-17</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    HYPERGEOMETRIC</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1      0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2      0.07368421</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3      0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4      0.07500000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5      0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6      0.07500000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7      0.05364372</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8      0.15000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9      0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10     0.05000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 11     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 12     0.05000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 13     0.02226721</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 14     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $capri_aic</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                SELECTS                                SELECTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1                         ins_del TET2     missense_point_mutations CBL_Ex_8_9</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2                         ins_del TET2            missense_point_mutations KIT</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3                        ins_del ASXL1     missense_point_mutations KRAS_Ex2_3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4                        ins_del ASXL1           missense_point_mutations TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5      missense_point_mutations SETBP1           nonsense_point_mutations EZH2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6      missense_point_mutations SETBP1          nonsense_point_mutations ASXL1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7  missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8  missense_point_mutations NRAS_Ex2_3          missense_point_mutations IRAK4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9        missense_point_mutations TET2                            ins_del EZH2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10       missense_point_mutations TET2                  nonsense_ins_del CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 11       missense_point_mutations EZH2                            ins_del TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 12       missense_point_mutations EZH2          missense_point_mutations CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 13       missense_point_mutations EZH2          missense_point_mutations ETNK1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 14      missense_point_mutations CSF3R           missense_point_mutations TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 15        missense_point_mutations KIT                 nonsense_ins_del RUNX_1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 16              nonsense_ins_del CEBPA     missense_point_mutations EED_Ex2_12</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 17              nonsense_ins_del CEBPA                    nonsense_ins_del WT1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 18      nonsense_point_mutations ASXL1     missense_point_mutations CBL_Ex_8_9</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 19      nonsense_point_mutations ASXL1          missense_point_mutations EPHB3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 20                    Pattern OR_CSF3R                  nonsense_ins_del CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    OBS.SELECTS OBS.SELECTED TEMPORAL.PRIORITY PROBABILITY.RAISING</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1            3            3      2.359743e-01        1.587286e-02</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2            3            2      1.421229e-06        5.460128e-22</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3            7            1      4.356112e-55        5.627097e-17</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4            7            3      2.278343e-38        6.442772e-35</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5           14            1      8.806722e-57        1.839890e-14</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6           14            4      1.426321e-55        7.635188e-63</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7            3            1      1.056706e-31        2.612641e-09</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8            3            1      2.827924e-29        1.055365e-20</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9            3            1      1.282066e-25        1.177708e-10</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10           3            2      5.985653e-07        1.056504e-05</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 11           6            3      9.373014e-28        7.840153e-28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 12           6            1      1.677847e-53        1.835656e-14</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 13           6            1      8.126240e-53        2.348033e-21</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 14           4            3      5.618501e-11        6.632068e-05</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 15           2            1      2.540051e-13        3.228035e-03</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 16           2            1      4.511947e-12        1.966262e-07</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 17           2            1      2.157029e-13        9.434522e-05</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 18           4            3      1.650994e-08        2.926887e-32</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 19           4            1      1.661066e-39        6.448439e-17</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 20           6            2      7.398044e-44        2.822865e-06</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    HYPERGEOMETRIC</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1      0.21356275</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2      0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3      0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4      0.07368421</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5      0.35000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6      0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7      0.07500000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8      0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9      0.07500000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10     0.14615385</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 11     0.05364372</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 12     0.15000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 13     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 14     0.27732794</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 15     0.05000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 16     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 17     0.05000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 18     0.02226721</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 19     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 20     0.28076923</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'>as.selective.advantage.relations</span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $capri_bic</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                               SELECTS                                SELECTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1 missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       missense_point_mutations EZH2          missense_point_mutations CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   OBS.SELECTS OBS.SELECTED TEMPORAL.PRIORITY PROBABILITY.RAISING HYPERGEOMETRIC</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1           3            1      1.056706e-31        2.612641e-09          0.075</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2           6            1      1.677847e-53        1.835656e-14          0.150</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $capri_aic</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                               SELECTS                                SELECTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1 missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2       missense_point_mutations EZH2          missense_point_mutations CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   OBS.SELECTS OBS.SELECTED TEMPORAL.PRIORITY PROBABILITY.RAISING HYPERGEOMETRIC</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1           3            1      1.056706e-31        2.612641e-09          0.075</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2           6            1      1.677847e-53        1.835656e-14          0.150</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'>as.selective.advantage.relations</span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span>, type<span class='op'>=</span><span class='st'>'pf'</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $pf</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                SELECTS                                SELECTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1                         ins_del TET2     missense_point_mutations CBL_Ex_8_9</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2                         ins_del TET2            missense_point_mutations KIT</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3                         ins_del TET2                 nonsense_ins_del RUNX_1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4                        ins_del ASXL1     missense_point_mutations KRAS_Ex2_3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5                        ins_del ASXL1           missense_point_mutations TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6                        ins_del ASXL1     missense_point_mutations CBL_Ex_8_9</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7      missense_point_mutations SETBP1     missense_point_mutations NRAS_Ex2_3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8      missense_point_mutations SETBP1     missense_point_mutations CBL_Ex_8_9</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9      missense_point_mutations SETBP1 missense_point_mutations JARID_2_Ex1_18</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10     missense_point_mutations SETBP1          missense_point_mutations EPHB3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 11     missense_point_mutations SETBP1          missense_point_mutations CSF3R</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 12     missense_point_mutations SETBP1           nonsense_point_mutations TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 13     missense_point_mutations SETBP1           nonsense_point_mutations EZH2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 14     missense_point_mutations SETBP1          nonsense_point_mutations ASXL1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 15     missense_point_mutations SETBP1          nonsense_point_mutations CSF3R</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 16     missense_point_mutations SETBP1                        Pattern OR_CSF3R</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 17 missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 18 missense_point_mutations NRAS_Ex2_3          missense_point_mutations IRAK4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 19       missense_point_mutations TET2                            ins_del EZH2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 20       missense_point_mutations TET2                    nonsense_ins_del WT1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 21       missense_point_mutations TET2                  nonsense_ins_del CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 22       missense_point_mutations EZH2                            ins_del TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 23       missense_point_mutations EZH2     missense_point_mutations NRAS_Ex2_3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 24       missense_point_mutations EZH2     missense_point_mutations CBL_Ex_8_9</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 25       missense_point_mutations EZH2          missense_point_mutations CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 26       missense_point_mutations EZH2          missense_point_mutations ETNK1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 27       missense_point_mutations EZH2          missense_point_mutations IRAK4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 28       missense_point_mutations EZH2            missense_point_mutations KIT</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 29      missense_point_mutations CSF3R           missense_point_mutations TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 30      missense_point_mutations CSF3R                    nonsense_ins_del WT1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 31      missense_point_mutations CSF3R                  nonsense_ins_del CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 32      missense_point_mutations CSF3R          nonsense_point_mutations CSF3R</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 33        missense_point_mutations KIT                 nonsense_ins_del RUNX_1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 34              nonsense_ins_del CEBPA     missense_point_mutations EED_Ex2_12</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 35              nonsense_ins_del CEBPA                    nonsense_ins_del WT1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 36       nonsense_point_mutations TET2     missense_point_mutations NRAS_Ex2_3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 37       nonsense_point_mutations TET2 missense_point_mutations JARID_2_Ex1_18</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 38       nonsense_point_mutations TET2          missense_point_mutations CSF3R</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 39      nonsense_point_mutations ASXL1     missense_point_mutations CBL_Ex_8_9</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 40      nonsense_point_mutations ASXL1          missense_point_mutations EPHB3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 41                    Pattern XOR_EZH2                            ins_del TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 42                    Pattern XOR_EZH2     missense_point_mutations NRAS_Ex2_3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 43                    Pattern XOR_EZH2          missense_point_mutations CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 44                    Pattern XOR_EZH2          missense_point_mutations ETNK1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 45                    Pattern XOR_EZH2          missense_point_mutations IRAK4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 46                    Pattern XOR_EZH2            missense_point_mutations KIT</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 47                    Pattern OR_CSF3R           missense_point_mutations TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 48                    Pattern OR_CSF3R                    nonsense_ins_del WT1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 49                    Pattern OR_CSF3R                  nonsense_ins_del CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    OBS.SELECTS OBS.SELECTED TEMPORAL.PRIORITY PROBABILITY.RAISING</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1            3            3      2.359743e-01        1.587286e-02</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2            3            2      1.421229e-06        5.460128e-22</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3            3            1      3.262925e-27        5.352680e-07</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4            7            1      4.356112e-55        5.627097e-17</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5            7            3      2.278343e-38        6.442772e-35</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6            7            3      4.899826e-40        4.004727e-02</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7           14            3      4.357290e-56        7.755853e-24</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8           14            3      4.145089e-56        7.691348e-28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9           14            1      9.175701e-57        5.311779e-11</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10          14            1      1.287253e-56        2.607680e-20</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 11          14            4      6.828657e-56        5.697137e-19</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 12          14            5      5.185189e-55        3.729102e-03</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 13          14            1      8.806722e-57        1.839890e-14</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 14          14            4      1.426321e-55        7.635188e-63</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 15          14            3      3.972375e-56        3.011047e-32</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 16          14            6      5.477097e-53        8.260024e-23</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 17           3            1      1.056706e-31        2.612641e-09</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 18           3            1      2.827924e-29        1.055365e-20</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 19           3            1      1.282066e-25        1.177708e-10</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 20           3            1      1.806902e-26        3.254703e-10</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 21           3            2      5.985653e-07        1.056504e-05</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 22           6            3      9.373014e-28        7.840153e-28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 23           6            3      3.120373e-25        8.401800e-13</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 24           6            3      3.690851e-30        2.969062e-02</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 25           6            1      1.677847e-53        1.835656e-14</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 26           6            1      8.126240e-53        2.348033e-21</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 27           6            1      3.167398e-52        3.631082e-27</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 28           6            2      5.489839e-41        8.185249e-09</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 29           4            3      5.618501e-11        6.632068e-05</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 30           4            1      3.309532e-45        1.348268e-12</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 31           4            2      1.860213e-26        3.703793e-06</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 32           4            3      9.416075e-09        6.601609e-13</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 33           2            1      2.540051e-13        3.228035e-03</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 34           2            1      4.511947e-12        1.966262e-07</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 35           2            1      2.157029e-13        9.434522e-05</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 36           5            3      9.388325e-16        8.545585e-03</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 37           5            1      4.217177e-49        3.823050e-10</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 38           5            4      5.771054e-04        1.704655e-06</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 39           4            3      1.650994e-08        2.926887e-32</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 40           4            1      1.661066e-39        6.448439e-17</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 41           8            3      1.657722e-44        8.907302e-28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 42           8            3      1.100280e-43        3.527613e-10</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 43           8            1      2.432208e-56        1.836811e-14</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 44           8            1      3.987969e-56        1.051434e-21</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 45           8            1      4.919078e-56        1.589068e-27</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 46           8            2      4.242942e-52        8.546011e-09</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 47           6            3      4.947292e-32        2.296749e-04</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 48           6            1      1.058573e-52        1.598725e-13</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 49           6            2      7.398044e-44        2.822865e-06</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    HYPERGEOMETRIC</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1      0.21356275</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2      0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3      0.07500000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4      0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5      0.07368421</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6      0.44777328</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7      0.03684211</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8      0.27631579</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9      0.35000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 11     0.11450925</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 12     0.22238028</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 13     0.35000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 14     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 15     0.03684211</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 16     0.09909910</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 17     0.07500000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 18     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 19     0.07500000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 20     0.07500000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 21     0.14615385</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 22     0.05364372</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 23     0.05364372</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 24     0.39433198</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 25     0.15000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 26     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 27     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 28     0.01923077</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 29     0.27732794</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 30     0.10000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 31     0.19230769</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 32     0.02226721</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 33     0.05000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 34     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 35     0.05000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 36     0.33755061</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 37     0.12500000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 38     0.06899004</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 39     0.02226721</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 40     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 41     0.09635628</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 42     0.09635628</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 43     0.20000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 44     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 45     0.00000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 46     0.03589744</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 47     0.39433198</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 48     0.15000000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 49     0.28076923</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
 <p>All examples in this section will be done with the the aCML dataset as reference.</p>
 <div id="modifying-events-and-samples" class="section level2">
 <h2 class="hasAnchor">
-<a href="#modifying-events-and-samples" class="anchor"></a>Modifying events and samples</h2>
+<a href="#modifying-events-and-samples" class="anchor" aria-hidden="true"></a>Modifying events and samples</h2>
 <p>TRONCO provides functions for renaming the events that were included in a dataset, or the type associated to a set of events (e.g., a <code>Mutation</code> could be renamed to a <code>Missense Mutation</code>).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/rename.gene.html">rename.gene</a></span><span class="op">(</span><span class="va">aCML</span>, <span class="st">'TET2'</span>, <span class="st">'new name'</span><span class="op">)</span>
@@ -159,12 +159,12 @@
 </div>
 <div id="modifying-patterns" class="section level2">
 <h2 class="hasAnchor">
-<a href="#modifying-patterns" class="anchor"></a>Modifying patterns</h2>
+<a href="#modifying-patterns" class="anchor" aria-hidden="true"></a>Modifying patterns</h2>
 <p>TRONCO provides functions to edit patterns, pretty much as for any other type of events. Patterns however have a special denotation and are supported only by CAPRI algorithm – see Model Reconstruction with CAPRI to see a practical application of that.</p>
 </div>
 <div id="subsetting-a-dataset" class="section level2">
 <h2 class="hasAnchor">
-<a href="#subsetting-a-dataset" class="anchor"></a>Subsetting a dataset</h2>
+<a href="#subsetting-a-dataset" class="anchor" aria-hidden="true"></a>Subsetting a dataset</h2>
 <p>It is very often the case that we want to subset a dataset by either selecting only some of its samples, or some of its events. Function <code>samples.selection</code> returns a dataset with only some selected samples.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/samples.selection.html">samples.selection</a></span><span class="op">(</span><span class="va">aCML</span>, samples <span class="op">=</span> <span class="fu"><a href="../reference/as.samples.html">as.samples</a></span><span class="op">(</span><span class="va">aCML</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span>

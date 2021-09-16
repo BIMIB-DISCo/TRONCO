@@ -58,9 +58,6 @@
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -83,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -152,7 +149,7 @@
     <p>Return the hypotheses in the dataset which constitute CAPRI's hypotheses.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.hypotheses</span><span class='op'>(</span><span class='va'>x</span>, cause <span class='op'>=</span> <span class='cn'>NA</span>, effect <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>as.hypotheses</span><span class='op'>(</span><span class='va'>x</span>, cause <span class='op'>=</span> <span class='cn'>NA</span>, effect <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,215 +173,216 @@
     <p>The hypotheses in the dataset which constitute CAPRI's hypotheses.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-<span class='fu'>as.hypotheses</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;        cause type                 cause event      effect type               
-#&gt;   [1,] "Pattern"                  "XOR_EZH2"       "ins_del"                 
-#&gt;   [2,] "Pattern"                  "XOR_EZH2"       "ins_del"                 
-#&gt;   [3,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;   [4,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;   [5,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;   [6,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;   [7,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;   [8,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;   [9,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;  [10,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;  [11,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;  [12,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;  [13,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;  [14,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;  [15,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;  [16,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;  [17,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;  [18,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;  [19,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"
-#&gt;  [20,] "Pattern"                  "XOR_EZH2"       "nonsense_ins_del"        
-#&gt;  [21,] "Pattern"                  "XOR_EZH2"       "nonsense_ins_del"        
-#&gt;  [22,] "Pattern"                  "XOR_EZH2"       "nonsense_ins_del"        
-#&gt;  [23,] "Pattern"                  "XOR_EZH2"       "nonsense_point_mutations"
-#&gt;  [24,] "Pattern"                  "XOR_EZH2"       "nonsense_point_mutations"
-#&gt;  [25,] "Pattern"                  "XOR_EZH2"       "nonsense_point_mutations"
-#&gt;  [26,] "ins_del"                  "TET2"           "Pattern"                 
-#&gt;  [27,] "ins_del"                  "ASXL1"          "Pattern"                 
-#&gt;  [28,] "missense_point_mutations" "SETBP1"         "Pattern"                 
-#&gt;  [29,] "missense_point_mutations" "NRAS_Ex2_3"     "Pattern"                 
-#&gt;  [30,] "missense_point_mutations" "KRAS_Ex2_3"     "Pattern"                 
-#&gt;  [31,] "missense_point_mutations" "TET2"           "Pattern"                 
-#&gt;  [32,] "missense_point_mutations" "CBL_Ex_8_9"     "Pattern"                 
-#&gt;  [33,] "missense_point_mutations" "IDH2_R140"      "Pattern"                 
-#&gt;  [34,] "missense_point_mutations" "SF3B1_Ex_12_15" "Pattern"                 
-#&gt;  [35,] "missense_point_mutations" "JARID_2_Ex1_18" "Pattern"                 
-#&gt;  [36,] "missense_point_mutations" "EED_Ex2_12"     "Pattern"                 
-#&gt;  [37,] "missense_point_mutations" "CEBPA"          "Pattern"                 
-#&gt;  [38,] "missense_point_mutations" "EPHB3"          "Pattern"                 
-#&gt;  [39,] "missense_point_mutations" "ETNK1"          "Pattern"                 
-#&gt;  [40,] "missense_point_mutations" "GATA2"          "Pattern"                 
-#&gt;  [41,] "missense_point_mutations" "IRAK4"          "Pattern"                 
-#&gt;  [42,] "missense_point_mutations" "MTA2"           "Pattern"                 
-#&gt;  [43,] "missense_point_mutations" "CSF3R"          "Pattern"                 
-#&gt;  [44,] "missense_point_mutations" "KIT"            "Pattern"                 
-#&gt;  [45,] "nonsense_ins_del"         "WT1"            "Pattern"                 
-#&gt;  [46,] "nonsense_ins_del"         "RUNX_1"         "Pattern"                 
-#&gt;  [47,] "nonsense_ins_del"         "CEBPA"          "Pattern"                 
-#&gt;  [48,] "nonsense_point_mutations" "TET2"           "Pattern"                 
-#&gt;  [49,] "nonsense_point_mutations" "ASXL1"          "Pattern"                 
-#&gt;  [50,] "nonsense_point_mutations" "CSF3R"          "Pattern"                 
-#&gt;  [51,] "Pattern"                  "OR_CSF3R"       "ins_del"                 
-#&gt;  [52,] "Pattern"                  "OR_CSF3R"       "ins_del"                 
-#&gt;  [53,] "Pattern"                  "OR_CSF3R"       "ins_del"                 
-#&gt;  [54,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [55,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [56,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [57,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [58,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [59,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [60,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [61,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [62,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [63,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [64,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [65,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [66,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [67,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [68,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [69,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [70,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"
-#&gt;  [71,] "Pattern"                  "OR_CSF3R"       "nonsense_ins_del"        
-#&gt;  [72,] "Pattern"                  "OR_CSF3R"       "nonsense_ins_del"        
-#&gt;  [73,] "Pattern"                  "OR_CSF3R"       "nonsense_ins_del"        
-#&gt;  [74,] "Pattern"                  "OR_CSF3R"       "nonsense_point_mutations"
-#&gt;  [75,] "Pattern"                  "OR_CSF3R"       "nonsense_point_mutations"
-#&gt;  [76,] "Pattern"                  "OR_CSF3R"       "nonsense_point_mutations"
-#&gt;  [77,] "ins_del"                  "TET2"           "Pattern"                 
-#&gt;  [78,] "ins_del"                  "EZH2"           "Pattern"                 
-#&gt;  [79,] "ins_del"                  "ASXL1"          "Pattern"                 
-#&gt;  [80,] "missense_point_mutations" "SETBP1"         "Pattern"                 
-#&gt;  [81,] "missense_point_mutations" "NRAS_Ex2_3"     "Pattern"                 
-#&gt;  [82,] "missense_point_mutations" "KRAS_Ex2_3"     "Pattern"                 
-#&gt;  [83,] "missense_point_mutations" "TET2"           "Pattern"                 
-#&gt;  [84,] "missense_point_mutations" "EZH2"           "Pattern"                 
-#&gt;  [85,] "missense_point_mutations" "CBL_Ex_8_9"     "Pattern"                 
-#&gt;  [86,] "missense_point_mutations" "IDH2_R140"      "Pattern"                 
-#&gt;  [87,] "missense_point_mutations" "SF3B1_Ex_12_15" "Pattern"                 
-#&gt;  [88,] "missense_point_mutations" "JARID_2_Ex1_18" "Pattern"                 
-#&gt;  [89,] "missense_point_mutations" "EED_Ex2_12"     "Pattern"                 
-#&gt;  [90,] "missense_point_mutations" "CEBPA"          "Pattern"                 
-#&gt;  [91,] "missense_point_mutations" "EPHB3"          "Pattern"                 
-#&gt;  [92,] "missense_point_mutations" "ETNK1"          "Pattern"                 
-#&gt;  [93,] "missense_point_mutations" "GATA2"          "Pattern"                 
-#&gt;  [94,] "missense_point_mutations" "IRAK4"          "Pattern"                 
-#&gt;  [95,] "missense_point_mutations" "MTA2"           "Pattern"                 
-#&gt;  [96,] "missense_point_mutations" "KIT"            "Pattern"                 
-#&gt;  [97,] "nonsense_ins_del"         "WT1"            "Pattern"                 
-#&gt;  [98,] "nonsense_ins_del"         "RUNX_1"         "Pattern"                 
-#&gt;  [99,] "nonsense_ins_del"         "CEBPA"          "Pattern"                 
-#&gt; [100,] "nonsense_point_mutations" "TET2"           "Pattern"                 
-#&gt; [101,] "nonsense_point_mutations" "EZH2"           "Pattern"                 
-#&gt; [102,] "nonsense_point_mutations" "ASXL1"          "Pattern"                 
-#&gt;        effect event    
-#&gt;   [1,] "TET2"          
-#&gt;   [2,] "ASXL1"         
-#&gt;   [3,] "SETBP1"        
-#&gt;   [4,] "NRAS_Ex2_3"    
-#&gt;   [5,] "KRAS_Ex2_3"    
-#&gt;   [6,] "TET2"          
-#&gt;   [7,] "CBL_Ex_8_9"    
-#&gt;   [8,] "IDH2_R140"     
-#&gt;   [9,] "SF3B1_Ex_12_15"
-#&gt;  [10,] "JARID_2_Ex1_18"
-#&gt;  [11,] "EED_Ex2_12"    
-#&gt;  [12,] "CEBPA"         
-#&gt;  [13,] "EPHB3"         
-#&gt;  [14,] "ETNK1"         
-#&gt;  [15,] "GATA2"         
-#&gt;  [16,] "IRAK4"         
-#&gt;  [17,] "MTA2"          
-#&gt;  [18,] "CSF3R"         
-#&gt;  [19,] "KIT"           
-#&gt;  [20,] "WT1"           
-#&gt;  [21,] "RUNX_1"        
-#&gt;  [22,] "CEBPA"         
-#&gt;  [23,] "TET2"          
-#&gt;  [24,] "ASXL1"         
-#&gt;  [25,] "CSF3R"         
-#&gt;  [26,] "XOR_EZH2"      
-#&gt;  [27,] "XOR_EZH2"      
-#&gt;  [28,] "XOR_EZH2"      
-#&gt;  [29,] "XOR_EZH2"      
-#&gt;  [30,] "XOR_EZH2"      
-#&gt;  [31,] "XOR_EZH2"      
-#&gt;  [32,] "XOR_EZH2"      
-#&gt;  [33,] "XOR_EZH2"      
-#&gt;  [34,] "XOR_EZH2"      
-#&gt;  [35,] "XOR_EZH2"      
-#&gt;  [36,] "XOR_EZH2"      
-#&gt;  [37,] "XOR_EZH2"      
-#&gt;  [38,] "XOR_EZH2"      
-#&gt;  [39,] "XOR_EZH2"      
-#&gt;  [40,] "XOR_EZH2"      
-#&gt;  [41,] "XOR_EZH2"      
-#&gt;  [42,] "XOR_EZH2"      
-#&gt;  [43,] "XOR_EZH2"      
-#&gt;  [44,] "XOR_EZH2"      
-#&gt;  [45,] "XOR_EZH2"      
-#&gt;  [46,] "XOR_EZH2"      
-#&gt;  [47,] "XOR_EZH2"      
-#&gt;  [48,] "XOR_EZH2"      
-#&gt;  [49,] "XOR_EZH2"      
-#&gt;  [50,] "XOR_EZH2"      
-#&gt;  [51,] "TET2"          
-#&gt;  [52,] "EZH2"          
-#&gt;  [53,] "ASXL1"         
-#&gt;  [54,] "SETBP1"        
-#&gt;  [55,] "NRAS_Ex2_3"    
-#&gt;  [56,] "KRAS_Ex2_3"    
-#&gt;  [57,] "TET2"          
-#&gt;  [58,] "EZH2"          
-#&gt;  [59,] "CBL_Ex_8_9"    
-#&gt;  [60,] "IDH2_R140"     
-#&gt;  [61,] "SF3B1_Ex_12_15"
-#&gt;  [62,] "JARID_2_Ex1_18"
-#&gt;  [63,] "EED_Ex2_12"    
-#&gt;  [64,] "CEBPA"         
-#&gt;  [65,] "EPHB3"         
-#&gt;  [66,] "ETNK1"         
-#&gt;  [67,] "GATA2"         
-#&gt;  [68,] "IRAK4"         
-#&gt;  [69,] "MTA2"          
-#&gt;  [70,] "KIT"           
-#&gt;  [71,] "WT1"           
-#&gt;  [72,] "RUNX_1"        
-#&gt;  [73,] "CEBPA"         
-#&gt;  [74,] "TET2"          
-#&gt;  [75,] "EZH2"          
-#&gt;  [76,] "ASXL1"         
-#&gt;  [77,] "OR_CSF3R"      
-#&gt;  [78,] "OR_CSF3R"      
-#&gt;  [79,] "OR_CSF3R"      
-#&gt;  [80,] "OR_CSF3R"      
-#&gt;  [81,] "OR_CSF3R"      
-#&gt;  [82,] "OR_CSF3R"      
-#&gt;  [83,] "OR_CSF3R"      
-#&gt;  [84,] "OR_CSF3R"      
-#&gt;  [85,] "OR_CSF3R"      
-#&gt;  [86,] "OR_CSF3R"      
-#&gt;  [87,] "OR_CSF3R"      
-#&gt;  [88,] "OR_CSF3R"      
-#&gt;  [89,] "OR_CSF3R"      
-#&gt;  [90,] "OR_CSF3R"      
-#&gt;  [91,] "OR_CSF3R"      
-#&gt;  [92,] "OR_CSF3R"      
-#&gt;  [93,] "OR_CSF3R"      
-#&gt;  [94,] "OR_CSF3R"      
-#&gt;  [95,] "OR_CSF3R"      
-#&gt;  [96,] "OR_CSF3R"      
-#&gt;  [97,] "OR_CSF3R"      
-#&gt;  [98,] "OR_CSF3R"      
-#&gt;  [99,] "OR_CSF3R"      
-#&gt; [100,] "OR_CSF3R"      
-#&gt; [101,] "OR_CSF3R"      
-#&gt; [102,] "OR_CSF3R"      </div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>as.hypotheses</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>        cause type                 cause event      effect type               </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [1,] "Pattern"                  "XOR_EZH2"       "ins_del"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [2,] "Pattern"                  "XOR_EZH2"       "ins_del"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [3,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [4,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [5,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [6,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [7,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [8,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [9,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [10,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [11,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [12,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [13,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [14,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [15,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [16,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [17,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [18,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [19,] "Pattern"                  "XOR_EZH2"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [20,] "Pattern"                  "XOR_EZH2"       "nonsense_ins_del"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [21,] "Pattern"                  "XOR_EZH2"       "nonsense_ins_del"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [22,] "Pattern"                  "XOR_EZH2"       "nonsense_ins_del"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [23,] "Pattern"                  "XOR_EZH2"       "nonsense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [24,] "Pattern"                  "XOR_EZH2"       "nonsense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [25,] "Pattern"                  "XOR_EZH2"       "nonsense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [26,] "ins_del"                  "TET2"           "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [27,] "ins_del"                  "ASXL1"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [28,] "missense_point_mutations" "SETBP1"         "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [29,] "missense_point_mutations" "NRAS_Ex2_3"     "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [30,] "missense_point_mutations" "KRAS_Ex2_3"     "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [31,] "missense_point_mutations" "TET2"           "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [32,] "missense_point_mutations" "CBL_Ex_8_9"     "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [33,] "missense_point_mutations" "IDH2_R140"      "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [34,] "missense_point_mutations" "SF3B1_Ex_12_15" "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [35,] "missense_point_mutations" "JARID_2_Ex1_18" "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [36,] "missense_point_mutations" "EED_Ex2_12"     "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [37,] "missense_point_mutations" "CEBPA"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [38,] "missense_point_mutations" "EPHB3"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [39,] "missense_point_mutations" "ETNK1"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [40,] "missense_point_mutations" "GATA2"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [41,] "missense_point_mutations" "IRAK4"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [42,] "missense_point_mutations" "MTA2"           "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [43,] "missense_point_mutations" "CSF3R"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [44,] "missense_point_mutations" "KIT"            "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [45,] "nonsense_ins_del"         "WT1"            "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [46,] "nonsense_ins_del"         "RUNX_1"         "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [47,] "nonsense_ins_del"         "CEBPA"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [48,] "nonsense_point_mutations" "TET2"           "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [49,] "nonsense_point_mutations" "ASXL1"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [50,] "nonsense_point_mutations" "CSF3R"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [51,] "Pattern"                  "OR_CSF3R"       "ins_del"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [52,] "Pattern"                  "OR_CSF3R"       "ins_del"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [53,] "Pattern"                  "OR_CSF3R"       "ins_del"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [54,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [55,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [56,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [57,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [58,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [59,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [60,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [61,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [62,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [63,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [64,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [65,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [66,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [67,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [68,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [69,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [70,] "Pattern"                  "OR_CSF3R"       "missense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [71,] "Pattern"                  "OR_CSF3R"       "nonsense_ins_del"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [72,] "Pattern"                  "OR_CSF3R"       "nonsense_ins_del"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [73,] "Pattern"                  "OR_CSF3R"       "nonsense_ins_del"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [74,] "Pattern"                  "OR_CSF3R"       "nonsense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [75,] "Pattern"                  "OR_CSF3R"       "nonsense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [76,] "Pattern"                  "OR_CSF3R"       "nonsense_point_mutations"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [77,] "ins_del"                  "TET2"           "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [78,] "ins_del"                  "EZH2"           "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [79,] "ins_del"                  "ASXL1"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [80,] "missense_point_mutations" "SETBP1"         "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [81,] "missense_point_mutations" "NRAS_Ex2_3"     "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [82,] "missense_point_mutations" "KRAS_Ex2_3"     "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [83,] "missense_point_mutations" "TET2"           "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [84,] "missense_point_mutations" "EZH2"           "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [85,] "missense_point_mutations" "CBL_Ex_8_9"     "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [86,] "missense_point_mutations" "IDH2_R140"      "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [87,] "missense_point_mutations" "SF3B1_Ex_12_15" "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [88,] "missense_point_mutations" "JARID_2_Ex1_18" "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [89,] "missense_point_mutations" "EED_Ex2_12"     "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [90,] "missense_point_mutations" "CEBPA"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [91,] "missense_point_mutations" "EPHB3"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [92,] "missense_point_mutations" "ETNK1"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [93,] "missense_point_mutations" "GATA2"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [94,] "missense_point_mutations" "IRAK4"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [95,] "missense_point_mutations" "MTA2"           "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [96,] "missense_point_mutations" "KIT"            "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [97,] "nonsense_ins_del"         "WT1"            "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [98,] "nonsense_ins_del"         "RUNX_1"         "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [99,] "nonsense_ins_del"         "CEBPA"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [100,] "nonsense_point_mutations" "TET2"           "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [101,] "nonsense_point_mutations" "EZH2"           "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [102,] "nonsense_point_mutations" "ASXL1"          "Pattern"                 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>        effect event    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [1,] "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [2,] "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [3,] "SETBP1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [4,] "NRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [5,] "KRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [6,] "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [7,] "CBL_Ex_8_9"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [8,] "IDH2_R140"     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [9,] "SF3B1_Ex_12_15"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [10,] "JARID_2_Ex1_18"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [11,] "EED_Ex2_12"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [12,] "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [13,] "EPHB3"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [14,] "ETNK1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [15,] "GATA2"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [16,] "IRAK4"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [17,] "MTA2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [18,] "CSF3R"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [19,] "KIT"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [20,] "WT1"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [21,] "RUNX_1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [22,] "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [23,] "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [24,] "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [25,] "CSF3R"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [26,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [27,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [28,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [29,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [30,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [31,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [32,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [33,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [34,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [35,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [36,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [37,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [38,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [39,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [40,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [41,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [42,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [43,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [44,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [45,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [46,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [47,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [48,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [49,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [50,] "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [51,] "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [52,] "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [53,] "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [54,] "SETBP1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [55,] "NRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [56,] "KRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [57,] "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [58,] "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [59,] "CBL_Ex_8_9"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [60,] "IDH2_R140"     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [61,] "SF3B1_Ex_12_15"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [62,] "JARID_2_Ex1_18"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [63,] "EED_Ex2_12"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [64,] "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [65,] "EPHB3"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [66,] "ETNK1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [67,] "GATA2"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [68,] "IRAK4"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [69,] "MTA2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [70,] "KIT"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [71,] "WT1"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [72,] "RUNX_1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [73,] "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [74,] "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [75,] "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [76,] "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [77,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [78,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [79,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [80,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [81,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [82,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [83,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [84,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [85,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [86,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [87,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [88,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [89,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [90,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [91,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [92,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [93,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [94,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [95,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [96,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [97,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [98,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [99,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [100,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [101,] "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [102,] "OR_CSF3R"      </span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

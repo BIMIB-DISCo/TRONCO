@@ -60,9 +60,6 @@ of a unique &quot;mutation&quot; type)" />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -85,7 +82,7 @@ of a unique &quot;mutation&quot; type)" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -156,7 +153,7 @@ of a unique &quot;mutation&quot; type)" />
 of a unique "mutation" type)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>join.types</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, new.type <span class='op'>=</span> <span class='st'>"new.type"</span>, new.color <span class='op'>=</span> <span class='st'>"khaki"</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>join.types</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, new.type <span class='op'>=</span> <span class='st'>"new.type"</span>, new.color <span class='op'>=</span> <span class='st'>"khaki"</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -188,256 +185,260 @@ of a unique "mutation" type)</p>
     <p>A TRONCO compliant dataset.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset_no_hypos</span><span class='op'>)</span>
-<span class='fu'>join.types</span><span class='op'>(</span><span class='va'>test_dataset_no_hypos</span>, <span class='st'>'ins_del'</span>, <span class='st'>'missense_point_mutations'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; *** Aggregating events of type(s) { ins_del, missense_point_mutations }
-#&gt; in a unique event with label " new.type ".
-#&gt; Dropping event types ins_del, missense_point_mutations for 19 genes.
-#&gt; ...................
-#&gt; *** Binding events for 2 datasets.</div><div class='output co'>#&gt; $genotypes
-#&gt;            G1 G2 G3 G4 G5 G6 G7 G8 G9 G10 G11 G12 G13 G14 G15 G16 G17 G18 G19
-#&gt; patient 1   0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 2   0  0  0  0  0  1  0  0  0   0   1   0   0   1   0   0   0   0   0
-#&gt; patient 3   0  0  0  0  0  0  0  0  0   0   1   1   0   0   0   0   0   0   0
-#&gt; patient 4   0  0  0  0  0  1  0  0  0   0   1   0   0   1   0   0   0   0   0
-#&gt; patient 5   0  0  0  0  0  0  1  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 6   0  0  0  0  1  0  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 7   0  0  0  0  0  1  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 8   0  0  0  0  0  1  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 9   0  0  0  0  0  0  0  0  0   1   1   0   0   0   0   0   0   0   0
-#&gt; patient 10  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 11  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 12  0  0  0  1  0  0  0  0  0   0   1   1   0   0   0   0   1   0   0
-#&gt; patient 13  0  0  0  1  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 14  0  0  0  0  0  0  1  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 15  0  0  0  0  0  0  0  0  0   0   0   0   0   0   1   0   0   0   0
-#&gt; patient 16  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 17  0  0  0  0  0  0  0  0  1   0   0   1   0   0   0   0   0   0   0
-#&gt; patient 18  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 19  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 20  0  0  0  0  0  0  0  0  1   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 21  0  0  0  0  0  0  0  1  0   1   0   0   0   0   0   0   0   0   0
-#&gt; patient 22  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   1   0   0   0
-#&gt; patient 23  0  0  0  0  0  0  0  1  1   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 24  0  0  0  0  0  0  0  1  1   1   0   0   0   1   0   0   0   0   0
-#&gt; patient 25  0  1  0  0  0  0  0  1  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 26  0  0  0  1  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 27  0  0  0  0  0  0  0  1  1   1   0   0   0   0   0   0   0   0   0
-#&gt; patient 28  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 29  0  0  0  1  0  0  0  0  1   1   0   0   0   0   0   0   0   0   0
-#&gt; patient 30  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 31  0  0  1  0  0  0  0  0  0   0   0   0   0   0   0   0   0   1   0
-#&gt; patient 32  0  0  0  0  0  0  0  0  0   1   0   0   1   0   0   0   0   0   0
-#&gt; patient 33  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 34  1  0  1  0  0  0  0  1  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 35  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 36  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 37  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 38  0  0  0  0  0  0  0  0  1   0   0   0   0   0   0   0   0   0   1
-#&gt; patient 39  0  0  0  0  0  0  0  0  0   1   0   0   0   0   0   0   0   0   0
-#&gt; patient 40  0  0  0  1  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt;            G20 G21 G22 G23 G24 G25 G26
-#&gt; patient 1    0   0   0   0   0   0   0
-#&gt; patient 2    0   0   0   0   0   0   0
-#&gt; patient 3    0   0   0   0   0   0   0
-#&gt; patient 4    0   0   0   0   0   0   0
-#&gt; patient 5    0   0   0   0   0   1   0
-#&gt; patient 6    0   0   0   0   0   0   0
-#&gt; patient 7    1   0   0   0   0   0   0
-#&gt; patient 8    0   0   0   0   0   0   0
-#&gt; patient 9    0   0   0   0   0   0   0
-#&gt; patient 10   0   0   0   0   0   0   0
-#&gt; patient 11   0   0   0   0   0   0   0
-#&gt; patient 12   0   0   0   0   0   0   0
-#&gt; patient 13   0   0   0   0   0   1   0
-#&gt; patient 14   0   0   0   0   0   0   0
-#&gt; patient 15   0   0   0   0   0   0   0
-#&gt; patient 16   0   0   0   0   1   0   0
-#&gt; patient 17   0   0   0   1   0   0   0
-#&gt; patient 18   0   0   0   0   0   0   0
-#&gt; patient 19   0   0   1   0   0   0   0
-#&gt; patient 20   0   1   0   0   0   0   0
-#&gt; patient 21   0   0   0   0   0   0   0
-#&gt; patient 22   0   0   0   0   0   0   0
-#&gt; patient 23   0   0   0   0   0   0   1
-#&gt; patient 24   0   0   0   0   0   0   0
-#&gt; patient 25   0   0   0   0   0   0   1
-#&gt; patient 26   0   0   0   0   0   0   0
-#&gt; patient 27   0   0   0   0   0   0   0
-#&gt; patient 28   0   0   0   0   0   0   0
-#&gt; patient 29   0   0   0   0   0   0   0
-#&gt; patient 30   0   0   0   0   0   1   0
-#&gt; patient 31   0   0   0   0   0   0   0
-#&gt; patient 32   0   0   0   0   0   0   0
-#&gt; patient 33   0   0   0   0   0   0   0
-#&gt; patient 34   0   0   0   0   0   1   0
-#&gt; patient 35   0   0   0   0   0   0   0
-#&gt; patient 36   0   0   0   0   0   0   0
-#&gt; patient 37   0   0   0   0   0   0   0
-#&gt; patient 38   0   0   0   0   0   0   0
-#&gt; patient 39   0   0   0   0   0   0   0
-#&gt; patient 40   0   0   0   0   0   0   0
-#&gt; 
-#&gt; $annotations
-#&gt;     type                       event           
-#&gt; G1  "nonsense_ins_del"         "WT1"           
-#&gt; G2  "nonsense_ins_del"         "RUNX_1"        
-#&gt; G3  "nonsense_ins_del"         "CEBPA"         
-#&gt; G4  "nonsense_point_mutations" "TET2"          
-#&gt; G5  "nonsense_point_mutations" "EZH2"          
-#&gt; G6  "nonsense_point_mutations" "ASXL1"         
-#&gt; G7  "nonsense_point_mutations" "CSF3R"         
-#&gt; G8  "new.type"                 "TET2"          
-#&gt; G9  "new.type"                 "EZH2"          
-#&gt; G10 "new.type"                 "ASXL1"         
-#&gt; G11 "new.type"                 "SETBP1"        
-#&gt; G12 "new.type"                 "NRAS_Ex2_3"    
-#&gt; G13 "new.type"                 "KRAS_Ex2_3"    
-#&gt; G14 "new.type"                 "CBL_Ex_8_9"    
-#&gt; G15 "new.type"                 "IDH2_R140"     
-#&gt; G16 "new.type"                 "SF3B1_Ex_12_15"
-#&gt; G17 "new.type"                 "JARID_2_Ex1_18"
-#&gt; G18 "new.type"                 "EED_Ex2_12"    
-#&gt; G19 "new.type"                 "CEBPA"         
-#&gt; G20 "new.type"                 "EPHB3"         
-#&gt; G21 "new.type"                 "ETNK1"         
-#&gt; G22 "new.type"                 "GATA2"         
-#&gt; G23 "new.type"                 "IRAK4"         
-#&gt; G24 "new.type"                 "MTA2"          
-#&gt; G25 "new.type"                 "CSF3R"         
-#&gt; G26 "new.type"                 "KIT"           
-#&gt; 
-#&gt; $types
-#&gt;                          color           
-#&gt; nonsense_ins_del         "cornflowerblue"
-#&gt; nonsense_point_mutations "firebrick1"    
-#&gt; new.type                 "khaki"         
-#&gt; </div><div class='input'><span class='fu'>join.types</span><span class='op'>(</span><span class='va'>test_dataset_no_hypos</span>, <span class='st'>'ins_del'</span>,
-     <span class='st'>'missense_point_mutations'</span>, new.type<span class='op'>=</span><span class='st'>'mut'</span>, new.color<span class='op'>=</span><span class='st'>'green'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; *** Aggregating events of type(s) { ins_del, missense_point_mutations }
-#&gt; in a unique event with label " mut ".
-#&gt; Dropping event types ins_del, missense_point_mutations for 19 genes.
-#&gt; ...................
-#&gt; *** Binding events for 2 datasets.</div><div class='output co'>#&gt; $genotypes
-#&gt;            G1 G2 G3 G4 G5 G6 G7 G8 G9 G10 G11 G12 G13 G14 G15 G16 G17 G18 G19
-#&gt; patient 1   0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 2   0  0  0  0  0  1  0  0  0   0   1   0   0   1   0   0   0   0   0
-#&gt; patient 3   0  0  0  0  0  0  0  0  0   0   1   1   0   0   0   0   0   0   0
-#&gt; patient 4   0  0  0  0  0  1  0  0  0   0   1   0   0   1   0   0   0   0   0
-#&gt; patient 5   0  0  0  0  0  0  1  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 6   0  0  0  0  1  0  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 7   0  0  0  0  0  1  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 8   0  0  0  0  0  1  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 9   0  0  0  0  0  0  0  0  0   1   1   0   0   0   0   0   0   0   0
-#&gt; patient 10  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 11  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 12  0  0  0  1  0  0  0  0  0   0   1   1   0   0   0   0   1   0   0
-#&gt; patient 13  0  0  0  1  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 14  0  0  0  0  0  0  1  0  0   0   1   0   0   0   0   0   0   0   0
-#&gt; patient 15  0  0  0  0  0  0  0  0  0   0   0   0   0   0   1   0   0   0   0
-#&gt; patient 16  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 17  0  0  0  0  0  0  0  0  1   0   0   1   0   0   0   0   0   0   0
-#&gt; patient 18  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 19  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 20  0  0  0  0  0  0  0  0  1   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 21  0  0  0  0  0  0  0  1  0   1   0   0   0   0   0   0   0   0   0
-#&gt; patient 22  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   1   0   0   0
-#&gt; patient 23  0  0  0  0  0  0  0  1  1   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 24  0  0  0  0  0  0  0  1  1   1   0   0   0   1   0   0   0   0   0
-#&gt; patient 25  0  1  0  0  0  0  0  1  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 26  0  0  0  1  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 27  0  0  0  0  0  0  0  1  1   1   0   0   0   0   0   0   0   0   0
-#&gt; patient 28  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 29  0  0  0  1  0  0  0  0  1   1   0   0   0   0   0   0   0   0   0
-#&gt; patient 30  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 31  0  0  1  0  0  0  0  0  0   0   0   0   0   0   0   0   0   1   0
-#&gt; patient 32  0  0  0  0  0  0  0  0  0   1   0   0   1   0   0   0   0   0   0
-#&gt; patient 33  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 34  1  0  1  0  0  0  0  1  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 35  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 36  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 37  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt; patient 38  0  0  0  0  0  0  0  0  1   0   0   0   0   0   0   0   0   0   1
-#&gt; patient 39  0  0  0  0  0  0  0  0  0   1   0   0   0   0   0   0   0   0   0
-#&gt; patient 40  0  0  0  1  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0
-#&gt;            G20 G21 G22 G23 G24 G25 G26
-#&gt; patient 1    0   0   0   0   0   0   0
-#&gt; patient 2    0   0   0   0   0   0   0
-#&gt; patient 3    0   0   0   0   0   0   0
-#&gt; patient 4    0   0   0   0   0   0   0
-#&gt; patient 5    0   0   0   0   0   1   0
-#&gt; patient 6    0   0   0   0   0   0   0
-#&gt; patient 7    1   0   0   0   0   0   0
-#&gt; patient 8    0   0   0   0   0   0   0
-#&gt; patient 9    0   0   0   0   0   0   0
-#&gt; patient 10   0   0   0   0   0   0   0
-#&gt; patient 11   0   0   0   0   0   0   0
-#&gt; patient 12   0   0   0   0   0   0   0
-#&gt; patient 13   0   0   0   0   0   1   0
-#&gt; patient 14   0   0   0   0   0   0   0
-#&gt; patient 15   0   0   0   0   0   0   0
-#&gt; patient 16   0   0   0   0   1   0   0
-#&gt; patient 17   0   0   0   1   0   0   0
-#&gt; patient 18   0   0   0   0   0   0   0
-#&gt; patient 19   0   0   1   0   0   0   0
-#&gt; patient 20   0   1   0   0   0   0   0
-#&gt; patient 21   0   0   0   0   0   0   0
-#&gt; patient 22   0   0   0   0   0   0   0
-#&gt; patient 23   0   0   0   0   0   0   1
-#&gt; patient 24   0   0   0   0   0   0   0
-#&gt; patient 25   0   0   0   0   0   0   1
-#&gt; patient 26   0   0   0   0   0   0   0
-#&gt; patient 27   0   0   0   0   0   0   0
-#&gt; patient 28   0   0   0   0   0   0   0
-#&gt; patient 29   0   0   0   0   0   0   0
-#&gt; patient 30   0   0   0   0   0   1   0
-#&gt; patient 31   0   0   0   0   0   0   0
-#&gt; patient 32   0   0   0   0   0   0   0
-#&gt; patient 33   0   0   0   0   0   0   0
-#&gt; patient 34   0   0   0   0   0   1   0
-#&gt; patient 35   0   0   0   0   0   0   0
-#&gt; patient 36   0   0   0   0   0   0   0
-#&gt; patient 37   0   0   0   0   0   0   0
-#&gt; patient 38   0   0   0   0   0   0   0
-#&gt; patient 39   0   0   0   0   0   0   0
-#&gt; patient 40   0   0   0   0   0   0   0
-#&gt; 
-#&gt; $annotations
-#&gt;     type                       event           
-#&gt; G1  "nonsense_ins_del"         "WT1"           
-#&gt; G2  "nonsense_ins_del"         "RUNX_1"        
-#&gt; G3  "nonsense_ins_del"         "CEBPA"         
-#&gt; G4  "nonsense_point_mutations" "TET2"          
-#&gt; G5  "nonsense_point_mutations" "EZH2"          
-#&gt; G6  "nonsense_point_mutations" "ASXL1"         
-#&gt; G7  "nonsense_point_mutations" "CSF3R"         
-#&gt; G8  "mut"                      "TET2"          
-#&gt; G9  "mut"                      "EZH2"          
-#&gt; G10 "mut"                      "ASXL1"         
-#&gt; G11 "mut"                      "SETBP1"        
-#&gt; G12 "mut"                      "NRAS_Ex2_3"    
-#&gt; G13 "mut"                      "KRAS_Ex2_3"    
-#&gt; G14 "mut"                      "CBL_Ex_8_9"    
-#&gt; G15 "mut"                      "IDH2_R140"     
-#&gt; G16 "mut"                      "SF3B1_Ex_12_15"
-#&gt; G17 "mut"                      "JARID_2_Ex1_18"
-#&gt; G18 "mut"                      "EED_Ex2_12"    
-#&gt; G19 "mut"                      "CEBPA"         
-#&gt; G20 "mut"                      "EPHB3"         
-#&gt; G21 "mut"                      "ETNK1"         
-#&gt; G22 "mut"                      "GATA2"         
-#&gt; G23 "mut"                      "IRAK4"         
-#&gt; G24 "mut"                      "MTA2"          
-#&gt; G25 "mut"                      "CSF3R"         
-#&gt; G26 "mut"                      "KIT"           
-#&gt; 
-#&gt; $types
-#&gt;                          color           
-#&gt; nonsense_ins_del         "cornflowerblue"
-#&gt; nonsense_point_mutations "firebrick1"    
-#&gt; mut                      "green"         
-#&gt; </div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset_no_hypos</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>join.types</span><span class='op'>(</span><span class='va'>test_dataset_no_hypos</span>, <span class='st'>'ins_del'</span>, <span class='st'>'missense_point_mutations'</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Aggregating events of type(s) { ins_del, missense_point_mutations }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> in a unique event with label " new.type ".</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Dropping event types ins_del, missense_point_mutations for 19 genes.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...................</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Binding events for 2 datasets.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $genotypes</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            G1 G2 G3 G4 G5 G6 G7 G8 G9 G10 G11 G12 G13 G14 G15 G16 G17 G18 G19</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1   0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2   0  0  0  0  0  1  0  0  0   0   1   0   0   1   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3   0  0  0  0  0  0  0  0  0   0   1   1   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4   0  0  0  0  0  1  0  0  0   0   1   0   0   1   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5   0  0  0  0  0  0  1  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6   0  0  0  0  1  0  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7   0  0  0  0  0  1  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8   0  0  0  0  0  1  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9   0  0  0  0  0  0  0  0  0   1   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12  0  0  0  1  0  0  0  0  0   0   1   1   0   0   0   0   1   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13  0  0  0  1  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14  0  0  0  0  0  0  1  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15  0  0  0  0  0  0  0  0  0   0   0   0   0   0   1   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17  0  0  0  0  0  0  0  0  1   0   0   1   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20  0  0  0  0  0  0  0  0  1   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21  0  0  0  0  0  0  0  1  0   1   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   1   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23  0  0  0  0  0  0  0  1  1   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24  0  0  0  0  0  0  0  1  1   1   0   0   0   1   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25  0  1  0  0  0  0  0  1  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26  0  0  0  1  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27  0  0  0  0  0  0  0  1  1   1   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29  0  0  0  1  0  0  0  0  1   1   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31  0  0  1  0  0  0  0  0  0   0   0   0   0   0   0   0   0   1   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32  0  0  0  0  0  0  0  0  0   1   0   0   1   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34  1  0  1  0  0  0  0  1  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38  0  0  0  0  0  0  0  0  1   0   0   0   0   0   0   0   0   0   1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39  0  0  0  0  0  0  0  0  0   1   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40  0  0  0  1  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            G20 G21 G22 G23 G24 G25 G26</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5    0   0   0   0   0   1   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7    1   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13   0   0   0   0   0   1   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16   0   0   0   0   1   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17   0   0   0   1   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19   0   0   1   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20   0   1   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23   0   0   0   0   0   0   1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25   0   0   0   0   0   0   1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30   0   0   0   0   0   1   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34   0   0   0   0   0   1   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $annotations</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     type                       event           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G1  "nonsense_ins_del"         "WT1"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G2  "nonsense_ins_del"         "RUNX_1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G3  "nonsense_ins_del"         "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G4  "nonsense_point_mutations" "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G5  "nonsense_point_mutations" "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G6  "nonsense_point_mutations" "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G7  "nonsense_point_mutations" "CSF3R"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G8  "new.type"                 "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G9  "new.type"                 "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G10 "new.type"                 "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G11 "new.type"                 "SETBP1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G12 "new.type"                 "NRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G13 "new.type"                 "KRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G14 "new.type"                 "CBL_Ex_8_9"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G15 "new.type"                 "IDH2_R140"     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G16 "new.type"                 "SF3B1_Ex_12_15"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G17 "new.type"                 "JARID_2_Ex1_18"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G18 "new.type"                 "EED_Ex2_12"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G19 "new.type"                 "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G20 "new.type"                 "EPHB3"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G21 "new.type"                 "ETNK1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G22 "new.type"                 "GATA2"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G23 "new.type"                 "IRAK4"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G24 "new.type"                 "MTA2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G25 "new.type"                 "CSF3R"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G26 "new.type"                 "KIT"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $types</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                          color           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> nonsense_ins_del         "cornflowerblue"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> nonsense_point_mutations "firebrick1"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> new.type                 "khaki"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'>join.types</span><span class='op'>(</span><span class='va'>test_dataset_no_hypos</span>, <span class='st'>'ins_del'</span>,</span>
+<span class='r-in'>     <span class='st'>'missense_point_mutations'</span>, new.type<span class='op'>=</span><span class='st'>'mut'</span>, new.color<span class='op'>=</span><span class='st'>'green'</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Aggregating events of type(s) { ins_del, missense_point_mutations }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> in a unique event with label " mut ".</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Dropping event types ins_del, missense_point_mutations for 19 genes.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ...................</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Binding events for 2 datasets.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $genotypes</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            G1 G2 G3 G4 G5 G6 G7 G8 G9 G10 G11 G12 G13 G14 G15 G16 G17 G18 G19</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1   0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2   0  0  0  0  0  1  0  0  0   0   1   0   0   1   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3   0  0  0  0  0  0  0  0  0   0   1   1   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4   0  0  0  0  0  1  0  0  0   0   1   0   0   1   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5   0  0  0  0  0  0  1  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6   0  0  0  0  1  0  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7   0  0  0  0  0  1  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8   0  0  0  0  0  1  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9   0  0  0  0  0  0  0  0  0   1   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12  0  0  0  1  0  0  0  0  0   0   1   1   0   0   0   0   1   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13  0  0  0  1  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14  0  0  0  0  0  0  1  0  0   0   1   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15  0  0  0  0  0  0  0  0  0   0   0   0   0   0   1   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17  0  0  0  0  0  0  0  0  1   0   0   1   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20  0  0  0  0  0  0  0  0  1   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21  0  0  0  0  0  0  0  1  0   1   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   1   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23  0  0  0  0  0  0  0  1  1   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24  0  0  0  0  0  0  0  1  1   1   0   0   0   1   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25  0  1  0  0  0  0  0  1  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26  0  0  0  1  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27  0  0  0  0  0  0  0  1  1   1   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29  0  0  0  1  0  0  0  0  1   1   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31  0  0  1  0  0  0  0  0  0   0   0   0   0   0   0   0   0   1   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32  0  0  0  0  0  0  0  0  0   1   0   0   1   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34  1  0  1  0  0  0  0  1  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38  0  0  0  0  0  0  0  0  1   0   0   0   0   0   0   0   0   0   1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39  0  0  0  0  0  0  0  0  0   1   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40  0  0  0  1  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            G20 G21 G22 G23 G24 G25 G26</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5    0   0   0   0   0   1   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7    1   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9    0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13   0   0   0   0   0   1   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16   0   0   0   0   1   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17   0   0   0   1   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19   0   0   1   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20   0   1   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23   0   0   0   0   0   0   1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25   0   0   0   0   0   0   1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30   0   0   0   0   0   1   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34   0   0   0   0   0   1   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40   0   0   0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $annotations</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     type                       event           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G1  "nonsense_ins_del"         "WT1"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G2  "nonsense_ins_del"         "RUNX_1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G3  "nonsense_ins_del"         "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G4  "nonsense_point_mutations" "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G5  "nonsense_point_mutations" "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G6  "nonsense_point_mutations" "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G7  "nonsense_point_mutations" "CSF3R"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G8  "mut"                      "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G9  "mut"                      "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G10 "mut"                      "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G11 "mut"                      "SETBP1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G12 "mut"                      "NRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G13 "mut"                      "KRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G14 "mut"                      "CBL_Ex_8_9"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G15 "mut"                      "IDH2_R140"     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G16 "mut"                      "SF3B1_Ex_12_15"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G17 "mut"                      "JARID_2_Ex1_18"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G18 "mut"                      "EED_Ex2_12"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G19 "mut"                      "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G20 "mut"                      "EPHB3"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G21 "mut"                      "ETNK1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G22 "mut"                      "GATA2"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G23 "mut"                      "IRAK4"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G24 "mut"                      "MTA2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G25 "mut"                      "CSF3R"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G26 "mut"                      "KIT"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $types</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                          color           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> nonsense_ins_del         "cornflowerblue"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> nonsense_point_mutations "firebrick1"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mut                      "green"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -64,9 +64,6 @@ regarding the loading functions provided by the package we refer to the Vignette
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -89,7 +86,7 @@ regarding the loading functions provided by the package we refer to the Vignette
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -164,7 +161,7 @@ Custom filters are possible (via filter.fun) to avoid loading the full MAF data.
 regarding the loading functions provided by the package we refer to the Vignette Section 3.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>import.MAF</span><span class='op'>(</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>import.MAF</span><span class='op'>(</span>
   <span class='va'>file</span>,
   sep <span class='op'>=</span> <span class='st'>"\t"</span>,
   is.TCGA <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -174,7 +171,7 @@ regarding the loading functions provided by the package we refer to the Vignette
   paste.to.Hugo_Symbol <span class='op'>=</span> <span class='cn'>NULL</span>,
   merge.mutation.types <span class='op'>=</span> <span class='cn'>TRUE</span>,
   silent <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -222,32 +219,35 @@ regarding the loading functions provided by the package we refer to the Vignette
     <p>A TRONCO compliant representation of the input MAF</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>maf</span><span class='op'>)</span>
-<span class='va'>mutations</span> <span class='op'>=</span> <span class='fu'>import.MAF</span><span class='op'>(</span><span class='va'>maf</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; *** Importing from dataframe
-#&gt; Loading MAF dataframe ...DONE
-#&gt; *** Mutations names: using Hugo_Symbol
-#&gt; *** Using full MAF: #entries  16 
-#&gt; *** MAF report: TCGA=TRUE
-#&gt; Type of annotated mutations: 
-#&gt; [1] Missense_Mutation Silent            Nonsense_Mutation Frame_Shift_Ins  
-#&gt; Levels: Frame_Shift_Ins Missense_Mutation Nonsense_Mutation Silent
-#&gt; *** [merge.mutation.types = T] Mutations will be merged and annotated as 'Mutation'
-#&gt; Number of samples: 3 
-#&gt; [TCGA = TRUE] Number of TCGA patients: 3 
-#&gt; Number of annotated mutations: 16 
-#&gt; Mutations annotated with "Valid" flag (%): 88 
-#&gt; Number of genes (Hugo_Symbol): 13 
-#&gt; Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :3 x 13 
-#&gt; ................
-#&gt; Starting conversion from MAF to TRONCO data type.</div><div class='input'><span class='va'>mutations</span> <span class='op'>=</span> <span class='fu'><a href='annotate.description.html'>annotate.description</a></span><span class='op'>(</span><span class='va'>mutations</span>, <span class='st'>'Example MAF'</span><span class='op'>)</span>
-<span class='va'>mutations</span> <span class='op'>=</span> <span class='fu'><a href='TCGA.shorten.barcodes.html'>TCGA.shorten.barcodes</a></span><span class='op'>(</span><span class='va'>mutations</span><span class='op'>)</span>
-<span class='fu'><a href='oncoprint.html'>oncoprint</a></span><span class='op'>(</span><span class='va'>mutations</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; *** Oncoprint for "Example MAF"
-#&gt; with attributes: stage = FALSE, hits = TRUE
-#&gt; Sorting samples ordering to enhance exclusivity patterns.
-#&gt; Setting automatic row font (exponential scaling): 11.6</div><div class='img'><img src='import.MAF-1.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>maf</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>mutations</span> <span class='op'>=</span> <span class='fu'>import.MAF</span><span class='op'>(</span><span class='va'>maf</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Importing from dataframe</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Loading MAF dataframe ...DONE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Mutations names: using Hugo_Symbol</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Using full MAF: #entries  16 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** MAF report: TCGA=TRUE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Type of annotated mutations: </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] Missense_Mutation Silent            Nonsense_Mutation Frame_Shift_Ins  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Levels: Frame_Shift_Ins Missense_Mutation Nonsense_Mutation Silent</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** [merge.mutation.types = T] Mutations will be merged and annotated as 'Mutation'</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Number of samples: 3 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [TCGA = TRUE] Number of TCGA patients: 3 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Number of annotated mutations: 16 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Mutations annotated with "Valid" flag (%): 88 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Number of genes (Hugo_Symbol): 13 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :3 x 13 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ................</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Starting conversion from MAF to TRONCO data type.</span>
+<span class='r-in'><span class='va'>mutations</span> <span class='op'>=</span> <span class='fu'><a href='annotate.description.html'>annotate.description</a></span><span class='op'>(</span><span class='va'>mutations</span>, <span class='st'>'Example MAF'</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>mutations</span> <span class='op'>=</span> <span class='fu'><a href='TCGA.shorten.barcodes.html'>TCGA.shorten.barcodes</a></span><span class='op'>(</span><span class='va'>mutations</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='oncoprint.html'>oncoprint</a></span><span class='op'>(</span><span class='va'>mutations</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Oncoprint for "Example MAF"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> with attributes: stage = FALSE, hits = TRUE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Sorting samples ordering to enhance exclusivity patterns.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Setting automatic row font (exponential scaling): 11.6</span>
+<span class='r-plt'><img src='import.MAF-1.png' alt='' width='700' height='433' /></span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

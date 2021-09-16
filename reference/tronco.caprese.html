@@ -60,9 +60,6 @@ we refer to the Vignette Section 6." />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -85,7 +82,7 @@ we refer to the Vignette Section 6." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -156,7 +153,7 @@ regarding the inference process and on the algorithm implemented in the package,
 we refer to the Vignette Section 6.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tronco.caprese</span><span class='op'>(</span><span class='va'>data</span>, lambda <span class='op'>=</span> <span class='fl'>0.5</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span>, epos <span class='op'>=</span> <span class='fl'>0</span>, eneg <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>tronco.caprese</span><span class='op'>(</span><span class='va'>data</span>, lambda <span class='op'>=</span> <span class='fl'>0.5</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span>, epos <span class='op'>=</span> <span class='fl'>0</span>, eneg <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -188,15 +185,16 @@ we refer to the Vignette Section 6.</p>
     <p>A TRONCO compliant object with reconstructed model</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset_no_hypos</span><span class='op'>)</span>
-<span class='va'>recon</span> <span class='op'>=</span> <span class='fu'>tronco.caprese</span><span class='op'>(</span><span class='va'>test_dataset_no_hypos</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; *** Checking input events.
-#&gt; *** Inferring a progression model with the following settings.
-#&gt; 	Dataset size: n = 40, m = 28.
-#&gt; 	Algorithm: CAPRESE with shrinkage coefficient: 0.5.
-#&gt; *** Evaluating LogLik informations.
-#&gt; The reconstruction has been successfully completed in 00h:00m:00s </div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset_no_hypos</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>recon</span> <span class='op'>=</span> <span class='fu'>tronco.caprese</span><span class='op'>(</span><span class='va'>test_dataset_no_hypos</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Checking input events.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Inferring a progression model with the following settings.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 	Dataset size: n = 40, m = 28.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 	Algorithm: CAPRESE with shrinkage coefficient: 0.5.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Evaluating LogLik informations.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> The reconstruction has been successfully completed in 00h:00m:00s </span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

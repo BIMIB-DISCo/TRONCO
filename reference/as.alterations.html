@@ -60,9 +60,6 @@ to be a TRONCO compliant dataset - see is.compliant." />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -85,7 +82,7 @@ to be a TRONCO compliant dataset - see is.compliant." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -156,7 +153,7 @@ a total of gene-level alterations diregarding the event type. Input 'x' is check
 to be a TRONCO compliant dataset - see <code>is.compliant</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.alterations</span><span class='op'>(</span><span class='va'>x</span>, new.type <span class='op'>=</span> <span class='st'>"Alteration"</span>, new.color <span class='op'>=</span> <span class='st'>"khaki"</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>as.alterations</span><span class='op'>(</span><span class='va'>x</span>, new.type <span class='op'>=</span> <span class='st'>"Alteration"</span>, new.color <span class='op'>=</span> <span class='st'>"khaki"</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -184,37 +181,39 @@ to be a TRONCO compliant dataset - see <code>is.compliant</code>.</p>
     <p>A TRONCO compliant dataset with alteration profiles.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>muts</span><span class='op'>)</span>
-<span class='fu'>as.alterations</span><span class='op'>(</span><span class='va'>muts</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; *** Aggregating events of type(s) { Mutation }
-#&gt; in a unique event with label " Alteration ".
-#&gt; One input type provided, using renaming functions.</div><div class='output co'>#&gt; $genotypes
-#&gt;                              G1 G2 G3 G4 G5 G6 G7 G8 G9 G10 G11 G12 G13
-#&gt; TCGA-A6-2672-01A-01W-0833-10  1  0  1  1  1  0  0  0  0   0   0   0   0
-#&gt; TCGA-A6-2674-01A-02W-0831-10  0  0  0  0  0  0  0  0  0   1   1   1   1
-#&gt; TCGA-A6-2676-01A-01W-0833-10  1  1  1  0  0  1  1  1  1   0   0   0   0
-#&gt; 
-#&gt; $annotations
-#&gt;     type         event   
-#&gt; G1  "Alteration" "A2BP1" 
-#&gt; G2  "Alteration" "ABCA10"
-#&gt; G3  "Alteration" "ABCA3" 
-#&gt; G4  "Alteration" "ABCA4" 
-#&gt; G5  "Alteration" "ACSM5" 
-#&gt; G6  "Alteration" "ADCY2" 
-#&gt; G7  "Alteration" "APC"   
-#&gt; G8  "Alteration" "ASB16" 
-#&gt; G9  "Alteration" "ABAT"  
-#&gt; G10 "Alteration" "ABCC3" 
-#&gt; G11 "Alteration" "ABHD12"
-#&gt; G12 "Alteration" "ABR"   
-#&gt; G13 "Alteration" "ACAD11"
-#&gt; 
-#&gt; $types
-#&gt;            color  
-#&gt; Alteration "khaki"
-#&gt; </div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>muts</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>as.alterations</span><span class='op'>(</span><span class='va'>muts</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> *** Aggregating events of type(s) { Mutation }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> in a unique event with label " Alteration ".</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> One input type provided, using renaming functions.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $genotypes</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                              G1 G2 G3 G4 G5 G6 G7 G8 G9 G10 G11 G12 G13</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> TCGA-A6-2672-01A-01W-0833-10  1  0  1  1  1  0  0  0  0   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> TCGA-A6-2674-01A-02W-0831-10  0  0  0  0  0  0  0  0  0   1   1   1   1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> TCGA-A6-2676-01A-01W-0833-10  1  1  1  0  0  1  1  1  1   0   0   0   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $annotations</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     type         event   </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G1  "Alteration" "A2BP1" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G2  "Alteration" "ABCA10"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G3  "Alteration" "ABCA3" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G4  "Alteration" "ABCA4" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G5  "Alteration" "ACSM5" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G6  "Alteration" "ADCY2" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G7  "Alteration" "APC"   </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G8  "Alteration" "ASB16" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G9  "Alteration" "ABAT"  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G10 "Alteration" "ABCC3" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G11 "Alteration" "ABHD12"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G12 "Alteration" "ABR"   </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> G13 "Alteration" "ACAD11"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $types</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            color  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Alteration "khaki"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

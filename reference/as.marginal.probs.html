@@ -61,9 +61,6 @@ been performed. Also, either the observed or fit probabilities can be extracted.
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -86,7 +83,7 @@ been performed. Also, either the observed or fit probabilities can be extracted.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -158,12 +155,12 @@ specify a subset of events to build the matrix, a subset of models if multiple r
 been performed. Also, either the observed or fit probabilities can be extracted.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.marginal.probs</span><span class='op'>(</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>as.marginal.probs</span><span class='op'>(</span>
   <span class='va'>x</span>,
   events <span class='op'>=</span> <span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
   models <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>model</span><span class='op'>)</span>,
   type <span class='op'>=</span> <span class='st'>"observed"</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,7 +171,7 @@ been performed. Also, either the observed or fit probabilities can be extracted.
     </tr>
     <tr>
       <th>events</th>
-      <td><p>A subset of events as of <code><a href='as.events.html'>as.events(x)</a></code>, all by default.</p></td>
+      <td><p>A subset of events as of <code>as.events(x)</code>, all by default.</p></td>
     </tr>
     <tr>
       <th>models</th>
@@ -191,103 +188,105 @@ been performed. Also, either the observed or fit probabilities can be extracted.
     <p>The marginal probabilities in a TRONCO model.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span>
-<span class='fu'>as.marginal.probs</span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $capri_bic
-#&gt;          marginal probability
-#&gt; gene 4             0.07416667
-#&gt; gene 5             0.02946970
-#&gt; gene 7             0.16984848
-#&gt; gene 29            0.35257576
-#&gt; gene 30            0.07954545
-#&gt; gene 31            0.02962121
-#&gt; gene 32            0.07318182
-#&gt; gene 33            0.14984848
-#&gt; gene 34            0.07045455
-#&gt; gene 36            0.03295455
-#&gt; gene 40            0.02727273
-#&gt; gene 44            0.02916667
-#&gt; gene 47            0.02984848
-#&gt; gene 49            0.02750000
-#&gt; gene 50            0.03166667
-#&gt; gene 51            0.02954545
-#&gt; gene 52            0.03068182
-#&gt; gene 53            0.03166667
-#&gt; gene 54            0.03060606
-#&gt; gene 55            0.10598485
-#&gt; gene 56            0.05242424
-#&gt; gene 66            0.02886364
-#&gt; gene 69            0.02916667
-#&gt; gene 77            0.05113636
-#&gt; gene 88            0.12439394
-#&gt; gene 89            0.02810606
-#&gt; gene 91            0.10007576
-#&gt; gene 111           0.07856061
-#&gt; XOR_EZH2           0.19787879
-#&gt; OR_CSF3R           0.15500000
-#&gt; 
-#&gt; $capri_aic
-#&gt;          marginal probability
-#&gt; gene 4             0.07416667
-#&gt; gene 5             0.02946970
-#&gt; gene 7             0.16984848
-#&gt; gene 29            0.35257576
-#&gt; gene 30            0.07954545
-#&gt; gene 31            0.02962121
-#&gt; gene 32            0.07318182
-#&gt; gene 33            0.14984848
-#&gt; gene 34            0.07045455
-#&gt; gene 36            0.03295455
-#&gt; gene 40            0.02727273
-#&gt; gene 44            0.02916667
-#&gt; gene 47            0.02984848
-#&gt; gene 49            0.02750000
-#&gt; gene 50            0.03166667
-#&gt; gene 51            0.02954545
-#&gt; gene 52            0.03068182
-#&gt; gene 53            0.03166667
-#&gt; gene 54            0.03060606
-#&gt; gene 55            0.10598485
-#&gt; gene 56            0.05242424
-#&gt; gene 66            0.02886364
-#&gt; gene 69            0.02916667
-#&gt; gene 77            0.05113636
-#&gt; gene 88            0.12439394
-#&gt; gene 89            0.02810606
-#&gt; gene 91            0.10007576
-#&gt; gene 111           0.07856061
-#&gt; XOR_EZH2           0.19787879
-#&gt; OR_CSF3R           0.15500000
-#&gt; </div><div class='input'><span class='fu'>as.marginal.probs</span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $capri_bic
-#&gt;         marginal probability
-#&gt; gene 30           0.07954545
-#&gt; gene 31           0.02962121
-#&gt; gene 32           0.07318182
-#&gt; gene 33           0.14984848
-#&gt; gene 34           0.07045455
-#&gt; gene 36           0.03295455
-#&gt; gene 40           0.02727273
-#&gt; gene 44           0.02916667
-#&gt; gene 47           0.02984848
-#&gt; gene 49           0.02750000
-#&gt; gene 50           0.03166667
-#&gt; 
-#&gt; $capri_aic
-#&gt;         marginal probability
-#&gt; gene 30           0.07954545
-#&gt; gene 31           0.02962121
-#&gt; gene 32           0.07318182
-#&gt; gene 33           0.14984848
-#&gt; gene 34           0.07045455
-#&gt; gene 36           0.03295455
-#&gt; gene 40           0.02727273
-#&gt; gene 44           0.02916667
-#&gt; gene 47           0.02984848
-#&gt; gene 49           0.02750000
-#&gt; gene 50           0.03166667
-#&gt; </div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>as.marginal.probs</span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $capri_bic</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          marginal probability</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 4             0.07416667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 5             0.02946970</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 7             0.16984848</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 29            0.35257576</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 30            0.07954545</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 31            0.02962121</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 32            0.07318182</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 33            0.14984848</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 34            0.07045455</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 36            0.03295455</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 40            0.02727273</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 44            0.02916667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 47            0.02984848</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 49            0.02750000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 50            0.03166667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 51            0.02954545</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 52            0.03068182</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 53            0.03166667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 54            0.03060606</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 55            0.10598485</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 56            0.05242424</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 66            0.02886364</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 69            0.02916667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 77            0.05113636</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 88            0.12439394</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 89            0.02810606</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 91            0.10007576</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 111           0.07856061</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> XOR_EZH2           0.19787879</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> OR_CSF3R           0.15500000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $capri_aic</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          marginal probability</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 4             0.07416667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 5             0.02946970</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 7             0.16984848</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 29            0.35257576</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 30            0.07954545</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 31            0.02962121</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 32            0.07318182</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 33            0.14984848</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 34            0.07045455</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 36            0.03295455</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 40            0.02727273</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 44            0.02916667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 47            0.02984848</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 49            0.02750000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 50            0.03166667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 51            0.02954545</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 52            0.03068182</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 53            0.03166667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 54            0.03060606</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 55            0.10598485</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 56            0.05242424</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 66            0.02886364</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 69            0.02916667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 77            0.05113636</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 88            0.12439394</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 89            0.02810606</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 91            0.10007576</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 111           0.07856061</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> XOR_EZH2           0.19787879</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> OR_CSF3R           0.15500000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'>as.marginal.probs</span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $capri_bic</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         marginal probability</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 30           0.07954545</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 31           0.02962121</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 32           0.07318182</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 33           0.14984848</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 34           0.07045455</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 36           0.03295455</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 40           0.02727273</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 44           0.02916667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 47           0.02984848</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 49           0.02750000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 50           0.03166667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $capri_aic</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         marginal probability</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 30           0.07954545</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 31           0.02962121</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 32           0.07318182</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 33           0.14984848</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 34           0.07045455</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 36           0.03295455</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 40           0.02727273</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 44           0.02916667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 47           0.02984848</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 49           0.02750000</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 50           0.03166667</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

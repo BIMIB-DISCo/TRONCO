@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
 <p>All examples in this section will be done with the the aCML dataset as reference.</p>
 <div id="sec:view" class="section level2">
 <h2 class="hasAnchor">
-<a href="#sec:view" class="anchor"></a>Summary report for a dataset and boolean queries</h2>
+<a href="#sec:view" class="anchor" aria-hidden="true"></a>Summary report for a dataset and boolean queries</h2>
 <p>We use the function <code>view</code> to get a short summary of a dataset that we loaded in TRONCO; this function reports on the number of samples and events, plus some meta information that could be displayed graphically.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/view.html">view</a></span><span class="op">(</span><span class="va">aCML</span><span class="op">)</span></code></pre></div>
@@ -124,7 +124,7 @@
 </div>
 <div id="creating-views-with-the-as-functions" class="section level2">
 <h2 class="hasAnchor">
-<a href="#creating-views-with-the-as-functions" class="anchor"></a>Creating views with the <code>as</code> functions</h2>
+<a href="#creating-views-with-the-as-functions" class="anchor" aria-hidden="true"></a>Creating views with the <code>as</code> functions</h2>
 <p>Several functions are available to create views over a dataset, with a set of parameter which can constraint the view – as in the SELECT/JOIN approaches in databases. In the following examples we show their execution with the default parameters, but shorten their output to make this document readable.</p>
 <p>The main <code>as</code> functions are here documented. <code>as.genotypes</code>, that we can use to get the matrix of <em>genotypes</em> that we imported.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -211,7 +211,7 @@
 </div>
 <div id="dataset-size" class="section level2">
 <h2 class="hasAnchor">
-<a href="#dataset-size" class="anchor"></a>Dataset size</h2>
+<a href="#dataset-size" class="anchor" aria-hidden="true"></a>Dataset size</h2>
 <p>A set of functions allow to get the number of genes, events, samples, types and patterns in a dataset.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ngenes.html">ngenes</a></span><span class="op">(</span><span class="va">aCML</span><span class="op">)</span></code></pre></div>
@@ -231,7 +231,7 @@
 </div>
 <div id="oncoprints" class="section level2">
 <h2 class="hasAnchor">
-<a href="#oncoprints" class="anchor"></a>Oncoprints</h2>
+<a href="#oncoprints" class="anchor" aria-hidden="true"></a>Oncoprints</h2>
 <p>Oncoprints are the most effective data-visualization functions in TRONCO. These are heatmaps where rows represent variants, and columns samples (<em>the reverse</em> of the input format required by TRONCO), and are annotated and displayed/sorted to enhance which samples have which mutations etc.</p>
 <p>By default <code>oncoprint</code> will try to sort samples and events to enhance exclusivity patterns among the events.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
@@ -307,8 +307,9 @@ This plot gives a graphical visualization of the events that are in the dataset 
 <pre><code>## *** Oncoprint for "CAPRI - Bionformatics aCML data"
 ## with attributes: stage = TRUE, hits = TRUE
 ## Sorting samples ordering to enhance exclusivity patterns.
-## Grouping samples according to input groups (group.samples).
-## Annotating stages with RColorBrewer color palette YlOrRd 
+## Grouping samples according to input groups (group.samples).</code></pre>
+<pre><code>## Warning in xtfrm.data.frame(x): cannot xtfrm data frames</code></pre>
+<pre><code>## Annotating stages with RColorBrewer color palette YlOrRd 
 ## Grouping labels: stage 1, stage 2 
 ## Setting automatic row font (exponential scaling): 8.1</code></pre>
 <div class="figure">
@@ -319,10 +320,10 @@ Example exttt{oncoprint} output for aCML data with randomly annotated stages, in
 </div>
 <div id="groups-visualization-e-g--pathways" class="section level2">
 <h2 class="hasAnchor">
-<a href="#groups-visualization-e-g--pathways" class="anchor"></a>Groups visualization (e.g., pathways)</h2>
+<a href="#groups-visualization-e-g--pathways" class="anchor" aria-hidden="true"></a>Groups visualization (e.g., pathways)</h2>
 <p>TRONCO provides functions to visualize groups of events, which in this case are called pathways – though this could be any group that one would like to define. Aggregation happens with the same rational as the <code>as.alterations</code> function, namely by merging the events in the group.</p>
 <p>We make an example of a pathway called <em>MyPATHWAY</em> involving genes SETBP1, EZH2 and WT1; we want it to be colored in red, and we want to have the genotype of each event to be maintened in the dataset. We proceed as follows (R’s output is omitted).</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pathway</span> <span class="op">=</span> <span class="fu"><a href="../reference/as.pathway.html">as.pathway</a></span><span class="op">(</span><span class="va">aCML</span>,
     pathway.genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'SETBP1'</span>, <span class="st">'EZH2'</span>, <span class="st">'WT1'</span><span class="op">)</span>,
     pathway.name <span class="op">=</span> <span class="st">'MyPATHWAY'</span>,
@@ -335,7 +336,7 @@ Example exttt{oncoprint} output for aCML data with randomly annotated stages, in
 ## Pathway extracted succesfully.
 ## *** Binding events for 2 datasets.</code></pre>
 <p>Which we then visualize with an <code>oncoprint</code></p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/oncoprint.html">oncoprint</a></span><span class="op">(</span><span class="va">pathway</span>, title <span class="op">=</span> <span class="st">'Custom pathway'</span>,  font.row <span class="op">=</span> <span class="fl">8</span>, cellheight <span class="op">=</span> <span class="fl">15</span>, cellwidth <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></code></pre></div>
 <pre><code>## *** Oncoprint for "Custom pathway"
 ## with attributes: stage = FALSE, hits = TRUE
@@ -346,7 +347,7 @@ Oncoprint output of a custom pathway called MyPATHWAY involving genes SETBP1, EZ
 </p>
 </div>
 <p>In TRONCO there is also a function which creates the pathway view and the corresponding oncoprint to multiple pathways, when these are given as a list. We make here a simple example of two custom pathways.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/pathway.visualization.html">pathway.visualization</a></span><span class="op">(</span><span class="va">aCML</span>, 
     pathways<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>P1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'TET2'</span>, <span class="st">'IRAK4'</span><span class="op">)</span>,  P2<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'SETBP1'</span>, <span class="st">'KIT'</span><span class="op">)</span><span class="op">)</span>,        
     aggregate.pathways<span class="op">=</span><span class="cn">FALSE</span>,
@@ -381,7 +382,7 @@ Oncoprint output of a custom pair of pathways, with events shown
 </div>
 <pre><code>## NULL</code></pre>
 <p>If we had to visualize just the signature of the pathway, we could set <code>aggregate.pathways=T</code>.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/pathway.visualization.html">pathway.visualization</a></span><span class="op">(</span><span class="va">aCML</span>, 
     pathways<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>P1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'TET2'</span>, <span class="st">'IRAK4'</span><span class="op">)</span>,  P2<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'SETBP1'</span>, <span class="st">'KIT'</span><span class="op">)</span><span class="op">)</span>,
     aggregate.pathways <span class="op">=</span> <span class="cn">TRUE</span>,
@@ -414,7 +415,7 @@ Oncoprint output of a custom pair of pathways, with events hidden
 </div>
 <pre><code>## NULL</code></pre>
 <p>The same operation could have been done using <a href="https://wikipathways.org" class="external-link">WikiPathways</a>. We can query WikiPathways and collect HGNC gene symbols and titles for pathways of interest as follows. (R’s output is omitted).</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wikipathways/rwikipathways" class="external-link">rWikiPathways</a></span><span class="op">)</span>
 <span class="co"># quotes inside query to require both terms</span>
 <span class="va">my.pathways</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rWikiPathways/man/findPathwaysByText.html" class="external-link">findPathwaysByText</a></span><span class="op">(</span><span class="st">'SETBP1 EZH2 TET2 IRAK4 SETBP1 KIT'</span><span class="op">)</span>
@@ -426,7 +427,7 @@ Oncoprint output of a custom pair of pathways, with events hidden
 <span class="va">pw.title</span><span class="op">&lt;-</span><span class="va">my.hs.pathways</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">name</span>
 <span class="va">pw.genes</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/rWikiPathways/man/getXrefList.html" class="external-link">getXrefList</a></span><span class="op">(</span><span class="va">my.wpids</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,<span class="st">"H"</span><span class="op">)</span> </code></pre></div>
 <p>Now <code>pw.genes</code> and <code>pw.title</code> can be used as input for the function <code>as.pathway</code>. It is also possible to view and edit these pathways at WikiPathways using the following commands to open tabs in your default browser.</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/rWikiPathways/man/getPathwayInfo.html" class="external-link">getPathwayInfo</a></span><span class="op">(</span><span class="va">my.wpids</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/rWikiPathways/man/getPathwayInfo.html" class="external-link">getPathwayInfo</a></span><span class="op">(</span><span class="va">my.wpids</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/rWikiPathways/man/getPathwayInfo.html" class="external-link">getPathwayInfo</a></span><span class="op">(</span><span class="va">my.wpids</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></code></pre></div>

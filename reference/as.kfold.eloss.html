@@ -60,9 +60,6 @@ reconstruction have been performed." />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -85,7 +82,7 @@ reconstruction have been performed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -156,7 +153,7 @@ TRONCO model. It is possible to specify models if multiple
 reconstruction have been performed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.kfold.eloss</span><span class='op'>(</span><span class='va'>x</span>, models <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>model</span><span class='op'>)</span>, values <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>as.kfold.eloss</span><span class='op'>(</span><span class='va'>x</span>, models <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>model</span><span class='op'>)</span>, values <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,14 +177,16 @@ reconstruction have been performed.</p>
     <p>All the bootstrap scores in a TRONCO model</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model_kfold</span><span class='op'>)</span>
-<span class='fu'>as.kfold.eloss</span><span class='op'>(</span><span class='va'>test_model_kfold</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;               Mean %-of-logLik      Stdev
-#&gt; capri_bic 7.171654    3.005719 0.04138269
-#&gt; capri_aic 7.034192    3.110566 0.06849423</div><div class='input'><span class='fu'>as.kfold.eloss</span><span class='op'>(</span><span class='va'>test_model_kfold</span>, models<span class='op'>=</span><span class='st'>'capri_aic'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;               Mean %-of-logLik      Stdev
-#&gt; capri_aic 7.034192    3.110566 0.06849423</div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model_kfold</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>as.kfold.eloss</span><span class='op'>(</span><span class='va'>test_model_kfold</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>               Mean %-of-logLik      Stdev</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> capri_bic 7.171654    3.005719 0.04138269</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> capri_aic 7.034192    3.110566 0.06849423</span>
+<span class='r-in'><span class='fu'>as.kfold.eloss</span><span class='op'>(</span><span class='va'>test_model_kfold</span>, models<span class='op'>=</span><span class='st'>'capri_aic'</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>               Mean %-of-logLik      Stdev</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> capri_aic 7.034192    3.110566 0.06849423</span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

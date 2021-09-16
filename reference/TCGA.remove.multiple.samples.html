@@ -58,9 +58,6 @@
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -83,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -152,7 +149,7 @@
     <p>If there are multiple sample in x, according to TCGA barcodes naming, remove them</p>
     </div>
 
-    <pre class="usage"><span class='fu'>TCGA.remove.multiple.samples</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>TCGA.remove.multiple.samples</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,449 +165,453 @@
     <p>A TRONCO compliant dataset</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-<span class='fu'>TCGA.remove.multiple.samples</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Patient NA with sample aliquotes
-#&gt; character(0)</div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt; Selecting -Inf </div><div class='output co'>#&gt; $genotypes
-#&gt;            gene 4 gene 5 gene 7 gene 29 gene 30 gene 31 gene 32 gene 33 gene 34
-#&gt; patient 1       0      0      0       1       0       0       0       0       0
-#&gt; patient 2       0      0      0       1       0       0       0       0       1
-#&gt; patient 3       0      0      0       1       1       0       0       0       0
-#&gt; patient 4       0      0      0       1       0       0       0       0       1
-#&gt; patient 5       0      0      0       1       0       0       0       0       0
-#&gt; patient 6       0      0      0       1       0       0       0       0       0
-#&gt; patient 7       0      0      0       1       0       0       0       0       0
-#&gt; patient 8       0      0      0       1       0       0       0       0       0
-#&gt; patient 9       0      0      1       1       0       0       0       0       0
-#&gt; patient 10      0      0      0       1       0       0       0       0       0
-#&gt; patient 11      0      0      0       1       0       0       0       0       0
-#&gt; patient 12      0      0      0       1       1       0       0       0       0
-#&gt; patient 13      0      0      0       1       0       0       0       0       0
-#&gt; patient 14      0      0      0       1       0       0       0       0       0
-#&gt; patient 15      0      0      0       0       0       0       0       0       0
-#&gt; patient 16      0      0      0       0       0       0       0       0       0
-#&gt; patient 17      0      0      0       0       1       0       0       1       0
-#&gt; patient 18      0      0      0       0       0       0       0       0       0
-#&gt; patient 19      0      0      0       0       0       0       0       0       0
-#&gt; patient 20      0      0      0       0       0       0       0       1       0
-#&gt; patient 21      0      0      1       0       0       0       1       0       0
-#&gt; patient 22      0      0      0       0       0       0       0       0       0
-#&gt; patient 23      1      0      0       0       0       0       0       1       0
-#&gt; patient 24      1      0      1       0       0       0       0       1       1
-#&gt; patient 25      1      0      0       0       0       0       0       0       0
-#&gt; patient 26      0      0      0       0       0       0       0       0       0
-#&gt; patient 27      0      1      1       0       0       0       1       0       0
-#&gt; patient 28      0      0      0       0       0       0       0       0       0
-#&gt; patient 29      0      0      1       0       0       0       0       1       0
-#&gt; patient 30      0      0      0       0       0       0       0       0       0
-#&gt; patient 31      0      0      0       0       0       0       0       0       0
-#&gt; patient 32      0      0      1       0       0       1       0       0       0
-#&gt; patient 33      0      0      0       0       0       0       0       0       0
-#&gt; patient 34      0      0      0       0       0       0       1       0       0
-#&gt; patient 35      0      0      0       0       0       0       0       0       0
-#&gt; patient 36      0      0      0       0       0       0       0       0       0
-#&gt; patient 37      0      0      0       0       0       0       0       0       0
-#&gt; patient 38      0      0      0       0       0       0       0       1       0
-#&gt; patient 39      0      0      1       0       0       0       0       0       0
-#&gt; patient 40      0      0      0       0       0       0       0       0       0
-#&gt;            gene 36 gene 40 gene 44 gene 47 gene 49 gene 50 gene 51 gene 52
-#&gt; patient 1        0       0       0       0       0       0       0       0
-#&gt; patient 2        0       0       0       0       0       0       0       0
-#&gt; patient 3        0       0       0       0       0       0       0       0
-#&gt; patient 4        0       0       0       0       0       0       0       0
-#&gt; patient 5        0       0       0       0       0       0       0       0
-#&gt; patient 6        0       0       0       0       0       0       0       0
-#&gt; patient 7        0       0       0       0       0       1       0       0
-#&gt; patient 8        0       0       0       0       0       0       0       0
-#&gt; patient 9        0       0       0       0       0       0       0       0
-#&gt; patient 10       0       0       0       0       0       0       0       0
-#&gt; patient 11       0       0       0       0       0       0       0       0
-#&gt; patient 12       0       0       1       0       0       0       0       0
-#&gt; patient 13       0       0       0       0       0       0       0       0
-#&gt; patient 14       0       0       0       0       0       0       0       0
-#&gt; patient 15       1       0       0       0       0       0       0       0
-#&gt; patient 16       0       0       0       0       0       0       0       0
-#&gt; patient 17       0       0       0       0       0       0       0       0
-#&gt; patient 18       0       0       0       0       0       0       0       0
-#&gt; patient 19       0       0       0       0       0       0       0       1
-#&gt; patient 20       0       0       0       0       0       0       1       0
-#&gt; patient 21       0       0       0       0       0       0       0       0
-#&gt; patient 22       0       1       0       0       0       0       0       0
-#&gt; patient 23       0       0       0       0       0       0       0       0
-#&gt; patient 24       0       0       0       0       0       0       0       0
-#&gt; patient 25       0       0       0       0       0       0       0       0
-#&gt; patient 26       0       0       0       0       0       0       0       0
-#&gt; patient 27       0       0       0       0       0       0       0       0
-#&gt; patient 28       0       0       0       0       0       0       0       0
-#&gt; patient 29       0       0       0       0       0       0       0       0
-#&gt; patient 30       0       0       0       0       0       0       0       0
-#&gt; patient 31       0       0       0       1       0       0       0       0
-#&gt; patient 32       0       0       0       0       0       0       0       0
-#&gt; patient 33       0       0       0       0       0       0       0       0
-#&gt; patient 34       0       0       0       0       0       0       0       0
-#&gt; patient 35       0       0       0       0       0       0       0       0
-#&gt; patient 36       0       0       0       0       0       0       0       0
-#&gt; patient 37       0       0       0       0       0       0       0       0
-#&gt; patient 38       0       0       0       0       1       0       0       0
-#&gt; patient 39       0       0       0       0       0       0       0       0
-#&gt; patient 40       0       0       0       0       0       0       0       0
-#&gt;            gene 53 gene 54 gene 55 gene 56 gene 66 gene 69 gene 77 gene 88
-#&gt; patient 1        0       0       0       0       0       0       0       0
-#&gt; patient 2        0       0       0       0       0       0       0       0
-#&gt; patient 3        0       0       0       0       0       0       0       0
-#&gt; patient 4        0       0       0       0       0       0       0       0
-#&gt; patient 5        0       0       1       0       0       0       0       0
-#&gt; patient 6        0       0       0       0       0       0       0       0
-#&gt; patient 7        0       0       0       0       0       0       0       0
-#&gt; patient 8        0       0       0       0       0       0       0       0
-#&gt; patient 9        0       0       0       0       0       0       0       0
-#&gt; patient 10       0       0       0       0       0       0       0       0
-#&gt; patient 11       0       0       0       0       0       0       0       0
-#&gt; patient 12       0       0       0       0       0       0       0       1
-#&gt; patient 13       0       0       1       0       0       0       0       1
-#&gt; patient 14       0       0       0       0       0       0       0       0
-#&gt; patient 15       0       0       0       0       0       0       0       0
-#&gt; patient 16       0       1       0       0       0       0       0       0
-#&gt; patient 17       1       0       0       0       0       0       0       0
-#&gt; patient 18       0       0       0       0       0       0       0       0
-#&gt; patient 19       0       0       0       0       0       0       0       0
-#&gt; patient 20       0       0       0       0       0       0       0       0
-#&gt; patient 21       0       0       0       0       0       0       0       0
-#&gt; patient 22       0       0       0       0       0       0       0       0
-#&gt; patient 23       0       0       0       1       0       0       0       0
-#&gt; patient 24       0       0       0       0       0       0       0       0
-#&gt; patient 25       0       0       0       1       0       1       0       0
-#&gt; patient 26       0       0       0       0       0       0       0       1
-#&gt; patient 27       0       0       0       0       0       0       0       0
-#&gt; patient 28       0       0       0       0       0       0       0       0
-#&gt; patient 29       0       0       0       0       0       0       0       1
-#&gt; patient 30       0       0       1       0       0       0       0       0
-#&gt; patient 31       0       0       0       0       0       0       1       0
-#&gt; patient 32       0       0       0       0       0       0       0       0
-#&gt; patient 33       0       0       0       0       0       0       0       0
-#&gt; patient 34       0       0       1       0       1       0       1       0
-#&gt; patient 35       0       0       0       0       0       0       0       0
-#&gt; patient 36       0       0       0       0       0       0       0       0
-#&gt; patient 37       0       0       0       0       0       0       0       0
-#&gt; patient 38       0       0       0       0       0       0       0       0
-#&gt; patient 39       0       0       0       0       0       0       0       0
-#&gt; patient 40       0       0       0       0       0       0       0       1
-#&gt;            gene 89 gene 91 gene 111 XOR_EZH2 OR_CSF3R
-#&gt; patient 1        0       0        0        0        0
-#&gt; patient 2        0       1        0        0        0
-#&gt; patient 3        0       0        0        0        0
-#&gt; patient 4        0       1        0        0        0
-#&gt; patient 5        0       0        1        0        1
-#&gt; patient 6        1       0        0        1        0
-#&gt; patient 7        0       1        0        0        0
-#&gt; patient 8        0       1        0        0        0
-#&gt; patient 9        0       0        0        0        0
-#&gt; patient 10       0       0        0        0        0
-#&gt; patient 11       0       0        0        0        0
-#&gt; patient 12       0       0        0        0        0
-#&gt; patient 13       0       0        0        0        1
-#&gt; patient 14       0       0        1        0        1
-#&gt; patient 15       0       0        0        0        0
-#&gt; patient 16       0       0        0        0        0
-#&gt; patient 17       0       0        0        1        0
-#&gt; patient 18       0       0        0        0        0
-#&gt; patient 19       0       0        0        0        0
-#&gt; patient 20       0       0        0        1        0
-#&gt; patient 21       0       0        0        0        0
-#&gt; patient 22       0       0        0        0        0
-#&gt; patient 23       0       0        0        1        0
-#&gt; patient 24       0       0        0        1        0
-#&gt; patient 25       0       0        0        0        0
-#&gt; patient 26       0       0        0        0        0
-#&gt; patient 27       0       0        0        1        0
-#&gt; patient 28       0       0        0        0        0
-#&gt; patient 29       0       0        0        1        0
-#&gt; patient 30       0       0        0        0        1
-#&gt; patient 31       0       0        0        0        0
-#&gt; patient 32       0       0        0        0        0
-#&gt; patient 33       0       0        0        0        0
-#&gt; patient 34       0       0        0        0        1
-#&gt; patient 35       0       0        1        0        1
-#&gt; patient 36       0       0        0        0        0
-#&gt; patient 37       0       0        0        0        0
-#&gt; patient 38       0       0        0        1        0
-#&gt; patient 39       0       0        0        0        0
-#&gt; patient 40       0       0        0        0        0
-#&gt; 
-#&gt; $annotations
-#&gt;          type                       event           
-#&gt; gene 4   "ins_del"                  "TET2"          
-#&gt; gene 5   "ins_del"                  "EZH2"          
-#&gt; gene 7   "ins_del"                  "ASXL1"         
-#&gt; gene 29  "missense_point_mutations" "SETBP1"        
-#&gt; gene 30  "missense_point_mutations" "NRAS_Ex2_3"    
-#&gt; gene 31  "missense_point_mutations" "KRAS_Ex2_3"    
-#&gt; gene 32  "missense_point_mutations" "TET2"          
-#&gt; gene 33  "missense_point_mutations" "EZH2"          
-#&gt; gene 34  "missense_point_mutations" "CBL_Ex_8_9"    
-#&gt; gene 36  "missense_point_mutations" "IDH2_R140"     
-#&gt; gene 40  "missense_point_mutations" "SF3B1_Ex_12_15"
-#&gt; gene 44  "missense_point_mutations" "JARID_2_Ex1_18"
-#&gt; gene 47  "missense_point_mutations" "EED_Ex2_12"    
-#&gt; gene 49  "missense_point_mutations" "CEBPA"         
-#&gt; gene 50  "missense_point_mutations" "EPHB3"         
-#&gt; gene 51  "missense_point_mutations" "ETNK1"         
-#&gt; gene 52  "missense_point_mutations" "GATA2"         
-#&gt; gene 53  "missense_point_mutations" "IRAK4"         
-#&gt; gene 54  "missense_point_mutations" "MTA2"          
-#&gt; gene 55  "missense_point_mutations" "CSF3R"         
-#&gt; gene 56  "missense_point_mutations" "KIT"           
-#&gt; gene 66  "nonsense_ins_del"         "WT1"           
-#&gt; gene 69  "nonsense_ins_del"         "RUNX_1"        
-#&gt; gene 77  "nonsense_ins_del"         "CEBPA"         
-#&gt; gene 88  "nonsense_point_mutations" "TET2"          
-#&gt; gene 89  "nonsense_point_mutations" "EZH2"          
-#&gt; gene 91  "nonsense_point_mutations" "ASXL1"         
-#&gt; gene 111 "nonsense_point_mutations" "CSF3R"         
-#&gt; XOR_EZH2 "Pattern"                  "XOR_EZH2"      
-#&gt; OR_CSF3R "Pattern"                  "OR_CSF3R"      
-#&gt; 
-#&gt; $types
-#&gt;                          color           
-#&gt; ins_del                  "khaki"         
-#&gt; missense_point_mutations "lightgreen"    
-#&gt; nonsense_ins_del         "cornflowerblue"
-#&gt; nonsense_point_mutations "firebrick1"    
-#&gt; Pattern                  "slateblue"     
-#&gt; 
-#&gt; $stages
-#&gt; [1] NA
-#&gt; 
-#&gt; $hypotheses
-#&gt; $hypotheses$num.hypotheses
-#&gt; [1] 2
-#&gt; 
-#&gt; $hypotheses$hlist
-#&gt;        cause      effect    
-#&gt;   [1,] "XOR_EZH2" "gene 4"  
-#&gt;   [2,] "XOR_EZH2" "gene 7"  
-#&gt;   [3,] "XOR_EZH2" "gene 29" 
-#&gt;   [4,] "XOR_EZH2" "gene 30" 
-#&gt;   [5,] "XOR_EZH2" "gene 31" 
-#&gt;   [6,] "XOR_EZH2" "gene 32" 
-#&gt;   [7,] "XOR_EZH2" "gene 34" 
-#&gt;   [8,] "XOR_EZH2" "gene 36" 
-#&gt;   [9,] "XOR_EZH2" "gene 40" 
-#&gt;  [10,] "XOR_EZH2" "gene 44" 
-#&gt;  [11,] "XOR_EZH2" "gene 47" 
-#&gt;  [12,] "XOR_EZH2" "gene 49" 
-#&gt;  [13,] "XOR_EZH2" "gene 50" 
-#&gt;  [14,] "XOR_EZH2" "gene 51" 
-#&gt;  [15,] "XOR_EZH2" "gene 52" 
-#&gt;  [16,] "XOR_EZH2" "gene 53" 
-#&gt;  [17,] "XOR_EZH2" "gene 54" 
-#&gt;  [18,] "XOR_EZH2" "gene 55" 
-#&gt;  [19,] "XOR_EZH2" "gene 56" 
-#&gt;  [20,] "XOR_EZH2" "gene 66" 
-#&gt;  [21,] "XOR_EZH2" "gene 69" 
-#&gt;  [22,] "XOR_EZH2" "gene 77" 
-#&gt;  [23,] "XOR_EZH2" "gene 88" 
-#&gt;  [24,] "XOR_EZH2" "gene 91" 
-#&gt;  [25,] "XOR_EZH2" "gene 111"
-#&gt;  [26,] "gene 4"   "XOR_EZH2"
-#&gt;  [27,] "gene 7"   "XOR_EZH2"
-#&gt;  [28,] "gene 29"  "XOR_EZH2"
-#&gt;  [29,] "gene 30"  "XOR_EZH2"
-#&gt;  [30,] "gene 31"  "XOR_EZH2"
-#&gt;  [31,] "gene 32"  "XOR_EZH2"
-#&gt;  [32,] "gene 34"  "XOR_EZH2"
-#&gt;  [33,] "gene 36"  "XOR_EZH2"
-#&gt;  [34,] "gene 40"  "XOR_EZH2"
-#&gt;  [35,] "gene 44"  "XOR_EZH2"
-#&gt;  [36,] "gene 47"  "XOR_EZH2"
-#&gt;  [37,] "gene 49"  "XOR_EZH2"
-#&gt;  [38,] "gene 50"  "XOR_EZH2"
-#&gt;  [39,] "gene 51"  "XOR_EZH2"
-#&gt;  [40,] "gene 52"  "XOR_EZH2"
-#&gt;  [41,] "gene 53"  "XOR_EZH2"
-#&gt;  [42,] "gene 54"  "XOR_EZH2"
-#&gt;  [43,] "gene 55"  "XOR_EZH2"
-#&gt;  [44,] "gene 56"  "XOR_EZH2"
-#&gt;  [45,] "gene 66"  "XOR_EZH2"
-#&gt;  [46,] "gene 69"  "XOR_EZH2"
-#&gt;  [47,] "gene 77"  "XOR_EZH2"
-#&gt;  [48,] "gene 88"  "XOR_EZH2"
-#&gt;  [49,] "gene 91"  "XOR_EZH2"
-#&gt;  [50,] "gene 111" "XOR_EZH2"
-#&gt;  [51,] "OR_CSF3R" "gene 4"  
-#&gt;  [52,] "OR_CSF3R" "gene 5"  
-#&gt;  [53,] "OR_CSF3R" "gene 7"  
-#&gt;  [54,] "OR_CSF3R" "gene 29" 
-#&gt;  [55,] "OR_CSF3R" "gene 30" 
-#&gt;  [56,] "OR_CSF3R" "gene 31" 
-#&gt;  [57,] "OR_CSF3R" "gene 32" 
-#&gt;  [58,] "OR_CSF3R" "gene 33" 
-#&gt;  [59,] "OR_CSF3R" "gene 34" 
-#&gt;  [60,] "OR_CSF3R" "gene 36" 
-#&gt;  [61,] "OR_CSF3R" "gene 40" 
-#&gt;  [62,] "OR_CSF3R" "gene 44" 
-#&gt;  [63,] "OR_CSF3R" "gene 47" 
-#&gt;  [64,] "OR_CSF3R" "gene 49" 
-#&gt;  [65,] "OR_CSF3R" "gene 50" 
-#&gt;  [66,] "OR_CSF3R" "gene 51" 
-#&gt;  [67,] "OR_CSF3R" "gene 52" 
-#&gt;  [68,] "OR_CSF3R" "gene 53" 
-#&gt;  [69,] "OR_CSF3R" "gene 54" 
-#&gt;  [70,] "OR_CSF3R" "gene 56" 
-#&gt;  [71,] "OR_CSF3R" "gene 66" 
-#&gt;  [72,] "OR_CSF3R" "gene 69" 
-#&gt;  [73,] "OR_CSF3R" "gene 77" 
-#&gt;  [74,] "OR_CSF3R" "gene 88" 
-#&gt;  [75,] "OR_CSF3R" "gene 89" 
-#&gt;  [76,] "OR_CSF3R" "gene 91" 
-#&gt;  [77,] "gene 4"   "OR_CSF3R"
-#&gt;  [78,] "gene 5"   "OR_CSF3R"
-#&gt;  [79,] "gene 7"   "OR_CSF3R"
-#&gt;  [80,] "gene 29"  "OR_CSF3R"
-#&gt;  [81,] "gene 30"  "OR_CSF3R"
-#&gt;  [82,] "gene 31"  "OR_CSF3R"
-#&gt;  [83,] "gene 32"  "OR_CSF3R"
-#&gt;  [84,] "gene 33"  "OR_CSF3R"
-#&gt;  [85,] "gene 34"  "OR_CSF3R"
-#&gt;  [86,] "gene 36"  "OR_CSF3R"
-#&gt;  [87,] "gene 40"  "OR_CSF3R"
-#&gt;  [88,] "gene 44"  "OR_CSF3R"
-#&gt;  [89,] "gene 47"  "OR_CSF3R"
-#&gt;  [90,] "gene 49"  "OR_CSF3R"
-#&gt;  [91,] "gene 50"  "OR_CSF3R"
-#&gt;  [92,] "gene 51"  "OR_CSF3R"
-#&gt;  [93,] "gene 52"  "OR_CSF3R"
-#&gt;  [94,] "gene 53"  "OR_CSF3R"
-#&gt;  [95,] "gene 54"  "OR_CSF3R"
-#&gt;  [96,] "gene 56"  "OR_CSF3R"
-#&gt;  [97,] "gene 66"  "OR_CSF3R"
-#&gt;  [98,] "gene 69"  "OR_CSF3R"
-#&gt;  [99,] "gene 77"  "OR_CSF3R"
-#&gt; [100,] "gene 88"  "OR_CSF3R"
-#&gt; [101,] "gene 89"  "OR_CSF3R"
-#&gt; [102,] "gene 91"  "OR_CSF3R"
-#&gt; 
-#&gt; $hypotheses$hstructure
-#&gt; $hypotheses$hstructure$XOR_EZH2
-#&gt;                            gene 5 gene 33 gene 89 XOR_gene 5_gene 33_gene 89
-#&gt; gene 5                          0       0       0                          1
-#&gt; gene 33                         0       0       0                          1
-#&gt; gene 89                         0       0       0                          1
-#&gt; XOR_gene 5_gene 33_gene 89      0       0       0                          0
-#&gt; 
-#&gt; $hypotheses$hstructure$OR_CSF3R
-#&gt;                     gene 55 gene 111 OR_gene 55_gene 111
-#&gt; gene 55                   0        0                   1
-#&gt; gene 111                  0        0                   1
-#&gt; OR_gene 55_gene 111       0        0                   0
-#&gt; 
-#&gt; 
-#&gt; $hypotheses$patterns
-#&gt; $hypotheses$patterns$XOR_EZH2
-#&gt; [1] "gene 5"  "gene 33" "gene 89"
-#&gt; 
-#&gt; $hypotheses$patterns$OR_CSF3R
-#&gt; [1] "gene 55"  "gene 111"
-#&gt; 
-#&gt; 
-#&gt; $hypotheses$atoms
-#&gt; $hypotheses$atoms$`gene 4`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 5`
-#&gt; [1] "XOR_EZH2"
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 7`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 29`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 30`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 31`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 32`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 33`
-#&gt; [1] "XOR_EZH2"
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 34`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 36`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 40`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 44`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 47`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 49`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 50`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 51`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 52`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 53`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 54`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 55`
-#&gt; [1] "OR_CSF3R"
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 56`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 66`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 69`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 77`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 88`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 89`
-#&gt; [1] "XOR_EZH2"
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 91`
-#&gt; NULL
-#&gt; 
-#&gt; $hypotheses$atoms$`gene 111`
-#&gt; [1] "OR_CSF3R"
-#&gt; 
-#&gt; 
-#&gt; $hypotheses$pvalues
-#&gt; $hypotheses$pvalues$XOR_EZH2
-#&gt;       
-#&gt; 1 1 1 
-#&gt; 
-#&gt; $hypotheses$pvalues$OR_CSF3R
-#&gt;           
-#&gt; 0.7226721 
-#&gt; 
-#&gt; 
-#&gt; </div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>TCGA.remove.multiple.samples</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Patient NA with sample aliquotes</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> character(0)</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>no non-missing arguments to max; returning -Inf</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Selecting -Inf </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $genotypes</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            gene 4 gene 5 gene 7 gene 29 gene 30 gene 31 gene 32 gene 33 gene 34</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1       0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2       0      0      0       1       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3       0      0      0       1       1       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4       0      0      0       1       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5       0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6       0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7       0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8       0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9       0      0      1       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10      0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11      0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12      0      0      0       1       1       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13      0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14      0      0      0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17      0      0      0       0       1       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20      0      0      0       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21      0      0      1       0       0       0       1       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23      1      0      0       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24      1      0      1       0       0       0       0       1       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25      1      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27      0      1      1       0       0       0       1       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29      0      0      1       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32      0      0      1       0       0       1       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34      0      0      0       0       0       0       1       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38      0      0      0       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39      0      0      1       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40      0      0      0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            gene 36 gene 40 gene 44 gene 47 gene 49 gene 50 gene 51 gene 52</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7        0       0       0       0       0       1       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12       0       0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15       1       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19       0       0       0       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20       0       0       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22       0       1       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31       0       0       0       1       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38       0       0       0       0       1       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            gene 53 gene 54 gene 55 gene 56 gene 66 gene 69 gene 77 gene 88</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5        0       0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9        0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12       0       0       0       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13       0       0       1       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16       0       1       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17       1       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23       0       0       0       1       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25       0       0       0       1       0       1       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26       0       0       0       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29       0       0       0       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30       0       0       1       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31       0       0       0       0       0       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34       0       0       1       0       1       0       1       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39       0       0       0       0       0       0       0       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40       0       0       0       0       0       0       0       1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            gene 89 gene 91 gene 111 XOR_EZH2 OR_CSF3R</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1        0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2        0       1        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3        0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4        0       1        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5        0       0        1        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6        1       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7        0       1        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8        0       1        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9        0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13       0       0        0        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14       0       0        1        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30       0       0        0        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34       0       0        0        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35       0       0        1        0        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38       0       0        0        1        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40       0       0        0        0        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $annotations</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          type                       event           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 4   "ins_del"                  "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 5   "ins_del"                  "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 7   "ins_del"                  "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 29  "missense_point_mutations" "SETBP1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 30  "missense_point_mutations" "NRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 31  "missense_point_mutations" "KRAS_Ex2_3"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 32  "missense_point_mutations" "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 33  "missense_point_mutations" "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 34  "missense_point_mutations" "CBL_Ex_8_9"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 36  "missense_point_mutations" "IDH2_R140"     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 40  "missense_point_mutations" "SF3B1_Ex_12_15"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 44  "missense_point_mutations" "JARID_2_Ex1_18"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 47  "missense_point_mutations" "EED_Ex2_12"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 49  "missense_point_mutations" "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 50  "missense_point_mutations" "EPHB3"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 51  "missense_point_mutations" "ETNK1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 52  "missense_point_mutations" "GATA2"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 53  "missense_point_mutations" "IRAK4"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 54  "missense_point_mutations" "MTA2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 55  "missense_point_mutations" "CSF3R"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 56  "missense_point_mutations" "KIT"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 66  "nonsense_ins_del"         "WT1"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 69  "nonsense_ins_del"         "RUNX_1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 77  "nonsense_ins_del"         "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 88  "nonsense_point_mutations" "TET2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 89  "nonsense_point_mutations" "EZH2"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 91  "nonsense_point_mutations" "ASXL1"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 111 "nonsense_point_mutations" "CSF3R"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> XOR_EZH2 "Pattern"                  "XOR_EZH2"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> OR_CSF3R "Pattern"                  "OR_CSF3R"      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $types</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                          color           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ins_del                  "khaki"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations "lightgreen"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> nonsense_ins_del         "cornflowerblue"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> nonsense_point_mutations "firebrick1"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Pattern                  "slateblue"     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $stages</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$num.hypotheses</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$hlist</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>        cause      effect    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [1,] "XOR_EZH2" "gene 4"  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [2,] "XOR_EZH2" "gene 7"  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [3,] "XOR_EZH2" "gene 29" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [4,] "XOR_EZH2" "gene 30" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [5,] "XOR_EZH2" "gene 31" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [6,] "XOR_EZH2" "gene 32" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [7,] "XOR_EZH2" "gene 34" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [8,] "XOR_EZH2" "gene 36" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [9,] "XOR_EZH2" "gene 40" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [10,] "XOR_EZH2" "gene 44" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [11,] "XOR_EZH2" "gene 47" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [12,] "XOR_EZH2" "gene 49" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [13,] "XOR_EZH2" "gene 50" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [14,] "XOR_EZH2" "gene 51" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [15,] "XOR_EZH2" "gene 52" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [16,] "XOR_EZH2" "gene 53" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [17,] "XOR_EZH2" "gene 54" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [18,] "XOR_EZH2" "gene 55" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [19,] "XOR_EZH2" "gene 56" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [20,] "XOR_EZH2" "gene 66" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [21,] "XOR_EZH2" "gene 69" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [22,] "XOR_EZH2" "gene 77" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [23,] "XOR_EZH2" "gene 88" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [24,] "XOR_EZH2" "gene 91" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [25,] "XOR_EZH2" "gene 111"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [26,] "gene 4"   "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [27,] "gene 7"   "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [28,] "gene 29"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [29,] "gene 30"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [30,] "gene 31"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [31,] "gene 32"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [32,] "gene 34"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [33,] "gene 36"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [34,] "gene 40"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [35,] "gene 44"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [36,] "gene 47"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [37,] "gene 49"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [38,] "gene 50"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [39,] "gene 51"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [40,] "gene 52"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [41,] "gene 53"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [42,] "gene 54"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [43,] "gene 55"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [44,] "gene 56"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [45,] "gene 66"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [46,] "gene 69"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [47,] "gene 77"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [48,] "gene 88"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [49,] "gene 91"  "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [50,] "gene 111" "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [51,] "OR_CSF3R" "gene 4"  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [52,] "OR_CSF3R" "gene 5"  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [53,] "OR_CSF3R" "gene 7"  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [54,] "OR_CSF3R" "gene 29" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [55,] "OR_CSF3R" "gene 30" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [56,] "OR_CSF3R" "gene 31" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [57,] "OR_CSF3R" "gene 32" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [58,] "OR_CSF3R" "gene 33" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [59,] "OR_CSF3R" "gene 34" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [60,] "OR_CSF3R" "gene 36" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [61,] "OR_CSF3R" "gene 40" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [62,] "OR_CSF3R" "gene 44" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [63,] "OR_CSF3R" "gene 47" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [64,] "OR_CSF3R" "gene 49" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [65,] "OR_CSF3R" "gene 50" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [66,] "OR_CSF3R" "gene 51" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [67,] "OR_CSF3R" "gene 52" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [68,] "OR_CSF3R" "gene 53" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [69,] "OR_CSF3R" "gene 54" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [70,] "OR_CSF3R" "gene 56" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [71,] "OR_CSF3R" "gene 66" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [72,] "OR_CSF3R" "gene 69" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [73,] "OR_CSF3R" "gene 77" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [74,] "OR_CSF3R" "gene 88" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [75,] "OR_CSF3R" "gene 89" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [76,] "OR_CSF3R" "gene 91" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [77,] "gene 4"   "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [78,] "gene 5"   "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [79,] "gene 7"   "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [80,] "gene 29"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [81,] "gene 30"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [82,] "gene 31"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [83,] "gene 32"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [84,] "gene 33"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [85,] "gene 34"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [86,] "gene 36"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [87,] "gene 40"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [88,] "gene 44"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [89,] "gene 47"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [90,] "gene 49"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [91,] "gene 50"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [92,] "gene 51"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [93,] "gene 52"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [94,] "gene 53"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [95,] "gene 54"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [96,] "gene 56"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [97,] "gene 66"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [98,] "gene 69"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [99,] "gene 77"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [100,] "gene 88"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [101,] "gene 89"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [102,] "gene 91"  "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$hstructure</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$hstructure$XOR_EZH2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                            gene 5 gene 33 gene 89 XOR_gene 5_gene 33_gene 89</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 5                          0       0       0                          1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 33                         0       0       0                          1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 89                         0       0       0                          1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> XOR_gene 5_gene 33_gene 89      0       0       0                          0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$hstructure$OR_CSF3R</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                     gene 55 gene 111 OR_gene 55_gene 111</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 55                   0        0                   1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> gene 111                  0        0                   1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> OR_gene 55_gene 111       0        0                   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$patterns</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$patterns$XOR_EZH2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "gene 5"  "gene 33" "gene 89"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$patterns$OR_CSF3R</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "gene 55"  "gene 111"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 4`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 5`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 7`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 29`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 30`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 31`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 32`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 33`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 34`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 36`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 40`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 44`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 47`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 49`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 50`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 51`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 52`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 53`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 54`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 55`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 56`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 66`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 69`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 77`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 88`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 89`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "XOR_EZH2"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 91`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> NULL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$atoms$`gene 111`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "OR_CSF3R"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$pvalues</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$pvalues$XOR_EZH2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1 1 1 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $hypotheses$pvalues$OR_CSF3R</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 0.7226721 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

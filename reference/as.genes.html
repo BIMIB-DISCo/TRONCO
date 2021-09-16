@@ -59,9 +59,6 @@ TRONCO compliant dataset - see is.compliant." />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -84,7 +81,7 @@ TRONCO compliant dataset - see is.compliant." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -154,7 +151,7 @@ TRONCO compliant dataset - see is.compliant." />
 TRONCO compliant dataset - see <code>is.compliant</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.genes</span><span class='op'>(</span><span class='va'>x</span>, types <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>as.genes</span><span class='op'>(</span><span class='va'>x</span>, types <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,15 +171,16 @@ TRONCO compliant dataset - see <code>is.compliant</code>.</p>
     <p>A vector of gene symbols for which a certain type of event exists</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-<span class='fu'>as.genes</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  [1] "TET2"           "EZH2"           "ASXL1"          "SETBP1"        
-#&gt;  [5] "NRAS_Ex2_3"     "KRAS_Ex2_3"     "CBL_Ex_8_9"     "IDH2_R140"     
-#&gt;  [9] "SF3B1_Ex_12_15" "JARID_2_Ex1_18" "EED_Ex2_12"     "CEBPA"         
-#&gt; [13] "EPHB3"          "ETNK1"          "GATA2"          "IRAK4"         
-#&gt; [17] "MTA2"           "CSF3R"          "KIT"            "WT1"           
-#&gt; [21] "RUNX_1"        </div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>as.genes</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "TET2"           "EZH2"           "ASXL1"          "SETBP1"        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [5] "NRAS_Ex2_3"     "KRAS_Ex2_3"     "CBL_Ex_8_9"     "IDH2_R140"     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "SF3B1_Ex_12_15" "JARID_2_Ex1_18" "EED_Ex2_12"     "CEBPA"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [13] "EPHB3"          "ETNK1"          "GATA2"          "IRAK4"         </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "MTA2"           "CSF3R"          "KIT"            "WT1"           </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [21] "RUNX_1"        </span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

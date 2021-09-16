@@ -59,9 +59,6 @@ If a name is not found, an error is raised!" />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -84,7 +81,7 @@ If a name is not found, an error is raised!" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -154,7 +151,7 @@ If a name is not found, an error is raised!" />
 If a name is not found, an error is raised!</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nameToKey</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>nameToKey</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,10 +171,10 @@ If a name is not found, an error is raised!</p>
     <p>A TRONCO dataset key name</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span>
-<span class='va'>adj_matrix</span> <span class='op'>=</span> <span class='fu'><a href='as.adj.matrix.html'>as.adj.matrix</a></span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span><span class='op'>)</span><span class='op'>$</span><span class='va'>bic</span>
-
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>adj_matrix</span> <span class='op'>=</span> <span class='fu'><a href='as.adj.matrix.html'>as.adj.matrix</a></span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span><span class='op'>)</span><span class='op'>$</span><span class='va'>bic</span></span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

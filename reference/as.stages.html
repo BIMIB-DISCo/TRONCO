@@ -59,9 +59,6 @@ TRONCO compliant dataset - see is.compliant." />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -84,7 +81,7 @@ TRONCO compliant dataset - see is.compliant." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -154,7 +151,7 @@ TRONCO compliant dataset - see is.compliant." />
 TRONCO compliant dataset - see <code>is.compliant</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as.stages</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>as.stages</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,52 +167,54 @@ TRONCO compliant dataset - see <code>is.compliant</code>.</p>
     <p>A matrix with 1 column annotating stages and rownames as sample IDs.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>stage</span><span class='op'>)</span>
-<span class='va'>test_dataset</span> <span class='op'>=</span> <span class='fu'><a href='annotate.stages.html'>annotate.stages</a></span><span class='op'>(</span><span class='va'>test_dataset</span>, <span class='va'>stage</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: 6  missing stages were added as NA.</span></div><div class='input'><span class='fu'>as.stages</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                stage
-#&gt; patient 1   Stage II
-#&gt; patient 2    Stage I
-#&gt; patient 3   Stage II
-#&gt; patient 4    Stage I
-#&gt; patient 5    Stage I
-#&gt; patient 6   Stage II
-#&gt; patient 7    Stage I
-#&gt; patient 8    Stage I
-#&gt; patient 9       &lt;NA&gt;
-#&gt; patient 10   Stage I
-#&gt; patient 11 Stage III
-#&gt; patient 12   Stage I
-#&gt; patient 13      &lt;NA&gt;
-#&gt; patient 14   Stage I
-#&gt; patient 15   Stage I
-#&gt; patient 16  Stage II
-#&gt; patient 17   Stage I
-#&gt; patient 18 Stage III
-#&gt; patient 19   Stage I
-#&gt; patient 20  Stage II
-#&gt; patient 21   Stage I
-#&gt; patient 22 Stage III
-#&gt; patient 23      &lt;NA&gt;
-#&gt; patient 24   Stage I
-#&gt; patient 25  Stage II
-#&gt; patient 26  Stage II
-#&gt; patient 27      &lt;NA&gt;
-#&gt; patient 28   Stage I
-#&gt; patient 29  Stage II
-#&gt; patient 30 Stage III
-#&gt; patient 31 Stage III
-#&gt; patient 32   Stage I
-#&gt; patient 33   Stage I
-#&gt; patient 34  Stage II
-#&gt; patient 35  Stage II
-#&gt; patient 36 Stage III
-#&gt; patient 37   Stage I
-#&gt; patient 38      &lt;NA&gt;
-#&gt; patient 39 Stage III
-#&gt; patient 40      &lt;NA&gt;</div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>stage</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>test_dataset</span> <span class='op'>=</span> <span class='fu'><a href='annotate.stages.html'>annotate.stages</a></span><span class='op'>(</span><span class='va'>test_dataset</span>, <span class='va'>stage</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>6  missing stages were added as NA.</span>
+<span class='r-in'><span class='fu'>as.stages</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                stage</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 1   Stage II</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 2    Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 3   Stage II</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 4    Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 5    Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 6   Stage II</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 7    Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 8    Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 9       &lt;NA&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 10   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 11 Stage III</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 12   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 13      &lt;NA&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 14   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 15   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 16  Stage II</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 17   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 18 Stage III</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 19   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 20  Stage II</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 21   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 22 Stage III</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 23      &lt;NA&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 24   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 25  Stage II</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 26  Stage II</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 27      &lt;NA&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 28   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 29  Stage II</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 30 Stage III</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 31 Stage III</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 32   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 33   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 34  Stage II</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 35  Stage II</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 36 Stage III</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 37   Stage I</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 38      &lt;NA&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 39 Stage III</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> patient 40      &lt;NA&gt;</span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

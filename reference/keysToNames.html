@@ -59,9 +59,6 @@ If a name is not found, the original name is left unchanged." />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -84,7 +81,7 @@ If a name is not found, the original name is left unchanged." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -154,7 +151,7 @@ If a name is not found, the original name is left unchanged." />
 If a name is not found, the original name is left unchanged.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>keysToNames</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>matrix</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>keysToNames</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>matrix</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,143 +171,144 @@ If a name is not found, the original name is left unchanged.</p>
     <p>The matrix with intelligible colnames/rownames.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span>
-<span class='va'>adj_matrix</span> <span class='op'>=</span> <span class='fu'><a href='as.adj.matrix.html'>as.adj.matrix</a></span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span><span class='op'>)</span><span class='op'>$</span><span class='va'>capri_bic</span>
-<span class='fu'>keysToNames</span><span class='op'>(</span><span class='va'>test_model</span>, <span class='va'>adj_matrix</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                                         missense_point_mutations NRAS_Ex2_3
-#&gt; missense_point_mutations NRAS_Ex2_3                                       0
-#&gt; missense_point_mutations KRAS_Ex2_3                                       0
-#&gt; missense_point_mutations TET2                                             0
-#&gt; missense_point_mutations EZH2                                             0
-#&gt; missense_point_mutations CBL_Ex_8_9                                       0
-#&gt; missense_point_mutations IDH2_R140                                        0
-#&gt; missense_point_mutations SF3B1_Ex_12_15                                   0
-#&gt; missense_point_mutations JARID_2_Ex1_18                                   0
-#&gt; missense_point_mutations EED_Ex2_12                                       0
-#&gt; missense_point_mutations CEBPA                                            0
-#&gt; missense_point_mutations EPHB3                                            0
-#&gt;                                         missense_point_mutations KRAS_Ex2_3
-#&gt; missense_point_mutations NRAS_Ex2_3                                       0
-#&gt; missense_point_mutations KRAS_Ex2_3                                       0
-#&gt; missense_point_mutations TET2                                             0
-#&gt; missense_point_mutations EZH2                                             0
-#&gt; missense_point_mutations CBL_Ex_8_9                                       0
-#&gt; missense_point_mutations IDH2_R140                                        0
-#&gt; missense_point_mutations SF3B1_Ex_12_15                                   0
-#&gt; missense_point_mutations JARID_2_Ex1_18                                   0
-#&gt; missense_point_mutations EED_Ex2_12                                       0
-#&gt; missense_point_mutations CEBPA                                            0
-#&gt; missense_point_mutations EPHB3                                            0
-#&gt;                                         missense_point_mutations TET2
-#&gt; missense_point_mutations NRAS_Ex2_3                                 0
-#&gt; missense_point_mutations KRAS_Ex2_3                                 0
-#&gt; missense_point_mutations TET2                                       0
-#&gt; missense_point_mutations EZH2                                       0
-#&gt; missense_point_mutations CBL_Ex_8_9                                 0
-#&gt; missense_point_mutations IDH2_R140                                  0
-#&gt; missense_point_mutations SF3B1_Ex_12_15                             0
-#&gt; missense_point_mutations JARID_2_Ex1_18                             0
-#&gt; missense_point_mutations EED_Ex2_12                                 0
-#&gt; missense_point_mutations CEBPA                                      0
-#&gt; missense_point_mutations EPHB3                                      0
-#&gt;                                         missense_point_mutations EZH2
-#&gt; missense_point_mutations NRAS_Ex2_3                                 0
-#&gt; missense_point_mutations KRAS_Ex2_3                                 0
-#&gt; missense_point_mutations TET2                                       0
-#&gt; missense_point_mutations EZH2                                       0
-#&gt; missense_point_mutations CBL_Ex_8_9                                 0
-#&gt; missense_point_mutations IDH2_R140                                  0
-#&gt; missense_point_mutations SF3B1_Ex_12_15                             0
-#&gt; missense_point_mutations JARID_2_Ex1_18                             0
-#&gt; missense_point_mutations EED_Ex2_12                                 0
-#&gt; missense_point_mutations CEBPA                                      0
-#&gt; missense_point_mutations EPHB3                                      0
-#&gt;                                         missense_point_mutations CBL_Ex_8_9
-#&gt; missense_point_mutations NRAS_Ex2_3                                       0
-#&gt; missense_point_mutations KRAS_Ex2_3                                       0
-#&gt; missense_point_mutations TET2                                             0
-#&gt; missense_point_mutations EZH2                                             0
-#&gt; missense_point_mutations CBL_Ex_8_9                                       0
-#&gt; missense_point_mutations IDH2_R140                                        0
-#&gt; missense_point_mutations SF3B1_Ex_12_15                                   0
-#&gt; missense_point_mutations JARID_2_Ex1_18                                   0
-#&gt; missense_point_mutations EED_Ex2_12                                       0
-#&gt; missense_point_mutations CEBPA                                            0
-#&gt; missense_point_mutations EPHB3                                            0
-#&gt;                                         missense_point_mutations IDH2_R140
-#&gt; missense_point_mutations NRAS_Ex2_3                                      0
-#&gt; missense_point_mutations KRAS_Ex2_3                                      0
-#&gt; missense_point_mutations TET2                                            0
-#&gt; missense_point_mutations EZH2                                            0
-#&gt; missense_point_mutations CBL_Ex_8_9                                      0
-#&gt; missense_point_mutations IDH2_R140                                       0
-#&gt; missense_point_mutations SF3B1_Ex_12_15                                  0
-#&gt; missense_point_mutations JARID_2_Ex1_18                                  0
-#&gt; missense_point_mutations EED_Ex2_12                                      0
-#&gt; missense_point_mutations CEBPA                                           0
-#&gt; missense_point_mutations EPHB3                                           0
-#&gt;                                         missense_point_mutations SF3B1_Ex_12_15
-#&gt; missense_point_mutations NRAS_Ex2_3                                           0
-#&gt; missense_point_mutations KRAS_Ex2_3                                           0
-#&gt; missense_point_mutations TET2                                                 0
-#&gt; missense_point_mutations EZH2                                                 0
-#&gt; missense_point_mutations CBL_Ex_8_9                                           0
-#&gt; missense_point_mutations IDH2_R140                                            0
-#&gt; missense_point_mutations SF3B1_Ex_12_15                                       0
-#&gt; missense_point_mutations JARID_2_Ex1_18                                       0
-#&gt; missense_point_mutations EED_Ex2_12                                           0
-#&gt; missense_point_mutations CEBPA                                                0
-#&gt; missense_point_mutations EPHB3                                                0
-#&gt;                                         missense_point_mutations JARID_2_Ex1_18
-#&gt; missense_point_mutations NRAS_Ex2_3                                           1
-#&gt; missense_point_mutations KRAS_Ex2_3                                           0
-#&gt; missense_point_mutations TET2                                                 0
-#&gt; missense_point_mutations EZH2                                                 0
-#&gt; missense_point_mutations CBL_Ex_8_9                                           0
-#&gt; missense_point_mutations IDH2_R140                                            0
-#&gt; missense_point_mutations SF3B1_Ex_12_15                                       0
-#&gt; missense_point_mutations JARID_2_Ex1_18                                       0
-#&gt; missense_point_mutations EED_Ex2_12                                           0
-#&gt; missense_point_mutations CEBPA                                                0
-#&gt; missense_point_mutations EPHB3                                                0
-#&gt;                                         missense_point_mutations EED_Ex2_12
-#&gt; missense_point_mutations NRAS_Ex2_3                                       0
-#&gt; missense_point_mutations KRAS_Ex2_3                                       0
-#&gt; missense_point_mutations TET2                                             0
-#&gt; missense_point_mutations EZH2                                             0
-#&gt; missense_point_mutations CBL_Ex_8_9                                       0
-#&gt; missense_point_mutations IDH2_R140                                        0
-#&gt; missense_point_mutations SF3B1_Ex_12_15                                   0
-#&gt; missense_point_mutations JARID_2_Ex1_18                                   0
-#&gt; missense_point_mutations EED_Ex2_12                                       0
-#&gt; missense_point_mutations CEBPA                                            0
-#&gt; missense_point_mutations EPHB3                                            0
-#&gt;                                         missense_point_mutations CEBPA
-#&gt; missense_point_mutations NRAS_Ex2_3                                  0
-#&gt; missense_point_mutations KRAS_Ex2_3                                  0
-#&gt; missense_point_mutations TET2                                        0
-#&gt; missense_point_mutations EZH2                                        1
-#&gt; missense_point_mutations CBL_Ex_8_9                                  0
-#&gt; missense_point_mutations IDH2_R140                                   0
-#&gt; missense_point_mutations SF3B1_Ex_12_15                              0
-#&gt; missense_point_mutations JARID_2_Ex1_18                              0
-#&gt; missense_point_mutations EED_Ex2_12                                  0
-#&gt; missense_point_mutations CEBPA                                       0
-#&gt; missense_point_mutations EPHB3                                       0
-#&gt;                                         missense_point_mutations EPHB3
-#&gt; missense_point_mutations NRAS_Ex2_3                                  0
-#&gt; missense_point_mutations KRAS_Ex2_3                                  0
-#&gt; missense_point_mutations TET2                                        0
-#&gt; missense_point_mutations EZH2                                        0
-#&gt; missense_point_mutations CBL_Ex_8_9                                  0
-#&gt; missense_point_mutations IDH2_R140                                   0
-#&gt; missense_point_mutations SF3B1_Ex_12_15                              0
-#&gt; missense_point_mutations JARID_2_Ex1_18                              0
-#&gt; missense_point_mutations EED_Ex2_12                                  0
-#&gt; missense_point_mutations CEBPA                                       0
-#&gt; missense_point_mutations EPHB3                                       0</div><div class='input'>
-
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>adj_matrix</span> <span class='op'>=</span> <span class='fu'><a href='as.adj.matrix.html'>as.adj.matrix</a></span><span class='op'>(</span><span class='va'>test_model</span>, events<span class='op'>=</span><span class='fu'><a href='as.events.html'>as.events</a></span><span class='op'>(</span><span class='va'>test_model</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span><span class='op'>)</span><span class='op'>$</span><span class='va'>capri_bic</span></span>
+<span class='r-in'><span class='fu'>keysToNames</span><span class='op'>(</span><span class='va'>test_model</span>, <span class='va'>adj_matrix</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                         missense_point_mutations NRAS_Ex2_3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations NRAS_Ex2_3                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations KRAS_Ex2_3                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations TET2                                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EZH2                                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CBL_Ex_8_9                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations IDH2_R140                                        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations SF3B1_Ex_12_15                                   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations JARID_2_Ex1_18                                   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EED_Ex2_12                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CEBPA                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EPHB3                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                         missense_point_mutations KRAS_Ex2_3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations NRAS_Ex2_3                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations KRAS_Ex2_3                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations TET2                                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EZH2                                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CBL_Ex_8_9                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations IDH2_R140                                        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations SF3B1_Ex_12_15                                   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations JARID_2_Ex1_18                                   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EED_Ex2_12                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CEBPA                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EPHB3                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                         missense_point_mutations TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations NRAS_Ex2_3                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations KRAS_Ex2_3                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations TET2                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EZH2                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CBL_Ex_8_9                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations IDH2_R140                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations SF3B1_Ex_12_15                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations JARID_2_Ex1_18                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EED_Ex2_12                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CEBPA                                      0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EPHB3                                      0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                         missense_point_mutations EZH2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations NRAS_Ex2_3                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations KRAS_Ex2_3                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations TET2                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EZH2                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CBL_Ex_8_9                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations IDH2_R140                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations SF3B1_Ex_12_15                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations JARID_2_Ex1_18                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EED_Ex2_12                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CEBPA                                      0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EPHB3                                      0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                         missense_point_mutations CBL_Ex_8_9</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations NRAS_Ex2_3                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations KRAS_Ex2_3                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations TET2                                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EZH2                                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CBL_Ex_8_9                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations IDH2_R140                                        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations SF3B1_Ex_12_15                                   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations JARID_2_Ex1_18                                   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EED_Ex2_12                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CEBPA                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EPHB3                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                         missense_point_mutations IDH2_R140</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations NRAS_Ex2_3                                      0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations KRAS_Ex2_3                                      0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations TET2                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EZH2                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CBL_Ex_8_9                                      0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations IDH2_R140                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations SF3B1_Ex_12_15                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations JARID_2_Ex1_18                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EED_Ex2_12                                      0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CEBPA                                           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EPHB3                                           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                         missense_point_mutations SF3B1_Ex_12_15</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations NRAS_Ex2_3                                           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations KRAS_Ex2_3                                           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations TET2                                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EZH2                                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CBL_Ex_8_9                                           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations IDH2_R140                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations SF3B1_Ex_12_15                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations JARID_2_Ex1_18                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EED_Ex2_12                                           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CEBPA                                                0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EPHB3                                                0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                         missense_point_mutations JARID_2_Ex1_18</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations NRAS_Ex2_3                                           1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations KRAS_Ex2_3                                           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations TET2                                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EZH2                                                 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CBL_Ex_8_9                                           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations IDH2_R140                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations SF3B1_Ex_12_15                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations JARID_2_Ex1_18                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EED_Ex2_12                                           0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CEBPA                                                0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EPHB3                                                0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                         missense_point_mutations EED_Ex2_12</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations NRAS_Ex2_3                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations KRAS_Ex2_3                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations TET2                                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EZH2                                             0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CBL_Ex_8_9                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations IDH2_R140                                        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations SF3B1_Ex_12_15                                   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations JARID_2_Ex1_18                                   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EED_Ex2_12                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CEBPA                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EPHB3                                            0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                         missense_point_mutations CEBPA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations NRAS_Ex2_3                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations KRAS_Ex2_3                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations TET2                                        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EZH2                                        1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CBL_Ex_8_9                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations IDH2_R140                                   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations SF3B1_Ex_12_15                              0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations JARID_2_Ex1_18                              0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EED_Ex2_12                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CEBPA                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EPHB3                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                         missense_point_mutations EPHB3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations NRAS_Ex2_3                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations KRAS_Ex2_3                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations TET2                                        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EZH2                                        0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CBL_Ex_8_9                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations IDH2_R140                                   0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations SF3B1_Ex_12_15                              0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations JARID_2_Ex1_18                              0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EED_Ex2_12                                  0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations CEBPA                                       0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> missense_point_mutations EPHB3                                       0</span>
+<span class='r-in'></span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

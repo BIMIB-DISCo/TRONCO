@@ -59,9 +59,6 @@ a TRONCO compliant dataset - see is.compliant." />
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -84,7 +81,7 @@ a TRONCO compliant dataset - see is.compliant." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -154,7 +151,7 @@ a TRONCO compliant dataset - see is.compliant." />
 a TRONCO compliant dataset - see <code>is.compliant</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>view</span><span class='op'>(</span><span class='va'>x</span>, view <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>view</span><span class='op'>(</span><span class='va'>x</span>, view <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -171,19 +168,20 @@ a TRONCO compliant dataset - see <code>is.compliant</code>.</p>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-<span class='fu'>view</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; -- TRONCO Dataset: n=40, m=30, |G|=21, patterns=2.
-#&gt; Events (types): ins_del, missense_point_mutations, nonsense_ins_del, nonsense_point_mutations, Pattern.
-#&gt; Colors (plot): khaki, lightgreen, cornflowerblue, firebrick1, slateblue.
-#&gt; Events (5 shown):
-#&gt; 	 gene 4 : ins_del TET2
-#&gt; 	 gene 5 : ins_del EZH2
-#&gt; 	 gene 7 : ins_del ASXL1
-#&gt; 	 gene 29 : missense_point_mutations SETBP1
-#&gt; 	 gene 30 : missense_point_mutations NRAS_Ex2_3
-#&gt; Genotypes (5 shown):</div><div class='input'>
-</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>view</span><span class='op'>(</span><span class='va'>test_dataset</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> -- TRONCO Dataset: n=40, m=30, |G|=21, patterns=2.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Events (types): ins_del, missense_point_mutations, nonsense_ins_del, nonsense_point_mutations, Pattern.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Colors (plot): khaki, lightgreen, cornflowerblue, firebrick1, slateblue.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Events (5 shown):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 	 gene 4 : ins_del TET2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 	 gene 5 : ins_del EZH2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 	 gene 7 : ins_del ASXL1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 	 gene 29 : missense_point_mutations SETBP1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 	 gene 30 : missense_point_mutations NRAS_Ex2_3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Genotypes (5 shown):</span>
+<span class='r-in'></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

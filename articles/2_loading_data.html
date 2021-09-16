@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.24.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.25.1</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@
     
 <div id="preliminaries" class="section level2">
 <h2 class="hasAnchor">
-<a href="#preliminaries" class="anchor"></a>Preliminaries</h2>
+<a href="#preliminaries" class="anchor" aria-hidden="true"></a>Preliminaries</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sites.google.com/site/troncopackage/" class="external-link">TRONCO</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">aCML</span><span class="op">)</span>
@@ -130,7 +130,7 @@
 </div>
 <div id="mutations-annotated-in-a-maf-format" class="section level2">
 <h2 class="hasAnchor">
-<a href="#mutations-annotated-in-a-maf-format" class="anchor"></a>Mutations annotated in a MAF format</h2>
+<a href="#mutations-annotated-in-a-maf-format" class="anchor" aria-hidden="true"></a>Mutations annotated in a MAF format</h2>
 <p>We use the function <code>import.MAF</code> to import a dataset in MAF format, in this case the following TCGA dataset</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">crc_maf</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span></code></pre></div>
@@ -229,7 +229,7 @@
 </div>
 <div id="copy-number-variants-annotated-in-the-gistic-format" class="section level2">
 <h2 class="hasAnchor">
-<a href="#copy-number-variants-annotated-in-the-gistic-format" class="anchor"></a>Copy Number Variants annotated in the GISTIC format</h2>
+<a href="#copy-number-variants-annotated-in-the-gistic-format" class="anchor" aria-hidden="true"></a>Copy Number Variants annotated in the GISTIC format</h2>
 <p>We use the function <code>import.GISTIC</code> to import a dataset in GISTIC format, in this case from</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">crc_gistic</span></code></pre></div>
@@ -263,7 +263,7 @@
 </div>
 <div id="custom-alterations-annotated-in-a-boolean-matrix" class="section level2">
 <h2 class="hasAnchor">
-<a href="#custom-alterations-annotated-in-a-boolean-matrix" class="anchor"></a>Custom alterations annotated in a boolean matrix</h2>
+<a href="#custom-alterations-annotated-in-a-boolean-matrix" class="anchor" aria-hidden="true"></a>Custom alterations annotated in a boolean matrix</h2>
 <p>One can annotate its custom type of alterations in a boolean matrix such as <code>crc_plain</code></p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">crc_plain</span></code></pre></div>
@@ -279,7 +279,7 @@
 </div>
 <div id="downloading-data-from-the-cbio-portal-for-cancer-genomics" class="section level2">
 <h2 class="hasAnchor">
-<a href="#downloading-data-from-the-cbio-portal-for-cancer-genomics" class="anchor"></a>Downloading data from the cBio portal for cancer genomics</h2>
+<a href="#downloading-data-from-the-cbio-portal-for-cancer-genomics" class="anchor" aria-hidden="true"></a>Downloading data from the cBio portal for cancer genomics</h2>
 <p>TRONCO uses the R interface to cBio to query data from the portal. All type of data can be downloaded from the portal, which includes MAF/GISTIC data for a lot of different cancer studies. An example of interaction with the portal is archived at the tool’s webpage.</p>
 <p>Here, we show how to download lung cancer data somatic mutations for genes TP53, KRAS and PIK3CA, from the lung cancer project run by TCGA, which is archived as <em>luad_tcga_pub</em> at cBio. If some of the parameters to <code>cbio.query</code> are missing the function will become interactive by showing a list of possible data available at the portal.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
