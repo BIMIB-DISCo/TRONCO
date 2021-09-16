@@ -1258,6 +1258,7 @@ as.kfold.prederr <- function(x,
 #'
 #' @examples
 #' data(test_model_kfold)
+#' data(test_model)
 #' as.kfold.posterr(test_model_kfold)
 #' as.kfold.posterr(test_model_kfold, events=as.events(test_model)[5:15,])
 #'
