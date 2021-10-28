@@ -19,7 +19,7 @@ reconstruction have been performed."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@ reconstruction have been performed."><!-- mathjax --><script src="https://cdnjs.
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -71,7 +71,7 @@ reconstruction have been performed."><!-- mathjax --><script src="https://cdnjs.
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>as.kfold.eloss</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/as.functions.R"><code>R/as.functions.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/as.functions.R" class="external-link"><code>R/as.functions.R</code></a></small>
     <div class="hidden name"><code>as.kfold.eloss.Rd</code></div>
     </div>
 
@@ -81,21 +81,27 @@ TRONCO model. It is possible to specify models if multiple
 reconstruction have been performed.</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">as.kfold.eloss</span><span class="op">(</span><span class="va">x</span>, models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span>, values <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">as.kfold.eloss</span><span class="op">(</span><span class="va">x</span>, models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span>, values <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>x</th>
-      <td><p>A TRONCO model.</p></td>
-    </tr><tr><th>models</th>
-      <td><p>A subset of reconstructed models, all by default.</p></td>
-    </tr><tr><th>values</th>
-      <td><p>If you want to see also the values</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x</dt>
+<dd><p>A TRONCO model.</p></dd>
+<dt>models</dt>
+<dd><p>A subset of reconstructed models, all by default.</p></dd>
+<dt>values</dt>
+<dd><p>If you want to see also the values</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
     <p>All the bootstrap scores in a TRONCO model</p>
+    </div>
+    </div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">test_model_kfold</span><span class="op">)</span></span>
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model_kfold</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">as.kfold.eloss</span><span class="op">(</span><span class="va">test_model_kfold</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               Mean %-of-logLik      Stdev</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> capri_bic 7.171654    3.005719 0.04138269</span>
@@ -105,6 +111,7 @@ reconstruction have been performed.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> capri_aic 7.034192    3.110566 0.06849423</span>
 <span class="r-in"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

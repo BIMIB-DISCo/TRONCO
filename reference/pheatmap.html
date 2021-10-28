@@ -18,7 +18,7 @@ parameters such as cell size, etc."><!-- mathjax --><script src="https://cdnjs.c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -55,7 +55,7 @@ parameters such as cell size, etc."><!-- mathjax --><script src="https://cdnjs.c
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -70,7 +70,7 @@ parameters such as cell size, etc."><!-- mathjax --><script src="https://cdnjs.c
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>A function to draw clustered heatmaps.</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/visualization.R"><code>R/visualization.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/visualization.R" class="external-link"><code>R/visualization.R</code></a></small>
     <div class="hidden name"><code>pheatmap.Rd</code></div>
     </div>
 
@@ -81,7 +81,7 @@ parameters such as cell size, etc.</p>
 
     <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">pheatmap</span><span class="op">(</span>
   <span class="va">mat</span>,
-  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html">colorRampPalette</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu">brewer.pal</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">7</span>, name <span class="op">=</span> <span class="st">"RdYlBu"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>,
+  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html" class="external-link">colorRampPalette</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="fu">brewer.pal</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">7</span>, name <span class="op">=</span> <span class="st">"RdYlBu"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>,
   kmeans_k <span class="op">=</span> <span class="cn">NA</span>,
   breaks <span class="op">=</span> <span class="cn">NA</span>,
   border_color <span class="op">=</span> <span class="st">"grey60"</span>,
@@ -95,8 +95,8 @@ parameters such as cell size, etc.</p>
   clustering_method <span class="op">=</span> <span class="st">"complete"</span>,
   cutree_rows <span class="op">=</span> <span class="cn">NA</span>,
   cutree_cols <span class="op">=</span> <span class="cn">NA</span>,
-  treeheight_row <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">cluster_rows</span>, <span class="fl">50</span>, <span class="fl">0</span><span class="op">)</span>,
-  treeheight_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">cluster_cols</span>, <span class="fl">50</span>, <span class="fl">0</span><span class="op">)</span>,
+  treeheight_row <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">cluster_rows</span>, <span class="fl">50</span>, <span class="fl">0</span><span class="op">)</span>,
+  treeheight_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">cluster_cols</span>, <span class="fl">50</span>, <span class="fl">0</span><span class="op">)</span>,
   legend <span class="op">=</span> <span class="cn">TRUE</span>,
   legend_breaks <span class="op">=</span> <span class="cn">NA</span>,
   legend_labels <span class="op">=</span> <span class="cn">NA</span>,
@@ -129,145 +129,149 @@ parameters such as cell size, etc.</p>
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>mat</th>
-      <td><p>numeric matrix of the values to be plotted.</p></td>
-    </tr><tr><th>color</th>
-      <td><p>vector of colors used in heatmap.</p></td>
-    </tr><tr><th>kmeans_k</th>
-      <td><p>the number of kmeans clusters to make, if we want to agggregate the 
-rows before drawing heatmap. If NA then the rows are not aggregated.</p></td>
-    </tr><tr><th>breaks</th>
-      <td><p>a sequence of numbers that covers the range of values in mat and is one 
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>mat</dt>
+<dd><p>numeric matrix of the values to be plotted.</p></dd>
+<dt>color</dt>
+<dd><p>vector of colors used in heatmap.</p></dd>
+<dt>kmeans_k</dt>
+<dd><p>the number of kmeans clusters to make, if we want to agggregate the 
+rows before drawing heatmap. If NA then the rows are not aggregated.</p></dd>
+<dt>breaks</dt>
+<dd><p>a sequence of numbers that covers the range of values in mat and is one 
 element longer than color vector. Used for mapping values to colors. Useful, if needed 
 to map certain values to certain colors, to certain values. If value is NA then the 
-breaks are calculated automatically.</p></td>
-    </tr><tr><th>border_color</th>
-      <td><p>color of cell borders on heatmap, use NA if no border should be 
-drawn.</p></td>
-    </tr><tr><th>cellwidth</th>
-      <td><p>individual cell width in points. If left as NA, then the values 
-depend on the size of plotting window.</p></td>
-    </tr><tr><th>cellheight</th>
-      <td><p>individual cell height in points. If left as NA, 
-then the values depend on the size of plotting window.</p></td>
-    </tr><tr><th>scale</th>
-      <td><p>character indicating if the values should be centered and scaled in 
+breaks are calculated automatically.</p></dd>
+<dt>border_color</dt>
+<dd><p>color of cell borders on heatmap, use NA if no border should be 
+drawn.</p></dd>
+<dt>cellwidth</dt>
+<dd><p>individual cell width in points. If left as NA, then the values 
+depend on the size of plotting window.</p></dd>
+<dt>cellheight</dt>
+<dd><p>individual cell height in points. If left as NA, 
+then the values depend on the size of plotting window.</p></dd>
+<dt>scale</dt>
+<dd><p>character indicating if the values should be centered and scaled in 
 either the row direction or the column direction, or none. Corresponding values are 
-<code>"row"</code>, <code>"column"</code> and <code>"none"</code></p></td>
-    </tr><tr><th>cluster_rows</th>
-      <td><p>boolean values determining if rows should be clustered,</p></td>
-    </tr><tr><th>cluster_cols</th>
-      <td><p>boolean values determining if columns should be clustered.</p></td>
-    </tr><tr><th>clustering_distance_rows</th>
-      <td><p>distance measure used in clustering rows. Possible 
+<code>"row"</code>, <code>"column"</code> and <code>"none"</code></p></dd>
+<dt>cluster_rows</dt>
+<dd><p>boolean values determining if rows should be clustered,</p></dd>
+<dt>cluster_cols</dt>
+<dd><p>boolean values determining if columns should be clustered.</p></dd>
+<dt>clustering_distance_rows</dt>
+<dd><p>distance measure used in clustering rows. Possible 
 values are <code>"correlation"</code> for Pearson correlation and all the distances 
-supported by <code><a href="https://rdrr.io/r/stats/dist.html">dist</a></code>, such as <code>"euclidean"</code>, etc. If the value is none 
-of the above it is assumed that a distance matrix is provided.</p></td>
-    </tr><tr><th>clustering_distance_cols</th>
-      <td><p>distance measure used in clustering columns. Possible 
-values the same as for clustering_distance_rows.</p></td>
-    </tr><tr><th>clustering_method</th>
-      <td><p>clustering method used. Accepts the same values as 
-<code><a href="https://rdrr.io/r/stats/hclust.html">hclust</a></code>.</p></td>
-    </tr><tr><th>cutree_rows</th>
-      <td><p>number of clusters the rows are divided into, based on the
+supported by <code><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></code>, such as <code>"euclidean"</code>, etc. If the value is none 
+of the above it is assumed that a distance matrix is provided.</p></dd>
+<dt>clustering_distance_cols</dt>
+<dd><p>distance measure used in clustering columns. Possible 
+values the same as for clustering_distance_rows.</p></dd>
+<dt>clustering_method</dt>
+<dd><p>clustering method used. Accepts the same values as 
+<code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></code>.</p></dd>
+<dt>cutree_rows</dt>
+<dd><p>number of clusters the rows are divided into, based on the
  hierarchical clustering (using cutree), if rows are not clustered, the 
-argument is ignored</p></td>
-    </tr><tr><th>cutree_cols</th>
-      <td><p>similar to <code>cutree_rows</code>, but for columns</p></td>
-    </tr><tr><th>treeheight_row</th>
-      <td><p>the height of a tree for rows, if these are clustered. 
-Default value 50 points.</p></td>
-    </tr><tr><th>treeheight_col</th>
-      <td><p>the height of a tree for columns, if these are clustered. 
-Default value 50 points.</p></td>
-    </tr><tr><th>legend</th>
-      <td><p>logical to determine if legend should be drawn or not.</p></td>
-    </tr><tr><th>legend_breaks</th>
-      <td><p>vector of breakpoints for the legend.</p></td>
-    </tr><tr><th>legend_labels</th>
-      <td><p>vector of labels for the <code>legend_breaks</code>.</p></td>
-    </tr><tr><th>annotation_row</th>
-      <td><p>data frame that specifies the annotations shown on left
+argument is ignored</p></dd>
+<dt>cutree_cols</dt>
+<dd><p>similar to <code>cutree_rows</code>, but for columns</p></dd>
+<dt>treeheight_row</dt>
+<dd><p>the height of a tree for rows, if these are clustered. 
+Default value 50 points.</p></dd>
+<dt>treeheight_col</dt>
+<dd><p>the height of a tree for columns, if these are clustered. 
+Default value 50 points.</p></dd>
+<dt>legend</dt>
+<dd><p>logical to determine if legend should be drawn or not.</p></dd>
+<dt>legend_breaks</dt>
+<dd><p>vector of breakpoints for the legend.</p></dd>
+<dt>legend_labels</dt>
+<dd><p>vector of labels for the <code>legend_breaks</code>.</p></dd>
+<dt>annotation_row</dt>
+<dd><p>data frame that specifies the annotations shown on left
  side of the heatmap. Each row defines the features for a specific row. The 
 rows in the data and in the annotation are matched using corresponding row
  names. Note that color schemes takes into account if variable is continuous
- or discrete.</p></td>
-    </tr><tr><th>annotation_col</th>
-      <td><p>similar to annotation_row, but for columns.</p></td>
-    </tr><tr><th>annotation</th>
-      <td><p>deprecated parameter that currently sets the annotation_col if it is missing</p></td>
-    </tr><tr><th>annotation_colors</th>
-      <td><p>list for specifying annotation_row and 
+ or discrete.</p></dd>
+<dt>annotation_col</dt>
+<dd><p>similar to annotation_row, but for columns.</p></dd>
+<dt>annotation</dt>
+<dd><p>deprecated parameter that currently sets the annotation_col if it is missing</p></dd>
+<dt>annotation_colors</dt>
+<dd><p>list for specifying annotation_row and 
 annotation_col track colors manually. It is  possible to define the colors 
-for only some of the features. Check examples for  details.</p></td>
-    </tr><tr><th>annotation_legend</th>
-      <td><p>boolean value showing if the legend for annotation 
-tracks should be drawn.</p></td>
-    </tr><tr><th>drop_levels</th>
-      <td><p>logical to determine if unused levels are also shown in 
-the legend</p></td>
-    </tr><tr><th>show_rownames</th>
-      <td><p>boolean specifying if column names are be shown.</p></td>
-    </tr><tr><th>show_colnames</th>
-      <td><p>boolean specifying if column names are be shown.</p></td>
-    </tr><tr><th>main</th>
-      <td><p>the title of the plot</p></td>
-    </tr><tr><th>fontsize</th>
-      <td><p>base fontsize for the plot</p></td>
-    </tr><tr><th>fontsize_row</th>
-      <td><p>fontsize for rownames (Default: fontsize)</p></td>
-    </tr><tr><th>fontsize_col</th>
-      <td><p>fontsize for colnames (Default: fontsize)</p></td>
-    </tr><tr><th>display_numbers</th>
-      <td><p>logical determining if the numeric values are also printed to 
+for only some of the features. Check examples for  details.</p></dd>
+<dt>annotation_legend</dt>
+<dd><p>boolean value showing if the legend for annotation 
+tracks should be drawn.</p></dd>
+<dt>drop_levels</dt>
+<dd><p>logical to determine if unused levels are also shown in 
+the legend</p></dd>
+<dt>show_rownames</dt>
+<dd><p>boolean specifying if column names are be shown.</p></dd>
+<dt>show_colnames</dt>
+<dd><p>boolean specifying if column names are be shown.</p></dd>
+<dt>main</dt>
+<dd><p>the title of the plot</p></dd>
+<dt>fontsize</dt>
+<dd><p>base fontsize for the plot</p></dd>
+<dt>fontsize_row</dt>
+<dd><p>fontsize for rownames (Default: fontsize)</p></dd>
+<dt>fontsize_col</dt>
+<dd><p>fontsize for colnames (Default: fontsize)</p></dd>
+<dt>display_numbers</dt>
+<dd><p>logical determining if the numeric values are also printed to 
 the cells. If this is a matrix (with same dimensions as original matrix), the contents
-of the matrix are shown instead of original values.</p></td>
-    </tr><tr><th>number_format</th>
-      <td><p>format strings (C printf style) of the numbers shown in cells. 
+of the matrix are shown instead of original values.</p></dd>
+<dt>number_format</dt>
+<dd><p>format strings (C printf style) of the numbers shown in cells. 
 For example "<code>%.2f</code>" shows 2 decimal places and "<code>%.1e</code>" shows exponential 
-notation (see more in <code><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></code>).</p></td>
-    </tr><tr><th>number_color</th>
-      <td><p>color of the text</p></td>
-    </tr><tr><th>fontsize_number</th>
-      <td><p>fontsize of the numbers displayed in cells</p></td>
-    </tr><tr><th>gaps_row</th>
-      <td><p>vector of row indices that show shere to put gaps into
+notation (see more in <code><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></code>).</p></dd>
+<dt>number_color</dt>
+<dd><p>color of the text</p></dd>
+<dt>fontsize_number</dt>
+<dd><p>fontsize of the numbers displayed in cells</p></dd>
+<dt>gaps_row</dt>
+<dd><p>vector of row indices that show shere to put gaps into
 heatmap. Used only if the rows are not clustered. See <code>cutree_row</code>
-to see how to introduce gaps to clustered rows.</p></td>
-    </tr><tr><th>gaps_col</th>
-      <td><p>similar to gaps_row, but for columns.</p></td>
-    </tr><tr><th>labels_row</th>
-      <td><p>custom labels for rows that are used instead of rownames.</p></td>
-    </tr><tr><th>labels_col</th>
-      <td><p>similar to labels_row, but for columns.</p></td>
-    </tr><tr><th>filename</th>
-      <td><p>file path where to save the picture. Filetype is decided by 
+to see how to introduce gaps to clustered rows.</p></dd>
+<dt>gaps_col</dt>
+<dd><p>similar to gaps_row, but for columns.</p></dd>
+<dt>labels_row</dt>
+<dd><p>custom labels for rows that are used instead of rownames.</p></dd>
+<dt>labels_col</dt>
+<dd><p>similar to labels_row, but for columns.</p></dd>
+<dt>filename</dt>
+<dd><p>file path where to save the picture. Filetype is decided by 
 the extension in the path. Currently following formats are supported: png, pdf, tiff,
  bmp, jpeg. Even if the plot does not fit into the plotting window, the file size is 
-calculated so that the plot would fit there, unless specified otherwise.</p></td>
-    </tr><tr><th>width</th>
-      <td><p>manual option for determining the output file width in inches.</p></td>
-    </tr><tr><th>height</th>
-      <td><p>manual option for determining the output file height in inches.</p></td>
-    </tr><tr><th>silent</th>
-      <td><p>do not draw the plot (useful when using the gtable output)</p></td>
-    </tr><tr><th>legend.cex</th>
-      <td><p>Default 0.5; determines legend size if <code>legend = TRUE</code></p></td>
-    </tr><tr><th>txt.stats</th>
-      <td><p>By default, shows a summary statistics for shown data (n,m, |G| and |P|)</p></td>
-    </tr><tr><th>...</th>
-      <td><p>graphical parameters for the text used in plot. Parameters passed to 
-<code>grid.text</code>, see <code>gpar</code>.</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>Invisibly a list of components</p><ul><li><p><code>tree_row</code> the clustering of rows as <code><a href="https://rdrr.io/r/stats/hclust.html">hclust</a></code> object</p></li>
-<li><p><code>tree_col</code> the clustering of columns as <code><a href="https://rdrr.io/r/stats/hclust.html">hclust</a></code> object</p></li>
+calculated so that the plot would fit there, unless specified otherwise.</p></dd>
+<dt>width</dt>
+<dd><p>manual option for determining the output file width in inches.</p></dd>
+<dt>height</dt>
+<dd><p>manual option for determining the output file height in inches.</p></dd>
+<dt>silent</dt>
+<dd><p>do not draw the plot (useful when using the gtable output)</p></dd>
+<dt>legend.cex</dt>
+<dd><p>Default 0.5; determines legend size if <code>legend = TRUE</code></p></dd>
+<dt>txt.stats</dt>
+<dd><p>By default, shows a summary statistics for shown data (n,m, |G| and |P|)</p></dd>
+<dt>...</dt>
+<dd><p>graphical parameters for the text used in plot. Parameters passed to 
+<code>grid.text</code>, see <code>gpar</code>.</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>Invisibly a list of components</p><ul><li><p><code>tree_row</code> the clustering of rows as <code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></code> object</p></li>
+<li><p><code>tree_col</code> the clustering of columns as <code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></code> object</p></li>
 <li><p><code>kmeans</code> the kmeans clustering of rows if parameter <code>kmeans_k</code> was 
 specified</p></li>
-</ul><h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
+</ul></div>
+    <div id="details">
+    <h2>Details</h2>
     <p>The function also allows to aggregate the rows using kmeans clustering. This is 
 advisable if number of rows is so big that R cannot handle their hierarchical 
 clustering anymore, roughly more than 1000. Instead of showing all the rows 
@@ -276,23 +280,28 @@ The number of clusters can be tuned with parameter kmeans_k.</p>
 <p>This is a modified version of the original pheatmap 
 (https://cran.r-project.org/web/packages/pheatmap/index.html)
 edited in accordance with GPL-2.</p>
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
+    </div>
+    <div id="author">
+    <h2>Author</h2>
     <p>Raivo Kolde &lt;rkolde@gmail.com&gt;</p>
+    </div>
+    </div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <div id="examples">
+    <h2>Examples</h2>
     <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Create test matrix</span></span>
-<span class="r-in"><span class="va">test</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span>, <span class="fl">20</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">test</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="va">test</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">+</span> <span class="fl">3</span></span>
-<span class="r-in"><span class="va">test</span><span class="op">[</span><span class="fl">11</span><span class="op">:</span><span class="fl">20</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="va">test</span><span class="op">[</span><span class="fl">11</span><span class="op">:</span><span class="fl">20</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">+</span> <span class="fl">2</span></span>
-<span class="r-in"><span class="va">test</span><span class="op">[</span><span class="fl">15</span><span class="op">:</span><span class="fl">20</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="va">test</span><span class="op">[</span><span class="fl">15</span><span class="op">:</span><span class="fl">20</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">+</span> <span class="fl">4</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Test"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Gene"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">test</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span>, <span class="fl">20</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">test</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="va">test</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">+</span> <span class="fl">3</span></span>
+<span class="r-in"><span class="va">test</span><span class="op">[</span><span class="fl">11</span><span class="op">:</span><span class="fl">20</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="va">test</span><span class="op">[</span><span class="fl">11</span><span class="op">:</span><span class="fl">20</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">+</span> <span class="fl">2</span></span>
+<span class="r-in"><span class="va">test</span><span class="op">[</span><span class="fl">15</span><span class="op">:</span><span class="fl">20</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="va">test</span><span class="op">[</span><span class="fl">15</span><span class="op">:</span><span class="fl">20</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">+</span> <span class="fl">4</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Test"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Gene"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Draw heatmaps</span></span>
 <span class="r-in"><span class="fu">pheatmap</span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span>
 <span class="r-plt"><img src="pheatmap-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

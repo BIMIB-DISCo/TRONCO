@@ -20,7 +20,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -57,7 +57,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -72,7 +72,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>tronco.kfold.eloss</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/statistics.R"><code>R/statistics.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/statistics.R" class="external-link"><code>R/statistics.R</code></a></small>
     <div class="hidden name"><code>tronco.kfold.eloss.Rd</code></div>
     </div>
 
@@ -85,36 +85,42 @@ we refer to the Vignette Section 7.</p>
 
     <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">tronco.kfold.eloss</span><span class="op">(</span>
   <span class="va">x</span>,
-  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="fu"><a href="as.models.html">as.models</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,
+  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="as.models.html">as.models</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,
   runs <span class="op">=</span> <span class="fl">10</span>,
   k <span class="op">=</span> <span class="fl">10</span>,
   silent <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>x</th>
-      <td><p>A reconstructed model (the output of tronco.capri or tronco.caprese)</p></td>
-    </tr><tr><th>models</th>
-      <td><p>The names of the selected regularizers (bic, aic or caprese)</p></td>
-    </tr><tr><th>runs</th>
-      <td><p>a positive integer number, the number of times cross-validation will be run</p></td>
-    </tr><tr><th>k</th>
-      <td><p>a positive integer number, the number of groups into which the data will be split</p></td>
-    </tr><tr><th>silent</th>
-      <td><p>A parameter to disable/enable verbose messages.</p></td>
-    </tr></table><h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x</dt>
+<dd><p>A reconstructed model (the output of tronco.capri or tronco.caprese)</p></dd>
+<dt>models</dt>
+<dd><p>The names of the selected regularizers (bic, aic or caprese)</p></dd>
+<dt>runs</dt>
+<dd><p>a positive integer number, the number of times cross-validation will be run</p></dd>
+<dt>k</dt>
+<dd><p>a positive integer number, the number of groups into which the data will be split</p></dd>
+<dt>silent</dt>
+<dd><p>A parameter to disable/enable verbose messages.</p></dd>
+</dl></div>
+    </div>
+
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">tronco.kfold.eloss</span><span class="op">(</span><span class="va">test_model</span>, k <span class="op">=</span> <span class="fl">2</span>, runs <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Calculating entropy loss with k-fold cross-validation </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	[ k = 2 | runs = 2 | regularizer = capri_bic ] ...  DONE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Model logLik = -235.8336 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 7.515978  |  3.186984 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.09068769 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 7.389858  |  3.133506 % </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.08060908 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Calculating entropy loss with k-fold cross-validation </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	[ k = 2 | runs = 2 | regularizer = capri_aic ] ...  DONE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Model logLik = -224.5718 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 6.986442  |  3.111006 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.1348354 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 6.931709  |  3.086634 % </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.195163 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genotypes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            gene 4 gene 5 gene 7 gene 29 gene 30 gene 31 gene 32 gene 33 gene 34</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> patient 1       0      0      0       1       0       0       0       0       0</span>
@@ -1846,12 +1852,12 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of folds:                       2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   loss function:                         Log-Likelihood Loss (disc.) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of runs:                        2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            7.515978 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.09068769 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            7.389858 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.08060908 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$eloss</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.580104 7.451852</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.446858 7.332859</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic</span>
@@ -1886,17 +1892,18 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of folds:                       2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   loss function:                         Log-Likelihood Loss (disc.) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of runs:                        2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            6.986442 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.1348354 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            6.931709 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.195163 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$eloss</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.081785 6.891099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.069711 6.793708</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

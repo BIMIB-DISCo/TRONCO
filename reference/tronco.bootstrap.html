@@ -19,7 +19,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -71,7 +71,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>tronco bootstrap</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/tronco.R"><code>R/tronco.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/tronco.R" class="external-link"><code>R/tronco.R</code></a></small>
     <div class="hidden name"><code>tronco.bootstrap.Rd</code></div>
     </div>
 
@@ -89,27 +89,33 @@ we refer to the Vignette Section 7.</p>
   silent <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>reconstruction</th>
-      <td><p>The output of tronco.capri or
-tronco.caprese</p></td>
-    </tr><tr><th>type</th>
-      <td><p>Parameter to define the type of sampling
-to be performed, e.g., non-parametric for uniform sampling.</p></td>
-    </tr><tr><th>nboot</th>
-      <td><p>Number of bootstrap sampling to be performed
-when estimating the model confidence.</p></td>
-    </tr><tr><th>cores.ratio</th>
-      <td><p>Percentage of cores to use
-coresRate * (numCores - 1)</p></td>
-    </tr><tr><th>silent</th>
-      <td><p>A parameter to disable/enable verbose messages.</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>reconstruction</dt>
+<dd><p>The output of tronco.capri or
+tronco.caprese</p></dd>
+<dt>type</dt>
+<dd><p>Parameter to define the type of sampling
+to be performed, e.g., non-parametric for uniform sampling.</p></dd>
+<dt>nboot</dt>
+<dd><p>Number of bootstrap sampling to be performed
+when estimating the model confidence.</p></dd>
+<dt>cores.ratio</dt>
+<dd><p>Percentage of cores to use
+coresRate * (numCores - 1)</p></dd>
+<dt>silent</dt>
+<dd><p>A parameter to disable/enable verbose messages.</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
     <p>A TRONCO compliant object with reconstructed model</p>
+    </div>
+    </div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">boot</span> <span class="op">=</span> <span class="fu">tronco.bootstrap</span><span class="op">(</span><span class="va">test_model</span>, nboot <span class="op">=</span> <span class="fl">1</span>, cores.ratio <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Executing now the bootstrap procedure, this may take a long time...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Expected completion in approx. 00h:00m:08s </span>
@@ -118,6 +124,7 @@ coresRate * (numCores - 1)</p></td>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performed non-parametric bootstrap with 1 resampling and 0.05 as pvalue for the statistical tests.</span>
 <span class="r-in"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

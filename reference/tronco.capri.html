@@ -19,7 +19,7 @@ we refer to the Vignette Section 6."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@ we refer to the Vignette Section 6."><!-- mathjax --><script src="https://cdnjs.
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -71,7 +71,7 @@ we refer to the Vignette Section 6."><!-- mathjax --><script src="https://cdnjs.
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>tronco capri</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/tronco.R"><code>R/tronco.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/tronco.R" class="external-link"><code>R/tronco.R</code></a></small>
     <div class="hidden name"><code>tronco.capri.Rd</code></div>
     </div>
 
@@ -84,7 +84,7 @@ we refer to the Vignette Section 6.</p>
     <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">tronco.capri</span><span class="op">(</span>
   <span class="va">data</span>,
   command <span class="op">=</span> <span class="st">"hc"</span>,
-  regularization <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"bic"</span>, <span class="st">"aic"</span><span class="op">)</span>,
+  regularization <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bic"</span>, <span class="st">"aic"</span><span class="op">)</span>,
   do.boot <span class="op">=</span> <span class="cn">TRUE</span>,
   nboot <span class="op">=</span> <span class="fl">100</span>,
   pvalue <span class="op">=</span> <span class="fl">0.05</span>,
@@ -97,39 +97,45 @@ we refer to the Vignette Section 6.</p>
   restart <span class="op">=</span> <span class="fl">100</span>
 <span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>data</th>
-      <td><p>A TRONCO compliant dataset.</p></td>
-    </tr><tr><th>command</th>
-      <td><p>Parameter to define to heuristic search to be performed. Hill Climbing and Tabu search are currently available.</p></td>
-    </tr><tr><th>regularization</th>
-      <td><p>Select the regularization for the likelihood estimation, e.g., BIC, AIC.</p></td>
-    </tr><tr><th>do.boot</th>
-      <td><p>A parameter to disable/enable the estimation of the error rates give the reconstructed model.</p></td>
-    </tr><tr><th>nboot</th>
-      <td><p>Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores.</p></td>
-    </tr><tr><th>pvalue</th>
-      <td><p>Pvalue to accept/reject the valid selective advantage relations.</p></td>
-    </tr><tr><th>min.boot</th>
-      <td><p>Minimum number of bootstrap sampling to be performed.</p></td>
-    </tr><tr><th>min.stat</th>
-      <td><p>A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected.</p></td>
-    </tr><tr><th>boot.seed</th>
-      <td><p>Initial seed for the bootstrap random sampling.</p></td>
-    </tr><tr><th>silent</th>
-      <td><p>A parameter to disable/enable verbose messages.</p></td>
-    </tr><tr><th>epos</th>
-      <td><p>Error rate of false positive errors.</p></td>
-    </tr><tr><th>eneg</th>
-      <td><p>Error rate of false negative errors.</p></td>
-    </tr><tr><th>restart</th>
-      <td><p>An integer, the number of random restarts.</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>data</dt>
+<dd><p>A TRONCO compliant dataset.</p></dd>
+<dt>command</dt>
+<dd><p>Parameter to define to heuristic search to be performed. Hill Climbing and Tabu search are currently available.</p></dd>
+<dt>regularization</dt>
+<dd><p>Select the regularization for the likelihood estimation, e.g., BIC, AIC.</p></dd>
+<dt>do.boot</dt>
+<dd><p>A parameter to disable/enable the estimation of the error rates give the reconstructed model.</p></dd>
+<dt>nboot</dt>
+<dd><p>Number of bootstrap sampling (with rejection) to be performed when estimating the selective advantage scores.</p></dd>
+<dt>pvalue</dt>
+<dd><p>Pvalue to accept/reject the valid selective advantage relations.</p></dd>
+<dt>min.boot</dt>
+<dd><p>Minimum number of bootstrap sampling to be performed.</p></dd>
+<dt>min.stat</dt>
+<dd><p>A parameter to disable/enable the minimum number of bootstrap sampling required besides nboot if any sampling is rejected.</p></dd>
+<dt>boot.seed</dt>
+<dd><p>Initial seed for the bootstrap random sampling.</p></dd>
+<dt>silent</dt>
+<dd><p>A parameter to disable/enable verbose messages.</p></dd>
+<dt>epos</dt>
+<dd><p>Error rate of false positive errors.</p></dd>
+<dt>eneg</dt>
+<dd><p>Error rate of false negative errors.</p></dd>
+<dt>restart</dt>
+<dd><p>An integer, the number of random restarts.</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
     <p>A TRONCO compliant object with reconstructed model</p>
+    </div>
+    </div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">recon</span> <span class="op">=</span> <span class="fu">tronco.capri</span><span class="op">(</span><span class="va">test_dataset</span>, nboot <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Checking input events.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Inferring a progression model with the following settings.</span>
@@ -141,17 +147,18 @@ we refer to the Vignette Section 6.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		p-value: 0.05.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		minimum bootstrapped scores: 3.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Bootstraping selective advantage scores (prima facie).</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	..........</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	.......</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Evaluating "temporal priority" (Wilcoxon, p-value 0.05)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Evaluating "probability raising" (Wilcoxon, p-value 0.05)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Loop detection found loops to break.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Removed 8 edges out of 52 (15%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	Removed 8 edges out of 50 (16%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Performing likelihood-fit with regularization bic.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Performing likelihood-fit with regularization aic.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Evaluating BIC / AIC / LogLik informations.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> The reconstruction has been successfully completed in 00h:00m:02s </span>
 <span class="r-in"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

@@ -18,7 +18,7 @@ x$genotypes, x$annotations, x$types and x$stage (optional)"><!-- mathjax --><scr
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -55,7 +55,7 @@ x$genotypes, x$annotations, x$types and x$stage (optional)"><!-- mathjax --><scr
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -70,7 +70,7 @@ x$genotypes, x$annotations, x$types and x$stage (optional)"><!-- mathjax --><scr
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>is.compliant</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/correctness.R"><code>R/correctness.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/correctness.R" class="external-link"><code>R/correctness.R</code></a></small>
     <div class="hidden name"><code>is.compliant.Rd</code></div>
     </div>
 
@@ -82,25 +82,32 @@ x$genotypes, x$annotations, x$types and x$stage (optional)</p>
     <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">is.compliant</span><span class="op">(</span>
   <span class="va">x</span>,
   err.fun <span class="op">=</span> <span class="st">"[ERR]"</span>,
-  stage <span class="op">=</span> <span class="op">!</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">stages</span><span class="op">)</span><span class="op">)</span> <span class="op">||</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">stages</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+  stage <span class="op">=</span> <span class="op">!</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">stages</span><span class="op">)</span><span class="op">)</span> <span class="op">||</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">stages</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>x</th>
-      <td><p>A TRONCO compliant dataset.</p></td>
-    </tr><tr><th>err.fun</th>
-      <td><p>string which identifies the function which called is.compliant</p></td>
-    </tr><tr><th>stage</th>
-      <td><p>boolean flag to check x$stage datagframe</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x</dt>
+<dd><p>A TRONCO compliant dataset.</p></dd>
+<dt>err.fun</dt>
+<dd><p>string which identifies the function which called is.compliant</p></dd>
+<dt>stage</dt>
+<dd><p>boolean flag to check x$stage datagframe</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
     <p>on error stops the computation</p>
+    </div>
+    </div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">is.compliant</span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
 <span class="r-in"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

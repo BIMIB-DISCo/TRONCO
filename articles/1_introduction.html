@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -96,7 +96,7 @@
       <h1 data-toc-skip>Introduction</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/vignettes/1_introduction.Rmd" class="external-link"><code>vignettes/1_introduction.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/vignettes/1_introduction.Rmd" class="external-link"><code>vignettes/1_introduction.Rmd</code></a></small>
       <div class="hidden name"><code>1_introduction.Rmd</code></div>
 
     </div>
@@ -105,9 +105,9 @@
     
 <p>The <strong>TRONCO</strong> (TR<em>anslational</em> ONCO<em>logy</em>) package collects algorithms to infer progression models via the approach of Suppes-Bayes Causal Network, both from an ensemble of tumors (cross-sectional samples) and within an individual patient (multi-region or single-cell samples). The package provides parallel implementation of algorithms that process binary matrices where each row represents a tumor sample and each column a single-nucleotide or a structural variant driving the progression; a 0/1 value models the absence/presence of that alteration in the sample. The tool can import data from plain, MAF or GISTIC format files, and can fetch it from the cBioPortal for cancer genomics. Functions for data manipulation and visualization are provided, as well as functions to import/export such data to other bioinformatics tools for, e.g, clustering or detection of mutually exclusive alterations. Inferred models can be visualized and tested for their confidence via bootstrap and cross-validation. <em>TRONCO</em> is used for the implementation of the Pipeline for Cancer Inference.</p>
 <p>In this vignette, we will give an overview of the package by presenting some of the functions that could be most commonly used to arrange a data-analysis pipeline, along with their parameters to customize <em>TRONCO</em>’s functioning. Advanced example case studies are available at the tool webpage</p>
-<div id="changelog" class="section level2">
-<h2 class="hasAnchor">
-<a href="#changelog" class="anchor" aria-hidden="true"></a>Changelog</h2>
+<div class="section level2">
+<h2 id="changelog">Changelog<a class="anchor" aria-label="anchor" href="#changelog"></a>
+</h2>
 <ul>
 <li>[2.8.1] Minor fix on documentation.</li>
 <li>[2.7.7] RNA Seq validation. Random restart on Hill Climbing added to CAPRI algorithm. Minor fixes to algorithms and error model.</li>
@@ -121,9 +121,9 @@
 <li>[1.0] released in mid 2014, includes CAPRESE algorithm. It is now outdated and no more maintained;</li>
 </ul>
 </div>
-<div id="algorithms-and-useful-links" class="section level2">
-<h2 class="hasAnchor">
-<a href="#algorithms-and-useful-links" class="anchor" aria-hidden="true"></a>Algorithms and useful links</h2>
+<div class="section level2">
+<h2 id="algorithms-and-useful-links">Algorithms and useful links<a class="anchor" aria-label="anchor" href="#algorithms-and-useful-links"></a>
+</h2>
 <table class="table">
 <colgroup>
 <col width="16%">
@@ -182,9 +182,9 @@
 <li>Ind.: individual-level with single-cell or multi-region data.</li>
 </ul>
 </div>
-<div id="external-links-to-resources-related-to-tronco" class="section level2">
-<h2 class="hasAnchor">
-<a href="#external-links-to-resources-related-to-tronco" class="anchor" aria-hidden="true"></a>External links to resources related to TRONCO</h2>
+<div class="section level2">
+<h2 id="external-links-to-resources-related-to-tronco">External links to resources related to TRONCO<a class="anchor" aria-label="anchor" href="#external-links-to-resources-related-to-tronco"></a>
+</h2>
 <ul>
 <li>TRONCO was introduced in <a href="https://academic.oup.com/bioinformatics/article/32/12/1911/1743307" class="external-link">De Sano, Luca, et al. “TRONCO: an R package for the inference of cancer progression models from heterogeneous genomic data.” Bioinformatics 32.12 (2016): 1911-1913</a>.</li>
 <li>TRONCO since version <em>2.3</em> is used to implement the <strong>Pipeline For Cancer Inference (PiCnIc)</strong> described in <a href="http://www.pnas.org/content/113/28/E4025" class="external-link">Caravagna, Giulio, et al. “Algorithmic methods to infer the evolutionary trajectories in cancer progression.” Proceedings of the National Academy of Sciences 113.28 (2016): E4025-E4034</a>.</li>
@@ -210,7 +210,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.9000.9000.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
 </div>
 
       </footer>

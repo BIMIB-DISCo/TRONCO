@@ -18,7 +18,7 @@ by frequency and gene symbols."><!-- mathjax --><script src="https://cdnjs.cloud
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -55,7 +55,7 @@ by frequency and gene symbols."><!-- mathjax --><script src="https://cdnjs.cloud
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -70,7 +70,7 @@ by frequency and gene symbols."><!-- mathjax --><script src="https://cdnjs.cloud
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>events.selection</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/selection.R"><code>R/selection.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/selection.R" class="external-link"><code>R/selection.R</code></a></small>
     <div class="hidden name"><code>events.selection.Rd</code></div>
     </div>
 
@@ -87,23 +87,29 @@ by frequency and gene symbols.</p>
   silent <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>x</th>
-      <td><p>A TRONCO compliant dataset.</p></td>
-    </tr><tr><th>filter.freq</th>
-      <td><p>[0,1] value which constriants the minimum frequence of selected events</p></td>
-    </tr><tr><th>filter.in.names</th>
-      <td><p>gene symbols which will be included</p></td>
-    </tr><tr><th>filter.out.names</th>
-      <td><p>gene symbols which will NOT be included</p></td>
-    </tr><tr><th>silent</th>
-      <td><p>A parameter to disable/enable verbose messages.</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x</dt>
+<dd><p>A TRONCO compliant dataset.</p></dd>
+<dt>filter.freq</dt>
+<dd><p>[0,1] value which constriants the minimum frequence of selected events</p></dd>
+<dt>filter.in.names</dt>
+<dd><p>gene symbols which will be included</p></dd>
+<dt>filter.out.names</dt>
+<dd><p>gene symbols which will NOT be included</p></dd>
+<dt>silent</dt>
+<dd><p>A parameter to disable/enable verbose messages.</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
     <p>A TRONCO compliant dataset.</p>
+    </div>
+    </div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">dataset</span> <span class="op">=</span> <span class="fu">events.selection</span><span class="op">(</span><span class="va">test_dataset</span>, <span class="fl">0.3</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Events selection: #events =  30 , #types =  5 Filters freq|in|out = { TRUE ,  FALSE ,  FALSE }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Minimum event frequency:  0.3  ( 12  alterations out of  40  samples).</span>
@@ -113,6 +119,7 @@ by frequency and gene symbols.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Selected  1  events, returning.</span>
 <span class="r-in"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

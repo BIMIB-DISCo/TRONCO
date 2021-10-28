@@ -23,7 +23,7 @@ regarding the loading functions provided by the package we refer to the Vignette
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -60,7 +60,7 @@ regarding the loading functions provided by the package we refer to the Vignette
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -75,7 +75,7 @@ regarding the loading functions provided by the package we refer to the Vignette
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>import.MAF</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/loading.R"><code>R/loading.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/loading.R" class="external-link"><code>R/loading.R</code></a></small>
     <div class="hidden name"><code>import.MAF.Rd</code></div>
     </div>
 
@@ -101,31 +101,37 @@ regarding the loading functions provided by the package we refer to the Vignette
   silent <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>file</th>
-      <td><p>MAF filename</p></td>
-    </tr><tr><th>sep</th>
-      <td><p>MAF separator, default \'\t\'</p></td>
-    </tr><tr><th>is.TCGA</th>
-      <td><p>TRUE if this MAF is from TCGA; thus its sample codenames can be interpreted</p></td>
-    </tr><tr><th>filter.fun</th>
-      <td><p>A filter function applied to each row. This is expected to return TRUE/FALSE.</p></td>
-    </tr><tr><th>to.TRONCO</th>
-      <td><p>If FALSE returns a dataframe with MAF data, not a TRONCO object</p></td>
-    </tr><tr><th>irregular</th>
-      <td><p>If TRUE seeks only for columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification</p></td>
-    </tr><tr><th>paste.to.Hugo_Symbol</th>
-      <td><p>If a list of column names, this will be pasted each Hugo_Symbol to yield names such as PHC2.chr1.33116215.33116215</p></td>
-    </tr><tr><th>merge.mutation.types</th>
-      <td><p>If TRUE, all mutations are considered equivalent, regardless of their Variant_Classification value. Otherwise no.</p></td>
-    </tr><tr><th>silent</th>
-      <td><p>A parameter to disable/enable verbose messages.</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>file</dt>
+<dd><p>MAF filename</p></dd>
+<dt>sep</dt>
+<dd><p>MAF separator, default \'\t\'</p></dd>
+<dt>is.TCGA</dt>
+<dd><p>TRUE if this MAF is from TCGA; thus its sample codenames can be interpreted</p></dd>
+<dt>filter.fun</dt>
+<dd><p>A filter function applied to each row. This is expected to return TRUE/FALSE.</p></dd>
+<dt>to.TRONCO</dt>
+<dd><p>If FALSE returns a dataframe with MAF data, not a TRONCO object</p></dd>
+<dt>irregular</dt>
+<dd><p>If TRUE seeks only for columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification</p></dd>
+<dt>paste.to.Hugo_Symbol</dt>
+<dd><p>If a list of column names, this will be pasted each Hugo_Symbol to yield names such as PHC2.chr1.33116215.33116215</p></dd>
+<dt>merge.mutation.types</dt>
+<dd><p>If TRUE, all mutations are considered equivalent, regardless of their Variant_Classification value. Otherwise no.</p></dd>
+<dt>silent</dt>
+<dd><p>A parameter to disable/enable verbose messages.</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
     <p>A TRONCO compliant representation of the input MAF</p>
+    </div>
+    </div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">maf</span><span class="op">)</span></span>
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">maf</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">mutations</span> <span class="op">=</span> <span class="fu">import.MAF</span><span class="op">(</span><span class="va">maf</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Importing from dataframe</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Loading MAF dataframe ...DONE</span>
@@ -154,6 +160,7 @@ regarding the loading functions provided by the package we refer to the Vignette
 <span class="r-plt"><img src="import.MAF-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

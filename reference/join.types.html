@@ -19,7 +19,7 @@ of a unique "mutation" type)'><!-- mathjax --><script src="https://cdnjs.cloudfl
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@ of a unique "mutation" type)'><!-- mathjax --><script src="https://cdnjs.cloudfl
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -71,7 +71,7 @@ of a unique "mutation" type)'><!-- mathjax --><script src="https://cdnjs.cloudfl
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>join.types</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/editing.functions.R"><code>R/editing.functions.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/editing.functions.R" class="external-link"><code>R/editing.functions.R</code></a></small>
     <div class="hidden name"><code>join.types.Rd</code></div>
     </div>
 
@@ -83,23 +83,29 @@ of a unique "mutation" type)</p>
 
     <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">join.types</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, new.type <span class="op">=</span> <span class="st">"new.type"</span>, new.color <span class="op">=</span> <span class="st">"khaki"</span>, silent <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>x</th>
-      <td><p>A TRONCO compliant dataset.</p></td>
-    </tr><tr><th>...</th>
-      <td><p>type to merge</p></td>
-    </tr><tr><th>new.type</th>
-      <td><p>label for the new type to create</p></td>
-    </tr><tr><th>new.color</th>
-      <td><p>color for the new type to create</p></td>
-    </tr><tr><th>silent</th>
-      <td><p>A parameter to disable/enable verbose messages.</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x</dt>
+<dd><p>A TRONCO compliant dataset.</p></dd>
+<dt>...</dt>
+<dd><p>type to merge</p></dd>
+<dt>new.type</dt>
+<dd><p>label for the new type to create</p></dd>
+<dt>new.color</dt>
+<dd><p>color for the new type to create</p></dd>
+<dt>silent</dt>
+<dd><p>A parameter to disable/enable verbose messages.</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
     <p>A TRONCO compliant dataset.</p>
+    </div>
+    </div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">test_dataset_no_hypos</span><span class="op">)</span></span>
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset_no_hypos</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">join.types</span><span class="op">(</span><span class="va">test_dataset_no_hypos</span>, <span class="st">'ins_del'</span>, <span class="st">'missense_point_mutations'</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Aggregating events of type(s) { ins_del, missense_point_mutations }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> in a unique event with label " new.type ".</span>
@@ -353,6 +359,7 @@ of a unique "mutation" type)</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

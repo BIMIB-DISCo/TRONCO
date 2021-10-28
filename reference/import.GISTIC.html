@@ -24,7 +24,7 @@ regarding the loading functions provided by the package we refer to the Vignette
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -61,7 +61,7 @@ regarding the loading functions provided by the package we refer to the Vignette
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -76,7 +76,7 @@ regarding the loading functions provided by the package we refer to the Vignette
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>import.GISTIC</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/loading.R"><code>R/loading.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/loading.R" class="external-link"><code>R/loading.R</code></a></small>
     <div class="hidden name"><code>import.GISTIC.Rd</code></div>
     </div>
 
@@ -102,29 +102,35 @@ regarding the loading functions provided by the package we refer to the Vignette
   rna.seq.down <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>x</th>
-      <td><p>Either a dataframe or a filename</p></td>
-    </tr><tr><th>filter.genes</th>
-      <td><p>A list of genes</p></td>
-    </tr><tr><th>filter.samples</th>
-      <td><p>A list of samples</p></td>
-    </tr><tr><th>silent</th>
-      <td><p>A parameter to disable/enable verbose messages.</p></td>
-    </tr><tr><th>trim</th>
-      <td><p>Remove the events without occurrence</p></td>
-    </tr><tr><th>rna.seq.data</th>
-      <td><p>Either a dataframe or a filename</p></td>
-    </tr><tr><th>rna.seq.up</th>
-      <td><p>TODO</p></td>
-    </tr><tr><th>rna.seq.down</th>
-      <td><p>TODO</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x</dt>
+<dd><p>Either a dataframe or a filename</p></dd>
+<dt>filter.genes</dt>
+<dd><p>A list of genes</p></dd>
+<dt>filter.samples</dt>
+<dd><p>A list of samples</p></dd>
+<dt>silent</dt>
+<dd><p>A parameter to disable/enable verbose messages.</p></dd>
+<dt>trim</dt>
+<dd><p>Remove the events without occurrence</p></dd>
+<dt>rna.seq.data</dt>
+<dd><p>Either a dataframe or a filename</p></dd>
+<dt>rna.seq.up</dt>
+<dd><p>TODO</p></dd>
+<dt>rna.seq.down</dt>
+<dd><p>TODO</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
     <p>A TRONCO compliant representation of the input CNAs.</p>
+    </div>
+    </div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span>
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">gistic</span> <span class="op">=</span> <span class="fu">import.GISTIC</span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Using full GISTIC: #dim  9  x  6 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** GISTIC input format conversion started.</span>
@@ -142,6 +148,7 @@ regarding the loading functions provided by the package we refer to the Vignette
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Number of samples: m = 9 </span>
 <span class="r-in"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

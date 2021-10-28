@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -69,7 +69,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>hypothesis add group</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/capri.hypotheses.R"><code>R/capri.hypotheses.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/capri.hypotheses.R" class="external-link"><code>R/capri.hypotheses.R</code></a></small>
     <div class="hidden name"><code>hypothesis.add.group.Rd</code></div>
     </div>
 
@@ -84,33 +84,38 @@
   pattern.cause <span class="op">=</span> <span class="st">"*"</span>,
   pattern.effect <span class="op">=</span> <span class="st">"*"</span>,
   dim.min <span class="op">=</span> <span class="fl">2</span>,
-  dim.max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span>,
+  dim.max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span>,
   min.prob <span class="op">=</span> <span class="fl">0</span>,
   silent <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>x</th>
-      <td><p>A TRONCO compliant dataset.</p></td>
-    </tr><tr><th>FUN</th>
-      <td><p>Type of pattern to be added, e.g., co-occurance, soft or hard exclusivity.</p></td>
-    </tr><tr><th>group</th>
-      <td><p>Group of events to be considered.</p></td>
-    </tr><tr><th>pattern.cause</th>
-      <td><p>Possibile causes for the pattern.</p></td>
-    </tr><tr><th>pattern.effect</th>
-      <td><p>Possibile effects for the pattern.</p></td>
-    </tr><tr><th>dim.min</th>
-      <td><p>Minimum cardinality of the subgroups to be considered.</p></td>
-    </tr><tr><th>dim.max</th>
-      <td><p>Maximum cardinality of the subgroups to be considered.</p></td>
-    </tr><tr><th>min.prob</th>
-      <td><p>Minimum probability associated to each valid group.</p></td>
-    </tr><tr><th>silent</th>
-      <td><p>A parameter to disable/enable verbose messages.</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x</dt>
+<dd><p>A TRONCO compliant dataset.</p></dd>
+<dt>FUN</dt>
+<dd><p>Type of pattern to be added, e.g., co-occurance, soft or hard exclusivity.</p></dd>
+<dt>group</dt>
+<dd><p>Group of events to be considered.</p></dd>
+<dt>pattern.cause</dt>
+<dd><p>Possibile causes for the pattern.</p></dd>
+<dt>pattern.effect</dt>
+<dd><p>Possibile effects for the pattern.</p></dd>
+<dt>dim.min</dt>
+<dd><p>Minimum cardinality of the subgroups to be considered.</p></dd>
+<dt>dim.max</dt>
+<dd><p>Maximum cardinality of the subgroups to be considered.</p></dd>
+<dt>min.prob</dt>
+<dd><p>Minimum probability associated to each valid group.</p></dd>
+<dt>silent</dt>
+<dd><p>A parameter to disable/enable verbose messages.</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
     <p>A TRONCO compliant object with the added hypotheses</p>
+    </div>
+    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

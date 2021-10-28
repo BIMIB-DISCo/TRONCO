@@ -19,7 +19,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -71,7 +71,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>tronco.plot</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/tronco.R"><code>R/tronco.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/tronco.R" class="external-link"><code>R/tronco.R</code></a></small>
     <div class="hidden name"><code>tronco.plot.Rd</code></div>
     </div>
 
@@ -83,7 +83,7 @@ we refer to the Vignette Section 7.</p>
 
     <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">tronco.plot</span><span class="op">(</span>
   <span class="va">x</span>,
-  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span>,
+  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span>,
   fontsize <span class="op">=</span> <span class="cn">NA</span>,
   height <span class="op">=</span> <span class="fl">2</span>,
   width <span class="op">=</span> <span class="fl">3</span>,
@@ -113,93 +113,99 @@ we refer to the Vignette Section 7.</p>
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>x</th>
-      <td><p>A reconstructed model (the output of the inference
-by a tronco function)</p></td>
-    </tr><tr><th>models</th>
-      <td><p>A vector containing the names of the
-algorithms used (caprese, capri_bic, etc)</p></td>
-    </tr><tr><th>fontsize</th>
-      <td><p>For node names. Default NA for
-automatic rescaling</p></td>
-    </tr><tr><th>height</th>
-      <td><p>Proportion node height - node width.
-Default height 2</p></td>
-    </tr><tr><th>width</th>
-      <td><p>Proportion node height - node width.
-Default width 2</p></td>
-    </tr><tr><th>height.logic</th>
-      <td><p>Height of logical nodes.
-Defaul 1</p></td>
-    </tr><tr><th>pf</th>
-      <td><p>Should I print Prima Facie?
-Default False</p></td>
-    </tr><tr><th>disconnected</th>
-      <td><p>Should I print disconnected
-nodes? Default False</p></td>
-    </tr><tr><th>scale.nodes</th>
-      <td><p>Node scaling coefficient
-(based on node frequency). Default NA (autoscale)</p></td>
-    </tr><tr><th>title</th>
-      <td><p>Title of the plot. Default as.description(x)</p></td>
-    </tr><tr><th>confidence</th>
-      <td><p>Should I add confidence
-informations? No if NA</p></td>
-    </tr><tr><th>p.min</th>
-      <td><p>p-value cutoff. Default automatic</p></td>
-    </tr><tr><th>legend</th>
-      <td><p>Should I visualise the legend?</p></td>
-    </tr><tr><th>legend.cex</th>
-      <td><p>CEX value for legend. Default 1.0</p></td>
-    </tr><tr><th>edge.cex</th>
-      <td><p>CEX value for edge labels. Default 1.0</p></td>
-    </tr><tr><th>label.edge.size</th>
-      <td><p>Size of edge labels.
-Default NA for automatic rescaling</p></td>
-    </tr><tr><th>expand</th>
-      <td><p>Should I expand hypotheses? Default TRUE</p></td>
-    </tr><tr><th>genes</th>
-      <td><p>Visualise only genes in this list.
-Default NULL, visualise all.</p></td>
-    </tr><tr><th>relations.filter</th>
-      <td><p>Filter relations to dispaly
-according to this functions. Default NA</p></td>
-    </tr><tr><th>edge.color</th>
-      <td><p>Edge color. Default 'black'</p></td>
-    </tr><tr><th>pathways.color</th>
-      <td><p>RColorBrewer colorser
-for patways. Default 'Set1'.</p></td>
-    </tr><tr><th>file</th>
-      <td><p>String containing filename for PDF output.
-If NA no PDF output will be provided</p></td>
-    </tr><tr><th>legend.pos</th>
-      <td><p>Legend position. Default 'bottom',</p></td>
-    </tr><tr><th>pathways</th>
-      <td><p>A vector containing pathways information
-as described in as.patterns()</p></td>
-    </tr><tr><th>lwd</th>
-      <td><p>Edge base lwd. Default 3</p></td>
-    </tr><tr><th>samples.annotation</th>
-      <td><p>= List of samples to search
-for events in model</p></td>
-    </tr><tr><th>export.igraph</th>
-      <td><p>If TRUE export the generated igraph
-object</p></td>
-    </tr><tr><th>create.new.dev</th>
-      <td><p>If TRUE create a new graphical device 
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x</dt>
+<dd><p>A reconstructed model (the output of the inference
+by a tronco function)</p></dd>
+<dt>models</dt>
+<dd><p>A vector containing the names of the
+algorithms used (caprese, capri_bic, etc)</p></dd>
+<dt>fontsize</dt>
+<dd><p>For node names. Default NA for
+automatic rescaling</p></dd>
+<dt>height</dt>
+<dd><p>Proportion node height - node width.
+Default height 2</p></dd>
+<dt>width</dt>
+<dd><p>Proportion node height - node width.
+Default width 2</p></dd>
+<dt>height.logic</dt>
+<dd><p>Height of logical nodes.
+Defaul 1</p></dd>
+<dt>pf</dt>
+<dd><p>Should I print Prima Facie?
+Default False</p></dd>
+<dt>disconnected</dt>
+<dd><p>Should I print disconnected
+nodes? Default False</p></dd>
+<dt>scale.nodes</dt>
+<dd><p>Node scaling coefficient
+(based on node frequency). Default NA (autoscale)</p></dd>
+<dt>title</dt>
+<dd><p>Title of the plot. Default as.description(x)</p></dd>
+<dt>confidence</dt>
+<dd><p>Should I add confidence
+informations? No if NA</p></dd>
+<dt>p.min</dt>
+<dd><p>p-value cutoff. Default automatic</p></dd>
+<dt>legend</dt>
+<dd><p>Should I visualise the legend?</p></dd>
+<dt>legend.cex</dt>
+<dd><p>CEX value for legend. Default 1.0</p></dd>
+<dt>edge.cex</dt>
+<dd><p>CEX value for edge labels. Default 1.0</p></dd>
+<dt>label.edge.size</dt>
+<dd><p>Size of edge labels.
+Default NA for automatic rescaling</p></dd>
+<dt>expand</dt>
+<dd><p>Should I expand hypotheses? Default TRUE</p></dd>
+<dt>genes</dt>
+<dd><p>Visualise only genes in this list.
+Default NULL, visualise all.</p></dd>
+<dt>relations.filter</dt>
+<dd><p>Filter relations to dispaly
+according to this functions. Default NA</p></dd>
+<dt>edge.color</dt>
+<dd><p>Edge color. Default 'black'</p></dd>
+<dt>pathways.color</dt>
+<dd><p>RColorBrewer colorser
+for patways. Default 'Set1'.</p></dd>
+<dt>file</dt>
+<dd><p>String containing filename for PDF output.
+If NA no PDF output will be provided</p></dd>
+<dt>legend.pos</dt>
+<dd><p>Legend position. Default 'bottom',</p></dd>
+<dt>pathways</dt>
+<dd><p>A vector containing pathways information
+as described in as.patterns()</p></dd>
+<dt>lwd</dt>
+<dd><p>Edge base lwd. Default 3</p></dd>
+<dt>samples.annotation</dt>
+<dd><p>= List of samples to search
+for events in model</p></dd>
+<dt>export.igraph</dt>
+<dd><p>If TRUE export the generated igraph
+object</p></dd>
+<dt>create.new.dev</dt>
+<dd><p>If TRUE create a new graphical device 
 when calling trono.plot. Set this to FALSE, e.g., if you do not 
 wish to create a new device when executing the command with 
-export.igraph = TRUE</p></td>
-    </tr><tr><th>...</th>
-      <td><p>Additional arguments for RGraphviz
-plot function</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
+export.igraph = TRUE</p></dd>
+<dt>...</dt>
+<dd><p>Additional arguments for RGraphviz
+plot function</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
     <p>Information about the reconstructed model</p>
+    </div>
+    </div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">tronco.plot</span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Expanding hypotheses syntax as graph nodes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Rendering graphics</span>
@@ -210,6 +216,7 @@ plot function</p></td>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

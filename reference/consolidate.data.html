@@ -19,7 +19,7 @@ observations"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/lib
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.24.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@ observations"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/lib
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/BIMIB-DISCo/TRONCO/">
+  <a href="https://github.com/BIMIB-DISCo/TRONCO/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -71,7 +71,7 @@ observations"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/lib
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>consolidate.data</h1>
-    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/R/editing.functions.R"><code>R/editing.functions.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/R/editing.functions.R" class="external-link"><code>R/editing.functions.R</code></a></small>
     <div class="hidden name"><code>consolidate.data.Rd</code></div>
     </div>
 
@@ -83,17 +83,23 @@ observations</p>
 
     <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">consolidate.data</span><span class="op">(</span><span class="va">x</span>, print <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments"><colgroup><col class="name"><col class="desc"></colgroup><tr><th>x</th>
-      <td><p>A TRONCO compliant dataset.</p></td>
-    </tr><tr><th>print</th>
-      <td><p>A boolean value stating whether to print of not the summary</p></td>
-    </tr></table><h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
+    <div id="ref-sections">
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x</dt>
+<dd><p>A TRONCO compliant dataset.</p></dd>
+<dt>print</dt>
+<dd><p>A boolean value stating whether to print of not the summary</p></dd>
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
     <p>The list of any 0 probability, 1 probability and indistinguishable.</p>
+    </div>
+    </div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
+    <div id="examples">
+    <h2>Examples</h2>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">consolidate.data</span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $indistinguishable</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
@@ -106,6 +112,7 @@ observations</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 </code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
