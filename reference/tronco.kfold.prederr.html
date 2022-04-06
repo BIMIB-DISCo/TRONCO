@@ -20,7 +20,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.27.1</span>
       </span>
     </div>
 
@@ -29,7 +29,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -83,7 +83,8 @@ regarding the statistical assesment of an inferred model,
 we refer to the Vignette Section 7.</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">tronco.kfold.prederr</span><span class="op">(</span>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tronco.kfold.prederr</span><span class="op">(</span>
   <span class="va">x</span>,
   models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="as.models.html">as.models</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,
   events <span class="op">=</span> <span class="fu"><a href="as.events.html">as.events</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,
@@ -92,8 +93,8 @@ we refer to the Vignette Section 7.</p>
   cores.ratio <span class="op">=</span> <span class="fl">1</span>,
   silent <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
@@ -111,11 +112,10 @@ we refer to the Vignette Section 7.</p>
 <dt>silent</dt>
 <dd><p>A parameter to disable/enable verbose messages.</p></dd>
 </dl></div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">tronco.kfold.prederr</span><span class="op">(</span><span class="va">test_model</span>, k <span class="op">=</span> <span class="fl">2</span>, runs <span class="op">=</span> <span class="fl">2</span>, cores.ratio <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Using 1 cores via "parallel" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Scanning 30 nodes for their prediction error (all parents). </span>
@@ -1827,10 +1827,10 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`ins_del TET2`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.075</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.100 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`ins_del EZH2`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`ins_del ASXL1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.175 0.175</span>
@@ -1845,13 +1845,13 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations TET2`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations EZH2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.15 0.15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations CBL_Ex_8_9`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1 0.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations IDH2_R140`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
@@ -1860,25 +1860,25 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations JARID_2_Ex1_18`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.050 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations EED_Ex2_12`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.050 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations CEBPA`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.050</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations EPHB3`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations ETNK1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.050</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations GATA2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations IRAK4`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations MTA2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
@@ -1887,13 +1887,13 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1 0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations KIT`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`nonsense_ins_del WT1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.000 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`nonsense_ins_del RUNX_1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`nonsense_ins_del CEBPA`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
@@ -1905,7 +1905,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`nonsense_point_mutations ASXL1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.175 0.100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1 0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`nonsense_point_mutations CSF3R`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.075</span>
@@ -1921,7 +1921,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`ins_del TET2`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`ins_del EZH2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.050 0.025</span>
@@ -1936,16 +1936,16 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations KRAS_Ex2_3`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.125 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations TET2`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.150 0.225</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.150</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations EZH2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.15 0.15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations CBL_Ex_8_9`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.10 0.15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.100 0.125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations IDH2_R140`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
@@ -1954,25 +1954,25 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations JARID_2_Ex1_18`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.00 0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.050</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations EED_Ex2_12`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations CEBPA`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations EPHB3`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.100 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.00 0.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations ETNK1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.050</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations GATA2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations IRAK4`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.050 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations MTA2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
@@ -1981,7 +1981,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1 0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations KIT`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.000 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`nonsense_ins_del WT1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
@@ -1990,7 +1990,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`nonsense_ins_del CEBPA`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.100 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`nonsense_point_mutations TET2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.125 0.125</span>
@@ -1999,7 +1999,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`nonsense_point_mutations ASXL1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1 0.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.275 0.100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`nonsense_point_mutations CSF3R`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.075</span>
@@ -2028,7 +2028,7 @@ we refer to the Vignette Section 7.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.9000.</p>
 </div>
 
       </footer></div>

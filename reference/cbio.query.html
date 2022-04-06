@@ -24,7 +24,7 @@ http://www.cbioportal.org."><!-- mathjax --><script src="https://cdnjs.cloudflar
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.27.1</span>
       </span>
     </div>
 
@@ -33,7 +33,7 @@ http://www.cbioportal.org."><!-- mathjax --><script src="https://cdnjs.cloudflar
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -91,15 +91,16 @@ is also saved to disk as Rdata file. See also
 http://www.cbioportal.org.</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">cbio.query</span><span class="op">(</span>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">cbio.query</span><span class="op">(</span>
   cbio.study <span class="op">=</span> <span class="cn">NA</span>,
   cbio.dataset <span class="op">=</span> <span class="cn">NA</span>,
   cbio.profile <span class="op">=</span> <span class="cn">NA</span>,
   <span class="va">genes</span>,
   file <span class="op">=</span> <span class="cn">NA</span>
 <span class="op">)</span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>cbio.study</dt>
@@ -117,7 +118,6 @@ http://www.cbioportal.org.</p>
     <h2>Value</h2>
     <p>A list with two dataframe: the gentic profile required and clinical data for the Cbio study.</p>
     </div>
-    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -131,7 +131,7 @@ http://www.cbioportal.org.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.9000.</p>
 </div>
 
       </footer></div>

@@ -19,7 +19,7 @@ we refer to the Vignette Section 6."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.27.1</span>
       </span>
     </div>
 
@@ -28,7 +28,7 @@ we refer to the Vignette Section 6."><!-- mathjax --><script src="https://cdnjs.
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -81,7 +81,8 @@ regarding the inference process and on the algorithm implemented in the package,
 we refer to the Vignette Section 6.</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">tronco.capri</span><span class="op">(</span>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tronco.capri</span><span class="op">(</span>
   <span class="va">data</span>,
   command <span class="op">=</span> <span class="st">"hc"</span>,
   regularization <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bic"</span>, <span class="st">"aic"</span><span class="op">)</span>,
@@ -96,8 +97,8 @@ we refer to the Vignette Section 6.</p>
   eneg <span class="op">=</span> <span class="fl">0</span>,
   restart <span class="op">=</span> <span class="fl">100</span>
 <span class="op">)</span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
@@ -131,11 +132,10 @@ we refer to the Vignette Section 6.</p>
     <h2>Value</h2>
     <p>A TRONCO compliant object with reconstructed model</p>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">recon</span> <span class="op">=</span> <span class="fu">tronco.capri</span><span class="op">(</span><span class="va">test_dataset</span>, nboot <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Checking input events.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Inferring a progression model with the following settings.</span>
@@ -147,15 +147,15 @@ we refer to the Vignette Section 6.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		p-value: 0.05.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		minimum bootstrapped scores: 3.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Bootstraping selective advantage scores (prima facie).</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	.......</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	...........</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Evaluating "temporal priority" (Wilcoxon, p-value 0.05)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Evaluating "probability raising" (Wilcoxon, p-value 0.05)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Loop detection found loops to break.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Removed 8 edges out of 50 (16%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	Removed 7 edges out of 51 (14%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Performing likelihood-fit with regularization bic.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Performing likelihood-fit with regularization aic.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Evaluating BIC / AIC / LogLik informations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> The reconstruction has been successfully completed in 00h:00m:02s </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> The reconstruction has been successfully completed in 00h:00m:01s </span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -171,7 +171,7 @@ we refer to the Vignette Section 6.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.9000.</p>
 </div>
 
       </footer></div>
