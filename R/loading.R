@@ -709,186 +709,190 @@ extract.MAF.HuGO.Entrez.map <- function(file, sep = "\t") {
 }
 
 
-#' Wrapper for the CGDS package to query the Cbio portal. This can
-#' work either automatically, if one sets \code{cbio.study},
-#' \code{cbio.dataset} or \code{cbio.profile}, or interactively
-#' otherwise. A list of genes to query with less than 900 entries should
-#' be provided. This function returns a list with two dataframe: the
-#' gentic profile required and clinical data for the Cbio study. Output
-#' is also saved to disk as Rdata file. See also
-#' http://www.cbioportal.org.
-#'
-#' @title cbio.query
-#' @param cbio.study  Cbio study ID
-#' @param cbio.dataset Cbio dataset ID
-#' @param cbio.profile Cbio genetic profile ID
-#' @param genes A list of < 900 genes to query
-#' @param file String containing filename for RData output. If NA no output will be provided
-#' @return A list with two dataframe: the gentic profile required and clinical data for the Cbio study.
-#' @export cbio.query
-#' @importFrom cgdsr CGDS getCancerStudies getCaseLists 
-#' @importFrom cgdsr getGeneticProfiles getProfileData getClinicalData
-#' @importFrom utils write.table
-#' 
-cbio.query <- function(cbio.study = NA,
-                       cbio.dataset = NA,
-                       cbio.profile = NA,
-                       genes,
-                       file = NA) {
-    cat("*** CGDS plugin for Cbio query.\n")
-    ## require("cgdsr")
+## Wrapper for the CGDS package to query the Cbio portal. This can
+## work either automatically, if one sets \code{cbio.study},
+## \code{cbio.dataset} or \code{cbio.profile}, or interactively
+## otherwise. A list of genes to query with less than 900 entries should
+## be provided. This function returns a list with two dataframe: the
+## gentic profile required and clinical data for the Cbio study. Output
+## is also saved to disk as Rdata file. See also
+## http://www.cbioportal.org.
+##
+## @title cbio.query
+## @param cbio.study  Cbio study ID
+## @param cbio.dataset Cbio dataset ID
+## @param cbio.profile Cbio genetic profile ID
+## @param genes A list of < 900 genes to query
+## @param file String containing filename for RData output. If NA no output will be provided
+## @return A list with two dataframe: the gentic profile required and clinical data for the Cbio study.
+## @export cbio.query
+## @importFrom cgdsr CGDS getCancerStudies getCaseLists 
+## @importFrom cgdsr getGeneticProfiles getProfileData getClinicalData
+## @importFrom utils write.table
+## 
+#cbio.query <- function(cbio.study = NA,
+#                       cbio.dataset = NA,
+#                       cbio.profile = NA,
+#                       genes,
+#                       file = NA) {
+#    cat("*** CGDS plugin for Cbio query.\n")
+#    ## require("cgdsr")
+#
+#    if (is.null(genes) || is.na(genes) || length(genes) == 0) {
+#        stop('Empty list of genes to query')
+#    }
+#    if (length(genes) > 900) {
+#        stop('URL with more than 900 genes will not be accepted, please split it.')
+#    }
+#
+#    if (is.na(cbio.study)) {
+#        cat("\nAutomatic CBIO study assessment: off")
+#    } else {
+#        cat(paste("\nAutomatic CBIO study index: ", cbio.study, sep = ""))
+#    }
+#
+#    if (is.na(cbio.dataset)) {
+#        cat("\nAutomatic CBIO dataset assessment: off")
+#    } else {
+#        cat(paste("\nAutomatic CBIO dataset index: ", cbio.dataset, sep = ""))
+#    }
+#    
+#    if (is.na(cbio.profile)) {
+#        cat("\nAutomatic CBIO profile assessment: off")
+#    } else {
+#        cat(paste("\nAutomatic CBIO profile index: ", cbio.profile, sep = ""))
+#    }
+#    
+#    ## mycgds = CGDS("http://www.cbioportal.org/public-portal/")
+#    ## New version of the CGDS-R library does not want the
+#    ## "public-portal".
+#    
+#    mycgds = CGDS("http://www.cbioportal.org/")
+#
+#    cs = getCancerStudies(mycgds)
+#    if (is.na(cbio.study)) {
+#        cat("\nAvailable studies at CBIO portal.\n")
+#        print(cs[c("cancer_study_id", "name")])
+#
+#        repeat{
+#            cbio.study <- readline(prompt = "Enter CBIO study id: ")
+#            if (cbio.study %in% cs$cancer_study_id)
+#                break
+#        }
+#    }
+#
+#    ## Get available case lists (collection of samples) for a given
+#    ## cancer study
+#
+#    mycancerstudy <- cbio.study
+#
+#    if (is.na(mycancerstudy)) {
+#        stop("CBIO study id invalid. Aborting.")
+#    }
+#
+#    study <- cs[cs$cancer_study_id == cbio.study, , drop = FALSE]
+#
+#    cat(paste("\nCancer codename: ", study[, 1], sep = ""))
+#    cat(paste("\nCancer Ref.: ", study[, 2], sep = ""))
+#    cat(paste("\nCancer Syn.: ", study[, 3], sep = ""))
+#
+#    cutdescr = function(x, n) {
+#        x[, ncol(x)] = ifelse(
+#            nchar(x[, ncol(x)]) > n,
+#            paste0(substr(x[, ncol(x)], 1, n), '....'),
+#            x[, ncol(x)])
+#        return(x)
+#    }
+#
+#    ## Get dataset for the study
+#
+#    csl = getCaseLists(mycgds, cbio.study)
+#    if (is.na(cbio.dataset)) {
+#        cat("\nAvailable datasets for study:", cbio.study, "\n")
+#        print(cutdescr(csl[c("case_list_id",  "case_list_description")], 90))
+#
+#        repeat{
+#            cbio.dataset <- readline(prompt = "Enter study dataset id: ")
+#            if (cbio.dataset %in% csl$case_list_id) break
+#        }
+#    }
+#
+#    caselist =  csl[csl$case_list_id == cbio.dataset, , drop = FALSE]
+#
+#    if (any(is.na(caselist))) stop("No data for selected study. Aborting.")
+#
+#
+#    cat(paste("\nData codename: ", caselist[, 1], sep = ""))
+#    cat(paste("\nData Ref.: ", caselist[, 2], sep = ""))
+#    cat(paste("\nData Syn.: ", caselist[, 3], sep = ""))
+#
+#    ## Get available genetic profiles
+#
+#    gp = getGeneticProfiles(mycgds, cbio.study)
+#    if (is.na(cbio.profile)) {
+#        cat("\nAvailable genetic profiles for selected datasets.\n")
+#        print(cutdescr(gp[c("genetic_profile_id", "genetic_profile_description")], 90))
+#
+#        repeat{
+#            cbio.profile <- readline(prompt = "Enter genetic profile id: ")
+#            if (cbio.profile %in% gp$genetic_profile_id) break
+#        }
+#    }
+#
+#    profile = gp[gp$genetic_profile_id == cbio.profile, , drop = FALSE]
+#
+#    if (any(is.na(cbio.profile))) {
+#        stop("No samples for this profile. Aborting")
+#    }
+#
+#    samples.name <- profile[1, 1]
+#    samples.ref <- profile[1, 2]
+#    samples.syn <- profile[1, 3]
+#    samples.id <- profile[1, 4]
+#
+#    cat(paste("\nSamples codename: ", samples.name, sep = ""))
+#    cat(paste("\nData Ref.: ", samples.ref, sep = ""))
+#    cat(paste("\nData Syn.: ", samples.syn, sep = ""))
+#
+#    cat("\n\nQuerying the following list of genes: ")
+#    cat(paste(genes, collapse = ", "), '\n')
+#
+#    ## Get data slices for a specified list of genes, genetic profile
+#    ## and case list
+#
+#    data <- getProfileData(mycgds, genes, samples.name, cbio.dataset)
+#    rownames(data) = gsub('\\.', '-', rownames(data))
+#    cat('Symbol \".\" was replaced with "-" in sample IDs.\n')
+#
+#    ## Export
+#
+#    cat(paste("\nData retrieved: ", nrow(data), " samples, ", ncol(data), " genes.", sep = ""))
+#
+#    ## Get clinical data for the case list
+#
+#    cat("\nRetrieved also clinical data for samples:", cbio.dataset)
+#
+#    clinicaldata = getClinicalData(mycgds, cbio.dataset)
+#    rownames(clinicaldata) = gsub('\\.', '-', rownames(clinicaldata))
+#
+#    ret = NULL
+#    ret$profile = data
+#    ret$clinical = clinicaldata
+#
+#    if (!is.na(file)) {
+#        save(ret, file=file)
+#    }
+#
+#    return(ret)
+#}
+#
+#
 
-    if (is.null(genes) || is.na(genes) || length(genes) == 0) {
-        stop('Empty list of genes to query')
-    }
-    if (length(genes) > 900) {
-        stop('URL with more than 900 genes will not be accepted, please split it.')
-    }
 
-    if (is.na(cbio.study)) {
-        cat("\nAutomatic CBIO study assessment: off")
-    } else {
-        cat(paste("\nAutomatic CBIO study index: ", cbio.study, sep = ""))
-    }
-
-    if (is.na(cbio.dataset)) {
-        cat("\nAutomatic CBIO dataset assessment: off")
-    } else {
-        cat(paste("\nAutomatic CBIO dataset index: ", cbio.dataset, sep = ""))
-    }
-    
-    if (is.na(cbio.profile)) {
-        cat("\nAutomatic CBIO profile assessment: off")
-    } else {
-        cat(paste("\nAutomatic CBIO profile index: ", cbio.profile, sep = ""))
-    }
-    
-    ## mycgds = CGDS("http://www.cbioportal.org/public-portal/")
-    ## New version of the CGDS-R library does not want the
-    ## "public-portal".
-    
-    mycgds = CGDS("http://www.cbioportal.org/")
-
-    cs = getCancerStudies(mycgds)
-    if (is.na(cbio.study)) {
-        cat("\nAvailable studies at CBIO portal.\n")
-        print(cs[c("cancer_study_id", "name")])
-
-        repeat{
-            cbio.study <- readline(prompt = "Enter CBIO study id: ")
-            if (cbio.study %in% cs$cancer_study_id)
-                break
-        }
-    }
-
-    ## Get available case lists (collection of samples) for a given
-    ## cancer study
-
-    mycancerstudy <- cbio.study
-
-    if (is.na(mycancerstudy)) {
-        stop("CBIO study id invalid. Aborting.")
-    }
-
-    study <- cs[cs$cancer_study_id == cbio.study, , drop = FALSE]
-
-    cat(paste("\nCancer codename: ", study[, 1], sep = ""))
-    cat(paste("\nCancer Ref.: ", study[, 2], sep = ""))
-    cat(paste("\nCancer Syn.: ", study[, 3], sep = ""))
-
-    cutdescr = function(x, n) {
-        x[, ncol(x)] = ifelse(
-            nchar(x[, ncol(x)]) > n,
-            paste0(substr(x[, ncol(x)], 1, n), '....'),
-            x[, ncol(x)])
-        return(x)
-    }
-
-    ## Get dataset for the study
-
-    csl = getCaseLists(mycgds, cbio.study)
-    if (is.na(cbio.dataset)) {
-        cat("\nAvailable datasets for study:", cbio.study, "\n")
-        print(cutdescr(csl[c("case_list_id",  "case_list_description")], 90))
-
-        repeat{
-            cbio.dataset <- readline(prompt = "Enter study dataset id: ")
-            if (cbio.dataset %in% csl$case_list_id) break
-        }
-    }
-
-    caselist =  csl[csl$case_list_id == cbio.dataset, , drop = FALSE]
-
-    if (any(is.na(caselist))) stop("No data for selected study. Aborting.")
-
-
-    cat(paste("\nData codename: ", caselist[, 1], sep = ""))
-    cat(paste("\nData Ref.: ", caselist[, 2], sep = ""))
-    cat(paste("\nData Syn.: ", caselist[, 3], sep = ""))
-
-    ## Get available genetic profiles
-
-    gp = getGeneticProfiles(mycgds, cbio.study)
-    if (is.na(cbio.profile)) {
-        cat("\nAvailable genetic profiles for selected datasets.\n")
-        print(cutdescr(gp[c("genetic_profile_id", "genetic_profile_description")], 90))
-
-        repeat{
-            cbio.profile <- readline(prompt = "Enter genetic profile id: ")
-            if (cbio.profile %in% gp$genetic_profile_id) break
-        }
-    }
-
-    profile = gp[gp$genetic_profile_id == cbio.profile, , drop = FALSE]
-
-    if (any(is.na(cbio.profile))) {
-        stop("No samples for this profile. Aborting")
-    }
-
-    samples.name <- profile[1, 1]
-    samples.ref <- profile[1, 2]
-    samples.syn <- profile[1, 3]
-    samples.id <- profile[1, 4]
-
-    cat(paste("\nSamples codename: ", samples.name, sep = ""))
-    cat(paste("\nData Ref.: ", samples.ref, sep = ""))
-    cat(paste("\nData Syn.: ", samples.syn, sep = ""))
-
-    cat("\n\nQuerying the following list of genes: ")
-    cat(paste(genes, collapse = ", "), '\n')
-
-    ## Get data slices for a specified list of genes, genetic profile
-    ## and case list
-
-    data <- getProfileData(mycgds, genes, samples.name, cbio.dataset)
-    rownames(data) = gsub('\\.', '-', rownames(data))
-    cat('Symbol \".\" was replaced with "-" in sample IDs.\n')
-
-    ## Export
-
-    cat(paste("\nData retrieved: ", nrow(data), " samples, ", ncol(data), " genes.", sep = ""))
-
-    ## Get clinical data for the case list
-
-    cat("\nRetrieved also clinical data for samples:", cbio.dataset)
-
-    clinicaldata = getClinicalData(mycgds, cbio.dataset)
-    rownames(clinicaldata) = gsub('\\.', '-', rownames(clinicaldata))
-
-    ret = NULL
-    ret$profile = data
-    ret$clinical = clinicaldata
-
-    if (!is.na(file)) {
-        save(ret, file=file)
-    }
-
-    return(ret)
-}
 
 
 #' Add an adjacency matrix as a model to a TRONCO compliant object.
-#' Input "model" can be either a dataframe or a file name. 
+#' Input model can be either a dataframe or a file name. 
 #' 
 #' @title import.model
 #' @param tronco_object A TRONCO compliant object
