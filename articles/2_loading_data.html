@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.27.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
       </span>
     </div>
 
@@ -283,7 +283,7 @@
 <p>TRONCO uses the R interface to cBio to query data from the portal. All type of data can be downloaded from the portal, which includes MAF/GISTIC data for a lot of different cancer studies. An example of interaction with the portal is archived at the tool’s webpage.</p>
 <p>Here, we show how to download lung cancer data somatic mutations for genes TP53, KRAS and PIK3CA, from the lung cancer project run by TCGA, which is archived as <em>luad_tcga_pub</em> at cBio. If some of the parameters to <code>cbio.query</code> are missing the function will become interactive by showing a list of possible data available at the portal.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span> <span class="op">=</span> <span class="fu"><a href="../reference/cbio.query.html">cbio.query</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">data</span> <span class="op">=</span> <span class="fu">cbio.query</span><span class="op">(</span>
     genes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'TP53'</span>, <span class="st">'KRAS'</span>, <span class="st">'PIK3CA'</span><span class="op">)</span>, 
     cbio.study <span class="op">=</span> <span class="st">'luad_tcga_pub'</span>,
     cbio.dataset <span class="op">=</span> <span class="st">'luad_tcga_pub_cnaseq'</span>, 
@@ -308,7 +308,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
 </div>
 
       </footer>
