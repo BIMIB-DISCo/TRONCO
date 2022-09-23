@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -78,30 +78,37 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">annotate.stages</span><span class="op">(</span><span class="va">x</span>, <span class="va">stages</span>, match.TCGA.patients <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">annotate.stages</span><span class="op">(</span><span class="va">x</span>, <span class="va">stages</span>, match.TCGA.patients <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A TRONCO compliant dataset.</p></dd>
+
+
 <dt>stages</dt>
 <dd><p>A list of stages. Rownames must match samples list of x</p></dd>
+
+
 <dt>match.TCGA.patients</dt>
 <dd><p>Match using TCGA notations (only first 12 characters)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A TRONCO compliant dataset.</p>
+    
+
+<p>A TRONCO compliant dataset.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">stage</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">test_dataset</span> <span class="op">=</span> <span class="fu">annotate.stages</span><span class="op">(</span><span class="va">test_dataset</span>, <span class="va">stage</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">stage</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">test_dataset</span> <span class="op">=</span> <span class="fu">annotate.stages</span><span class="op">(</span><span class="va">test_dataset</span>, <span class="va">stage</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>6  missing stages were added as NA.</span>
-<span class="r-in"><span class="fu"><a href="as.stages.html">as.stages</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="as.stages.html">as.stages</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                stage</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> patient 1   Stage II</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> patient 2    Stage I</span>
@@ -143,7 +150,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> patient 38      &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> patient 39 Stage III</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> patient 40      &lt;NA&gt;</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -158,7 +165,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

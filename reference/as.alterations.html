@@ -19,7 +19,7 @@ to be a TRONCO compliant dataset - see is.compliant."><!-- mathjax --><script sr
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -82,29 +82,38 @@ to be a TRONCO compliant dataset - see <code>is.compliant</code>.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">as.alterations</span><span class="op">(</span><span class="va">x</span>, new.type <span class="op">=</span> <span class="st">"Alteration"</span>, new.color <span class="op">=</span> <span class="st">"khaki"</span>, silent <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">as.alterations</span><span class="op">(</span><span class="va">x</span>, new.type <span class="op">=</span> <span class="st">"Alteration"</span>, new.color <span class="op">=</span> <span class="st">"khaki"</span>, silent <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A TRONCO compliant dataset.</p></dd>
+
+
 <dt>new.type</dt>
 <dd><p>The types label of the new event type, 'Alteration' by default.</p></dd>
+
+
 <dt>new.color</dt>
 <dd><p>The color of the event <code>new.type</code>, default 'khaki'.</p></dd>
+
+
 <dt>silent</dt>
 <dd><p>A parameter to disable/enable verbose messages.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A TRONCO compliant dataset with alteration profiles.</p>
+    
+
+<p>A TRONCO compliant dataset with alteration profiles.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">muts</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">as.alterations</span><span class="op">(</span><span class="va">muts</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">muts</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">as.alterations</span><span class="op">(</span><span class="va">muts</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Aggregating events of type(s) { Mutation }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> in a unique event with label " Alteration ".</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> One input type provided, using renaming functions.</span>
@@ -134,7 +143,7 @@ to be a TRONCO compliant dataset - see <code>is.compliant</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            color  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Alteration "khaki"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -149,7 +158,7 @@ to be a TRONCO compliant dataset - see <code>is.compliant</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

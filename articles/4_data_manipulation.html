@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -109,53 +109,53 @@
 </h2>
 <p>TRONCO provides functions for renaming the events that were included in a dataset, or the type associated to a set of events (e.g., a <code>Mutation</code> could be renamed to a <code>Missense Mutation</code>).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/rename.gene.html">rename.gene</a></span><span class="op">(</span><span class="va">aCML</span>, <span class="st">'TET2'</span>, <span class="st">'new name'</span><span class="op">)</span>
-<span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/rename.type.html">rename.type</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="st">'Ins/Del'</span>, <span class="st">'new type'</span><span class="op">)</span>
-<span class="fu"><a href="../reference/as.events.html">as.events</a></span><span class="op">(</span><span class="va">dataset</span>, type <span class="op">=</span> <span class="st">'new type'</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##        type       event     </span>
-<span class="co">## gene 4 "new type" "new name"</span>
-<span class="co">## gene 5 "new type" "EZH2"    </span>
-<span class="co">## gene 6 "new type" "CBL"     </span>
-<span class="co">## gene 7 "new type" "ASXL1"</span></code></pre>
+<code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/rename.gene.html">rename.gene</a></span><span class="op">(</span><span class="va">aCML</span>, <span class="st">'TET2'</span>, <span class="st">'new name'</span><span class="op">)</span></span>
+<span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/rename.type.html">rename.type</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="st">'Ins/Del'</span>, <span class="st">'new type'</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/as.events.html">as.events</a></span><span class="op">(</span><span class="va">dataset</span>, type <span class="op">=</span> <span class="st">'new type'</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##        type       event     </span></span>
+<span><span class="co">## gene 4 "new type" "new name"</span></span>
+<span><span class="co">## gene 5 "new type" "EZH2"    </span></span>
+<span><span class="co">## gene 6 "new type" "CBL"     </span></span>
+<span><span class="co">## gene 7 "new type" "ASXL1"</span></span></code></pre>
 <p>and return a modified TRONCO object. More complex operations are also possible. For instance, two events with the same signature – i.e., appearing in the same samples – can be joined to a new event (see also Data Consolidation in Model Inference) with the same signature and a new name.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/join.events.html">join.events</a></span><span class="op">(</span><span class="va">aCML</span>, 
-    <span class="st">'gene 4'</span>,
-    <span class="st">'gene 88'</span>,
-    new.event<span class="op">=</span><span class="st">'test'</span>,
-    new.type<span class="op">=</span><span class="st">'banana'</span>,
-    event.color<span class="op">=</span><span class="st">'yellow'</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## *** Binding events for 2 datasets.</span></code></pre>
+<code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/join.events.html">join.events</a></span><span class="op">(</span><span class="va">aCML</span>, </span>
+<span>    <span class="st">'gene 4'</span>,</span>
+<span>    <span class="st">'gene 88'</span>,</span>
+<span>    new.event<span class="op">=</span><span class="st">'test'</span>,</span>
+<span>    new.type<span class="op">=</span><span class="st">'banana'</span>,</span>
+<span>    event.color<span class="op">=</span><span class="st">'yellow'</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## *** Binding events for 2 datasets.</span></span></code></pre>
 <p>where in this case we also created a new event type, with its own color.</p>
 <p>In a similar way we can decide to join all the events of two distinct types, in this case if a gene <em>x</em> has signatures for both type of events, he will get a unique signature with an alteration present if it is either of the second <em>or</em> the second type</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/join.types.html">join.types</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="st">'Nonsense point'</span>, <span class="st">'Nonsense Ins/Del'</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## *** Aggregating events of type(s) { Nonsense point, Nonsense Ins/Del }</span>
-<span class="co">## in a unique event with label " new.type ".</span>
-<span class="co">## Dropping event types Nonsense point, Nonsense Ins/Del for 6 genes.</span>
-<span class="co">## ......</span>
-<span class="co">## *** Binding events for 2 datasets.</span></code></pre>
+<code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/join.types.html">join.types</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="st">'Nonsense point'</span>, <span class="st">'Nonsense Ins/Del'</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## *** Aggregating events of type(s) { Nonsense point, Nonsense Ins/Del }</span></span>
+<span><span class="co">## in a unique event with label " new.type ".</span></span>
+<span><span class="co">## Dropping event types Nonsense point, Nonsense Ins/Del for 6 genes.</span></span>
+<span><span class="co">## ......</span></span>
+<span><span class="co">## *** Binding events for 2 datasets.</span></span></code></pre>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/as.types.html">as.types</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] "Ins/Del"        "Missense point" "banana"         "new.type"</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/as.types.html">as.types</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "Ins/Del"        "Missense point" "banana"         "new.type"</span></span></code></pre>
 <p>TRONCO also provides functions for deleting specific events, samples or types.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/delete.gene.html">delete.gene</a></span><span class="op">(</span><span class="va">aCML</span>, gene <span class="op">=</span> <span class="st">'TET2'</span><span class="op">)</span>
-<span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/delete.event.html">delete.event</a></span><span class="op">(</span><span class="va">dataset</span>, gene <span class="op">=</span> <span class="st">'ASXL1'</span>, type <span class="op">=</span> <span class="st">'Ins/Del'</span><span class="op">)</span>
-<span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/delete.samples.html">delete.samples</a></span><span class="op">(</span><span class="va">dataset</span>, samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'patient 5'</span>, <span class="st">'patient 6'</span><span class="op">)</span><span class="op">)</span>
-<span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/delete.type.html">delete.type</a></span><span class="op">(</span><span class="va">dataset</span>, type <span class="op">=</span> <span class="st">'Missense point'</span><span class="op">)</span>
-<span class="fu"><a href="../reference/view.html">view</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Description: CAPRI - Bionformatics aCML data.</span>
-<span class="co">## -- TRONCO Dataset: n=62, m=8, |G|=7, patterns=0.</span>
-<span class="co">## Events (types): Ins/Del, Nonsense Ins/Del, Nonsense point.</span>
-<span class="co">## Colors (plot): #7FC97F, #FDC086, #fab3d8.</span>
-<span class="co">## Events (5 shown):</span>
-<span class="co">##   gene 5 : Ins/Del EZH2</span>
-<span class="co">##   gene 6 : Ins/Del CBL</span>
-<span class="co">##   gene 66 : Nonsense Ins/Del WT1</span>
-<span class="co">##   gene 69 : Nonsense Ins/Del RUNX1</span>
-<span class="co">##   gene 77 : Nonsense Ins/Del CEBPA</span>
-<span class="co">## Genotypes (5 shown):</span></code></pre>
+<code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/delete.gene.html">delete.gene</a></span><span class="op">(</span><span class="va">aCML</span>, gene <span class="op">=</span> <span class="st">'TET2'</span><span class="op">)</span></span>
+<span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/delete.event.html">delete.event</a></span><span class="op">(</span><span class="va">dataset</span>, gene <span class="op">=</span> <span class="st">'ASXL1'</span>, type <span class="op">=</span> <span class="st">'Ins/Del'</span><span class="op">)</span></span>
+<span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/delete.samples.html">delete.samples</a></span><span class="op">(</span><span class="va">dataset</span>, samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'patient 5'</span>, <span class="st">'patient 6'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/delete.type.html">delete.type</a></span><span class="op">(</span><span class="va">dataset</span>, type <span class="op">=</span> <span class="st">'Missense point'</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/view.html">view</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Description: CAPRI - Bionformatics aCML data.</span></span>
+<span><span class="co">## -- TRONCO Dataset: n=62, m=8, |G|=7, patterns=0.</span></span>
+<span><span class="co">## Events (types): Ins/Del, Nonsense Ins/Del, Nonsense point.</span></span>
+<span><span class="co">## Colors (plot): #7FC97F, #FDC086, #fab3d8.</span></span>
+<span><span class="co">## Events (5 shown):</span></span>
+<span><span class="co">##   gene 5 : Ins/Del EZH2</span></span>
+<span><span class="co">##   gene 6 : Ins/Del CBL</span></span>
+<span><span class="co">##   gene 66 : Nonsense Ins/Del WT1</span></span>
+<span><span class="co">##   gene 69 : Nonsense Ins/Del RUNX1</span></span>
+<span><span class="co">##   gene 77 : Nonsense Ins/Del CEBPA</span></span>
+<span><span class="co">## Genotypes (5 shown):</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="modifying-patterns">Modifying patterns<a class="anchor" aria-label="anchor" href="#modifying-patterns"></a>
@@ -167,55 +167,55 @@
 </h2>
 <p>It is very often the case that we want to subset a dataset by either selecting only some of its samples, or some of its events. Function <code>samples.selection</code> returns a dataset with only some selected samples.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/samples.selection.html">samples.selection</a></span><span class="op">(</span><span class="va">aCML</span>, samples <span class="op">=</span> <span class="fu"><a href="../reference/as.samples.html">as.samples</a></span><span class="op">(</span><span class="va">aCML</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span>
-<span class="fu"><a href="../reference/view.html">view</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Description: CAPRI - Bionformatics aCML data.</span>
-<span class="co">## -- TRONCO Dataset: n=3, m=31, |G|=23, patterns=0.</span>
-<span class="co">## Events (types): Ins/Del, Missense point, Nonsense Ins/Del, Nonsense point.</span>
-<span class="co">## Colors (plot): #7FC97F, #4483B0, #FDC086, #fab3d8.</span>
-<span class="co">## Events (5 shown):</span>
-<span class="co">##   gene 4 : Ins/Del TET2</span>
-<span class="co">##   gene 5 : Ins/Del EZH2</span>
-<span class="co">##   gene 6 : Ins/Del CBL</span>
-<span class="co">##   gene 7 : Ins/Del ASXL1</span>
-<span class="co">##   gene 29 : Missense point SETBP1</span>
-<span class="co">## Genotypes (5 shown):</span></code></pre>
+<code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/samples.selection.html">samples.selection</a></span><span class="op">(</span><span class="va">aCML</span>, samples <span class="op">=</span> <span class="fu"><a href="../reference/as.samples.html">as.samples</a></span><span class="op">(</span><span class="va">aCML</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/view.html">view</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Description: CAPRI - Bionformatics aCML data.</span></span>
+<span><span class="co">## -- TRONCO Dataset: n=3, m=31, |G|=23, patterns=0.</span></span>
+<span><span class="co">## Events (types): Ins/Del, Missense point, Nonsense Ins/Del, Nonsense point.</span></span>
+<span><span class="co">## Colors (plot): #7FC97F, #4483B0, #FDC086, #fab3d8.</span></span>
+<span><span class="co">## Events (5 shown):</span></span>
+<span><span class="co">##   gene 4 : Ins/Del TET2</span></span>
+<span><span class="co">##   gene 5 : Ins/Del EZH2</span></span>
+<span><span class="co">##   gene 6 : Ins/Del CBL</span></span>
+<span><span class="co">##   gene 7 : Ins/Del ASXL1</span></span>
+<span><span class="co">##   gene 29 : Missense point SETBP1</span></span>
+<span><span class="co">## Genotypes (5 shown):</span></span></code></pre>
 <p>Function <code>events.selection</code>, instead, performs selection according to a filter of events. With this function, we can subset data according to a frequency, and we can force inclusion/exclusion of certain events by specifying their name. For instance, here we pick all events with a minimum frequency of 5%, force exclusion of SETBP1 (all events associated), and inclusion of EZH1 and EZH2.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/events.selection.html">events.selection</a></span><span class="op">(</span><span class="va">aCML</span>,  filter.freq <span class="op">=</span> <span class="fl">.05</span>, 
-    filter.in.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'EZH1'</span>,<span class="st">'EZH2'</span><span class="op">)</span>, 
-    filter.out.names <span class="op">=</span> <span class="st">'SETBP1'</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## *** Events selection: #events =  31 , #types =  4 Filters freq|in|out = { TRUE ,  TRUE ,  TRUE }</span>
-<span class="co">## Minimum event frequency:  0.05  ( 3  alterations out of  64  samples).</span>
-<span class="co">## ...............................</span>
-<span class="co">## Selected  9  events.</span>
-<span class="co">## </span>
-<span class="co">## [filter.in] Genes hold:  EZH1, EZH2  ...  [ 1 / 2  found].</span>
-<span class="co">## [filter.out] Genes dropped:  SETBP1  ...  [ 1 / 1  found].</span>
-<span class="co">## Selected  10  events, returning.</span></code></pre>
+<code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/events.selection.html">events.selection</a></span><span class="op">(</span><span class="va">aCML</span>,  filter.freq <span class="op">=</span> <span class="fl">.05</span>, </span>
+<span>    filter.in.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'EZH1'</span>,<span class="st">'EZH2'</span><span class="op">)</span>, </span>
+<span>    filter.out.names <span class="op">=</span> <span class="st">'SETBP1'</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## *** Events selection: #events =  31 , #types =  4 Filters freq|in|out = { TRUE ,  TRUE ,  TRUE }</span></span>
+<span><span class="co">## Minimum event frequency:  0.05  ( 3  alterations out of  64  samples).</span></span>
+<span><span class="co">## ...............................</span></span>
+<span><span class="co">## Selected  9  events.</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## [filter.in] Genes hold:  EZH1, EZH2  ...  [ 1 / 2  found].</span></span>
+<span><span class="co">## [filter.out] Genes dropped:  SETBP1  ...  [ 1 / 1  found].</span></span>
+<span><span class="co">## Selected  10  events, returning.</span></span></code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/as.events.html">as.events</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##         type             event  </span>
-<span class="co">## gene 4  "Ins/Del"        "TET2" </span>
-<span class="co">## gene 5  "Ins/Del"        "EZH2" </span>
-<span class="co">## gene 7  "Ins/Del"        "ASXL1"</span>
-<span class="co">## gene 30 "Missense point" "NRAS" </span>
-<span class="co">## gene 32 "Missense point" "TET2" </span>
-<span class="co">## gene 33 "Missense point" "EZH2" </span>
-<span class="co">## gene 55 "Missense point" "CSF3R"</span>
-<span class="co">## gene 88 "Nonsense point" "TET2" </span>
-<span class="co">## gene 89 "Nonsense point" "EZH2" </span>
-<span class="co">## gene 91 "Nonsense point" "ASXL1"</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/as.events.html">as.events</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##         type             event  </span></span>
+<span><span class="co">## gene 4  "Ins/Del"        "TET2" </span></span>
+<span><span class="co">## gene 5  "Ins/Del"        "EZH2" </span></span>
+<span><span class="co">## gene 7  "Ins/Del"        "ASXL1"</span></span>
+<span><span class="co">## gene 30 "Missense point" "NRAS" </span></span>
+<span><span class="co">## gene 32 "Missense point" "TET2" </span></span>
+<span><span class="co">## gene 33 "Missense point" "EZH2" </span></span>
+<span><span class="co">## gene 55 "Missense point" "CSF3R"</span></span>
+<span><span class="co">## gene 88 "Nonsense point" "TET2" </span></span>
+<span><span class="co">## gene 89 "Nonsense point" "EZH2" </span></span>
+<span><span class="co">## gene 91 "Nonsense point" "ASXL1"</span></span></code></pre>
 <p>An example visualization of the data before and after the selection process can be obtained by combining the <code>gtable</code> objects returned by . We here use <code>gtable = T</code> to get access to have a GROB table returned, and <code>silent = T</code> to avoid that the calls to the function display on the device; the call to <code>grid.arrange</code> displays the captured <code>gtable</code> objects.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gridExtra</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span>
-    <span class="fu"><a href="../reference/oncoprint.html">oncoprint</a></span><span class="op">(</span><span class="fu"><a href="../reference/as.alterations.html">as.alterations</a></span><span class="op">(</span><span class="va">aCML</span>, new.color <span class="op">=</span> <span class="st">'brown3'</span><span class="op">)</span>, 
-        cellheight <span class="op">=</span> <span class="fl">6</span>, cellwidth <span class="op">=</span> <span class="fl">4</span>, gtable <span class="op">=</span> <span class="cn">TRUE</span>,
-        silent <span class="op">=</span> <span class="cn">TRUE</span>, font.row <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">$</span><span class="va">gtable</span>,
-    <span class="fu"><a href="../reference/oncoprint.html">oncoprint</a></span><span class="op">(</span><span class="va">dataset</span>, cellheight <span class="op">=</span> <span class="fl">6</span>, cellwidth <span class="op">=</span> <span class="fl">4</span>,
-        gtable <span class="op">=</span> <span class="cn">TRUE</span>, silent <span class="op">=</span> <span class="cn">TRUE</span>, font.row <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">$</span><span class="va">gtable</span>, 
-    ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gridExtra</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="../reference/oncoprint.html">oncoprint</a></span><span class="op">(</span><span class="fu"><a href="../reference/as.alterations.html">as.alterations</a></span><span class="op">(</span><span class="va">aCML</span>, new.color <span class="op">=</span> <span class="st">'brown3'</span><span class="op">)</span>, </span>
+<span>        cellheight <span class="op">=</span> <span class="fl">6</span>, cellwidth <span class="op">=</span> <span class="fl">4</span>, gtable <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        silent <span class="op">=</span> <span class="cn">TRUE</span>, font.row <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">$</span><span class="va">gtable</span>,</span>
+<span>    <span class="fu"><a href="../reference/oncoprint.html">oncoprint</a></span><span class="op">(</span><span class="va">dataset</span>, cellheight <span class="op">=</span> <span class="fl">6</span>, cellwidth <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>        gtable <span class="op">=</span> <span class="cn">TRUE</span>, silent <span class="op">=</span> <span class="cn">TRUE</span>, font.row <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">$</span><span class="va">gtable</span>, </span>
+<span>    ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="4_data_manipulation_files/figure-html/unnamed-chunk-9-1.png" alt="Multiple output from oncoprint can be captured as a gtable and composed via grid.arrange (package gridExtra). In this case we show  aCML data on top -- displayed after the as.alterations transformation -- versus a selected subdataset of events with a minimum frequency of 5%, force exclusion of SETBP1 (all events associated), and inclusion of EZH1 and EZH2." width="672"><p class="caption">
 Multiple output from oncoprint can be captured as a gtable and composed via grid.arrange (package gridExtra). In this case we show aCML data on top – displayed after the as.alterations transformation – versus a selected subdataset of events with a minimum frequency of 5%, force exclusion of SETBP1 (all events associated), and inclusion of EZH1 and EZH2.
@@ -241,7 +241,7 @@ Multiple output from oncoprint can be captured as a gtable and composed via grid
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer>

@@ -19,7 +19,7 @@ reconstruction have been performed."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -82,34 +82,41 @@ reconstruction have been performed.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">as.kfold.eloss</span><span class="op">(</span><span class="va">x</span>, models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span>, values <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">as.kfold.eloss</span><span class="op">(</span><span class="va">x</span>, models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span>, values <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A TRONCO model.</p></dd>
+
+
 <dt>models</dt>
 <dd><p>A subset of reconstructed models, all by default.</p></dd>
+
+
 <dt>values</dt>
 <dd><p>If you want to see also the values</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>All the bootstrap scores in a TRONCO model</p>
+    
+
+<p>All the bootstrap scores in a TRONCO model</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model_kfold</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">as.kfold.eloss</span><span class="op">(</span><span class="va">test_model_kfold</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model_kfold</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">as.kfold.eloss</span><span class="op">(</span><span class="va">test_model_kfold</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               Mean %-of-logLik      Stdev</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> capri_bic 7.171654    3.005719 0.04138269</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> capri_aic 7.034192    3.110566 0.06849423</span>
-<span class="r-in"><span class="fu">as.kfold.eloss</span><span class="op">(</span><span class="va">test_model_kfold</span>, models<span class="op">=</span><span class="st">'capri_aic'</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">as.kfold.eloss</span><span class="op">(</span><span class="va">test_model_kfold</span>, models<span class="op">=</span><span class="st">'capri_aic'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               Mean %-of-logLik      Stdev</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> capri_aic 7.034192    3.110566 0.06849423</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -124,7 +131,7 @@ reconstruction have been performed.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

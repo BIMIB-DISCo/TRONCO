@@ -20,7 +20,7 @@ been performed."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -84,34 +84,43 @@ been performed.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">as.selective.advantage.relations</span><span class="op">(</span>
-  <span class="va">x</span>,
-  events <span class="op">=</span> <span class="fu"><a href="as.events.html">as.events</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,
-  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span>,
-  type <span class="op">=</span> <span class="st">"fit"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">as.selective.advantage.relations</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  events <span class="op">=</span> <span class="fu"><a href="as.events.html">as.events</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"fit"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A TRONCO model.</p></dd>
+
+
 <dt>events</dt>
 <dd><p>A subset of events as of <code>as.events(x)</code>, all by default.</p></dd>
+
+
 <dt>models</dt>
 <dd><p>A subset of reconstructed models, all by default.</p></dd>
+
+
 <dt>type</dt>
 <dd><p>Either Prima Facie ('pf') or fit ('fit') probabilities, 'fit' by default.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>All the selective advantage relations in a TRONCO model</p>
+    
+
+<p>All the selective advantage relations in a TRONCO model</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">as.selective.advantage.relations</span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">as.selective.advantage.relations</span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $capri_bic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                SELECTS                                SELECTED</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1                         ins_del TET2            missense_point_mutations KIT</span>
@@ -224,7 +233,7 @@ been performed.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19     0.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20     0.28076923</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">as.selective.advantage.relations</span><span class="op">(</span><span class="va">test_model</span>, events<span class="op">=</span><span class="fu"><a href="as.events.html">as.events</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">15</span>,<span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">as.selective.advantage.relations</span><span class="op">(</span><span class="va">test_model</span>, events<span class="op">=</span><span class="fu"><a href="as.events.html">as.events</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">15</span>,<span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $capri_bic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                               SELECTS                                SELECTED</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 missense_point_mutations NRAS_Ex2_3 missense_point_mutations JARID_2_Ex1_18</span>
@@ -241,7 +250,7 @@ been performed.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1           3            1      1.056706e-31        2.612641e-09          0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2           6            1      1.677847e-53        1.835656e-14          0.150</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">as.selective.advantage.relations</span><span class="op">(</span><span class="va">test_model</span>, events<span class="op">=</span><span class="fu"><a href="as.events.html">as.events</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">15</span>,<span class="op">]</span>, type<span class="op">=</span><span class="st">'pf'</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">as.selective.advantage.relations</span><span class="op">(</span><span class="va">test_model</span>, events<span class="op">=</span><span class="fu"><a href="as.events.html">as.events</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">15</span>,<span class="op">]</span>, type<span class="op">=</span><span class="st">'pf'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pf</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                SELECTS                                SELECTED</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1                         ins_del TET2     missense_point_mutations CBL_Ex_8_9</span>
@@ -394,7 +403,7 @@ been performed.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 48     0.15000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 49     0.28076923</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -409,7 +418,7 @@ been performed.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

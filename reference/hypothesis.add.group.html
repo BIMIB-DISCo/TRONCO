@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -78,43 +78,62 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">hypothesis.add.group</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">FUN</span>,
-  <span class="va">group</span>,
-  pattern.cause <span class="op">=</span> <span class="st">"*"</span>,
-  pattern.effect <span class="op">=</span> <span class="st">"*"</span>,
-  dim.min <span class="op">=</span> <span class="fl">2</span>,
-  dim.max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span>,
-  min.prob <span class="op">=</span> <span class="fl">0</span>,
-  silent <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hypothesis.add.group</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">FUN</span>,</span>
+<span>  <span class="va">group</span>,</span>
+<span>  pattern.cause <span class="op">=</span> <span class="st">"*"</span>,</span>
+<span>  pattern.effect <span class="op">=</span> <span class="st">"*"</span>,</span>
+<span>  dim.min <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  dim.max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span>,</span>
+<span>  min.prob <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  silent <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A TRONCO compliant dataset.</p></dd>
+
+
 <dt>FUN</dt>
 <dd><p>Type of pattern to be added, e.g., co-occurance, soft or hard exclusivity.</p></dd>
+
+
 <dt>group</dt>
 <dd><p>Group of events to be considered.</p></dd>
+
+
 <dt>pattern.cause</dt>
 <dd><p>Possibile causes for the pattern.</p></dd>
+
+
 <dt>pattern.effect</dt>
 <dd><p>Possibile effects for the pattern.</p></dd>
+
+
 <dt>dim.min</dt>
 <dd><p>Minimum cardinality of the subgroups to be considered.</p></dd>
+
+
 <dt>dim.max</dt>
 <dd><p>Maximum cardinality of the subgroups to be considered.</p></dd>
+
+
 <dt>min.prob</dt>
 <dd><p>Minimum probability associated to each valid group.</p></dd>
+
+
 <dt>silent</dt>
 <dd><p>A parameter to disable/enable verbose messages.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A TRONCO compliant object with the added hypotheses</p>
+    
+
+<p>A TRONCO compliant object with the added hypotheses</p>
     </div>
 
   </div>
@@ -129,7 +148,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

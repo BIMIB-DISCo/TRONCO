@@ -19,7 +19,7 @@ of a unique "mutation" type)'><!-- mathjax --><script src="https://cdnjs.cloudfl
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -82,31 +82,42 @@ of a unique "mutation" type)</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">join.types</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, new.type <span class="op">=</span> <span class="st">"new.type"</span>, new.color <span class="op">=</span> <span class="st">"khaki"</span>, silent <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">join.types</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, new.type <span class="op">=</span> <span class="st">"new.type"</span>, new.color <span class="op">=</span> <span class="st">"khaki"</span>, silent <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A TRONCO compliant dataset.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>type to merge</p></dd>
+
+
 <dt>new.type</dt>
 <dd><p>label for the new type to create</p></dd>
+
+
 <dt>new.color</dt>
 <dd><p>color for the new type to create</p></dd>
+
+
 <dt>silent</dt>
 <dd><p>A parameter to disable/enable verbose messages.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A TRONCO compliant dataset.</p>
+    
+
+<p>A TRONCO compliant dataset.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset_no_hypos</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">join.types</span><span class="op">(</span><span class="va">test_dataset_no_hypos</span>, <span class="st">'ins_del'</span>, <span class="st">'missense_point_mutations'</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset_no_hypos</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">join.types</span><span class="op">(</span><span class="va">test_dataset_no_hypos</span>, <span class="st">'ins_del'</span>, <span class="st">'missense_point_mutations'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Aggregating events of type(s) { ins_del, missense_point_mutations }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> in a unique event with label " new.type ".</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dropping event types ins_del, missense_point_mutations for 19 genes.</span>
@@ -231,8 +242,8 @@ of a unique "mutation" type)</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> nonsense_point_mutations "firebrick1"    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> new.type                 "khaki"         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">join.types</span><span class="op">(</span><span class="va">test_dataset_no_hypos</span>, <span class="st">'ins_del'</span>,</span>
-<span class="r-in">     <span class="st">'missense_point_mutations'</span>, new.type<span class="op">=</span><span class="st">'mut'</span>, new.color<span class="op">=</span><span class="st">'green'</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">join.types</span><span class="op">(</span><span class="va">test_dataset_no_hypos</span>, <span class="st">'ins_del'</span>,</span></span>
+<span class="r-in"><span>     <span class="st">'missense_point_mutations'</span>, new.type<span class="op">=</span><span class="st">'mut'</span>, new.color<span class="op">=</span><span class="st">'green'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Aggregating events of type(s) { ins_del, missense_point_mutations }</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> in a unique event with label " mut ".</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dropping event types ins_del, missense_point_mutations for 19 genes.</span>
@@ -357,7 +368,7 @@ of a unique "mutation" type)</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> nonsense_point_mutations "firebrick1"    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mut                      "green"         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -372,7 +383,7 @@ of a unique "mutation" type)</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

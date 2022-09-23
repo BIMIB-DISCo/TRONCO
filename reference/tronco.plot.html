@@ -19,7 +19,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -82,37 +82,37 @@ we refer to the Vignette Section 7.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tronco.plot</span><span class="op">(</span>
-  <span class="va">x</span>,
-  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span>,
-  fontsize <span class="op">=</span> <span class="cn">NA</span>,
-  height <span class="op">=</span> <span class="fl">2</span>,
-  width <span class="op">=</span> <span class="fl">3</span>,
-  height.logic <span class="op">=</span> <span class="fl">1</span>,
-  pf <span class="op">=</span> <span class="cn">FALSE</span>,
-  disconnected <span class="op">=</span> <span class="cn">FALSE</span>,
-  scale.nodes <span class="op">=</span> <span class="cn">NA</span>,
-  title <span class="op">=</span> <span class="fu"><a href="as.description.html">as.description</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,
-  confidence <span class="op">=</span> <span class="cn">NA</span>,
-  p.min <span class="op">=</span> <span class="fl">0.05</span>,
-  legend <span class="op">=</span> <span class="cn">TRUE</span>,
-  legend.cex <span class="op">=</span> <span class="fl">1</span>,
-  edge.cex <span class="op">=</span> <span class="fl">1</span>,
-  label.edge.size <span class="op">=</span> <span class="cn">NA</span>,
-  expand <span class="op">=</span> <span class="cn">TRUE</span>,
-  genes <span class="op">=</span> <span class="cn">NULL</span>,
-  relations.filter <span class="op">=</span> <span class="cn">NA</span>,
-  edge.color <span class="op">=</span> <span class="st">"black"</span>,
-  pathways.color <span class="op">=</span> <span class="st">"Set1"</span>,
-  file <span class="op">=</span> <span class="cn">NA</span>,
-  legend.pos <span class="op">=</span> <span class="st">"bottom"</span>,
-  pathways <span class="op">=</span> <span class="cn">NULL</span>,
-  lwd <span class="op">=</span> <span class="fl">3</span>,
-  samples.annotation <span class="op">=</span> <span class="cn">NA</span>,
-  export.igraph <span class="op">=</span> <span class="cn">FALSE</span>,
-  create.new.dev <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tronco.plot</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span>,</span>
+<span>  fontsize <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  height <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  width <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  height.logic <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  pf <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  disconnected <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  scale.nodes <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  title <span class="op">=</span> <span class="fu"><a href="as.description.html">as.description</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>  confidence <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  p.min <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  legend.cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  edge.cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  label.edge.size <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  expand <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  genes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  relations.filter <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  edge.color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  pathways.color <span class="op">=</span> <span class="st">"Set1"</span>,</span>
+<span>  file <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  legend.pos <span class="op">=</span> <span class="st">"bottom"</span>,</span>
+<span>  pathways <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  lwd <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  samples.annotation <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  export.igraph <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  create.new.dev <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -120,93 +120,152 @@ we refer to the Vignette Section 7.</p>
     <dl><dt>x</dt>
 <dd><p>A reconstructed model (the output of the inference
 by a tronco function)</p></dd>
+
+
 <dt>models</dt>
 <dd><p>A vector containing the names of the
 algorithms used (caprese, capri_bic, etc)</p></dd>
+
+
 <dt>fontsize</dt>
 <dd><p>For node names. Default NA for
 automatic rescaling</p></dd>
+
+
 <dt>height</dt>
 <dd><p>Proportion node height - node width.
 Default height 2</p></dd>
+
+
 <dt>width</dt>
 <dd><p>Proportion node height - node width.
 Default width 2</p></dd>
+
+
 <dt>height.logic</dt>
 <dd><p>Height of logical nodes.
 Defaul 1</p></dd>
+
+
 <dt>pf</dt>
 <dd><p>Should I print Prima Facie?
 Default False</p></dd>
+
+
 <dt>disconnected</dt>
 <dd><p>Should I print disconnected
 nodes? Default False</p></dd>
+
+
 <dt>scale.nodes</dt>
 <dd><p>Node scaling coefficient
 (based on node frequency). Default NA (autoscale)</p></dd>
+
+
 <dt>title</dt>
 <dd><p>Title of the plot. Default as.description(x)</p></dd>
+
+
 <dt>confidence</dt>
 <dd><p>Should I add confidence
 informations? No if NA</p></dd>
+
+
 <dt>p.min</dt>
 <dd><p>p-value cutoff. Default automatic</p></dd>
+
+
 <dt>legend</dt>
 <dd><p>Should I visualise the legend?</p></dd>
+
+
 <dt>legend.cex</dt>
 <dd><p>CEX value for legend. Default 1.0</p></dd>
+
+
 <dt>edge.cex</dt>
 <dd><p>CEX value for edge labels. Default 1.0</p></dd>
+
+
 <dt>label.edge.size</dt>
 <dd><p>Size of edge labels.
 Default NA for automatic rescaling</p></dd>
+
+
 <dt>expand</dt>
 <dd><p>Should I expand hypotheses? Default TRUE</p></dd>
+
+
 <dt>genes</dt>
 <dd><p>Visualise only genes in this list.
 Default NULL, visualise all.</p></dd>
+
+
 <dt>relations.filter</dt>
 <dd><p>Filter relations to dispaly
 according to this functions. Default NA</p></dd>
+
+
 <dt>edge.color</dt>
 <dd><p>Edge color. Default 'black'</p></dd>
+
+
 <dt>pathways.color</dt>
 <dd><p>RColorBrewer colorser
 for patways. Default 'Set1'.</p></dd>
+
+
 <dt>file</dt>
 <dd><p>String containing filename for PDF output.
 If NA no PDF output will be provided</p></dd>
+
+
 <dt>legend.pos</dt>
 <dd><p>Legend position. Default 'bottom',</p></dd>
+
+
 <dt>pathways</dt>
 <dd><p>A vector containing pathways information
 as described in as.patterns()</p></dd>
+
+
 <dt>lwd</dt>
 <dd><p>Edge base lwd. Default 3</p></dd>
+
+
 <dt>samples.annotation</dt>
 <dd><p>= List of samples to search
 for events in model</p></dd>
+
+
 <dt>export.igraph</dt>
 <dd><p>If TRUE export the generated igraph
 object</p></dd>
+
+
 <dt>create.new.dev</dt>
 <dd><p>If TRUE create a new graphical device 
 when calling trono.plot. Set this to FALSE, e.g., if you do not 
 wish to create a new device when executing the command with 
 export.igraph = TRUE</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments for RGraphviz
 plot function</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Information about the reconstructed model</p>
+    
+
+<p>Information about the reconstructed model</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">tronco.plot</span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">tronco.plot</span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Expanding hypotheses syntax as graph nodes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Rendering graphics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Nodes with no incoming/outgoing edges will not be displayed.</span>
@@ -214,7 +273,7 @@ plot function</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Plotting graph and adding legends.</span>
 <span class="r-plt img"><img src="tronco.plot-1.png" alt="" width="700" height="433"></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -229,7 +288,7 @@ plot function</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

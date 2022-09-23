@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -78,40 +78,53 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">oncoprint.cbio</span><span class="op">(</span>
-  <span class="va">x</span>,
-  file <span class="op">=</span> <span class="st">"oncoprint-cbio.txt"</span>,
-  hom.del <span class="op">=</span> <span class="st">"Homozygous Loss"</span>,
-  het.loss <span class="op">=</span> <span class="st">"Heterozygous Loss"</span>,
-  gain <span class="op">=</span> <span class="st">"Low-level Gain"</span>,
-  amp <span class="op">=</span> <span class="st">"High-level Gain"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oncoprint.cbio</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  file <span class="op">=</span> <span class="st">"oncoprint-cbio.txt"</span>,</span>
+<span>  hom.del <span class="op">=</span> <span class="st">"Homozygous Loss"</span>,</span>
+<span>  het.loss <span class="op">=</span> <span class="st">"Heterozygous Loss"</span>,</span>
+<span>  gain <span class="op">=</span> <span class="st">"Low-level Gain"</span>,</span>
+<span>  amp <span class="op">=</span> <span class="st">"High-level Gain"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A TRONCO compliant dataset.</p></dd>
+
+
 <dt>file</dt>
 <dd><p>name of the file where to save the output</p></dd>
+
+
 <dt>hom.del</dt>
 <dd><p>type of Homozygous Deletion</p></dd>
+
+
 <dt>het.loss</dt>
 <dd><p>type of Heterozygous Loss</p></dd>
+
+
 <dt>gain</dt>
 <dd><p>type of Gain</p></dd>
+
+
 <dt>amp</dt>
 <dd><p>type of Amplification</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A file containing instruction for the CBio visualization Tool</p>
+    
+
+<p>A file containing instruction for the CBio visualization Tool</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">gistic</span> <span class="op">=</span> <span class="fu"><a href="import.GISTIC.html">import.GISTIC</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">gistic</span> <span class="op">=</span> <span class="fu"><a href="import.GISTIC.html">import.GISTIC</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Using full GISTIC: #dim  9  x  6 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** GISTIC input format conversion started.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converting input data to character for import speedup.</span>
@@ -126,8 +139,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Number of events: n = 7 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Number of genes: |G| = 6 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Number of samples: m = 9 </span>
-<span class="r-in"><span class="fu">oncoprint.cbio</span><span class="op">(</span><span class="va">gistic</span><span class="op">)</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="fu">oncoprint.cbio</span><span class="op">(</span><span class="va">gistic</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -142,7 +155,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

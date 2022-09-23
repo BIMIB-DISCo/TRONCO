@@ -22,7 +22,7 @@ and scan every node to estimate its posterior classification error."><!-- mathja
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -86,39 +86,52 @@ and scan every node to estimate its posterior classification error.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tronco.kfold.posterr</span><span class="op">(</span>
-  <span class="va">x</span>,
-  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="as.models.html">as.models</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,
-  events <span class="op">=</span> <span class="fu"><a href="as.events.html">as.events</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,
-  runs <span class="op">=</span> <span class="fl">10</span>,
-  k <span class="op">=</span> <span class="fl">10</span>,
-  cores.ratio <span class="op">=</span> <span class="fl">1</span>,
-  silent <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tronco.kfold.posterr</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="as.models.html">as.models</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  events <span class="op">=</span> <span class="fu"><a href="as.events.html">as.events</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>  runs <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  cores.ratio <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  silent <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A reconstructed model (the output of tronco.capri)</p></dd>
+
+
 <dt>models</dt>
 <dd><p>The names of the selected regularizers (bic, aic or caprese)</p></dd>
+
+
 <dt>events</dt>
 <dd><p>a list of event</p></dd>
+
+
 <dt>runs</dt>
 <dd><p>a positive integer number, the number of times cross-validation will be run</p></dd>
+
+
 <dt>k</dt>
 <dd><p>a positive integer number, the number of groups into which the data will be split</p></dd>
+
+
 <dt>cores.ratio</dt>
 <dd><p>Percentage of cores to use. coresRate * (numCores - 1)</p></dd>
+
+
 <dt>silent</dt>
 <dd><p>A parameter to disable/enable verbose messages.</p></dd>
+
 </dl></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">tronco.kfold.posterr</span><span class="op">(</span><span class="va">test_model</span>, k <span class="op">=</span> <span class="fl">2</span>, runs <span class="op">=</span> <span class="fl">2</span>, cores.ratio <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">tronco.kfold.posterr</span><span class="op">(</span><span class="va">test_model</span>, k <span class="op">=</span> <span class="fl">2</span>, runs <span class="op">=</span> <span class="fl">2</span>, cores.ratio <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Using 1 cores via "parallel" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Scanning 14 edges for posterior classification error. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Regularizer: capri_bic </span>
@@ -3509,7 +3522,7 @@ and scan every node to estimate its posterior classification error.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -3524,7 +3537,7 @@ and scan every node to estimate its posterior classification error.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

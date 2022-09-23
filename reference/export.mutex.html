@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -80,40 +80,53 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">export.mutex</span><span class="op">(</span>
-  <span class="va">x</span>,
-  filename <span class="op">=</span> <span class="st">"tronco_to_mutex"</span>,
-  filepath <span class="op">=</span> <span class="st">"./"</span>,
-  label.mutation <span class="op">=</span> <span class="st">"SNV"</span>,
-  label.amplification <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"High-level Gain"</span><span class="op">)</span>,
-  label.deletion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Homozygous Loss"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">export.mutex</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  filename <span class="op">=</span> <span class="st">"tronco_to_mutex"</span>,</span>
+<span>  filepath <span class="op">=</span> <span class="st">"./"</span>,</span>
+<span>  label.mutation <span class="op">=</span> <span class="st">"SNV"</span>,</span>
+<span>  label.amplification <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"High-level Gain"</span><span class="op">)</span>,</span>
+<span>  label.deletion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Homozygous Loss"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A TRONCO compliant dataset.</p></dd>
+
+
 <dt>filename</dt>
 <dd><p>The name of the file</p></dd>
+
+
 <dt>filepath</dt>
 <dd><p>The path where to save the file</p></dd>
+
+
 <dt>label.mutation</dt>
 <dd><p>The event type to use as mutation</p></dd>
+
+
 <dt>label.amplification</dt>
 <dd><p>The event type to use as amplification (can be a list)</p></dd>
+
+
 <dt>label.deletion</dt>
 <dd><p>The event type to use as amplification (can be a list)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A MUTEX example matrix</p>
+    
+
+<p>A MUTEX example matrix</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="import.GISTIC.html">import.GISTIC</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="import.GISTIC.html">import.GISTIC</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Using full GISTIC: #dim  9  x  6 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** GISTIC input format conversion started.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Converting input data to character for import speedup.</span>
@@ -128,7 +141,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Number of events: n = 7 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Number of genes: |G| = 6 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Number of samples: m = 9 </span>
-<span class="r-in"><span class="fu">export.mutex</span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">export.mutex</span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        TCGA-A6-2670 TCGA-A6-2672 TCGA-A6-2674 TCGA-A6-2676 TCGA-A6-2677</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NRAS              0            0            0            0            0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CTNNB1            0            0            0            0            0</span>
@@ -143,7 +156,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> APC               0            0            0            0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> KRAS              0            0            0            0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TP53              0            0            0            0</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -158,7 +171,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

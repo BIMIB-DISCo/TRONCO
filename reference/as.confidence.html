@@ -23,7 +23,7 @@ vector parameter conf."><!-- mathjax --><script src="https://cdnjs.cloudflare.co
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -90,27 +90,34 @@ vector parameter <code>conf</code>.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">as.confidence</span><span class="op">(</span><span class="va">x</span>, <span class="va">conf</span>, models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">as.confidence</span><span class="op">(</span><span class="va">x</span>, <span class="va">conf</span>, models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">model</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A TRONCO model.</p></dd>
+
+
 <dt>conf</dt>
 <dd><p>A vector with any of 'tp', 'pr', 'hg', 'npb', 'pb', 'sb', 'eloss', 'prederr' or 'posterr'.</p></dd>
+
+
 <dt>models</dt>
 <dd><p>The name of the models to extract, all by default.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of matrices with the event-to-event confidence.</p>
+    
+
+<p>A list of matrices with the event-to-event confidence.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">as.confidence</span><span class="op">(</span><span class="va">test_model</span>, conf<span class="op">=</span><span class="st">'tp'</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_model</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">as.confidence</span><span class="op">(</span><span class="va">test_model</span>, conf<span class="op">=</span><span class="st">'tp'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $tp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                gene 4       gene 5       gene 7 gene 29      gene 30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gene 4   1.000000e+00 1.455680e-26 1.000000e+00       1 9.251274e-01</span>
@@ -299,7 +306,7 @@ vector parameter <code>conf</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> XOR_EZH2 1.000000e+00 1.828484e-33 8.074223e-44 1.000000e+00 1.000000e+00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OR_CSF3R 3.892881e-53 8.311018e-18 1.000000e+00 1.000000e+00 1.000000e+00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">as.confidence</span><span class="op">(</span><span class="va">test_model</span>, conf<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'tp'</span>, <span class="st">'hg'</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">as.confidence</span><span class="op">(</span><span class="va">test_model</span>, conf<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'tp'</span>, <span class="st">'hg'</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $hg</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              gene 4 gene 5     gene 7    gene 29    gene 30 gene 31    gene 32</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gene 4   1.00000000  0.075 0.44777328 0.73684211 0.21356275   0.075 0.21356275</span>
@@ -645,7 +652,7 @@ vector parameter <code>conf</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> XOR_EZH2 1.000000e+00 1.828484e-33 8.074223e-44 1.000000e+00 1.000000e+00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OR_CSF3R 3.892881e-53 8.311018e-18 1.000000e+00 1.000000e+00 1.000000e+00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -660,7 +667,7 @@ vector parameter <code>conf</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

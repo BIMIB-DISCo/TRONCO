@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -78,31 +78,36 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">as.types.in.patterns</span><span class="op">(</span><span class="va">x</span>, patterns <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">as.types.in.patterns</span><span class="op">(</span><span class="va">x</span>, patterns <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A TRONCO compliant dataset.</p></dd>
+
+
 <dt>patterns</dt>
 <dd><p>A list of patterns for which the list will be returned</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of types present in patterns which consitute CAPRI's hypotheses</p>
+    
+
+<p>A list of types present in patterns which consitute CAPRI's hypotheses</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">as.types.in.patterns</span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">as.types.in.patterns</span><span class="op">(</span><span class="va">test_dataset</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ins_del"                  "missense_point_mutations"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3] "nonsense_point_mutations"</span>
-<span class="r-in"><span class="fu">as.types.in.patterns</span><span class="op">(</span><span class="va">test_dataset</span>, patterns<span class="op">=</span><span class="st">'XOR_EZH2'</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">as.types.in.patterns</span><span class="op">(</span><span class="va">test_dataset</span>, patterns<span class="op">=</span><span class="st">'XOR_EZH2'</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ins_del"                  "missense_point_mutations"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3] "nonsense_point_mutations"</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -117,7 +122,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>

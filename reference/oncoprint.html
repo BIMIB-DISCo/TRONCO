@@ -18,7 +18,7 @@ regarding the visualization through oncoprints, we refer to the Vignette Section
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.28.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
       </span>
     </div>
 
@@ -80,109 +80,170 @@ regarding the visualization through oncoprints, we refer to the Vignette Section
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">oncoprint</span><span class="op">(</span>
-  <span class="va">x</span>,
-  excl.sort <span class="op">=</span> <span class="cn">TRUE</span>,
-  samples.cluster <span class="op">=</span> <span class="cn">FALSE</span>,
-  genes.cluster <span class="op">=</span> <span class="cn">FALSE</span>,
-  file <span class="op">=</span> <span class="cn">NA</span>,
-  ann.stage <span class="op">=</span> <span class="fu"><a href="has.stages.html">has.stages</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,
-  ann.hits <span class="op">=</span> <span class="cn">TRUE</span>,
-  stage.color <span class="op">=</span> <span class="st">"YlOrRd"</span>,
-  hits.color <span class="op">=</span> <span class="st">"Purples"</span>,
-  null.color <span class="op">=</span> <span class="st">"lightgray"</span>,
-  border.color <span class="op">=</span> <span class="st">"white"</span>,
-  text.cex <span class="op">=</span> <span class="fl">1</span>,
-  font.column <span class="op">=</span> <span class="cn">NA</span>,
-  font.row <span class="op">=</span> <span class="cn">NA</span>,
-  title <span class="op">=</span> <span class="fu"><a href="as.description.html">as.description</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,
-  sample.id <span class="op">=</span> <span class="cn">FALSE</span>,
-  hide.zeroes <span class="op">=</span> <span class="cn">FALSE</span>,
-  legend <span class="op">=</span> <span class="cn">TRUE</span>,
-  legend.cex <span class="op">=</span> <span class="fl">0.5</span>,
-  cellwidth <span class="op">=</span> <span class="cn">NA</span>,
-  cellheight <span class="op">=</span> <span class="cn">NA</span>,
-  group.by.label <span class="op">=</span> <span class="cn">FALSE</span>,
-  group.by.stage <span class="op">=</span> <span class="cn">FALSE</span>,
-  group.samples <span class="op">=</span> <span class="cn">NA</span>,
-  gene.annot <span class="op">=</span> <span class="cn">NA</span>,
-  gene.annot.color <span class="op">=</span> <span class="st">"Set1"</span>,
-  show.patterns <span class="op">=</span> <span class="cn">FALSE</span>,
-  annotate.consolidate.events <span class="op">=</span> <span class="cn">FALSE</span>,
-  txt.stats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="nsamples.html">nsamples</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="st">" samples\n"</span>, <span class="fu"><a href="nevents.html">nevents</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="st">" events\n"</span>, <span class="fu"><a href="ngenes.html">ngenes</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,
-    <span class="st">" genes\n"</span>, <span class="fu"><a href="npatterns.html">npatterns</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="st">" patterns"</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>,
-  gtable <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oncoprint</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  excl.sort <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  samples.cluster <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  genes.cluster <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  file <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  ann.stage <span class="op">=</span> <span class="fu"><a href="has.stages.html">has.stages</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>  ann.hits <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  stage.color <span class="op">=</span> <span class="st">"YlOrRd"</span>,</span>
+<span>  hits.color <span class="op">=</span> <span class="st">"Purples"</span>,</span>
+<span>  null.color <span class="op">=</span> <span class="st">"lightgray"</span>,</span>
+<span>  border.color <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>  text.cex <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  font.column <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  font.row <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  title <span class="op">=</span> <span class="fu"><a href="as.description.html">as.description</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>  sample.id <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  hide.zeroes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  legend.cex <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  cellwidth <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  cellheight <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  group.by.label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  group.by.stage <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  group.samples <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  gene.annot <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  gene.annot.color <span class="op">=</span> <span class="st">"Set1"</span>,</span>
+<span>  show.patterns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  annotate.consolidate.events <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  txt.stats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="nsamples.html">nsamples</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="st">" samples\n"</span>, <span class="fu"><a href="nevents.html">nevents</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="st">" events\n"</span>, <span class="fu"><a href="ngenes.html">ngenes</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>    <span class="st">" genes\n"</span>, <span class="fu"><a href="npatterns.html">npatterns</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="st">" patterns"</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>,</span>
+<span>  gtable <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A TRONCO compliant dataset</p></dd>
+
+
 <dt>excl.sort</dt>
 <dd><p>Boolean value, if TRUE sorts samples to enhance exclusivity of alterations</p></dd>
+
+
 <dt>samples.cluster</dt>
 <dd><p>Boolean value, if TRUE clusters samples (columns). Default FALSE</p></dd>
+
+
 <dt>genes.cluster</dt>
 <dd><p>Boolean value, if TRUE clusters genes (rows). Default FALSE</p></dd>
+
+
 <dt>file</dt>
 <dd><p>If not NA write to <code>file</code> the Oncoprint, default is NA (just visualization).</p></dd>
+
+
 <dt>ann.stage</dt>
 <dd><p>Boolean value to annotate stage classification, default depends on <code>x</code></p></dd>
+
+
 <dt>ann.hits</dt>
 <dd><p>Boolean value to annotate the number of events in each sample, default is TRUE</p></dd>
+
+
 <dt>stage.color</dt>
 <dd><p>RColorbrewer palette to color stage annotations. Default is 'YlOrRd'</p></dd>
+
+
 <dt>hits.color</dt>
 <dd><p>RColorbrewer palette to color hits annotations. Default is 'Purples'</p></dd>
+
+
 <dt>null.color</dt>
 <dd><p>Color for the Oncoprint cells with 0s, default is 'lightgray'</p></dd>
+
+
 <dt>border.color</dt>
 <dd><p>Border color for the Oncoprint, default is white' (no border)</p></dd>
+
+
 <dt>text.cex</dt>
 <dd><p>Title and annotations cex, multiplied by font size 7</p></dd>
+
+
 <dt>font.column</dt>
 <dd><p>If NA, half of font.row is used</p></dd>
+
+
 <dt>font.row</dt>
 <dd><p>If NA, max(c(15 * exp(-0.02 * nrow(data)), 2)) is used, where data is the data 
 visualized in the Oncoprint</p></dd>
+
+
 <dt>title</dt>
 <dd><p>Oncoprint title, default is as.name(x) - see <code>as.name</code></p></dd>
+
+
 <dt>sample.id</dt>
 <dd><p>If TRUE shows samples name (columns). Default is FALSE</p></dd>
+
+
 <dt>hide.zeroes</dt>
 <dd><p>If TRUE trims data - see <code>trim</code> - before plot. Default is FALSE</p></dd>
+
+
 <dt>legend</dt>
 <dd><p>If TRUE shows a legend for the types of events visualized. Defualt is TRUE</p></dd>
+
+
 <dt>legend.cex</dt>
 <dd><p>Default 0.5; determines legend size if <code>legend = TRUE</code></p></dd>
+
+
 <dt>cellwidth</dt>
 <dd><p>Default NA, sets autoscale cell width</p></dd>
+
+
 <dt>cellheight</dt>
 <dd><p>Default NA, sets autoscale cell height</p></dd>
+
+
 <dt>group.by.label</dt>
 <dd><p>Sort samples (rows) by event label - usefull when multiple events per gene are
 available</p></dd>
+
+
 <dt>group.by.stage</dt>
 <dd><p>Default FALSE; sort samples by stage.</p></dd>
+
+
 <dt>group.samples</dt>
 <dd><p>If this samples -&gt; group map is provided, samples are grouped as of groups
 and sorted according to the number of mutations per sample - usefull when <code>data</code> was clustered</p></dd>
+
+
 <dt>gene.annot</dt>
 <dd><p>Genes'groups, e.g. list(RAF=c('KRAS','NRAS'), Wnt=c('APC', 'CTNNB1')). Default is NA.</p></dd>
+
+
 <dt>gene.annot.color</dt>
 <dd><p>Either a RColorColorbrewer palette name or a set of custom colors matching names(gene.annot)</p></dd>
+
+
 <dt>show.patterns</dt>
 <dd><p>If TRUE shows also a separate oncoprint for each pattern. Default is FALSE</p></dd>
+
+
 <dt>annotate.consolidate.events</dt>
 <dd><p>Default is FALSE. If TRUE an annotation for events to consolidate is shown.</p></dd>
+
+
 <dt>txt.stats</dt>
 <dd><p>By default, shows a summary statistics for shown data (n,m, |G| and |P|)</p></dd>
+
+
 <dt>gtable</dt>
 <dd><p>If TRUE return the gtable object</p></dd>
+
+
 <dt>...</dt>
 <dd><p>other arguments to pass to pheatmap</p></dd>
+
 </dl></div>
 
   </div>
@@ -197,7 +258,7 @@ and sorted according to the number of mutations per sample - usefull when <code>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
 </div>
 
       </footer></div>
