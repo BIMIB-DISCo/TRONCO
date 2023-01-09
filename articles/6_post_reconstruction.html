@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.1</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
 
       
 
-      </header><script src="6_post_reconstruction_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Post-reconstruction</h1>
@@ -103,8 +103,12 @@
 
     
     
-<p>TRONCO provides functions to plot a model, access information about the probabilities used to extract it from data, and two types of confidence measures: those used to infer the model, and those computed a posteriori from it.</p>
-<p>Function <code>view</code> provides updated information about a model if this is available.</p>
+<p>TRONCO provides functions to plot a model, access information about
+the probabilities used to extract it from data, and two types of
+confidence measures: those used to infer the model, and those computed a
+posteriori from it.</p>
+<p>Function <code>view</code> provides updated information about a model
+if this is available.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/view.html">view</a></span><span class="op">(</span><span class="va">model.capri</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Description: CAPRI - aCML.</span></span>
@@ -129,7 +133,15 @@
 <div class="section level2">
 <h2 id="visualizing-a-reconstructed-model">Visualizing a reconstructed model<a class="anchor" aria-label="anchor" href="#visualizing-a-reconstructed-model"></a>
 </h2>
-<p>We can plot a model by using function . Here, we plot the aCML model inferred by CAPRI with BIC and AIC as a regolarizator. We set some parameters to get a nice plot (scaling etc.), and distinguish the edges detected by the two regularization techniques. The confidence of each edge is shown in terms of temporal priority and probability raising (selective advantage scores) and hypergeometric testing (statistical relevance of the dataset of input). Events are annotated as in the oncoprint, edge p-values above a minium threshold (default 0.05) are red.</p>
+<p>We can plot a model by using function . Here, we plot the aCML model
+inferred by CAPRI with BIC and AIC as a regolarizator. We set some
+parameters to get a nice plot (scaling etc.), and distinguish the edges
+detected by the two regularization techniques. The confidence of each
+edge is shown in terms of temporal priority and probability raising
+(selective advantage scores) and hypergeometric testing (statistical
+relevance of the dataset of input). Events are annotated as in the
+oncoprint, edge p-values above a minium threshold (default 0.05) are
+red.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tronco.plot.html">tronco.plot</a></span><span class="op">(</span><span class="va">model.capri</span>, </span>
 <span>    fontsize <span class="op">=</span> <span class="fl">12</span>, </span>
@@ -148,7 +160,9 @@
 <span><span class="co">## RGraphviz object prepared.</span></span>
 <span><span class="co">## Plotting graph and adding legends.</span></span></code></pre>
 <p><img src="6_post_reconstruction_files/figure-html/unnamed-chunk-3-1.png" width="384"></p>
-<p>We can also make a multiplot with this function, which in this case we do by showing the models inferred by the other algorithms based on Minimum Spanning Trees.</p>
+<p>We can also make a multiplot with this function, which in this case
+we do by showing the models inferred by the other algorithms based on
+Minimum Spanning Trees.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/tronco.plot.html">tronco.plot</a></span><span class="op">(</span><span class="va">model.caprese</span>, fontsize <span class="op">=</span> <span class="fl">22</span>, scale.nodes <span class="op">=</span> <span class="fl">0.6</span>, legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
@@ -184,14 +198,20 @@
 <span><span class="co">## Plotting graph and adding legends.</span></span></code></pre>
 <div class="figure">
 <img src="6_post_reconstruction_files/figure-html/unnamed-chunk-4-1.png" alt="aCML data processed model by algorithms to extract models from individual patients, we show the otput of  CAPRESE,  and all algorithms based on Minimum Spanning Trees (Edmonds, Chow Liu and Prim). Only the  model retrieved by Chow Liu has two different edge colors as it was regularized with two different strategies: AIC and BIC." width="672"><p class="caption">
-aCML data processed model by algorithms to extract models from individual patients, we show the otput of CAPRESE, and all algorithms based on Minimum Spanning Trees (Edmonds, Chow Liu and Prim). Only the model retrieved by Chow Liu has two different edge colors as it was regularized with two different strategies: AIC and BIC.
+aCML data processed model by algorithms to extract models from
+individual patients, we show the otput of CAPRESE, and all algorithms
+based on Minimum Spanning Trees (Edmonds, Chow Liu and Prim). Only the
+model retrieved by Chow Liu has two different edge colors as it was
+regularized with two different strategies: AIC and BIC.
 </p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="accessing-information-within-a-model-e-g--confidence">Accessing information within a model (e.g., confidence)<a class="anchor" aria-label="anchor" href="#accessing-information-within-a-model-e-g--confidence"></a>
 </h2>
-<p>We can visualize a summary of the parameters used for the reconstruction, test if an object has a model or delete it (which shall be done to retrieve the original dataset).</p>
+<p>We can visualize a summary of the parameters used for the
+reconstruction, test if an object has a model or delete it (which shall
+be done to retrieve the original dataset).</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="../reference/as.parameters.html">as.parameters</a></span><span class="op">(</span><span class="va">model.capri</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   algorithm command regularization do.boot nboot pvalue min.boot min.stat</span></span>
@@ -208,7 +228,11 @@ aCML data processed model by algorithms to extract models from individual patien
 <div class="section level3">
 <h3 id="model-structure">Model structure<a class="anchor" aria-label="anchor" href="#model-structure"></a>
 </h3>
-<p>A set of functions can be used to visualize the content of object which contains the reconstructed model. For instance, we can access the adjacency matrix of a model by using <code>as.adj.matrix</code> which will return a matrix for each one of the regularizators used – in this case because CAPRI was run with both BIC/AIC.</p>
+<p>A set of functions can be used to visualize the content of object
+which contains the reconstructed model. For instance, we can access the
+adjacency matrix of a model by using <code>as.adj.matrix</code> which
+will return a matrix for each one of the regularizators used – in this
+case because CAPRI was run with both BIC/AIC.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="../reference/as.adj.matrix.html">as.adj.matrix</a></span><span class="op">(</span><span class="va">model.capri</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## List of 2</span></span>
@@ -224,7 +248,17 @@ aCML data processed model by algorithms to extract models from individual patien
 <div class="section level3">
 <h3 id="empirical-probabilities">Empirical probabilities<a class="anchor" aria-label="anchor" href="#empirical-probabilities"></a>
 </h3>
-<p>Every model is inferred by estimating the empirical marginal, joint and conditional probabilities for all the events, from input data. These in some cases are estimated by a bootstrap procedure (see the algorithms implemented). TRONCO has functions to extract such table, that could be in turn printed by using external functions for, e.g., heatmap visualization (see below for an example via the <code>pheatmap</code> package). We show these functions working with the CAPRI model; in this case the tables are the same for both BIC/AIC structures as they are computed before performing penalized likelihood-fit. The marginal <em>P(x)</em> for <em>x</em> an event in the dataset are obtained by <code>as.marginal.probs</code>.</p>
+<p>Every model is inferred by estimating the empirical marginal, joint
+and conditional probabilities for all the events, from input data. These
+in some cases are estimated by a bootstrap procedure (see the algorithms
+implemented). TRONCO has functions to extract such table, that could be
+in turn printed by using external functions for, e.g., heatmap
+visualization (see below for an example via the <code>pheatmap</code>
+package). We show these functions working with the CAPRI model; in this
+case the tables are the same for both BIC/AIC structures as they are
+computed before performing penalized likelihood-fit. The marginal
+<em>P(x)</em> for <em>x</em> an event in the dataset are obtained by
+<code>as.marginal.probs</code>.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">marginal.prob</span> <span class="op">=</span> <span class="fu"><a href="../reference/as.marginal.probs.html">as.marginal.probs</a></span><span class="op">(</span><span class="va">model.capri</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">marginal.prob</span><span class="op">$</span><span class="va">capri_bic</span><span class="op">)</span></span></code></pre></div>
@@ -235,7 +269,8 @@ aCML data processed model by algorithms to extract models from individual patien
 <span><span class="co">## gene 7           0.126420455</span></span>
 <span><span class="co">## gene 29          0.230113636</span></span>
 <span><span class="co">## gene 30          0.078125000</span></span></code></pre>
-<p>Similarly, the joint <em>P(x,y)</em> for every pair of events in the dataset is given by <code>as.joint.probs</code>.</p>
+<p>Similarly, the joint <em>P(x,y)</em> for every pair of events in the
+dataset is given by <code>as.joint.probs</code>.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">joint.prob</span> <span class="op">=</span> <span class="fu"><a href="../reference/as.joint.probs.html">as.joint.probs</a></span><span class="op">(</span><span class="va">model.capri</span>, models<span class="op">=</span><span class="st">'capri_bic'</span><span class="op">)</span></span>
 <span><span class="va">joint.prob</span><span class="op">$</span><span class="va">capri_bic</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
@@ -243,7 +278,8 @@ aCML data processed model by algorithms to extract models from individual patien
 <span><span class="co">## gene 4 0.06463068 0.000000000 0.00000000</span></span>
 <span><span class="co">## gene 5 0.00000000 0.009943182 0.00000000</span></span>
 <span><span class="co">## gene 6 0.00000000 0.000000000 0.01704545</span></span></code></pre>
-<p>And <code>as.conditional.probs</code> finally gives the conditional <em>P(x|y)</em> for every edge in the dataset.</p>
+<p>And <code>as.conditional.probs</code> finally gives the conditional
+<em>P(x|y)</em> for every edge in the dataset.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">conditional.prob</span> <span class="op">=</span> <span class="fu"><a href="../reference/as.conditional.probs.html">as.conditional.probs</a></span><span class="op">(</span><span class="va">model.capri</span>, models<span class="op">=</span><span class="st">'capri_bic'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">conditional.prob</span><span class="op">$</span><span class="va">capri_bic</span><span class="op">)</span></span></code></pre></div>
@@ -258,7 +294,10 @@ aCML data processed model by algorithms to extract models from individual patien
 <div class="section level3">
 <h3 id="confidence-measures">Confidence measures<a class="anchor" aria-label="anchor" href="#confidence-measures"></a>
 </h3>
-<p>Confidence scores can be accessed by function , which takes as parameter the type of confidence measure that one wants to access to. This will work for either confidence measures assessed before reconstructing the model – if available –, or afterwards.</p>
+<p>Confidence scores can be accessed by function , which takes as
+parameter the type of confidence measure that one wants to access to.
+This will work for either confidence measures assessed before
+reconstructing the model – if available –, or afterwards.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="../reference/as.confidence.html">as.confidence</a></span><span class="op">(</span><span class="va">model.capri</span>, conf <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'tp'</span>, <span class="st">'pr'</span>, <span class="st">'hg'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## List of 3</span></span>
@@ -274,7 +313,12 @@ aCML data processed model by algorithms to extract models from individual patien
 <span><span class="co">##   ..- attr(*, "dimnames")=List of 2</span></span>
 <span><span class="co">##   .. ..$ : chr [1:26] "gene 4" "gene 5" "gene 6" "gene 7" ...</span></span>
 <span><span class="co">##   .. ..$ : chr [1:26] "gene 4" "gene 5" "gene 6" "gene 7" ...</span></span></code></pre>
-<p>Other functions visualize tables summarizing the statistics for each edge in the model, For instance, if one uses function <code>as.selective.advantage.relations</code> the p-values for temporal priority, probability raising and hypergeometric testing, as well as other information about each edge can be accessed, e.g., the number of observations for the upstream and the downstream events.</p>
+<p>Other functions visualize tables summarizing the statistics for each
+edge in the model, For instance, if one uses function
+<code>as.selective.advantage.relations</code> the p-values for temporal
+priority, probability raising and hypergeometric testing, as well as
+other information about each edge can be accessed, e.g., the number of
+observations for the upstream and the downstream events.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as.selective.advantage.relations.html">as.selective.advantage.relations</a></span><span class="op">(</span><span class="va">model.capri</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $capri_bic</span></span>
@@ -321,22 +365,34 @@ aCML data processed model by algorithms to extract models from individual patien
 <div class="section level2">
 <h2 id="confidence-via-non-parametric-and-statistical-bootstrap">Confidence via non-parametric and statistical bootstrap<a class="anchor" aria-label="anchor" href="#confidence-via-non-parametric-and-statistical-bootstrap"></a>
 </h2>
-<p>TRONCO provides three different strategies to perform bootstrap and assess confidence of each edge in terms of a score in the range [0, 100], where 100 is the highest confidence). Non-parametric (default) and statistical bootstrap strategies are available, and can be executed by calling function <code>tronco.bootstrap</code> with <code>type</code> parameter set appropriately. This function is parallel, and parameter <code>cores.ratio</code> (default 1) can be used to percentage of available cores that shall be used to compute the scores. Parameter <code>nboot</code> controls the number of bootstrap iterations.</p>
+<p>TRONCO provides three different strategies to perform bootstrap and
+assess confidence of each edge in terms of a score in the range [0,
+100], where 100 is the highest confidence). Non-parametric (default) and
+statistical bootstrap strategies are available, and can be executed by
+calling function <code>tronco.bootstrap</code> with <code>type</code>
+parameter set appropriately. This function is parallel, and parameter
+<code>cores.ratio</code> (default 1) can be used to percentage of
+available cores that shall be used to compute the scores. Parameter
+<code>nboot</code> controls the number of bootstrap iterations.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.boot</span> <span class="op">=</span> <span class="fu"><a href="../reference/tronco.bootstrap.html">tronco.bootstrap</a></span><span class="op">(</span><span class="va">model.capri</span>, nboot <span class="op">=</span> <span class="fl">3</span>, cores.ratio <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Executing now the bootstrap procedure, this may take a long time...</span></span>
-<span><span class="co">##  Expected completion in approx. 00h:00m:04s </span></span>
+<span><span class="co">##  Expected completion in approx. 00h:00m:03s </span></span>
 <span><span class="co">##  Using 1 cores via "parallel" </span></span>
 <span><span class="co">##  Reducing results</span></span>
 <span><span class="co">## Performed non-parametric bootstrap with 3 resampling and 0.05 as pvalue for the statistical tests.</span></span></code></pre>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.boot</span> <span class="op">=</span> <span class="fu"><a href="../reference/tronco.bootstrap.html">tronco.bootstrap</a></span><span class="op">(</span><span class="va">model.boot</span>, nboot <span class="op">=</span> <span class="fl">3</span>, cores.ratio <span class="op">=</span> <span class="fl">0</span>, type <span class="op">=</span> <span class="st">'statistical'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Executing now the bootstrap procedure, this may take a long time...</span></span>
-<span><span class="co">##  Expected completion in approx. 00h:00m:04s </span></span>
+<span><span class="co">##  Expected completion in approx. 00h:00m:03s </span></span>
 <span><span class="co">##  Using 1 cores via "parallel" </span></span>
 <span><span class="co">##  Reducing results</span></span>
 <span><span class="co">## Performed statistical bootstrap with 3 resampling and 0.05 as pvalue for the statistical tests.</span></span></code></pre>
-<p>Bootstrap scores can be annotated to the <code>tronco.plot</code> output by setting them via the confidence parameter <code>confidence=c('npb', 'sb')</code>. In this case edge thickness will be proportional to the non-parametric <code>npb</code>) scores – the last to appear in the <code>confidence</code> parameter.</p>
+<p>Bootstrap scores can be annotated to the <code>tronco.plot</code>
+output by setting them via the confidence parameter
+<code>confidence=c('npb', 'sb')</code>. In this case edge thickness will
+be proportional to the non-parametric <code>npb</code>) scores – the
+last to appear in the <code>confidence</code> parameter.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tronco.plot.html">tronco.plot</a></span><span class="op">(</span><span class="va">model.boot</span>, </span>
 <span>    fontsize <span class="op">=</span> <span class="fl">12</span>, </span>
@@ -356,10 +412,17 @@ aCML data processed model by algorithms to extract models from individual patien
 <span><span class="co">## Plotting graph and adding legends.</span></span></code></pre>
 <div class="figure">
 <img src="6_post_reconstruction_files/figure-html/unnamed-chunk-12-1.png" alt="aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and annotated with both non-parametric and statistical bootstrap scores. Edge thickness is proportional to the non-parametric scores." width="384"><p class="caption">
-aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and annotated with both non-parametric and statistical bootstrap scores. Edge thickness is proportional to the non-parametric scores.
+aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and
+annotated with both non-parametric and statistical bootstrap scores.
+Edge thickness is proportional to the non-parametric scores.
 </p>
 </div>
-<p>Bootstrap scores can extracted or visualized even with other TRONCO functions. For instance, we can accessall scores via <code>as.bootstrap.scores</code>, which resembles function <code>as.selective.advantage.relations</code> and will display the scores per edge. Notice that even function <code>view</code> gives an update output by mentioning the available bootstrap scores.</p>
+<p>Bootstrap scores can extracted or visualized even with other TRONCO
+functions. For instance, we can accessall scores via
+<code>as.bootstrap.scores</code>, which resembles function
+<code>as.selective.advantage.relations</code> and will display the
+scores per edge. Notice that even function <code>view</code> gives an
+update output by mentioning the available bootstrap scores.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as.bootstrap.scores.html">as.bootstrap.scores</a></span><span class="op">(</span><span class="va">model.boot</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $capri_bic</span></span>
@@ -371,12 +434,12 @@ aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and annotated
 <span><span class="co">## 5  Nonsense point ASXL1      Pattern XOR_CBL           5            4</span></span>
 <span><span class="co">## 6     Pattern XOR_ASXL1   Missense point CBL          14            3</span></span>
 <span><span class="co">##   NONPAR.BOOT STAT.BOOT</span></span>
-<span><span class="co">## 1    66.66667       100</span></span>
-<span><span class="co">## 2   100.00000       100</span></span>
+<span><span class="co">## 1   100.00000       100</span></span>
+<span><span class="co">## 2    66.66667       100</span></span>
 <span><span class="co">## 3    33.33333       100</span></span>
 <span><span class="co">## 4     0.00000       100</span></span>
-<span><span class="co">## 5   100.00000       100</span></span>
-<span><span class="co">## 6    33.33333       100</span></span>
+<span><span class="co">## 5    33.33333       100</span></span>
+<span><span class="co">## 6     0.00000       100</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $capri_aic</span></span>
 <span><span class="co">##                  SELECTS              SELECTED OBS.SELECTS OBS.SELECTED</span></span>
@@ -391,16 +454,16 @@ aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and annotated
 <span><span class="co">## 9  Pattern TET2_xor_IDH2         Ins/Del ASXL1          17            9</span></span>
 <span><span class="co">## 10     Pattern XOR_ASXL1    Missense point CBL          14            3</span></span>
 <span><span class="co">##    NONPAR.BOOT STAT.BOOT</span></span>
-<span><span class="co">## 1     66.66667       100</span></span>
-<span><span class="co">## 2     66.66667       100</span></span>
-<span><span class="co">## 3    100.00000       100</span></span>
+<span><span class="co">## 1     33.33333       100</span></span>
+<span><span class="co">## 2    100.00000       100</span></span>
+<span><span class="co">## 3     66.66667       100</span></span>
 <span><span class="co">## 4     33.33333       100</span></span>
 <span><span class="co">## 5      0.00000       100</span></span>
 <span><span class="co">## 6      0.00000       100</span></span>
 <span><span class="co">## 7      0.00000       100</span></span>
-<span><span class="co">## 8    100.00000       100</span></span>
+<span><span class="co">## 8     33.33333       100</span></span>
 <span><span class="co">## 9      0.00000       100</span></span>
-<span><span class="co">## 10    33.33333       100</span></span></code></pre>
+<span><span class="co">## 10     0.00000       100</span></span></code></pre>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/view.html">view</a></span><span class="op">(</span><span class="va">model.boot</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Description: CAPRI - aCML.</span></span>
@@ -423,7 +486,11 @@ aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and annotated
 <span><span class="co">## Available confidence measures:</span></span>
 <span><span class="co">##  Temporal priority | Probability raising | Hypergeometric</span></span>
 <span><span class="co">## Bootstrap estimation available.</span></span></code></pre>
-<p>If we want to access a matrix with the scores and visualize that in a heatmap we can use for instance the <code>pheatmap</code> function of TRONCO. In this case we need to use also function <code>keysToNames</code> to translate internal TRONCO keys to mnemonic names in the plot</p>
+<p>If we want to access a matrix with the scores and visualize that in a
+heatmap we can use for instance the <code>pheatmap</code> function of
+TRONCO. In this case we need to use also function
+<code>keysToNames</code> to translate internal TRONCO keys to mnemonic
+names in the plot</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pheatmap.html">pheatmap</a></span><span class="op">(</span><span class="fu"><a href="../reference/keysToNames.html">keysToNames</a></span><span class="op">(</span><span class="va">model.boot</span>, <span class="fu"><a href="../reference/as.confidence.html">as.confidence</a></span><span class="op">(</span><span class="va">model.boot</span>, conf <span class="op">=</span> <span class="st">'sb'</span><span class="op">)</span><span class="op">$</span><span class="va">sb</span><span class="op">$</span><span class="va">capri_aic</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, </span>
 <span>           main <span class="op">=</span>  <span class="st">'Statistical bootstrap scores for AIC model'</span>,</span>
@@ -434,20 +501,36 @@ aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and annotated
 <span>           <span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="6_post_reconstruction_files/figure-html/unnamed-chunk-14-1.png" alt="Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization)." width="672"><p class="caption">
-Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization).
+Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC
+regularization).
 </p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="confidence-via-cross-validation-entropy-loss-prediction-and-posterior-classification-errors">Confidence via cross-validation (entropy loss, prediction and posterior classification errors)<a class="anchor" aria-label="anchor" href="#confidence-via-cross-validation-entropy-loss-prediction-and-posterior-classification-errors"></a>
+<h2 id="confidence-via-cross-validation-entropy-loss-prediction-and-posterior-classification-errors">Confidence via cross-validation (entropy loss, prediction and
+posterior classification errors)<a class="anchor" aria-label="anchor" href="#confidence-via-cross-validation-entropy-loss-prediction-and-posterior-classification-errors"></a>
 </h2>
-<p>TRONCO implements <em>k</em>-fold cross-validation routines (from the <em>bnlearn</em> package) to provide estimates of the following statistics:</p>
+<p>TRONCO implements <em>k</em>-fold cross-validation routines (from the
+<em>bnlearn</em> package) to provide estimates of the following
+statistics:</p>
 <ul>
-<li>the <em>negative entropy</em> (via <code>tronco.kfold.eloss</code>) of a whole model ? i.e., the negated expected log-likelihood of the test set for the Bayesian network fitted from the training set.</li>
-<li>the <em>prediction error</em> (via <code>tronco.kfold.prederr</code>) for a single node <em>x</em> and its parents set <em>X</em> – i.e., how precisely we can predict the values of <em>x</em> by using only the information present in its local distribution, via <em>X</em>.</li>
-<li>the <em>posterior classification error</em> (via <code>tronco.kfold.posterr</code>) for a single node <em>x</em> and one of its parent node <em>y in X</em> – i.e., the values of <em>x</em> are predicted using only the information present in <em>y</em> by likelihood weighting and Bayesian posterior estimates.</li>
+<li>the <em>negative entropy</em> (via <code>tronco.kfold.eloss</code>)
+of a whole model ? i.e., the negated expected log-likelihood of the test
+set for the Bayesian network fitted from the training set.</li>
+<li>the <em>prediction error</em> (via
+<code>tronco.kfold.prederr</code>) for a single node <em>x</em> and its
+parents set <em>X</em> – i.e., how precisely we can predict the values
+of <em>x</em> by using only the information present in its local
+distribution, via <em>X</em>.</li>
+<li>the <em>posterior classification error</em> (via
+<code>tronco.kfold.posterr</code>) for a single node <em>x</em> and one
+of its parent node <em>y in X</em> – i.e., the values of <em>x</em> are
+predicted using only the information present in <em>y</em> by likelihood
+weighting and Bayesian posterior estimates.</li>
 </ul>
-<p>By default, a 10 repetitions from 10-fold cross-validation experiment are perfomed, for all the models which are found inside a TRONCO object – in this case 2, one for CAPRI with BIC and one for CAPRI with AIC.</p>
+<p>By default, a 10 repetitions from 10-fold cross-validation experiment
+are perfomed, for all the models which are found inside a TRONCO object
+– in this case 2, one for CAPRI with BIC and one for CAPRI with AIC.</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.boot</span> <span class="op">=</span> <span class="fu"><a href="../reference/tronco.kfold.eloss.html">tronco.kfold.eloss</a></span><span class="op">(</span><span class="va">model.boot</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Calculating entropy loss with k-fold cross-validation </span></span>
@@ -478,7 +561,8 @@ Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization
 <span><span class="co">##  Scanning 10 edges for posterior classification error. </span></span>
 <span><span class="co">##  Regularizer: capri_aic </span></span>
 <span><span class="co">## *** Reducing results</span></span></code></pre>
-<p>These results can be visualized in terms of summary tables, as for the other confidence scores.</p>
+<p>These results can be visualized in terms of summary tables, as for
+the other confidence scores.</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as.kfold.eloss.html">as.kfold.eloss</a></span><span class="op">(</span><span class="va">model.boot</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##               Mean %-of-logLik      Stdev</span></span>
@@ -487,6 +571,31 @@ Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as.kfold.prederr.html">as.kfold.prederr</a></span><span class="op">(</span><span class="va">model.boot</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $capri_bic</span></span>
+<span><span class="co">##                   SELECTED MEAN.PREDERR SD.PREDERR</span></span>
+<span><span class="co">## 5    Missense point SETBP1     0.218750          0</span></span>
+<span><span class="co">## 6      Missense point NRAS     0.078125          0</span></span>
+<span><span class="co">## 7      Missense point KRAS     0.015625          0</span></span>
+<span><span class="co">## 8      Missense point TET2     0.078125          0</span></span>
+<span><span class="co">## 9      Missense point EZH2     0.109375          0</span></span>
+<span><span class="co">## 10      Missense point CBL     0.046875          0</span></span>
+<span><span class="co">## 11     Missense point IDH2     0.046875          0</span></span>
+<span><span class="co">## 12    Missense point SF3B1     0.015625          0</span></span>
+<span><span class="co">## 13    Missense point CSF3R     0.078125          0</span></span>
+<span><span class="co">## 14     Nonsense point TET2     0.109375          0</span></span>
+<span><span class="co">## 15     Nonsense point EZH2     0.031250          0</span></span>
+<span><span class="co">## 16    Nonsense point ASXL1     0.078125          0</span></span>
+<span><span class="co">## 17    Nonsense point CSF3R     0.046875          0</span></span>
+<span><span class="co">## 18   Pattern NRAS_xor_KRAS     0.093750          0</span></span>
+<span><span class="co">## 19 Pattern SF3B1_xor_ASXL1     0.234375          0</span></span>
+<span><span class="co">## 20   Pattern TET2_xor_IDH2     0.265625          0</span></span>
+<span><span class="co">## 21    Pattern TET2_or_IDH2     0.281250          0</span></span>
+<span><span class="co">## 22        Pattern XOR_TET2     0.250000          0</span></span>
+<span><span class="co">## 23        Pattern XOR_EZH2     0.156250          0</span></span>
+<span><span class="co">## 24         Pattern XOR_CBL     0.109375          0</span></span>
+<span><span class="co">## 25       Pattern XOR_ASXL1     0.218750          0</span></span>
+<span><span class="co">## 26        Pattern OR_CSF3R     0.109375          0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $capri_aic</span></span>
 <span><span class="co">##                   SELECTED MEAN.PREDERR SD.PREDERR</span></span>
 <span><span class="co">## 5    Missense point SETBP1    0.2187500 0.00000000</span></span>
 <span><span class="co">## 6      Missense point NRAS    0.0781250 0.00000000</span></span>
@@ -507,58 +616,36 @@ Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization
 <span><span class="co">## 21    Pattern TET2_or_IDH2    0.2812500 0.00000000</span></span>
 <span><span class="co">## 22        Pattern XOR_TET2    0.2500000 0.00000000</span></span>
 <span><span class="co">## 23        Pattern XOR_EZH2    0.1562500 0.00000000</span></span>
-<span><span class="co">## 24         Pattern XOR_CBL    0.0703125 0.01104854</span></span>
+<span><span class="co">## 24         Pattern XOR_CBL    0.0859375 0.01104854</span></span>
 <span><span class="co">## 25       Pattern XOR_ASXL1    0.2187500 0.00000000</span></span>
-<span><span class="co">## 26        Pattern OR_CSF3R    0.1093750 0.00000000</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## $capri_aic</span></span>
-<span><span class="co">##                   SELECTED MEAN.PREDERR SD.PREDERR</span></span>
-<span><span class="co">## 5    Missense point SETBP1     0.218750 0.00000000</span></span>
-<span><span class="co">## 6      Missense point NRAS     0.078125 0.00000000</span></span>
-<span><span class="co">## 7      Missense point KRAS     0.015625 0.00000000</span></span>
-<span><span class="co">## 8      Missense point TET2     0.078125 0.00000000</span></span>
-<span><span class="co">## 9      Missense point EZH2     0.109375 0.00000000</span></span>
-<span><span class="co">## 10      Missense point CBL     0.046875 0.00000000</span></span>
-<span><span class="co">## 11     Missense point IDH2     0.046875 0.00000000</span></span>
-<span><span class="co">## 12    Missense point SF3B1     0.015625 0.00000000</span></span>
-<span><span class="co">## 13    Missense point CSF3R     0.078125 0.00000000</span></span>
-<span><span class="co">## 14     Nonsense point TET2     0.109375 0.00000000</span></span>
-<span><span class="co">## 15     Nonsense point EZH2     0.031250 0.00000000</span></span>
-<span><span class="co">## 16    Nonsense point ASXL1     0.078125 0.00000000</span></span>
-<span><span class="co">## 17    Nonsense point CSF3R     0.046875 0.00000000</span></span>
-<span><span class="co">## 18   Pattern NRAS_xor_KRAS     0.093750 0.00000000</span></span>
-<span><span class="co">## 19 Pattern SF3B1_xor_ASXL1     0.234375 0.00000000</span></span>
-<span><span class="co">## 20   Pattern TET2_xor_IDH2     0.265625 0.00000000</span></span>
-<span><span class="co">## 21    Pattern TET2_or_IDH2     0.281250 0.00000000</span></span>
-<span><span class="co">## 22        Pattern XOR_TET2     0.250000 0.00000000</span></span>
-<span><span class="co">## 23        Pattern XOR_EZH2     0.156250 0.00000000</span></span>
-<span><span class="co">## 24         Pattern XOR_CBL     0.078125 0.02209709</span></span>
-<span><span class="co">## 25       Pattern XOR_ASXL1     0.218750 0.00000000</span></span>
-<span><span class="co">## 26        Pattern OR_CSF3R     0.109375 0.00000000</span></span></code></pre>
+<span><span class="co">## 26        Pattern OR_CSF3R    0.1093750 0.00000000</span></span></code></pre>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as.kfold.posterr.html">as.kfold.posterr</a></span><span class="op">(</span><span class="va">model.boot</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $capri_bic</span></span>
 <span><span class="co">##                 SELECTS             SELECTED MEAN.POSTERR SD.POSTERR</span></span>
-<span><span class="co">## 1 Missense point SETBP1 Nonsense point ASXL1     0.078125          0</span></span>
-<span><span class="co">## 2   Missense point TET2         Ins/Del EZH2     0.015625          0</span></span>
-<span><span class="co">## 3   Missense point TET2          Ins/Del CBL     0.015625          0</span></span>
-<span><span class="co">## 4   Missense point EZH2         Ins/Del TET2     0.062500          0</span></span>
-<span><span class="co">## 5  Nonsense point ASXL1      Pattern XOR_CBL     0.078125          0</span></span>
-<span><span class="co">## 6     Pattern XOR_ASXL1   Missense point CBL     0.046875          0</span></span>
+<span><span class="co">## 1 Missense point SETBP1 Nonsense point ASXL1    0.0781250 0.00000000</span></span>
+<span><span class="co">## 2   Missense point TET2         Ins/Del EZH2    0.0156250 0.00000000</span></span>
+<span><span class="co">## 3   Missense point TET2          Ins/Del CBL    0.0156250 0.00000000</span></span>
+<span><span class="co">## 4   Missense point EZH2         Ins/Del TET2    0.0625000 0.00000000</span></span>
+<span><span class="co">## 5  Nonsense point ASXL1      Pattern XOR_CBL    0.1015625 0.01104854</span></span>
+<span><span class="co">## 6     Pattern XOR_ASXL1   Missense point CBL    0.0468750 0.00000000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $capri_aic</span></span>
 <span><span class="co">##                  SELECTS              SELECTED MEAN.POSTERR SD.POSTERR</span></span>
-<span><span class="co">## 1          Ins/Del ASXL1   Missense point KRAS     0.015625          0</span></span>
-<span><span class="co">## 2  Missense point SETBP1  Nonsense point ASXL1     0.078125          0</span></span>
-<span><span class="co">## 3    Missense point TET2          Ins/Del EZH2     0.015625          0</span></span>
-<span><span class="co">## 4    Missense point TET2           Ins/Del CBL     0.015625          0</span></span>
-<span><span class="co">## 5    Missense point EZH2          Ins/Del TET2     0.062500          0</span></span>
-<span><span class="co">## 6    Nonsense point TET2   Missense point NRAS     0.078125          0</span></span>
-<span><span class="co">## 7    Nonsense point TET2 Pattern NRAS_xor_KRAS     0.093750          0</span></span>
-<span><span class="co">## 8   Nonsense point ASXL1       Pattern XOR_CBL     0.093750          0</span></span>
-<span><span class="co">## 9  Pattern TET2_xor_IDH2         Ins/Del ASXL1     0.140625          0</span></span>
-<span><span class="co">## 10     Pattern XOR_ASXL1    Missense point CBL     0.046875          0</span></span></code></pre>
-<p>Notice that these can be combined to create a nice table with all these statistics – we make here the example of a table with all the BIC statistics. This format can be readily exported to external spreadsheets for further visualization.</p>
+<span><span class="co">## 1          Ins/Del ASXL1   Missense point KRAS     0.015625 0.00000000</span></span>
+<span><span class="co">## 2  Missense point SETBP1  Nonsense point ASXL1     0.078125 0.00000000</span></span>
+<span><span class="co">## 3    Missense point TET2          Ins/Del EZH2     0.015625 0.00000000</span></span>
+<span><span class="co">## 4    Missense point TET2           Ins/Del CBL     0.015625 0.00000000</span></span>
+<span><span class="co">## 5    Missense point EZH2          Ins/Del TET2     0.062500 0.00000000</span></span>
+<span><span class="co">## 6    Nonsense point TET2   Missense point NRAS     0.078125 0.00000000</span></span>
+<span><span class="co">## 7    Nonsense point TET2 Pattern NRAS_xor_KRAS     0.093750 0.00000000</span></span>
+<span><span class="co">## 8   Nonsense point ASXL1       Pattern XOR_CBL     0.078125 0.02209709</span></span>
+<span><span class="co">## 9  Pattern TET2_xor_IDH2         Ins/Del ASXL1     0.140625 0.00000000</span></span>
+<span><span class="co">## 10     Pattern XOR_ASXL1    Missense point CBL     0.046875 0.00000000</span></span></code></pre>
+<p>Notice that these can be combined to create a nice table with all
+these statistics – we make here the example of a table with all the BIC
+statistics. This format can be readily exported to external spreadsheets
+for further visualization.</p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tabular</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">obj</span>, <span class="va">M</span><span class="op">)</span><span class="op">{</span></span>
 <span>    <span class="va">tab</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span></span>
@@ -576,41 +663,42 @@ Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">tabular</span><span class="op">(</span><span class="va">model.boot</span>, <span class="st">'capri_bic'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        capri_bic.SELECTS   capri_bic.SELECTED capri_bic.OBS.SELECTS</span></span>
-<span><span class="co">## 2    Missense point TET2         Ins/Del EZH2                     5</span></span>
-<span><span class="co">## 23  Nonsense point ASXL1      Pattern XOR_CBL                     5</span></span>
 <span><span class="co">## 13 Missense point SETBP1 Nonsense point ASXL1                    14</span></span>
+<span><span class="co">## 2    Missense point TET2         Ins/Del EZH2                     5</span></span>
 <span><span class="co">## 1    Missense point TET2          Ins/Del CBL                     5</span></span>
-<span><span class="co">## 4      Pattern XOR_ASXL1   Missense point CBL                    14</span></span>
+<span><span class="co">## 23  Nonsense point ASXL1      Pattern XOR_CBL                     5</span></span>
 <span><span class="co">## 3    Missense point EZH2         Ins/Del TET2                     7</span></span>
+<span><span class="co">## 4      Pattern XOR_ASXL1   Missense point CBL                    14</span></span>
 <span><span class="co">##    capri_bic.OBS.SELECTED capri_bic.TEMPORAL.PRIORITY</span></span>
-<span><span class="co">## 2                       1                3.107997e-08</span></span>
-<span><span class="co">## 23                      4                1.253535e-02</span></span>
 <span><span class="co">## 13                      5                1.265401e-08</span></span>
+<span><span class="co">## 2                       1                3.107997e-08</span></span>
 <span><span class="co">## 1                       1                7.055746e-07</span></span>
-<span><span class="co">## 4                       3                1.181758e-08</span></span>
+<span><span class="co">## 23                      4                1.253535e-02</span></span>
 <span><span class="co">## 3                       4                8.288203e-04</span></span>
+<span><span class="co">## 4                       3                1.181758e-08</span></span>
 <span><span class="co">##    capri_bic.PROBABILITY.RAISING capri_bic.HYPERGEOMETRIC capri_bic.NONPAR.BOOT</span></span>
-<span><span class="co">## 2                   2.968162e-05              0.078125000             100.00000</span></span>
-<span><span class="co">## 23                  1.262353e-05              0.040873436             100.00000</span></span>
-<span><span class="co">## 13                  6.653729e-09              0.002029387              66.66667</span></span>
+<span><span class="co">## 13                  6.653729e-09              0.002029387             100.00000</span></span>
+<span><span class="co">## 2                   2.968162e-05              0.078125000              66.66667</span></span>
 <span><span class="co">## 1                   1.172650e-05              0.000000000              33.33333</span></span>
-<span><span class="co">## 4                   3.952172e-09              0.008736559              33.33333</span></span>
+<span><span class="co">## 23                  1.262353e-05              0.040873436              33.33333</span></span>
 <span><span class="co">## 3                   1.739852e-06              0.055944826               0.00000</span></span>
+<span><span class="co">## 4                   3.952172e-09              0.008736559               0.00000</span></span>
 <span><span class="co">##    capri_bic.STAT.BOOT capri_bic.MEAN.PREDERR capri_bic.SD.PREDERR</span></span>
+<span><span class="co">## 13                 100               0.078125                    0</span></span>
 <span><span class="co">## 2                  100                     NA                   NA</span></span>
-<span><span class="co">## 23                 100              0.0703125           0.01104854</span></span>
-<span><span class="co">## 13                 100              0.0781250           0.00000000</span></span>
 <span><span class="co">## 1                  100                     NA                   NA</span></span>
-<span><span class="co">## 4                  100              0.0468750           0.00000000</span></span>
+<span><span class="co">## 23                 100               0.109375                    0</span></span>
 <span><span class="co">## 3                  100                     NA                   NA</span></span>
+<span><span class="co">## 4                  100               0.046875                    0</span></span>
 <span><span class="co">##    capri_bic.MEAN.POSTERR capri_bic.SD.POSTERR</span></span>
-<span><span class="co">## 2                0.015625                    0</span></span>
-<span><span class="co">## 23               0.078125                    0</span></span>
-<span><span class="co">## 13               0.078125                    0</span></span>
-<span><span class="co">## 1                0.015625                    0</span></span>
-<span><span class="co">## 4                0.046875                    0</span></span>
-<span><span class="co">## 3                0.062500                    0</span></span></code></pre>
-<p>We finally show the plot of the model with the confidences by cross-validation.</p>
+<span><span class="co">## 13              0.0781250           0.00000000</span></span>
+<span><span class="co">## 2               0.0156250           0.00000000</span></span>
+<span><span class="co">## 1               0.0156250           0.00000000</span></span>
+<span><span class="co">## 23              0.1015625           0.01104854</span></span>
+<span><span class="co">## 3               0.0625000           0.00000000</span></span>
+<span><span class="co">## 4               0.0468750           0.00000000</span></span></code></pre>
+<p>We finally show the plot of the model with the confidences by
+cross-validation.</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tronco.plot.html">tronco.plot</a></span><span class="op">(</span><span class="va">model.boot</span>, </span>
 <span>    fontsize <span class="op">=</span> <span class="fl">12</span>, </span>
@@ -630,7 +718,10 @@ Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization
 <span><span class="co">## Plotting graph and adding legends.</span></span></code></pre>
 <div class="figure">
 <img src="6_post_reconstruction_files/figure-html/unnamed-chunk-18-1.png" alt="aCML model reconstructed by CAPRI with  AIC/BIC as regolarizators and annotated with  non-parametric, as well as with entropy loss, prediction and posterior classification errors computed via cross-validation. Edge thickness is proportional to the non-parametric  scores." width="384"><p class="caption">
-aCML model reconstructed by CAPRI with AIC/BIC as regolarizators and annotated with non-parametric, as well as with entropy loss, prediction and posterior classification errors computed via cross-validation. Edge thickness is proportional to the non-parametric scores.
+aCML model reconstructed by CAPRI with AIC/BIC as regolarizators and
+annotated with non-parametric, as well as with entropy loss, prediction
+and posterior classification errors computed via cross-validation. Edge
+thickness is proportional to the non-parametric scores.
 </p>
 </div>
 </div>
@@ -653,7 +744,7 @@ aCML model reconstructed by CAPRI with AIC/BIC as regolarizators and annotated w
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.9000.</p>
 </div>
 
       </footer>

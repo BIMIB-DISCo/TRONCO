@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.1</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
 
       
 
-      </header><script src="2_loading_data_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Loading Data</h1>
@@ -112,26 +112,63 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">crc_maf</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">crc_plain</span><span class="op">)</span></span></code></pre></div>
-<p>TRONCO transforms input data in a sort of database-alike format, where three main fields are presente: <em>genotypes</em> which contains the genomic signatures of the input samples, <em>annotations</em> which provides an index to the events present in the data and <em>types</em>, a field mapping type of events (e.g., mutations, CNAs, etc.) to colors for display visualization. Other annotations are generated when a dataset is augmented with some metadata. A TRONCO object shall be edited by using TRONCO functions, to avoid to create inconsistencies in its internal representation. Function <code>is.compliant</code> can be used to test if a TRONCO object is consistent; the function is called by any TRONCO function before returning a modified object, so to ensure that consistency is preserved – <code>is.compliant</code> will raise an error if this is not the case.</p>
-<p>TRONCO supports the import of data from 3 formats. The Mutation Annotation Format (<em>MAF</em>) is a tab-delimited file containing somatic and/or germline mutation annotations; the <em>GISTIC</em> format for copy number alterations as defined by TCGA and a custom boolean matrix format where the user can directly specify the mutational profiles to be importend. Through some data included in the package we will show how to load your datasets in TRONCO.</p>
+<p>TRONCO transforms input data in a sort of database-alike format,
+where three main fields are presente: <em>genotypes</em> which contains
+the genomic signatures of the input samples, <em>annotations</em> which
+provides an index to the events present in the data and <em>types</em>,
+a field mapping type of events (e.g., mutations, CNAs, etc.) to colors
+for display visualization. Other annotations are generated when a
+dataset is augmented with some metadata. A TRONCO object shall be edited
+by using TRONCO functions, to avoid to create inconsistencies in its
+internal representation. Function <code>is.compliant</code> can be used
+to test if a TRONCO object is consistent; the function is called by any
+TRONCO function before returning a modified object, so to ensure that
+consistency is preserved – <code>is.compliant</code> will raise an error
+if this is not the case.</p>
+<p>TRONCO supports the import of data from 3 formats. The Mutation
+Annotation Format (<em>MAF</em>) is a tab-delimited file containing
+somatic and/or germline mutation annotations; the <em>GISTIC</em> format
+for copy number alterations as defined by TCGA and a custom boolean
+matrix format where the user can directly specify the mutational
+profiles to be importend. Through some data included in the package we
+will show how to load your datasets in TRONCO.</p>
 <ul>
 <li>
-<strong>aCML</strong> a TRONCO object that represents the <em>atypical Chronic Myeloid Leukemia</em> dataset by Piazza <em>et al.</em> (Nat. Gen. 2013 45(1):18-24).</li>
+<strong>aCML</strong> a TRONCO object that represents the
+<em>atypical Chronic Myeloid Leukemia</em> dataset by Piazza <em>et
+al.</em> (Nat. Gen. 2013 45(1):18-24).</li>
 <li>
-<strong>crc_maf</strong> a shortened version of the <em>colorectal cancer mutation data</em> made available by the TCGA consortium within the COADREAD. See <a href="https://tcga-data.nci.nih.gov/docs/publications/coadread_2012/" class="external-link">this link</a> and our PicNiC case study for the real analysis of such data.</li>
+<strong>crc_maf</strong> a shortened version of the <em>colorectal
+cancer mutation data</em> made available by the TCGA consortium within
+the COADREAD. See <a href="https://tcga-data.nci.nih.gov/docs/publications/coadread_2012/" class="external-link">this
+link</a> and our PicNiC case study for the real analysis of such
+data.</li>
 <li>
-<strong>crc_gistic</strong> from the same TCGA project, we also provide a shortened version of the focal CNAs in the GISTIC format where 1 represents a low level gain, 2 a high level gain, -1 a heterozygous loss of a gene and -2 its homozygous loss.</li>
+<strong>crc_gistic</strong> from the same TCGA project, we also
+provide a shortened version of the focal CNAs in the GISTIC format where
+1 represents a low level gain, 2 a high level gain, -1 a heterozygous
+loss of a gene and -2 its homozygous loss.</li>
 <li>
-<strong>crc_plain</strong> a custom boolean matrix where rows are samples, and columns represent events – in this case alterations in a certain gene. Notice with this format one could also custom types of alterations, for instance wider chromosomal aberrations or, in principle, epigenetic states (over-expression, methylated regions, etc.) that are persistent across tumor evolution.</li>
+<strong>crc_plain</strong> a custom boolean matrix where rows are
+samples, and columns represent events – in this case alterations in a
+certain gene. Notice with this format one could also custom types of
+alterations, for instance wider chromosomal aberrations or, in
+principle, epigenetic states (over-expression, methylated regions, etc.)
+that are persistent across tumor evolution.</li>
 </ul>
-<p>Whatever is dataset created as explained in the next sections, it can be annotated by adding a mnemonic description of the data, which will be used as plot titles when possible. Function <code>annotate.description</code> raises a warning if the dataset was previously annotated.</p>
+<p>Whatever is dataset created as explained in the next sections, it can
+be annotated by adding a mnemonic description of the data, which will be
+used as plot titles when possible. Function
+<code>annotate.description</code> raises a warning if the dataset was
+previously annotated.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aCML</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotate.description.html">annotate.description</a></span><span class="op">(</span><span class="va">aCML</span>, <span class="st">'aCML data (Bioinf.)'</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="mutations-annotated-in-a-maf-format">Mutations annotated in a MAF format<a class="anchor" aria-label="anchor" href="#mutations-annotated-in-a-maf-format"></a>
 </h2>
-<p>We use the function <code>import.MAF</code> to import a dataset in MAF format, in this case the following TCGA dataset</p>
+<p>We use the function <code>import.MAF</code> to import a dataset in
+MAF format, in this case the following TCGA dataset</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">crc_maf</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      Hugo_Symbol Entrez_Gene_Id       Center NCBI_Build Chromosome</span></span>
@@ -148,7 +185,10 @@
 <span><span class="co">## 649         7518937      7518937      +      Nonsense_Mutation          SNP</span></span>
 <span><span class="co">## 928       153468834    153468834      +      Missense_Mutation          SNP</span></span>
 <span><span class="co">## 1390        7517864      7517864      +      Missense_Mutation          SNP</span></span></code></pre>
-<p>A default importation is done without adding parameters to <code>import.MAF</code>. In this case, all mutations per gene will be considered equivalent, regardless of the type that is annotated in the MAF. Also, all genes will be imported, and all samples.</p>
+<p>A default importation is done without adding parameters to
+<code>import.MAF</code>. In this case, all mutations per gene will be
+considered equivalent, regardless of the type that is annotated in the
+MAF. Also, all genes will be imported, and all samples.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset_maf</span> <span class="op">=</span> <span class="fu"><a href="../reference/import.MAF.html">import.MAF</a></span><span class="op">(</span><span class="va">crc_maf</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Importing from dataframe</span></span>
@@ -167,7 +207,16 @@
 <span><span class="co">## Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :9 x 6 </span></span>
 <span><span class="co">## .................</span></span>
 <span><span class="co">## Starting conversion from MAF to TRONCO data type.</span></span></code></pre>
-<p>In the above case – where we see that mutations are annotated as <code>Missense_Mutation</code> or <code>Nonsense_Mutation</code>, if a gene in a sample has both, these will be merged to a unique <code>Mutation</code> type. In this case a pair gene name with <code>Mutation</code> will be what we call an <em>event</em> in our dataset – e.g., APC Mutation. If one would like to have two distinct events in the dataset, i.e., APC <code>Missense_Mutation</code> and APC <code>Nonsense_Mutation</code>, parameter <code>merge.mutation.types</code> should be set to false in the call to <code>import.MAF</code>.</p>
+<p>In the above case – where we see that mutations are annotated as
+<code>Missense_Mutation</code> or <code>Nonsense_Mutation</code>, if a
+gene in a sample has both, these will be merged to a unique
+<code>Mutation</code> type. In this case a pair gene name with
+<code>Mutation</code> will be what we call an <em>event</em> in our
+dataset – e.g., APC Mutation. If one would like to have two distinct
+events in the dataset, i.e., APC <code>Missense_Mutation</code> and APC
+<code>Nonsense_Mutation</code>, parameter
+<code>merge.mutation.types</code> should be set to false in the call to
+<code>import.MAF</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset_maf</span> <span class="op">=</span> <span class="fu"><a href="../reference/import.MAF.html">import.MAF</a></span><span class="op">(</span><span class="va">crc_maf</span>, merge.mutation.types <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Importing from dataframe</span></span>
@@ -185,7 +234,14 @@
 <span><span class="co">## Number of genes (Hugo_Symbol): 6 </span></span>
 <span><span class="co">## Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :</span></span>
 <span><span class="co">## .................</span></span></code></pre>
-<p>Sometimes, we might want to filter out some of the entries in a MAF – maybe restricting the type of genes, mutations or sample that we want to process. If one defines <code>filter.fun</code> as a function that returns <code>TRUE</code> only for those entries which shall be considered, he gets a filter process which is applied to each row of the MAF file prior to transforming that into a TRONCO dataset. In this example we select only mutations annotated to APC – we access that through the <em>Hugo_Symbol</em> flag of a MAF.</p>
+<p>Sometimes, we might want to filter out some of the entries in a MAF –
+maybe restricting the type of genes, mutations or sample that we want to
+process. If one defines <code>filter.fun</code> as a function that
+returns <code>TRUE</code> only for those entries which shall be
+considered, he gets a filter process which is applied to each row of the
+MAF file prior to transforming that into a TRONCO dataset. In this
+example we select only mutations annotated to APC – we access that
+through the <em>Hugo_Symbol</em> flag of a MAF.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset_maf</span> <span class="op">=</span> <span class="fu"><a href="../reference/import.MAF.html">import.MAF</a></span><span class="op">(</span><span class="va">crc_maf</span>, filter.fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span> <span class="va">x</span><span class="op">[</span><span class="st">'Hugo_Symbol'</span><span class="op">]</span> <span class="op">==</span> <span class="st">'APC'</span><span class="op">}</span> <span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Importing from dataframe</span></span>
@@ -205,7 +261,14 @@
 <span><span class="co">## Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :3 x 1 </span></span>
 <span><span class="co">## ...</span></span>
 <span><span class="co">## Starting conversion from MAF to TRONCO data type.</span></span></code></pre>
-<p>It is also sometimes convenient – especially when working with data collected from a single individual patient – to distinguish the type of mutations and their position in a gene, or if they are somehow annotated to COSMIC or other databases. For instance, we might want to want to use the <code>MA.protein.change</code> annotation in the MAF file to get composite names such as TP53.R175H, TP53.R213, TP53.R267W etc. This can be done by setting {paste.to.Hugo_Symbol} to have the relevant name of the MAF annotation</p>
+<p>It is also sometimes convenient – especially when working with data
+collected from a single individual patient – to distinguish the type of
+mutations and their position in a gene, or if they are somehow annotated
+to COSMIC or other databases. For instance, we might want to want to use
+the <code>MA.protein.change</code> annotation in the MAF file to get
+composite names such as TP53.R175H, TP53.R213, TP53.R267W etc. This can
+be done by setting {} to have the relevant name of the MAF
+annotation</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset_maf</span> <span class="op">=</span> <span class="fu"><a href="../reference/import.MAF.html">import.MAF</a></span><span class="op">(</span><span class="va">crc_maf</span>, </span>
 <span>    merge.mutation.types <span class="op">=</span> <span class="cn">FALSE</span>, </span>
@@ -225,12 +288,14 @@
 <span><span class="co">## Number of genes (Hugo_Symbol): 16 </span></span>
 <span><span class="co">## Starting conversion from MAF to 0/1 mutation profiles (1 = mutation) :</span></span>
 <span><span class="co">## .................</span></span></code></pre>
-<p>TRONCO supports custom MAF files, where possibly not all the standard annotations are present, via <code>irregular = TRUE</code>.</p>
+<p>TRONCO supports custom MAF files, where possibly not all the standard
+annotations are present, via <code>irregular = TRUE</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="copy-number-variants-annotated-in-the-gistic-format">Copy Number Variants annotated in the GISTIC format<a class="anchor" aria-label="anchor" href="#copy-number-variants-annotated-in-the-gistic-format"></a>
 </h2>
-<p>We use the function <code>import.GISTIC</code> to import a dataset in GISTIC format, in this case from</p>
+<p>We use the function <code>import.GISTIC</code> to import a dataset in
+GISTIC format, in this case from</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">crc_gistic</span></span></code></pre></div>
 <pre><code><span><span class="co">##              NRAS CTNNB1 FBXW7 APC KRAS TP53</span></span>
@@ -243,7 +308,11 @@
 <span><span class="co">## TCGA-A6-2683   -1     -1    -1  -1    0   -1</span></span>
 <span><span class="co">## TCGA-A6-3807    0     -1     0   0   -1   -1</span></span>
 <span><span class="co">## TCGA-AA-3516    0      0     0   0    0    0</span></span></code></pre>
-<p>In its default execution all the data annotated in the file is imported. But in principle it is possible to avoid to import some genes or samples; in this case it is sufficient to use parameters <code>filter.genes</code> and <code>filter.samples</code> for this function.</p>
+<p>In its default execution all the data annotated in the file is
+imported. But in principle it is possible to avoid to import some genes
+or samples; in this case it is sufficient to use parameters
+<code>filter.genes</code> and <code>filter.samples</code> for this
+function.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset_gistic</span> <span class="op">=</span> <span class="fu"><a href="../reference/import.GISTIC.html">import.GISTIC</a></span><span class="op">(</span><span class="va">crc_gistic</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Using full GISTIC: #dim  9  x  6 </span></span>
@@ -264,7 +333,8 @@
 <div class="section level2">
 <h2 id="custom-alterations-annotated-in-a-boolean-matrix">Custom alterations annotated in a boolean matrix<a class="anchor" aria-label="anchor" href="#custom-alterations-annotated-in-a-boolean-matrix"></a>
 </h2>
-<p>One can annotate its custom type of alterations in a boolean matrix such as <code>crc_plain</code></p>
+<p>One can annotate its custom type of alterations in a boolean matrix
+such as <code>crc_plain</code></p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">crc_plain</span></span></code></pre></div>
 <pre><code><span><span class="co">##                 TP53 FBXW7 APC CTNNB1 NRAS KRAS</span></span>
@@ -273,15 +343,29 @@
 <span><span class="co">## TCGA-AA-3519-01    1     0   1      0    0    0</span></span>
 <span><span class="co">## TCGA-AA-3520-01    1     0   0      0    0    1</span></span>
 <span><span class="co">## TCGA-AA-3521-01    0     0   1      0    0    1</span></span></code></pre>
-<p>In this case, function <code>import.genotypes</code> will convert the matrix to a TRONCO object where events’ names and samples codes will be set from column and row names of the matrix. If this is not possible, these will be generated from templates. By default, the <code>event.type</code> is set to <code>variant</code> but one can specify a custom name for the alteration that is reported in the matrix</p>
+<p>In this case, function <code>import.genotypes</code> will convert the
+matrix to a TRONCO object where events’ names and samples codes will be
+set from column and row names of the matrix. If this is not possible,
+these will be generated from templates. By default, the
+<code>event.type</code> is set to <code>variant</code> but one can
+specify a custom name for the alteration that is reported in the
+matrix</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset_plain</span> <span class="op">=</span> <span class="fu"><a href="../reference/import.genotypes.html">import.genotypes</a></span><span class="op">(</span><span class="va">crc_plain</span>, event.type<span class="op">=</span><span class="st">'myVariant'</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="downloading-data-from-the-cbio-portal-for-cancer-genomics">Downloading data from the cBio portal for cancer genomics<a class="anchor" aria-label="anchor" href="#downloading-data-from-the-cbio-portal-for-cancer-genomics"></a>
 </h2>
-<p>TRONCO uses the R interface to cBio to query data from the portal. All type of data can be downloaded from the portal, which includes MAF/GISTIC data for a lot of different cancer studies. An example of interaction with the portal is archived at the tool’s webpage.</p>
-<p>Here, we show how to download lung cancer data somatic mutations for genes TP53, KRAS and PIK3CA, from the lung cancer project run by TCGA, which is archived as <em>luad_tcga_pub</em> at cBio. If some of the parameters to <code>cbio.query</code> are missing the function will become interactive by showing a list of possible data available at the portal.</p>
+<p>TRONCO uses the R interface to cBio to query data from the portal.
+All type of data can be downloaded from the portal, which includes
+MAF/GISTIC data for a lot of different cancer studies. An example of
+interaction with the portal is archived at the tool’s webpage.</p>
+<p>Here, we show how to download lung cancer data somatic mutations for
+genes TP53, KRAS and PIK3CA, from the lung cancer project run by TCGA,
+which is archived as <em>luad_tcga_pub</em> at cBio. If some of the
+parameters to <code>cbio.query</code> are missing the function will
+become interactive by showing a list of possible data available at the
+portal.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">=</span> <span class="fu">cbio.query</span><span class="op">(</span></span>
 <span>    genes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'TP53'</span>, <span class="st">'KRAS'</span>, <span class="st">'PIK3CA'</span><span class="op">)</span>, </span>
@@ -308,7 +392,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.9000.</p>
 </div>
 
       </footer>

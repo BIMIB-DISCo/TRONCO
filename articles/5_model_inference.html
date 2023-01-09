@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.1</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
 
       
 
-      </header><script src="5_model_inference_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Model inference</h1>
@@ -103,8 +103,15 @@
 
     
     
-<p>We make use of the most of the functions described above to show how to perform inference with various algorithms; the reader should read first those sections of the vignette to have an explanation of how those functions work. The aCML dataset is used as a test-case for all algorithms, regardless it should be precessed by algorithms to infer ensemble-level progression models.</p>
-<p>To replicate the plots of the original paper were the aCML dataset was first analyzed with CAPRI, we can change the colors assigned to each type of event with the function <code>change.color</code>.</p>
+<p>We make use of the most of the functions described above to show how
+to perform inference with various algorithms; the reader should read
+first those sections of the vignette to have an explanation of how those
+functions work. The aCML dataset is used as a test-case for all
+algorithms, regardless it should be precessed by algorithms to infer
+ensemble-level progression models.</p>
+<p>To replicate the plots of the original paper were the aCML dataset
+was first analyzed with CAPRI, we can change the colors assigned to each
+type of event with the function <code>change.color</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/change.color.html">change.color</a></span><span class="op">(</span><span class="va">aCML</span>, <span class="st">'Ins/Del'</span>, <span class="st">'dodgerblue4'</span><span class="op">)</span></span>
 <span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/change.color.html">change.color</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="st">'Missense point'</span>, <span class="st">'#7FC97F'</span><span class="op">)</span></span>
@@ -114,7 +121,10 @@
 <div class="section level4">
 <h4 id="data-consolidation-">Data consolidation.<a class="anchor" aria-label="anchor" href="#data-consolidation-"></a>
 </h4>
-<p>All TRONCO algorithms require an input dataset were events have non-zero/non-one probability, and are all distinguishable. The tool provides a function to return lists of events which do not satisfy these constraint.</p>
+<p>All TRONCO algorithms require an input dataset were events have
+non-zero/non-one probability, and are all distinguishable. The tool
+provides a function to return lists of events which do not satisfy these
+constraint.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/consolidate.data.html">consolidate.data</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $indistinguishable</span></span>
@@ -125,12 +135,19 @@
 <span><span class="co">## </span></span>
 <span><span class="co">## $ones</span></span>
 <span><span class="co">## list()</span></span></code></pre>
-<p>The aCML data has none of the above issues (the call returns empty lists); if this were not the case data manipulation functions can be used to edit a TRONCO object.</p>
+<p>The aCML data has none of the above issues (the call returns empty
+lists); if this were not the case data manipulation functions can be
+used to edit a TRONCO object.</p>
 </div>
 <div class="section level2">
 <h2 id="capri">CAPRI<a class="anchor" aria-label="anchor" href="#capri"></a>
 </h2>
-<p>In what follows, we show CAPRI’s functioning by replicating the aCML case study presented in CAPRI’s original paper. Regardless from which types of mutations we include, we select only the genes mutated at least in the 5% of the patients – thus we first use <code>as.alterations</code> to have gene-level frequencies, and then we apply there a frequency filter (R’s output is omitted).</p>
+<p>In what follows, we show CAPRI’s functioning by replicating the aCML
+case study presented in CAPRI’s original paper. Regardless from which
+types of mutations we include, we select only the genes mutated at least
+in the 5% of the patients – thus we first use
+<code>as.alterations</code> to have gene-level frequencies, and then we
+apply there a frequency filter (R’s output is omitted).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">alterations</span> <span class="op">=</span> <span class="fu"><a href="../reference/events.selection.html">events.selection</a></span><span class="op">(</span><span class="fu"><a href="../reference/as.alterations.html">as.alterations</a></span><span class="op">(</span><span class="va">aCML</span><span class="op">)</span>, filter.freq <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Aggregating events of type(s) { Ins/Del, Missense point, Nonsense Ins/Del, Nonsense point }</span></span>
@@ -144,7 +161,14 @@
 <span><span class="co">## Selected  7  events.</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Selected  7  events, returning.</span></span></code></pre>
-<p>To proceed further with the example we create the <em>dataset</em> to be used for the inference of the model. From the original dataset we select all the genes whose mutations are occurring at least the 5% of the times, and we get that by the alterations profiles; also we force inclusion of all the events for the genes involved in an hypothesis (those included in variable <code>gene.hypotheses</code>, this list is based on the support found in the literature of potential aCML patterns).</p>
+<p>To proceed further with the example we create the <em>dataset</em> to
+be used for the inference of the model. From the original dataset we
+select all the genes whose mutations are occurring at least the 5% of
+the times, and we get that by the alterations profiles; also we force
+inclusion of all the events for the genes involved in an hypothesis
+(those included in variable <code>gene.hypotheses</code>, this list is
+based on the support found in the literature of potential aCML
+patterns).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gene.hypotheses</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'KRAS'</span>, <span class="st">'NRAS'</span>, <span class="st">'IDH1'</span>, <span class="st">'IDH2'</span>, <span class="st">'TET2'</span>, <span class="st">'SF3B1'</span>, <span class="st">'ASXL1'</span><span class="op">)</span></span>
 <span><span class="va">aCML.clean</span> <span class="op">=</span> <span class="fu"><a href="../reference/events.selection.html">events.selection</a></span><span class="op">(</span><span class="va">aCML</span>,</span>
@@ -155,7 +179,9 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aCML.clean</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotate.description.html">annotate.description</a></span><span class="op">(</span><span class="va">aCML.clean</span>, </span>
 <span>    <span class="st">'CAPRI - Bionformatics aCML data (selected events)'</span><span class="op">)</span></span></code></pre></div>
-<p>We show a new oncoprint of this latest dataset where we annotate the genes in <code>gene.hypotheses</code> in order to identify them. The sample names are also shown.</p>
+<p>We show a new oncoprint of this latest dataset where we annotate the
+genes in <code>gene.hypotheses</code> in order to identify them. The
+sample names are also shown.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oncoprint.html">oncoprint</a></span><span class="op">(</span><span class="va">aCML.clean</span>, gene.annot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>priors <span class="op">=</span> <span class="va">gene.hypotheses</span><span class="op">)</span>, sample.id <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Oncoprint for "CAPRI - Bionformatics aCML data (selected events)"</span></span>
@@ -166,28 +192,53 @@
 <span><span class="co">## Setting automatic samples font half of row font: 5.3</span></span></code></pre>
 <div class="figure">
 <img src="5_model_inference_files/figure-html/unnamed-chunk-6-1.png" alt="Data selected for aCML reconstruction annotated with the events which are part of a pattern that we will input to CAPRI." width="768"><p class="caption">
-Data selected for aCML reconstruction annotated with the events which are part of a pattern that we will input to CAPRI.
+Data selected for aCML reconstruction annotated with the events which
+are part of a pattern that we will input to CAPRI.
 </p>
 </div>
 <div class="section level3">
 <h3 id="testable-hypotheses-via-logical-formulas-i-e--patterns">Testable hypotheses via logical formulas (i.e., patterns)<a class="anchor" aria-label="anchor" href="#testable-hypotheses-via-logical-formulas-i-e--patterns"></a>
 </h3>
-<p>CAPRI is the only algorithm in TRONCO that supports hypotheses-testing of causal structures expressed as logical formulas with AND, OR and XOR operators. An example invented formula could be</p>
-<p>(APC:<em>Mutation</em> <strong>XOR</strong> APC:<em>Deletion</em>) <strong>OR</strong> CTNNB1:<em>Mutation</em></p>
-<p>where APC mutations and deletions are in disjunctive relation with CTNNB1 mutations; this is done to test if those events could confer equivalent fitness in terms of ensemble-level progression – see the original CAPRI paper and the PiCnIc pipeline for detailed explanations.</p>
-<p>Every formula is transformed into a CAPRI <em>pattern</em>. For every hypothesis it is possible to specify against which possible target event it should be tested, e.g., one might test the above formula against PIK3CA mutations, but not ATM ones. If this is not done, a pattern is tested against all other events in the dataset but those which constitute itself. A pattern tested against one other event is called an hypothesis.</p>
+<p>CAPRI is the only algorithm in TRONCO that supports
+hypotheses-testing of causal structures expressed as logical formulas
+with AND, OR and XOR operators. An example invented formula could be</p>
+<p>(APC:<em>Mutation</em> <strong>XOR</strong> APC:<em>Deletion</em>)
+<strong>OR</strong> CTNNB1:<em>Mutation</em></p>
+<p>where APC mutations and deletions are in disjunctive relation with
+CTNNB1 mutations; this is done to test if those events could confer
+equivalent fitness in terms of ensemble-level progression – see the
+original CAPRI paper and the PiCnIc pipeline for detailed
+explanations.</p>
+<p>Every formula is transformed into a CAPRI <em>pattern</em>. For every
+hypothesis it is possible to specify against which possible target event
+it should be tested, e.g., one might test the above formula against
+PIK3CA mutations, but not ATM ones. If this is not done, a pattern is
+tested against all other events in the dataset but those which
+constitute itself. A pattern tested against one other event is called an
+hypothesis.</p>
 <div class="section level4">
 <h4 id="adding-custom-hypotheses-">Adding custom hypotheses.<a class="anchor" aria-label="anchor" href="#adding-custom-hypotheses-"></a>
 </h4>
-<p>We add the hypotheses that are described in CAPRI’s manuscript; we start with hard exclusivity (XOR) for NRAS/KRAS mutation,</p>
-<p>NRAS:<em>Missense point</em> <strong>XOR</strong> KRAS:<em>Missense point</em></p>
-<p>tested against all the events in the dataset (default <code>pattern.effect = *</code>)</p>
+<p>We add the hypotheses that are described in CAPRI’s manuscript; we
+start with hard exclusivity (XOR) for NRAS/KRAS mutation,</p>
+<p>NRAS:<em>Missense point</em> <strong>XOR</strong> KRAS:<em>Missense
+point</em></p>
+<p>tested against all the events in the dataset (default
+<code>pattern.effect = *</code>)</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aCML.hypo</span> <span class="op">=</span> <span class="fu"><a href="../reference/hypothesis.add.html">hypothesis.add</a></span><span class="op">(</span><span class="va">aCML.clean</span>, <span class="st">'NRAS xor KRAS'</span>, <span class="fu"><a href="../reference/XOR.html">XOR</a></span><span class="op">(</span><span class="st">'NRAS'</span>, <span class="st">'KRAS'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>When a pattern is included, a new column in the dataset is created – whose signature is given by the evaluation of the formula constituting the pattern. We call this operation <em>lifting of a pattern</em>, and this shall create not inconsistency in the data – i.e., it shall not duplicate any of the other columns. TRONCO check this; for instance when we try to include a soft exclusivity (OR) pattern for the above genes we get an error (not shown).</p>
+<p>When a pattern is included, a new column in the dataset is created –
+whose signature is given by the evaluation of the formula constituting
+the pattern. We call this operation <em>lifting of a pattern</em>, and
+this shall create not inconsistency in the data – i.e., it shall not
+duplicate any of the other columns. TRONCO check this; for instance when
+we try to include a soft exclusivity (OR) pattern for the above genes we
+get an error (not shown).</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aCML.hypo</span> <span class="op">=</span> <span class="fu"><a href="../reference/hypothesis.add.html">hypothesis.add</a></span><span class="op">(</span><span class="va">aCML.hypo</span>, <span class="st">'NRAS or KRAS'</span>,  <span class="fu"><a href="../reference/OR.html">OR</a></span><span class="op">(</span><span class="st">'NRAS'</span>, <span class="st">'KRAS'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Notice that TRONCO functions can be used to look at their alterations and understand why the OR signature is equivalent to the XOR one – this happens as no samples harbour both mutations.</p>
+<p>Notice that TRONCO functions can be used to look at their alterations
+and understand why the OR signature is equivalent to the XOR one – this
+happens as no samples harbour both mutations.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oncoprint.html">oncoprint</a></span><span class="op">(</span><span class="fu"><a href="../reference/events.selection.html">events.selection</a></span><span class="op">(</span><span class="va">aCML.hypo</span>,</span>
 <span>    filter.in.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'KRAS'</span>, <span class="st">'NRAS'</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -201,16 +252,27 @@ Data selected for aCML reconstruction annotated with the events which are part o
 <span><span class="co">## Sorting samples ordering to enhance exclusivity patterns.</span></span></code></pre>
 <div class="figure">
 <img src="5_model_inference_files/figure-html/unnamed-chunk-9-1.png" alt="Oncoprint output to show the perfect (hard) exclusivity among NRAS/KRAS mutations in aCML" width="576"><p class="caption">
-Oncoprint output to show the perfect (hard) exclusivity among NRAS/KRAS mutations in aCML
+Oncoprint output to show the perfect (hard) exclusivity among NRAS/KRAS
+mutations in aCML
 </p>
 </div>
-<p>We repeated the same analysis as before for other hypotheses and for the same reasons, we will include only the hard exclusivity pattern. In this case we add a two-levels pattern</p>
-<p>SF3B1:<em>Missense point</em> <strong>XOR</strong> (ASXL1:<em>Ins/Del</em> <strong>XOR</strong> ASXL1:<em>Nonsense point</em>)</p>
-<p>since ASXL1 is mutated in two different ways, and no samples harbour both mutation types.</p>
+<p>We repeated the same analysis as before for other hypotheses and for
+the same reasons, we will include only the hard exclusivity pattern. In
+this case we add a two-levels pattern</p>
+<p>SF3B1:<em>Missense point</em> <strong>XOR</strong>
+(ASXL1:<em>Ins/Del</em> <strong>XOR</strong> ASXL1:<em>Nonsense
+point</em>)</p>
+<p>since ASXL1 is mutated in two different ways, and no samples harbour
+both mutation types.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aCML.hypo</span> <span class="op">=</span> <span class="fu"><a href="../reference/hypothesis.add.html">hypothesis.add</a></span><span class="op">(</span><span class="va">aCML.hypo</span>, <span class="st">'SF3B1 xor ASXL1'</span>, <span class="fu"><a href="../reference/XOR.html">XOR</a></span><span class="op">(</span><span class="st">'SF3B1'</span>, <span class="fu"><a href="../reference/XOR.html">XOR</a></span><span class="op">(</span><span class="st">'ASXL1'</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    <span class="st">'*'</span><span class="op">)</span></span></code></pre></div>
-<p>Finally, we now do the same for genes TET2 and IDH2. In this case 3 events for the gene TET2 are present, that is <code>Ins/Del</code>, <code>Missense point</code> and <code>Nonsense point</code>. For this reason, since we are not specifying any subset of such events to be considered, all TET2 alterations are used. Since the events present a perfect hard exclusivity, their patters will be included as a XOR.</p>
+<p>Finally, we now do the same for genes TET2 and IDH2. In this case 3
+events for the gene TET2 are present, that is <code>Ins/Del</code>,
+<code>Missense point</code> and <code>Nonsense point</code>. For this
+reason, since we are not specifying any subset of such events to be
+considered, all TET2 alterations are used. Since the events present a
+perfect hard exclusivity, their patters will be included as a XOR.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as.events.html">as.events</a></span><span class="op">(</span><span class="va">aCML.hypo</span>, genes <span class="op">=</span> <span class="st">'TET2'</span><span class="op">)</span> </span></code></pre></div>
 <pre><code><span><span class="co">##         type             event </span></span>
@@ -227,7 +289,9 @@ Oncoprint output to show the perfect (hard) exclusivity among NRAS/KRAS mutation
 <span>    <span class="fu"><a href="../reference/OR.html">OR</a></span><span class="op">(</span><span class="st">'TET2'</span>, <span class="st">'IDH2'</span><span class="op">)</span>,</span>
 <span>    <span class="st">'*'</span><span class="op">)</span></span></code></pre></div>
 <p>Which is the following pattern</p>
-<p>(TET2:<em>Ins/Del</em>) <strong>XOR</strong> (TET2:<em>Missense point</em>) <strong>XOR</strong> (TET2:<em>Nonsense point</em>) <strong>XOR</strong> (IDH2:<em>Missense point</em>)</p>
+<p>(TET2:<em>Ins/Del</em>) <strong>XOR</strong> (TET2:<em>Missense
+point</em>) <strong>XOR</strong> (TET2:<em>Nonsense point</em>)
+<strong>XOR</strong> (IDH2:<em>Missense point</em>)</p>
 <p>which we can visualize via an <code>oncoprint</code>.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oncoprint.html">oncoprint</a></span><span class="op">(</span><span class="fu"><a href="../reference/events.selection.html">events.selection</a></span><span class="op">(</span><span class="va">aCML.hypo</span>,</span>
@@ -242,14 +306,23 @@ Oncoprint output to show the perfect (hard) exclusivity among NRAS/KRAS mutation
 <span><span class="co">## Sorting samples ordering to enhance exclusivity patterns.</span></span></code></pre>
 <div class="figure">
 <img src="5_model_inference_files/figure-html/unnamed-chunk-12-1.png" alt="{oncoprint} output to show the soft exclusivity among NRAS/KRAS mutations in aCML" width="672"><p class="caption">
-{oncoprint} output to show the soft exclusivity among NRAS/KRAS mutations in aCML
+{oncoprint} output to show the soft exclusivity among NRAS/KRAS
+mutations in aCML
 </p>
 </div>
 </div>
 <div class="section level4">
 <h4 id="adding-automatically-hypotheses-for-homologous-events-">Adding (automatically) hypotheses for homologous events.<a class="anchor" aria-label="anchor" href="#adding-automatically-hypotheses-for-homologous-events-"></a>
 </h4>
-<p>We consider homologous events those having the same mnemonic name – as of function <code>as.genes</code> – but events of different type. For instance, mutations and deletions of the same gene would be considered such (e.g., in the aCML dataset ASXL1 Ins/Del and Nonsense point). It could be a good idea to test such events, in terms of progression fitness, to test is they might be equivalent; we can do that by building a pattern of exclusivity among them. TRONCO has a function to make this automatically which, by default, adds a soft exclusivity OR pattern among them.</p>
+<p>We consider homologous events those having the same mnemonic name –
+as of function <code>as.genes</code> – but events of different type. For
+instance, mutations and deletions of the same gene would be considered
+such (e.g., in the aCML dataset ASXL1 Ins/Del and Nonsense point). It
+could be a good idea to test such events, in terms of progression
+fitness, to test is they might be equivalent; we can do that by building
+a pattern of exclusivity among them. TRONCO has a function to make this
+automatically which, by default, adds a soft exclusivity OR pattern
+among them.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aCML.hypo</span> <span class="op">=</span> <span class="fu"><a href="../reference/hypothesis.add.homologous.html">hypothesis.add.homologous</a></span><span class="op">(</span><span class="va">aCML.hypo</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Adding hypotheses for Homologous Patterns</span></span>
@@ -257,15 +330,30 @@ Oncoprint output to show the perfect (hard) exclusivity among NRAS/KRAS mutation
 <span><span class="co">##  Cause: * </span></span>
 <span><span class="co">##  Effect: * </span></span>
 <span><span class="co">## .....Hypothesis created for all possible gene patterns.</span></span></code></pre>
-<p>This function added one pattern for each of TET2, EZH2, CBL, ASXL1, CSF3R (unless they created duplicated columns in the dataset), with a connective OR/XOR which is appropriate for the events considered; for instance the TET2 homologous pattern</p>
-<p>(TET2:<em>Ins/Del</em>) <strong>XOR</strong> (TET2:<em>Missense point</em>) <strong>XOR</strong> (TET2:<em>Nonsense point</em>)</p>
-<p>was created with a XOR function, as TET2 appears in perfect exclusivity.</p>
+<p>This function added one pattern for each of TET2, EZH2, CBL, ASXL1,
+CSF3R (unless they created duplicated columns in the dataset), with a
+connective OR/XOR which is appropriate for the events considered; for
+instance the TET2 homologous pattern</p>
+<p>(TET2:<em>Ins/Del</em>) <strong>XOR</strong> (TET2:<em>Missense
+point</em>) <strong>XOR</strong> (TET2:<em>Nonsense point</em>)</p>
+<p>was created with a XOR function, as TET2 appears in perfect
+exclusivity.</p>
 </div>
 <div class="section level4">
 <h4 id="adding-automatically-hypotheses-for-a-group-of-genes-">Adding (automatically) hypotheses for a group of genes.<a class="anchor" aria-label="anchor" href="#adding-automatically-hypotheses-for-a-group-of-genes-"></a>
 </h4>
-<p>The idea behind the previous function is generalized by <code>hypothesis.add.group</code>, that add a set of hypotheses that can be combinatorially created out of a group of genes. As such, this function can create an exponential number of hypotheses and should be used with caution as too many hypotheses, with respect to sample size, should not be included.</p>
-<p>This function takes, among its inputs, the top-level logical connective, AND/OR/XOR, a minimum/maximum pattern size – to restrict the combinatorial sampling of subgroups –, plus a parameter that can be used to constrain the minimum event frequency. If, among the events included some of them have homologous, these are put automatically nested with the same logic of the <code>hypothesis.add.group</code> function.</p>
+<p>The idea behind the previous function is generalized by
+<code>hypothesis.add.group</code>, that add a set of hypotheses that can
+be combinatorially created out of a group of genes. As such, this
+function can create an exponential number of hypotheses and should be
+used with caution as too many hypotheses, with respect to sample size,
+should not be included.</p>
+<p>This function takes, among its inputs, the top-level logical
+connective, AND/OR/XOR, a minimum/maximum pattern size – to restrict the
+combinatorial sampling of subgroups –, plus a parameter that can be used
+to constrain the minimum event frequency. If, among the events included
+some of them have homologous, these are put automatically nested with
+the same logic of the <code>hypothesis.add.group</code> function.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/hypothesis.add.group.html">hypothesis.add.group</a></span><span class="op">(</span><span class="va">aCML.clean</span>, <span class="va">OR</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'SETBP1'</span>, <span class="st">'ASXL1'</span>, <span class="st">'CBL'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Adding Group Hypotheses</span></span>
@@ -275,7 +363,8 @@ Oncoprint output to show the perfect (hard) exclusivity among NRAS/KRAS mutation
 <span><span class="co">## Genes with multiple events:  ASXL1, CBL </span></span>
 <span><span class="co">## Generating  4 patterns [size: min = 3  -  max = 3 ].</span></span>
 <span><span class="co">## Hypothesis created for all possible patterns.</span></span></code></pre>
-<p>The final dataset that will be given as input to CAPRI is finally shown. Notice the signatures of all the lifted patterns.</p>
+<p>The final dataset that will be given as input to CAPRI is finally
+shown. Notice the signatures of all the lifted patterns.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oncoprint.html">oncoprint</a></span><span class="op">(</span><span class="va">aCML.hypo</span>, gene.annot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>priors <span class="op">=</span> <span class="va">gene.hypotheses</span><span class="op">)</span>, sample.id <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>    font.row<span class="op">=</span><span class="fl">10</span>, font.column<span class="op">=</span><span class="fl">5</span>, cellheight<span class="op">=</span><span class="fl">15</span>, cellwidth<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span></code></pre></div>
@@ -285,21 +374,24 @@ Oncoprint output to show the perfect (hard) exclusivity among NRAS/KRAS mutation
 <span><span class="co">## Annotating genes with RColorBrewer color palette Set1 .</span></span></code></pre>
 <div class="figure">
 <img src="5_model_inference_files/figure-html/unnamed-chunk-15-1.png" alt="oncoprint} output of the a dataset that has patterns that could be given as input to CAPRI to retrieve a progression model." width="768"><p class="caption">
-oncoprint} output of the a dataset that has patterns that could be given as input to CAPRI to retrieve a progression model.
+oncoprint} output of the a dataset that has patterns that could be given
+as input to CAPRI to retrieve a progression model.
 </p>
 </div>
 </div>
 <div class="section level4">
 <h4 id="querying-visualizing-and-manipulating-capris-patterns-">Querying, visualizing and manipulating CAPRI’s patterns.<a class="anchor" aria-label="anchor" href="#querying-visualizing-and-manipulating-capris-patterns-"></a>
 </h4>
-<p>We also provide functions to get the number of hypotheses and patterns present in the data.</p>
+<p>We also provide functions to get the number of hypotheses and
+patterns present in the data.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/npatterns.html">npatterns</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 4</span></span></code></pre>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nhypotheses.html">nhypotheses</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 106</span></span></code></pre>
-<p>We can visualize any pattern or the elements involved in them with the following functions.</p>
+<p>We can visualize any pattern or the elements involved in them with
+the following functions.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as.patterns.html">as.patterns</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "OR_SETBP1_ASXL1"     "OR_SETBP1_CBL"       "OR_ASXL1_CBL"       </span></span>
@@ -318,7 +410,9 @@ oncoprint} output of the a dataset that has patterns that could be given as inpu
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as.types.in.patterns.html">as.types.in.patterns</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Ins/Del"        "Missense point" "Nonsense point"</span></span></code></pre>
-<p>Similarily, we can enumerate the hypotheses with the function <code>as.hypotheses</code>, and delete certain patterns and hypotheses. Deleting a pattern consists in deleting all of its hypotheses.</p>
+<p>Similarily, we can enumerate the hypotheses with the function
+<code>as.hypotheses</code>, and delete certain patterns and hypotheses.
+Deleting a pattern consists in deleting all of its hypotheses.</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/as.hypotheses.html">as.hypotheses</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      cause type cause event       effect type      effect event</span></span>
@@ -335,7 +429,13 @@ oncoprint} output of the a dataset that has patterns that could be given as inpu
 <div class="section level4">
 <h4 id="how-to-build-a-pattern-">How to build a pattern.<a class="anchor" aria-label="anchor" href="#how-to-build-a-pattern-"></a>
 </h4>
-<p>It is sometimes of help to plot some information about a certain combination of events, and a target – especially to disentangle the proper logical connectives to use when building a pattern. Here, we test genes SETBP1 and ASXL1 versus Missense point mutations of CSF3R, and observe that the majority of observations are mutually exclusive, but almost half of the CSF3R mutated samples with Missense point mutations do not harbout any mutation in SETBP1 and ASXL1.</p>
+<p>It is sometimes of help to plot some information about a certain
+combination of events, and a target – especially to disentangle the
+proper logical connectives to use when building a pattern. Here, we test
+genes SETBP1 and ASXL1 versus Missense point mutations of CSF3R, and
+observe that the majority of observations are mutually exclusive, but
+almost half of the CSF3R mutated samples with Missense point mutations
+do not harbout any mutation in SETBP1 and ASXL1.</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tronco.pattern.plot.html">tronco.pattern.plot</a></span><span class="op">(</span><span class="va">aCML</span>,</span>
 <span>    group <span class="op">=</span> <span class="fu"><a href="../reference/as.events.html">as.events</a></span><span class="op">(</span><span class="va">aCML</span>, genes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'SETBP1'</span>, <span class="st">'ASXL1'</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -365,7 +465,9 @@ oncoprint} output of the a dataset that has patterns that could be given as inpu
 <span><span class="co">## [2,]                    0</span></span>
 <span><span class="co">## [3,]                    0</span></span>
 <span><span class="co">## [4,]                    2</span></span></code></pre>
-<p>It is also possible to create a circle plot where we can observe the contribution of genes SETBP1 and ASXL1 in every match with a Missense point mutations of CSF3R.</p>
+<p>It is also possible to create a circle plot where we can observe the
+contribution of genes SETBP1 and ASXL1 in every match with a Missense
+point mutations of CSF3R.</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tronco.pattern.plot.html">tronco.pattern.plot</a></span><span class="op">(</span><span class="va">aCML</span>,</span>
 <span>    group <span class="op">=</span> <span class="fu"><a href="../reference/as.events.html">as.events</a></span><span class="op">(</span><span class="va">aCML</span>, genes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'TET2'</span>, <span class="st">'ASXL1'</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -398,7 +500,11 @@ oncoprint} output of the a dataset that has patterns that could be given as inpu
 <span><span class="co">## other             2</span></span></code></pre>
 <div class="figure">
 <img src="5_model_inference_files/figure-html/pattern-plot-circos-1.png" alt="Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missense point mutations of  CSF3R. The combination of this and the previous  plots should allow to understand which pattern we shall write in an attempt to capture a potential causality relation between the pattern and the event." width="576"><p class="caption">
-Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missense point mutations of CSF3R. The combination of this and the previous plots should allow to understand which pattern we shall write in an attempt to capture a potential causality relation between the pattern and the event.
+Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus
+Missense point mutations of CSF3R. The combination of this and the
+previous plots should allow to understand which pattern we shall write
+in an attempt to capture a potential causality relation between the
+pattern and the event.
 </p>
 </div>
 </div>
@@ -406,7 +512,12 @@ Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missens
 <div class="section level3">
 <h3 id="model-reconstruction">Model reconstruction<a class="anchor" aria-label="anchor" href="#model-reconstruction"></a>
 </h3>
-<p>We run the inference of the model by CAPRI algorithm with its default parameter: we use both AIC and BIC as regularizators, Hill-climbing as heuristic search of the solutions and exhaustive bootstrap (<code>nboot</code> replicates or more for Wilcoxon testing, i.e., more iterations can be performed if samples are rejected), p-value are set at 0.05. We set the seed for the sake of reproducibility.</p>
+<p>We run the inference of the model by CAPRI algorithm with its default
+parameter: we use both AIC and BIC as regularizators, Hill-climbing as
+heuristic search of the solutions and exhaustive bootstrap
+(<code>nboot</code> replicates or more for Wilcoxon testing, i.e., more
+iterations can be performed if samples are rejected), p-value are set at
+0.05. We set the seed for the sake of reproducibility.</p>
 <p><code>{r results='hide', include=FALSE}= aCML.hypo = annotate.description(aCML.hypo, '') aCML.clean = annotate.description(aCML.clean, '')</code></p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.capri</span> <span class="op">=</span> <span class="fu"><a href="../reference/tronco.capri.html">tronco.capri</a></span><span class="op">(</span><span class="va">aCML.hypo</span>, boot.seed <span class="op">=</span> <span class="fl">12345</span>, nboot <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
@@ -438,8 +549,15 @@ Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missens
 <div class="section level2">
 <h2 id="caprese">CAPRESE<a class="anchor" aria-label="anchor" href="#caprese"></a>
 </h2>
-<p>The CAPRESE algorithm is one of a set of algorithms to reconstruct progression models from data of an individual patient. This algorithm uses a shrinkage-alike estimator combining correlation and probability raising among pair of events. This algorithm shall return a forest of trees, a special case of a Suppes-Bayes Causal Network.</p>
-<p>Despite this is derived to infer progression models from individual level data, we use it here to process aCML data (without patterns and with its default parameters). This algorithm has no bootstrap and, as such, is the quickest available in TRONCO.</p>
+<p>The CAPRESE algorithm is one of a set of algorithms to reconstruct
+progression models from data of an individual patient. This algorithm
+uses a shrinkage-alike estimator combining correlation and probability
+raising among pair of events. This algorithm shall return a forest of
+trees, a special case of a Suppes-Bayes Causal Network.</p>
+<p>Despite this is derived to infer progression models from individual
+level data, we use it here to process aCML data (without patterns and
+with its default parameters). This algorithm has no bootstrap and, as
+such, is the quickest available in TRONCO.</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.caprese</span> <span class="op">=</span> <span class="fu"><a href="../reference/tronco.caprese.html">tronco.caprese</a></span><span class="op">(</span><span class="va">aCML.clean</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Checking input events.</span></span>
@@ -456,7 +574,11 @@ Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missens
 <div class="section level2">
 <h2 id="directed-minimum-spanning-tree-with-mutual-information">Directed Minimum Spanning Tree with Mutual Information<a class="anchor" aria-label="anchor" href="#directed-minimum-spanning-tree-with-mutual-information"></a>
 </h2>
-<p>This algorithm is meant to extract a forest of trees of progression from data of an individual patient. This algorithm is based on a formulation of the problem in terms of minimum spamming trees and exploits results from Edmonds. We test it to infer a model from aCML data as we did with CAPRESE.</p>
+<p>This algorithm is meant to extract a forest of trees of progression
+from data of an individual patient. This algorithm is based on a
+formulation of the problem in terms of minimum spamming trees and
+exploits results from Edmonds. We test it to infer a model from aCML
+data as we did with CAPRESE.</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.edmonds</span> <span class="op">=</span> <span class="fu"><a href="../reference/tronco.edmonds.html">tronco.edmonds</a></span><span class="op">(</span><span class="va">aCML.clean</span>, nboot <span class="op">=</span> <span class="fl">5</span>, boot.seed <span class="op">=</span> <span class="fl">12345</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Checking input events.</span></span>
@@ -482,9 +604,15 @@ Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missens
 <span><span class="co">## description substituted: CAPRI - Bionformatics aCML data (selected events) .</span></span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="partially-directed-minimum-spanning-tree-with-mutual-information">Partially Directed Minimum Spanning Tree with Mutual Information<a class="anchor" aria-label="anchor" href="#partially-directed-minimum-spanning-tree-with-mutual-information"></a>
+<h2 id="partially-directed-minimum-spanning-tree-with-mutual-information">Partially Directed Minimum Spanning Tree with Mutual
+Information<a class="anchor" aria-label="anchor" href="#partially-directed-minimum-spanning-tree-with-mutual-information"></a>
 </h2>
-<p>This algorithm extends the previous one in situations where it is not possible to fully assess a confident time ordering among the nodes, hence leading to a partially directed input. This algorithm adopts Gabow search strategy to evaluate the best directed minimum spanning tree among such undirected components. We test it to infer a model from aCML data as all the other algorithms.</p>
+<p>This algorithm extends the previous one in situations where it is not
+possible to fully assess a confident time ordering among the nodes,
+hence leading to a partially directed input. This algorithm adopts Gabow
+search strategy to evaluate the best directed minimum spanning tree
+among such undirected components. We test it to infer a model from aCML
+data as all the other algorithms.</p>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.gabow</span> <span class="op">=</span> <span class="fu"><a href="../reference/tronco.gabow.html">tronco.gabow</a></span><span class="op">(</span><span class="va">aCML.clean</span>, nboot <span class="op">=</span> <span class="fl">5</span>, boot.seed <span class="op">=</span> <span class="fl">12345</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Checking input events.</span></span>
@@ -512,7 +640,14 @@ Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missens
 <div class="section level2">
 <h2 id="undirected-minimum-spanning-tree-with-likelihood-fit">Undirected Minimum Spanning Tree with Likelihood-Fit<a class="anchor" aria-label="anchor" href="#undirected-minimum-spanning-tree-with-likelihood-fit"></a>
 </h2>
-<p>This algorithm is meant to extract a progression from data of an individual patient, but it is not constrained to retrieve a tree/forest – i.e., it could retrieve a direct acyclic graph – according to the level of noise and heterogeneity of the input data. This algorithm is based on a formulation of the problem in terms of minimum spamming trees and exploits results from Chow Liu and other variants for likelihood-fit. Thus, this algorithm is executed with potentially multiple regularizator as CAPRI – here we use BIC/AIC.</p>
+<p>This algorithm is meant to extract a progression from data of an
+individual patient, but it is not constrained to retrieve a tree/forest
+– i.e., it could retrieve a direct acyclic graph – according to the
+level of noise and heterogeneity of the input data. This algorithm is
+based on a formulation of the problem in terms of minimum spamming trees
+and exploits results from Chow Liu and other variants for
+likelihood-fit. Thus, this algorithm is executed with potentially
+multiple regularizator as CAPRI – here we use BIC/AIC.</p>
 <p>We test it to aCML data as all the other algorithms.</p>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.chowliu</span> <span class="op">=</span> <span class="fu"><a href="../reference/tronco.chowliu.html">tronco.chowliu</a></span><span class="op">(</span><span class="va">aCML.clean</span>, nboot <span class="op">=</span> <span class="fl">5</span>, boot.seed <span class="op">=</span> <span class="fl">12345</span><span class="op">)</span></span></code></pre></div>
@@ -542,7 +677,13 @@ Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missens
 <div class="section level2">
 <h2 id="undirected-minimum-spanning-tree-with-mutual-information">Undirected Minimum Spanning Tree with Mutual Information<a class="anchor" aria-label="anchor" href="#undirected-minimum-spanning-tree-with-mutual-information"></a>
 </h2>
-<p>This algorithm is meant to extract a progression from data of an individual patient. As the Chow Liu algorithm, this could retrieve a direct acyclic graph according to the level of noise and heterogeneity of the input data. This algorithm formulatesf the problem in terms of undirected minimum spamming trees and exploits results from Prim, which are a generalization of Edomonds’ ones. We test it to aCML data as all the other algorithms.</p>
+<p>This algorithm is meant to extract a progression from data of an
+individual patient. As the Chow Liu algorithm, this could retrieve a
+direct acyclic graph according to the level of noise and heterogeneity
+of the input data. This algorithm formulatesf the problem in terms of
+undirected minimum spamming trees and exploits results from Prim, which
+are a generalization of Edomonds’ ones. We test it to aCML data as all
+the other algorithms.</p>
 <div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.prim</span> <span class="op">=</span> <span class="fu"><a href="../reference/tronco.prim.html">tronco.prim</a></span><span class="op">(</span><span class="va">aCML.clean</span>, nboot <span class="op">=</span> <span class="fl">5</span>, boot.seed <span class="op">=</span> <span class="fl">12345</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## *** Checking input events.</span></span>
@@ -561,7 +702,7 @@ Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missens
 <span><span class="co">##  Removed 2 edges out of 24 (8%)</span></span>
 <span><span class="co">## *** Performing likelihood-fit with regularization: no_reg .</span></span>
 <span><span class="co">## *** Evaluating BIC / AIC / LogLik informations.</span></span>
-<span><span class="co">## The reconstruction has been successfully completed in 00h:00m:02s</span></span></code></pre>
+<span><span class="co">## The reconstruction has been successfully completed in 00h:00m:01s</span></span></code></pre>
 <div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.prim</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotate.description.html">annotate.description</a></span><span class="op">(</span><span class="va">model.prim</span>, <span class="st">'MST Prim - aCML data'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in annotate.description(model.prim, "MST Prim - aCML data"): Old</span></span>
@@ -586,7 +727,7 @@ Circos to show an hypothesis: here we test genes SETBP1 and ASXL1 versus Missens
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.9000.</p>
 </div>
 
       </footer>
