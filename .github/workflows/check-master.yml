@@ -29,11 +29,9 @@
 ## http://bioconductor.org/developers/how-to/git/
 on:
   push:
-    branches:
-      - master
+    branches: [main, master]
   pull_request:
-    branches:
-      - master
+    branches: [main, master]
 
 name: check-master
 
@@ -154,12 +152,12 @@ jobs:
           'marginfix', 'titlesec', 'fancyhdr', 'enumitem', 'parskip', 'preprint',
           'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
           'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces',
-          'pdfcrop', 'everysel', 'beramono'))
+          'pdfcrop', 'everysel', 'beramono', 'amscls'))
         shell: Rscript {0}
 
       - name: Install R packages
         run: |
-          ##install.packages('Rfast')
+          
         shell: Rscript {0}
 
       - name: Query dependencies
@@ -348,7 +346,7 @@ jobs:
       matrix:
         config:
           ## Comment/Un-comment in case you also want to run other versions
-          ## - {os: ubuntu-latest, r: 'release'}
+          # - {os: ubuntu-latest, r: 'release'}
           - {os: macOS-latest, r: 'release'}
           - {os: windows-latest, r: 'release'}
           # - {os: ubuntu-16.04, rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
@@ -381,7 +379,7 @@ jobs:
           'marginfix', 'titlesec', 'fancyhdr', 'enumitem', 'parskip', 'preprint',
           'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
           'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces',
-          'pdfcrop', 'everysel', 'beramono'))
+          'pdfcrop', 'everysel', 'beramono', 'amscls'))
         shell: Rscript {0}
 
       - name: Query dependencies

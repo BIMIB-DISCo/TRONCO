@@ -151,7 +151,7 @@ jobs:
           'marginfix', 'titlesec', 'fancyhdr', 'enumitem', 'parskip', 'preprint',
           'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
           'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces',
-          'pdfcrop', 'everysel', 'beramono'))
+          'pdfcrop', 'everysel', 'beramono', 'amscls'))
         shell: Rscript {0}
 
       - name: Install R packages
@@ -344,7 +344,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          ## Comment/Un-comment in case you also want to run other versions
+          # Comment/Un-comment in case you also want to run other versions
           - {os: ubuntu-latest, r: 'devel'}
           - {os: macOS-latest, r: 'devel'}
           - {os: windows-latest, r: 'devel'}
@@ -378,7 +378,7 @@ jobs:
           'marginfix', 'titlesec', 'fancyhdr', 'enumitem', 'parskip', 'preprint',
           'soul', 'placeins', 'ragged2e', 'ms', 'footmisc', 'changepage',
           'caption', 'xstring', 'mathtools', 'pgf', 'environ', 'trimspaces',
-          'pdfcrop', 'everysel', 'beramono'))
+          'pdfcrop', 'everysel', 'beramono', 'amscls'))
         shell: Rscript {0}
 
       - name: Query dependencies
