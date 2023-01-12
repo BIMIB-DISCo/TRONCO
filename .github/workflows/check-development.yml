@@ -156,6 +156,7 @@ jobs:
 
       - name: Install R packages
         run: |
+          install.packages('curl')
           install.packages('rcmdcheck')
         shell: Rscript {0}
 
