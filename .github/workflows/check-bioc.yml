@@ -190,6 +190,7 @@ jobs:
           ## The speed gains only apply to the docker builds.
           message(paste('****', Sys.time(), 'pass number 1 at installing dependencies: local dependencies ****'))
           remotes::install_local(dependencies = TRUE, repos = gha_repos, build_vignettes = FALSE, upgrade = TRUE)
+          install.packages("magick", repos = gha_repos)
         continue-on-error: true
         shell: Rscript {0}
 
