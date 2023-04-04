@@ -1,7 +1,25 @@
 ---
-title: Data visualization
-output: html_document
+title: "Data visualization"
+author: 
+  - Luca De Sano
+  - Daniele Ramazzotti
+  - Giulio Caravagna
+  - Alex Graudenxi
+  - Marco Antoniotti
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+graphics: yes
+package: TRONCO
+output:
+  BiocStyle::html_document:
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{The TRONCO (TRanslational ONCOlogy) package  collects algorithms
+  to infer progression models via the approach of Suppes-Bayes Causal Network}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{TRONCO,BiocStyle}
 ---
+
 
 ```{r, include=FALSE}
 library(TRONCO)
