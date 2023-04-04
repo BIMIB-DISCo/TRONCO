@@ -9,5 +9,4 @@
 ^pkgdown$
 ^doc$
 ^Meta$
-^vignettes/.*Rmd$
 ^vignettes/.*gml$
