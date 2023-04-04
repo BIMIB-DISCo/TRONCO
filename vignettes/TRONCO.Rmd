@@ -14,7 +14,7 @@ output:
     toc_float: true
 vignette: >
   %\VignetteIndexEntry{The TRONCO (TRanslational ONCOlogy) package  collects algorithms
-  to infer  progression models via the approach of Suppes-Bayes Causal Network}
+  to infer progression models via the approach of Suppes-Bayes Causal Network}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
   %\VignetteDepends{TRONCO,BiocStyle}
