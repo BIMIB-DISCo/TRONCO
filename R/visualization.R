@@ -204,7 +204,7 @@ oncoprint <- function(x,
                         '.'))
 
         ## Order groups by label, and then data (by column)
-        order = order(group.samples)
+        order = order(group.samples[,1])
         group.samples = group.samples[order, , drop = FALSE]
 
         data = data[, rownames(group.samples)]            

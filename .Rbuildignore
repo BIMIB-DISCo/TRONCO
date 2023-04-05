@@ -9,5 +9,7 @@
 ^pkgdown$
 ^doc$
 ^Meta$
-^vignettes/.*Rmd$
 ^vignettes/.*gml$
+^vignettes/.*R$
+^vignettes/.*html$
+^vignettes/.gitignore$

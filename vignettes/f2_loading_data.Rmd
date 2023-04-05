@@ -1,6 +1,22 @@
 ---
-title: Loading Data
-output: html_document
+title: "Loading data"
+author: 
+  - Luca De Sano
+  - Daniele Ramazzotti
+  - Giulio Caravagna
+  - Alex Graudenxi
+  - Marco Antoniotti
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+graphics: yes
+package: TRONCO
+output:
+  BiocStyle::html_document:
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Loading data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{TRONCO,BiocStyle}
 ---
 
 

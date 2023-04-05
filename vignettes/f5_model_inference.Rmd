@@ -1,7 +1,24 @@
 ---
-title: Model inference
-output: html_document
+title: "Model inference"
+author: 
+  - Luca De Sano
+  - Daniele Ramazzotti
+  - Giulio Caravagna
+  - Alex Graudenxi
+  - Marco Antoniotti
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+graphics: yes
+package: TRONCO
+output:
+  BiocStyle::html_document:
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Model inference}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{TRONCO,BiocStyle}
 ---
+
 
 ```{r, include=FALSE}
 library(TRONCO)
