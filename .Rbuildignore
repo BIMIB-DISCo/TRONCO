@@ -13,3 +13,5 @@
 ^vignettes/.*R$
 ^vignettes/.*html$
 ^vignettes/.gitignore$
+^inst/doc/.*Rmd$
+^inst/doc/.*html$
