@@ -20,7 +20,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.31.5</span>
       </span>
     </div>
 
@@ -35,25 +35,25 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/1_introduction.html">Introduction</a>
+      <a href="../articles/f1_introduction.html">An introduction to the TRONCO R package</a>
     </li>
     <li>
-      <a href="../articles/2_loading_data.html">Loading Data</a>
+      <a href="../articles/f2_loading_data.html">Loading data</a>
     </li>
     <li>
-      <a href="../articles/3_data_visualization.html">Data visualization</a>
+      <a href="../articles/f3_data_visualization.html">Data visualization</a>
     </li>
     <li>
-      <a href="../articles/4_data_manipulation.html">Data manipulation</a>
+      <a href="../articles/f4_data_manipulation.html">Data manipulation</a>
     </li>
     <li>
-      <a href="../articles/5_model_inference.html">Model inference</a>
+      <a href="../articles/f5_model_inference.html">Model inference</a>
     </li>
     <li>
-      <a href="../articles/6_post_reconstruction.html">Post-reconstruction</a>
+      <a href="../articles/f6_post_reconstruction.html">Post reconstruction</a>
     </li>
     <li>
-      <a href="../articles/7_import_export.html">Import/export from other tools</a>
+      <a href="../articles/f7_import_export.html">Import/export from other tools</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -123,13 +123,13 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Calculating entropy loss with k-fold cross-validation </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	[ k = 2 | runs = 2 | regularizer = capri_bic ] ...  DONE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Model logLik = -235.8336 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 7.152172  |  3.03272 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.1813396 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 7.166851  |  3.038945 % </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.246515 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Calculating entropy loss with k-fold cross-validation </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	[ k = 2 | runs = 2 | regularizer = capri_aic ] ...  DONE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Model logLik = -224.5718 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 7.095781  |  3.159694 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.1153109 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 7.065411  |  3.14617 % </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.2711118 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genotypes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            gene 4 gene 5 gene 7 gene 29 gene 30 gene 31 gene 32 gene 33 gene 34</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> patient 1       0      0      0       1       0       0       0       0       0</span>
@@ -1861,12 +1861,12 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of folds:                       2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   loss function:                         Log-Likelihood Loss (disc.) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of runs:                        2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            7.152172 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.1813396 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            7.166851 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.246515 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$eloss</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.280398 7.023945</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.341164 6.992539</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic</span>
@@ -1901,12 +1901,12 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of folds:                       2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   loss function:                         Log-Likelihood Loss (disc.) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of runs:                        2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            7.095781 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.1153109 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            7.065411 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.2711118 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$eloss</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.014244 7.177319</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.873706 7.257116</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

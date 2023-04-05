@@ -20,7 +20,7 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.30.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.31.5</span>
       </span>
     </div>
 
@@ -35,25 +35,25 @@ we refer to the Vignette Section 7."><!-- mathjax --><script src="https://cdnjs.
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/1_introduction.html">Introduction</a>
+      <a href="../articles/f1_introduction.html">An introduction to the TRONCO R package</a>
     </li>
     <li>
-      <a href="../articles/2_loading_data.html">Loading Data</a>
+      <a href="../articles/f2_loading_data.html">Loading data</a>
     </li>
     <li>
-      <a href="../articles/3_data_visualization.html">Data visualization</a>
+      <a href="../articles/f3_data_visualization.html">Data visualization</a>
     </li>
     <li>
-      <a href="../articles/4_data_manipulation.html">Data manipulation</a>
+      <a href="../articles/f4_data_manipulation.html">Data manipulation</a>
     </li>
     <li>
-      <a href="../articles/5_model_inference.html">Model inference</a>
+      <a href="../articles/f5_model_inference.html">Model inference</a>
     </li>
     <li>
-      <a href="../articles/6_post_reconstruction.html">Post-reconstruction</a>
+      <a href="../articles/f6_post_reconstruction.html">Post reconstruction</a>
     </li>
     <li>
-      <a href="../articles/7_import_export.html">Import/export from other tools</a>
+      <a href="../articles/f7_import_export.html">Import/export from other tools</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -1840,10 +1840,10 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`ins_del TET2`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.125 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`ins_del EZH2`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`ins_del ASXL1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.175 0.175</span>
@@ -1858,7 +1858,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations TET2`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.100 0.075</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.175 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations EZH2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.15 0.15</span>
@@ -1873,7 +1873,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations JARID_2_Ex1_18`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.050 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations EED_Ex2_12`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.00</span>
@@ -1882,7 +1882,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations EPHB3`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.10 0.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations ETNK1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
@@ -1891,7 +1891,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations IRAK4`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.050 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations MTA2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
@@ -1900,13 +1900,13 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1 0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`missense_point_mutations KIT`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.075</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`nonsense_ins_del WT1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`nonsense_ins_del RUNX_1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.050 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`nonsense_ins_del CEBPA`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
@@ -1918,7 +1918,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`nonsense_point_mutations ASXL1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.275 0.100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1 0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$prederr$`nonsense_point_mutations CSF3R`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.075</span>
@@ -1934,10 +1934,10 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`ins_del TET2`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.150 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`ins_del EZH2`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.075</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.050</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`ins_del ASXL1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.175 0.175</span>
@@ -1952,13 +1952,13 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations TET2`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.100 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations EZH2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.15 0.15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations CBL_Ex_8_9`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.125 0.175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.150 0.125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations IDH2_R140`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
@@ -1970,7 +1970,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations EED_Ex2_12`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.050</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations CEBPA`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
@@ -1985,7 +1985,7 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations IRAK4`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.075</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.050 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations MTA2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
@@ -1994,16 +1994,16 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1 0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`missense_point_mutations KIT`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.075 0.050</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`nonsense_ins_del WT1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`nonsense_ins_del RUNX_1`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05 0.00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`nonsense_ins_del CEBPA`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.050 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.025 0.075</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$prederr$`nonsense_point_mutations TET2`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.125 0.125</span>

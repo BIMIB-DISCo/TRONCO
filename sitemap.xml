@@ -7,25 +7,25 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/1_introduction.html</loc>
+    <loc>/articles/f1_introduction.html</loc>
   </url>
   <url>
-    <loc>/articles/2_loading_data.html</loc>
+    <loc>/articles/f2_loading_data.html</loc>
   </url>
   <url>
-    <loc>/articles/3_data_visualization.html</loc>
+    <loc>/articles/f3_data_visualization.html</loc>
   </url>
   <url>
-    <loc>/articles/4_data_manipulation.html</loc>
+    <loc>/articles/f4_data_manipulation.html</loc>
   </url>
   <url>
-    <loc>/articles/5_model_inference.html</loc>
+    <loc>/articles/f5_model_inference.html</loc>
   </url>
   <url>
-    <loc>/articles/6_post_reconstruction.html</loc>
+    <loc>/articles/f6_post_reconstruction.html</loc>
   </url>
   <url>
-    <loc>/articles/7_import_export.html</loc>
+    <loc>/articles/f7_import_export.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
