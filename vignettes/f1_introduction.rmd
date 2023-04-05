@@ -1,5 +1,5 @@
 ---
-title: "An introduction to the `TRONCO` R package"
+title: "An introduction to the TRONCO R package"
 author: 
   - Luca De Sano
   - Daniele Ramazzotti
