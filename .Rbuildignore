@@ -10,3 +10,6 @@
 ^doc$
 ^Meta$
 ^vignettes/.*gml$
+^vignettes/.*R$
+^vignettes/.*html$
+^vignettes/.gitignore$

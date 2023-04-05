@@ -37,6 +37,8 @@ background = "#f3f3ff"
 ## Changelog 
 
 
+- [2.31.5] Update vignette.
+- [2.31.4] Fix error on the usate of `order` function.
 - [2.8.1] Minor fix on documentation.
 - [2.7.7] RNA Seq validation. Random restart on Hill Climbing added to CAPRI algorithm. Minor fixes to algorithms and error model.
 - [2.7.3] Development version. Assignment to .GlobalEnv removed.
