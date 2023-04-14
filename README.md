@@ -1,9 +1,6 @@
 TRONCO (TRanslational ONCOlogy)
 ===============================
 
-[![Actions Status](https://github.com/BIMIB-DISCo/TRONCO/workflows/check-master/badge.svg)](https://github.com/BIMIB-DISCo/TRONCO/actions?query=workflow%3Acheck-master)
-[![Actions Status](https://github.com/BIMIB-DISCo/TRONCO/workflows/check-development/badge.svg)](https://github.com/BIMIB-DISCo/TRONCO/actions?query=workflow%3Acheck-development)
-
 | Branch | Status |
 | --- | --- |
 | master | [![R-CMD-check-bioc](https://github.com/BIMIB-DISCo/TRONCO/actions/workflows/check-bioc.yml/badge.svg?branch=master)](https://github.com/BIMIB-DISCo/TRONCO/actions/workflows/check-bioc.yml) |
