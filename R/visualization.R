@@ -164,8 +164,8 @@ oncoprint <- function(x,
         data = sorted.data$M  
     }
 
-    if (group.by.stage) {   
-        ord.stages = as.stages(x)[order(as.stages(x)), , drop = FALSE]
+    if (group.by.stage) {  
+        ord.stages = as.stages(x)[order(as.stages(x)[,1]), , drop = FALSE]
         cat('Grouping samples by stage annotation.\n')
 
         aux.fun <- function(samp) {
