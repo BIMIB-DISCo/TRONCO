@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Model inference • TRONCO</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.34.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.34.1</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@ Graudenxi</h4>
                         <h4 data-toc-skip class="author">Marco
 Antoniotti</h4>
             
-            <h4 data-toc-skip class="date">October 31, 2023</h4>
+            <h4 data-toc-skip class="date">March 21, 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/HEAD/vignettes/f5_model_inference.Rmd" class="external-link"><code>vignettes/f5_model_inference.Rmd</code></a></small>
       <div class="hidden name"><code>f5_model_inference.Rmd</code></div>
@@ -608,7 +608,7 @@ data as we did with CAPRESE.</p>
 <span><span class="co">##  Removed 2 edges out of 24 (8%)</span></span>
 <span><span class="co">## *** Performing likelihood-fit with regularization: no_reg and score: pmi .</span></span>
 <span><span class="co">## *** Evaluating BIC / AIC / LogLik informations.</span></span>
-<span><span class="co">## The reconstruction has been successfully completed in 00h:00m:01s</span></span></code></pre>
+<span><span class="co">## The reconstruction has been successfully completed in 00h:00m:00s</span></span></code></pre>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.edmonds</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotate.description.html">annotate.description</a></span><span class="op">(</span><span class="va">model.edmonds</span>, <span class="st">'MST Edmonds - aCML'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in annotate.description(model.edmonds, "MST Edmonds - aCML"): Old</span></span>
@@ -642,7 +642,7 @@ data as all the other algorithms.</p>
 <span><span class="co">##  Removed 2 edges out of 24 (8%)</span></span>
 <span><span class="co">## *** Performing likelihood-fit with regularization: no_reg .</span></span>
 <span><span class="co">## *** Evaluating BIC / AIC / LogLik informations.</span></span>
-<span><span class="co">## The reconstruction has been successfully completed in 00h:00m:01s</span></span></code></pre>
+<span><span class="co">## The reconstruction has been successfully completed in 00h:00m:00s</span></span></code></pre>
 <div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.gabow</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotate.description.html">annotate.description</a></span><span class="op">(</span><span class="va">model.gabow</span>, <span class="st">'MST Gabow - aCML'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in annotate.description(model.gabow, "MST Gabow - aCML"): Old</span></span>
@@ -679,7 +679,7 @@ multiple regularizator as CAPRI – here we use BIC/AIC.</p>
 <span><span class="co">## *** Performing likelihood-fit with regularization bic .</span></span>
 <span><span class="co">## *** Performing likelihood-fit with regularization aic .</span></span>
 <span><span class="co">## *** Evaluating BIC / AIC / LogLik informations.</span></span>
-<span><span class="co">## The reconstruction has been successfully completed in 00h:00m:01s</span></span></code></pre>
+<span><span class="co">## The reconstruction has been successfully completed in 00h:00m:00s</span></span></code></pre>
 <div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.chowliu</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotate.description.html">annotate.description</a></span><span class="op">(</span><span class="va">model.chowliu</span>, <span class="st">'MST Chow Liu - aCML'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in annotate.description(model.chowliu, "MST Chow Liu - aCML"): Old</span></span>
@@ -713,7 +713,7 @@ the other algorithms.</p>
 <span><span class="co">##  Removed 2 edges out of 24 (8%)</span></span>
 <span><span class="co">## *** Performing likelihood-fit with regularization: no_reg .</span></span>
 <span><span class="co">## *** Evaluating BIC / AIC / LogLik informations.</span></span>
-<span><span class="co">## The reconstruction has been successfully completed in 00h:00m:02s</span></span></code></pre>
+<span><span class="co">## The reconstruction has been successfully completed in 00h:00m:01s</span></span></code></pre>
 <div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.prim</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotate.description.html">annotate.description</a></span><span class="op">(</span><span class="va">model.prim</span>, <span class="st">'MST Prim - aCML data'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in annotate.description(model.prim, "MST Prim - aCML data"): Old</span></span>
