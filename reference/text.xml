@@ -29,7 +29,7 @@
   <graph id="G" edgedefault="directed">
     <data key="g_name"></data>
     <data key="g_models">CAPRI capri_bic - CAPRI capri_aic</data>
-    <data key="g_informations">Generated with TRONCO v2.34.1</data>
+    <data key="g_informations">Generated with TRONCO v2.36.0</data>
     <node id="n0">
       <data key="v_name">OR</data>
       <data key="v_label"></data>
