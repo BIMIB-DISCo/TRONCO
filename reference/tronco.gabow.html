@@ -103,63 +103,63 @@ we refer to the Vignette Section 6.</p>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>data</dt>
+    <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A TRONCO compliant dataset.</p></dd>
 
 
-<dt>regularization</dt>
+<dt id="arg-regularization">regularization<a class="anchor" aria-label="anchor" href="#arg-regularization"></a></dt>
 <dd><p>Select the regularization for the
 likelihood estimation, e.g., BIC, AIC.</p></dd>
 
 
-<dt>score</dt>
+<dt id="arg-score">score<a class="anchor" aria-label="anchor" href="#arg-score"></a></dt>
 <dd><p>Select the score for the estimation of
 the best tree, e.g., pointwise mutual information (pmi), conditional entropy (entropy).</p></dd>
 
 
-<dt>do.boot</dt>
+<dt id="arg-do-boot">do.boot<a class="anchor" aria-label="anchor" href="#arg-do-boot"></a></dt>
 <dd><p>A parameter to disable/enable the estimation
 of the error rates give the reconstructed model.</p></dd>
 
 
-<dt>nboot</dt>
+<dt id="arg-nboot">nboot<a class="anchor" aria-label="anchor" href="#arg-nboot"></a></dt>
 <dd><p>Number of bootstrap sampling (with rejection)
 to be performed when estimating the selective advantage scores.</p></dd>
 
 
-<dt>pvalue</dt>
+<dt id="arg-pvalue">pvalue<a class="anchor" aria-label="anchor" href="#arg-pvalue"></a></dt>
 <dd><p>Pvalue to accept/reject the valid selective
 advantage relations.</p></dd>
 
 
-<dt>min.boot</dt>
+<dt id="arg-min-boot">min.boot<a class="anchor" aria-label="anchor" href="#arg-min-boot"></a></dt>
 <dd><p>Minimum number of bootstrap sampling to be
 performed.</p></dd>
 
 
-<dt>min.stat</dt>
+<dt id="arg-min-stat">min.stat<a class="anchor" aria-label="anchor" href="#arg-min-stat"></a></dt>
 <dd><p>A parameter to disable/enable the minimum number
 of bootstrap sampling required besides nboot if any sampling
 is rejected.</p></dd>
 
 
-<dt>boot.seed</dt>
+<dt id="arg-boot-seed">boot.seed<a class="anchor" aria-label="anchor" href="#arg-boot-seed"></a></dt>
 <dd><p>Initial seed for the bootstrap random sampling.</p></dd>
 
 
-<dt>silent</dt>
+<dt id="arg-silent">silent<a class="anchor" aria-label="anchor" href="#arg-silent"></a></dt>
 <dd><p>A parameter to disable/enable verbose messages.</p></dd>
 
 
-<dt>epos</dt>
+<dt id="arg-epos">epos<a class="anchor" aria-label="anchor" href="#arg-epos"></a></dt>
 <dd><p>Error rate of false positive errors.</p></dd>
 
 
-<dt>eneg</dt>
+<dt id="arg-eneg">eneg<a class="anchor" aria-label="anchor" href="#arg-eneg"></a></dt>
 <dd><p>Error rate of false negative errors.</p></dd>
 
 
-<dt>do.raising</dt>
+<dt id="arg-do-raising">do.raising<a class="anchor" aria-label="anchor" href="#arg-do-raising"></a></dt>
 <dd><p>Whether to use or not the raising condition as a prior.</p></dd>
 
 </dl></div>
@@ -183,11 +183,11 @@ is rejected.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		p-value: 0.05.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		minimum bootstrapped scores: 3.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Bootstraping selective advantage scores (prima facie).</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	.......</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	......</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Evaluating "temporal priority" (Wilcoxon, p-value 0.05)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	Evaluating "probability raising" (Wilcoxon, p-value 0.05)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Loop detection found loops to break.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 	Removed 4 edges out of 38 (11%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 	Removed 4 edges out of 44 (9%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Performing likelihood-fit with regularization: no_reg .</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> *** Evaluating BIC / AIC / LogLik informations.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> The reconstruction has been successfully completed in 00h:00m:01s </span>

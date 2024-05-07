@@ -133,105 +133,105 @@ parameters such as cell size, etc.</p>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>mat</dt>
+    <dl><dt id="arg-mat">mat<a class="anchor" aria-label="anchor" href="#arg-mat"></a></dt>
 <dd><p>numeric matrix of the values to be plotted.</p></dd>
 
 
-<dt>color</dt>
+<dt id="arg-color">color<a class="anchor" aria-label="anchor" href="#arg-color"></a></dt>
 <dd><p>vector of colors used in heatmap.</p></dd>
 
 
-<dt>kmeans_k</dt>
+<dt id="arg-kmeans-k">kmeans_k<a class="anchor" aria-label="anchor" href="#arg-kmeans-k"></a></dt>
 <dd><p>the number of kmeans clusters to make, if we want to agggregate the 
 rows before drawing heatmap. If NA then the rows are not aggregated.</p></dd>
 
 
-<dt>breaks</dt>
+<dt id="arg-breaks">breaks<a class="anchor" aria-label="anchor" href="#arg-breaks"></a></dt>
 <dd><p>a sequence of numbers that covers the range of values in mat and is one 
 element longer than color vector. Used for mapping values to colors. Useful, if needed 
 to map certain values to certain colors, to certain values. If value is NA then the 
 breaks are calculated automatically.</p></dd>
 
 
-<dt>border_color</dt>
+<dt id="arg-border-color">border_color<a class="anchor" aria-label="anchor" href="#arg-border-color"></a></dt>
 <dd><p>color of cell borders on heatmap, use NA if no border should be 
 drawn.</p></dd>
 
 
-<dt>cellwidth</dt>
+<dt id="arg-cellwidth">cellwidth<a class="anchor" aria-label="anchor" href="#arg-cellwidth"></a></dt>
 <dd><p>individual cell width in points. If left as NA, then the values 
 depend on the size of plotting window.</p></dd>
 
 
-<dt>cellheight</dt>
+<dt id="arg-cellheight">cellheight<a class="anchor" aria-label="anchor" href="#arg-cellheight"></a></dt>
 <dd><p>individual cell height in points. If left as NA, 
 then the values depend on the size of plotting window.</p></dd>
 
 
-<dt>scale</dt>
+<dt id="arg-scale">scale<a class="anchor" aria-label="anchor" href="#arg-scale"></a></dt>
 <dd><p>character indicating if the values should be centered and scaled in 
 either the row direction or the column direction, or none. Corresponding values are 
 <code>"row"</code>, <code>"column"</code> and <code>"none"</code></p></dd>
 
 
-<dt>cluster_rows</dt>
+<dt id="arg-cluster-rows">cluster_rows<a class="anchor" aria-label="anchor" href="#arg-cluster-rows"></a></dt>
 <dd><p>boolean values determining if rows should be clustered,</p></dd>
 
 
-<dt>cluster_cols</dt>
+<dt id="arg-cluster-cols">cluster_cols<a class="anchor" aria-label="anchor" href="#arg-cluster-cols"></a></dt>
 <dd><p>boolean values determining if columns should be clustered.</p></dd>
 
 
-<dt>clustering_distance_rows</dt>
+<dt id="arg-clustering-distance-rows">clustering_distance_rows<a class="anchor" aria-label="anchor" href="#arg-clustering-distance-rows"></a></dt>
 <dd><p>distance measure used in clustering rows. Possible 
 values are <code>"correlation"</code> for Pearson correlation and all the distances 
 supported by <code><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></code>, such as <code>"euclidean"</code>, etc. If the value is none 
 of the above it is assumed that a distance matrix is provided.</p></dd>
 
 
-<dt>clustering_distance_cols</dt>
+<dt id="arg-clustering-distance-cols">clustering_distance_cols<a class="anchor" aria-label="anchor" href="#arg-clustering-distance-cols"></a></dt>
 <dd><p>distance measure used in clustering columns. Possible 
 values the same as for clustering_distance_rows.</p></dd>
 
 
-<dt>clustering_method</dt>
+<dt id="arg-clustering-method">clustering_method<a class="anchor" aria-label="anchor" href="#arg-clustering-method"></a></dt>
 <dd><p>clustering method used. Accepts the same values as 
 <code><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></code>.</p></dd>
 
 
-<dt>cutree_rows</dt>
+<dt id="arg-cutree-rows">cutree_rows<a class="anchor" aria-label="anchor" href="#arg-cutree-rows"></a></dt>
 <dd><p>number of clusters the rows are divided into, based on the
  hierarchical clustering (using cutree), if rows are not clustered, the 
 argument is ignored</p></dd>
 
 
-<dt>cutree_cols</dt>
+<dt id="arg-cutree-cols">cutree_cols<a class="anchor" aria-label="anchor" href="#arg-cutree-cols"></a></dt>
 <dd><p>similar to <code>cutree_rows</code>, but for columns</p></dd>
 
 
-<dt>treeheight_row</dt>
+<dt id="arg-treeheight-row">treeheight_row<a class="anchor" aria-label="anchor" href="#arg-treeheight-row"></a></dt>
 <dd><p>the height of a tree for rows, if these are clustered. 
 Default value 50 points.</p></dd>
 
 
-<dt>treeheight_col</dt>
+<dt id="arg-treeheight-col">treeheight_col<a class="anchor" aria-label="anchor" href="#arg-treeheight-col"></a></dt>
 <dd><p>the height of a tree for columns, if these are clustered. 
 Default value 50 points.</p></dd>
 
 
-<dt>legend</dt>
+<dt id="arg-legend">legend<a class="anchor" aria-label="anchor" href="#arg-legend"></a></dt>
 <dd><p>logical to determine if legend should be drawn or not.</p></dd>
 
 
-<dt>legend_breaks</dt>
+<dt id="arg-legend-breaks">legend_breaks<a class="anchor" aria-label="anchor" href="#arg-legend-breaks"></a></dt>
 <dd><p>vector of breakpoints for the legend.</p></dd>
 
 
-<dt>legend_labels</dt>
+<dt id="arg-legend-labels">legend_labels<a class="anchor" aria-label="anchor" href="#arg-legend-labels"></a></dt>
 <dd><p>vector of labels for the <code>legend_breaks</code>.</p></dd>
 
 
-<dt>annotation_row</dt>
+<dt id="arg-annotation-row">annotation_row<a class="anchor" aria-label="anchor" href="#arg-annotation-row"></a></dt>
 <dd><p>data frame that specifies the annotations shown on left
  side of the heatmap. Each row defines the features for a specific row. The 
 rows in the data and in the annotation are matched using corresponding row
@@ -239,120 +239,120 @@ rows in the data and in the annotation are matched using corresponding row
  or discrete.</p></dd>
 
 
-<dt>annotation_col</dt>
+<dt id="arg-annotation-col">annotation_col<a class="anchor" aria-label="anchor" href="#arg-annotation-col"></a></dt>
 <dd><p>similar to annotation_row, but for columns.</p></dd>
 
 
-<dt>annotation</dt>
+<dt id="arg-annotation">annotation<a class="anchor" aria-label="anchor" href="#arg-annotation"></a></dt>
 <dd><p>deprecated parameter that currently sets the annotation_col if it is missing</p></dd>
 
 
-<dt>annotation_colors</dt>
+<dt id="arg-annotation-colors">annotation_colors<a class="anchor" aria-label="anchor" href="#arg-annotation-colors"></a></dt>
 <dd><p>list for specifying annotation_row and 
 annotation_col track colors manually. It is  possible to define the colors 
 for only some of the features. Check examples for  details.</p></dd>
 
 
-<dt>annotation_legend</dt>
+<dt id="arg-annotation-legend">annotation_legend<a class="anchor" aria-label="anchor" href="#arg-annotation-legend"></a></dt>
 <dd><p>boolean value showing if the legend for annotation 
 tracks should be drawn.</p></dd>
 
 
-<dt>drop_levels</dt>
+<dt id="arg-drop-levels">drop_levels<a class="anchor" aria-label="anchor" href="#arg-drop-levels"></a></dt>
 <dd><p>logical to determine if unused levels are also shown in 
 the legend</p></dd>
 
 
-<dt>show_rownames</dt>
+<dt id="arg-show-rownames">show_rownames<a class="anchor" aria-label="anchor" href="#arg-show-rownames"></a></dt>
 <dd><p>boolean specifying if column names are be shown.</p></dd>
 
 
-<dt>show_colnames</dt>
+<dt id="arg-show-colnames">show_colnames<a class="anchor" aria-label="anchor" href="#arg-show-colnames"></a></dt>
 <dd><p>boolean specifying if column names are be shown.</p></dd>
 
 
-<dt>main</dt>
+<dt id="arg-main">main<a class="anchor" aria-label="anchor" href="#arg-main"></a></dt>
 <dd><p>the title of the plot</p></dd>
 
 
-<dt>fontsize</dt>
+<dt id="arg-fontsize">fontsize<a class="anchor" aria-label="anchor" href="#arg-fontsize"></a></dt>
 <dd><p>base fontsize for the plot</p></dd>
 
 
-<dt>fontsize_row</dt>
+<dt id="arg-fontsize-row">fontsize_row<a class="anchor" aria-label="anchor" href="#arg-fontsize-row"></a></dt>
 <dd><p>fontsize for rownames (Default: fontsize)</p></dd>
 
 
-<dt>fontsize_col</dt>
+<dt id="arg-fontsize-col">fontsize_col<a class="anchor" aria-label="anchor" href="#arg-fontsize-col"></a></dt>
 <dd><p>fontsize for colnames (Default: fontsize)</p></dd>
 
 
-<dt>display_numbers</dt>
+<dt id="arg-display-numbers">display_numbers<a class="anchor" aria-label="anchor" href="#arg-display-numbers"></a></dt>
 <dd><p>logical determining if the numeric values are also printed to 
 the cells. If this is a matrix (with same dimensions as original matrix), the contents
 of the matrix are shown instead of original values.</p></dd>
 
 
-<dt>number_format</dt>
+<dt id="arg-number-format">number_format<a class="anchor" aria-label="anchor" href="#arg-number-format"></a></dt>
 <dd><p>format strings (C printf style) of the numbers shown in cells. 
 For example "<code>%.2f</code>" shows 2 decimal places and "<code>%.1e</code>" shows exponential 
 notation (see more in <code><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></code>).</p></dd>
 
 
-<dt>number_color</dt>
+<dt id="arg-number-color">number_color<a class="anchor" aria-label="anchor" href="#arg-number-color"></a></dt>
 <dd><p>color of the text</p></dd>
 
 
-<dt>fontsize_number</dt>
+<dt id="arg-fontsize-number">fontsize_number<a class="anchor" aria-label="anchor" href="#arg-fontsize-number"></a></dt>
 <dd><p>fontsize of the numbers displayed in cells</p></dd>
 
 
-<dt>gaps_row</dt>
+<dt id="arg-gaps-row">gaps_row<a class="anchor" aria-label="anchor" href="#arg-gaps-row"></a></dt>
 <dd><p>vector of row indices that show shere to put gaps into
 heatmap. Used only if the rows are not clustered. See <code>cutree_row</code>
 to see how to introduce gaps to clustered rows.</p></dd>
 
 
-<dt>gaps_col</dt>
+<dt id="arg-gaps-col">gaps_col<a class="anchor" aria-label="anchor" href="#arg-gaps-col"></a></dt>
 <dd><p>similar to gaps_row, but for columns.</p></dd>
 
 
-<dt>labels_row</dt>
+<dt id="arg-labels-row">labels_row<a class="anchor" aria-label="anchor" href="#arg-labels-row"></a></dt>
 <dd><p>custom labels for rows that are used instead of rownames.</p></dd>
 
 
-<dt>labels_col</dt>
+<dt id="arg-labels-col">labels_col<a class="anchor" aria-label="anchor" href="#arg-labels-col"></a></dt>
 <dd><p>similar to labels_row, but for columns.</p></dd>
 
 
-<dt>filename</dt>
+<dt id="arg-filename">filename<a class="anchor" aria-label="anchor" href="#arg-filename"></a></dt>
 <dd><p>file path where to save the picture. Filetype is decided by 
 the extension in the path. Currently following formats are supported: png, pdf, tiff,
  bmp, jpeg. Even if the plot does not fit into the plotting window, the file size is 
 calculated so that the plot would fit there, unless specified otherwise.</p></dd>
 
 
-<dt>width</dt>
+<dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>
 <dd><p>manual option for determining the output file width in inches.</p></dd>
 
 
-<dt>height</dt>
+<dt id="arg-height">height<a class="anchor" aria-label="anchor" href="#arg-height"></a></dt>
 <dd><p>manual option for determining the output file height in inches.</p></dd>
 
 
-<dt>silent</dt>
+<dt id="arg-silent">silent<a class="anchor" aria-label="anchor" href="#arg-silent"></a></dt>
 <dd><p>do not draw the plot (useful when using the gtable output)</p></dd>
 
 
-<dt>legend.cex</dt>
+<dt id="arg-legend-cex">legend.cex<a class="anchor" aria-label="anchor" href="#arg-legend-cex"></a></dt>
 <dd><p>Default 0.5; determines legend size if <code>legend = TRUE</code></p></dd>
 
 
-<dt>txt.stats</dt>
+<dt id="arg-txt-stats">txt.stats<a class="anchor" aria-label="anchor" href="#arg-txt-stats"></a></dt>
 <dd><p>By default, shows a summary statistics for shown data (n,m, |G| and |P|)</p></dd>
 
 
-<dt>...</dt>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>graphical parameters for the text used in plot. Parameters passed to 
 <code>grid.text</code>, see <code>gpar</code>.</p></dd>
 

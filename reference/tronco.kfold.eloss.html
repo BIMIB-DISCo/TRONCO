@@ -95,23 +95,23 @@ we refer to the Vignette Section 7.</p>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>x</dt>
+    <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>A reconstructed model (the output of tronco.capri or tronco.caprese)</p></dd>
 
 
-<dt>models</dt>
+<dt id="arg-models">models<a class="anchor" aria-label="anchor" href="#arg-models"></a></dt>
 <dd><p>The names of the selected regularizers (bic, aic or caprese)</p></dd>
 
 
-<dt>runs</dt>
+<dt id="arg-runs">runs<a class="anchor" aria-label="anchor" href="#arg-runs"></a></dt>
 <dd><p>a positive integer number, the number of times cross-validation will be run</p></dd>
 
 
-<dt>k</dt>
+<dt id="arg-k">k<a class="anchor" aria-label="anchor" href="#arg-k"></a></dt>
 <dd><p>a positive integer number, the number of groups into which the data will be split</p></dd>
 
 
-<dt>silent</dt>
+<dt id="arg-silent">silent<a class="anchor" aria-label="anchor" href="#arg-silent"></a></dt>
 <dd><p>A parameter to disable/enable verbose messages.</p></dd>
 
 </dl></div>
@@ -123,13 +123,13 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Calculating entropy loss with k-fold cross-validation </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	[ k = 2 | runs = 2 | regularizer = capri_bic ] ...  DONE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Model logLik = -235.8336 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 7.002925  |  2.969435 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.01868354 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 7.076527  |  3.000645 % </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.05370371 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Calculating entropy loss with k-fold cross-validation </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 	[ k = 2 | runs = 2 | regularizer = capri_aic ] ...  DONE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Model logLik = -224.5718 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 7.073748  |  3.149883 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.1588761 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean   eloss = 7.107135  |  3.164749 % </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Stdev  eloss =  0.1437489 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $genotypes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            gene 4 gene 5 gene 7 gene 29 gene 30 gene 31 gene 32 gene 33 gene 34</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> patient 1       0      0      0       1       0       0       0       0       0</span>
@@ -1861,12 +1861,12 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of folds:                       2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   loss function:                         Log-Likelihood Loss (disc.) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of runs:                        2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            7.002925 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.01868354 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            7.076527 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.05370371 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_bic$eloss</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.989714 7.016136</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.038553 7.114501</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic</span>
@@ -1901,12 +1901,12 @@ we refer to the Vignette Section 7.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of folds:                       2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   loss function:                         Log-Likelihood Loss (disc.) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number of runs:                        2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            7.073748 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.1588761 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   average loss over the runs:            7.107135 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   standard deviation of the loss:        0.1437489 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $kfold$capri_aic$eloss</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.186091 6.961406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.005489 7.208781</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

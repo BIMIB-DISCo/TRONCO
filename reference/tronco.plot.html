@@ -117,140 +117,140 @@ we refer to the Vignette Section 7.</p>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>x</dt>
+    <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>A reconstructed model (the output of the inference
 by a tronco function)</p></dd>
 
 
-<dt>models</dt>
+<dt id="arg-models">models<a class="anchor" aria-label="anchor" href="#arg-models"></a></dt>
 <dd><p>A vector containing the names of the
 algorithms used (caprese, capri_bic, etc)</p></dd>
 
 
-<dt>fontsize</dt>
+<dt id="arg-fontsize">fontsize<a class="anchor" aria-label="anchor" href="#arg-fontsize"></a></dt>
 <dd><p>For node names. Default NA for
 automatic rescaling</p></dd>
 
 
-<dt>height</dt>
+<dt id="arg-height">height<a class="anchor" aria-label="anchor" href="#arg-height"></a></dt>
 <dd><p>Proportion node height - node width.
 Default height 2</p></dd>
 
 
-<dt>width</dt>
+<dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>
 <dd><p>Proportion node height - node width.
 Default width 2</p></dd>
 
 
-<dt>height.logic</dt>
+<dt id="arg-height-logic">height.logic<a class="anchor" aria-label="anchor" href="#arg-height-logic"></a></dt>
 <dd><p>Height of logical nodes.
 Defaul 1</p></dd>
 
 
-<dt>pf</dt>
+<dt id="arg-pf">pf<a class="anchor" aria-label="anchor" href="#arg-pf"></a></dt>
 <dd><p>Should I print Prima Facie?
 Default False</p></dd>
 
 
-<dt>disconnected</dt>
+<dt id="arg-disconnected">disconnected<a class="anchor" aria-label="anchor" href="#arg-disconnected"></a></dt>
 <dd><p>Should I print disconnected
 nodes? Default False</p></dd>
 
 
-<dt>scale.nodes</dt>
+<dt id="arg-scale-nodes">scale.nodes<a class="anchor" aria-label="anchor" href="#arg-scale-nodes"></a></dt>
 <dd><p>Node scaling coefficient
 (based on node frequency). Default NA (autoscale)</p></dd>
 
 
-<dt>title</dt>
+<dt id="arg-title">title<a class="anchor" aria-label="anchor" href="#arg-title"></a></dt>
 <dd><p>Title of the plot. Default as.description(x)</p></dd>
 
 
-<dt>confidence</dt>
+<dt id="arg-confidence">confidence<a class="anchor" aria-label="anchor" href="#arg-confidence"></a></dt>
 <dd><p>Should I add confidence
 informations? No if NA</p></dd>
 
 
-<dt>p.min</dt>
+<dt id="arg-p-min">p.min<a class="anchor" aria-label="anchor" href="#arg-p-min"></a></dt>
 <dd><p>p-value cutoff. Default automatic</p></dd>
 
 
-<dt>legend</dt>
+<dt id="arg-legend">legend<a class="anchor" aria-label="anchor" href="#arg-legend"></a></dt>
 <dd><p>Should I visualise the legend?</p></dd>
 
 
-<dt>legend.cex</dt>
+<dt id="arg-legend-cex">legend.cex<a class="anchor" aria-label="anchor" href="#arg-legend-cex"></a></dt>
 <dd><p>CEX value for legend. Default 1.0</p></dd>
 
 
-<dt>edge.cex</dt>
+<dt id="arg-edge-cex">edge.cex<a class="anchor" aria-label="anchor" href="#arg-edge-cex"></a></dt>
 <dd><p>CEX value for edge labels. Default 1.0</p></dd>
 
 
-<dt>label.edge.size</dt>
+<dt id="arg-label-edge-size">label.edge.size<a class="anchor" aria-label="anchor" href="#arg-label-edge-size"></a></dt>
 <dd><p>Size of edge labels.
 Default NA for automatic rescaling</p></dd>
 
 
-<dt>expand</dt>
+<dt id="arg-expand">expand<a class="anchor" aria-label="anchor" href="#arg-expand"></a></dt>
 <dd><p>Should I expand hypotheses? Default TRUE</p></dd>
 
 
-<dt>genes</dt>
+<dt id="arg-genes">genes<a class="anchor" aria-label="anchor" href="#arg-genes"></a></dt>
 <dd><p>Visualise only genes in this list.
 Default NULL, visualise all.</p></dd>
 
 
-<dt>relations.filter</dt>
+<dt id="arg-relations-filter">relations.filter<a class="anchor" aria-label="anchor" href="#arg-relations-filter"></a></dt>
 <dd><p>Filter relations to dispaly
 according to this functions. Default NA</p></dd>
 
 
-<dt>edge.color</dt>
+<dt id="arg-edge-color">edge.color<a class="anchor" aria-label="anchor" href="#arg-edge-color"></a></dt>
 <dd><p>Edge color. Default 'black'</p></dd>
 
 
-<dt>pathways.color</dt>
+<dt id="arg-pathways-color">pathways.color<a class="anchor" aria-label="anchor" href="#arg-pathways-color"></a></dt>
 <dd><p>RColorBrewer colorser
 for patways. Default 'Set1'.</p></dd>
 
 
-<dt>file</dt>
+<dt id="arg-file">file<a class="anchor" aria-label="anchor" href="#arg-file"></a></dt>
 <dd><p>String containing filename for PDF output.
 If NA no PDF output will be provided</p></dd>
 
 
-<dt>legend.pos</dt>
+<dt id="arg-legend-pos">legend.pos<a class="anchor" aria-label="anchor" href="#arg-legend-pos"></a></dt>
 <dd><p>Legend position. Default 'bottom',</p></dd>
 
 
-<dt>pathways</dt>
+<dt id="arg-pathways">pathways<a class="anchor" aria-label="anchor" href="#arg-pathways"></a></dt>
 <dd><p>A vector containing pathways information
 as described in as.patterns()</p></dd>
 
 
-<dt>lwd</dt>
+<dt id="arg-lwd">lwd<a class="anchor" aria-label="anchor" href="#arg-lwd"></a></dt>
 <dd><p>Edge base lwd. Default 3</p></dd>
 
 
-<dt>samples.annotation</dt>
+<dt id="arg-samples-annotation">samples.annotation<a class="anchor" aria-label="anchor" href="#arg-samples-annotation"></a></dt>
 <dd><p>= List of samples to search
 for events in model</p></dd>
 
 
-<dt>export.igraph</dt>
+<dt id="arg-export-igraph">export.igraph<a class="anchor" aria-label="anchor" href="#arg-export-igraph"></a></dt>
 <dd><p>If TRUE export the generated igraph
 object</p></dd>
 
 
-<dt>create.new.dev</dt>
+<dt id="arg-create-new-dev">create.new.dev<a class="anchor" aria-label="anchor" href="#arg-create-new-dev"></a></dt>
 <dd><p>If TRUE create a new graphical device 
 when calling trono.plot. Set this to FALSE, e.g., if you do not 
 wish to create a new device when executing the command with 
 export.igraph = TRUE</p></dd>
 
 
-<dt>...</dt>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments for RGraphviz
 plot function</p></dd>
 

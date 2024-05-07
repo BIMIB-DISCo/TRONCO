@@ -105,39 +105,39 @@ regarding the loading functions provided by the package we refer to the Vignette
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>file</dt>
+    <dl><dt id="arg-file">file<a class="anchor" aria-label="anchor" href="#arg-file"></a></dt>
 <dd><p>MAF filename</p></dd>
 
 
-<dt>sep</dt>
+<dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
 <dd><p>MAF separator, default \'\t\'</p></dd>
 
 
-<dt>is.TCGA</dt>
+<dt id="arg-is-tcga">is.TCGA<a class="anchor" aria-label="anchor" href="#arg-is-tcga"></a></dt>
 <dd><p>TRUE if this MAF is from TCGA; thus its sample codenames can be interpreted</p></dd>
 
 
-<dt>filter.fun</dt>
+<dt id="arg-filter-fun">filter.fun<a class="anchor" aria-label="anchor" href="#arg-filter-fun"></a></dt>
 <dd><p>A filter function applied to each row. This is expected to return TRUE/FALSE.</p></dd>
 
 
-<dt>to.TRONCO</dt>
+<dt id="arg-to-tronco">to.TRONCO<a class="anchor" aria-label="anchor" href="#arg-to-tronco"></a></dt>
 <dd><p>If FALSE returns a dataframe with MAF data, not a TRONCO object</p></dd>
 
 
-<dt>irregular</dt>
+<dt id="arg-irregular">irregular<a class="anchor" aria-label="anchor" href="#arg-irregular"></a></dt>
 <dd><p>If TRUE seeks only for columns Hugo_Symbol, Tumor_Sample_Barcode and Variant_Classification</p></dd>
 
 
-<dt>paste.to.Hugo_Symbol</dt>
+<dt id="arg-paste-to-hugo-symbol">paste.to.Hugo_Symbol<a class="anchor" aria-label="anchor" href="#arg-paste-to-hugo-symbol"></a></dt>
 <dd><p>If a list of column names, this will be pasted each Hugo_Symbol to yield names such as PHC2.chr1.33116215.33116215</p></dd>
 
 
-<dt>merge.mutation.types</dt>
+<dt id="arg-merge-mutation-types">merge.mutation.types<a class="anchor" aria-label="anchor" href="#arg-merge-mutation-types"></a></dt>
 <dd><p>If TRUE, all mutations are considered equivalent, regardless of their Variant_Classification value. Otherwise no.</p></dd>
 
 
-<dt>silent</dt>
+<dt id="arg-silent">silent<a class="anchor" aria-label="anchor" href="#arg-silent"></a></dt>
 <dd><p>A parameter to disable/enable verbose messages.</p></dd>
 
 </dl></div>
