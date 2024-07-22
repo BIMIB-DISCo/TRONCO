@@ -1,393 +1,133 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/f1_introduction.html</loc>
-  </url>
-  <url>
-    <loc>/articles/f2_loading_data.html</loc>
-  </url>
-  <url>
-    <loc>/articles/f3_data_visualization.html</loc>
-  </url>
-  <url>
-    <loc>/articles/f4_data_manipulation.html</loc>
-  </url>
-  <url>
-    <loc>/articles/f5_model_inference.html</loc>
-  </url>
-  <url>
-    <loc>/articles/f6_post_reconstruction.html</loc>
-  </url>
-  <url>
-    <loc>/articles/f7_import_export.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/AND.html</loc>
-  </url>
-  <url>
-    <loc>/reference/OR.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TCGA.map.clinical.data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TCGA.multiple.samples.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TCGA.remove.multiple.samples.html</loc>
-  </url>
-  <url>
-    <loc>/reference/TCGA.shorten.barcodes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/XOR.html</loc>
-  </url>
-  <url>
-    <loc>/reference/aCML.html</loc>
-  </url>
-  <url>
-    <loc>/reference/annotate.description.html</loc>
-  </url>
-  <url>
-    <loc>/reference/annotate.stages.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.adj.matrix.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.alterations.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.bootstrap.scores.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.colors.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.conditional.probs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.confidence.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.description.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.events.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.events.in.patterns.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.events.in.sample.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.gene.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.genes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.genes.in.patterns.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.genotypes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.hypotheses.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.joint.probs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.kfold.eloss.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.kfold.posterr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.kfold.prederr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.marginal.probs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.models.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.parameters.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.pathway.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.patterns.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.samples.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.selective.advantage.relations.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.stages.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.types.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.types.in.patterns.html</loc>
-  </url>
-  <url>
-    <loc>/reference/change.color.html</loc>
-  </url>
-  <url>
-    <loc>/reference/consolidate.data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/crc_gistic.html</loc>
-  </url>
-  <url>
-    <loc>/reference/crc_maf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/crc_plain.html</loc>
-  </url>
-  <url>
-    <loc>/reference/delete.event.html</loc>
-  </url>
-  <url>
-    <loc>/reference/delete.gene.html</loc>
-  </url>
-  <url>
-    <loc>/reference/delete.hypothesis.html</loc>
-  </url>
-  <url>
-    <loc>/reference/delete.model.html</loc>
-  </url>
-  <url>
-    <loc>/reference/delete.pattern.html</loc>
-  </url>
-  <url>
-    <loc>/reference/delete.samples.html</loc>
-  </url>
-  <url>
-    <loc>/reference/delete.type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/duplicates.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ebind.html</loc>
-  </url>
-  <url>
-    <loc>/reference/enforce.numeric.html</loc>
-  </url>
-  <url>
-    <loc>/reference/enforce.string.html</loc>
-  </url>
-  <url>
-    <loc>/reference/events.selection.html</loc>
-  </url>
-  <url>
-    <loc>/reference/export.graphml.html</loc>
-  </url>
-  <url>
-    <loc>/reference/export.mutex.html</loc>
-  </url>
-  <url>
-    <loc>/reference/export.nbs.input.html</loc>
-  </url>
-  <url>
-    <loc>/reference/extract.MAF.HuGO.Entrez.map.html</loc>
-  </url>
-  <url>
-    <loc>/reference/genes.table.report.html</loc>
-  </url>
-  <url>
-    <loc>/reference/has.duplicates.html</loc>
-  </url>
-  <url>
-    <loc>/reference/has.model.html</loc>
-  </url>
-  <url>
-    <loc>/reference/has.stages.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hypothesis.add.group.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hypothesis.add.homologous.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hypothesis.add.html</loc>
-  </url>
-  <url>
-    <loc>/reference/import.GISTIC.html</loc>
-  </url>
-  <url>
-    <loc>/reference/import.MAF.html</loc>
-  </url>
-  <url>
-    <loc>/reference/import.genotypes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/import.model.html</loc>
-  </url>
-  <url>
-    <loc>/reference/import.mutex.groups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/intersect.datasets.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.compliant.html</loc>
-  </url>
-  <url>
-    <loc>/reference/join.events.html</loc>
-  </url>
-  <url>
-    <loc>/reference/join.types.html</loc>
-  </url>
-  <url>
-    <loc>/reference/keysToNames.html</loc>
-  </url>
-  <url>
-    <loc>/reference/maf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/muts.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nameToKey.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nevents.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ngenes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nhypotheses.html</loc>
-  </url>
-  <url>
-    <loc>/reference/npatterns.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nsamples.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ntypes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/oncoprint.cbio.html</loc>
-  </url>
-  <url>
-    <loc>/reference/oncoprint.html</loc>
-  </url>
-  <url>
-    <loc>/reference/order.frequency.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pathway.visualization.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pheatmap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rank.recurrents.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rename.gene.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rename.type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/samples.selection.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sbind.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ssplit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stage.html</loc>
-  </url>
-  <url>
-    <loc>/reference/test_dataset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/test_dataset_no_hypos.html</loc>
-  </url>
-  <url>
-    <loc>/reference/test_model.html</loc>
-  </url>
-  <url>
-    <loc>/reference/test_model_kfold.html</loc>
-  </url>
-  <url>
-    <loc>/reference/trim.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.bootstrap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.caprese.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.capri.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.chowliu.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.edmonds.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.gabow.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.kfold.eloss.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.kfold.posterr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.kfold.prederr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.pattern.plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tronco.prim.html</loc>
-  </url>
-  <url>
-    <loc>/reference/view.html</loc>
-  </url>
-  <url>
-    <loc>/reference/which.samples.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/articles/f1_introduction.html</loc></url>
+<url><loc>/articles/f2_loading_data.html</loc></url>
+<url><loc>/articles/f3_data_visualization.html</loc></url>
+<url><loc>/articles/f4_data_manipulation.html</loc></url>
+<url><loc>/articles/f5_model_inference.html</loc></url>
+<url><loc>/articles/f6_post_reconstruction.html</loc></url>
+<url><loc>/articles/f7_import_export.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/AND.html</loc></url>
+<url><loc>/reference/OR.html</loc></url>
+<url><loc>/reference/TCGA.map.clinical.data.html</loc></url>
+<url><loc>/reference/TCGA.multiple.samples.html</loc></url>
+<url><loc>/reference/TCGA.remove.multiple.samples.html</loc></url>
+<url><loc>/reference/TCGA.shorten.barcodes.html</loc></url>
+<url><loc>/reference/XOR.html</loc></url>
+<url><loc>/reference/aCML.html</loc></url>
+<url><loc>/reference/annotate.description.html</loc></url>
+<url><loc>/reference/annotate.stages.html</loc></url>
+<url><loc>/reference/as.adj.matrix.html</loc></url>
+<url><loc>/reference/as.alterations.html</loc></url>
+<url><loc>/reference/as.bootstrap.scores.html</loc></url>
+<url><loc>/reference/as.colors.html</loc></url>
+<url><loc>/reference/as.conditional.probs.html</loc></url>
+<url><loc>/reference/as.confidence.html</loc></url>
+<url><loc>/reference/as.description.html</loc></url>
+<url><loc>/reference/as.events.html</loc></url>
+<url><loc>/reference/as.events.in.patterns.html</loc></url>
+<url><loc>/reference/as.events.in.sample.html</loc></url>
+<url><loc>/reference/as.gene.html</loc></url>
+<url><loc>/reference/as.genes.html</loc></url>
+<url><loc>/reference/as.genes.in.patterns.html</loc></url>
+<url><loc>/reference/as.genotypes.html</loc></url>
+<url><loc>/reference/as.hypotheses.html</loc></url>
+<url><loc>/reference/as.joint.probs.html</loc></url>
+<url><loc>/reference/as.kfold.eloss.html</loc></url>
+<url><loc>/reference/as.kfold.posterr.html</loc></url>
+<url><loc>/reference/as.kfold.prederr.html</loc></url>
+<url><loc>/reference/as.marginal.probs.html</loc></url>
+<url><loc>/reference/as.models.html</loc></url>
+<url><loc>/reference/as.parameters.html</loc></url>
+<url><loc>/reference/as.pathway.html</loc></url>
+<url><loc>/reference/as.patterns.html</loc></url>
+<url><loc>/reference/as.samples.html</loc></url>
+<url><loc>/reference/as.selective.advantage.relations.html</loc></url>
+<url><loc>/reference/as.stages.html</loc></url>
+<url><loc>/reference/as.types.html</loc></url>
+<url><loc>/reference/as.types.in.patterns.html</loc></url>
+<url><loc>/reference/change.color.html</loc></url>
+<url><loc>/reference/consolidate.data.html</loc></url>
+<url><loc>/reference/crc_gistic.html</loc></url>
+<url><loc>/reference/crc_maf.html</loc></url>
+<url><loc>/reference/crc_plain.html</loc></url>
+<url><loc>/reference/delete.event.html</loc></url>
+<url><loc>/reference/delete.gene.html</loc></url>
+<url><loc>/reference/delete.hypothesis.html</loc></url>
+<url><loc>/reference/delete.model.html</loc></url>
+<url><loc>/reference/delete.pattern.html</loc></url>
+<url><loc>/reference/delete.samples.html</loc></url>
+<url><loc>/reference/delete.type.html</loc></url>
+<url><loc>/reference/duplicates.html</loc></url>
+<url><loc>/reference/ebind.html</loc></url>
+<url><loc>/reference/enforce.numeric.html</loc></url>
+<url><loc>/reference/enforce.string.html</loc></url>
+<url><loc>/reference/events.selection.html</loc></url>
+<url><loc>/reference/export.graphml.html</loc></url>
+<url><loc>/reference/export.mutex.html</loc></url>
+<url><loc>/reference/export.nbs.input.html</loc></url>
+<url><loc>/reference/extract.MAF.HuGO.Entrez.map.html</loc></url>
+<url><loc>/reference/genes.table.report.html</loc></url>
+<url><loc>/reference/has.duplicates.html</loc></url>
+<url><loc>/reference/has.model.html</loc></url>
+<url><loc>/reference/has.stages.html</loc></url>
+<url><loc>/reference/hypothesis.add.group.html</loc></url>
+<url><loc>/reference/hypothesis.add.homologous.html</loc></url>
+<url><loc>/reference/hypothesis.add.html</loc></url>
+<url><loc>/reference/import.GISTIC.html</loc></url>
+<url><loc>/reference/import.MAF.html</loc></url>
+<url><loc>/reference/import.genotypes.html</loc></url>
+<url><loc>/reference/import.model.html</loc></url>
+<url><loc>/reference/import.mutex.groups.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/intersect.datasets.html</loc></url>
+<url><loc>/reference/is.compliant.html</loc></url>
+<url><loc>/reference/join.events.html</loc></url>
+<url><loc>/reference/join.types.html</loc></url>
+<url><loc>/reference/keysToNames.html</loc></url>
+<url><loc>/reference/maf.html</loc></url>
+<url><loc>/reference/muts.html</loc></url>
+<url><loc>/reference/nameToKey.html</loc></url>
+<url><loc>/reference/nevents.html</loc></url>
+<url><loc>/reference/ngenes.html</loc></url>
+<url><loc>/reference/nhypotheses.html</loc></url>
+<url><loc>/reference/npatterns.html</loc></url>
+<url><loc>/reference/nsamples.html</loc></url>
+<url><loc>/reference/ntypes.html</loc></url>
+<url><loc>/reference/oncoprint.cbio.html</loc></url>
+<url><loc>/reference/oncoprint.html</loc></url>
+<url><loc>/reference/order.frequency.html</loc></url>
+<url><loc>/reference/pathway.visualization.html</loc></url>
+<url><loc>/reference/pheatmap.html</loc></url>
+<url><loc>/reference/rank.recurrents.html</loc></url>
+<url><loc>/reference/rename.gene.html</loc></url>
+<url><loc>/reference/rename.type.html</loc></url>
+<url><loc>/reference/samples.selection.html</loc></url>
+<url><loc>/reference/sbind.html</loc></url>
+<url><loc>/reference/ssplit.html</loc></url>
+<url><loc>/reference/stage.html</loc></url>
+<url><loc>/reference/test_dataset.html</loc></url>
+<url><loc>/reference/test_dataset_no_hypos.html</loc></url>
+<url><loc>/reference/test_model.html</loc></url>
+<url><loc>/reference/test_model_kfold.html</loc></url>
+<url><loc>/reference/trim.html</loc></url>
+<url><loc>/reference/tronco.bootstrap.html</loc></url>
+<url><loc>/reference/tronco.caprese.html</loc></url>
+<url><loc>/reference/tronco.capri.html</loc></url>
+<url><loc>/reference/tronco.chowliu.html</loc></url>
+<url><loc>/reference/tronco.edmonds.html</loc></url>
+<url><loc>/reference/tronco.gabow.html</loc></url>
+<url><loc>/reference/tronco.kfold.eloss.html</loc></url>
+<url><loc>/reference/tronco.kfold.posterr.html</loc></url>
+<url><loc>/reference/tronco.kfold.prederr.html</loc></url>
+<url><loc>/reference/tronco.pattern.plot.html</loc></url>
+<url><loc>/reference/tronco.plot.html</loc></url>
+<url><loc>/reference/tronco.prim.html</loc></url>
+<url><loc>/reference/view.html</loc></url>
+<url><loc>/reference/which.samples.html</loc></url>
 </urlset>
+
