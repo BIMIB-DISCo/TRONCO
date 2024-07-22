@@ -1,6 +1,6 @@
 Package: TRONCO
 Version: 2.37.0
-Date: 2024-05-07
+Date: 2024-07-22
 Title: TRONCO, an R package for TRanslational ONCOlogy
 Authors@R: c(person("Marco", "Antoniotti", role=c("ctb")), 
     person("Giulio", "Caravagna", role=c("aut"), email="gcaravagna@units.it"),
@@ -73,5 +73,5 @@ biocViews: BiomedicalInformatics,
            DataImport,
            SingleCell,
            ImmunoOncology
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
