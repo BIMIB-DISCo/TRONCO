@@ -1,6 +1,6 @@
-pandoc: '3.4'
+pandoc: 3.6.3
 pkgdown: 2.1.1.9000
-pkgdown_sha: ffe60d5f60934e95285d416dae12c05e24ed1dac
+pkgdown_sha: 66477c0dbb4f4925ec872cf64d5eaa316cc70bac
 articles:
   f1_introduction: f1_introduction.html
   f2_loading_data: f2_loading_data.html
@@ -9,4 +9,4 @@ articles:
   f5_model_inference: f5_model_inference.html
   f6_post_reconstruction: f6_post_reconstruction.html
   f7_import_export: f7_import_export.html
-last_built: 2024-10-31T14:46Z
+last_built: 2025-03-31T04:36Z
