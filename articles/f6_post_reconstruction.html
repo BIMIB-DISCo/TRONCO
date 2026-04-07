@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">TRONCO</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.42.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.44.0</span>
       </span>
     </div>
 
@@ -104,7 +104,7 @@ Graudenxi</h4>
                         <h4 data-toc-skip class="author">Marco
 Antoniotti</h4>
             
-            <h4 data-toc-skip class="date">October 15, 2025</h4>
+            <h4 data-toc-skip class="date">April 07, 2026</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/BIMIB-DISCo/TRONCO/blob/master/vignettes/f6_post_reconstruction.Rmd" class="external-link"><code>vignettes/f6_post_reconstruction.Rmd</code></a></small>
       <div class="hidden name"><code>f6_post_reconstruction.Rmd</code></div>
@@ -169,7 +169,7 @@ red.</p>
 <span><span class="co">## Adding confidence information: tp, pr, hg </span></span>
 <span><span class="co">## RGraphviz object prepared.</span></span>
 <span><span class="co">## Plotting graph and adding legends.</span></span></code></pre>
-<p><img src="f6_post_reconstruction_files/figure-html/unnamed-chunk-3-1.png" width="384"></p>
+<p><img src="f6_post_reconstruction_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="384"></p>
 <p>We can also make a multiplot with this function, which in this case
 we do by showing the models inferred by the other algorithms based on
 Minimum Spanning Trees.</p>
@@ -207,7 +207,7 @@ Minimum Spanning Trees.</p>
 <span><span class="co">## RGraphviz object prepared.</span></span>
 <span><span class="co">## Plotting graph and adding legends.</span></span></code></pre>
 <div class="figure">
-<img src="f6_post_reconstruction_files/figure-html/unnamed-chunk-4-1.png" alt="aCML data processed model by algorithms to extract models from individual patients, we show the otput of  CAPRESE,  and all algorithms based on Minimum Spanning Trees (Edmonds, Chow Liu and Prim). Only the  model retrieved by Chow Liu has two different edge colors as it was regularized with two different strategies: AIC and BIC." width="672"><p class="caption">
+<img src="f6_post_reconstruction_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="aCML data processed model by algorithms to extract models from individual patients, we show the otput of  CAPRESE,  and all algorithms based on Minimum Spanning Trees (Edmonds, Chow Liu and Prim). Only the  model retrieved by Chow Liu has two different edge colors as it was regularized with two different strategies: AIC and BIC." width="672"><p class="caption">
 aCML data processed model by algorithms to extract models from
 individual patients, we show the otput of CAPRESE, and all algorithms
 based on Minimum Spanning Trees (Edmonds, Chow Liu and Prim). Only the
@@ -315,7 +315,7 @@ reconstructing the model – if available –, or afterwards.</p>
 <span><span class="co">##   ..- attr(*, "dimnames")=List of 2</span></span>
 <span><span class="co">##   .. ..$ : chr [1:26] "gene 4" "gene 5" "gene 6" "gene 7" ...</span></span>
 <span><span class="co">##   .. ..$ : chr [1:26] "gene 4" "gene 5" "gene 6" "gene 7" ...</span></span>
-<span><span class="co">##  $ tp: num [1:26, 1:26] 1.00 1.00 1.00 3.03e-06 6.32e-09 ...</span></span>
+<span><span class="co">##  $ tp: num [1:26, 1:26] 1.00 1.00 1.00 4.28e-07 4.75e-13 ...</span></span>
 <span><span class="co">##   ..- attr(*, "dimnames")=List of 2</span></span>
 <span><span class="co">##   .. ..$ : chr [1:26] "gene 4" "gene 5" "gene 6" "gene 7" ...</span></span>
 <span><span class="co">##   .. ..$ : chr [1:26] "gene 4" "gene 5" "gene 6" "gene 7" ...</span></span>
@@ -340,12 +340,12 @@ observations for the upstream and the downstream events.</p>
 <span><span class="co">## 5  Nonsense point ASXL1      Pattern XOR_CBL           5            4</span></span>
 <span><span class="co">## 6     Pattern XOR_ASXL1   Missense point CBL          14            3</span></span>
 <span><span class="co">##   TEMPORAL.PRIORITY PROBABILITY.RAISING HYPERGEOMETRIC</span></span>
-<span><span class="co">## 1      1.265401e-08        6.653729e-09    0.002029387</span></span>
-<span><span class="co">## 2      3.107997e-08        2.968162e-05    0.078125000</span></span>
-<span><span class="co">## 3      7.055746e-07        1.172650e-05    0.000000000</span></span>
-<span><span class="co">## 4      8.288203e-04        1.739852e-06    0.055944826</span></span>
-<span><span class="co">## 5      1.253535e-02        1.262353e-05    0.040873436</span></span>
-<span><span class="co">## 6      1.181758e-08        3.952172e-09    0.008736559</span></span>
+<span><span class="co">## 1      5.703105e-12        4.752865e-13    0.002029387</span></span>
+<span><span class="co">## 2      2.590183e-10        5.412544e-06    0.078125000</span></span>
+<span><span class="co">## 3      5.150186e-08        1.417571e-06    0.000000000</span></span>
+<span><span class="co">## 4      6.047418e-04        1.876946e-07    0.055944826</span></span>
+<span><span class="co">## 5      1.181928e-02        2.393560e-06    0.040873436</span></span>
+<span><span class="co">## 6      9.029999e-12        7.254419e-12    0.008736559</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $capri_aic</span></span>
 <span><span class="co">##                  SELECTS              SELECTED OBS.SELECTS OBS.SELECTED</span></span>
@@ -360,16 +360,16 @@ observations for the upstream and the downstream events.</p>
 <span><span class="co">## 9  Pattern TET2_xor_IDH2         Ins/Del ASXL1          17            9</span></span>
 <span><span class="co">## 10     Pattern XOR_ASXL1    Missense point CBL          14            3</span></span>
 <span><span class="co">##    TEMPORAL.PRIORITY PROBABILITY.RAISING HYPERGEOMETRIC</span></span>
-<span><span class="co">## 1       6.724574e-09        8.364015e-07    0.000000000</span></span>
-<span><span class="co">## 2       1.265401e-08        6.653729e-09    0.002029387</span></span>
-<span><span class="co">## 3       3.107997e-08        2.968162e-05    0.078125000</span></span>
-<span><span class="co">## 4       7.055746e-07        1.172650e-05    0.000000000</span></span>
-<span><span class="co">## 5       8.288203e-04        1.739852e-06    0.055944826</span></span>
-<span><span class="co">## 6       5.292684e-04        1.416741e-07    0.011832364</span></span>
-<span><span class="co">## 7       1.562932e-02        1.825523e-07    0.022184702</span></span>
-<span><span class="co">## 8       1.253535e-02        1.262353e-05    0.040873436</span></span>
-<span><span class="co">## 9       1.218091e-08        1.638856e-07    0.025903967</span></span>
-<span><span class="co">## 10      1.181758e-08        3.952172e-09    0.008736559</span></span></code></pre>
+<span><span class="co">## 1       1.901035e-12        2.492734e-08    0.000000000</span></span>
+<span><span class="co">## 2       5.703105e-12        4.752865e-13    0.002029387</span></span>
+<span><span class="co">## 3       2.590183e-10        5.412544e-06    0.078125000</span></span>
+<span><span class="co">## 4       5.150186e-08        1.417571e-06    0.000000000</span></span>
+<span><span class="co">## 5       6.047418e-04        1.876946e-07    0.055944826</span></span>
+<span><span class="co">## 6       3.573487e-04        2.497506e-09    0.011832364</span></span>
+<span><span class="co">## 7       1.484687e-02        4.049239e-09    0.022184702</span></span>
+<span><span class="co">## 8       1.181928e-02        2.393560e-06    0.040873436</span></span>
+<span><span class="co">## 9       7.128964e-12        3.234163e-09    0.025903967</span></span>
+<span><span class="co">## 10      9.029999e-12        7.254419e-12    0.008736559</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
@@ -421,7 +421,7 @@ last to appear in the <code>confidence</code> parameter.</p>
 <span><span class="co">## RGraphviz object prepared.</span></span>
 <span><span class="co">## Plotting graph and adding legends.</span></span></code></pre>
 <div class="figure">
-<img src="f6_post_reconstruction_files/figure-html/unnamed-chunk-12-1.png" alt="aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and annotated with both non-parametric and statistical bootstrap scores. Edge thickness is proportional to the non-parametric scores." width="384"><p class="caption">
+<img src="f6_post_reconstruction_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and annotated with both non-parametric and statistical bootstrap scores. Edge thickness is proportional to the non-parametric scores." width="384"><p class="caption">
 aCML model reconstructed by CAPRI with AIC / BIC as regolarizators and
 annotated with both non-parametric and statistical bootstrap scores.
 Edge thickness is proportional to the non-parametric scores.
@@ -444,12 +444,12 @@ update output by mentioning the available bootstrap scores.</p>
 <span><span class="co">## 5  Nonsense point ASXL1      Pattern XOR_CBL           5            4</span></span>
 <span><span class="co">## 6     Pattern XOR_ASXL1   Missense point CBL          14            3</span></span>
 <span><span class="co">##   NONPAR.BOOT STAT.BOOT</span></span>
-<span><span class="co">## 1   100.00000       100</span></span>
-<span><span class="co">## 2    33.33333       100</span></span>
+<span><span class="co">## 1    66.66667       100</span></span>
+<span><span class="co">## 2     0.00000       100</span></span>
 <span><span class="co">## 3   100.00000       100</span></span>
-<span><span class="co">## 4     0.00000       100</span></span>
+<span><span class="co">## 4    33.33333       100</span></span>
 <span><span class="co">## 5    33.33333       100</span></span>
-<span><span class="co">## 6    66.66667       100</span></span>
+<span><span class="co">## 6    33.33333       100</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $capri_aic</span></span>
 <span><span class="co">##                  SELECTS              SELECTED OBS.SELECTS OBS.SELECTED</span></span>
@@ -464,16 +464,16 @@ update output by mentioning the available bootstrap scores.</p>
 <span><span class="co">## 9  Pattern TET2_xor_IDH2         Ins/Del ASXL1          17            9</span></span>
 <span><span class="co">## 10     Pattern XOR_ASXL1    Missense point CBL          14            3</span></span>
 <span><span class="co">##    NONPAR.BOOT STAT.BOOT</span></span>
-<span><span class="co">## 1    100.00000       100</span></span>
+<span><span class="co">## 1     33.33333       100</span></span>
 <span><span class="co">## 2    100.00000       100</span></span>
-<span><span class="co">## 3     33.33333       100</span></span>
+<span><span class="co">## 3      0.00000       100</span></span>
 <span><span class="co">## 4    100.00000       100</span></span>
-<span><span class="co">## 5      0.00000       100</span></span>
-<span><span class="co">## 6    100.00000       100</span></span>
-<span><span class="co">## 7     66.66667       100</span></span>
-<span><span class="co">## 8     66.66667       100</span></span>
+<span><span class="co">## 5     33.33333       100</span></span>
+<span><span class="co">## 6     33.33333       100</span></span>
+<span><span class="co">## 7      0.00000       100</span></span>
+<span><span class="co">## 8     33.33333       100</span></span>
 <span><span class="co">## 9      0.00000       100</span></span>
-<span><span class="co">## 10   100.00000       100</span></span></code></pre>
+<span><span class="co">## 10    33.33333       100</span></span></code></pre>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/view.html">view</a></span><span class="op">(</span><span class="va">model.boot</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Description: CAPRI - aCML.</span></span>
@@ -510,7 +510,7 @@ names in the plot</p>
 <span>           number_format <span class="op">=</span> <span class="st">"%d"</span></span>
 <span>           <span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="f6_post_reconstruction_files/figure-html/unnamed-chunk-14-1.png" alt="Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization)." width="672"><p class="caption">
+<img src="f6_post_reconstruction_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC regularization)." width="672"><p class="caption">
 Heatmap of the bootstrap scores for the CAPRI aCML model (via AIC
 regularization).
 </p>
@@ -607,51 +607,51 @@ the other confidence scores.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## $capri_aic</span></span>
 <span><span class="co">##                   SELECTED MEAN.PREDERR SD.PREDERR</span></span>
-<span><span class="co">## 5    Missense point SETBP1     0.218750 0.00000000</span></span>
-<span><span class="co">## 6      Missense point NRAS     0.078125 0.00000000</span></span>
-<span><span class="co">## 7      Missense point KRAS     0.015625 0.00000000</span></span>
-<span><span class="co">## 8      Missense point TET2     0.078125 0.00000000</span></span>
-<span><span class="co">## 9      Missense point EZH2     0.109375 0.00000000</span></span>
-<span><span class="co">## 10      Missense point CBL     0.046875 0.00000000</span></span>
-<span><span class="co">## 11     Missense point IDH2     0.046875 0.00000000</span></span>
-<span><span class="co">## 12    Missense point SF3B1     0.015625 0.00000000</span></span>
-<span><span class="co">## 13    Missense point CSF3R     0.078125 0.00000000</span></span>
-<span><span class="co">## 14     Nonsense point TET2     0.109375 0.00000000</span></span>
-<span><span class="co">## 15     Nonsense point EZH2     0.031250 0.00000000</span></span>
-<span><span class="co">## 16    Nonsense point ASXL1     0.078125 0.00000000</span></span>
-<span><span class="co">## 17    Nonsense point CSF3R     0.046875 0.00000000</span></span>
-<span><span class="co">## 18   Pattern NRAS_xor_KRAS     0.093750 0.00000000</span></span>
-<span><span class="co">## 19 Pattern SF3B1_xor_ASXL1     0.234375 0.00000000</span></span>
-<span><span class="co">## 20   Pattern TET2_xor_IDH2     0.265625 0.00000000</span></span>
-<span><span class="co">## 21    Pattern TET2_or_IDH2     0.281250 0.00000000</span></span>
-<span><span class="co">## 22        Pattern XOR_TET2     0.250000 0.00000000</span></span>
-<span><span class="co">## 23        Pattern XOR_EZH2     0.156250 0.00000000</span></span>
-<span><span class="co">## 24         Pattern XOR_CBL     0.093750 0.02209709</span></span>
-<span><span class="co">## 25       Pattern XOR_ASXL1     0.218750 0.00000000</span></span>
-<span><span class="co">## 26        Pattern OR_CSF3R     0.109375 0.00000000</span></span></code></pre>
+<span><span class="co">## 5    Missense point SETBP1    0.2187500 0.00000000</span></span>
+<span><span class="co">## 6      Missense point NRAS    0.0781250 0.00000000</span></span>
+<span><span class="co">## 7      Missense point KRAS    0.0156250 0.00000000</span></span>
+<span><span class="co">## 8      Missense point TET2    0.0781250 0.00000000</span></span>
+<span><span class="co">## 9      Missense point EZH2    0.1093750 0.00000000</span></span>
+<span><span class="co">## 10      Missense point CBL    0.0468750 0.00000000</span></span>
+<span><span class="co">## 11     Missense point IDH2    0.0468750 0.00000000</span></span>
+<span><span class="co">## 12    Missense point SF3B1    0.0156250 0.00000000</span></span>
+<span><span class="co">## 13    Missense point CSF3R    0.0781250 0.00000000</span></span>
+<span><span class="co">## 14     Nonsense point TET2    0.1093750 0.00000000</span></span>
+<span><span class="co">## 15     Nonsense point EZH2    0.0312500 0.00000000</span></span>
+<span><span class="co">## 16    Nonsense point ASXL1    0.0781250 0.00000000</span></span>
+<span><span class="co">## 17    Nonsense point CSF3R    0.0468750 0.00000000</span></span>
+<span><span class="co">## 18   Pattern NRAS_xor_KRAS    0.1093750 0.02209709</span></span>
+<span><span class="co">## 19 Pattern SF3B1_xor_ASXL1    0.2343750 0.00000000</span></span>
+<span><span class="co">## 20   Pattern TET2_xor_IDH2    0.2656250 0.00000000</span></span>
+<span><span class="co">## 21    Pattern TET2_or_IDH2    0.2812500 0.00000000</span></span>
+<span><span class="co">## 22        Pattern XOR_TET2    0.2500000 0.00000000</span></span>
+<span><span class="co">## 23        Pattern XOR_EZH2    0.1562500 0.00000000</span></span>
+<span><span class="co">## 24         Pattern XOR_CBL    0.0859375 0.01104854</span></span>
+<span><span class="co">## 25       Pattern XOR_ASXL1    0.2187500 0.00000000</span></span>
+<span><span class="co">## 26        Pattern OR_CSF3R    0.1093750 0.00000000</span></span></code></pre>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as.kfold.posterr.html">as.kfold.posterr</a></span><span class="op">(</span><span class="va">model.boot</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $capri_bic</span></span>
 <span><span class="co">##                 SELECTS             SELECTED MEAN.POSTERR SD.POSTERR</span></span>
-<span><span class="co">## 1 Missense point SETBP1 Nonsense point ASXL1     0.046875 0.00000000</span></span>
-<span><span class="co">## 2   Missense point TET2         Ins/Del EZH2     0.015625 0.00000000</span></span>
+<span><span class="co">## 1 Missense point SETBP1 Nonsense point ASXL1     0.062500 0.02209709</span></span>
+<span><span class="co">## 2   Missense point TET2         Ins/Del EZH2     0.031250 0.02209709</span></span>
 <span><span class="co">## 3   Missense point TET2          Ins/Del CBL     0.015625 0.00000000</span></span>
 <span><span class="co">## 4   Missense point EZH2         Ins/Del TET2     0.062500 0.00000000</span></span>
-<span><span class="co">## 5  Nonsense point ASXL1      Pattern XOR_CBL     0.093750 0.02209709</span></span>
+<span><span class="co">## 5  Nonsense point ASXL1      Pattern XOR_CBL     0.078125 0.00000000</span></span>
 <span><span class="co">## 6     Pattern XOR_ASXL1   Missense point CBL     0.046875 0.00000000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $capri_aic</span></span>
 <span><span class="co">##                  SELECTS              SELECTED MEAN.POSTERR SD.POSTERR</span></span>
-<span><span class="co">## 1          Ins/Del ASXL1   Missense point KRAS     0.015625 0.00000000</span></span>
-<span><span class="co">## 2  Missense point SETBP1  Nonsense point ASXL1     0.062500 0.02209709</span></span>
-<span><span class="co">## 3    Missense point TET2          Ins/Del EZH2     0.015625 0.00000000</span></span>
-<span><span class="co">## 4    Missense point TET2           Ins/Del CBL     0.015625 0.00000000</span></span>
-<span><span class="co">## 5    Missense point EZH2          Ins/Del TET2     0.062500 0.00000000</span></span>
-<span><span class="co">## 6    Nonsense point TET2   Missense point NRAS     0.078125 0.00000000</span></span>
-<span><span class="co">## 7    Nonsense point TET2 Pattern NRAS_xor_KRAS     0.093750 0.00000000</span></span>
-<span><span class="co">## 8   Nonsense point ASXL1       Pattern XOR_CBL     0.093750 0.00000000</span></span>
-<span><span class="co">## 9  Pattern TET2_xor_IDH2         Ins/Del ASXL1     0.140625 0.00000000</span></span>
-<span><span class="co">## 10     Pattern XOR_ASXL1    Missense point CBL     0.046875 0.00000000</span></span></code></pre>
+<span><span class="co">## 1          Ins/Del ASXL1   Missense point KRAS     0.015625          0</span></span>
+<span><span class="co">## 2  Missense point SETBP1  Nonsense point ASXL1     0.046875          0</span></span>
+<span><span class="co">## 3    Missense point TET2          Ins/Del EZH2     0.015625          0</span></span>
+<span><span class="co">## 4    Missense point TET2           Ins/Del CBL     0.015625          0</span></span>
+<span><span class="co">## 5    Missense point EZH2          Ins/Del TET2     0.062500          0</span></span>
+<span><span class="co">## 6    Nonsense point TET2   Missense point NRAS     0.078125          0</span></span>
+<span><span class="co">## 7    Nonsense point TET2 Pattern NRAS_xor_KRAS     0.093750          0</span></span>
+<span><span class="co">## 8   Nonsense point ASXL1       Pattern XOR_CBL     0.078125          0</span></span>
+<span><span class="co">## 9  Pattern TET2_xor_IDH2         Ins/Del ASXL1     0.140625          0</span></span>
+<span><span class="co">## 10     Pattern XOR_ASXL1    Missense point CBL     0.046875          0</span></span></code></pre>
 <p>Notice that these can be combined to create a nice table with all
 these statistics – we make here the example of a table with all the BIC
 statistics. This format can be readily exported to external spreadsheets
@@ -675,38 +675,38 @@ for further visualization.</p>
 <pre><code><span><span class="co">##        capri_bic.SELECTS   capri_bic.SELECTED capri_bic.OBS.SELECTS</span></span>
 <span><span class="co">## 1    Missense point TET2          Ins/Del CBL                     5</span></span>
 <span><span class="co">## 13 Missense point SETBP1 Nonsense point ASXL1                    14</span></span>
-<span><span class="co">## 4      Pattern XOR_ASXL1   Missense point CBL                    14</span></span>
-<span><span class="co">## 2    Missense point TET2         Ins/Del EZH2                     5</span></span>
-<span><span class="co">## 23  Nonsense point ASXL1      Pattern XOR_CBL                     5</span></span>
 <span><span class="co">## 3    Missense point EZH2         Ins/Del TET2                     7</span></span>
+<span><span class="co">## 4      Pattern XOR_ASXL1   Missense point CBL                    14</span></span>
+<span><span class="co">## 23  Nonsense point ASXL1      Pattern XOR_CBL                     5</span></span>
+<span><span class="co">## 2    Missense point TET2         Ins/Del EZH2                     5</span></span>
 <span><span class="co">##    capri_bic.OBS.SELECTED capri_bic.TEMPORAL.PRIORITY</span></span>
-<span><span class="co">## 1                       1                7.055746e-07</span></span>
-<span><span class="co">## 13                      5                1.265401e-08</span></span>
-<span><span class="co">## 4                       3                1.181758e-08</span></span>
-<span><span class="co">## 2                       1                3.107997e-08</span></span>
-<span><span class="co">## 23                      4                1.253535e-02</span></span>
-<span><span class="co">## 3                       4                8.288203e-04</span></span>
+<span><span class="co">## 1                       1                5.150186e-08</span></span>
+<span><span class="co">## 13                      5                5.703105e-12</span></span>
+<span><span class="co">## 3                       4                6.047418e-04</span></span>
+<span><span class="co">## 4                       3                9.029999e-12</span></span>
+<span><span class="co">## 23                      4                1.181928e-02</span></span>
+<span><span class="co">## 2                       1                2.590183e-10</span></span>
 <span><span class="co">##    capri_bic.PROBABILITY.RAISING capri_bic.HYPERGEOMETRIC capri_bic.NONPAR.BOOT</span></span>
-<span><span class="co">## 1                   1.172650e-05              0.000000000             100.00000</span></span>
-<span><span class="co">## 13                  6.653729e-09              0.002029387             100.00000</span></span>
-<span><span class="co">## 4                   3.952172e-09              0.008736559              66.66667</span></span>
-<span><span class="co">## 2                   2.968162e-05              0.078125000              33.33333</span></span>
-<span><span class="co">## 23                  1.262353e-05              0.040873436              33.33333</span></span>
-<span><span class="co">## 3                   1.739852e-06              0.055944826               0.00000</span></span>
+<span><span class="co">## 1                   1.417571e-06              0.000000000             100.00000</span></span>
+<span><span class="co">## 13                  4.752865e-13              0.002029387              66.66667</span></span>
+<span><span class="co">## 3                   1.876946e-07              0.055944826              33.33333</span></span>
+<span><span class="co">## 4                   7.254419e-12              0.008736559              33.33333</span></span>
+<span><span class="co">## 23                  2.393560e-06              0.040873436              33.33333</span></span>
+<span><span class="co">## 2                   5.412544e-06              0.078125000               0.00000</span></span>
 <span><span class="co">##    capri_bic.STAT.BOOT capri_bic.MEAN.PREDERR capri_bic.SD.PREDERR</span></span>
 <span><span class="co">## 1                  100                     NA                   NA</span></span>
 <span><span class="co">## 13                 100              0.0781250           0.00000000</span></span>
-<span><span class="co">## 4                  100              0.0468750           0.00000000</span></span>
-<span><span class="co">## 2                  100                     NA                   NA</span></span>
-<span><span class="co">## 23                 100              0.0859375           0.01104854</span></span>
 <span><span class="co">## 3                  100                     NA                   NA</span></span>
+<span><span class="co">## 4                  100              0.0468750           0.00000000</span></span>
+<span><span class="co">## 23                 100              0.0859375           0.01104854</span></span>
+<span><span class="co">## 2                  100                     NA                   NA</span></span>
 <span><span class="co">##    capri_bic.MEAN.POSTERR capri_bic.SD.POSTERR</span></span>
 <span><span class="co">## 1                0.015625           0.00000000</span></span>
-<span><span class="co">## 13               0.046875           0.00000000</span></span>
+<span><span class="co">## 13               0.062500           0.02209709</span></span>
+<span><span class="co">## 3                0.062500           0.00000000</span></span>
 <span><span class="co">## 4                0.046875           0.00000000</span></span>
-<span><span class="co">## 2                0.015625           0.00000000</span></span>
-<span><span class="co">## 23               0.093750           0.02209709</span></span>
-<span><span class="co">## 3                0.062500           0.00000000</span></span></code></pre>
+<span><span class="co">## 23               0.078125           0.00000000</span></span>
+<span><span class="co">## 2                0.031250           0.02209709</span></span></code></pre>
 <p>We finally show the plot of the model with the confidences by
 cross-validation.</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
@@ -727,7 +727,7 @@ cross-validation.</p>
 <span><span class="co">## RGraphviz object prepared.</span></span>
 <span><span class="co">## Plotting graph and adding legends.</span></span></code></pre>
 <div class="figure">
-<img src="f6_post_reconstruction_files/figure-html/unnamed-chunk-18-1.png" alt="aCML model reconstructed by CAPRI with  AIC/BIC as regolarizators and annotated with  non-parametric, as well as with entropy loss, prediction and posterior classification errors computed via cross-validation. Edge thickness is proportional to the non-parametric  scores." width="384"><p class="caption">
+<img src="f6_post_reconstruction_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="aCML model reconstructed by CAPRI with  AIC/BIC as regolarizators and annotated with  non-parametric, as well as with entropy loss, prediction and posterior classification errors computed via cross-validation. Edge thickness is proportional to the non-parametric  scores." width="384"><p class="caption">
 aCML model reconstructed by CAPRI with AIC/BIC as regolarizators and
 annotated with non-parametric, as well as with entropy loss, prediction
 and posterior classification errors computed via cross-validation. Edge
@@ -752,7 +752,7 @@ thickness is proportional to the non-parametric scores.
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.9000.</p>
 </div>
 
       </footer>
