@@ -107,120 +107,152 @@ export(tronco.prim)
 export(view)
 export(which.samples)
 importFrom(R.matlab,writeMat)
-importFrom(RColorBrewer,brewer.pal)
-importFrom(RColorBrewer,brewer.pal.info)
-importFrom(Rgraphviz,edgeNames)
-importFrom(Rgraphviz,plot)
-importFrom(bnlearn,"amat<-")
-importFrom(bnlearn,amat)
-importFrom(bnlearn,bn.cv)
-importFrom(bnlearn,chow.liu)
-importFrom(bnlearn,empty.graph)
-importFrom(bnlearn,hc)
-importFrom(bnlearn,score)
-importFrom(bnlearn,set.arc)
-importFrom(bnlearn,tabu)
-importFrom(circlize,chordDiagram)
-importFrom(circlize,circos.clear)
-importFrom(circlize,circos.par)
-importFrom(circlize,circos.text)
-importFrom(circlize,circos.trackPlotRegion)
-importFrom(circlize,get.cell.meta.data)
+importFrom(RColorBrewer,
+  brewer.pal,
+  brewer.pal.info
+)
+importFrom(Rgraphviz,
+  edgeNames,
+  plot
+)
+importFrom(bnlearn,
+  "amat<-",
+  amat,
+  bn.cv,
+  chow.liu,
+  empty.graph,
+  hc,
+  score,
+  set.arc,
+  tabu
+)
+importFrom(circlize,
+  chordDiagram,
+  circos.clear,
+  circos.par,
+  circos.text,
+  circos.trackPlotRegion,
+  get.cell.meta.data
+)
 importFrom(doParallel,registerDoParallel)
-importFrom(foreach,"%dopar%")
-importFrom(foreach,foreach)
-importFrom(grDevices,bmp)
-importFrom(grDevices,col2rgb)
-importFrom(grDevices,colorRampPalette)
-importFrom(grDevices,dev.copy2pdf)
-importFrom(grDevices,dev.cur)
-importFrom(grDevices,dev.off)
-importFrom(grDevices,dev.set)
-importFrom(grDevices,jpeg)
-importFrom(grDevices,pdf)
-importFrom(grDevices,png)
-importFrom(grDevices,rainbow)
-importFrom(grDevices,rgb)
-importFrom(grDevices,tiff)
-importFrom(graphics,barplot)
-importFrom(graphics,layout)
-importFrom(graphics,legend)
-importFrom(graphics,locator)
-importFrom(graphics,par)
-importFrom(graphics,plot.new)
-importFrom(graphics,strwidth)
-importFrom(grid,convertHeight)
-importFrom(grid,convertWidth)
-importFrom(grid,gList)
-importFrom(grid,gTree)
-importFrom(grid,gpar)
-importFrom(grid,grid.draw)
-importFrom(grid,grid.newpage)
-importFrom(grid,grid.pretty)
-importFrom(grid,grobTree)
-importFrom(grid,polylineGrob)
-importFrom(grid,rectGrob)
-importFrom(grid,textGrob)
-importFrom(grid,unit)
-importFrom(grid,unit.c)
-importFrom(grid,viewport)
-importFrom(gridExtra,grid.arrange)
-importFrom(gridExtra,grid.table)
-importFrom(gtable,gtable)
-importFrom(gtable,gtable_add_grob)
-importFrom(gtable,gtable_height)
-importFrom(gtable,gtable_width)
+importFrom(foreach,
+  "%dopar%",
+  foreach
+)
+importFrom(grDevices,
+  bmp,
+  col2rgb,
+  colorRampPalette,
+  dev.copy2pdf,
+  dev.cur,
+  dev.off,
+  dev.set,
+  jpeg,
+  pdf,
+  png,
+  rainbow,
+  rgb,
+  tiff
+)
+importFrom(graphics,
+  barplot,
+  layout,
+  legend,
+  locator,
+  par,
+  plot.new,
+  strwidth
+)
+importFrom(grid,
+  convertHeight,
+  convertWidth,
+  gList,
+  gTree,
+  gpar,
+  grid.draw,
+  grid.newpage,
+  grid.pretty,
+  grobTree,
+  polylineGrob,
+  rectGrob,
+  textGrob,
+  unit,
+  unit.c,
+  viewport
+)
+importFrom(gridExtra,
+  grid.arrange,
+  grid.table
+)
+importFrom(gtable,
+  gtable,
+  gtable_add_grob,
+  gtable_height,
+  gtable_width
+)
 importFrom(gtools,permutations)
-importFrom(igraph,"E<-")
-importFrom(igraph,"V<-")
-importFrom(igraph,E)
-importFrom(igraph,V)
-importFrom(igraph,clusters)
-importFrom(igraph,edge)
-importFrom(igraph,get.adjacency)
-importFrom(igraph,get.edgelist)
-importFrom(igraph,get.shortest.paths)
-importFrom(igraph,graph.adjacency)
-importFrom(igraph,graph.union)
-importFrom(igraph,graph_from_adjacency_matrix)
-importFrom(igraph,igraph.from.graphNEL)
-importFrom(igraph,igraph.to.graphNEL)
-importFrom(igraph,is.dag)
-importFrom(igraph,minimum.spanning.tree)
-importFrom(igraph,set.edge.attribute)
-importFrom(igraph,set.graph.attribute)
-importFrom(igraph,set.vertex.attribute)
-importFrom(igraph,unfold.tree)
-importFrom(igraph,write.graph)
+importFrom(igraph,
+  "E<-",
+  "V<-",
+  E,
+  V,
+  clusters,
+  edge,
+  get.adjacency,
+  get.edgelist,
+  get.shortest.paths,
+  graph.adjacency,
+  graph.union,
+  graph_from_adjacency_matrix,
+  igraph.from.graphNEL,
+  igraph.to.graphNEL,
+  is.dag,
+  minimum.spanning.tree,
+  set.edge.attribute,
+  set.graph.attribute,
+  set.vertex.attribute,
+  unfold.tree,
+  write.graph
+)
 importFrom(iterators,icount)
-importFrom(methods,getPackageName)
-importFrom(methods,is)
-importFrom(parallel,detectCores)
-importFrom(parallel,makeCluster)
-importFrom(parallel,stopCluster)
-importFrom(scales,brewer_pal)
-importFrom(scales,dscale)
-importFrom(scales,hue_pal)
-importFrom(stats,AIC)
-importFrom(stats,BIC)
-importFrom(stats,as.dist)
-importFrom(stats,cor)
-importFrom(stats,cutree)
-importFrom(stats,dist)
-importFrom(stats,fisher.test)
-importFrom(stats,hclust)
-importFrom(stats,kmeans)
-importFrom(stats,logLik)
-importFrom(stats,phyper)
-importFrom(stats,runif)
-importFrom(stats,sd)
-importFrom(stats,wilcox.test)
-importFrom(utils,combn)
-importFrom(utils,count.fields)
-importFrom(utils,flush.console)
-importFrom(utils,head)
-importFrom(utils,packageVersion)
-importFrom(utils,read.delim)
-importFrom(utils,read.table)
-importFrom(utils,write.table)
+importFrom(methods,
+  getPackageName,
+  is
+)
+importFrom(parallel,
+  detectCores,
+  makeCluster,
+  stopCluster
+)
+importFrom(scales,
+  brewer_pal,
+  dscale,
+  hue_pal
+)
+importFrom(stats,
+  AIC,
+  BIC,
+  as.dist,
+  cor,
+  cutree,
+  dist,
+  fisher.test,
+  hclust,
+  kmeans,
+  logLik,
+  phyper,
+  runif,
+  sd,
+  wilcox.test
+)
+importFrom(utils,
+  combn,
+  count.fields,
+  flush.console,
+  head,
+  packageVersion,
+  read.delim,
+  read.table,
+  write.table
+)
 importFrom(xtable,xtable)
